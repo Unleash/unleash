@@ -5,10 +5,23 @@ import useToast from 'hooks/useToast';
 interface ILinkFieldProps {
     inviteLink: string;
     small?: boolean;
+    successTitle?: string;
+    errorTitle?: string;
 }
 
-export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
+export const LinkField = ({
+    inviteLink,
+    small,
+    successTitle = 'Successfully copied invite link.',
+    errorTitle = 'Could not copy invite link.',
+}: ILinkFieldProps) => {
     const { setToastData } = useToast();
+
+    const setError = () =>
+        setToastData({
+            type: 'error',
+            title: errorTitle,
+        });
 
     const handleCopy = () => {
         try {
@@ -17,7 +30,7 @@ export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
                 .then(() => {
                     setToastData({
                         type: 'success',
-                        title: 'Successfully copied invite link.',
+                        title: successTitle,
                     });
                 })
                 .catch(() => {
@@ -27,12 +40,6 @@ export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
             setError();
         }
     };
-
-    const setError = () =>
-        setToastData({
-            type: 'error',
-            title: 'Could not copy invite link.',
-        });
 
     return (
         <Box

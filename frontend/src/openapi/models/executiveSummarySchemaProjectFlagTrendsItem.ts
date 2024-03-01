@@ -21,6 +21,8 @@ export type ExecutiveSummarySchemaProjectFlagTrendsItem = {
     timeToProduction?: number;
     /** The number of all flags on a particular day */
     total: number;
+    /** The number of users who have access to the project */
+    users?: number;
     /** Year and week in a given year for which the stats were calculated */
     week: string;
 };

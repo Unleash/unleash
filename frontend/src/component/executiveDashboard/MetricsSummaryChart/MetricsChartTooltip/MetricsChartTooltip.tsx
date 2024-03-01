@@ -1,8 +1,7 @@
-import { type VFC } from "react";
-import { ExecutiveSummarySchemaMetricsSummaryTrendsItem } from "openapi";
-import { Box, Divider, Paper, styled, Typography } from "@mui/material";
-import { TooltipState } from "../../LineChart/ChartTooltip/ChartTooltip";
-import { HorizontalDistributionChart } from "../../HorizontalDistributionChart/HorizontalDistributionChart";
+import { type VFC } from 'react';
+import { ExecutiveSummarySchemaMetricsSummaryTrendsItem } from 'openapi';
+import { Box, Divider, Paper, styled, Typography } from '@mui/material';
+import { TooltipState } from '../../LineChart/ChartTooltip/ChartTooltip';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -15,6 +14,48 @@ const StyledItemHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const InfoLine = ({
+    iconChar,
+    title,
+    color,
+}: {
+    iconChar: string;
+    title: string;
+    color: 'info' | 'success' | 'error';
+}) => (
+    <Typography
+        variant='body2'
+        component='p'
+        sx={{
+            color: (theme) => theme.palette[color].main,
+        }}
+    >
+        <Typography component='span'>{iconChar}</Typography>
+        <strong>{title}</strong>
+    </Typography>
+);
+
+const InfoSummary = ({ data }: { data: { key: string; value: number }[] }) => (
+    <Typography variant={'body1'} component={'p'}>
+        <Box display={'flex'} flexDirection={'row'}>
+            {data.map(({ key, value }) => (
+                <div style={{ flex: 1, flexDirection: 'column' }}>
+                    <div
+                        style={{
+                            flex: 1,
+                            textAlign: 'center',
+                            marginBottom: '4px',
+                        }}
+                    >
+                        {key}
+                    </div>
+                    <div style={{ flex: 1, textAlign: 'center' }}>{value}</div>
+                </div>
+            ))}
+        </Box>
+    </Typography>
+);
+
 export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
@@ -23,7 +64,9 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
             label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as ExecutiveSummarySchemaMetricsSummaryTrendsItem,
+            value: point.raw as ExecutiveSummarySchemaMetricsSummaryTrendsItem & {
+                total: number;
+            },
         };
     });
 
@@ -44,6 +87,15 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     key={`${point.title}-${index}`}
                 >
                     <StyledItemHeader>
+                        <Typography variant='body2' component='span'>
+                            <Typography
+                                sx={{ color: point.color }}
+                                component='span'
+                            >
+                                {'● '}
+                            </Typography>
+                            <strong>{point.title}</strong>
+                        </Typography>
                         <Typography
                             variant='body2'
                             color='textSecondary'
@@ -55,42 +107,34 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     <Divider
                         sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}
                     />
-                    <Typography
-                        variant='body2'
-                        component='p'
-                        sx={(theme) => ({
-                            marginBottom: theme.spacing(0.5),
-                        })}
-                    >
-                        Exposed: {point.value.totalYes}
-                    </Typography>
-                    <Typography
-                        variant='body2'
-                        component='p'
-                        sx={(theme) => ({
-                            marginBottom: theme.spacing(0.5),
-                        })}
-                    >
-                        Not exposed: {point.value.totalNo}
-                    </Typography>
-                    <Typography
-                        variant='body2'
-                        component='p'
-                        sx={(theme) => ({
-                            marginBottom: theme.spacing(0.5),
-                        })}
-                    >
-                        Apps: {point.value.totalApps}
-                    </Typography>
-                    <Typography
-                        variant='body2'
-                        component='p'
-                        sx={(theme) => ({
-                            marginBottom: theme.spacing(0.5),
-                        })}
-                    >
-                        Environments: {point.value.totalEnvironments}
-                    </Typography>
+                    <InfoLine
+                        iconChar={'▣ '}
+                        title={`Total requests: ${point.value.total}`}
+                        color={'info'}
+                    />
+                    <InfoLine
+                        iconChar={'▲ '}
+                        title={`Exposed: ${point.value.totalYes}`}
+                        color={'success'}
+                    />
+                    <InfoLine
+                        iconChar={'▼ '}
+                        title={`Not exposed: ${point.value.totalNo}`}
+                        color={'error'}
+                    />
+                    <Divider
+                        sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}
+                    />
+                    <InfoSummary
+                        data={[
+                            { key: 'Flags', value: point.value.totalFlags },
+                            {
+                                key: 'Environments',
+                                value: point.value.totalEnvironments,
+                            },
+                            { key: 'Apps', value: point.value.totalApps },
+                        ]}
+                    />
                 </StyledTooltipItemContainer>
             )) || null}
         </Box>

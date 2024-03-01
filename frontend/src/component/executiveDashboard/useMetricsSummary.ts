@@ -14,6 +14,7 @@ interface GroupedData {
             totalNo: number;
             totalApps: number;
             totalEnvironments: number;
+            totalFlags: number;
         };
     };
 }
@@ -38,6 +39,7 @@ function groupAndSumData(data: MetricsSummaryTrends): any {
                 totalNo: 0,
                 totalApps: 0,
                 totalEnvironments: 0,
+                totalFlags: 0,
             };
         }
 
@@ -47,6 +49,7 @@ function groupAndSumData(data: MetricsSummaryTrends): any {
         groupedData[project][weekId].totalApps += item.totalApps;
         groupedData[project][weekId].totalEnvironments +=
             item.totalEnvironments;
+        groupedData[project][weekId].totalFlags += item.totalFlags;
     });
 
     return Object.entries(groupedData).map(([project, weeks]) => {

@@ -1,7 +1,7 @@
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ISignalEndpoint } from 'interfaces/signal';
-import { useSignals } from 'hooks/api/getters/useSignals/useSignals';
+import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
 import { Suspense, lazy } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -70,13 +70,10 @@ export const SignalEndpointsSignalsModal = ({
 }: ISignalEndpointsSignalsModalProps) => {
     const { uiConfig } = useUiConfig();
     const { locationSettings } = useLocationSettings();
-    const { signals, hasMore, loadMore, loading } = useSignals(
-        signalEndpoint?.id,
-        20,
-        {
+    const { signalEndpointSignals, hasMore, loadMore, loading } =
+        useSignalEndpointSignals(signalEndpoint?.id, 20, {
             refreshInterval: 5000,
-        },
-    );
+        });
 
     if (!signalEndpoint) {
         return null;
@@ -93,7 +90,7 @@ export const SignalEndpointsSignalsModal = ({
             label={title}
         >
             <FormTemplate
-                loading={loading && signals.length === 0}
+                loading={loading && signalEndpointSignals.length === 0}
                 modal
                 description=''
                 documentationLink=''
@@ -120,21 +117,21 @@ export const SignalEndpointsSignalsModal = ({
                 <StyledForm>
                     <SidePanelList
                         height={960}
-                        items={signals}
+                        items={signalEndpointSignals}
                         columns={[
                             {
                                 header: 'Date',
                                 maxWidth: 180,
-                                cell: (event) =>
+                                cell: ({ createdAt }) =>
                                     formatDateYMDHMS(
-                                        event.createdAt,
+                                        createdAt,
                                         locationSettings?.locale,
                                     ),
                             },
                             {
                                 header: 'Token',
                                 maxWidth: 350,
-                                cell: (event) => event.tokenName,
+                                cell: ({ tokenName }) => tokenName,
                             },
                         ]}
                         sidePanelHeader='Payload'
@@ -160,7 +157,7 @@ export const SignalEndpointsSignalsModal = ({
                         }
                     />
                     <ConditionallyRender
-                        condition={signals.length === 0}
+                        condition={signalEndpointSignals.length === 0}
                         show={
                             <p>
                                 No signals have been received on this signal

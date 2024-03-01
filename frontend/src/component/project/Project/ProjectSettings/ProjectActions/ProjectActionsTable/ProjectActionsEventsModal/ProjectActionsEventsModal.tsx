@@ -9,7 +9,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectActionsEventsStateCell } from './ProjectActionsEventsStateCell';
-import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails.tsx/ProjectActionsEventsDetails';
+import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails/ProjectActionsEventsDetails';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',

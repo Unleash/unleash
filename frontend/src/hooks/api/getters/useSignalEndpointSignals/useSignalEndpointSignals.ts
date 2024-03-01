@@ -5,13 +5,13 @@ import useSWRInfinite, {
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { ISignal } from 'interfaces/signal';
+import { ISignalEndpointSignal } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/signal-endpoints';
 
 type SignalsResponse = {
-    signals: ISignal[];
+    signalEndpointSignals: ISignalEndpointSignal[];
 };
 
 const fetcher = async (url: string) => {
@@ -20,7 +20,7 @@ const fetcher = async (url: string) => {
     return response.json();
 };
 
-export const useSignals = (
+export const useSignalEndpointSignals = (
     signalEndpointId?: number,
     limit = 50,
     options: SWRInfiniteConfiguration = {},
@@ -36,7 +36,8 @@ export const useSignals = (
         if (!signalEndpointId || !isEnterprise || !signalsEnabled) return null;
 
         // Reached the end
-        if (previousPageData && !previousPageData.signals.length) return null;
+        if (previousPageData && !previousPageData.signalEndpointSignals.length)
+            return null;
 
         return formatApiPath(
             `${ENDPOINT}/${signalEndpointId}/signals?limit=${limit}&offset=${
@@ -51,13 +52,15 @@ export const useSignals = (
             revalidateAll: true,
         });
 
-    const signals = data ? data.flatMap(({ signals }) => signals) : [];
+    const signalEndpointSignals = data
+        ? data.flatMap(({ signalEndpointSignals }) => signalEndpointSignals)
+        : [];
 
     const isLoadingInitialData = !data && !error;
     const isLoadingMore = size > 0 && !data?.[size - 1];
     const loading = isLoadingInitialData || isLoadingMore;
 
-    const hasMore = data?.[size - 1]?.signals.length === limit;
+    const hasMore = data?.[size - 1]?.signalEndpointSignals.length === limit;
 
     const loadMore = () => {
         if (loading || !hasMore) return;
@@ -65,7 +68,7 @@ export const useSignals = (
     };
 
     return {
-        signals,
+        signalEndpointSignals,
         hasMore,
         loadMore,
         loading,

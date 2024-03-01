@@ -13,7 +13,7 @@ const StyledDetails = styled('div')(({ theme }) => ({
 export const ProjectActionsEventsDetails = ({
     state,
     actionSet: { actions },
-    observableEvent,
+    signal,
 }: IActionSetEvent) => {
     const stateText =
         state === 'failed'
@@ -27,9 +27,7 @@ export const ProjectActionsEventsDetails = ({
             <Alert severity={state === 'failed' ? 'error' : 'success'}>
                 {stateText}
             </Alert>
-            <ProjectActionsEventsDetailsSource
-                observableEvent={observableEvent}
-            />
+            <ProjectActionsEventsDetailsSource signal={signal} />
             {actions.map((action, i) => (
                 <ProjectActionsEventsDetailsAction
                     key={action.id}

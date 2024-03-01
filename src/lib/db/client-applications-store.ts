@@ -329,7 +329,6 @@ export default class ClientApplicationsStore
         rows: any[],
         existingStrategies: string[],
     ): IApplicationOverview {
-        console.log(rows);
         const featureCount = new Set(rows.map((row) => row.feature_name)).size;
         const missingStrategies: Set<string> = new Set();
 
@@ -355,6 +354,8 @@ export default class ClientApplicationsStore
                 }
             });
 
+            const featureDoesNotExist = !project && feature_name;
+
             let env = acc.find((e) => e.name === environment);
             if (!env) {
                 env = {
@@ -366,8 +367,9 @@ export default class ClientApplicationsStore
                         instance_id ? [instance_id] : [],
                     ),
                     issues: {
-                        missingFeatures:
-                            !project && feature_name ? [feature_name] : [],
+                        missingFeatures: featureDoesNotExist
+                            ? [feature_name]
+                            : [],
                     },
                 };
                 acc.push(env);
@@ -377,8 +379,7 @@ export default class ClientApplicationsStore
                     env.instanceCount = env.uniqueInstanceIds.size;
                 }
                 if (
-                    !project &&
-                    feature_name &&
+                    featureDoesNotExist &&
                     !env.issues.missingFeatures.includes(feature_name)
                 ) {
                     env.issues.missingFeatures.push(feature_name);

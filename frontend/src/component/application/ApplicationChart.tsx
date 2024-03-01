@@ -1,6 +1,5 @@
 import { Box, Divider, styled, Typography, useTheme } from '@mui/material';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router-dom';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
 import {
@@ -194,7 +193,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const navigate = useNavigate();
     const theme = useTheme();
 
-    const { applicationMode, issueCount } = getApplicationIssueMode(data);
+    const mode = getApplicationIssueMode(data);
 
     return (
         <Box sx={{ width }}>
@@ -218,7 +217,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             },
                         }))}
                     >
-                        <StyledApplicationBox mode={applicationMode}>
+                        <StyledApplicationBox mode={mode.applicationMode}>
                             <Typography
                                 sx={(theme) => ({
                                     fontSize: theme.fontSizes.smallerBody,
@@ -239,18 +238,14 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 environmentCount={data.environments.length}
                                 featureCount={data.featureCount}
                             />
-
                             <StyledDivider />
-
-                            <ConditionallyRender
-                                condition={applicationMode === 'success'}
-                                show={<SuccessStatus />}
-                                elseShow={
-                                    <WarningStatus>
-                                        {issueCount} issues detected
-                                    </WarningStatus>
-                                }
-                            />
+                            {mode.applicationMode === 'success' ? (
+                                <SuccessStatus />
+                            ) : (
+                                <WarningStatus>
+                                    {mode.issueCount} issues detected
+                                </WarningStatus>
+                            )}
                         </StyledApplicationBox>
                     </ArcherElement>
                 </StyleApplicationContainer>

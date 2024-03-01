@@ -188,11 +188,14 @@ const OutdatedSDKs = ({ sdks }: IOutdatedSDKsProps) => {
 
 export const getApplicationIssueMode = (
     application: ApplicationOverviewSchema,
-): {
-    applicationMode: 'success' | 'warning';
-    issueCount: number;
-} => {
-    console.log(application);
+):
+    | {
+          applicationMode: 'success';
+      }
+    | {
+          applicationMode: 'warning';
+          issueCount: number;
+      } => {
     const issueCount =
         application.issues.missingStrategies.length +
         application.environments
@@ -210,7 +213,11 @@ export const getApplicationIssueMode = (
 };
 
 export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
-    const issueCount = getApplicationIssueMode(application).issueCount;
+    const mode = getApplicationIssueMode(application);
+
+    if (mode.applicationMode === 'success') {
+        return null;
+    }
     const outdatedSdks = [
         ...new Set(
             application.environments.flatMap((env) => env.issues.outdatedSdks),
@@ -223,27 +230,23 @@ export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
             ),
         ),
     ];
+    const issueCount = mode.issueCount;
     return (
-        <ConditionallyRender
-            condition={issueCount > 0}
-            show={
-                <WarningContainer>
-                    <WarningHeader>
-                        <WarningAmberRounded />
-                        <WarningHeaderText>
-                            We detected {issueCount} issue
-                            {issueCount !== 1 ? 's' : ''} in this application
-                        </WarningHeaderText>
-                    </WarningHeader>
-                    <IssueContainer>
-                        <OutdatedSDKs sdks={outdatedSdks} />
-                        <FeaturesMissing features={missingFeatures} />
-                        <StrategiesMissing
-                            strategies={application.issues.missingStrategies}
-                        />
-                    </IssueContainer>
-                </WarningContainer>
-            }
-        />
+        <WarningContainer>
+            <WarningHeader>
+                <WarningAmberRounded />
+                <WarningHeaderText>
+                    We detected {issueCount} issue
+                    {issueCount !== 1 ? 's' : ''} in this application
+                </WarningHeaderText>
+            </WarningHeader>
+            <IssueContainer>
+                <OutdatedSDKs sdks={outdatedSdks} />
+                <FeaturesMissing features={missingFeatures} />
+                <StrategiesMissing
+                    strategies={application.issues.missingStrategies}
+                />
+            </IssueContainer>
+        </WarningContainer>
     );
 };

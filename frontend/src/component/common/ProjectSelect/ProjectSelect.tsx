@@ -1,12 +1,5 @@
 import { ComponentProps, Dispatch, SetStateAction, VFC } from 'react';
-import {
-    Autocomplete,
-    Box,
-    styled,
-    SxProps,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Autocomplete, SxProps, TextField } from '@mui/material';
 import { renderOption } from '../../playground/Playground/PlaygroundForm/renderOption';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 
@@ -22,7 +15,7 @@ interface IProjectSelectProps {
     onChange: Dispatch<SetStateAction<string[]>>;
     dataTestId?: string;
     sx?: SxProps;
-    disabled?: boolean
+    disabled?: boolean;
 }
 
 function findAllIndexes(arr: string[], name: string): number[] {

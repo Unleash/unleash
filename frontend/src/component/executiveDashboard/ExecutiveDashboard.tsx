@@ -1,5 +1,11 @@
 import { useMemo, useState, VFC } from 'react';
-import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Box,
+    styled,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { UsersChart } from './UsersChart/UsersChart';
 import { FlagsChart } from './FlagsChart/FlagsChart';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
@@ -10,7 +16,10 @@ import { FlagsProjectChart } from './FlagsProjectChart/FlagsProjectChart';
 import { ProjectHealthChart } from './ProjectHealthChart/ProjectHealthChart';
 import { TimeToProductionChart } from './TimeToProductionChart/TimeToProductionChart';
 import { TimeToProduction } from './TimeToProduction/TimeToProduction';
-import { ProjectSelect, allOption } from './ProjectSelect/ProjectSelect';
+import {
+    ProjectSelect,
+    allOption,
+} from '../common/ProjectSelect/ProjectSelect';
 import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
 import {
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
@@ -24,6 +33,18 @@ const StyledGrid = styled(Box)(({ theme }) => ({
     gridTemplateColumns: `300px 1fr`,
     gridAutoRows: 'auto',
     gap: theme.spacing(2),
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(4),
+    [theme.breakpoints.down('lg')]: {
+        width: '100%',
+        marginLeft: 0,
+    },
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
 }));
 
 const useDashboardGrid = () => {
@@ -153,7 +174,16 @@ export const ExecutiveDashboard: VFC = () => {
                     />
                 </Widget>
             </StyledGrid>
-            <ProjectSelect selectedProjects={projects} onChange={setProjects} />
+            <StyledBox>
+                <Typography variant='h2' component='span'>
+                    Insights per project
+                </Typography>
+                <ProjectSelect
+                    selectedProjects={projects}
+                    onChange={setProjects}
+                    dataTestId={'DASHBOARD_PROJECT_SELECT'}
+                />
+            </StyledBox>
             <StyledGrid>
                 <Widget
                     title='Number of flags per project'

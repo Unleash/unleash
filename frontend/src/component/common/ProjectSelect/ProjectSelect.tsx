@@ -9,18 +9,6 @@ import {
 import { renderOption } from '../../playground/Playground/PlaygroundForm/renderOption';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 
-const StyledBox = styled(Box)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    marginTop: theme.spacing(4),
-    [theme.breakpoints.down('lg')]: {
-        width: '100%',
-        marginLeft: 0,
-    },
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-}));
-
 interface IOption {
     label: string;
     id: string;
@@ -31,20 +19,39 @@ export const allOption = { label: 'ALL', id: '*' };
 interface IProjectSelectProps {
     selectedProjects: string[];
     onChange: Dispatch<SetStateAction<string[]>>;
+    dataTestId?: string;
+}
+
+function findAllIndexes(arr: string[], name: string): number[] {
+    const indexes: number[] = [];
+    arr.forEach((currentValue, index) => {
+        if (currentValue === name) {
+            indexes.push(index);
+        }
+    });
+    return indexes;
 }
 
 export const ProjectSelect: VFC<IProjectSelectProps> = ({
     selectedProjects,
     onChange,
+    dataTestId,
 }) => {
     const { projects: availableProjects } = useProjects();
 
+    const projectNames = availableProjects.map(({ name }) => name);
+
     const projectsOptions = [
         allOption,
-        ...availableProjects.map(({ name: label, id }) => ({
-            label,
-            id,
-        })),
+        ...availableProjects.map(({ name, id }) => {
+            const indexes = findAllIndexes(projectNames, name);
+            const isDuplicate = indexes.length > 1;
+
+            return {
+                label: isDuplicate ? `${name} - (${id})` : name,
+                id,
+            };
+        }),
     ];
 
     const isAllProjects =
@@ -80,34 +87,27 @@ export const ProjectSelect: VFC<IProjectSelectProps> = ({
     };
 
     return (
-        <StyledBox>
-            <Typography variant='h2' component='span'>
-                Insights per project
-            </Typography>
-            <Autocomplete
-                disablePortal
-                id='projects'
-                limitTags={3}
-                multiple={!isAllProjects}
-                options={projectsOptions}
-                sx={{ flex: 1, maxWidth: 360 }}
-                renderInput={(params) => (
-                    <TextField {...params} label='Projects' />
-                )}
-                renderOption={renderOption}
-                getOptionLabel={({ label }) => label}
-                disableCloseOnSelect
-                size='small'
-                value={
-                    isAllProjects
-                        ? allOption
-                        : projectsOptions.filter(({ id }) =>
-                              selectedProjects.includes(id),
-                          )
-                }
-                onChange={onProjectsChange}
-                data-testid={'DASHBOARD_PROJECT_SELECT'}
-            />
-        </StyledBox>
+        <Autocomplete
+            disablePortal
+            id='projects'
+            limitTags={3}
+            multiple={!isAllProjects}
+            options={projectsOptions}
+            sx={{ flex: 1, maxWidth: 360 }}
+            renderInput={(params) => <TextField {...params} label='Projects' />}
+            renderOption={renderOption}
+            getOptionLabel={({ label }) => label}
+            disableCloseOnSelect
+            size='small'
+            value={
+                isAllProjects
+                    ? allOption
+                    : projectsOptions.filter(({ id }) =>
+                          selectedProjects.includes(id),
+                      )
+            }
+            onChange={onProjectsChange}
+            data-testid={dataTestId ? dataTestId : 'PROJECT_SELECT'}
+        />
     );
 };

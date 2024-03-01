@@ -53,7 +53,7 @@ describe('useFilteredFlagTrends', () => {
             active: 11,
             stale: 2,
             potentiallyStale: 1,
-            averageUsers: '2.00',
+            averageUsers: 2,
             averageHealth: '79',
         });
     });
@@ -79,7 +79,7 @@ describe('useFilteredFlagTrends', () => {
             active: 5,
             stale: 0,
             potentiallyStale: 0,
-            averageUsers: '0.00',
+            averageUsers: 0,
             averageHealth: '100',
         });
     });
@@ -104,7 +104,7 @@ describe('useFilteredFlagTrends', () => {
                     active: 5,
                     stale: 0,
                     potentiallyStale: 0,
-                    users: 2,
+                    users: 3,
                     date: '',
                 },
             ]),
@@ -115,7 +115,7 @@ describe('useFilteredFlagTrends', () => {
             active: 10,
             stale: 0,
             potentiallyStale: 0,
-            averageUsers: '1.00',
+            averageUsers: 1.5,
             averageHealth: '100',
         });
     });
@@ -141,7 +141,7 @@ describe('useFilteredFlagTrends', () => {
             active: 0,
             stale: 0,
             potentiallyStale: 0,
-            averageUsers: '0.00',
+            averageUsers: 0,
             averageHealth: undefined,
         });
     });

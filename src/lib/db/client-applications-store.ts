@@ -10,7 +10,6 @@ import { Logger, LogProvider } from '../logger';
 import { Db } from './db';
 import { IApplicationOverview } from '../features/metrics/instance/models';
 import { applySearchFilters } from '../features/feature-search/search-utils';
-import { ApplicationOverviewIssuesSchema } from '../openapi/spec/application-overview-issues-schema';
 
 const COLUMNS = [
     'app_name',
@@ -330,8 +329,8 @@ export default class ClientApplicationsStore
         rows: any[],
         existingStrategies: string[],
     ): IApplicationOverview {
+        console.log(rows);
         const featureCount = new Set(rows.map((row) => row.feature_name)).size;
-        const missingFeatures: Set<string> = new Set();
         const missingStrategies: Set<string> = new Set();
 
         const environments = rows.reduce((acc, row) => {
@@ -346,10 +345,6 @@ export default class ClientApplicationsStore
             } = row;
 
             if (!environment) return acc;
-
-            if (!project && feature_name) {
-                missingFeatures.add(feature_name);
-            }
 
             strategies.forEach((strategy) => {
                 if (
@@ -370,12 +365,23 @@ export default class ClientApplicationsStore
                     uniqueInstanceIds: new Set(
                         instance_id ? [instance_id] : [],
                     ),
+                    issues: {
+                        missingFeatures:
+                            !project && feature_name ? [feature_name] : [],
+                    },
                 };
                 acc.push(env);
             } else {
-                if (instance_id && !env.uniqueInstanceIds.has(instance_id)) {
+                if (instance_id) {
                     env.uniqueInstanceIds.add(instance_id);
                     env.instanceCount = env.uniqueInstanceIds.size;
+                }
+                if (
+                    !project &&
+                    feature_name &&
+                    !env.issues.missingFeatures.includes(feature_name)
+                ) {
+                    env.issues.missingFeatures.push(feature_name);
                 }
                 if (sdk_version && !env.sdks.includes(sdk_version)) {
                     env.sdks.push(sdk_version);
@@ -392,20 +398,6 @@ export default class ClientApplicationsStore
             env.sdks.sort();
         });
 
-        const issues: ApplicationOverviewIssuesSchema[] = [];
-        if (missingFeatures.size > 0) {
-            issues.push({
-                type: 'missingFeatures',
-                items: [...missingFeatures],
-            });
-        }
-        if (missingStrategies.size > 0) {
-            issues.push({
-                type: 'missingStrategies',
-                items: [...missingStrategies],
-            });
-        }
-
         return {
             projects: [
                 ...new Set(
@@ -416,7 +408,9 @@ export default class ClientApplicationsStore
             ],
             featureCount,
             environments,
-            issues,
+            issues: {
+                missingStrategies: [...missingStrategies],
+            },
         };
     }
 }

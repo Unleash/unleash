@@ -814,7 +814,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 `${T.featureStrategySegment}.feature_strategy_id`,
                 `${T.featureStrategies}.id`,
             )
-            .where(`${T.featureStrategySegment}.segment_id`, '=', segmentId);
+            .join(
+                T.features,
+                `${T.features}.name`,
+                `${T.featureStrategies}.feature_name`,
+            )
+            .where(`${T.featureStrategySegment}.segment_id`, '=', segmentId)
+            .andWhere(`${T.features}.archived_at`, 'IS', null);
+
         stopTimer();
         return rows.map(mapRow);
     }

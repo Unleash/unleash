@@ -16,7 +16,7 @@ export function responseTimeMetrics(
 ): any {
     return _responseTime((req, res, time) => {
         const { statusCode } = res;
-        const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
+        const pathname = req.route ? req.path : '(hidden)';
 
         let appName: string | undefined;
         if (
@@ -34,6 +34,7 @@ export function responseTimeMetrics(
             time,
             appName,
         };
+        console.log('timingInfo', timingInfo);
         eventBus.emit(REQUEST_TIME, timingInfo);
     });
 }

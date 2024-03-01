@@ -13,8 +13,6 @@ export const legendOptions = {
                 labels: {},
             };
 
-            // console.log({ chart });
-
             return (chart as any)._getSortedDatasetMetas().map((meta: any) => {
                 const style = meta.controller.getStyle(
                     usePointStyle ? 0 : undefined,

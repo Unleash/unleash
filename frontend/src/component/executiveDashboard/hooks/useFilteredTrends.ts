@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { allOption } from '../components/ProjectSelect/ProjectSelect';
+import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 
 export const useFilteredTrends = <
     T extends {

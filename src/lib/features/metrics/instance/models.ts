@@ -32,7 +32,7 @@ export interface IApplication {
     links?: Record<string, string>;
 }
 
-type IApplicationOverviewEnvironment = Omit<
+export type IApplicationOverviewEnvironment = Omit<
     ApplicationOverviewEnvironmentSchema,
     'lastSeen'
 > & {

@@ -15,7 +15,7 @@ export interface ApplicationOverviewSchema {
     /** The number of features the application has been using. */
     featureCount: number;
     /** This list of issues that might be wrong with the application */
-    issues: ApplicationOverviewIssuesSchema[];
+    issues: ApplicationOverviewIssuesSchema;
     /** The list of projects the application has been using. */
     projects: string[];
 }

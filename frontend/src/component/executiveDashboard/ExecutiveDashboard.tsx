@@ -1,16 +1,15 @@
-import { useState, VFC } from 'react';
+import { VFC } from 'react';
 import { Box, styled } from '@mui/material';
+import { ArrayParam, withDefault } from 'use-query-params';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import { allOption, ProjectSelect } from 'component/common/ProjectSelect/ProjectSelect';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 
 import { useFilteredFlagsSummary } from './hooks/useFilteredFlagsSummary';
 import { useFilteredTrends } from './hooks/useFilteredTrends';
 
 import { Widget } from './components/Widget/Widget';
-import {
-    allOption,
-    ProjectSelect,
-} from './components/ProjectSelect/ProjectSelect';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
 
 import { UserStats } from './componentsStat/UserStats/UserStats';
@@ -25,8 +24,7 @@ import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/Project
 import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
-import { ArrayParam, withDefault } from 'use-query-params';
-import { usePersistentTableState } from 'hooks/usePersistentTableState';
+
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -80,6 +78,8 @@ export const ExecutiveDashboard: VFC = () => {
                         <ProjectSelect
                             selectedProjects={projects}
                             onChange={setProjects}
+                            dataTestId={'DASHBOARD_PROJECT_SELECT'}
+                            sx={{ flex: 1, maxWidth: '360px' }}
                         />
                     }
                 />
@@ -177,7 +177,7 @@ export const ExecutiveDashboard: VFC = () => {
                 </ChartWidget>
                 {/* <Widget title='Average time to production'>
                     <TimeToProduction
-                        //FIXME: data from API
+                        //FIXME: data from API
                         daysToProduction={5.2}
                     />
                 </Widget>

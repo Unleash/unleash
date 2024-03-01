@@ -16,7 +16,6 @@ const config: SDKConfig = {
 
 export function findOutdatedSDKs(sdkVersions: string[]): string[] {
     const uniqueSdkVersions = Array.from(new Set(sdkVersions));
-    const outdatedSDKs: string[] = [];
 
     return uniqueSdkVersions.filter((sdkVersion) => {
         const result = sdkVersion.split(':');

@@ -202,6 +202,7 @@ import { applicationOverviewSchema } from './spec/application-overview-schema';
 import { applicationOverviewEnvironmentSchema } from './spec/application-overview-environment-schema';
 import { applicationOverviewIssuesSchema } from './spec/application-overview-issues-schema';
 import { applicationEnvironmentInstancesSchema } from './spec/application-environment-instances-schema';
+import { applicationEnvironmentIssuesSchema } from './spec/application-environment-issues-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = (typeof schemas)[keyof typeof schemas]['$id'];
@@ -253,6 +254,7 @@ export const schemas: UnleashSchemas = {
     applicationOverviewIssuesSchema,
     applicationOverviewEnvironmentSchema,
     applicationEnvironmentInstancesSchema,
+    applicationEnvironmentIssuesSchema,
     applicationUsageSchema,
     applicationsSchema,
     batchFeaturesSchema,

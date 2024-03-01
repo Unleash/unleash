@@ -122,7 +122,9 @@ test('should show correct number of total', async () => {
 
     const expected = {
         projects: ['default'],
-        issues: [],
+        issues: {
+            missingStrategies: [],
+        },
         environments: [
             {
                 instanceCount: 2,
@@ -179,27 +181,20 @@ test('should show missing features and strategies', async () => {
 
     const expected = {
         projects: ['default'],
-        issues: [
-            {
-                type: 'missingFeatures',
-                items: ['toggle-name-2', 'toggle-name-3'],
-            },
-            {
-                type: 'missingStrategies',
-                items: ['my-special-strategy'],
-            },
-            {
-                type: 'outdatedSdks',
-                items: ['unleash-client-node:1.0.0'],
-            },
-        ],
         environments: [
             {
                 instanceCount: 1,
                 name: 'default',
                 sdks: ['unleash-client-node:1.0.0'],
+                issues: {
+                    missingFeatures: ['toggle-name-2', 'toggle-name-3'],
+                    outdatedSdks: ['unleash-client-node:1.0.0'],
+                },
             },
         ],
+        issues: {
+            missingStrategies: ['my-special-strategy'],
+        },
         featureCount: 3,
     };
 

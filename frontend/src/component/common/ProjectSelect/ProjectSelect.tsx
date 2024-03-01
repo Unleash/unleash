@@ -1,5 +1,5 @@
 import { ComponentProps, Dispatch, SetStateAction, VFC } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, SxProps, TextField } from '@mui/material';
 import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
@@ -15,20 +15,43 @@ interface IProjectSelectProps {
     onChange:
         | Dispatch<SetStateAction<string[]>>
         | ((projects: string[]) => void);
+    dataTestId?: string;
+    sx?: SxProps;
+    disabled?: boolean;
+}
+
+function findAllIndexes(arr: string[], name: string): number[] {
+    const indexes: number[] = [];
+    arr.forEach((currentValue, index) => {
+        if (currentValue === name) {
+            indexes.push(index);
+        }
+    });
+    return indexes;
 }
 
 export const ProjectSelect: VFC<IProjectSelectProps> = ({
     selectedProjects,
     onChange,
+    dataTestId,
+    sx,
+    disabled,
 }) => {
     const { projects: availableProjects } = useProjects();
 
+    const projectNames = availableProjects.map(({ name }) => name);
+
     const projectsOptions = [
         allOption,
-        ...availableProjects.map(({ name: label, id }) => ({
-            label,
-            id,
-        })),
+        ...availableProjects.map(({ name, id }) => {
+            const indexes = findAllIndexes(projectNames, name);
+            const isDuplicate = indexes.length > 1;
+
+            return {
+                label: isDuplicate ? `${name} - (${id})` : name,
+                id,
+            };
+        }),
     ];
 
     const isAllProjects =
@@ -70,12 +93,13 @@ export const ProjectSelect: VFC<IProjectSelectProps> = ({
             limitTags={3}
             multiple={!isAllProjects}
             options={projectsOptions}
-            sx={{ flex: 1, maxWidth: 360 }}
+            sx={sx}
             renderInput={(params) => <TextField {...params} label='Projects' />}
             renderOption={renderOption}
             getOptionLabel={({ label }) => label}
             disableCloseOnSelect
             size='small'
+            disabled={disabled}
             value={
                 isAllProjects
                     ? allOption
@@ -84,7 +108,7 @@ export const ProjectSelect: VFC<IProjectSelectProps> = ({
                       )
             }
             onChange={onProjectsChange}
-            data-testid={'DASHBOARD_PROJECT_SELECT'}
+            data-testid={dataTestId ? dataTestId : 'PROJECT_SELECT'}
         />
     );
 };

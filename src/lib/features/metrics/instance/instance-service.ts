@@ -222,15 +222,11 @@ export default class ClientInstanceService {
     ): Promise<IApplicationOverview> {
         const result =
             await this.clientApplicationsStore.getApplicationOverview(appName);
-
-        const sdks = result.environments.flatMap(
-            (environment) => environment.sdks,
-        );
-        const outdatedSdks = findOutdatedSDKs(sdks);
-        if (outdatedSdks.length > 0) {
-            result.issues.push({ type: 'outdatedSdks', items: outdatedSdks });
-        }
-
+        result.environments.forEach((environment) => {
+            environment.issues.outdatedSdks = findOutdatedSDKs(
+                environment.sdks,
+            );
+        });
         return result;
     }
 

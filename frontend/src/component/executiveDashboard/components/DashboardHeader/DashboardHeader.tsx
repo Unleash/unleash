@@ -1,7 +1,7 @@
 import { ReactNode, VFC } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { ReviewsOutlined, Share } from '@mui/icons-material';
+import { ReviewsOutlined } from '@mui/icons-material';
 import { Button, Typography } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';

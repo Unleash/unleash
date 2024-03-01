@@ -34,7 +34,6 @@ export function responseTimeMetrics(
             time,
             appName,
         };
-        console.log('timingInfo', timingInfo);
         eventBus.emit(REQUEST_TIME, timingInfo);
     });
 }

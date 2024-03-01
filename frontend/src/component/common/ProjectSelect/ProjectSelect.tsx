@@ -2,10 +2,10 @@ import { ComponentProps, Dispatch, SetStateAction, VFC } from 'react';
 import {
     Autocomplete,
     Box,
-    styled,
+    styled, SxProps,
     TextField,
-    Typography,
-} from '@mui/material';
+    Typography
+} from "@mui/material";
 import { renderOption } from '../../playground/Playground/PlaygroundForm/renderOption';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 
@@ -20,6 +20,7 @@ interface IProjectSelectProps {
     selectedProjects: string[];
     onChange: Dispatch<SetStateAction<string[]>>;
     dataTestId?: string;
+    sx?: SxProps
 }
 
 function findAllIndexes(arr: string[], name: string): number[] {
@@ -36,6 +37,7 @@ export const ProjectSelect: VFC<IProjectSelectProps> = ({
     selectedProjects,
     onChange,
     dataTestId,
+    sx,
 }) => {
     const { projects: availableProjects } = useProjects();
 
@@ -93,7 +95,7 @@ export const ProjectSelect: VFC<IProjectSelectProps> = ({
             limitTags={3}
             multiple={!isAllProjects}
             options={projectsOptions}
-            sx={{ flex: 1, maxWidth: 360 }}
+            sx={sx}
             renderInput={(params) => <TextField {...params} label='Projects' />}
             renderOption={renderOption}
             getOptionLabel={({ label }) => label}

@@ -204,48 +204,52 @@ export const PlaygroundConnectionFieldset: VFC<
                 </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                <Tooltip
-                    arrow
-                    title={
-                        token
-                            ? 'Environment is automatically selected because you are using a token'
-                            : 'Select environments to use in the playground'
-                    }
-                >
-                    <Autocomplete
-                        disablePortal
-                        limitTags={3}
-                        id='environment'
-                        multiple={true}
-                        options={environmentOptions}
-                        sx={{ flex: 1 }}
-                        renderInput={(params) => (
-                            <TextField {...params} label='Environments' />
-                        )}
-                        renderOption={renderOption}
-                        getOptionLabel={({ label }) => label}
-                        disableCloseOnSelect={false}
-                        size='small'
-                        value={envValue}
-                        onChange={onEnvironmentsChange}
-                        disabled={Boolean(token)}
-                        data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
-                    />
-                </Tooltip>
-                <Tooltip
-                    arrow
-                    title={
-                        token
-                            ? 'Project is automatically selected because you are using a token'
-                            : 'Select projects to use in the playground'
-                    }
-                >
-                    <ProjectSelect
-                        selectedProjects={projects}
-                        onChange={setProjects}
-                        dataTestId={'PLAYGROUND_PROJECT_SELECT'}
-                    />
-                </Tooltip>
+                <Box flex={1}>
+                    <Tooltip
+                        arrow
+                        title={
+                            token
+                                ? 'Environment is automatically selected because you are using a token'
+                                : 'Select environments to use in the playground'
+                        }
+                    >
+                        <Autocomplete
+                            disablePortal
+                            limitTags={3}
+                            id='environment'
+                            multiple={true}
+                            options={environmentOptions}
+                            sx={{ flex: 1 }}
+                            renderInput={(params) => (
+                                <TextField {...params} label='Environments' />
+                            )}
+                            renderOption={renderOption}
+                            getOptionLabel={({ label }) => label}
+                            disableCloseOnSelect={false}
+                            size='small'
+                            value={envValue}
+                            onChange={onEnvironmentsChange}
+                            disabled={Boolean(token)}
+                            data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
+                        />
+                    </Tooltip>
+                </Box>
+                <Box flex={1}>
+                    <Tooltip
+                        arrow
+                        title={
+                            token
+                                ? 'Project is automatically selected because you are using a token'
+                                : 'Select projects to use in the playground'
+                        }
+                    >
+                        <ProjectSelect
+                            selectedProjects={projects}
+                            onChange={setProjects}
+                            dataTestId={'PLAYGROUND_PROJECT_SELECT'}
+                        />
+                    </Tooltip>
+                </Box>
             </Box>
             <Input
                 sx={{ mt: 2, width: '50%', pr: 1 }}

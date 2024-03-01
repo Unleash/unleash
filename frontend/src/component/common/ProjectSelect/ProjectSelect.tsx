@@ -1,7 +1,7 @@
 import { ComponentProps, Dispatch, SetStateAction, VFC } from 'react';
 import { Autocomplete, SxProps, TextField } from '@mui/material';
-import { renderOption } from '../../playground/Playground/PlaygroundForm/renderOption';
-import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 interface IOption {
     label: string;

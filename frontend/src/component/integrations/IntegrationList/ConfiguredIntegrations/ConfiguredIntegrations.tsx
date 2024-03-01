@@ -4,6 +4,10 @@ import { StyledCardsGrid } from '../IntegrationList.styles';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { VFC } from 'react';
 import { Typography, styled } from '@mui/material';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledConfiguredSection = styled('section')(({ theme }) => ({
     display: 'flex',
@@ -23,6 +27,10 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
     addons,
     providers,
 }) => {
+    const { signalEndpoints } = useSignalEndpoints();
+    const signalsEnabled = useUiFlag('signals');
+    const { isEnterprise } = useUiConfig();
+
     const ref = useLoading(loading || false);
 
     return (
@@ -65,6 +73,22 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                             />
                         );
                     })}
+                <ConditionallyRender
+                    condition={
+                        isEnterprise() && signalsEnabled
+                        // && signalEndpoints.length > 0
+                    }
+                    show={
+                        <IntegrationCard
+                            variant='stacked'
+                            icon='webhook'
+                            title='Signals'
+                            description={`${signalEndpoints.length} signal endpoints configured`}
+                            link='/integrations/signals'
+                            configureActionText='View signal endpoints'
+                        />
+                    }
+                />
             </StyledCardsGrid>
         </StyledConfiguredSection>
     );

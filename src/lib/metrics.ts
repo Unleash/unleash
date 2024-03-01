@@ -372,12 +372,11 @@ export default class MetricsMonitor {
                     .set(config.rateLimiting.passwordResetMaxPerMinute);
                 rateLimits
                     .labels({
-                        endpoint: '/api/incoming-webhook/:name',
+                        endpoint: '/api/signal-endpoint/:name',
                         method: 'POST',
                     })
                     .set(
-                        config.rateLimiting.callIncomingWebhookMaxPerSecond *
-                            60,
+                        config.rateLimiting.callSignalEndpointMaxPerSecond * 60,
                     );
             } catch (e) {}
         }

@@ -47,7 +47,7 @@ export const ProjectActionsTable = ({
     const { actions, refetch } = useActions(projectId);
     const { toggleActionSet, removeActionSet } = useActionsApi(projectId);
 
-    const { incomingWebhooks } = useSignalEndpoints();
+    const { signalEndpoints } = useSignalEndpoints();
     const { serviceAccounts } = useServiceAccounts();
 
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
@@ -111,7 +111,7 @@ export const ProjectActionsTable = ({
                 }: { row: { original: IActionSet } }) => (
                     <ProjectActionsTriggerCell
                         action={action}
-                        incomingWebhooks={incomingWebhooks}
+                        signalEndpoints={signalEndpoints}
                     />
                 ),
             },
@@ -202,7 +202,7 @@ export const ProjectActionsTable = ({
                 disableSortBy: true,
             },
         ],
-        [incomingWebhooks, serviceAccounts],
+        [signalEndpoints, serviceAccounts],
     );
 
     const [initialState] = useState({

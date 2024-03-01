@@ -1,6 +1,6 @@
 import { URL_SAFE_BASIC } from '@server/util/constants';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
-import { IIncomingWebhook } from 'interfaces/signal';
+import { ISignalEndpoint } from 'interfaces/signal';
 import { useEffect, useState } from 'react';
 
 enum ErrorField {
@@ -8,20 +8,20 @@ enum ErrorField {
     TOKEN_NAME = 'tokenName',
 }
 
-const DEFAULT_INCOMING_WEBHOOKS_FORM_ERRORS = {
+const DEFAULT_SIGNAL_ENDPOINTS_FORM_ERRORS = {
     [ErrorField.NAME]: undefined,
     [ErrorField.TOKEN_NAME]: undefined,
 };
 
-export type IncomingWebhooksFormErrors = Record<ErrorField, string | undefined>;
+export type SignalEndpointsFormErrors = Record<ErrorField, string | undefined>;
 
 export enum TokenGeneration {
     LATER = 'later',
     NOW = 'now',
 }
 
-export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
-    const { incomingWebhooks } = useSignalEndpoints();
+export const useSignalEndpointsForm = (signalEndpoint?: ISignalEndpoint) => {
+    const { signalEndpoints } = useSignalEndpoints();
 
     const [enabled, setEnabled] = useState(false);
     const [name, setName] = useState('');
@@ -32,21 +32,21 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
     const [tokenName, setTokenName] = useState('');
 
     const reloadForm = () => {
-        setEnabled(incomingWebhook?.enabled ?? true);
-        setName(incomingWebhook?.name || '');
-        setDescription(incomingWebhook?.description || '');
+        setEnabled(signalEndpoint?.enabled ?? true);
+        setName(signalEndpoint?.name || '');
+        setDescription(signalEndpoint?.description || '');
         setTokenGeneration(TokenGeneration.LATER);
         setTokenName('');
         setValidated(false);
-        setErrors(DEFAULT_INCOMING_WEBHOOKS_FORM_ERRORS);
+        setErrors(DEFAULT_SIGNAL_ENDPOINTS_FORM_ERRORS);
     };
 
     useEffect(() => {
         reloadForm();
-    }, [incomingWebhook]);
+    }, [signalEndpoint]);
 
-    const [errors, setErrors] = useState<IncomingWebhooksFormErrors>(
-        DEFAULT_INCOMING_WEBHOOKS_FORM_ERRORS,
+    const [errors, setErrors] = useState<SignalEndpointsFormErrors>(
+        DEFAULT_SIGNAL_ENDPOINTS_FORM_ERRORS,
     );
     const [validated, setValidated] = useState(false);
 
@@ -61,8 +61,8 @@ export const useIncomingWebhooksForm = (incomingWebhook?: IIncomingWebhook) => {
     const isEmpty = (value: string) => !value.length;
 
     const isNameNotUnique = (value: string) =>
-        incomingWebhooks?.some(
-            ({ id, name }) => id !== incomingWebhook?.id && name === value,
+        signalEndpoints?.some(
+            ({ id, name }) => id !== signalEndpoint?.id && name === value,
         );
 
     const isNameInvalid = (value: string) => !URL_SAFE_BASIC.test(value);

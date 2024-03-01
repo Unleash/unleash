@@ -7,7 +7,7 @@ import {
     styled,
 } from '@mui/material';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
-import { IObservableEvent } from 'interfaces/action';
+import { ISignal } from 'interfaces/signal';
 import { Suspense, lazy, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -28,23 +28,22 @@ const StyledLink = styled(Link)(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-interface IProjectActionsEventsDetailsSourceIncomingWebhookProps {
-    observableEvent: IObservableEvent;
+interface IProjectActionsEventsDetailsSourceSignalEndpointProps {
+    signal: ISignal;
 }
 
-export const ProjectActionsEventsDetailsSourceIncomingWebhook = ({
-    observableEvent,
-}: IProjectActionsEventsDetailsSourceIncomingWebhookProps) => {
-    const { incomingWebhooks } = useSignalEndpoints();
+export const ProjectActionsEventsDetailsSourceSignalEndpoint = ({
+    signal,
+}: IProjectActionsEventsDetailsSourceSignalEndpointProps) => {
+    const { signalEndpoints } = useSignalEndpoints();
 
-    const incomingWebhookName = useMemo(() => {
-        const incomingWebhook = incomingWebhooks.find(
-            (incomingWebhook) =>
-                incomingWebhook.id === observableEvent.sourceId,
+    const signalEndpointName = useMemo(() => {
+        const signalEndpoint = signalEndpoints.find(
+            ({ id }) => id === signal.sourceId,
         );
 
-        return incomingWebhook?.name;
-    }, [incomingWebhooks, observableEvent.sourceId]);
+        return signalEndpoint?.name;
+    }, [signalEndpoints, signal.sourceId]);
 
     return (
         <StyledAccordion>
@@ -55,15 +54,15 @@ export const ProjectActionsEventsDetailsSourceIncomingWebhook = ({
                     </IconButton>
                 }
             >
-                Incoming webhook:
-                <StyledLink to='/integrations/incoming-webhooks'>
-                    {incomingWebhookName}
+                Signal endpoint:
+                <StyledLink to='/integrations/signals'>
+                    {signalEndpointName}
                 </StyledLink>
             </AccordionSummary>
             <AccordionDetails>
                 <Suspense fallback={null}>
                     <LazyReactJSONEditor
-                        content={{ json: observableEvent.payload }}
+                        content={{ json: signal.payload }}
                         readOnly
                         statusBar={false}
                         editorStyle='sidePanel'

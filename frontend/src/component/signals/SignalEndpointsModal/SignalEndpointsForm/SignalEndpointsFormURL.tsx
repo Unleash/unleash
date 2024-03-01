@@ -4,7 +4,7 @@ import copy from 'copy-to-clipboard';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 
-const StyledIncomingWebhookUrlSection = styled('div')(({ theme }) => ({
+const StyledSignalEndpointUrlSection = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1.5),
@@ -15,11 +15,11 @@ const StyledIncomingWebhookUrlSection = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
-const StyledIncomingWebhookUrlSectionDescription = styled('p')(({ theme }) => ({
+const StyledSignalEndpointUrlSectionDescription = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-const StyledIncomingWebhookUrl = styled('div')(({ theme }) => ({
+const StyledSignalEndpointUrl = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     backgroundColor: theme.palette.background.elevation2,
     padding: theme.spacing(0.5, 1, 0.5, 2),
@@ -31,17 +31,17 @@ const StyledIncomingWebhookUrl = styled('div')(({ theme }) => ({
     wordBreak: 'break-all',
 }));
 
-interface IIncomingWebhooksFormURLProps {
+interface ISignalEndpointsFormURLProps {
     name: string;
 }
 
-export const IncomingWebhooksFormURL = ({
+export const SignalEndpointsFormURL = ({
     name,
-}: IIncomingWebhooksFormURLProps) => {
+}: ISignalEndpointsFormURLProps) => {
     const { uiConfig } = useUiConfig();
     const { setToastData } = useToast();
 
-    const url = `${uiConfig.unleashUrl}/api/incoming-webhook/${name}`;
+    const url = `${uiConfig.unleashUrl}/api/signal-endpoint/${name}`;
 
     const onCopyToClipboard = () => {
         copy(url);
@@ -52,18 +52,18 @@ export const IncomingWebhooksFormURL = ({
     };
 
     return (
-        <StyledIncomingWebhookUrlSection>
-            <StyledIncomingWebhookUrlSectionDescription>
-                Incoming webhook URL:
-            </StyledIncomingWebhookUrlSectionDescription>
-            <StyledIncomingWebhookUrl>
+        <StyledSignalEndpointUrlSection>
+            <StyledSignalEndpointUrlSectionDescription>
+                Signal endpoint URL:
+            </StyledSignalEndpointUrlSectionDescription>
+            <StyledSignalEndpointUrl>
                 {url}
                 <Tooltip title='Copy URL' arrow>
                     <IconButton onClick={onCopyToClipboard} size='large'>
                         <CopyIcon />
                     </IconButton>
                 </Tooltip>
-            </StyledIncomingWebhookUrl>
-        </StyledIncomingWebhookUrlSection>
+            </StyledSignalEndpointUrl>
+        </StyledSignalEndpointUrlSection>
     );
 };

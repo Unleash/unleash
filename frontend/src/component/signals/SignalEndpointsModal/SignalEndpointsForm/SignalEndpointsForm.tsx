@@ -10,13 +10,13 @@ import {
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IIncomingWebhook } from 'interfaces/signal';
+import { ISignalEndpoint } from 'interfaces/signal';
 import {
-    IncomingWebhooksFormErrors,
+    SignalEndpointsFormErrors,
     TokenGeneration,
-} from './useIncomingWebhooksForm';
-import { IncomingWebhooksFormURL } from './IncomingWebhooksFormURL';
-import { IncomingWebhooksTokens } from './IncomingWebhooksTokens/IncomingWebhooksTokens';
+} from './useSignalEndpointsForm';
+import { SignalEndpointsFormURL } from './SignalEndpointsFormURL';
+import { SignalEndpointsTokens } from './SignalEndpointsTokens/SignalEndpointsTokens';
 
 const StyledRaisedSection = styled('div')(({ theme }) => ({
     background: theme.palette.background.elevation1,
@@ -59,8 +59,8 @@ const StyledInlineContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-interface IIncomingWebhooksFormProps {
-    incomingWebhook?: IIncomingWebhook;
+interface ISignalEndpointsFormProps {
+    signalEndpoint?: ISignalEndpoint;
     enabled: boolean;
     setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
     name: string;
@@ -71,7 +71,7 @@ interface IIncomingWebhooksFormProps {
     setTokenGeneration: React.Dispatch<React.SetStateAction<TokenGeneration>>;
     tokenName: string;
     setTokenName: React.Dispatch<React.SetStateAction<string>>;
-    errors: IncomingWebhooksFormErrors;
+    errors: SignalEndpointsFormErrors;
     validateName: (name: string) => boolean;
     validateTokenName: (
         tokenGeneration: TokenGeneration,
@@ -80,8 +80,8 @@ interface IIncomingWebhooksFormProps {
     validated: boolean;
 }
 
-export const IncomingWebhooksForm = ({
-    incomingWebhook,
+export const SignalEndpointsForm = ({
+    signalEndpoint,
     enabled,
     setEnabled,
     name,
@@ -96,7 +96,7 @@ export const IncomingWebhooksForm = ({
     validateName,
     validateTokenName,
     validated,
-}: IIncomingWebhooksFormProps) => {
+}: ISignalEndpointsFormProps) => {
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);
     };
@@ -107,15 +107,15 @@ export const IncomingWebhooksForm = ({
         <div>
             <StyledRaisedSection>
                 <FormSwitch checked={enabled} setChecked={setEnabled}>
-                    Incoming webhook status
+                    Signal endpoint status
                 </FormSwitch>
             </StyledRaisedSection>
             <StyledInputDescription>
-                What is your new incoming webhook name?
+                What is your new signal endpoint name?
             </StyledInputDescription>
             <StyledInput
                 autoFocus
-                label='Incoming webhook name'
+                label='Signal endpoint name'
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 value={name}
@@ -127,23 +127,23 @@ export const IncomingWebhooksForm = ({
                 autoComplete='off'
             />
             <StyledInputDescription>
-                What is your new incoming webhook description?
+                What is your new signal endpoint description?
             </StyledInputDescription>
             <StyledInput
-                label='Incoming webhook description'
+                label='Signal endpoint description'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 autoComplete='off'
             />
-            <IncomingWebhooksFormURL name={name} />
+            <SignalEndpointsFormURL name={name} />
             <ConditionallyRender
-                condition={incomingWebhook === undefined}
+                condition={signalEndpoint === undefined}
                 show={
                     <StyledSecondarySection>
                         <StyledInputDescription>Token</StyledInputDescription>
                         <StyledInputSecondaryDescription>
-                            In order to connect your newly created incoming
-                            webhook, you will also need a token.{' '}
+                            In order to connect your newly created signal
+                            endpoint, you will also need a token.{' '}
                             <Link
                                 href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
                                 target='_blank'
@@ -184,8 +184,8 @@ export const IncomingWebhooksForm = ({
                         </FormControl>
                         <StyledInlineContainer>
                             <StyledInputSecondaryDescription>
-                                A new incoming webhook token will be generated
-                                for the incoming webhook, so you can get started
+                                A new signal endpoint token will be generated
+                                for the signal endpoint, so you can get started
                                 right away.
                             </StyledInputSecondaryDescription>
                             <ConditionallyRender
@@ -221,10 +221,10 @@ export const IncomingWebhooksForm = ({
                 elseShow={
                     <>
                         <StyledInputDescription>
-                            Incoming webhook tokens
+                            Signal endpoint tokens
                         </StyledInputDescription>
-                        <IncomingWebhooksTokens
-                            incomingWebhook={incomingWebhook!}
+                        <SignalEndpointsTokens
+                            signalEndpoint={signalEndpoint!}
                         />
                     </>
                 }

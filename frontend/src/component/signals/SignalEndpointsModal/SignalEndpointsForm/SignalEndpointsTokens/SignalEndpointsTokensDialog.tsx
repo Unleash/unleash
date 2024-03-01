@@ -6,17 +6,17 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 
-interface IIncomingWebhooksTokensDialogProps {
+interface ISignalEndpointsTokensDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     token?: string;
 }
 
-export const IncomingWebhooksTokensDialog = ({
+export const SignalEndpointsTokensDialog = ({
     open,
     setOpen,
     token,
-}: IIncomingWebhooksTokensDialogProps) => (
+}: ISignalEndpointsTokensDialogProps) => (
     <Dialogue
         open={open}
         secondaryButtonText='Close'
@@ -25,10 +25,10 @@ export const IncomingWebhooksTokensDialog = ({
                 setOpen(false);
             }
         }}
-        title='Incoming webhook token created'
+        title='Signal endpoint token created'
     >
         <StyledAlert severity='info'>
-            Make sure to copy your incoming webhook token now. You won't be able
+            Make sure to copy your signal endpoint token now. You won't be able
             to see it again!
         </StyledAlert>
         <Typography variant='body1'>Your token:</Typography>

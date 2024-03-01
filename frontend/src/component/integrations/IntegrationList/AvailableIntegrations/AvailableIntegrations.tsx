@@ -8,6 +8,7 @@ import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegra
 import { OFFICIAL_SDKS } from './SDKs';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
@@ -53,6 +54,7 @@ const StyledGrayContainer = styled('div')(({ theme }) => ({
 export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     providers,
 }) => {
+    const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
 
     const customProviders = [JIRA_INFO];
@@ -96,7 +98,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             ),
                         )}
                     <ConditionallyRender
-                        condition={signalsEnabled}
+                        condition={isEnterprise() && signalsEnabled}
                         show={
                             <IntegrationCard
                                 icon='webhook'

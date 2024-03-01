@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IncomingWebhookTokenPayload } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
-import { IIncomingWebhookToken } from 'interfaces/signal';
+import { SignalEndpointTokenPayload } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
+import { ISignalEndpointToken } from 'interfaces/signal';
 import { styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 
@@ -19,19 +19,19 @@ const StyledInput = styled(Input)(({ theme }) => ({
     maxWidth: theme.spacing(50),
 }));
 
-interface IIncomingWebhooksTokensCreateDialogProps {
+interface ISignalEndpointsTokensCreateDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    tokens: IIncomingWebhookToken[];
-    onCreateClick: (newToken: IncomingWebhookTokenPayload) => void;
+    tokens: ISignalEndpointToken[];
+    onCreateClick: (newToken: SignalEndpointTokenPayload) => void;
 }
 
-export const IncomingWebhooksTokensCreateDialog = ({
+export const SignalEndpointsTokensCreateDialog = ({
     open,
     setOpen,
     tokens,
     onCreateClick,
-}: IIncomingWebhooksTokensCreateDialogProps) => {
+}: ISignalEndpointsTokensCreateDialogProps) => {
     const [name, setName] = useState('');
 
     const [nameError, setNameError] = useState('');

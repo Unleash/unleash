@@ -1,20 +1,18 @@
-import { IObservableEvent } from 'interfaces/action';
-import { ProjectActionsEventsDetailsSourceIncomingWebhook } from './ProjectActionsEventsDetailsSourceIncomingWebhook';
+import { ISignal } from 'interfaces/signal';
+import { ProjectActionsEventsDetailsSourceSignalEndpoint } from './ProjectActionsEventsDetailsSourceSignalEndpoint';
 
 interface IProjectActionsEventsDetailsSourceProps {
-    observableEvent: IObservableEvent;
+    signal: ISignal;
 }
 
 export const ProjectActionsEventsDetailsSource = ({
-    observableEvent,
+    signal,
 }: IProjectActionsEventsDetailsSourceProps) => {
-    const { source } = observableEvent;
+    const { source } = signal;
 
-    if (source === 'incoming-webhook') {
+    if (source === 'signal-endpoint') {
         return (
-            <ProjectActionsEventsDetailsSourceIncomingWebhook
-                observableEvent={observableEvent}
-            />
+            <ProjectActionsEventsDetailsSourceSignalEndpoint signal={signal} />
         );
     }
 

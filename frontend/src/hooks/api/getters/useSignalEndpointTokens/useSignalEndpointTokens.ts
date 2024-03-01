@@ -6,24 +6,28 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 import { ISignalEndpointToken } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-// TODO: update endpoint and incomingWebhookTokens property
-const ENDPOINT = 'api/admin/incoming-webhooks';
+const ENDPOINT = 'api/admin/signal-endpoints';
+
+const DEFAULT_DATA = {
+    signalEndpointTokens: [],
+};
 
 export const useSignalEndpointTokens = (signalEndpointId: number) => {
     const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
 
-    const { data, error, mutate } = useConditionalSWR(
+    const { data, error, mutate } = useConditionalSWR<{
+        signalEndpointTokens: ISignalEndpointToken[];
+    }>(
         isEnterprise() && signalsEnabled,
-        { incomingWebhookTokens: [] },
+        DEFAULT_DATA,
         formatApiPath(`${ENDPOINT}/${signalEndpointId}/tokens`),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            signalEndpointTokens: (data?.incomingWebhookTokens ??
-                []) as ISignalEndpointToken[],
+            signalEndpointTokens: data?.signalEndpointTokens ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

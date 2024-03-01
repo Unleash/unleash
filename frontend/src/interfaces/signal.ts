@@ -1,5 +1,3 @@
-import { ObservableEventSource } from './action';
-
 export interface ISignalEndpoint {
     id: number;
     enabled: boolean;
@@ -18,11 +16,18 @@ export interface ISignalEndpointToken {
     createdByUserId: number;
 }
 
+export type SignalSource = 'signal-endpoint';
+
 export interface ISignal {
     id: number;
-    payload: Record<string, unknown>;
-    createdAt: string;
-    source: ObservableEventSource;
+    source: SignalSource;
     sourceId: number;
+    createdAt: string;
+    createdByIncomingWebhookTokenId: number;
+    payload: Record<string, unknown>;
+}
+
+export interface ISignalWithTokenName
+    extends Omit<ISignal, 'createdByIncomingWebhookTokenId'> {
     tokenName: string;
 }

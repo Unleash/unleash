@@ -20,18 +20,18 @@ import { useSearch } from 'hooks/useSearch';
 import { useMemo, useState } from 'react';
 import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { IncomingWebhooksTokensCreateDialog } from './IncomingWebhooksTokensCreateDialog';
-import { IncomingWebhooksTokensDialog } from './IncomingWebhooksTokensDialog';
+import { SignalEndpointsTokensCreateDialog } from './SignalEndpointsTokensCreateDialog';
+import { SignalEndpointsTokensDialog } from './SignalEndpointsTokensDialog';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
-    IncomingWebhookTokenPayload,
+    SignalEndpointTokenPayload,
     useSignalEndpointTokensApi,
 } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IIncomingWebhook, IIncomingWebhookToken } from 'interfaces/signal';
+import { ISignalEndpoint, ISignalEndpointToken } from 'interfaces/signal';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -71,20 +71,20 @@ export type PageQueryType = Partial<
 
 const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
-interface IIncomingWebhooksTokensProps {
-    incomingWebhook: IIncomingWebhook;
+interface ISignalEndpointsTokensProps {
+    signalEndpoint: ISignalEndpoint;
 }
 
-export const IncomingWebhooksTokens = ({
-    incomingWebhook,
-}: IIncomingWebhooksTokensProps) => {
+export const SignalEndpointsTokens = ({
+    signalEndpoint,
+}: ISignalEndpointsTokensProps) => {
     const theme = useTheme();
     const { setToastData, setToastApiError } = useToast();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const { incomingWebhookTokens, refetch: refetchTokens } =
-        useSignalEndpointTokens(incomingWebhook.id);
+    const { signalEndpointTokens, refetch: refetchTokens } =
+        useSignalEndpointTokens(signalEndpoint.id);
     const { refetch } = useSignalEndpoints();
-    const { addIncomingWebhookToken, removeIncomingWebhookToken } =
+    const { addSignalEndpointToken, removeSignalEndpointToken } =
         useSignalEndpointTokensApi();
 
     const [initialState] = useState(() => ({
@@ -96,12 +96,12 @@ export const IncomingWebhooksTokens = ({
     const [tokenOpen, setTokenOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [newToken, setNewToken] = useState('');
-    const [selectedToken, setSelectedToken] = useState<IIncomingWebhookToken>();
+    const [selectedToken, setSelectedToken] = useState<ISignalEndpointToken>();
 
-    const onCreateClick = async (newToken: IncomingWebhookTokenPayload) => {
+    const onCreateClick = async (newToken: SignalEndpointTokenPayload) => {
         try {
-            const { token } = await addIncomingWebhookToken(
-                incomingWebhook.id,
+            const { token } = await addSignalEndpointToken(
+                signalEndpoint.id,
                 newToken,
             );
             refetch();
@@ -121,8 +121,8 @@ export const IncomingWebhooksTokens = ({
     const onDeleteClick = async () => {
         if (selectedToken) {
             try {
-                await removeIncomingWebhookToken(
-                    incomingWebhook.id,
+                await removeSignalEndpointToken(
+                    signalEndpoint.id,
                     selectedToken.id,
                 );
                 refetch();
@@ -183,7 +183,7 @@ export const IncomingWebhooksTokens = ({
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        incomingWebhookTokens,
+        signalEndpointTokens,
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -223,7 +223,7 @@ export const IncomingWebhooksTokens = ({
                 <Button
                     variant='contained'
                     color='primary'
-                    disabled={incomingWebhookTokens.length >= PAT_LIMIT}
+                    disabled={signalEndpointTokens.length >= PAT_LIMIT}
                     onClick={() => setCreateOpen(true)}
                 >
                     New token
@@ -251,31 +251,31 @@ export const IncomingWebhooksTokens = ({
                         elseShow={
                             <StyledTablePlaceholder>
                                 <StyledPlaceholderTitle>
-                                    You have no tokens for this incoming webhook
+                                    You have no tokens for this signal endpoint
                                     yet.
                                 </StyledPlaceholderTitle>
                                 <StyledPlaceholderSubtitle>
-                                    Create a token to start using this incoming
-                                    webhook.
+                                    Create a token to start using this signal
+                                    endpoint.
                                 </StyledPlaceholderSubtitle>
                                 <Button
                                     variant='outlined'
                                     onClick={() => setCreateOpen(true)}
                                 >
-                                    Create new incoming webhook token
+                                    Create new signal endpoint token
                                 </Button>
                             </StyledTablePlaceholder>
                         }
                     />
                 }
             />
-            <IncomingWebhooksTokensCreateDialog
+            <SignalEndpointsTokensCreateDialog
                 open={createOpen}
                 setOpen={setCreateOpen}
-                tokens={incomingWebhookTokens}
+                tokens={signalEndpointTokens}
                 onCreateClick={onCreateClick}
             />
-            <IncomingWebhooksTokensDialog
+            <SignalEndpointsTokensDialog
                 open={tokenOpen}
                 setOpen={setTokenOpen}
                 token={newToken}
@@ -293,7 +293,7 @@ export const IncomingWebhooksTokens = ({
                 <Typography>
                     Any applications or scripts using this token "
                     <strong>{selectedToken?.name}</strong>" will no longer be
-                    able to make requests to this incoming webhook. You cannot
+                    able to make requests to this signal endpoint. You cannot
                     undo this action.
                 </Typography>
             </Dialogue>

@@ -225,7 +225,7 @@ export const SignalEndpointsTable = () => {
         <PageContent
             header={
                 <PageHeader
-                    title='Integrations'
+                    title={`Signal endpoints (${signalEndpoints.length})`}
                     actions={
                         <Button
                             variant='contained'

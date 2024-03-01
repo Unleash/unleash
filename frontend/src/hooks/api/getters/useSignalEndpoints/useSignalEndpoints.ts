@@ -6,11 +6,10 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 import { ISignalEndpoint } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-// TODO: Update endpoint and incomingWebhooks property
-const ENDPOINT = 'api/admin/incoming-webhooks';
+const ENDPOINT = 'api/admin/signal-endpoints';
 
 const DEFAULT_DATA = {
-    incomingWebhooks: [],
+    signalEndpoints: [],
 };
 
 export const useSignalEndpoints = () => {
@@ -18,7 +17,7 @@ export const useSignalEndpoints = () => {
     const signalsEnabled = useUiFlag('signals');
 
     const { data, error, mutate } = useConditionalSWR<{
-        incomingWebhooks: ISignalEndpoint[];
+        signalEndpoints: ISignalEndpoint[];
     }>(
         isEnterprise() && signalsEnabled,
         DEFAULT_DATA,
@@ -28,7 +27,7 @@ export const useSignalEndpoints = () => {
 
     return useMemo(
         () => ({
-            signalEndpoints: data?.incomingWebhooks ?? [],
+            signalEndpoints: data?.signalEndpoints ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,

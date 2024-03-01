@@ -1,7 +1,7 @@
 import { Avatar, Box, Link, styled } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IActionSet } from 'interfaces/action';
-import { IIncomingWebhook } from 'interfaces/signal';
+import { ISignalEndpoint } from 'interfaces/signal';
 import webhooksIcon from 'assets/icons/webhooks.svg';
 import { Link as RouterLink } from 'react-router-dom';
 import { ComponentType } from 'react';
@@ -32,15 +32,15 @@ const StyledLink = styled(Link)<{
 
 interface IProjectActionsTriggerCellProps {
     action: IActionSet;
-    incomingWebhooks: IIncomingWebhook[];
+    signalEndpoints: ISignalEndpoint[];
 }
 
 export const ProjectActionsTriggerCell = ({
     action,
-    incomingWebhooks,
+    signalEndpoints,
 }: IProjectActionsTriggerCellProps) => {
     const { sourceId } = action.match;
-    const trigger = incomingWebhooks.find(({ id }) => id === sourceId);
+    const trigger = signalEndpoints.find(({ id }) => id === sourceId);
 
     if (!trigger) {
         return <TextCell>No trigger</TextCell>;
@@ -51,12 +51,12 @@ export const ProjectActionsTriggerCell = ({
             <StyledCell>
                 <StyledIcon
                     src={formatAssetPath(webhooksIcon)}
-                    alt='Incoming webhook'
+                    alt='Signal endpoint'
                     variant='rounded'
                 />
                 <StyledLink
                     component={RouterLink}
-                    to='/integrations/incoming-webhooks'
+                    to='/integrations/signals'
                     underline='hover'
                 >
                     {trigger.name}

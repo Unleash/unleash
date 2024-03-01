@@ -8,12 +8,10 @@ import useUiConfig from '../useUiConfig/useUiConfig';
 import { ISignal } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-// TODO: update endpoint
-const ENDPOINT = 'api/admin/incoming-webhooks';
+const ENDPOINT = 'api/admin/signal-endpoints';
 
-// TODO: rename property to signals
 type SignalsResponse = {
-    incomingWebhookEvents: ISignal[];
+    signals: ISignal[];
 };
 
 const fetcher = async (url: string) => {
@@ -38,11 +36,10 @@ export const useSignals = (
         if (!signalEndpointId || !isEnterprise || !signalsEnabled) return null;
 
         // Reached the end
-        if (previousPageData && !previousPageData.incomingWebhookEvents.length)
-            return null;
+        if (previousPageData && !previousPageData.signals.length) return null;
 
         return formatApiPath(
-            `${ENDPOINT}/${signalEndpointId}/events?limit=${limit}&offset=${
+            `${ENDPOINT}/${signalEndpointId}/signals?limit=${limit}&offset=${
                 pageIndex * limit
             }`,
         );
@@ -54,15 +51,13 @@ export const useSignals = (
             revalidateAll: true,
         });
 
-    const signals = data
-        ? data.flatMap(({ incomingWebhookEvents }) => incomingWebhookEvents)
-        : [];
+    const signals = data ? data.flatMap(({ signals }) => signals) : [];
 
     const isLoadingInitialData = !data && !error;
     const isLoadingMore = size > 0 && !data?.[size - 1];
     const loading = isLoadingInitialData || isLoadingMore;
 
-    const hasMore = data?.[size - 1]?.incomingWebhookEvents.length === limit;
+    const hasMore = data?.[size - 1]?.signals.length === limit;
 
     const loadMore = () => {
         if (loading || !hasMore) return;

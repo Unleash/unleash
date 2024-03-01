@@ -176,16 +176,16 @@ export const BANNER_CREATED = 'banner-created' as const;
 export const BANNER_UPDATED = 'banner-updated' as const;
 export const BANNER_DELETED = 'banner-deleted' as const;
 
-export const INCOMING_WEBHOOK_CREATED = 'incoming-webhook-created' as const;
-export const INCOMING_WEBHOOK_UPDATED = 'incoming-webhook-updated' as const;
-export const INCOMING_WEBHOOK_DELETED = 'incoming-webhook-deleted' as const;
+export const SIGNAL_ENDPOINT_CREATED = 'signal-endpoint-created' as const;
+export const SIGNAL_ENDPOINT_UPDATED = 'signal-endpoint-updated' as const;
+export const SIGNAL_ENDPOINT_DELETED = 'signal-endpoint-deleted' as const;
 
-export const INCOMING_WEBHOOK_TOKEN_CREATED =
-    'incoming-webhook-token-created' as const;
-export const INCOMING_WEBHOOK_TOKEN_UPDATED =
-    'incoming-webhook-token-updated' as const;
-export const INCOMING_WEBHOOK_TOKEN_DELETED =
-    'incoming-webhook-token-deleted' as const;
+export const SIGNAL_ENDPOINT_TOKEN_CREATED =
+    'signal-endpoint-token-created' as const;
+export const SIGNAL_ENDPOINT_TOKEN_UPDATED =
+    'signal-endpoint-token-updated' as const;
+export const SIGNAL_ENDPOINT_TOKEN_DELETED =
+    'signal-endpoint-token-deleted' as const;
 
 export const ACTIONS_CREATED = 'actions-created' as const;
 export const ACTIONS_UPDATED = 'actions-updated' as const;
@@ -325,12 +325,12 @@ export const IEventTypes = [
     PROJECT_ENVIRONMENT_REMOVED,
     DEFAULT_STRATEGY_UPDATED,
     SEGMENT_IMPORT,
-    INCOMING_WEBHOOK_CREATED,
-    INCOMING_WEBHOOK_UPDATED,
-    INCOMING_WEBHOOK_DELETED,
-    INCOMING_WEBHOOK_TOKEN_CREATED,
-    INCOMING_WEBHOOK_TOKEN_UPDATED,
-    INCOMING_WEBHOOK_TOKEN_DELETED,
+    SIGNAL_ENDPOINT_CREATED,
+    SIGNAL_ENDPOINT_UPDATED,
+    SIGNAL_ENDPOINT_DELETED,
+    SIGNAL_ENDPOINT_TOKEN_CREATED,
+    SIGNAL_ENDPOINT_TOKEN_UPDATED,
+    SIGNAL_ENDPOINT_TOKEN_DELETED,
     ACTIONS_CREATED,
     ACTIONS_UPDATED,
     ACTIONS_DELETED,

@@ -5,18 +5,18 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IIncomingWebhook } from 'interfaces/signal';
+import { ISignalEndpoint } from 'interfaces/signal';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import {
-    IncomingWebhookPayload,
+    SignalEndpointPayload,
     useSignalEndpointsApi,
 } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
 import { useSignalEndpointTokensApi } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
-import { IncomingWebhooksForm } from './IncomingWebhooksForm/IncomingWebhooksForm';
+import { SignalEndpointsForm } from './SignalEndpointsForm/SignalEndpointsForm';
 import {
     TokenGeneration,
-    useIncomingWebhooksForm,
-} from './IncomingWebhooksForm/useIncomingWebhooksForm';
+    useSignalEndpointsForm,
+} from './SignalEndpointsForm/useSignalEndpointsForm';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -48,25 +48,25 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-interface IIncomingWebhooksModalProps {
-    incomingWebhook?: IIncomingWebhook;
+interface ISignalEndpointsModalProps {
+    signalEndpoint?: ISignalEndpoint;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     newToken: (token: string) => void;
-    onOpenEvents: () => void;
+    onOpenSignals: () => void;
 }
 
-export const IncomingWebhooksModal = ({
-    incomingWebhook,
+export const SignalEndpointsModal = ({
+    signalEndpoint,
     open,
     setOpen,
     newToken,
-    onOpenEvents,
-}: IIncomingWebhooksModalProps) => {
+    onOpenSignals,
+}: ISignalEndpointsModalProps) => {
     const { refetch } = useSignalEndpoints();
-    const { addIncomingWebhook, updateIncomingWebhook, loading } =
+    const { addSignalEndpoint, updateSignalEndpoint, loading } =
         useSignalEndpointsApi();
-    const { addIncomingWebhookToken } = useSignalEndpointTokensApi();
+    const { addSignalEndpointToken } = useSignalEndpointTokensApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
@@ -87,16 +87,16 @@ export const IncomingWebhooksModal = ({
         validate,
         validated,
         reloadForm,
-    } = useIncomingWebhooksForm(incomingWebhook);
+    } = useSignalEndpointsForm(signalEndpoint);
 
     useEffect(() => {
         reloadForm();
     }, [open]);
 
-    const editing = incomingWebhook !== undefined;
-    const title = `${editing ? 'Edit' : 'New'} incoming webhook`;
+    const editing = signalEndpoint !== undefined;
+    const title = `${editing ? 'Edit' : 'New'} signal endpoint`;
 
-    const payload: IncomingWebhookPayload = {
+    const payload: SignalEndpointPayload = {
         enabled,
         name,
         description,
@@ -104,8 +104,8 @@ export const IncomingWebhooksModal = ({
 
     const formatApiCode = () => `curl --location --request ${
         editing ? 'PUT' : 'POST'
-    } '${uiConfig.unleashUrl}/api/admin/incoming-webhooks${
-        editing ? `/${incomingWebhook.id}` : ''
+    } '${uiConfig.unleashUrl}/api/admin/signal-endpoints${
+        editing ? `/${signalEndpoint.id}` : ''
     }' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
@@ -118,18 +118,18 @@ export const IncomingWebhooksModal = ({
 
         try {
             if (editing) {
-                await updateIncomingWebhook(incomingWebhook.id, payload);
+                await updateSignalEndpoint(signalEndpoint.id, payload);
             } else {
-                const { id } = await addIncomingWebhook(payload);
+                const { id } = await addSignalEndpoint(payload);
                 if (tokenGeneration === TokenGeneration.NOW) {
-                    const { token } = await addIncomingWebhookToken(id, {
+                    const { token } = await addSignalEndpointToken(id, {
                         name: tokenName,
                     });
                     newToken(token);
                 }
             }
             setToastData({
-                title: `Incoming webhook ${
+                title: `Signal endpoint ${
                     editing ? 'updated' : 'added'
                 } successfully`,
                 type: 'success',
@@ -152,21 +152,21 @@ export const IncomingWebhooksModal = ({
             <FormTemplate
                 loading={loading}
                 modal
-                description='Incoming Webhooks allow third-party services to send observable events to Unleash.'
-                documentationLink='https://docs.getunleash.io/reference/incoming-webhooks'
-                documentationLinkLabel='Incoming webhooks documentation'
+                description='Signal endpoints allow third-party services to send signals to Unleash.'
+                documentationLink='https://docs.getunleash.io/reference/signals'
+                documentationLinkLabel='Signals documentation'
                 formatApiCode={formatApiCode}
             >
                 <StyledHeader>
                     <StyledTitle>{title}</StyledTitle>
                     <ConditionallyRender
                         condition={editing}
-                        show={<Link onClick={onOpenEvents}>View events</Link>}
+                        show={<Link onClick={onOpenSignals}>View signals</Link>}
                     />
                 </StyledHeader>
                 <StyledForm onSubmit={onSubmit}>
-                    <IncomingWebhooksForm
-                        incomingWebhook={incomingWebhook}
+                    <SignalEndpointsForm
+                        signalEndpoint={signalEndpoint}
                         enabled={enabled}
                         setEnabled={setEnabled}
                         name={name}
@@ -188,7 +188,7 @@ export const IncomingWebhooksModal = ({
                             variant='contained'
                             color='primary'
                         >
-                            {editing ? 'Save' : 'Add'} incoming webhook
+                            {editing ? 'Save' : 'Add'} signal endpoint
                         </Button>
                         <StyledCancelButton
                             onClick={() => {

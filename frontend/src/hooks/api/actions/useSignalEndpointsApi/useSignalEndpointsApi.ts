@@ -1,8 +1,7 @@
 import { ISignalEndpoint } from 'interfaces/signal';
 import useAPI from '../useApi/useApi';
 
-// TODO: update endpoint
-const ENDPOINT = 'api/admin/incoming-webhooks';
+const ENDPOINT = 'api/admin/signal-endpoints';
 
 export type SignalEndpointPayload = Omit<
     ISignalEndpoint,

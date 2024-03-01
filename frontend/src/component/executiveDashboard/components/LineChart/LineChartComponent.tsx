@@ -97,7 +97,6 @@ const LineChartComponent: VFC<{
     isLocalTooltip,
     overrideOptions,
     TooltipComponent,
-
 }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();

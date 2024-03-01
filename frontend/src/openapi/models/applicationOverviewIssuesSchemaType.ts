@@ -14,4 +14,5 @@ export type ApplicationOverviewIssuesSchemaType =
 export const ApplicationOverviewIssuesSchemaType = {
     missingFeatures: 'missingFeatures',
     missingStrategies: 'missingStrategies',
+    outdatedSdks: 'outdatedSdks',
 } as const;

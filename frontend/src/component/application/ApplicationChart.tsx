@@ -4,12 +4,15 @@ import { ConditionallyRender } from '../common/ConditionallyRender/Conditionally
 import { useNavigate } from 'react-router-dom';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
 import { ApplicationOverviewSchema } from '../../openapi';
-import { useRequiredPathParam } from '../../hooks/useRequiredPathParam';
-import { WarningAmberRounded } from '@mui/icons-material';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { HelpIcon } from '../common/HelpIcon/HelpIcon';
+import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';
+import TimeAgo from 'react-timeago';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
 }));
 
 const StyledCell = styled('td')(({ theme }) => ({
@@ -48,6 +51,8 @@ const StyledEnvironmentBox = styled(Box)<{
         theme.palette[mode === 'success' ? 'secondary' : 'warning'].light,
     display: 'inline-block',
     padding: theme.spacing(1.5, 1.5, 1.5, 1.5),
+    zIndex: 1,
+    opacity: 0.9,
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -58,8 +63,9 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 
 const StyledEnvironmentsContainer = styled(Box)({
     display: 'flex',
-    justifyContent: 'start',
-    gap: '20px',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: '60px 20px',
 });
 
 const EnvironmentHeader = styled(Typography)(({ theme }) => ({
@@ -73,6 +79,23 @@ const StyledStatus = styled(Typography)<{
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette[mode].dark,
+    display: 'flex',
+    alignItems: 'center',
+}));
+
+const StyledIconRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(3),
+    color: theme.palette.secondary.main,
+    paddingTop: theme.spacing(2),
+}));
+
+const StyledIconContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(0.5),
+}));
+const StyledText = styled(Box)(({ theme }) => ({
+    color: theme.palette.text.primary,
     display: 'flex',
     alignItems: 'center',
 }));
@@ -116,7 +139,42 @@ interface IApplicationChartProps {
     data: ApplicationOverviewSchema;
 }
 
+interface IApplicationCountersProps {
+    environmentCount: number;
+    featureCount: number;
+}
+
+const ApplicationCounters = ({
+    environmentCount,
+    featureCount,
+}: IApplicationCountersProps) => {
+    return (
+        <StyledIconRow>
+            <StyledIconContainer>
+                <CloudCircle />
+                <StyledText>{environmentCount}</StyledText>
+            </StyledIconContainer>
+            <StyledIconContainer>
+                <Flag />
+                <StyledText>{featureCount}</StyledText>
+            </StyledIconContainer>
+        </StyledIconRow>
+    );
+};
+
+const useTracking = () => {
+    const { trackEvent } = usePlausibleTracker();
+    return () => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'environment box clicked',
+            },
+        });
+    };
+};
+
 export const ApplicationChart = ({ data }: IApplicationChartProps) => {
+    const trackClick = useTracking();
     const applicationName = useRequiredPathParam('name');
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();
@@ -163,6 +221,10 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             >
                                 {applicationName}
                             </Typography>
+                            <ApplicationCounters
+                                environmentCount={data.environments.length}
+                                featureCount={data.featureCount}
+                            />
 
                             <StyledDivider />
 
@@ -188,6 +250,13 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             <StyledEnvironmentBox
                                 mode={mode}
                                 key={environment.name}
+                                sx={{ cursor: 'pointer' }}
+                                onClick={(e) => {
+                                    trackClick();
+                                    navigate(
+                                        `/applications/${applicationName}/instances?environment=${environment.name}`,
+                                    );
+                                }}
                             >
                                 <EnvironmentHeader>
                                     {environment.name} environment
@@ -196,7 +265,18 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 <StyledTable>
                                     <tbody>
                                         <tr>
-                                            <StyledCell>Instances:</StyledCell>
+                                            <StyledCell
+                                                sx={{ display: 'flex' }}
+                                            >
+                                                Instances:{' '}
+                                                <HelpIcon
+                                                    size={
+                                                        theme.fontSizes
+                                                            .smallBody
+                                                    }
+                                                    tooltip='Active instances in the last 2 days'
+                                                />
+                                            </StyledCell>
                                             <StyledCell>
                                                 {environment.instanceCount}
                                             </StyledCell>
@@ -212,7 +292,16 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                         <tr>
                                             <StyledCell>Last seen:</StyledCell>
                                             <StyledCell>
-                                                {environment.lastSeen}
+                                                {environment.lastSeen && (
+                                                    <TimeAgo
+                                                        minPeriod={60}
+                                                        date={
+                                                            new Date(
+                                                                environment.lastSeen,
+                                                            )
+                                                        }
+                                                    />
+                                                )}
                                             </StyledCell>
                                         </tr>
                                     </tbody>

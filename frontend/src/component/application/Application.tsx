@@ -2,8 +2,6 @@
 import React, { useContext, useState } from 'react';
 import {
     Box,
-    Avatar,
-    Icon,
     IconButton,
     LinearProgress,
     Link,
@@ -12,7 +10,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { Link as LinkIcon } from '@mui/icons-material';
+import { Delete, Link as LinkIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ConnectedInstances } from './ConnectedInstances/ConnectedInstances';
@@ -25,13 +23,13 @@ import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import useToast from 'hooks/useToast';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ApplicationEdit } from './ApplicationEdit/ApplicationEdit';
 import ApplicationOverview from './ApplicationOverview';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 
 type Tab = {
     title: string;
@@ -81,10 +79,6 @@ export const Application = () => {
     const { setToastData, setToastApiError } = useToast();
     const { pathname } = useLocation();
 
-    if (useOldApplicationScreen) {
-        return <ApplicationEdit />;
-    }
-
     const basePath = `/applications/${name}`;
 
     const [showDialog, setShowDialog] = useState(false);
@@ -92,6 +86,10 @@ export const Application = () => {
     const toggleModal = () => {
         setShowDialog(!showDialog);
     };
+
+    if (useOldApplicationScreen) {
+        return <ApplicationEdit />;
+    }
 
     const formatDate = (v: string) => formatDateYMD(v, locationSettings.locale);
 
@@ -150,19 +148,6 @@ export const Application = () => {
             <StyledHeader>
                 <PageContent>
                     <PageHeader
-                        titleElement={
-                            <span
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Avatar style={{ marginRight: '8px' }}>
-                                    <Icon>{icon || 'apps'}</Icon>
-                                </Avatar>
-                                {appName}
-                            </span>
-                        }
                         title={appName}
                         actions={
                             <>
@@ -179,25 +164,22 @@ export const Application = () => {
                                     }
                                 />
 
-                                <PermissionButton
+                                <PermissionIconButton
                                     tooltipProps={{
                                         title: 'Delete application',
                                     }}
                                     onClick={toggleModal}
                                     permission={UPDATE_APPLICATION}
                                 >
-                                    Delete
-                                </PermissionButton>
+                                    <Delete />
+                                </PermissionIconButton>
                             </>
                         }
                     />
 
                     <Box sx={(theme) => ({ marginTop: theme.spacing(1) })}>
-                        <Typography variant='body1'>
-                            {description || ''}
-                        </Typography>
                         <Typography variant='body2'>
-                            Created: <strong>{formatDate(createdAt)}</strong>
+                            Created: {formatDate(createdAt)}
                         </Typography>
                     </Box>
                 </PageContent>

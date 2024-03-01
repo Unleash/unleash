@@ -100,9 +100,25 @@ export const ProjectActionsModal = ({
             payload: filters
                 .filter((f) => f.parameter.length > 0)
                 .reduce(
-                    (acc, filter) => ({
+                    (
+                        acc,
+                        {
+                            parameter,
+                            inverted,
+                            operator,
+                            caseInsensitive,
+                            value,
+                            values,
+                        },
+                    ) => ({
                         ...acc,
-                        [filter.parameter]: filter.value,
+                        [parameter]: {
+                            inverted,
+                            operator,
+                            caseInsensitive,
+                            value,
+                            values,
+                        },
                     }),
                     {},
                 ),

@@ -1,5 +1,5 @@
 import { useActions } from 'hooks/api/getters/useActions/useActions';
-import { IAction, IActionSet } from 'interfaces/action';
+import { IAction, IActionSet, ParameterMatch } from 'interfaces/action';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -7,14 +7,15 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 enum ErrorField {
     NAME = 'name',
     TRIGGER = 'trigger',
+    FILTERS = 'filters',
     ACTOR = 'actor',
     ACTIONS = 'actions',
 }
 
-export type ActionsFilterState = {
+export type ActionsFilterState = ParameterMatch & {
     id: string;
     parameter: string;
-    value: string;
+    error?: string;
 };
 
 export type ActionsActionState = Omit<
@@ -27,6 +28,7 @@ export type ActionsActionState = Omit<
 const DEFAULT_PROJECT_ACTIONS_FORM_ERRORS = {
     [ErrorField.NAME]: undefined,
     [ErrorField.TRIGGER]: undefined,
+    [ErrorField.FILTERS]: undefined,
     [ErrorField.ACTOR]: undefined,
     [ErrorField.ACTIONS]: undefined,
 };
@@ -50,10 +52,17 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         setSourceId(action?.match?.sourceId ?? 0);
         setFilters(
             Object.entries(action?.match?.payload ?? {}).map(
-                ([parameter, value]) => ({
+                ([
+                    parameter,
+                    { inverted, operator, caseInsensitive, value, values },
+                ]) => ({
                     id: uuidv4(),
                     parameter,
-                    value: value as string,
+                    inverted,
+                    operator,
+                    caseInsensitive,
+                    value,
+                    values,
                 }),
             ),
         );
@@ -86,6 +95,13 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     const setError = (field: ErrorField, error: string) => {
         setErrors((errors) => ({ ...errors, [field]: error }));
     };
+
+    useEffect(() => {
+        clearError(ErrorField.FILTERS);
+        if (filters.some(({ error }) => error)) {
+            setError(ErrorField.FILTERS, 'One or more filters have errors.');
+        }
+    }, [filters]);
 
     const isEmpty = (value: string) => !value.length;
 

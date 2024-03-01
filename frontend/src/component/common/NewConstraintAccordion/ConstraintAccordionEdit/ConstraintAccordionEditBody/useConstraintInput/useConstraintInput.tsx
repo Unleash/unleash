@@ -20,8 +20,8 @@ import {
 import { nonEmptyArray } from 'utils/nonEmptyArray';
 
 interface IUseConstraintInputProps {
-    contextDefinition: IUnleashContextDefinition;
-    localConstraint: IConstraint;
+    contextDefinition: Pick<IUnleashContextDefinition, 'legalValues'>;
+    localConstraint: Pick<IConstraint, 'operator' | 'value' | 'values'>;
 }
 
 interface IUseConstraintOutput {

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 type ConnectedInstancesTableData = {
     instanceId: string;
@@ -39,7 +40,7 @@ export const useConnectedInstancesTable = (
             {
                 Header: 'Last seen',
                 accessor: 'lastSeen',
-                Cell: HighlightCell,
+                Cell: TimeAgoCell,
                 styles: {
                     width: '20%',
                 },

@@ -1,5 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
-import { formatDateYMDHMS } from 'utils/formatDate';
+import { FC, useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useConnectedInstancesTable } from './useConnectedInstancesTable';
 import { ConnectedInstancesTable } from './ConnectedInstancesTable';
@@ -9,6 +8,7 @@ import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/u
 import { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const useEnvironments = (application: string) => {
     const { data: applicationOverview } = useApplicationOverview(application);
@@ -34,7 +34,26 @@ const useEnvironments = (application: string) => {
     };
 };
 
+const useTracking = () => {
+    const { trackEvent } = usePlausibleTracker();
+    useEffect(() => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'connected instances opened',
+            },
+        });
+    }, []);
+    return () => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'connected instances environment changed',
+            },
+        });
+    };
+};
+
 export const ConnectedInstances: FC = () => {
+    const trackEnvironmentChange = useTracking();
     const name = useRequiredPathParam('name');
 
     const { currentEnvironment, setCurrentEnvironment, environments } =
@@ -55,7 +74,7 @@ export const ConnectedInstances: FC = () => {
             instanceId,
             ip: clientIp || '',
             sdkVersion: sdkVersion || '',
-            lastSeen: lastSeen ? formatDateYMDHMS(lastSeen) : '',
+            lastSeen: lastSeen || '',
         });
         if (!currentEnvironment) {
             return [];
@@ -83,6 +102,7 @@ export const ConnectedInstances: FC = () => {
                             exclusive
                             onChange={(event, value) => {
                                 if (value !== null) {
+                                    trackEnvironmentChange();
                                     setCurrentEnvironment(value);
                                 }
                             }}

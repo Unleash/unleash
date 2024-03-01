@@ -1,3 +1,5 @@
+import { IConstraint } from './strategy';
+
 export interface IActionSet {
     id: number;
     enabled: boolean;
@@ -12,10 +14,15 @@ export interface IActionSet {
 
 type MatchSource = 'incoming-webhook';
 
+export type ParameterMatch = Pick<
+    IConstraint,
+    'inverted' | 'operator' | 'caseInsensitive' | 'value' | 'values'
+>;
+
 export interface IMatch {
     source: MatchSource;
     sourceId: number;
-    payload: Record<string, unknown>;
+    payload: Record<string, ParameterMatch>;
 }
 
 export interface IAction {

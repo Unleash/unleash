@@ -29,6 +29,7 @@ import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
+import { ApplicationView } from '../ApplicationView/ApplicationView';
 
 export const ApplicationEdit = () => {
     const navigate = useNavigate();
@@ -75,7 +76,7 @@ export const ApplicationEdit = () => {
     const tabData = [
         {
             label: 'Application overview',
-            component: <ApplicationEdit />,
+            component: <ApplicationView />,
         },
         {
             label: 'Edit application',

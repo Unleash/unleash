@@ -26,11 +26,29 @@ export const ProjectActionsFiltersCell = ({
             <TooltipLink
                 tooltip={
                     <>
-                        {filters.map(([parameter, value]) => (
-                            <StyledItem key={parameter}>
-                                <strong>{parameter}</strong>: {value}
-                            </StyledItem>
-                        ))}
+                        {filters.map(
+                            ([
+                                parameter,
+                                {
+                                    inverted,
+                                    operator,
+                                    caseInsensitive,
+                                    value,
+                                    values,
+                                },
+                            ]) => (
+                                <StyledItem key={parameter}>
+                                    <strong>{parameter}</strong>{' '}
+                                    {inverted ? 'NOT' : ''} {operator}{' '}
+                                    {caseInsensitive
+                                        ? '(case insensitive)'
+                                        : ''}{' '}
+                                    <strong>
+                                        {values ? values.join(', ') : value}
+                                    </strong>
+                                </StyledItem>
+                            ),
+                        )}
                     </>
                 }
             >

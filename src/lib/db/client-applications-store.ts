@@ -312,7 +312,8 @@ export default class ClientApplicationsStore
                     'cme.environment',
                 );
             })
-            .where('a.app_name', appName);
+            .where('a.app_name', appName)
+            .orderBy('cme.environment', 'asc');
         const rows = await query;
         if (!rows.length) {
             throw new NotFoundError(`Could not find appName=${appName}`);

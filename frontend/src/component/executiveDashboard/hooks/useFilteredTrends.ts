@@ -19,4 +19,4 @@ export const useFilteredTrends = <
         ) as T[];
 
         return output;
-    }, [projects]);
+    }, [input, projects]);

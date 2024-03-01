@@ -1,8 +1,7 @@
-import { type ExecutiveSummarySchema } from 'openapi';
 import { renderHook } from '@testing-library/react-hooks';
 import { useFilteredTrends } from './useFilteredTrends';
 
-const mockProjectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'] = [
+const mockProjectFlagTrends = [
     {
         week: '2024-01',
         project: 'project1',
@@ -119,6 +118,48 @@ describe('useFilteredFlagTrends', () => {
             },
             {
                 week: '2024-02',
+                project: 'project1',
+                total: 1,
+                active: 1,
+                stale: 0,
+                potentiallyStale: 0,
+                users: 1,
+                date: '',
+            },
+        ]);
+    });
+
+    it('should re-render if input has changed', () => {
+        const projects = ['project1'];
+        const { result, rerender } = renderHook(
+            ({ input, projects }) => useFilteredTrends(input, projects),
+            {
+                initialProps: {
+                    input: mockProjectFlagTrends,
+                    projects,
+                },
+            },
+        );
+
+        rerender({
+            input: [
+                {
+                    week: '2024-01',
+                    project: 'project1',
+                    total: 1,
+                    active: 1,
+                    stale: 0,
+                    potentiallyStale: 0,
+                    users: 1,
+                    date: '',
+                },
+            ],
+            projects,
+        });
+
+        expect(result.current).toEqual([
+            {
+                week: '2024-01',
                 project: 'project1',
                 total: 1,
                 active: 1,

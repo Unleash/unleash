@@ -1,57 +1,78 @@
 import { useMemo } from 'react';
-import { getProjectColor } from './executive-dashboard-utils';
 import { useTheme } from '@mui/material';
-import {
-    ExecutiveSummarySchema,
-    ExecutiveSummarySchemaMetricsSummaryTrendsItem,
-} from '../../openapi';
+import { ExecutiveSummarySchema } from '../../openapi';
+import { parseISO, getISOWeek, format } from 'date-fns';
+import { getProjectColor } from './executive-dashboard-utils';
 
 type MetricsSummaryTrends = ExecutiveSummarySchema['metricsSummaryTrends'];
 
+interface GroupedData {
+    [key: string]: {
+        [week: string]: {
+            total: number;
+            totalYes: number;
+            totalNo: number;
+            totalApps: number;
+            totalEnvironments: number;
+        };
+    };
+}
+
+function groupAndSumData(data: MetricsSummaryTrends): any {
+    const groupedData: GroupedData = {};
+
+    data.forEach((item) => {
+        const weekNumber = getISOWeek(parseISO(item.date));
+        const year = format(parseISO(item.date), 'yyyy');
+        const weekId = `${year}-${weekNumber.toString().padStart(2, '0')}`;
+        const project = item.project;
+
+        if (!groupedData[project]) {
+            groupedData[project] = {};
+        }
+
+        if (!groupedData[project][weekId]) {
+            groupedData[project][weekId] = {
+                total: 0,
+                totalYes: 0,
+                totalNo: 0,
+                totalApps: 0,
+                totalEnvironments: 0,
+            };
+        }
+
+        groupedData[project][weekId].total += item.totalYes + item.totalNo;
+        groupedData[project][weekId].totalYes += item.totalYes;
+        groupedData[project][weekId].totalNo += item.totalNo;
+        groupedData[project][weekId].totalApps += item.totalApps;
+        groupedData[project][weekId].totalEnvironments +=
+            item.totalEnvironments;
+    });
+
+    return Object.entries(groupedData).map(([project, weeks]) => {
+        const color = getProjectColor(project);
+        return {
+            label: project,
+            borderColor: color,
+            backgroundColor: color,
+            fill: false,
+            data: Object.entries(weeks)
+                .sort(([weekA], [weekB]) => weekA.localeCompare(weekB))
+                .map(([weekId, values]) => ({
+                    weekId,
+                    ...values,
+                })),
+        };
+    });
+}
+
 export const useMetricsSummary = (
     metricsSummaryTrends: MetricsSummaryTrends,
-    field: 'total' | 'totalYes' | 'totalNo' | 'totalApps',
 ) => {
     const theme = useTheme();
 
     const data = useMemo(() => {
-        const groupedFlagTrends = metricsSummaryTrends.reduce<
-            Record<string, ExecutiveSummarySchemaMetricsSummaryTrendsItem[]>
-        >((groups, item) => {
-            if (!groups[item.project]) {
-                groups[item.project] = [];
-            }
-            groups[item.project].push(item);
-            return groups;
-        }, {});
-
-        const datasets = Object.entries(groupedFlagTrends).map(
-            ([project, metricsSummaryTrends]) => {
-                const color = getProjectColor(project);
-                return {
-                    label: project,
-                    data: metricsSummaryTrends.map((item) => {
-                        if (field !== 'total') {
-                            return item[field] || 0;
-                        }
-                        return item.totalYes + item.totalNo || 0;
-                    }),
-                    borderColor: color,
-                    backgroundColor: color,
-                    fill: false,
-                };
-            },
-        );
-
-        const objectKeys = Object.keys(groupedFlagTrends);
-
-        const firstElementSummary = groupedFlagTrends[objectKeys[0]] || [];
-        const firstElementsDates = firstElementSummary.map((item) => item.date);
-
-        return {
-            labels: firstElementsDates,
-            datasets,
-        };
+        return { datasets: groupAndSumData(metricsSummaryTrends) };
     }, [theme, metricsSummaryTrends]);
 
     return data;

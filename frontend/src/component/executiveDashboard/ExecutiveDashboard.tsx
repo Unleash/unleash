@@ -182,7 +182,7 @@ export const ExecutiveDashboard: VFC = () => {
                     selectedProjects={projects}
                     onChange={setProjects}
                     dataTestId={'DASHBOARD_PROJECT_SELECT'}
-                    sx={{flex: 1, maxWidth: '360px'}}
+                    sx={{ flex: 1, maxWidth: '360px' }}
                 />
             </StyledBox>
             <StyledGrid>

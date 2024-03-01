@@ -3,7 +3,10 @@ import { Box, styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
-import { allOption, ProjectSelect } from 'component/common/ProjectSelect/ProjectSelect';
+import {
+    allOption,
+    ProjectSelect,
+} from 'component/common/ProjectSelect/ProjectSelect';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 
 import { useFilteredFlagsSummary } from './hooks/useFilteredFlagsSummary';
@@ -24,7 +27,6 @@ import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/Project
 import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
-
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',

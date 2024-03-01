@@ -7,7 +7,9 @@ const placeHolderApplication: ApplicationOverviewSchema = {
     environments: [],
     featureCount: 0,
     projects: [],
-    issues: [],
+    issues: {
+        missingStrategies: [],
+    },
 };
 export const useApplicationOverview = (
     application: string,

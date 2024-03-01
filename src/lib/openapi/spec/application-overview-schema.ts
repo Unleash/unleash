@@ -1,6 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { applicationOverviewEnvironmentSchema } from './application-overview-environment-schema';
 import { applicationOverviewIssuesSchema } from './application-overview-issues-schema';
+import { applicationEnvironmentIssuesSchema } from './application-environment-issues-schema';
 
 export const applicationOverviewSchema = {
     $id: '#/components/schemas/applicationOverviewSchema',
@@ -35,16 +36,14 @@ export const applicationOverviewSchema = {
         issues: {
             description:
                 'This list of issues that might be wrong with the application',
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/applicationOverviewIssuesSchema',
-            },
+            $ref: '#/components/schemas/applicationOverviewIssuesSchema',
         },
     },
     components: {
         schemas: {
             applicationOverviewEnvironmentSchema,
             applicationOverviewIssuesSchema,
+            applicationEnvironmentIssuesSchema,
         },
     },
 } as const;

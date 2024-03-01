@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { WarningAmberRounded } from '@mui/icons-material';
-import { ApplicationOverviewIssuesSchema } from 'openapi';
+import { ApplicationOverviewSchema } from 'openapi';
 import { Link } from 'react-router-dom';
 import {
     CREATE_FEATURE,
@@ -80,93 +80,173 @@ const StyledLink = styled(Link)(() => ({
 }));
 
 export interface IApplicationIssuesProps {
-    issues: ApplicationOverviewIssuesSchema[];
+    application: ApplicationOverviewSchema;
 }
 
-const resolveIssueText = (issue: ApplicationOverviewIssuesSchema) => {
-    const issueCount = issue.items.length;
-    let issueText = '';
+export interface IFeaturesMissingProps {
+    features: string[];
+}
 
-    if (issue.type === 'outdatedSdks') {
-        return 'We detected the following outdated SDKs';
+interface IStrategiesMissingProps {
+    strategies: string[];
+}
+
+interface IOutdatedSDKsProps {
+    sdks: string[];
+}
+
+const FeaturesMissing = ({ features }: IFeaturesMissingProps) => {
+    const { hasAccess } = useContext(AccessContext);
+    const length = features.length;
+
+    if (length === 0) {
+        return null;
     }
 
-    switch (issue.type) {
-        case 'missingFeatures':
-            issueText = `feature flag${issueCount !== 1 ? 's' : ''}`;
-            break;
-        case 'missingStrategies':
-            issueText = `strategy type${issueCount !== 1 ? 's' : ''}`;
-            break;
-    }
-
-    return `We detected ${issueCount} ${issueText} defined in the SDK that ${
-        issueCount !== 1 ? 'do' : 'does'
-    } not exist in Unleash`;
+    return (
+        <IssueTextContainer>
+            <Box>{`We detected ${length} feature flag${
+                length !== 1 ? 's' : ''
+            } defined in the SDK that ${
+                length !== 1 ? 'do' : 'does'
+            } not exist in Unleash`}</Box>
+            <StyledList>
+                {features.map((feature) => (
+                    <IssueRowContainer key={feature}>
+                        <StyledListElement>{feature}</StyledListElement>
+                        <ConditionallyRender
+                            condition={hasAccess(CREATE_FEATURE)}
+                            show={
+                                <StyledLink
+                                    key={feature}
+                                    to={`/projects/default/create-toggle?name=${feature}`}
+                                >
+                                    Create feature flag
+                                </StyledLink>
+                            }
+                        />
+                    </IssueRowContainer>
+                ))}
+            </StyledList>
+        </IssueTextContainer>
+    );
 };
 
-export const ApplicationIssues = ({ issues }: IApplicationIssuesProps) => {
+const StrategiesMissing = ({ strategies }: IStrategiesMissingProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const length = strategies.length;
+
+    if (length === 0) {
+        return null;
+    }
     return (
-        <ConditionallyRender
-            condition={issues.length > 0}
-            show={
-                <WarningContainer>
-                    <WarningHeader>
-                        <WarningAmberRounded />
-                        <WarningHeaderText>
-                            We detected {issues.length} issue
-                            {issues.length !== 1 ? 's' : ''} in this application
-                        </WarningHeaderText>
-                    </WarningHeader>
-                    <IssueContainer>
-                        {issues.map((issue) => (
-                            <IssueTextContainer key={issue.type}>
-                                {resolveIssueText(issue)}
-                                <StyledList>
-                                    {issue.items.map((item) => (
-                                        <IssueRowContainer key={item}>
-                                            <StyledListElement>
-                                                {item}
-                                            </StyledListElement>
-                                            <ConditionallyRender
-                                                condition={
-                                                    issue.type ===
-                                                        'missingFeatures' &&
-                                                    hasAccess(CREATE_FEATURE)
-                                                }
-                                                show={
-                                                    <StyledLink
-                                                        key={item}
-                                                        to={`/projects/default/create-toggle?name=${item}`}
-                                                    >
-                                                        Create feature flag
-                                                    </StyledLink>
-                                                }
-                                            />
-                                            <ConditionallyRender
-                                                condition={
-                                                    issue.type ===
-                                                        'missingStrategies' &&
-                                                    hasAccess(CREATE_STRATEGY)
-                                                }
-                                                show={
-                                                    <StyledLink
-                                                        key={item}
-                                                        to={`/strategies/create`}
-                                                    >
-                                                        Create strategy type
-                                                    </StyledLink>
-                                                }
-                                            />
-                                        </IssueRowContainer>
-                                    ))}
-                                </StyledList>
-                            </IssueTextContainer>
-                        ))}
-                    </IssueContainer>
-                </WarningContainer>
-            }
-        />
+        <IssueTextContainer>
+            <Box>{`We detected ${length} strategy type${
+                length !== 1 ? 's' : ''
+            } defined in the SDK that ${
+                length !== 1 ? 'do' : 'does'
+            } not exist in Unleash`}</Box>
+            <StyledList>
+                {strategies.map((strategy) => (
+                    <IssueRowContainer key={strategy}>
+                        <StyledListElement>{strategy}</StyledListElement>
+                        <ConditionallyRender
+                            condition={hasAccess(CREATE_STRATEGY)}
+                            show={
+                                <StyledLink
+                                    key={strategy}
+                                    to={`/strategies/create`}
+                                >
+                                    Create strategy type
+                                </StyledLink>
+                            }
+                        />
+                    </IssueRowContainer>
+                ))}
+            </StyledList>
+        </IssueTextContainer>
+    );
+};
+
+const OutdatedSDKs = ({ sdks }: IOutdatedSDKsProps) => {
+    if (sdks.length === 0) {
+        return null;
+    }
+    return (
+        <IssueTextContainer>
+            <Box>We detected the following outdated SDKs</Box>
+            <StyledList>
+                {sdks.map((sdk) => (
+                    <IssueRowContainer key={sdk}>
+                        <StyledListElement>{sdk}</StyledListElement>
+                    </IssueRowContainer>
+                ))}
+            </StyledList>
+        </IssueTextContainer>
+    );
+};
+
+export const getApplicationIssueMode = (
+    application: ApplicationOverviewSchema,
+):
+    | {
+          applicationMode: 'success';
+      }
+    | {
+          applicationMode: 'warning';
+          issueCount: number;
+      } => {
+    const issueCount =
+        application.issues.missingStrategies.length +
+        application.environments
+            .map(
+                (env) =>
+                    env.issues.missingFeatures.length +
+                    env.issues.outdatedSdks.length,
+            )
+            .reduce((sum, num) => sum + num, 0);
+
+    return {
+        issueCount,
+        applicationMode: issueCount > 0 ? 'warning' : 'success',
+    };
+};
+
+export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
+    const mode = getApplicationIssueMode(application);
+
+    if (mode.applicationMode === 'success') {
+        return null;
+    }
+    const outdatedSdks = [
+        ...new Set(
+            application.environments.flatMap((env) => env.issues.outdatedSdks),
+        ),
+    ];
+    const missingFeatures = [
+        ...new Set(
+            application.environments.flatMap(
+                (env) => env.issues.missingFeatures,
+            ),
+        ),
+    ];
+    const issueCount = mode.issueCount;
+    return (
+        <WarningContainer>
+            <WarningHeader>
+                <WarningAmberRounded />
+                <WarningHeaderText>
+                    We detected {issueCount} issue
+                    {issueCount !== 1 ? 's' : ''} in this application
+                </WarningHeaderText>
+            </WarningHeader>
+            <IssueContainer>
+                <OutdatedSDKs sdks={outdatedSdks} />
+                <FeaturesMissing features={missingFeatures} />
+                <StrategiesMissing
+                    strategies={application.issues.missingStrategies}
+                />
+            </IssueContainer>
+        </WarningContainer>
     );
 };

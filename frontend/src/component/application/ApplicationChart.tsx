@@ -1,14 +1,17 @@
 import { Box, Divider, styled, Typography, useTheme } from '@mui/material';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router-dom';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
-import { ApplicationOverviewSchema } from '../../openapi';
+import {
+    ApplicationOverviewEnvironmentSchema,
+    ApplicationOverviewSchema,
+} from '../../openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HelpIcon } from '../common/HelpIcon/HelpIcon';
 import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';
 import TimeAgo from 'react-timeago';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { getApplicationIssueMode } from './ApplicationIssues/ApplicationIssues';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -100,6 +103,15 @@ const StyledText = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
+interface IApplicationChartProps {
+    data: ApplicationOverviewSchema;
+}
+
+interface IApplicationCountersProps {
+    environmentCount: number;
+    featureCount: number;
+}
+
 const useElementWidth = () => {
     const elementRef = useRef<HTMLDivElement>(null);
     const [width, setWidth] = useState('100%');
@@ -135,15 +147,6 @@ const WarningStatus: FC = ({ children }) => (
     </StyledStatus>
 );
 
-interface IApplicationChartProps {
-    data: ApplicationOverviewSchema;
-}
-
-interface IApplicationCountersProps {
-    environmentCount: number;
-    featureCount: number;
-}
-
 const ApplicationCounters = ({
     environmentCount,
     featureCount,
@@ -173,6 +176,16 @@ const useTracking = () => {
     };
 };
 
+const getEnvironmentMode = (
+    environment: ApplicationOverviewEnvironmentSchema,
+) => {
+    return environment.issues.missingFeatures.length +
+        environment.issues.outdatedSdks.length ===
+        0
+        ? 'success'
+        : 'warning';
+};
+
 export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const trackClick = useTracking();
     const applicationName = useRequiredPathParam('name');
@@ -180,8 +193,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const navigate = useNavigate();
     const theme = useTheme();
 
-    const mode: 'success' | 'warning' =
-        data.issues.length === 0 ? 'success' : 'warning';
+    const mode = getApplicationIssueMode(data);
 
     return (
         <Box sx={{ width }}>
@@ -198,13 +210,14 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             sourceAnchor: 'bottom',
                             style: {
                                 strokeColor:
-                                    mode === 'success'
+                                    getEnvironmentMode(environment) ===
+                                    'success'
                                         ? theme.palette.secondary.border
                                         : theme.palette.warning.border,
                             },
                         }))}
                     >
-                        <StyledApplicationBox mode={mode}>
+                        <StyledApplicationBox mode={mode.applicationMode}>
                             <Typography
                                 sx={(theme) => ({
                                     fontSize: theme.fontSizes.smallerBody,
@@ -225,18 +238,14 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 environmentCount={data.environments.length}
                                 featureCount={data.featureCount}
                             />
-
                             <StyledDivider />
-
-                            <ConditionallyRender
-                                condition={mode === 'success'}
-                                show={<SuccessStatus />}
-                                elseShow={
-                                    <WarningStatus>
-                                        {data.issues.length} issues detected
-                                    </WarningStatus>
-                                }
-                            />
+                            {mode.applicationMode === 'success' ? (
+                                <SuccessStatus />
+                            ) : (
+                                <WarningStatus>
+                                    {mode.issueCount} issues detected
+                                </WarningStatus>
+                            )}
                         </StyledApplicationBox>
                     </ArcherElement>
                 </StyleApplicationContainer>
@@ -248,7 +257,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             key={environment.name}
                         >
                             <StyledEnvironmentBox
-                                mode={mode}
+                                mode={getEnvironmentMode(environment)}
                                 key={environment.name}
                                 sx={{ cursor: 'pointer' }}
                                 onClick={(e) => {

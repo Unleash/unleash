@@ -75,7 +75,7 @@ const ApplicationOverview = () => {
                         ))}
                     </ProjectContainer>
                     <StyledDivider />
-                    <ApplicationIssues issues={data.issues} />
+                    <ApplicationIssues application={data} />
                     <ApplicationChart data={data} />
                 </ApplicationContainer>
             }

@@ -244,7 +244,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 featureCount={data.featureCount}
                             />
                             <StyledDivider />
-                            {mode.applicationMode !== 'success' ? (
+                            {mode.applicationMode === 'success' ? (
                                 <SuccessStatus />
                             ) : (
                                 <WarningStatus>

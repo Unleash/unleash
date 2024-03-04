@@ -11,7 +11,7 @@ interface IMetricsSummaryChartProps {
 export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
     metricsSummaryTrends,
 }) => {
-    const data = useMetricsSummary(metricsSummaryTrends, 'total');
+    const data = useMetricsSummary(metricsSummaryTrends);
 
     return <LineChart data={data} />;
 };

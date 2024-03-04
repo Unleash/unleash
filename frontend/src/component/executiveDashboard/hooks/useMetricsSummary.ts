@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { getProjectColor } from '../executive-dashboard-utils';
 import { useTheme } from '@mui/material';
+import { getProjectColor } from '../executive-dashboard-utils';
 import {
     ExecutiveSummarySchema,
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
-} from '../../../openapi';
+} from 'openapi';
 
 type MetricsSummaryTrends = ExecutiveSummarySchema['metricsSummaryTrends'];
 

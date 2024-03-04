@@ -21,11 +21,14 @@ import { PROXY_FEATURES_FOR_TOKEN_TIME } from '../metric-events';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
-type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
+type Stores = Pick<
+    IUnleashStores,
+    'projectStore' | 'eventStore' | 'segmentReadModel'
+>;
 
 type Services = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'segmentService' | 'configurationRevisionService'
+    'featureToggleServiceV2' | 'configurationRevisionService'
 >;
 
 export class ProxyRepository
@@ -164,7 +167,7 @@ export class ProxyRepository
 
     private async segmentsForToken(): Promise<Segment[]> {
         return mapSegmentsForClient(
-            await this.services.segmentService.getAll(),
+            await this.stores.segmentReadModel.getAll(),
         );
     }
 

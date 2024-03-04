@@ -19,7 +19,7 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
             isLocalTooltip
             TooltipComponent={MetricsSummaryTooltip}
             overrideOptions={{
-                parsing: { yAxisKey: 'total', xAxisKey: 'weekId' },
+                parsing: { yAxisKey: 'totalRequests', xAxisKey: 'week' },
             }}
         />
     );

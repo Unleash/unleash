@@ -575,7 +575,6 @@ export * from './getAllToggles403';
 export * from './getApiTokensByName401';
 export * from './getApiTokensByName403';
 export * from './getApplication404';
-export * from './getApplicationEnvironmentInstances404';
 export * from './getApplicationOverview404';
 export * from './getApplicationsParams';
 export * from './getArchivedFeatures401';

@@ -20,7 +20,7 @@ async function getSetup(anonymise: boolean = false) {
         experimental: { flags: { anonymiseEventLog: anonymise } },
     });
     const services = createServices(stores, config);
-    const app = await getApp(config, stores, services);
+    const { app } = await getApp(config, stores, services);
 
     return {
         base,

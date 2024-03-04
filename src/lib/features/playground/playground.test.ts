@@ -23,7 +23,7 @@ async function getSetup() {
         experimental: { flags: { strictSchemaValidation: true } },
     });
     const services = createServices(stores, config);
-    const app = await getApp(config, stores, services);
+    const { app } = await getApp(config, stores, services);
     return { base, request: supertest(app) };
 }
 describe('toggle generator', () => {

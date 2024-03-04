@@ -21,7 +21,7 @@ async function getSetup(opts?: IUnleashOptions) {
     db = await dbInit('metrics', config.getLogger);
 
     const services = createServices(db.stores, config, db.rawDatabase);
-    const app = await getApp(config, db.stores, services);
+    const { app } = await getApp(config, db.stores, services);
     return {
         request: supertest(app),
         stores: db.stores,

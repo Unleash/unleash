@@ -16,7 +16,7 @@ async function getSetup() {
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    const app = await getApp(config, stores, services);
+    const { app } = await getApp(config, stores, services);
 
     return {
         base,

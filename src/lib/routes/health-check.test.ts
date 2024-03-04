@@ -11,7 +11,7 @@ async function getSetup() {
     const stores = createStores();
     const config = createTestConfig();
     const services = createServices(stores, config);
-    const app = await getApp(config, stores, services);
+    const { app } = await getApp(config, stores, services);
 
     return {
         request: supertest(app),

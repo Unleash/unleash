@@ -288,7 +288,6 @@ export const createServices = (
     const proxyService = new ProxyService(config, stores, {
         featureToggleServiceV2,
         clientMetricsServiceV2,
-        segmentService,
         settingService,
         configurationRevisionService,
     });

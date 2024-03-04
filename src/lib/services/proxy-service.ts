@@ -23,12 +23,14 @@ type Config = Pick<
     'getLogger' | 'frontendApi' | 'frontendApiOrigins' | 'eventBus'
 >;
 
-type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
+type Stores = Pick<
+    IUnleashStores,
+    'projectStore' | 'eventStore' | 'segmentReadModel'
+>;
 
 type Services = Pick<
     IUnleashServices,
     | 'featureToggleServiceV2'
-    | 'segmentService'
     | 'clientMetricsServiceV2'
     | 'settingService'
     | 'configurationRevisionService'

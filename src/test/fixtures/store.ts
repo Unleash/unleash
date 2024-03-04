@@ -42,6 +42,7 @@ import { FakeLastSeenStore } from '../../lib/features/metrics/last-seen/fake-las
 import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-feature-search-store';
 import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inactive-users-store';
 import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage/fake-traffic-data-usage-store';
+import { FakeSegmentReadModel } from '../../lib/features/segment/fake-segment-read-model';
 
 const db = {
     select: () => ({
@@ -93,6 +94,7 @@ const createStores: () => IUnleashStores = () => {
         featureSearchStore: new FakeFeatureSearchStore(),
         inactiveUsersStore: new FakeInactiveUsersStore(),
         trafficDataUsageStore: new FakeTrafficDataUsageStore(),
+        segmentReadModel: new FakeSegmentReadModel(),
     };
 };
 

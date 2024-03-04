@@ -5,8 +5,10 @@ import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredInteg
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 
 export const IntegrationList: VFC = () => {
+    const { signalEndpoints } = useSignalEndpoints();
     const { providers, addons, loading } = useAddons();
 
     return (
@@ -15,7 +17,7 @@ export const IntegrationList: VFC = () => {
             isLoading={loading}
         >
             <ConditionallyRender
-                condition={addons.length > 0}
+                condition={addons.length > 0 || signalEndpoints.length > 0}
                 show={
                     <ConfiguredIntegrations
                         addons={addons}

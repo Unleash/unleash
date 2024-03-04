@@ -83,7 +83,11 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                             variant='stacked'
                             icon='webhook'
                             title='Signals'
-                            description={`${signalEndpoints.length} signal endpoints configured`}
+                            description={`${
+                                signalEndpoints.length
+                            } signal endpoint${
+                                signalEndpoints.length === 1 ? '' : 's'
+                            } configured`}
                             link='/integrations/signals'
                             configureActionText='View signal endpoints'
                         />

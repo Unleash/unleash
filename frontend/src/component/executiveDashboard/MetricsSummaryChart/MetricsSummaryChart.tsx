@@ -13,7 +13,6 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
     metricsSummaryTrends,
 }) => {
     const data = useMetricsSummary(metricsSummaryTrends);
-    console.log(data);
     return (
         <LineChart
             data={data}

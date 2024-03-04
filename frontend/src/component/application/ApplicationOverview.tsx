@@ -38,8 +38,6 @@ const ProjectContainer = styled(Box)(({ theme }) => ({
 const ApplicationHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    // alignItems: 'center',
-    // alignItems: 'flex-start'
     alignSelf: 'stretch',
 }));
 

@@ -12,7 +12,6 @@ export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
 }) => {
     const data = useProjectChartData(projectFlagTrends);
-
     return (
         <LineChart
             data={data}

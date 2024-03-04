@@ -12,7 +12,9 @@ export const allOption = { label: 'ALL', id: '*' };
 
 interface IProjectSelectProps {
     selectedProjects: string[];
-    onChange: Dispatch<SetStateAction<string[]>>;
+    onChange:
+        | Dispatch<SetStateAction<string[]>>
+        | ((projects: string[]) => void);
     dataTestId?: string;
     sx?: SxProps;
     disabled?: boolean;

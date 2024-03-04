@@ -1,236 +1,195 @@
-import { useMemo, useState, VFC } from 'react';
+import { VFC } from 'react';
+import { Box, styled } from '@mui/material';
+import { ArrayParam, withDefault } from 'use-query-params';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import {
-    Box,
-    styled,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
-import { UsersChart } from './UsersChart/UsersChart';
-import { FlagsChart } from './FlagsChart/FlagsChart';
-import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
-import { UserStats } from './UserStats/UserStats';
-import { FlagStats } from './FlagStats/FlagStats';
-import { Widget } from './Widget/Widget';
-import { FlagsProjectChart } from './FlagsProjectChart/FlagsProjectChart';
-import { ProjectHealthChart } from './ProjectHealthChart/ProjectHealthChart';
-import { TimeToProductionChart } from './TimeToProductionChart/TimeToProductionChart';
-import { TimeToProduction } from './TimeToProduction/TimeToProduction';
-import {
-    ProjectSelect,
     allOption,
-} from '../common/ProjectSelect/ProjectSelect';
-import { MetricsSummaryChart } from './MetricsSummaryChart/MetricsSummaryChart';
-import {
-    ExecutiveSummarySchemaMetricsSummaryTrendsItem,
-    ExecutiveSummarySchemaProjectFlagTrendsItem,
-} from 'openapi';
-import { HealthStats } from './HealthStats/HealthStats';
-import { DashboardHeader } from './DashboardHeader/DashboardHeader';
+    ProjectSelect,
+} from 'component/common/ProjectSelect/ProjectSelect';
+import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
+
+import { useFilteredFlagsSummary } from './hooks/useFilteredFlagsSummary';
+import { useFilteredTrends } from './hooks/useFilteredTrends';
+
+import { Widget } from './components/Widget/Widget';
+import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
+
+import { UserStats } from './componentsStat/UserStats/UserStats';
+import { FlagStats } from './componentsStat/FlagStats/FlagStats';
+import { HealthStats } from './componentsStat/HealthStats/HealthStats';
+import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction';
+
+import { UsersChart } from './componentsChart/UsersChart/UsersChart';
+import { FlagsChart } from './componentsChart/FlagsChart/FlagsChart';
+import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProjectChart';
+import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart';
+import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
+import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
+import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: `300px 1fr`,
+    gridTemplateColumns: `repeat(2, 1fr)`,
     gridAutoRows: 'auto',
     gap: theme.spacing(2),
-}));
-
-const StyledBox = styled(Box)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    marginTop: theme.spacing(4),
-    [theme.breakpoints.down('lg')]: {
-        width: '100%',
-        marginLeft: 0,
+    paddingBottom: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: `300px 1fr`,
     },
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
 }));
 
-const useDashboardGrid = () => {
-    const theme = useTheme();
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-    if (isSmallScreen) {
-        return {
-            gridTemplateColumns: `1fr`,
-            chartSpan: 1,
-            userTrendsOrder: 3,
-            flagStatsOrder: 2,
-            largeChartSpan: 1,
-        };
-    }
-
-    if (isMediumScreen) {
-        return {
-            gridTemplateColumns: `1fr 1fr`,
-            chartSpan: 2,
-            userTrendsOrder: 3,
-            flagStatsOrder: 2,
-            largeChartSpan: 2,
-        };
-    }
-
-    return {
-        gridTemplateColumns: `300px auto`,
-        chartSpan: 1,
-        userTrendsOrder: 2,
-        flagStatsOrder: 3,
-        largeChartSpan: 2,
-    };
-};
-
-interface FilteredProjectData {
-    filteredProjectFlagTrends: ExecutiveSummarySchemaProjectFlagTrendsItem[];
-    filteredMetricsSummaryTrends: ExecutiveSummarySchemaMetricsSummaryTrendsItem[];
-}
+const ChartWidget = styled(Widget)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        gridColumnStart: 'span 2',
+        order: 2,
+    },
+}));
 
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
-    const [projects, setProjects] = useState([allOption.id]);
+    const stateConfig = {
+        projects: withDefault(ArrayParam, [allOption.id]),
+    };
+    const [state, setState] = usePersistentTableState(`insights`, stateConfig);
+    const setProjects = (projects: string[]) => {
+        setState({ projects });
+    };
+    const projects = state.projects
+        ? (state.projects.filter(Boolean) as string[])
+        : [];
+    const showAllProjects = projects[0] === allOption.id;
+    const projectsData = useFilteredTrends(
+        executiveDashboardData.projectFlagTrends,
+        projects,
+    );
+    const metricsData = useFilteredTrends(
+        executiveDashboardData.metricsSummaryTrends,
+        projects,
+    );
+    const { users } = executiveDashboardData;
 
-    const flagPerUsers = useMemo(() => {
-        if (
-            executiveDashboardData.users.total === 0 ||
-            executiveDashboardData.flags.total === 0
-        )
-            return '0';
-
-        return (
-            executiveDashboardData.flags.total /
-            executiveDashboardData.users.total
-        ).toFixed(1);
-    }, [executiveDashboardData]);
-
-    const { filteredProjectFlagTrends, filteredMetricsSummaryTrends } =
-        useMemo<FilteredProjectData>(() => {
-            if (projects[0] === allOption.id) {
-                return {
-                    filteredProjectFlagTrends:
-                        executiveDashboardData.projectFlagTrends,
-                    filteredMetricsSummaryTrends:
-                        executiveDashboardData.metricsSummaryTrends,
-                };
-            }
-
-            const filteredProjectFlagTrends =
-                executiveDashboardData.projectFlagTrends.filter((trend) =>
-                    projects.includes(trend.project),
-                ) as ExecutiveSummarySchemaProjectFlagTrendsItem[];
-
-            const filteredImpressionsSummary =
-                executiveDashboardData.metricsSummaryTrends.filter((summary) =>
-                    projects.includes(summary.project),
-                ) as ExecutiveSummarySchemaMetricsSummaryTrendsItem[];
-
-            return {
-                filteredProjectFlagTrends,
-                filteredMetricsSummaryTrends: filteredImpressionsSummary,
-            };
-        }, [executiveDashboardData, projects]);
-
-    const {
-        gridTemplateColumns,
-        chartSpan,
-        userTrendsOrder,
-        flagStatsOrder,
-        largeChartSpan,
-    } = useDashboardGrid();
+    const summary = useFilteredFlagsSummary(projectsData);
+    const isOneProjectSelected = projects.length === 1;
 
     return (
         <>
             <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
-                <DashboardHeader />
+                <DashboardHeader
+                    actions={
+                        <ProjectSelect
+                            selectedProjects={projects}
+                            onChange={setProjects}
+                            dataTestId={'DASHBOARD_PROJECT_SELECT'}
+                            sx={{ flex: 1, maxWidth: '360px' }}
+                        />
+                    }
+                />
             </Box>
-            <StyledGrid sx={{ gridTemplateColumns }}>
-                <Widget title='Total users' order={1}>
-                    <UserStats
-                        count={executiveDashboardData.users.total}
-                        active={executiveDashboardData.users.active}
-                        inactive={executiveDashboardData.users.inactive}
-                    />
-                </Widget>
-                <Widget title='Users' order={userTrendsOrder} span={chartSpan}>
-                    <UsersChart
-                        userTrends={executiveDashboardData.userTrends}
-                        isLoading={loading}
-                    />
-                </Widget>
+            <StyledGrid>
+                <ConditionallyRender
+                    condition={showAllProjects}
+                    show={
+                        <Widget title='Total users'>
+                            <UserStats
+                                count={users.total}
+                                active={users.active}
+                                inactive={users.inactive}
+                            />
+                        </Widget>
+                    }
+                    elseShow={
+                        <Widget
+                            title={
+                                isOneProjectSelected
+                                    ? 'Users in project'
+                                    : 'Users per project on average'
+                            }
+                        >
+                            <UserStats count={summary.averageUsers} />
+                        </Widget>
+                    }
+                />
+                <ConditionallyRender
+                    condition={showAllProjects}
+                    show={
+                        <ChartWidget title='Users'>
+                            <UsersChart
+                                userTrends={executiveDashboardData.userTrends}
+                                isLoading={loading}
+                            />
+                        </ChartWidget>
+                    }
+                    elseShow={
+                        <ChartWidget title='Users per project'>
+                            <UsersPerProjectChart
+                                projectFlagTrends={projectsData}
+                            />
+                        </ChartWidget>
+                    }
+                />
                 <Widget
                     title='Total flags'
-                    tooltip='Total flags represent the total active flags (not archived) that currently exist across all projects of your application.'
-                    order={flagStatsOrder}
+                    tooltip='Active flags (not archived) that currently exist across selected projects.'
                 >
                     <FlagStats
-                        count={executiveDashboardData.flags.total}
-                        flagsPerUser={flagPerUsers}
+                        count={summary.total}
+                        flagsPerUser={
+                            showAllProjects
+                                ? (summary.total / users.total).toFixed(2)
+                                : ''
+                        }
                     />
                 </Widget>
-                <Widget title='Number of flags' order={4} span={chartSpan}>
-                    <FlagsChart
-                        flagTrends={executiveDashboardData.flagTrends}
-                        isLoading={loading}
-                    />
-                </Widget>
-            </StyledGrid>
-            <StyledBox>
-                <Typography variant='h2' component='span'>
-                    Insights per project
-                </Typography>
-                <ProjectSelect
-                    selectedProjects={projects}
-                    onChange={setProjects}
-                    dataTestId={'DASHBOARD_PROJECT_SELECT'}
-                    sx={{ flex: 1, maxWidth: '360px' }}
+                <ConditionallyRender
+                    condition={showAllProjects}
+                    show={
+                        <ChartWidget title='Number of flags'>
+                            <FlagsChart
+                                flagTrends={executiveDashboardData.flagTrends}
+                                isLoading={loading}
+                            />
+                        </ChartWidget>
+                    }
+                    elseShow={
+                        <ChartWidget title='Flags per project'>
+                            <FlagsProjectChart
+                                projectFlagTrends={projectsData}
+                            />
+                        </ChartWidget>
+                    }
                 />
-            </StyledBox>
-            <StyledGrid>
-                <Widget
-                    title='Number of flags per project'
-                    order={5}
-                    span={largeChartSpan}
-                >
-                    <FlagsProjectChart
-                        projectFlagTrends={filteredProjectFlagTrends}
-                    />
-                </Widget>
-                <Widget title='Average health' order={6}>
+                <Widget title='Average health'>
                     <HealthStats
-                        // FIXME: data from API
-                        value={80}
-                        healthy={4}
-                        stale={1}
-                        potentiallyStale={0}
+                        value={summary.averageHealth}
+                        healthy={summary.active}
+                        stale={summary.stale}
+                        potentiallyStale={summary.potentiallyStale}
                     />
                 </Widget>
-                <Widget title='Health per project' order={7} span={chartSpan}>
-                    <ProjectHealthChart
-                        projectFlagTrends={filteredProjectFlagTrends}
-                    />
-                </Widget>
-                <Widget
-                    title='Metrics over time per project'
-                    order={8}
-                    span={largeChartSpan}
+                <ChartWidget
+                    title={
+                        showAllProjects ? 'Healthy flags' : 'Health per project'
+                    }
                 >
-                    <MetricsSummaryChart
-                        metricsSummaryTrends={filteredMetricsSummaryTrends}
+                    <ProjectHealthChart
+                        projectFlagTrends={projectsData}
+                        isAggregate={showAllProjects}
                     />
-                </Widget>
-
-                <Widget title='Average time to production' order={9}>
+                </ChartWidget>
+                {/* <Widget title='Average time to production'>
                     <TimeToProduction
-                        //FIXME: data from API
+                        //FIXME: data from API
                         daysToProduction={5.2}
                     />
                 </Widget>
-                <Widget title='Time to production' order={10} span={chartSpan}>
-                    <TimeToProductionChart
-                        projectFlagTrends={filteredProjectFlagTrends}
-                    />
-                </Widget>
+                <ChartWidget title='Time to production'>
+                    <TimeToProductionChart projectFlagTrends={projectsData} />
+                </ChartWidget> */}
             </StyledGrid>
+            <Widget title='Metrics'>
+                <MetricsSummaryChart metricsSummaryTrends={metricsData} />
+            </Widget>
         </>
     );
 };

@@ -101,7 +101,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         condition={isEnterprise() && signalsEnabled}
                         show={
                             <IntegrationCard
-                                icon='webhook'
+                                icon='signals'
                                 title='Signals'
                                 description='Signal endpoints allow third-party services to send signals to Unleash.'
                                 link='/integrations/signals'

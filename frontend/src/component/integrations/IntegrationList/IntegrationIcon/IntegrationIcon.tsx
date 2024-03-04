@@ -1,8 +1,8 @@
-import { Avatar, styled } from '@mui/material';
+import { ReactNode } from 'react';
+import { Avatar, Icon, styled } from '@mui/material';
 import { DeviceHub } from '@mui/icons-material';
 import { formatAssetPath } from 'utils/formatPath';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import slackIcon from 'assets/icons/slack.svg';
 import jiraCommentIcon from 'assets/icons/jira-comment.svg';
@@ -37,12 +37,32 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     overflow: 'hidden',
     width: theme.spacing(4),
     height: theme.spacing(4),
+    fontSize: '28px',
 }));
+
+const StyledCustomIcon = styled(Icon)({
+    '&&&': {
+        display: 'flex',
+        height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 'inherit',
+    },
+});
+
+const StyledSignalsIcon = styled(StyledCustomIcon)(({ theme }) => ({
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+}));
+
+const signalsIcon = <StyledSignalsIcon>sensors</StyledSignalsIcon>;
+export const SignalsIcon = () => signalsIcon;
 
 const integrations: Record<
     string,
     {
-        icon: string;
+        icon: string | ReactNode;
         title: string;
     }
 > = {
@@ -67,24 +87,41 @@ const integrations: Record<
     react: { title: 'React', icon: react },
     ruby: { title: 'Ruby', icon: ruby },
     rust: { title: 'Rust', icon: rust },
+    signals: {
+        title: 'Signals',
+        icon: signalsIcon,
+    },
     svelte: { title: 'Svelte', icon: svelte },
     vue: { title: 'Vue', icon: vue },
 };
 
-export const IntegrationIcon = ({ name }: IIntegrationIconProps) => (
-    <ConditionallyRender
-        condition={Object.keys(integrations).includes(name)}
-        show={() => (
-            <StyledAvatar
-                src={formatAssetPath(integrations[name].icon)}
-                alt={`${capitalizeFirst(integrations[name].title)} icon`}
-                variant='rounded'
-            />
-        )}
-        elseShow={() => (
+export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
+    const integration = integrations[name];
+
+    if (!integration) {
+        return (
             <StyledAvatar variant='rounded'>
                 <DeviceHub />
             </StyledAvatar>
-        )}
-    />
-);
+        );
+    }
+
+    if (typeof integration.icon === 'string') {
+        return (
+            <StyledAvatar
+                src={formatAssetPath(integration.icon)}
+                alt={`${capitalizeFirst(integration.title)} icon`}
+                variant='rounded'
+            />
+        );
+    }
+
+    return (
+        <StyledAvatar
+            alt={`${capitalizeFirst(integration.title)} icon`}
+            variant='rounded'
+        >
+            {integration.icon}
+        </StyledAvatar>
+    );
+};

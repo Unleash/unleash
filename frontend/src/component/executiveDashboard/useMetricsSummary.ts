@@ -38,7 +38,6 @@ export const useMetricsSummary = (
         const groupedMetrics = groupDataByProject(metricsSummaryTrends);
         const datasets = Object.entries(groupedMetrics).map(
             ([project, trends]) => {
-                console.log(project);
                 const color = getProjectColor(project);
                 return {
                     label: project,

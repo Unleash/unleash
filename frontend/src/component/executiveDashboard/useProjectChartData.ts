@@ -24,7 +24,6 @@ export const useProjectChartData = (projectFlagTrends: ProjectFlagTrends) => {
 
         const datasets = Object.entries(groupedFlagTrends).map(
             ([project, trends]) => {
-                console.log(project);
                 const color = getProjectColor(project);
                 return {
                     label: project,

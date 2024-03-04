@@ -377,7 +377,7 @@ test(`should import segments and connect them to feature strategies`, async () =
         .expect(202);
 
     const allSegments = await app.services.segmentService.getAll();
-    const activeSegments = await app.services.segmentService.getActive();
+    const activeSegments = await db.stores.segmentReadModel.getActive();
 
     expect(allSegments.length).toEqual(2);
     expect(collectIds(allSegments)).toEqual([1, 2]);

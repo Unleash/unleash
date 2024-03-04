@@ -79,10 +79,6 @@ export class SegmentService implements ISegmentService {
         return this.segmentStore.getAll(this.config.isEnterprise);
     }
 
-    async getActive(): Promise<ISegment[]> {
-        return this.segmentStore.getActive();
-    }
-
     async getActiveForClient(): Promise<IClientSegment[]> {
         return this.segmentStore.getActiveForClient();
     }

@@ -1,4 +1,4 @@
-import { IFeatureStrategySegment, ISegment } from '../../types';
+import { IClientSegment, IFeatureStrategySegment, ISegment } from '../../types';
 import { ISegmentReadModel } from './segment-read-model-type';
 
 export class FakeSegmentReadModel implements ISegmentReadModel {
@@ -7,6 +7,14 @@ export class FakeSegmentReadModel implements ISegmentReadModel {
     }
 
     async getAllFeatureStrategySegments(): Promise<IFeatureStrategySegment[]> {
+        return [];
+    }
+
+    async getActive(): Promise<ISegment[]> {
+        return [];
+    }
+
+    async getActiveForClient(): Promise<IClientSegment[]> {
         return [];
     }
 }

@@ -8,7 +8,12 @@ import {
 } from '../../openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HelpIcon } from '../common/HelpIcon/HelpIcon';
-import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';
+import {
+    CheckCircle,
+    CloudCircle,
+    Flag,
+    WarningAmberRounded,
+} from '@mui/icons-material';
 import TimeAgo from 'react-timeago';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getApplicationIssueMode } from './ApplicationIssues/ApplicationIssues';
@@ -127,7 +132,7 @@ const useElementWidth = () => {
 };
 const SuccessStatus = () => (
     <StyledStatus mode='success'>
-        <WarningAmberRounded
+        <CheckCircle
             sx={(theme) => ({
                 color: theme.palette.success.main,
             })}
@@ -239,7 +244,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 featureCount={data.featureCount}
                             />
                             <StyledDivider />
-                            {mode.applicationMode === 'success' ? (
+                            {mode.applicationMode !== 'success' ? (
                                 <SuccessStatus />
                             ) : (
                                 <WarningStatus>

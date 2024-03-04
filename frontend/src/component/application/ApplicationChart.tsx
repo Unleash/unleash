@@ -5,7 +5,7 @@ import { FC, useLayoutEffect, useRef, useState } from 'react';
 import {
     ApplicationOverviewEnvironmentSchema,
     ApplicationOverviewSchema,
-} from '../../openapi';
+} from 'openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HelpIcon } from '../common/HelpIcon/HelpIcon';
 import { CloudCircle, Flag, WarningAmberRounded } from '@mui/icons-material';

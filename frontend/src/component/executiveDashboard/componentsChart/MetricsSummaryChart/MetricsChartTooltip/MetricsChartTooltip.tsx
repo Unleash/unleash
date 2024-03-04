@@ -1,7 +1,7 @@
 import { type VFC } from 'react';
 import { ExecutiveSummarySchemaMetricsSummaryTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
-import { TooltipState } from '../../components/LineChart/ChartTooltip/ChartTooltip';
+import { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -109,7 +109,7 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▣ '}
-                        title={`Total requests: ${point.value.total}`}
+                        title={`Total requests: ${point.value.totalRequests}`}
                         color={'info'}
                     />
                     <InfoLine

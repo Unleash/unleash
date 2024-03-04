@@ -18,13 +18,11 @@ import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
 import { UserStats } from './componentsStat/UserStats/UserStats';
 import { FlagStats } from './componentsStat/FlagStats/FlagStats';
 import { HealthStats } from './componentsStat/HealthStats/HealthStats';
-import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction';
 
 import { UsersChart } from './componentsChart/UsersChart/UsersChart';
 import { FlagsChart } from './componentsChart/FlagsChart/FlagsChart';
 import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProjectChart';
 import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart';
-import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
 

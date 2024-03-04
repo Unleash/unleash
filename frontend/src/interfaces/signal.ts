@@ -23,11 +23,11 @@ export interface ISignal {
     source: SignalSource;
     sourceId: number;
     createdAt: string;
-    createdBySignalEndpointTokenId: number;
+    createdBySourceTokenId: number;
     payload: Record<string, unknown>;
 }
 
 export interface ISignalEndpointSignal
-    extends Omit<ISignal, 'createdBySignalEndpointTokenId'> {
+    extends Omit<ISignal, 'createdBySourceTokenId'> {
     tokenName: string;
 }

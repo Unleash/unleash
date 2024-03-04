@@ -75,8 +75,9 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                     })}
                 <ConditionallyRender
                     condition={
-                        isEnterprise() && signalsEnabled
-                        // && signalEndpoints.length > 0
+                        isEnterprise() &&
+                        signalsEnabled &&
+                        signalEndpoints.length > 0
                     }
                     show={
                         <IntegrationCard

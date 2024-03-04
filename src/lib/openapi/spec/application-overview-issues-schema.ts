@@ -5,20 +5,14 @@ export const applicationOverviewIssuesSchema = {
     type: 'object',
     description: 'This list of issues that might be wrong with the application',
     additionalProperties: false,
-    required: ['type', 'items'],
+    required: ['missingStrategies'],
     properties: {
-        type: {
-            type: 'string',
-            enum: ['missingFeatures', 'missingStrategies', 'outdatedSdks'],
-            description: 'The name of this action.',
-        },
-        items: {
+        missingStrategies: {
             type: 'array',
             items: {
                 type: 'string',
             },
-            description:
-                'The list of issues that might be wrong with the application',
+            description: 'The list of strategies that are missing from Unleash',
             example: ['feature1', 'feature2'],
         },
     },

@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ApplicationEnvironmentIssuesSchema } from './applicationEnvironmentIssuesSchema';
 
 /**
  * Data about an application environment
@@ -10,6 +11,8 @@
 export interface ApplicationOverviewEnvironmentSchema {
     /** The number of instances of the application environment */
     instanceCount: number;
+    /** This list of issues that might be wrong with the application */
+    issues: ApplicationEnvironmentIssuesSchema;
     /** The last time the application environment was seen */
     lastSeen: string | null;
     /** Name of the application environment */

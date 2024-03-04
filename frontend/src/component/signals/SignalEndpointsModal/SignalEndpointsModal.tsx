@@ -5,15 +5,18 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IActionSet } from 'interfaces/action';
-import { useActions } from 'hooks/api/getters/useActions/useActions';
+import { ISignalEndpoint } from 'interfaces/signal';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import {
-    ActionSetPayload,
-    useActionsApi,
-} from 'hooks/api/actions/useActionsApi/useActionsApi';
-import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm';
-import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+    SignalEndpointPayload,
+    useSignalEndpointsApi,
+} from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
+import { useSignalEndpointTokensApi } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
+import { SignalEndpointsForm } from './SignalEndpointsForm/SignalEndpointsForm';
+import {
+    TokenGeneration,
+    useSignalEndpointsForm,
+} from './SignalEndpointsForm/useSignalEndpointsForm';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -45,22 +48,25 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-interface IProjectActionsModalProps {
-    action?: IActionSet;
+interface ISignalEndpointsModalProps {
+    signalEndpoint?: ISignalEndpoint;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onOpenEvents: () => void;
+    newToken: (token: string) => void;
+    onOpenSignals: () => void;
 }
 
-export const ProjectActionsModal = ({
-    action,
+export const SignalEndpointsModal = ({
+    signalEndpoint,
     open,
     setOpen,
-    onOpenEvents,
-}: IProjectActionsModalProps) => {
-    const projectId = useRequiredPathParam('projectId');
-    const { refetch } = useActions(projectId);
-    const { addActionSet, updateActionSet, loading } = useActionsApi(projectId);
+    newToken,
+    onOpenSignals,
+}: ISignalEndpointsModalProps) => {
+    const { refetch } = useSignalEndpoints();
+    const { addSignalEndpoint, updateSignalEndpoint, loading } =
+        useSignalEndpointsApi();
+    const { addSignalEndpointToken } = useSignalEndpointTokensApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
@@ -69,72 +75,37 @@ export const ProjectActionsModal = ({
         setEnabled,
         name,
         setName,
-        sourceId,
-        setSourceId,
-        filters,
-        setFilters,
-        actorId,
-        setActorId,
-        actions,
-        setActions,
+        description,
+        setDescription,
+        tokenGeneration,
+        setTokenGeneration,
+        tokenName,
+        setTokenName,
         errors,
         validateName,
+        validateTokenName,
         validate,
         validated,
         reloadForm,
-    } = useProjectActionsForm(action);
+    } = useSignalEndpointsForm(signalEndpoint);
 
     useEffect(() => {
         reloadForm();
     }, [open]);
 
-    const editing = action !== undefined;
-    const title = `${editing ? 'Edit' : 'New'} action`;
+    const editing = signalEndpoint !== undefined;
+    const title = `${editing ? 'Edit' : 'New'} signal endpoint`;
 
-    const payload: ActionSetPayload = {
+    const payload: SignalEndpointPayload = {
         enabled,
         name,
-        match: {
-            source: 'signal-endpoint',
-            sourceId,
-            payload: filters
-                .filter((f) => f.parameter.length > 0)
-                .reduce(
-                    (
-                        acc,
-                        {
-                            parameter,
-                            inverted,
-                            operator,
-                            caseInsensitive,
-                            value,
-                            values,
-                        },
-                    ) => ({
-                        ...acc,
-                        [parameter]: {
-                            inverted,
-                            operator,
-                            caseInsensitive,
-                            value,
-                            values,
-                        },
-                    }),
-                    {},
-                ),
-        },
-        actorId,
-        actions: actions.map(({ action, sortOrder, executionParams }) => ({
-            action,
-            sortOrder,
-            executionParams,
-        })),
+        description,
     };
 
     const formatApiCode = () => `curl --location --request ${
         editing ? 'PUT' : 'POST'
-    } '${uiConfig.unleashUrl}/api/admin/projects/${projectId}/actions${
-        editing ? `/${action.id}` : ''
+    } '${uiConfig.unleashUrl}/api/admin/signal-endpoints${
+        editing ? `/${signalEndpoint.id}` : ''
     }' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
@@ -147,12 +118,20 @@ export const ProjectActionsModal = ({
 
         try {
             if (editing) {
-                await updateActionSet(action.id, payload);
+                await updateSignalEndpoint(signalEndpoint.id, payload);
             } else {
-                await addActionSet(payload);
+                const { id } = await addSignalEndpoint(payload);
+                if (tokenGeneration === TokenGeneration.NOW) {
+                    const { token } = await addSignalEndpointToken(id, {
+                        name: tokenName,
+                    });
+                    newToken(token);
+                }
             }
             setToastData({
-                title: `action ${editing ? 'updated' : 'added'} successfully`,
+                title: `Signal endpoint ${
+                    editing ? 'updated' : 'added'
+                } successfully`,
                 type: 'success',
             });
             refetch();
@@ -173,34 +152,34 @@ export const ProjectActionsModal = ({
             <FormTemplate
                 loading={loading}
                 modal
-                description='Actions allow you to configure automations based on specific signals, like the ones originated from signal endpoints.'
-                documentationLink='https://docs.getunleash.io/reference/actions'
-                documentationLinkLabel='Actions documentation'
+                description='Signal endpoints allow third-party services to send signals to Unleash.'
+                documentationLink='https://docs.getunleash.io/reference/signals'
+                documentationLinkLabel='Signals documentation'
                 formatApiCode={formatApiCode}
             >
                 <StyledHeader>
                     <StyledTitle>{title}</StyledTitle>
                     <ConditionallyRender
                         condition={editing}
-                        show={<Link onClick={onOpenEvents}>View events</Link>}
+                        show={<Link onClick={onOpenSignals}>View signals</Link>}
                     />
                 </StyledHeader>
                 <StyledForm onSubmit={onSubmit}>
-                    <ProjectActionsForm
+                    <SignalEndpointsForm
+                        signalEndpoint={signalEndpoint}
                         enabled={enabled}
                         setEnabled={setEnabled}
                         name={name}
                         setName={setName}
-                        sourceId={sourceId}
-                        setSourceId={setSourceId}
-                        filters={filters}
-                        setFilters={setFilters}
-                        actorId={actorId}
-                        setActorId={setActorId}
-                        actions={actions}
-                        setActions={setActions}
+                        description={description}
+                        setDescription={setDescription}
+                        tokenGeneration={tokenGeneration}
+                        setTokenGeneration={setTokenGeneration}
+                        tokenName={tokenName}
+                        setTokenName={setTokenName}
                         errors={errors}
                         validateName={validateName}
+                        validateTokenName={validateTokenName}
                         validated={validated}
                     />
                     <StyledButtonContainer>
@@ -209,7 +188,7 @@ export const ProjectActionsModal = ({
                             variant='contained'
                             color='primary'
                         >
-                            {editing ? 'Save' : 'Add'} action
+                            {editing ? 'Save' : 'Add'} signal endpoint
                         </Button>
                         <StyledCancelButton
                             onClick={() => {

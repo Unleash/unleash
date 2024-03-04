@@ -1,15 +1,18 @@
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { IActionSet } from 'interfaces/action';
-import { useActionEvents } from 'hooks/api/getters/useActionEvents/useActionEvents';
+import { ISignalEndpoint } from 'interfaces/signal';
+import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
+import { Suspense, lazy } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ProjectActionsEventsStateCell } from './ProjectActionsEventsStateCell';
-import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails/ProjectActionsEventsDetails';
+
+const LazyReactJSONEditor = lazy(
+    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
+);
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -24,6 +27,17 @@ const StyledHeaderRow = styled('div')({
     width: '100%',
 });
 
+const StyledHeaderSubtitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: theme.spacing(2),
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const StyledDescription = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
 const StyledTitle = styled('h1')({
     fontWeight: 'normal',
 });
@@ -34,10 +48,6 @@ const StyledForm = styled('form')({
     height: '100%',
 });
 
-const StyledFailedItemWrapper = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.error.light,
-}));
-
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
@@ -45,35 +55,31 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(4),
 }));
 
-interface IProjectActionsEventsModalProps {
-    action?: IActionSet;
+interface ISignalEndpointsSignalsModalProps {
+    signalEndpoint?: ISignalEndpoint;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpenConfiguration: () => void;
 }
 
-export const ProjectActionsEventsModal = ({
-    action,
+export const SignalEndpointsSignalsModal = ({
+    signalEndpoint,
     open,
     setOpen,
     onOpenConfiguration,
-}: IProjectActionsEventsModalProps) => {
-    const projectId = useRequiredPathParam('projectId');
+}: ISignalEndpointsSignalsModalProps) => {
+    const { uiConfig } = useUiConfig();
     const { locationSettings } = useLocationSettings();
-    const { actionEvents, hasMore, loadMore, loading } = useActionEvents(
-        action?.id,
-        projectId,
-        20,
-        {
+    const { signalEndpointSignals, hasMore, loadMore, loading } =
+        useSignalEndpointSignals(signalEndpoint?.id, 20, {
             refreshInterval: 5000,
-        },
-    );
+        });
 
-    if (!action) {
+    if (!signalEndpoint) {
         return null;
     }
 
-    const title = `Events: ${action.name}`;
+    const title = `Signals: ${signalEndpoint.name}`;
 
     return (
         <SidebarModal
@@ -84,7 +90,7 @@ export const ProjectActionsEventsModal = ({
             label={title}
         >
             <FormTemplate
-                loading={loading && actionEvents.length === 0}
+                loading={loading && signalEndpointSignals.length === 0}
                 modal
                 description=''
                 documentationLink=''
@@ -98,41 +104,47 @@ export const ProjectActionsEventsModal = ({
                             View configuration
                         </Link>
                     </StyledHeaderRow>
+                    <StyledHeaderSubtitle>
+                        <p>
+                            {uiConfig.unleashUrl}/api/signal-endpoint/
+                            {signalEndpoint.name}
+                        </p>
+                        <StyledDescription>
+                            {signalEndpoint.description}
+                        </StyledDescription>
+                    </StyledHeaderSubtitle>
                 </StyledHeader>
                 <StyledForm>
                     <SidePanelList
                         height={960}
-                        items={actionEvents}
+                        items={signalEndpointSignals}
                         columns={[
                             {
-                                header: 'Status',
-                                align: 'center',
-                                maxWidth: 100,
-                                cell: ProjectActionsEventsStateCell,
-                            },
-                            {
                                 header: 'Date',
-                                maxWidth: 240,
+                                maxWidth: 180,
                                 cell: ({ createdAt }) =>
                                     formatDateYMDHMS(
                                         createdAt,
                                         locationSettings?.locale,
                                     ),
                             },
+                            {
+                                header: 'Token',
+                                maxWidth: 350,
+                                cell: ({ tokenName }) => tokenName,
+                            },
                         ]}
-                        sidePanelHeader='Details'
-                        renderContent={ProjectActionsEventsDetails}
-                        renderItem={({ id, state }, children) => {
-                            if (state === 'failed') {
-                                return (
-                                    <StyledFailedItemWrapper key={id}>
-                                        {children}
-                                    </StyledFailedItemWrapper>
-                                );
-                            }
-
-                            return children;
-                        }}
+                        sidePanelHeader='Payload'
+                        renderContent={(event) => (
+                            <Suspense fallback={null}>
+                                <LazyReactJSONEditor
+                                    content={{ json: event.payload }}
+                                    readOnly
+                                    statusBar={false}
+                                    editorStyle='sidePanel'
+                                />
+                            </Suspense>
+                        )}
                         listEnd={
                             <ConditionallyRender
                                 condition={hasMore}
@@ -145,11 +157,11 @@ export const ProjectActionsEventsModal = ({
                         }
                     />
                     <ConditionallyRender
-                        condition={actionEvents.length === 0}
+                        condition={signalEndpointSignals.length === 0}
                         show={
                             <p>
-                                No events have been registered for this action
-                                set.
+                                No signals have been received on this signal
+                                endpoint.
                             </p>
                         }
                     />

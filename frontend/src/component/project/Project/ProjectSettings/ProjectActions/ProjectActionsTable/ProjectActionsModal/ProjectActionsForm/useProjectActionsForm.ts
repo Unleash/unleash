@@ -6,7 +6,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 enum ErrorField {
     NAME = 'name',
-    TRIGGER = 'trigger',
+    SOURCE = 'source',
     FILTERS = 'filters',
     ACTOR = 'actor',
     ACTIONS = 'actions',
@@ -27,7 +27,7 @@ export type ActionsActionState = Omit<
 
 const DEFAULT_PROJECT_ACTIONS_FORM_ERRORS = {
     [ErrorField.NAME]: undefined,
-    [ErrorField.TRIGGER]: undefined,
+    [ErrorField.SOURCE]: undefined,
     [ErrorField.FILTERS]: undefined,
     [ErrorField.ACTOR]: undefined,
     [ErrorField.ACTIONS]: undefined,
@@ -127,11 +127,11 @@ export const useProjectActionsForm = (action?: IActionSet) => {
 
     const validateSourceId = (sourceId: number) => {
         if (isIdEmpty(sourceId)) {
-            setError(ErrorField.TRIGGER, 'Incoming webhook is required.');
+            setError(ErrorField.SOURCE, 'Source is required.');
             return false;
         }
 
-        clearError(ErrorField.TRIGGER);
+        clearError(ErrorField.SOURCE);
         return true;
     };
 

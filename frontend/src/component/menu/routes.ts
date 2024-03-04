@@ -47,6 +47,7 @@ import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirec
 import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
 import { Application } from 'component/application/Application';
+import { Signals } from 'component/signals/Signals';
 
 export const routes: IRoute[] = [
     // Splash
@@ -351,12 +352,20 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/integrations/*',
+        path: '/integrations',
         title: 'Integrations',
         component: IntegrationList,
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/integrations/signals',
+        title: 'Signals',
+        component: Signals,
+        hidden: true,
+        type: 'protected',
+        menu: {},
     },
 
     // Segments

@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 import {
     ExecutiveSummarySchema,
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
-} from '../../openapi';
+} from 'openapi';
 import { getProjectColor } from './executive-dashboard-utils';
 
 type MetricsSummaryTrends = ExecutiveSummarySchema['metricsSummaryTrends'];

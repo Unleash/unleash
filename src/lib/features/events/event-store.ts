@@ -32,6 +32,7 @@ const EVENT_COLUMNS = [
 
 export type IQueryOperations =
     | IWhereOperation
+    | IWhereInOperation
     | IBeforeDateOperation
     | IBetweenDatesOperation
     | IForFeaturesOperation;
@@ -40,6 +41,14 @@ interface IWhereOperation {
     op: 'where';
     parameters: {
         [key: string]: string;
+    };
+}
+
+interface IWhereInOperation {
+    op: 'whereIn';
+    parameters: {
+        columnAccessor: string;
+        values: string[];
     };
 }
 
@@ -203,6 +212,10 @@ class EventStore implements IEventStore {
                     query = this.where(query, operation.parameters);
                 }
 
+                if (operation.op === 'whereIn') {
+                    query = this.whereIn(query, operation.parameters);
+                }
+
                 if (operation.op === 'forFeatures') {
                     query = this.forFeatures(query, operation.parameters);
                 }
@@ -232,6 +245,10 @@ class EventStore implements IEventStore {
                     query = this.where(query, operation.parameters);
                 }
 
+                if (operation.op === 'whereIn') {
+                    query = this.whereIn(query, operation.parameters);
+                }
+
                 if (operation.op === 'forFeatures') {
                     query = this.forFeatures(query, operation.parameters);
                 }
@@ -257,6 +274,13 @@ class EventStore implements IEventStore {
         parameters: { [key: string]: string },
     ): Knex.QueryBuilder {
         return query.where(parameters);
+    }
+
+    whereIn(
+        query: Knex.QueryBuilder,
+        parameters: { columnAccessor: string; values: string[] },
+    ): Knex.QueryBuilder {
+        return query.whereIn(parameters.columnAccessor, parameters.values);
     }
 
     beforeDate(

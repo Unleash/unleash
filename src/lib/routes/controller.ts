@@ -206,12 +206,11 @@ export default class Controller {
         this.app.use(path, router);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     useWithMiddleware(path: string, router: IRouter, middleware: any): void {
         this.app.use(path, middleware, router);
     }
 
-    get router(): any {
+    get router(): IRouter {
         return this.app;
     }
 }

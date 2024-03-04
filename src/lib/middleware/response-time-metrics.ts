@@ -3,8 +3,8 @@ import EventEmitter from 'events';
 import { REQUEST_TIME } from '../metric-events';
 import { IFlagResolver } from '../types/experimental';
 import { InstanceStatsService } from '../services';
+import { RequestHandler } from 'express';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const _responseTime = responseTime.default;
 
 const appNameReportingThreshold = 1000;
@@ -13,10 +13,10 @@ export function responseTimeMetrics(
     eventBus: EventEmitter,
     flagResolver: IFlagResolver,
     instanceStatsService: Pick<InstanceStatsService, 'getAppCountSnapshot'>,
-): any {
+): RequestHandler {
     return _responseTime((req, res, time) => {
         const { statusCode } = res;
-        const pathname = req.route ? req.path : '(hidden)';
+        const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
 
         let appName: string | undefined;
         if (
@@ -34,7 +34,7 @@ export function responseTimeMetrics(
             time,
             appName,
         };
-        console.log('timingInfo', timingInfo);
+
         eventBus.emit(REQUEST_TIME, timingInfo);
     });
 }

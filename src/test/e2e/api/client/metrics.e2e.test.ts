@@ -2,6 +2,7 @@ import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import metricsExample from '../../../examples/client-metrics.json';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import { REQUEST_TIME } from '../../../../lib/metric-events';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -63,4 +64,32 @@ test('should create instance if does not exist', async () => {
         .expect(202);
     const finalInstances = await db.stores.clientInstanceStore.getAll();
     expect(finalInstances.length).toBe(1);
+});
+
+test('should emit response time metrics data in the correct path', async () => {
+    const badMetrics = {
+        ...metricsExample,
+        bucket: { ...metricsExample.bucket, stop: null },
+    };
+
+    let timeInfo = undefined;
+    app.config.eventBus.on(REQUEST_TIME, (data) => {
+        timeInfo = data;
+    });
+
+    await app.request.post('/api/client/metrics').send(badMetrics).expect(400);
+
+    // wait in a loop of 10 milliseconds step while triggered is false
+    // or until 1000 milliseconds have passed
+    while (timeInfo === undefined) {
+        console.log('Waiting for event to be triggered');
+        await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+    console.log('Received data', timeInfo);
+    expect(timeInfo).toMatchObject({
+        method: 'POST',
+        statusCode: 400,
+        path: '/api/client/metrics',
+    });
+    app.config.eventBus.removeAllListeners();
 });

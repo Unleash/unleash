@@ -13,14 +13,13 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
     metricsSummaryTrends,
 }) => {
     const data = useMetricsSummary(metricsSummaryTrends);
-    console.log(data);
     return (
         <LineChart
             data={data}
             isLocalTooltip
             TooltipComponent={MetricsSummaryTooltip}
             overrideOptions={{
-                parsing: { yAxisKey: 'total', xAxisKey: 'weekId' },
+                parsing: { yAxisKey: 'totalRequests', xAxisKey: 'week' },
             }}
         />
     );

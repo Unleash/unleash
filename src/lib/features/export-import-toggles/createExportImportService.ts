@@ -25,12 +25,10 @@ import {
     createFakeFeatureToggleService,
     createFeatureToggleService,
 } from '../feature-toggle/createFeatureToggleService';
-import SegmentStore from '../../db/segment-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
 import FakeTagStore from '../../../test/fixtures/fake-tag-store';
 import FakeTagTypeStore from '../tag-type/fake-tag-type-store';
-import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
@@ -47,14 +45,12 @@ import { DeferredServiceFactory } from '../../db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 import {
-    createFakeSegmentService,
-    createSegmentService,
-} from '../segment/createSegmentService';
-import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
 import { createEventsService } from '../events/createEventsService';
+import { SegmentReadModel } from '../segment/segment-read-model';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -64,7 +60,6 @@ export const createFakeExportImportTogglesService = (
     const featureToggleStore = new FakeFeatureToggleStore();
     const tagStore = new FakeTagStore();
     const tagTypeStore = new FakeTagTypeStore();
-    const segmentStore = new FakeSegmentStore();
     const projectStore = new FakeProjectStore();
     const featureTagStore = new FakeFeatureTagStore();
     const strategyStore = new FakeStrategiesStore();
@@ -115,7 +110,7 @@ export const createFakeExportImportTogglesService = (
     );
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
 
-    const segmentService = createFakeSegmentService(config);
+    const segmentReadModel = new FakeSegmentReadModel();
 
     const dependentFeaturesService = createFakeDependentFeaturesService(config);
 
@@ -126,7 +121,6 @@ export const createFakeExportImportTogglesService = (
             contextFieldStore,
             featureToggleStore,
             featureTagStore,
-            segmentStore,
             tagTypeStore,
             featureEnvironmentStore,
         },
@@ -139,10 +133,10 @@ export const createFakeExportImportTogglesService = (
             contextService,
             strategyService,
             tagTypeService,
-            segmentService,
             dependentFeaturesService,
         },
         dependentFeaturesReadModel,
+        segmentReadModel,
     );
 
     return exportImportService;
@@ -162,12 +156,6 @@ export const deferredExportImportTogglesService = (
         );
         const tagStore = new TagStore(db, eventBus, getLogger);
         const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);
-        const segmentStore = new SegmentStore(
-            db,
-            eventBus,
-            getLogger,
-            flagResolver,
-        );
         const projectStore = new ProjectStore(
             db,
             eventBus,
@@ -230,7 +218,7 @@ export const deferredExportImportTogglesService = (
         );
         const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
-        const segmentService = createSegmentService(db, config);
+        const segmentReadModel = new SegmentReadModel(db);
 
         const dependentFeaturesService =
             createDependentFeaturesService(config)(db);
@@ -242,7 +230,6 @@ export const deferredExportImportTogglesService = (
                 contextFieldStore,
                 featureToggleStore,
                 featureTagStore,
-                segmentStore,
                 tagTypeStore,
                 featureEnvironmentStore,
             },
@@ -255,10 +242,10 @@ export const deferredExportImportTogglesService = (
                 contextService,
                 strategyService,
                 tagTypeService,
-                segmentService,
                 dependentFeaturesService,
             },
             dependentFeaturesReadModel,
+            segmentReadModel,
         );
 
         return exportImportService;

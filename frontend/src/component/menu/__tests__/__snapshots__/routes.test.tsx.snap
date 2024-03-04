@@ -11,6 +11,18 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "component": [Function],
+    "enterprise": false,
+    "flag": "executiveDashboard",
+    "menu": {
+      "advanced": true,
+      "mobile": true,
+    },
+    "path": "/insights",
+    "title": "Insights",
+    "type": "protected",
+  },
+  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],
@@ -421,15 +433,6 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {},
     "path": "/profile/*",
     "title": "Profile",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "enterprise": true,
-    "flag": "executiveDashboard",
-    "menu": {},
-    "path": "/dashboard",
-    "title": "Executive dashboard",
     "type": "protected",
   },
 ]

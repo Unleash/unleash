@@ -2,13 +2,15 @@ import { useTheme } from '@mui/material';
 import { useMemo } from 'react';
 import { fillGradientPrimary } from '../components/LineChart/LineChart';
 
-export const usePlaceholderData = ({
-    fill = false,
-    type = 'constant',
-}: {
+type PlaceholderDataOptions = {
     fill?: boolean;
     type?: 'rising' | 'constant' | 'double';
-}) => {
+};
+
+export const usePlaceholderData = (
+    placeholderDataOptions?: PlaceholderDataOptions,
+) => {
+    const { fill = false, type = 'constant' } = placeholderDataOptions || {};
     const theme = useTheme();
 
     return useMemo(

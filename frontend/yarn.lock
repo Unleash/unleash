@@ -2263,10 +2263,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@17.0.75", "@types/react@>=16.9.0", "@types/react@^17":
-  version "17.0.75"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.75.tgz#cffbc76840a12fcadaf5a3cf14878bb06efcf73d"
-  integrity sha512-MSA+NzEzXnQKrqpO63CYqNstFjsESgvJAdAyyJ1n6ZQq/GLgf6nOfIKwk+Twuz0L1N6xPe+qz5xRCJrbhMaLsw==
+"@types/react@*", "@types/react@17.0.76", "@types/react@>=16.9.0", "@types/react@^17":
+  version "17.0.76"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.76.tgz#bfdf762046699e265655cd8f67a51beab6cd1e80"
+  integrity sha512-w9Aq+qeszGYoQM0hgFcdsAODGJdogadBDiitPm+zjBFJ0mLymvn2qSXsDaLJUndFRqqXk1FQfa9avHUBk1JhJQ==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"

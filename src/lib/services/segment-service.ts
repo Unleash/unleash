@@ -1,6 +1,5 @@
 import { IUnleashConfig } from '../types/option';
 import {
-    IClientSegment,
     IFlagResolver,
     IUnleashStores,
     SKIP_CHANGE_REQUEST,
@@ -77,10 +76,6 @@ export class SegmentService implements ISegmentService {
 
     async getAll(): Promise<ISegment[]> {
         return this.segmentStore.getAll(this.config.isEnterprise);
-    }
-
-    async getActiveForClient(): Promise<IClientSegment[]> {
-        return this.segmentStore.getActiveForClient();
     }
 
     async getByStrategy(strategyId: string): Promise<ISegment[]> {

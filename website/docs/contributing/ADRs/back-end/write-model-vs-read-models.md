@@ -1,11 +1,11 @@
 ---
-title: "ADR: Write model vs Read models"
+title: "ADR: Write Model vs Read Models"
 ---
 
 ## Background
 
 We keep solving 3 problems in each of the business modules:
-* changing state of the system though actions
+* changing the state of the system through actions
 * displaying UI 
 * asking other modules for information
 
@@ -22,7 +22,7 @@ To address these challenges categorize your problem as one of 3 models:
 We have 3 types of models serving 3 different purposes:
 * I need to take action that modifies a state of the system (Write Model) 
 
-Solution: Go through the Command stack aka the *Write Model*. *Application logic* with the use case/workflow/steps resides in the *application service*. Application service can delegate
+Solution: Go through the Command stack aka the *Write Model*. *Application logic* with the use case/workflow/steps resides in the *Application Service*. Application service can delegate
   business logic handling to the *Domain Model* if needed (only for complex subdomains like Change Requests). Simple domain logic (very few business if statements)
   can be handled together with the application logic. Application service calls the store that is responsible for the CRUD operations on the write model. 
 
@@ -34,6 +34,6 @@ Solution: Expose *External Read Model* aka *View Model* that returns all the dat
 
 * I need information from another module to proceed with my module application logic (Internal Read Model)
   
-Solution: Cross module queries can be handles with the *Internal Read Model*. Internal means it's used internally between our modules and not exposed to the UI.
+Solution: Cross module queries can be handled with the *Internal Read Model*. Internal means it's used internally between our modules and not exposed to the UI.
   Internal read models are typically narrowly focused on answering one question and usually return much simpler data than external read models. By introducing internal
   read model other business modules are not coupled to our module's service/store/write model and can't call write model methods from another module by accident.

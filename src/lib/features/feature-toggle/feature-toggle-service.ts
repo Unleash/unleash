@@ -1324,6 +1324,7 @@ class FeatureToggleService {
             ...cToggle,
             name: newFeatureName,
             variants: undefined,
+            createdAt: undefined,
         };
         const created = await this.createFeatureToggle(
             projectId,

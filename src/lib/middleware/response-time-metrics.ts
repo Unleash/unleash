@@ -9,6 +9,30 @@ const _responseTime = responseTime.default;
 
 const appNameReportingThreshold = 1000;
 
+export const storeRequestedRoute: RequestHandler = (req, res, next) => {
+    res.locals.route = `${req.baseUrl}${req.route.path}`;
+    next();
+};
+
+function collapse(path: string): string {
+    let prefix = '';
+    if (path.startsWith('/api/admin')) {
+        prefix = '/api/admin/';
+    } else if (path.startsWith('/api/client')) {
+        prefix = '/api/client/';
+    } else if (path.startsWith('/api/frontend')) {
+        prefix = '/api/frontend/';
+    } else if (path.startsWith('/api')) {
+        prefix = '/api/';
+    } else if (path.startsWith('/edge')) {
+        prefix = '/edge/';
+    } else if (path.startsWith('/auth')) {
+        prefix = '/auth/';
+    }
+
+    return `${prefix}(hidden)`;
+}
+
 export function responseTimeMetrics(
     eventBus: EventEmitter,
     flagResolver: IFlagResolver,
@@ -16,8 +40,11 @@ export function responseTimeMetrics(
 ): RequestHandler {
     return _responseTime((req, res, time) => {
         const { statusCode } = res;
-        const pathname = req.route ? req.baseUrl + req.route.path : '(hidden)';
-
+        const pathname = res.locals.route
+            ? res.locals.route
+            : req.route
+              ? req.baseUrl + req.route.path
+              : collapse(req.path);
         let appName: string | undefined;
         if (
             !flagResolver.isEnabled('responseTimeWithAppNameKillSwitch') &&

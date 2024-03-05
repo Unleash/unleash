@@ -85,7 +85,7 @@ test('should emit response time metrics data in the correct path', async () => {
         console.log('Waiting for event to be triggered');
         await new Promise((resolve) => setTimeout(resolve, 10));
     }
-    console.log('Received data', timeInfo);
+
     expect(timeInfo).toMatchObject({
         method: 'POST',
         statusCode: 400,

@@ -4,6 +4,7 @@ import { IUnleashConfig, NONE } from '../types';
 import { handleErrors } from './util';
 import requireContentType from '../middleware/content_type_checker';
 import { PermissionError } from '../error';
+import { storeRequestedRoute } from '../middleware/response-time-metrics';
 
 interface IRequestHandler<
     P = any,
@@ -108,6 +109,7 @@ export default class Controller {
     route(options: IRouteOptions): void {
         this.app[options.method](
             options.path,
+            storeRequestedRoute,
             checkPermission(options.permission),
             checkPrivateProjectPermissions(),
             this.useContentTypeMiddleware(options),
@@ -195,6 +197,7 @@ export default class Controller {
     ): void {
         this.app.post(
             path,
+            storeRequestedRoute,
             checkPermission(permission),
             checkPrivateProjectPermissions(),
             filehandler.bind(this),

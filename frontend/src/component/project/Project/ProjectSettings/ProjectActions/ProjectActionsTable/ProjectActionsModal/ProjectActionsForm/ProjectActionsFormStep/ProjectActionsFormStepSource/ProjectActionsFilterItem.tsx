@@ -1,8 +1,14 @@
-import { IconButton, Tooltip, styled } from '@mui/material';
-import { ActionsFilterState } from './useProjectActionsForm';
+import {
+    Autocomplete,
+    IconButton,
+    TextField,
+    Tooltip,
+    styled,
+} from '@mui/material';
+import { ActionsFilterState } from '../../useProjectActionsForm';
 import { Delete } from '@mui/icons-material';
 import Input from 'component/common/Input/Input';
-import { ProjectActionsFormItem } from './ProjectActionsFormItem';
+import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
 import {
     Operator,
@@ -99,6 +105,7 @@ interface IProjectActionsFilterItemProps {
     filter: ActionsFilterState;
     index: number;
     stateChanged: (updatedFilter: ActionsFilterState) => void;
+    suggestions: string[];
     onDelete: () => void;
 }
 
@@ -106,6 +113,7 @@ export const ProjectActionsFilterItem = ({
     filter,
     index,
     stateChanged,
+    suggestions,
     onDelete,
 }: IProjectActionsFilterItemProps) => {
     const { parameter, inverted, operator, caseInsensitive, value, values } =
@@ -211,15 +219,23 @@ export const ProjectActionsFilterItem = ({
             <StyledFilter>
                 <StyledFilterHeader>
                     <StyledInputContainer>
-                        <StyledInput
-                            label='Parameter'
+                        <Autocomplete
+                            freeSolo
+                            options={suggestions}
                             value={parameter}
-                            onChange={(e) =>
+                            onInputChange={(_, parameter) =>
                                 stateChanged({
                                     ...filter,
-                                    parameter: e.target.value,
+                                    parameter,
                                 })
                             }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    size='small'
+                                    label='Parameter'
+                                />
+                            )}
                         />
                     </StyledInputContainer>
                     <StyledOperatorOptions>

@@ -2,11 +2,11 @@ import { Avatar, Box, Link, styled } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IActionSet } from 'interfaces/action';
 import { ISignalEndpoint } from 'interfaces/signal';
-import webhooksIcon from 'assets/icons/webhooks.svg';
 import { Link as RouterLink } from 'react-router-dom';
 import { ComponentType } from 'react';
 import { wrapperStyles } from 'component/common/Table/cells/LinkCell/LinkCell.styles';
-import { formatAssetPath } from 'utils/formatPath';
+import { SignalsIcon } from 'component/integrations/IntegrationList/IntegrationIcon/IntegrationIcon';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 const StyledCell = styled(Box)({
     display: 'flex',
@@ -18,6 +18,7 @@ const StyledIcon = styled(Avatar)(({ theme }) => ({
     overflow: 'hidden',
     width: theme.spacing(3),
     height: theme.spacing(3),
+    fontSize: theme.fontSizes.mainHeader,
 }));
 
 const StyledLink = styled(Link)<{
@@ -39,21 +40,26 @@ export const ProjectActionsTriggerCell = ({
     action,
     signalEndpoints,
 }: IProjectActionsTriggerCellProps) => {
-    const { sourceId } = action.match;
+    const { sourceId, source } = action.match;
     const trigger = signalEndpoints.find(({ id }) => id === sourceId);
 
     if (!trigger) {
         return <TextCell>No trigger</TextCell>;
     }
 
+    const sourceIcon =
+        source === 'signal-endpoint' ? (
+            <HtmlTooltip title='Signal endpoint' arrow>
+                <StyledIcon alt='Signal endpoint' variant='rounded'>
+                    <SignalsIcon />
+                </StyledIcon>
+            </HtmlTooltip>
+        ) : null;
+
     return (
         <TextCell>
             <StyledCell>
-                <StyledIcon
-                    src={formatAssetPath(webhooksIcon)}
-                    alt='Signal endpoint'
-                    variant='rounded'
-                />
+                {sourceIcon}
                 <StyledLink
                     component={RouterLink}
                     to='/integrations/signals'

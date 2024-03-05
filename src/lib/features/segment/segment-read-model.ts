@@ -1,4 +1,9 @@
-import { IConstraint, IFeatureStrategySegment, ISegment } from '../../types';
+import {
+    IClientSegment,
+    IConstraint,
+    IFeatureStrategySegment,
+    ISegment,
+} from '../../types';
 import { ISegmentReadModel } from './segment-read-model-type';
 import NotFoundError from '../../error/notfound-error';
 import { Db } from '../../db/db';
@@ -73,6 +78,30 @@ export class SegmentReadModel implements ISegmentReadModel {
         return rows.map((row) => ({
             featureStrategyId: row.feature_strategy_id,
             segmentId: row.segment_id,
+        }));
+    }
+
+    async getActive(): Promise<ISegment[]> {
+        const rows: ISegmentRow[] = await this.db
+            .distinct(this.prefixColumns())
+            .from('segments')
+            .orderBy('name', 'asc')
+            .join(
+                'feature_strategy_segment',
+                'feature_strategy_segment.segment_id',
+                'segments.id',
+            );
+
+        return rows.map(this.mapRow);
+    }
+
+    async getActiveForClient(): Promise<IClientSegment[]> {
+        const fullSegments = await this.getActive();
+
+        return fullSegments.map((segments) => ({
+            id: segments.id,
+            name: segments.name,
+            constraints: segments.constraints,
         }));
     }
 }

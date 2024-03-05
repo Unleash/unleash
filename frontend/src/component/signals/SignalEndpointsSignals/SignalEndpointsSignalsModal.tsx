@@ -121,7 +121,7 @@ export const SignalEndpointsSignalsModal = ({
                         columns={[
                             {
                                 header: 'Date',
-                                maxWidth: 180,
+                                maxWidth: 220,
                                 cell: ({ createdAt }) =>
                                     formatDateYMDHMS(
                                         createdAt,
@@ -130,7 +130,7 @@ export const SignalEndpointsSignalsModal = ({
                             },
                             {
                                 header: 'Token',
-                                maxWidth: 350,
+                                maxWidth: 300,
                                 cell: ({ tokenName }) => tokenName,
                             },
                         ]}

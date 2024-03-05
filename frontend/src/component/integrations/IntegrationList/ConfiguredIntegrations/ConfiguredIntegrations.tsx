@@ -82,7 +82,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                     show={
                         <IntegrationCard
                             variant='stacked'
-                            icon='webhook'
+                            icon='signals'
                             title='Signals'
                             description={`${
                                 signalEndpoints.length

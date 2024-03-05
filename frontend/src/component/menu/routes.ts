@@ -60,6 +60,17 @@ export const routes: IRoute[] = [
         isStandalone: true,
     },
 
+    // Insights - previously "Executive dashboard"
+    {
+        path: '/insights',
+        title: 'Insights',
+        component: ExecutiveDashboard,
+        type: 'protected',
+        menu: { mobile: true, advanced: true },
+        flag: 'executiveDashboard',
+        enterprise: false,
+    },
+
     // Project
     {
         path: '/projects/create',
@@ -437,17 +448,6 @@ export const routes: IRoute[] = [
         component: Profile,
         type: 'protected',
         menu: {},
-    },
-
-    // Executive dashboard
-    {
-        path: '/dashboard',
-        title: 'Executive dashboard',
-        component: ExecutiveDashboard,
-        type: 'protected',
-        menu: {},
-        flag: 'executiveDashboard',
-        enterprise: true,
     },
 
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */

@@ -69,6 +69,8 @@ export const ProjectActionsModal = ({
         setEnabled,
         name,
         setName,
+        description,
+        setDescription,
         sourceId,
         setSourceId,
         filters,
@@ -94,6 +96,7 @@ export const ProjectActionsModal = ({
     const payload: ActionSetPayload = {
         enabled,
         name,
+        description,
         match: {
             source: 'signal-endpoint',
             sourceId,

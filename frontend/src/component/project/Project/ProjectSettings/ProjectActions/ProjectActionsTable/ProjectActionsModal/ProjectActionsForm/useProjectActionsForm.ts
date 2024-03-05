@@ -41,6 +41,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
 
     const [enabled, setEnabled] = useState(false);
     const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
     const [sourceId, setSourceId] = useState<number>(0);
     const [filters, setFilters] = useState<ActionsFilterState[]>([]);
     const [actorId, setActorId] = useState<number>(0);
@@ -49,6 +50,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     const reloadForm = () => {
         setEnabled(action?.enabled ?? true);
         setName(action?.name || '');
+        setDescription(action?.description || '');
         setSourceId(action?.match?.sourceId ?? 0);
         setFilters(
             Object.entries(action?.match?.payload ?? {}).map(
@@ -171,6 +173,8 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         setEnabled,
         name,
         setName,
+        description,
+        setDescription,
         sourceId,
         setSourceId,
         filters,

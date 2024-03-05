@@ -2070,19 +2070,15 @@ test('should get correct amount of features archived in current and past window'
     await Promise.all([
         updateFeature(toggles[0].name, {
             archived_at: new Date(),
-            archived: true,
         }),
         updateFeature(toggles[1].name, {
             archived_at: new Date(),
-            archived: true,
         }),
         updateFeature(toggles[2].name, {
             archived_at: subDays(new Date(), 31),
-            archived: true,
         }),
         updateFeature(toggles[3].name, {
             archived_at: subDays(new Date(), 31),
-            archived: true,
         }),
     ]);
 

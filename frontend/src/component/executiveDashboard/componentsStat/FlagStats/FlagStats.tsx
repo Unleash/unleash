@@ -43,7 +43,7 @@ const StyledInsightsContainer = styled(Box)(({ theme }) => ({
 const StyledHeaderContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(0.5)
+    marginBottom: theme.spacing(0.5),
 }));
 
 const StyledTextContainer = styled(Box)(({ theme }) => ({

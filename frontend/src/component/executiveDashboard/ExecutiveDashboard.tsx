@@ -188,7 +188,10 @@ export const ExecutiveDashboard: VFC = () => {
                     <TimeToProductionChart projectFlagTrends={projectsData} />
                 </ChartWidget> */}
             </StyledGrid>
-            <Widget title='Metrics' tooltip='Summary of all flag evaluations reported by SDKs.'>
+            <Widget
+                title='Metrics'
+                tooltip='Summary of all flag evaluations reported by SDKs.'
+            >
                 <MetricsSummaryChart metricsSummaryTrends={metricsData} />
             </Widget>
         </>

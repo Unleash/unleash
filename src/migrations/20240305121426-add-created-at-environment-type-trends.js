@@ -11,5 +11,5 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql('ALTER TABLE IF EXISTS environment_type_trends DROP COLUMN created_at;', cb);
+    db.runSql('ALTER TABLE IF EXISTS environment_type_trends DROP COLUMN IF EXISTS created_at;', cb);
 };

@@ -49,7 +49,7 @@ export const ExecutiveDashboard: VFC = () => {
     const stateConfig = {
         projects: withDefault(ArrayParam, [allOption.id]),
     };
-    const [state, setState] = usePersistentTableState(`insights`, stateConfig);
+    const [state, setState] = usePersistentTableState('insights', stateConfig);
     const setProjects = (projects: string[]) => {
         setState({ projects });
     };
@@ -79,7 +79,7 @@ export const ExecutiveDashboard: VFC = () => {
                             selectedProjects={projects}
                             onChange={setProjects}
                             dataTestId={'DASHBOARD_PROJECT_SELECT'}
-                            sx={{ flex: 1, maxWidth: '360px' }}
+                            sx={{ flex: 1, maxWidth: '360px', width: '100%' }}
                         />
                     }
                 />
@@ -157,7 +157,10 @@ export const ExecutiveDashboard: VFC = () => {
                         </ChartWidget>
                     }
                 />
-                <Widget title='Average health'>
+                <Widget
+                    title='Average health'
+                    tooltip='Average health is a percentage of flags that are not stale nor potencially stale.'
+                >
                     <HealthStats
                         value={summary.averageHealth}
                         healthy={summary.active}
@@ -185,7 +188,7 @@ export const ExecutiveDashboard: VFC = () => {
                     <TimeToProductionChart projectFlagTrends={projectsData} />
                 </ChartWidget> */}
             </StyledGrid>
-            <Widget title='Metrics'>
+            <Widget title='Metrics' tooltip='Summary of all flag evaluations reported by SDKs.'>
                 <MetricsSummaryChart metricsSummaryTrends={metricsData} />
             </Widget>
         </>

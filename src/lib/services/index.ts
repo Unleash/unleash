@@ -26,7 +26,7 @@ import EnvironmentService from '../features/project-environments/environment-ser
 import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';
 import UserSplashService from './user-splash-service';
-import { SegmentService } from './segment-service';
+import { SegmentService } from '../features/segment/segment-service';
 import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from '../features/playground/playground-service';

@@ -43,7 +43,7 @@ import {
     IExportService,
     IImportService,
 } from '../features/export-import-toggles/export-import-service';
-import { ISegmentService } from '../segments/segment-service-interface';
+import { ISegmentService } from '../features/segment/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import EventAnnouncerService from '../services/event-announcer-service';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';

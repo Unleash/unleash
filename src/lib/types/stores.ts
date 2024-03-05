@@ -24,7 +24,7 @@ import { IFeatureToggleClientStore } from '../features/client-feature-toggles/ty
 import { IClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2-type';
 import { IUserSplashStore } from './stores/user-splash-store';
 import { IRoleStore } from './stores/role-store';
-import { ISegmentStore } from './stores/segment-store';
+import { ISegmentStore } from '../features/segment/segment-store-type';
 import { IGroupStore } from './stores/group-store';
 import { IPatStore } from './stores/pat-store';
 import { IPublicSignupTokenStore } from './stores/public-signup-token-store';

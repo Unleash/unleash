@@ -96,7 +96,7 @@ import { AccessService } from '../../services/access-service';
 import { IUser } from '../../server-impl';
 import { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { unique } from '../../util/unique';
-import { ISegmentService } from '../../segments/segment-service-interface';
+import { ISegmentService } from '../segment/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';

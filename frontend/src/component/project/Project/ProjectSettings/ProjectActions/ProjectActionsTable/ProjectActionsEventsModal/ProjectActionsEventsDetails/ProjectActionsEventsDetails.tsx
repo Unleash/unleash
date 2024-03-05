@@ -10,6 +10,10 @@ const StyledDetails = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
+const StyledAlert = styled(Alert)({
+    fontSize: 'inherit',
+});
+
 export const ProjectActionsEventsDetails = ({
     state,
     actionSet: { actions },
@@ -24,9 +28,9 @@ export const ProjectActionsEventsDetails = ({
 
     return (
         <StyledDetails>
-            <Alert severity={state === 'failed' ? 'error' : 'success'}>
+            <StyledAlert severity={state === 'failed' ? 'error' : 'success'}>
                 {stateText}
-            </Alert>
+            </StyledAlert>
             <ProjectActionsEventsDetailsSource signal={signal} />
             {actions.map((action, i) => (
                 <ProjectActionsEventsDetailsAction

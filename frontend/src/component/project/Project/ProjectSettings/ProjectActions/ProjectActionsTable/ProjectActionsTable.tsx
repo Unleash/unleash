@@ -13,10 +13,10 @@ import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { useActionsApi } from 'hooks/api/actions/useActionsApi/useActionsApi';
 import { IActionSet } from 'interfaces/action';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
-import { ProjectActionsTriggerCell } from './ProjectActionsTriggerCell';
+import { ProjectActionsSourceCell } from './ProjectActionsSourceCell';
 import { ProjectActionsFiltersCell } from './ProjectActionsFiltersCell';
 import { ProjectActionsActorCell } from './ProjectActionsActorCell';
-import { ProjectActionsActionsCell } from './ProjectActionsActionsCell';
+import { ProjectActionsActionsCell } from './ProjectActionsActionsCell/ProjectActionsActionsCell';
 import { ProjectActionsTableActionsCell } from './ProjectActionsTableActionsCell';
 import { ProjectActionsModal } from './ProjectActionsModal/ProjectActionsModal';
 import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog';
@@ -96,6 +96,7 @@ export const ProjectActionsTable = ({
                 }: { row: { original: IActionSet } }) => (
                     <LinkCell
                         title={action.name}
+                        subtitle={action.description}
                         onClick={() => {
                             setSelectedAction(action);
                             setModalOpen(true);
@@ -104,12 +105,12 @@ export const ProjectActionsTable = ({
                 ),
             },
             {
-                id: 'trigger',
-                Header: 'Trigger',
+                id: 'source',
+                Header: 'Source',
                 Cell: ({
                     row: { original: action },
                 }: { row: { original: IActionSet } }) => (
-                    <ProjectActionsTriggerCell
+                    <ProjectActionsSourceCell
                         action={action}
                         signalEndpoints={signalEndpoints}
                     />

@@ -44,6 +44,7 @@ export const StyledFailedIcon = styled(ErrorOutline)(({ theme }) => ({
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginTop: theme.spacing(2),
+    fontSize: 'inherit',
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({

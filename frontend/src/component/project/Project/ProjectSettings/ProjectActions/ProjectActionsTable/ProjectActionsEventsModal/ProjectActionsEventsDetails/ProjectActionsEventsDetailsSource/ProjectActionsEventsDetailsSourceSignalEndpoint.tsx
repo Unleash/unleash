@@ -24,6 +24,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
 }));
 
+const StyledAccordionSummary = styled(AccordionSummary)({
+    lineHeight: '1.5rem',
+});
+
 const StyledLink = styled(Link)(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
@@ -47,7 +51,7 @@ export const ProjectActionsEventsDetailsSourceSignalEndpoint = ({
 
     return (
         <StyledAccordion>
-            <AccordionSummary
+            <StyledAccordionSummary
                 expandIcon={
                     <IconButton>
                         <ExpandMore titleAccess='Toggle' />
@@ -58,7 +62,7 @@ export const ProjectActionsEventsDetailsSourceSignalEndpoint = ({
                 <StyledLink to='/integrations/signals'>
                     {signalEndpointName}
                 </StyledLink>
-            </AccordionSummary>
+            </StyledAccordionSummary>
             <AccordionDetails>
                 <Suspense fallback={null}>
                     <LazyReactJSONEditor

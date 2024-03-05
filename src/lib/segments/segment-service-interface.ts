@@ -33,8 +33,6 @@ export interface ISegmentService {
 
     validateName(name: string): Promise<void>;
 
-    getActive(): Promise<ISegment[]>;
-
     getActiveForClient(): Promise<IClientSegment[]>;
 
     getAll(): Promise<ISegment[]>;

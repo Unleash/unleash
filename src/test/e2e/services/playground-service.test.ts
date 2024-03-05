@@ -20,18 +20,14 @@ import { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from '../../../lib/openapi/spec/segment-schema';
 import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema';
 import { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema';
-import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
-import {
-    createFeatureToggleService,
-    createSegmentService,
-} from '../../../lib/features';
+import { createFeatureToggleService } from '../../../lib/features';
+import { SegmentReadModel } from '../../../lib/features/segment/segment-read-model';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
 let featureToggleService: FeatureToggleService;
-let segmentService: ISegmentService;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -41,14 +37,17 @@ beforeAll(async () => {
         db.rawDatabase,
         config,
     );
-    segmentService = createSegmentService(db.rawDatabase, config);
+    const segmentReadModel = new SegmentReadModel(db.rawDatabase);
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
-    service = new PlaygroundService(config, {
-        featureToggleServiceV2: featureToggleService,
-        segmentService,
-        privateProjectChecker,
-    });
+    service = new PlaygroundService(
+        config,
+        {
+            featureToggleServiceV2: featureToggleService,
+            privateProjectChecker,
+        },
+        segmentReadModel,
+    );
 });
 
 afterAll(async () => {

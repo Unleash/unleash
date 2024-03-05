@@ -38,12 +38,12 @@ const flagResolverWithResponseTimeMetricsFix = {
     isEnabled: (name: string) => name === 'responseTimeMetricsFix',
 };
 
-// res will always have locals (according to express RequestHandler type). Make sure it's always cleaned up
+// Make sure it's always cleaned up
 let res: any;
 beforeEach(() => {
     res = {
         statusCode: 200,
-        locals: {},
+        locals: {}, // res will always have locals (according to express RequestHandler type)
     };
 });
 

@@ -50,14 +50,16 @@ export function responseTimeMetrics(
         const responseTimeMetricsFix = flagResolver.isEnabled(
             'responseTimeMetricsFix',
         );
-        const pathname =
-            responseTimeMetricsFix && res.locals.route
-                ? res.locals.route
-                : req.route
-                  ? req.baseUrl + req.route.path
-                  : responseTimeMetricsFix
-                      ? collapse(req.path)
-                      : '(hidden)';
+        let pathname: string | undefined = undefined;
+        if (responseTimeMetricsFix && res.locals.route) {
+            pathname = res.locals.route;
+        } else if (req.route) {
+            pathname = req.baseUrl + req.route.path;
+        }
+        // when pathname is undefined use a fallback
+        pathname =
+            pathname ??
+            (responseTimeMetricsFix ? collapse(req.path) : '(hidden)');
         let appName: string | undefined;
         if (
             !flagResolver.isEnabled('responseTimeWithAppNameKillSwitch') &&

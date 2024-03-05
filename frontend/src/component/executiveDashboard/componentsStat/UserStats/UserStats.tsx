@@ -13,22 +13,23 @@ const StyledUserContainer = styled(Box)(({ theme }) => ({
 
 const StyledUserBox = styled(Box)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusExtraLarge}px`,
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.background.alternative,
     maxWidth: 300,
     padding: theme.spacing(2),
-    marginBottom: theme.spacing(3),
+    margin: `0 auto ${theme.spacing(3)}`,
     position: 'relative',
     zIndex: 2,
 }));
 
 const StyledCustomShadow = styled(Box)(({ theme }) => ({
-    width: '220px',
+    maxWidth: 270,
     height: '54px',
     backgroundColor: 'rgba(108, 101, 229, 0.30)',
     position: 'absolute',
     margin: '0 auto',
     top: '45px',
     left: '15px',
+    right: '15px',
     borderRadius: `${theme.shape.borderRadiusExtraLarge}px`,
     zIndex: 1,
 }));

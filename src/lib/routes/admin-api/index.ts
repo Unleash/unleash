@@ -37,7 +37,7 @@ import FeatureSearchController from '../../features/feature-search/feature-searc
 import { InactiveUsersController } from '../../users/inactive/inactive-users-controller';
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 
-class AdminApi extends Controller {
+export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
         super(config);
 
@@ -171,5 +171,3 @@ class AdminApi extends Controller {
         );
     }
 }
-
-module.exports = AdminApi;

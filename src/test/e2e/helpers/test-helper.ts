@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 
-import EventEmitter from 'events';
 import getApp from '../../../lib/app';
 import { createTestConfig } from '../../config/test-config';
 import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
@@ -321,8 +320,6 @@ async function createApp(
     });
     const services = createServices(stores, config, db);
     const unleashSession = sessionDb(config, undefined);
-    const emitter = new EventEmitter();
-    emitter.setMaxListeners(0);
     const app = await getApp(config, stores, services, unleashSession, db);
     const request = supertest.agent(app);
 

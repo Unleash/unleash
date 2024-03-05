@@ -6,3 +6,12 @@ exports.up = function (db, cb) {
         cb,
     );
 };
+
+exports.down = function (db, cb) {
+    db.runSql(
+        `
+            ALTER TABLE features ADD COLUMN IF NOT EXISTS archived BOOLEAN DEFAULT FALSE;
+        `,
+        cb,
+    );
+};

@@ -9,6 +9,7 @@ export interface IActionSet {
     id: number;
     enabled: boolean;
     name: string;
+    description: string;
     project: string;
     actorId: number;
     match: IMatch;

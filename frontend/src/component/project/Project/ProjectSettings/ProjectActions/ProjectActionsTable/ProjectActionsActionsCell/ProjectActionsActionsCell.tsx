@@ -3,6 +3,13 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IActionSet } from 'interfaces/action';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
+import { ProjectActionsLastEvent } from './ProjectActionsLastEvent';
+
+const StyledCell = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
 
 const StyledActionItems = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,7 +41,8 @@ export const ProjectActionsActionsCell = ({
     }
 
     return (
-        <TextCell>
+        <StyledCell>
+            <ProjectActionsLastEvent action={action} />
             <TooltipLink
                 tooltip={
                     <StyledActionItems>
@@ -60,6 +68,6 @@ export const ProjectActionsActionsCell = ({
                     ? '1 action'
                     : `${actions.length} actions`}
             </TooltipLink>
-        </TextCell>
+        </StyledCell>
     );
 };

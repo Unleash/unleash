@@ -31,43 +31,43 @@ const StyledLink = styled(Link)<{
     },
 }));
 
-interface IProjectActionsTriggerCellProps {
+interface IProjectActionsSourceCellProps {
     action: IActionSet;
     signalEndpoints: ISignalEndpoint[];
 }
 
-export const ProjectActionsTriggerCell = ({
+export const ProjectActionsSourceCell = ({
     action,
     signalEndpoints,
-}: IProjectActionsTriggerCellProps) => {
+}: IProjectActionsSourceCellProps) => {
     const { sourceId, source } = action.match;
-    const trigger = signalEndpoints.find(({ id }) => id === sourceId);
 
-    if (!trigger) {
-        return <TextCell>No trigger</TextCell>;
+    if (source === 'signal-endpoint') {
+        const signalEndpoint = signalEndpoints.find(
+            ({ id }) => id === sourceId,
+        );
+
+        if (signalEndpoint) {
+            return (
+                <TextCell>
+                    <StyledCell>
+                        <HtmlTooltip title='Signal endpoint' arrow>
+                            <StyledIcon alt='Signal endpoint' variant='rounded'>
+                                <SignalsIcon />
+                            </StyledIcon>
+                        </HtmlTooltip>
+                        <StyledLink
+                            component={RouterLink}
+                            to='/integrations/signals'
+                            underline='hover'
+                        >
+                            {signalEndpoint.name}
+                        </StyledLink>
+                    </StyledCell>
+                </TextCell>
+            );
+        }
     }
 
-    const sourceIcon =
-        source === 'signal-endpoint' ? (
-            <HtmlTooltip title='Signal endpoint' arrow>
-                <StyledIcon alt='Signal endpoint' variant='rounded'>
-                    <SignalsIcon />
-                </StyledIcon>
-            </HtmlTooltip>
-        ) : null;
-
-    return (
-        <TextCell>
-            <StyledCell>
-                {sourceIcon}
-                <StyledLink
-                    component={RouterLink}
-                    to='/integrations/signals'
-                    underline='hover'
-                >
-                    {trigger.name}
-                </StyledLink>
-            </StyledCell>
-        </TextCell>
-    );
+    return <TextCell>No source</TextCell>;
 };

@@ -207,7 +207,7 @@ export interface IRateLimiting {
     createUserMaxPerMinute: number;
     simpleLoginMaxPerMinute: number;
     passwordResetMaxPerMinute: number;
-    callIncomingWebhookMaxPerSecond: number;
+    callSignalEndpointMaxPerSecond: number;
 }
 
 export interface IUnleashConfig {

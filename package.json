@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "5.9.0+main",
+  "version": "5.10.0+main",
   "keywords": ["unleash", "feature toggle", "feature", "toggle"],
   "files": [
     "dist",
@@ -166,11 +166,11 @@
     "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.11",
     "@types/mime": "3.0.4",
-    "@types/node": "18.19.17",
+    "@types/node": "18.19.18",
     "@types/nodemailer": "6.4.14",
     "@types/owasp-password-strength-test": "1.3.2",
-    "@types/pg": "8.11.0",
-    "@types/semver": "7.5.7",
+    "@types/pg": "8.11.2",
+    "@types/semver": "7.5.8",
     "@types/stoppable": "1.1.3",
     "@types/supertest": "6.0.2",
     "@types/type-is": "1.6.6",

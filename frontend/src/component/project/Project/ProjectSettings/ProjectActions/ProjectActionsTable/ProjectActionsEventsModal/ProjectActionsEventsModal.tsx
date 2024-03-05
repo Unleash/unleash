@@ -9,7 +9,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectActionsEventsStateCell } from './ProjectActionsEventsStateCell';
-import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails.tsx/ProjectActionsEventsDetails';
+import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails/ProjectActionsEventsDetails';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -86,9 +86,9 @@ export const ProjectActionsEventsModal = ({
             <FormTemplate
                 loading={loading && actionEvents.length === 0}
                 modal
-                description='Actions allow you to configure automations based on specific triggers, like incoming webhooks.'
-                documentationLink='https://docs.getunleash.io/reference/actions'
-                documentationLinkLabel='Actions documentation'
+                description=''
+                documentationLink=''
+                documentationLinkLabel=''
                 showGuidance={false}
             >
                 <StyledHeader>

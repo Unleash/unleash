@@ -3,6 +3,8 @@ import { Db } from '../../db/db';
 import { IUnleashConfig } from '../../types';
 import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-store';
 import { ClientFeatureToggleService } from './client-feature-toggle-service';
+import { SegmentReadModel } from '../segment/segment-read-model';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
 
 export const createClientFeatureToggleService = (
     db: Db,
@@ -17,10 +19,13 @@ export const createClientFeatureToggleService = (
         flagResolver,
     );
 
+    const segmentReadModel = new SegmentReadModel(db);
+
     const clientFeatureToggleService = new ClientFeatureToggleService(
         {
             clientFeatureToggleStore: featureToggleClientStore,
         },
+        segmentReadModel,
         { getLogger, flagResolver },
     );
 
@@ -34,10 +39,13 @@ export const createFakeClientFeatureToggleService = (
 
     const fakeClientFeatureToggleStore = new FakeClientFeatureToggleStore();
 
+    const fakeSegmentReadModel = new FakeSegmentReadModel();
+
     const clientFeatureToggleService = new ClientFeatureToggleService(
         {
             clientFeatureToggleStore: fakeClientFeatureToggleStore,
         },
+        fakeSegmentReadModel,
         { getLogger, flagResolver },
     );
 

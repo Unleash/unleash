@@ -21,7 +21,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { ISegmentService } from '../../segments/segment-service-interface';
+import { ISegmentService } from './segment-service-interface';
 import { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema';
 import { AccessService, OpenApiService } from '../../services';
 import {

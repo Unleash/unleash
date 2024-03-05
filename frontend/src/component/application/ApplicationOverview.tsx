@@ -1,6 +1,6 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Box, Divider, styled } from '@mui/material';
+import { Alert, Box, Button, Divider, styled } from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 import { ApplicationIssues } from './ApplicationIssues/ApplicationIssues';
@@ -10,6 +10,8 @@ import { Badge } from '../common/Badge/Badge';
 import { useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
+import { useFeedback } from '../feedbackNew/useFeedback';
+import { ReviewsOutlined } from '@mui/icons-material';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -33,6 +35,12 @@ const ProjectContainer = styled(Box)(({ theme }) => ({
     alignSelf: 'stretch',
 }));
 
+const ApplicationHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignSelf: 'stretch',
+}));
+
 const useTracking = () => {
     const { trackEvent } = usePlausibleTracker();
     useEffect(() => {
@@ -51,31 +59,54 @@ const ApplicationOverview = () => {
     const navigate = useNavigate();
     const { data, loading } = useApplicationOverview(applicationName);
 
+    const { openFeedback } = useFeedback('applicationOverview', 'automatic');
+
+    const createFeedbackContext = () => {
+        openFeedback({
+            title: 'How easy was it to use the application overview page?',
+            positiveLabel:
+                'What do you like most about the new application overview page?',
+            areasForImprovementsLabel:
+                'What should be improved on the application overview page?',
+        });
+    };
+
     return (
         <ConditionallyRender
             condition={!loading && data.environments.length === 0}
             show={<Alert severity='warning'>No data available.</Alert>}
             elseShow={
                 <ApplicationContainer>
-                    <ProjectContainer>
-                        Projects using this application
-                        {data.projects.map((project) => (
-                            <Badge
-                                sx={{ cursor: 'pointer' }}
-                                key={project}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    navigate(`/projects/${project}`);
-                                }}
-                                color='secondary'
-                                icon={<TopicOutlinedIcon />}
-                            >
-                                {project}
-                            </Badge>
-                        ))}
-                    </ProjectContainer>
+                    <ApplicationHeader>
+                        <ProjectContainer>
+                            Projects using this application
+                            {data.projects.map((project) => (
+                                <Badge
+                                    sx={{ cursor: 'pointer' }}
+                                    key={project}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        navigate(`/projects/${project}`);
+                                    }}
+                                    color='secondary'
+                                    icon={<TopicOutlinedIcon />}
+                                >
+                                    {project}
+                                </Badge>
+                            ))}
+                        </ProjectContainer>
+                        <Button
+                            startIcon={<ReviewsOutlined />}
+                            variant='outlined'
+                            onClick={createFeedbackContext}
+                            size='small'
+                        >
+                            Provide feedback
+                        </Button>
+                    </ApplicationHeader>
+
                     <StyledDivider />
-                    <ApplicationIssues issues={data.issues} />
+                    <ApplicationIssues application={data} />
                     <ApplicationChart data={data} />
                 </ApplicationContainer>
             }

@@ -69,6 +69,8 @@ export const ProjectActionsModal = ({
         setEnabled,
         name,
         setName,
+        description,
+        setDescription,
         sourceId,
         setSourceId,
         filters,
@@ -94,8 +96,9 @@ export const ProjectActionsModal = ({
     const payload: ActionSetPayload = {
         enabled,
         name,
+        description,
         match: {
-            source: 'incoming-webhook',
+            source: 'signal-endpoint',
             sourceId,
             payload: filters
                 .filter((f) => f.parameter.length > 0)
@@ -173,7 +176,7 @@ export const ProjectActionsModal = ({
             <FormTemplate
                 loading={loading}
                 modal
-                description='Actions allow you to configure automations based on specific triggers, like incoming webhooks.'
+                description='Actions allow you to configure automations based on specific signals, like the ones originated from signal endpoints.'
                 documentationLink='https://docs.getunleash.io/reference/actions'
                 documentationLinkLabel='Actions documentation'
                 formatApiCode={formatApiCode}

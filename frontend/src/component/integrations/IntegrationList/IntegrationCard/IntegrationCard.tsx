@@ -10,7 +10,10 @@ import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
+type CardVariant = 'default' | 'stacked';
+
 interface IIntegrationCardBaseProps {
+    variant?: CardVariant;
     id?: string | number;
     icon?: string;
     title: string;
@@ -37,7 +40,9 @@ type IIntegrationCardProps =
     | IIntegrationCardWithLinkProps
     | IIntegrationCardWithOnClickProps;
 
-const StyledCard = styled('div')(({ theme }) => ({
+const StyledCard = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'variant',
+})<{ variant?: CardVariant }>(({ theme, variant = 'default' }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(3),
@@ -48,6 +53,24 @@ const StyledCard = styled('div')(({ theme }) => ({
     ':hover': {
         backgroundColor: theme.palette.action.hover,
     },
+    ...(variant === 'stacked' && {
+        position: 'relative',
+        zIndex: 0,
+        '&:after': {
+            content: '""',
+            width: 'auto',
+            height: theme.spacing(0.75),
+            position: 'absolute',
+            zIndex: -1,
+            bottom: theme.spacing(-0.75),
+            left: theme.spacing(1),
+            right: theme.spacing(1),
+            borderBottomLeftRadius: `${theme.shape.borderRadiusMedium}px`,
+            borderBottomRightRadius: `${theme.shape.borderRadiusMedium}px`,
+            border: `1px solid ${theme.palette.divider}`,
+            boxShadow: theme.boxShadows.card,
+        },
+    }),
 }));
 
 const StyledLink = styled(Link)({
@@ -89,6 +112,7 @@ const StyledOpenInNewIcon = styled(OpenInNewIcon)(({ theme }) => ({
 }));
 
 export const IntegrationCard: VFC<IIntegrationCardProps> = ({
+    variant = 'default',
     icon,
     title,
     description,
@@ -113,7 +137,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     };
 
     const content = (
-        <StyledCard>
+        <StyledCard variant={variant}>
             <StyledHeader>
                 <StyledTitle variant='h3' data-loading>
                     <IntegrationIcon name={icon as string} /> {title}

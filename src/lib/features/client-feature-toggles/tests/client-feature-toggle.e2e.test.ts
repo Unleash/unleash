@@ -70,15 +70,16 @@ test('should get empty getFeatures via client', () => {
 
 test('if caching is enabled should memoize', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
-    const getActive = jest.fn().mockReturnValue([]);
-    const getActiveForClient = jest.fn().mockReturnValue([]);
+    const getActiveSegmentsForClient = jest.fn().mockReturnValue([]);
     const respondWithValidation = jest.fn().mockReturnValue({});
     const validPath = jest.fn().mockReturnValue(jest.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
     const openApiService = { respondWithValidation, validPath };
-    const clientFeatureToggleService = { getClientFeatures };
+    const clientFeatureToggleService = {
+        getClientFeatures,
+        getActiveSegmentsForClient,
+    };
     const featureToggleService = { getClientFeatures };
-    const segmentService = { getActive, getActiveForClient };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
     const controller = new FeatureController(
@@ -90,8 +91,6 @@ test('if caching is enabled should memoize', async () => {
             clientFeatureToggleService,
             // @ts-expect-error due to partial implementation
             featureToggleService,
-            // @ts-expect-error due to partial implementation
-            segmentService,
             // @ts-expect-error due to partial implementation
             configurationRevisionService,
         },
@@ -112,13 +111,14 @@ test('if caching is enabled should memoize', async () => {
 
 test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
-    const getActive = jest.fn().mockReturnValue([]);
-    const getActiveForClient = jest.fn().mockReturnValue([]);
+    const getActiveSegmentsForClient = jest.fn().mockReturnValue([]);
     const respondWithValidation = jest.fn().mockReturnValue({});
     const validPath = jest.fn().mockReturnValue(jest.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
-    const clientFeatureToggleService = { getClientFeatures };
-    const segmentService = { getActive, getActiveForClient };
+    const clientFeatureToggleService = {
+        getClientFeatures,
+        getActiveSegmentsForClient,
+    };
     const featureToggleService = { getClientFeatures };
     const openApiService = { respondWithValidation, validPath };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
@@ -132,8 +132,6 @@ test('if caching is not enabled all calls goes to service', async () => {
             clientFeatureToggleService,
             // @ts-expect-error due to partial implementation
             featureToggleService,
-            // @ts-expect-error due to partial implementation
-            segmentService,
             // @ts-expect-error due to partial implementation
             configurationRevisionService,
         },

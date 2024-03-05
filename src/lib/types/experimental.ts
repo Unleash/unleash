@@ -28,7 +28,7 @@ export type IFlagKey =
     | 'disableMetrics'
     | 'stripClientHeadersOn304'
     | 'stripHeadersOnAPI'
-    | 'incomingWebhooks'
+    | 'signals'
     | 'automatedActions'
     | 'celebrateUnleash'
     | 'increaseUnleashWidth'
@@ -136,8 +136,8 @@ const flags: IFlags = {
             .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
         false,
     ),
-    incomingWebhooks: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INCOMING_WEBHOOKS,
+    signals: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIGNALS,
         false,
     ),
     automatedActions: parseEnvVarBoolean(

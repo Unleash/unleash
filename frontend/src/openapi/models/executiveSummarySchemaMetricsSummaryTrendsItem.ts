@@ -5,8 +5,6 @@
  */
 
 export type ExecutiveSummarySchemaMetricsSummaryTrendsItem = {
-    /** Date the impressions summary were calculated */
-    date: string;
     /** Project id of the project the impressions summary belong to */
     project: string;
     /** Total number of applications the impression data belong to */
@@ -17,6 +15,10 @@ export type ExecutiveSummarySchemaMetricsSummaryTrendsItem = {
     totalFlags: number;
     /** Total number of times all project flags were not exposed across all environments */
     totalNo: number;
+    /** Total number of times all project flags were requested  */
+    totalRequests: number;
     /** Total number of times all project flags were exposed across all environments */
     totalYes: number;
+    /** Year and week in a given year for which the metrics summary was calculated */
+    week: string;
 };

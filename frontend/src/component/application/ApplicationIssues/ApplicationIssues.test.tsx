@@ -1,24 +1,29 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { ApplicationIssues } from './ApplicationIssues';
-import { ApplicationOverviewIssuesSchema } from 'openapi';
+import { ApplicationOverviewSchema } from 'openapi';
 
 test('Display all application issues', async () => {
-    const issues: ApplicationOverviewIssuesSchema[] = [
-        {
-            type: 'missingFeatures',
-            items: ['my-app'],
+    const application: ApplicationOverviewSchema = {
+        projects: ['default'],
+        featureCount: 0,
+        environments: [
+            {
+                issues: {
+                    missingFeatures: ['my-app'],
+                    outdatedSdks: ['unleash-client-php:1.13.0'],
+                },
+                sdks: [],
+                instanceCount: 0,
+                lastSeen: new Date().toISOString(),
+                name: 'development',
+            },
+        ],
+        issues: {
+            missingStrategies: ['defaultStrategy', 'mainStrategy'],
         },
-        {
-            type: 'missingStrategies',
-            items: ['defaultStrategy', 'mainStrategy'],
-        },
-        {
-            type: 'outdatedSdks',
-            items: ['unleash-client-php:1.13.0'],
-        },
-    ];
-    render(<ApplicationIssues issues={issues} />);
+    };
+    render(<ApplicationIssues application={application} />);
 
     await screen.findByText('my-app');
     await screen.findByText('mainStrategy');

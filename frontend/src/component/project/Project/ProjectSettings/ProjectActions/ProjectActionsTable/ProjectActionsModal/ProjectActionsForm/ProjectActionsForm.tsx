@@ -9,7 +9,7 @@ import {
     ProjectActionsFormErrors,
 } from './useProjectActionsForm';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { v4 as uuidv4 } from 'uuid';
 import { useMemo } from 'react';
 import GeneralSelect, {} from 'component/common/GeneralSelect/GeneralSelect';
@@ -100,8 +100,8 @@ export const ProjectActionsForm = ({
     const projectId = useRequiredPathParam('projectId');
     const { serviceAccounts, loading: serviceAccountsLoading } =
         useServiceAccounts();
-    const { incomingWebhooks, loading: incomingWebhooksLoading } =
-        useIncomingWebhooks();
+    const { signalEndpoints, loading: signalEndpointsLoading } =
+        useSignalEndpoints();
 
     const handleOnBlur = (callback: Function) => {
         setTimeout(() => callback(), 300);
@@ -151,16 +151,16 @@ export const ProjectActionsForm = ({
         );
     };
 
-    const incomingWebhookOptions = useMemo(() => {
-        if (incomingWebhooksLoading) {
+    const signalEndpointOptions = useMemo(() => {
+        if (signalEndpointsLoading) {
             return [];
         }
 
-        return incomingWebhooks.map((webhook) => ({
-            label: webhook.name,
-            key: `${webhook.id}`,
+        return signalEndpoints.map(({ id, name }) => ({
+            label: name,
+            key: `${id}`,
         }));
-    }, [incomingWebhooksLoading, incomingWebhooks]);
+    }, [signalEndpointsLoading, signalEndpoints]);
 
     const serviceAccountOptions = useMemo(() => {
         if (serviceAccountsLoading) {
@@ -218,15 +218,14 @@ export const ProjectActionsForm = ({
             <ProjectActionsFormStep
                 name='Trigger'
                 resourceLink={
-                    <RouterLink to='/integrations/incoming-webhooks'>
-                        Create incoming webhook
+                    <RouterLink to='/integrations/signals'>
+                        Create signal endpoint
                     </RouterLink>
                 }
             >
                 <GeneralSelect
-                    label='Incoming webhook'
-                    name='incoming-webhook'
-                    options={incomingWebhookOptions}
+                    label='Source'
+                    options={signalEndpointOptions}
                     value={`${sourceId}`}
                     onChange={(v) => {
                         setSourceId(parseInt(v));

@@ -1,9 +1,15 @@
+import { ISignal, SignalSource } from './signal';
 import { IConstraint } from './strategy';
+
+type ActionSetState = 'started' | 'success' | 'failed';
+
+type ActionState = ActionSetState | 'not started';
 
 export interface IActionSet {
     id: number;
     enabled: boolean;
     name: string;
+    description: string;
     project: string;
     actorId: number;
     match: IMatch;
@@ -12,15 +18,13 @@ export interface IActionSet {
     createdByUserId: number;
 }
 
-type MatchSource = 'incoming-webhook';
-
 export type ParameterMatch = Pick<
     IConstraint,
     'inverted' | 'operator' | 'caseInsensitive' | 'value' | 'values'
 >;
 
 export interface IMatch {
-    source: MatchSource;
+    source: SignalSource;
     sourceId: number;
     payload: Record<string, ParameterMatch>;
 }
@@ -34,21 +38,6 @@ export interface IAction {
     createdByUserId: number;
 }
 
-export type ObservableEventSource = 'incoming-webhook';
-
-export interface IObservableEvent {
-    id: number;
-    source: ObservableEventSource;
-    sourceId: number;
-    createdAt: string;
-    createdByIncomingWebhookTokenId: number;
-    payload: Record<string, unknown>;
-}
-
-type ActionSetState = 'started' | 'success' | 'failed';
-
-type ActionState = ActionSetState | 'not started';
-
 export interface IActionEvent extends IAction {
     state: ActionState;
     details?: string;
@@ -61,9 +50,9 @@ interface IActionSetEventActionSet extends IActionSet {
 export interface IActionSetEvent {
     id: number;
     actionSetId: number;
-    observableEventId: number;
+    signalId: number;
     createdAt: string;
     state: ActionSetState;
-    observableEvent: IObservableEvent;
+    signal: ISignal;
     actionSet: IActionSetEventActionSet;
 }

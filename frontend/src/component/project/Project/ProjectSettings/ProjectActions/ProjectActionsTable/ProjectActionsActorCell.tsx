@@ -19,5 +19,11 @@ export const ProjectActionsActorCell = ({
         return <TextCell>No service account</TextCell>;
     }
 
-    return <LinkCell to='/admin/service-accounts'>{actor.name}</LinkCell>;
+    return (
+        <LinkCell
+            to='/admin/service-accounts'
+            title={actor.name}
+            subtitle={actor.username}
+        />
+    );
 };

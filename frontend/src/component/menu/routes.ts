@@ -47,6 +47,7 @@ import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirec
 import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
 import { Application } from 'component/application/Application';
+import { Signals } from 'component/signals/Signals';
 
 export const routes: IRoute[] = [
     // Splash
@@ -57,6 +58,17 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: {},
         isStandalone: true,
+    },
+
+    // Insights - previously "Executive dashboard"
+    {
+        path: '/insights',
+        title: 'Insights',
+        component: ExecutiveDashboard,
+        type: 'protected',
+        menu: { mobile: true, advanced: true },
+        flag: 'executiveDashboard',
+        enterprise: false,
     },
 
     // Project
@@ -351,12 +363,20 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/integrations/*',
+        path: '/integrations',
         title: 'Integrations',
         component: IntegrationList,
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/integrations/signals',
+        title: 'Signals',
+        component: Signals,
+        hidden: true,
+        type: 'protected',
+        menu: {},
     },
 
     // Segments
@@ -428,17 +448,6 @@ export const routes: IRoute[] = [
         component: Profile,
         type: 'protected',
         menu: {},
-    },
-
-    // Executive dashboard
-    {
-        path: '/dashboard',
-        title: 'Executive dashboard',
-        component: ExecutiveDashboard,
-        type: 'protected',
-        menu: {},
-        flag: 'executiveDashboard',
-        enterprise: true,
     },
 
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */

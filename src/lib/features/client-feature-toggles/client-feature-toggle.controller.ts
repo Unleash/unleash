@@ -31,7 +31,6 @@ import {
     clientFeaturesSchema,
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
-import { ISegmentService } from '../../segments/segment-service-interface';
 import ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import { ClientFeatureToggleService } from './client-feature-toggle-service';
 
@@ -53,8 +52,6 @@ export default class FeatureController extends Controller {
 
     private clientFeatureToggleService: ClientFeatureToggleService;
 
-    private segmentService: ISegmentService;
-
     private clientSpecService: ClientSpecService;
 
     private openApiService: OpenApiService;
@@ -73,7 +70,6 @@ export default class FeatureController extends Controller {
     constructor(
         {
             clientFeatureToggleService,
-            segmentService,
             clientSpecService,
             openApiService,
             configurationRevisionService,
@@ -81,7 +77,6 @@ export default class FeatureController extends Controller {
         }: Pick<
             IUnleashServices,
             | 'clientFeatureToggleService'
-            | 'segmentService'
             | 'clientSpecService'
             | 'openApiService'
             | 'configurationRevisionService'
@@ -92,7 +87,6 @@ export default class FeatureController extends Controller {
         super(config);
         const { clientFeatureCaching } = config;
         this.clientFeatureToggleService = clientFeatureToggleService;
-        this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
         this.configurationRevisionService = configurationRevisionService;
@@ -162,7 +156,7 @@ export default class FeatureController extends Controller {
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
         return Promise.all([
             this.clientFeatureToggleService.getClientFeatures(query),
-            this.segmentService.getActiveForClient(),
+            this.clientFeatureToggleService.getActiveSegmentsForClient(),
         ]);
     }
 

@@ -2,6 +2,7 @@ import { styled, Typography } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IActionSet } from 'interfaces/action';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
+import { formatOperatorDescription } from 'component/common/NewConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 
 const StyledItem = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -24,6 +25,9 @@ export const ProjectActionsFiltersCell = ({
     return (
         <TextCell>
             <TooltipLink
+                tooltipProps={{
+                    maxWidth: 500,
+                }}
                 tooltip={
                     <>
                         {filters.map(
@@ -36,18 +40,33 @@ export const ProjectActionsFiltersCell = ({
                                     value,
                                     values,
                                 },
-                            ]) => (
-                                <StyledItem key={parameter}>
-                                    <strong>{parameter}</strong>{' '}
-                                    {inverted ? 'NOT' : ''} {operator}{' '}
-                                    {caseInsensitive
-                                        ? '(case insensitive)'
-                                        : ''}{' '}
-                                    <strong>
-                                        {values ? values.join(', ') : value}
-                                    </strong>
-                                </StyledItem>
-                            ),
+                            ]) => {
+                                const operatorDescription: string =
+                                    formatOperatorDescription(operator);
+
+                                const operatorText = inverted ? (
+                                    <>
+                                        is <u>not</u>{' '}
+                                        {operatorDescription.substring(2)}
+                                    </>
+                                ) : (
+                                    operatorDescription
+                                );
+
+                                return (
+                                    <StyledItem key={parameter}>
+                                        <strong>{parameter}</strong>{' '}
+                                        {operatorText}
+                                        {caseInsensitive
+                                            ? ' (case insensitive)'
+                                            : ''}
+                                        {': '}
+                                        <strong>
+                                            {values ? values.join(', ') : value}
+                                        </strong>
+                                    </StyledItem>
+                                );
+                            },
                         )}
                     </>
                 }

@@ -26,7 +26,7 @@ import { FeatureEnvironmentStore } from './feature-environment-store';
 import { ClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2';
 import UserSplashStore from './user-splash-store';
 import RoleStore from './role-store';
-import SegmentStore from './segment-store';
+import SegmentStore from '../features/segment/segment-store';
 import GroupStore from './group-store';
 import PatStore from './pat-store';
 import { PublicSignupTokenStore } from './public-signup-token-store';
@@ -42,6 +42,7 @@ import LastSeenStore from '../features/metrics/last-seen/last-seen-store';
 import FeatureSearchStore from '../features/feature-search/feature-search-store';
 import { InactiveUsersStore } from '../users/inactive/inactive-users-store';
 import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store';
+import { SegmentReadModel } from '../features/segment/segment-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -145,6 +146,7 @@ export const createStores = (
         featureSearchStore: new FeatureSearchStore(db, eventBus, getLogger),
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
+        segmentReadModel: new SegmentReadModel(db),
     };
 };
 

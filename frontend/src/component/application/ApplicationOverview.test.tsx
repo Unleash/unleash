@@ -24,9 +24,13 @@ test('Display application overview with environments', async () => {
                 instanceCount: 999,
                 lastSeen: new Date().toISOString(),
                 sdks: ['unleash-client-node:5.5.0-beta.0'],
+                issues: {
+                    missingFeatures: [],
+                    outdatedSdks: [],
+                },
             },
         ],
-        issues: [],
+        issues: { missingStrategies: [] },
         featureCount: 1,
         projects: ['default'],
     });
@@ -54,7 +58,9 @@ test('Display application overview without environments', async () => {
     setupApi({
         environments: [],
         featureCount: 0,
-        issues: [],
+        issues: {
+            missingStrategies: [],
+        },
         projects: ['default'],
     });
     render(
@@ -81,18 +87,15 @@ test('Display application with issues', async () => {
                 instanceCount: 999,
                 lastSeen: new Date().toISOString(),
                 sdks: ['unleash-client-node:5.5.0-beta.0'],
+                issues: {
+                    missingFeatures: ['feature1'],
+                    outdatedSdks: [],
+                },
             },
         ],
-        issues: [
-            {
-                type: 'missingFeatures',
-                items: ['feature1'],
-            },
-            {
-                type: 'missingStrategies',
-                items: ['strategy1'],
-            },
-        ],
+        issues: {
+            missingStrategies: ['strategy1'],
+        },
         featureCount: 1,
         projects: ['default'],
     });

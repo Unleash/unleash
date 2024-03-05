@@ -117,7 +117,6 @@ exports[`should create default config 1`] = `
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
       "inMemoryScheduledChangeRequests": false,
-      "incomingWebhooks": false,
       "increaseUnleashWidth": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -138,6 +137,7 @@ exports[`should create default config 1`] = `
       "scimApi": false,
       "sdkReporting": false,
       "showInactiveUsers": false,
+      "signals": false,
       "strictSchemaValidation": false,
       "stripClientHeadersOn304": false,
       "useMemoizedActiveTokens": false,
@@ -177,7 +177,7 @@ exports[`should create default config 1`] = `
   "prometheusApi": undefined,
   "publicFolder": undefined,
   "rateLimiting": {
-    "callIncomingWebhookMaxPerSecond": 1,
+    "callSignalEndpointMaxPerSecond": 1,
     "createUserMaxPerMinute": 20,
     "passwordResetMaxPerMinute": 1,
     "simpleLoginMaxPerMinute": 10,

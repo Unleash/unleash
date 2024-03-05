@@ -1,9 +1,5 @@
-import { ISegmentStore } from '../../lib/types/stores/segment-store';
-import {
-    IClientSegment,
-    IFeatureStrategySegment,
-    ISegment,
-} from '../../lib/types/model';
+import { ISegmentStore } from '../../lib/features/segment/segment-store-type';
+import { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
 
 export default class FakeSegmentStore implements ISegmentStore {
     count(): Promise<number> {
@@ -31,14 +27,6 @@ export default class FakeSegmentStore implements ISegmentStore {
     }
 
     async getAll(): Promise<ISegment[]> {
-        return [];
-    }
-
-    async getActive(): Promise<ISegment[]> {
-        return [];
-    }
-
-    async getActiveForClient(): Promise<IClientSegment[]> {
         return [];
     }
 

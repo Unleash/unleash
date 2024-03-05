@@ -1,6 +1,10 @@
 import { createLocalStorage } from '../utils/createLocalStorage';
 
-export type IFeedbackCategory = 'search' | 'newStrategyForm' | 'insights';
+export type IFeedbackCategory =
+    | 'search'
+    | 'newStrategyForm'
+    | 'insights'
+    | 'applicationOverview';
 
 export const useUserSubmittedFeedback = (category: IFeedbackCategory) => {
     const key = `unleash-userSubmittedFeedback:${category}`;

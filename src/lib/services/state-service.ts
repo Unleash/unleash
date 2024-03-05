@@ -50,7 +50,7 @@ import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-st
 import { IUnleashStores } from '../types/stores';
 import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
-import { ISegmentStore } from '../types/stores/segment-store';
+import { ISegmentStore } from '../features/segment/segment-store-type';
 import { PartialSome } from '../types/partial';
 import EventService from '../features/events/event-service';
 

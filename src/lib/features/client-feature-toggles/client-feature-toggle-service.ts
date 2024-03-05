@@ -1,6 +1,7 @@
 import {
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
+    ISegmentReadModel,
     IUnleashConfig,
     IUnleashStores,
 } from '../../types';
@@ -14,14 +15,22 @@ export class ClientFeatureToggleService {
 
     private clientFeatureToggleStore: IFeatureToggleClientStore;
 
+    private segmentReadModel: ISegmentReadModel;
+
     constructor(
         {
             clientFeatureToggleStore,
         }: Pick<IUnleashStores, 'clientFeatureToggleStore'>,
+        segmentReadModel: ISegmentReadModel,
         { getLogger }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
+        this.segmentReadModel = segmentReadModel;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
+    }
+
+    async getActiveSegmentsForClient() {
+        return this.segmentReadModel.getActiveForClient();
     }
 
     async getClientFeatures(

@@ -4,22 +4,28 @@ import { IUnleashServices } from '../../types/services';
 import { ALL } from '../../types/models/api-token';
 import { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema';
 import { Logger } from '../../logger';
-import { IFlagResolver, ISegment, IUnleashConfig } from '../../types';
+import {
+    IFlagResolver,
+    ISegment,
+    ISegmentReadModel,
+    IUnleashConfig,
+} from '../../types';
 import { offlineUnleashClient } from './offline-unleash-client';
 import { FeatureInterface } from '../../features/playground/feature-evaluator/feature';
 import {
     EvaluatedPlaygroundStrategy,
     FeatureStrategiesEvaluationResult,
 } from '../../features/playground/feature-evaluator/client';
-import { ISegmentService } from '../../segments/segment-service-interface';
 import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';
-import { AdvancedPlaygroundFeatureSchema } from '../../openapi';
+import {
+    AdvancedPlaygroundFeatureSchema,
+    playgroundStrategyEvaluation,
+} from '../../openapi';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 import { validateQueryComplexity } from './validateQueryComplexity';
-import { playgroundStrategyEvaluation } from '../../openapi';
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { getDefaultVariant } from './feature-evaluator/variant';
 
@@ -66,30 +72,28 @@ export class PlaygroundService {
 
     private readonly featureToggleService: FeatureToggleService;
 
-    private readonly segmentService: ISegmentService;
+    private readonly flagResolver: IFlagResolver;
 
-    private flagResolver: IFlagResolver;
+    private readonly privateProjectChecker: IPrivateProjectChecker;
 
-    private privateProjectChecker: IPrivateProjectChecker;
+    private readonly segmentReadModel: ISegmentReadModel;
 
     constructor(
         config: IUnleashConfig,
         {
             featureToggleServiceV2,
-            segmentService,
             privateProjectChecker,
         }: Pick<
             IUnleashServices,
-            | 'featureToggleServiceV2'
-            | 'segmentService'
-            | 'privateProjectChecker'
+            'featureToggleServiceV2' | 'privateProjectChecker'
         >,
+        segmentReadModel: ISegmentReadModel,
     ) {
         this.logger = config.getLogger('services/playground-service.ts');
         this.flagResolver = config.flagResolver;
         this.featureToggleService = featureToggleServiceV2;
-        this.segmentService = segmentService;
         this.privateProjectChecker = privateProjectChecker;
+        this.segmentReadModel = segmentReadModel;
     }
 
     async evaluateAdvancedQuery(
@@ -99,7 +103,7 @@ export class PlaygroundService {
         limit: number,
         userId: number,
     ): Promise<AdvancedPlaygroundFeatureEvaluationResult[]> {
-        const segments = await this.segmentService.getActive();
+        const segments = await this.segmentReadModel.getActive();
 
         let filteredProjects: typeof projects = projects;
 
@@ -266,7 +270,7 @@ export class PlaygroundService {
     ): Promise<PlaygroundFeatureEvaluationResult[]> {
         const [{ features, featureProject }, segments] = await Promise.all([
             this.resolveFeatures(projects, environment),
-            this.segmentService.getActive(),
+            this.segmentReadModel.getActive(),
         ]);
 
         const result = await this.evaluate({

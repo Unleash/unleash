@@ -108,10 +108,10 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/banners',
         label: 'Banners',
     },
-    'incoming-webhooks': {
+    signals: {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/incoming-webhooks',
-        label: 'Incoming Webhooks',
+        url: 'https://docs.getunleash.io/reference/signals',
+        label: 'Signals',
     },
     actions: {
         plan: FeaturePlan.ENTERPRISE,

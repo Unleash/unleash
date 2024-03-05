@@ -15,7 +15,7 @@ import {
 } from '../../../types';
 import EnvironmentService from '../../project-environments/environment-service';
 import { ForbiddenError, PatternError, PermissionError } from '../../../error';
-import { ISegmentService } from '../../../segments/segment-service-interface';
+import { ISegmentService } from '../../segment/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
 import {
     insertFeatureEnvironmentsLastSeen,

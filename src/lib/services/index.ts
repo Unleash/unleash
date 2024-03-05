@@ -26,7 +26,7 @@ import EnvironmentService from '../features/project-environments/environment-ser
 import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';
 import UserSplashService from './user-splash-service';
-import { SegmentService } from './segment-service';
+import { SegmentService } from '../features/segment/segment-service';
 import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from '../features/playground/playground-service';
@@ -109,6 +109,8 @@ import {
     createInstanceStatsService,
 } from '../features/instance-stats/createInstanceStatsService';
 import { InactiveUsersService } from '../users/inactive/inactive-users-service';
+import { SegmentReadModel } from '../features/segment/segment-read-model';
+import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -138,6 +140,9 @@ export const createServices = (
     const dependentFeaturesReadModel = db
         ? new DependentFeaturesReadModel(db)
         : new FakeDependentFeaturesReadModel();
+    const segmentReadModel = db
+        ? new SegmentReadModel(db)
+        : new FakeSegmentReadModel();
 
     const contextService = new ContextService(
         stores,
@@ -270,11 +275,14 @@ export const createServices = (
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
-    const playgroundService = new PlaygroundService(config, {
-        featureToggleServiceV2,
-        segmentService,
-        privateProjectChecker,
-    });
+    const playgroundService = new PlaygroundService(
+        config,
+        {
+            featureToggleServiceV2,
+            privateProjectChecker,
+        },
+        segmentReadModel,
+    );
 
     const configurationRevisionService = new ConfigurationRevisionService(
         stores,
@@ -288,7 +296,6 @@ export const createServices = (
     const proxyService = new ProxyService(config, stores, {
         featureToggleServiceV2,
         clientMetricsServiceV2,
-        segmentService,
         settingService,
         configurationRevisionService,
     });

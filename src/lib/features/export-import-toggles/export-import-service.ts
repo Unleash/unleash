@@ -12,7 +12,6 @@ import {
     IFeatureStrategySegment,
     IFeatureTagStore,
     IFlagResolver,
-    ISegmentStore,
     ITagTypeStore,
     IUnleashConfig,
     IUnleashServices,
@@ -51,8 +50,8 @@ import { findDuplicates } from '../../util/findDuplicates';
 import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
-import { ISegmentService } from '../../segments/segment-service-interface';
 import { allSettledWithRejection } from '../../util/allSettledWithRejection';
+import { ISegmentReadModel } from '../segment/segment-read-model-type';
 
 export type IImportService = {
     validate(
@@ -88,8 +87,6 @@ export default class ExportImportService
 
     private featureTagStore: IFeatureTagStore;
 
-    private segmentStore: ISegmentStore;
-
     private flagResolver: IFlagResolver;
 
     private featureToggleService: FeatureToggleService;
@@ -106,7 +103,7 @@ export default class ExportImportService
 
     private tagTypeService: TagTypeService;
 
-    private segmentService: ISegmentService;
+    private segmentReadModel: ISegmentReadModel;
 
     private featureTagService: FeatureTagService;
 
@@ -125,7 +122,6 @@ export default class ExportImportService
             | 'featureEnvironmentStore'
             | 'tagTypeStore'
             | 'featureTagStore'
-            | 'segmentStore'
             | 'contextFieldStore'
         >,
         {
@@ -140,7 +136,6 @@ export default class ExportImportService
             eventService,
             tagTypeService,
             featureTagService,
-            segmentService,
             dependentFeaturesService,
         }: Pick<
             IUnleashServices,
@@ -151,10 +146,10 @@ export default class ExportImportService
             | 'eventService'
             | 'tagTypeService'
             | 'featureTagService'
-            | 'segmentService'
             | 'dependentFeaturesService'
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
+        segmentReadModel: ISegmentReadModel,
     ) {
         this.toggleStore = stores.featureToggleStore;
         this.importTogglesStore = stores.importTogglesStore;
@@ -162,14 +157,12 @@ export default class ExportImportService
         this.featureEnvironmentStore = stores.featureEnvironmentStore;
         this.tagTypeStore = stores.tagTypeStore;
         this.featureTagStore = stores.featureTagStore;
-        this.segmentStore = stores.segmentStore;
         this.flagResolver = flagResolver;
         this.featureToggleService = featureToggleService;
         this.contextFieldStore = stores.contextFieldStore;
         this.strategyService = strategyService;
         this.contextService = contextService;
         this.accessService = accessService;
-        this.segmentService = segmentService;
         this.eventService = eventService;
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
@@ -181,6 +174,7 @@ export default class ExportImportService
             this.contextService,
         );
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
+        this.segmentReadModel = segmentReadModel;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -479,7 +473,7 @@ export default class ExportImportService
     private async getUnsupportedSegments(
         dto: ImportTogglesSchema,
     ): Promise<string[]> {
-        const supportedSegments = await this.segmentService.getAll();
+        const supportedSegments = await this.segmentReadModel.getAll();
         const targetProject = dto.project;
         return dto.data.segments
             ? dto.data.segments
@@ -583,7 +577,7 @@ export default class ExportImportService
     }
 
     private async remapSegments(dto: ImportTogglesSchema) {
-        const existingSegments = await this.segmentService.getAll();
+        const existingSegments = await this.segmentReadModel.getAll();
 
         const segmentMapping = new Map(
             dto.data.segments?.map((segment) => [
@@ -820,10 +814,10 @@ export default class ExportImportService
                 featureNames,
                 query.environment,
             ),
-            this.segmentStore.getAllFeatureStrategySegments(),
+            this.segmentReadModel.getAllFeatureStrategySegments(),
             this.contextFieldStore.getAll(),
             this.featureTagStore.getAllByFeatures(featureNames),
-            this.segmentStore.getAll(),
+            this.segmentReadModel.getAll(),
             this.tagTypeStore.getAll(),
             this.dependentFeaturesReadModel.getDependencies(featureNames),
         ]);

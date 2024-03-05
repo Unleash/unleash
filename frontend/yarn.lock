@@ -2175,10 +2175,10 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/node@18.19.17":
-  version "18.19.17"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.17.tgz#a581a9fb4b2cfdbc61f008804f4436b2d5c40354"
-  integrity sha512-SzyGKgwPzuWp2SHhlpXKzCX0pIOfcI4V2eF37nNBJOhwlegQ83omtVQ1XxZpDE06V/d6AQvfQdPfnw0tRC//Ng==
+"@types/node@18.19.18":
+  version "18.19.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.18.tgz#7526471b28828d1fef1f7e4960fb9477e6e4369c"
+  integrity sha512-80CP7B8y4PzZF0GWx15/gVWRrB5y/bIjNI84NK3cmQJu0WZwvmj2WMA5LcofQFVfLqqCSp545+U2LsrVzX36Zg==
   dependencies:
     undici-types "~5.26.4"
 
@@ -2263,10 +2263,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@17.0.75", "@types/react@>=16.9.0", "@types/react@^17":
-  version "17.0.75"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.75.tgz#cffbc76840a12fcadaf5a3cf14878bb06efcf73d"
-  integrity sha512-MSA+NzEzXnQKrqpO63CYqNstFjsESgvJAdAyyJ1n6ZQq/GLgf6nOfIKwk+Twuz0L1N6xPe+qz5xRCJrbhMaLsw==
+"@types/react@*", "@types/react@17.0.76", "@types/react@>=16.9.0", "@types/react@^17":
+  version "17.0.76"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.76.tgz#bfdf762046699e265655cd8f67a51beab6cd1e80"
+  integrity sha512-w9Aq+qeszGYoQM0hgFcdsAODGJdogadBDiitPm+zjBFJ0mLymvn2qSXsDaLJUndFRqqXk1FQfa9avHUBk1JhJQ==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -2277,10 +2277,10 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.8.tgz#ce5ace04cfeabe7ef87c0091e50752e36707deff"
   integrity sha512-WZLiwShhwLRmeV6zH+GkbOFT6Z6VklCItrDioxUnv+u4Ll+8vKeFySoFyK/0ctcRpOmwAicELfmys1sDc/Rw+A==
 
-"@types/semver@7.5.7":
-  version "7.5.7"
-  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.7.tgz#326f5fdda70d13580777bcaa1bc6fa772a5aef0e"
-  integrity sha512-/wdoPq1QqkSj9/QOeKkFquEuPzQbHTWAMPH/PaUMB+JuR31lXhlWXRZ52IpfDYVlDOUBvX09uBrPwxGT1hjNBg==
+"@types/semver@7.5.8":
+  version "7.5.8"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.8.tgz#8268a8c57a3e4abd25c165ecd36237db7948a55e"
+  integrity sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==
 
 "@types/sinonjs__fake-timers@8.1.1":
   version "8.1.1"
@@ -2336,10 +2336,10 @@
   dependencies:
     "@types/node" "*"
 
-"@uiw/codemirror-extensions-basic-setup@4.21.22":
-  version "4.21.22"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.21.22.tgz#7e68e5f9fb305d7a35948190351f219a1443d775"
-  integrity sha512-Lxq2EitQb/MwbNrMHBmVdSIR96WmaICnYBYeZbLUxmr4kQcbrA6HXqNSNZJ0V4ZihPfKnNs9+g87QK0HsadE6A==
+"@uiw/codemirror-extensions-basic-setup@4.21.23":
+  version "4.21.23"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.21.23.tgz#9b5b281ef935ff06a4049977d17fb73ec988dd51"
+  integrity sha512-8czPnm5f/UthTbByamiaeutvDDUf2ZIbXyfuamrU3J/ThLRVzOxtvv9Su1BWiFbO2enixQfxrKaZd26uuYUbtQ==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/commands" "^6.0.0"
@@ -2349,32 +2349,32 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/codemirror-theme-duotone@4.21.22":
-  version "4.21.22"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.21.22.tgz#8de2ff2e03b5de5beeb32816907f8541e1f6010a"
-  integrity sha512-xv/l5g/Ar6jrWYV2OEXUWH6U0Bje3tL/iyQYlwdElMnaz+CzQCHMkPRAoWE2w6NYZm5PZAM8DS3cwsWfZ2Kg5Q==
+"@uiw/codemirror-theme-duotone@4.21.23":
+  version "4.21.23"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.21.23.tgz#8c313f14f7e8bcc89e54000bd371ce678b33eeca"
+  integrity sha512-VgPVj8HOjJjCauLc6Ey4A1YXNoClckBazqN3JFPyy77ayChqMs6sWM9X87BVJxAU2I3DBXBr+Kia/1sWjsiq1Q==
   dependencies:
-    "@uiw/codemirror-themes" "4.21.22"
+    "@uiw/codemirror-themes" "4.21.23"
 
-"@uiw/codemirror-themes@4.21.22":
-  version "4.21.22"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.21.22.tgz#3a1b813a1b7b9bfd48fc2935df24d277a78ee294"
-  integrity sha512-oRMNtDmD6ER0EH2/NKGbrUzeRJbZ/4+GE3/9OItaAGhdsd2V33WGqVX7QwXsjLNhpNfscbVKB3PYLyRooBdlfg==
+"@uiw/codemirror-themes@4.21.23":
+  version "4.21.23"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.21.23.tgz#a8cac59beda56d51e482f0a1503809e8a0e89c52"
+  integrity sha512-eTQjWTASVgDleSaN7JfsplG/M9gGuOujSRTVZ7IvXL+c1mobtxVgLpo2IjQHWzJBBD0XAqsah6Mbu1dhP0jZHw==
   dependencies:
     "@codemirror/language" "^6.0.0"
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/react-codemirror@4.21.22":
-  version "4.21.22"
-  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.21.22.tgz#38482e1b94e45eb4f33e7f8d5337762aa5891987"
-  integrity sha512-VmxU9oRXwcleG2u5Ui2xVXaLVPL8cBuRN3vA41hlu4OQ/ftJb+4p+dBd6bZ+NJKSXm3LufbPGzu8oKwNO4tG4A==
+"@uiw/react-codemirror@4.21.23":
+  version "4.21.23"
+  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.21.23.tgz#9c8a4f86184cb448874fe226f56b4d7042294cba"
+  integrity sha512-KCjIQdkb4Y1ZsMvWwj/rGjC81VFvzRNYvcpNpBzBx3D2ZlWdMnCWHV9KJtDuHyKTHQlgpWNp8HMnUjxaQsnisA==
   dependencies:
     "@babel/runtime" "^7.18.6"
     "@codemirror/commands" "^6.1.0"
     "@codemirror/state" "^6.1.1"
     "@codemirror/theme-one-dark" "^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup" "4.21.22"
+    "@uiw/codemirror-extensions-basic-setup" "4.21.23"
     codemirror "^6.0.0"
 
 "@vitejs/plugin-react@4.2.1":
@@ -3204,10 +3204,10 @@ cypress-vite@^1.4.0:
     chokidar "^3.5.3"
     debug "^4.3.4"
 
-cypress@13.6.5:
-  version "13.6.5"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.6.5.tgz#d8ab22dda3b9a8abeebcb65dc8a2707cb73bf925"
-  integrity sha512-2NxSDcO2zHw5kTcosc6dzv2zppEqiXrFFhZw5cx/EWrSNZABTzpr/EyvYzGgrWm46o5173JUfuJfDQcaiZZPVQ==
+cypress@13.6.6:
+  version "13.6.6"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.6.6.tgz#5133f231ed1c6e57dc8dcbf60aade220bcd6884b"
+  integrity sha512-S+2S9S94611hXimH9a3EAYt81QM913ZVA03pUmGDfLTFa5gyp85NJ8dJGSlEAEmyRsYkioS1TtnWtbv/Fzt11A==
   dependencies:
     "@cypress/request" "^3.0.0"
     "@cypress/xvfb" "^1.2.4"

@@ -13,15 +13,15 @@ import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { useActionsApi } from 'hooks/api/actions/useActionsApi/useActionsApi';
 import { IActionSet } from 'interfaces/action';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
-import { ProjectActionsTriggerCell } from './ProjectActionsTriggerCell';
+import { ProjectActionsSourceCell } from './ProjectActionsSourceCell';
 import { ProjectActionsFiltersCell } from './ProjectActionsFiltersCell';
 import { ProjectActionsActorCell } from './ProjectActionsActorCell';
-import { ProjectActionsActionsCell } from './ProjectActionsActionsCell';
+import { ProjectActionsActionsCell } from './ProjectActionsActionsCell/ProjectActionsActionsCell';
 import { ProjectActionsTableActionsCell } from './ProjectActionsTableActionsCell';
 import { ProjectActionsModal } from './ProjectActionsModal/ProjectActionsModal';
 import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
-import { useIncomingWebhooks } from 'hooks/api/getters/useIncomingWebhooks/useIncomingWebhooks';
+import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ProjectActionsEventsModal } from './ProjectActionsEventsModal/ProjectActionsEventsModal';
@@ -47,7 +47,7 @@ export const ProjectActionsTable = ({
     const { actions, refetch } = useActions(projectId);
     const { toggleActionSet, removeActionSet } = useActionsApi(projectId);
 
-    const { incomingWebhooks } = useIncomingWebhooks();
+    const { signalEndpoints } = useSignalEndpoints();
     const { serviceAccounts } = useServiceAccounts();
 
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
@@ -96,6 +96,7 @@ export const ProjectActionsTable = ({
                 }: { row: { original: IActionSet } }) => (
                     <LinkCell
                         title={action.name}
+                        subtitle={action.description}
                         onClick={() => {
                             setSelectedAction(action);
                             setModalOpen(true);
@@ -104,14 +105,14 @@ export const ProjectActionsTable = ({
                 ),
             },
             {
-                id: 'trigger',
-                Header: 'Trigger',
+                id: 'source',
+                Header: 'Source',
                 Cell: ({
                     row: { original: action },
                 }: { row: { original: IActionSet } }) => (
-                    <ProjectActionsTriggerCell
+                    <ProjectActionsSourceCell
                         action={action}
-                        incomingWebhooks={incomingWebhooks}
+                        signalEndpoints={signalEndpoints}
                     />
                 ),
             },
@@ -202,7 +203,7 @@ export const ProjectActionsTable = ({
                 disableSortBy: true,
             },
         ],
-        [incomingWebhooks, serviceAccounts],
+        [signalEndpoints, serviceAccounts],
     );
 
     const [initialState] = useState({

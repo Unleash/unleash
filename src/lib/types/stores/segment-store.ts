@@ -1,13 +1,9 @@
-import { IClientSegment, IFeatureStrategySegment, ISegment } from '../model';
+import { IFeatureStrategySegment, ISegment } from '../model';
 import { Store } from './store';
 import User from '../user';
 
 export interface ISegmentStore extends Store<ISegment, number> {
     getAll(includeChangeRequestUsageData?: boolean): Promise<ISegment[]>;
-
-    getActive(): Promise<ISegment[]>;
-
-    getActiveForClient(): Promise<IClientSegment[]>;
 
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 

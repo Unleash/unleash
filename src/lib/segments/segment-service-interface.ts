@@ -1,6 +1,6 @@
 import { ChangeRequestStrategy } from '../features/change-request-segment-usage-service/change-request-segment-usage-read-model';
 import { UpsertSegmentSchema } from '../openapi';
-import { IClientSegment, IFeatureStrategy, ISegment, IUser } from '../types';
+import { IFeatureStrategy, ISegment, IUser } from '../types';
 
 export type StrategiesUsingSegment = {
     strategies: IFeatureStrategy[];
@@ -32,8 +32,6 @@ export interface ISegmentService {
     ): Promise<StrategiesUsingSegment>;
 
     validateName(name: string): Promise<void>;
-
-    getActiveForClient(): Promise<IClientSegment[]>;
 
     getAll(): Promise<ISegment[]>;
 

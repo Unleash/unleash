@@ -300,10 +300,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .count('type')
             .groupBy('type');
 
-        query.where({
-            project: projectId,
-            archived,
-        });
+        query
+            .where({
+                project: projectId,
+            })
+            .modify(FeatureToggleStore.filterByArchived, archived);
 
         const result = await query;
         return result.map((row) => ({
@@ -677,7 +678,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                                                   WHERE feature_types.id = features.type) *
                                                  INTERVAL '1 day'))) as current_staleness
              FROM features
-             WHERE NOT stale = true AND archived_at IS NULL`,
+             WHERE NOT stale = true
+               AND archived_at IS NULL`,
             [currentTime || this.db.fn.now()],
         );
 

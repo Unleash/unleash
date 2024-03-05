@@ -1,4 +1,7 @@
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import metricsExample from '../../../examples/client-metrics.json';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
@@ -9,7 +12,13 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('metrics_api_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                responseTimeMetricsFix: true,
+            },
+        },
+    });
 });
 
 afterEach(async () => {

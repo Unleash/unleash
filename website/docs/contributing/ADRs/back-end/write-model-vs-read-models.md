@@ -24,16 +24,16 @@ We have 3 types of models serving 3 different purposes:
 
 Solution: Go through the Command stack aka the *Write Model*. *Application logic* with the use case/workflow/steps resides in the *Application Service*. Application service can delegate
   business logic handling to the *Domain Model* if needed (only for complex subdomains like Change Requests). Simple domain logic (very few business if statements)
-  can be handled together with the application logic. Application service calls the store that is responsible for the CRUD operations on the write model. 
+  can be handled together with the application logic. Application service calls the store that is responsible for the *generic CRUD operations* serving the write model. 
 
 * I need to read data for UI display (External Read Model)
   
 Solution: Expose *External Read Model* aka *View Model* that returns all the data in one query so that frontend doesn't have to ask multiple write models for data.
-  View model will typically join data across a few DB tables since most UI screens required more than one table of data. If we keep the complex queries for UI
+  View model will typically join data across a few DB tables since most UI screens required more than one table of data. If we keep the *complex queries* for UI
   in the external read model our stores can be generic and focused on the main table operations.
 
 * I need information from another module to proceed with my module application logic (Internal Read Model)
   
 Solution: Cross module queries can be handled with the *Internal Read Model*. Internal means it's used internally between our modules and not exposed to the UI.
-  Internal read models are typically narrowly focused on answering one question and usually return much simpler data than external read models. By introducing internal
+  Internal read models are typically narrowly focused on answering one question and usually require *simple queries* compared to external read models. By introducing internal
   read model other business modules are not coupled to our module's service/store/write model and can't call write model methods from another module by accident.

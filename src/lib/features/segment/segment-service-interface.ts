@@ -1,6 +1,6 @@
-import { ChangeRequestStrategy } from '../features/change-request-segment-usage-service/change-request-segment-usage-read-model';
-import { UpsertSegmentSchema } from '../openapi';
-import { IFeatureStrategy, ISegment, IUser } from '../types';
+import { ChangeRequestStrategy } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
+import { UpsertSegmentSchema } from '../../openapi';
+import { IFeatureStrategy, ISegment, IUser } from '../../types';
 
 export type StrategiesUsingSegment = {
     strategies: IFeatureStrategy[];

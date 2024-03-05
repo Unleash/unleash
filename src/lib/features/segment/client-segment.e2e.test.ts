@@ -1,30 +1,26 @@
-import dbInit, { ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import {
-    IConstraint,
-    IFeatureToggleClient,
-    ISegment,
-} from '../../../../lib/types/model';
-import { randomId } from '../../../../lib/util/random-id';
-import User from '../../../../lib/types/user';
+} from '../../../test/e2e/helpers/test-helper';
+import { IConstraint, IFeatureToggleClient, ISegment } from '../../types/model';
+import { randomId } from '../../util/random-id';
+import User from '../../types/user';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from '../../../../lib/util/segments';
-import { collectIds } from '../../../../lib/util/collect-ids';
-import { arraysHaveSameItems } from '../../../../lib/util/arraysHaveSameItems';
+} from '../../util/segments';
+import { collectIds } from '../../util/collect-ids';
+import { arraysHaveSameItems } from '../../util/arraysHaveSameItems';
 import {
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     FeatureStrategySchema,
     UpsertSegmentSchema,
-} from '../../../../lib/openapi';
-import { DEFAULT_ENV } from '../../../../lib/util';
-import { DEFAULT_PROJECT } from '../../../../lib/types';
+} from '../../openapi';
+import { DEFAULT_ENV } from '../../util';
+import { DEFAULT_PROJECT } from '../../types';
 
 let db: ITestDb;
 let app: IUnleashTest;

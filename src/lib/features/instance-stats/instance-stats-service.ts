@@ -14,7 +14,7 @@ import { IGroupStore } from '../../types/stores/group-store';
 import { IProjectStore } from '../../features/project/project-store-type';
 import { IStrategyStore } from '../../types/stores/strategy-store';
 import { IUserStore } from '../../types/stores/user-store';
-import { ISegmentStore } from '../../types/stores/segment-store';
+import { ISegmentStore } from '../segment/segment-store-type';
 import { IRoleStore } from '../../types/stores/role-store';
 import VersionService from '../../services/version-service';
 import { ISettingStore } from '../../types/stores/settings-store';

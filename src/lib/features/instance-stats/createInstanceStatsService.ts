@@ -16,7 +16,7 @@ import EnvironmentStore from '../project-environments/environment-store';
 import StrategyStore from '../../db/strategy-store';
 import ContextFieldStore from '../../db/context-field-store';
 import GroupStore from '../../db/group-store';
-import SegmentStore from '../../db/segment-store';
+import SegmentStore from '../segment/segment-store';
 import RoleStore from '../../db/role-store';
 import SettingStore from '../../db/setting-store';
 import ClientInstanceStore from '../../db/client-instance-store';

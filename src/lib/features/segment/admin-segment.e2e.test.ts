@@ -1,18 +1,18 @@
-import { randomId } from '../../../../lib/util/random-id';
-import { IFeatureToggleClient, ISegment } from '../../../../lib/types/model';
-import { collectIds } from '../../../../lib/util/collect-ids';
-import dbInit, { ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+import { randomId } from '../../util/random-id';
+import { IFeatureToggleClient, ISegment } from '../../types/model';
+import { collectIds } from '../../util/collect-ids';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
 import {
     addStrategyToFeatureEnv,
     createFeatureToggle,
-} from '../../helpers/app.utils';
+} from '../../../test/e2e/helpers/app.utils';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import { StrategiesUsingSegment } from '../../../../lib/segments/segment-service-interface';
-import { IUser } from '../../../../lib/types';
+} from '../../../test/e2e/helpers/test-helper';
+import { StrategiesUsingSegment } from './segment-service-interface';
+import { IUser } from '../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;

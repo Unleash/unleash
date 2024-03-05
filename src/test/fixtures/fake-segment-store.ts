@@ -1,4 +1,4 @@
-import { ISegmentStore } from '../../lib/types/stores/segment-store';
+import { ISegmentStore } from '../../lib/features/segment/segment-store-type';
 import { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
 
 export default class FakeSegmentStore implements ISegmentStore {

@@ -13,4 +13,4 @@ export * from './types';
 export * from './util';
 export * from './error';
 export * from './features';
-export * from './segments/segment-service-interface';
+export * from './features/segment/segment-service-interface';

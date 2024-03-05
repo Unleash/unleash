@@ -26,7 +26,7 @@ import { FeatureEnvironmentStore } from './feature-environment-store';
 import { ClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2';
 import UserSplashStore from './user-splash-store';
 import RoleStore from './role-store';
-import SegmentStore from './segment-store';
+import SegmentStore from '../features/segment/segment-store';
 import GroupStore from './group-store';
 import PatStore from './pat-store';
 import { PublicSignupTokenStore } from './public-signup-token-store';

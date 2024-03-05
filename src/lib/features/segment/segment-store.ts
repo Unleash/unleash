@@ -1,13 +1,17 @@
-import { ISegmentStore } from '../types/stores/segment-store';
-import { IConstraint, IFeatureStrategySegment, ISegment } from '../types/model';
-import { Logger, LogProvider } from '../logger';
+import { ISegmentStore } from './segment-store-type';
+import {
+    IConstraint,
+    IFeatureStrategySegment,
+    ISegment,
+} from '../../types/model';
+import { Logger, LogProvider } from '../../logger';
 import EventEmitter from 'events';
-import NotFoundError from '../error/notfound-error';
-import { PartialSome } from '../types/partial';
-import User from '../types/user';
-import { Db } from './db';
-import { IFlagResolver } from '../types';
-import { isDefined } from '../util';
+import NotFoundError from '../../error/notfound-error';
+import { PartialSome } from '../../types/partial';
+import User from '../../types/user';
+import { Db } from '../../db/db';
+import { IFlagResolver } from '../../types';
+import { isDefined } from '../../util';
 
 const T = {
     segments: 'segments',

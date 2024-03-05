@@ -1,6 +1,6 @@
-import { IFeatureStrategySegment, ISegment } from '../model';
-import { Store } from './store';
-import User from '../user';
+import { IFeatureStrategySegment, ISegment } from '../../types/model';
+import { Store } from '../../types/stores/store';
+import User from '../../types/user';
 
 export interface ISegmentStore extends Store<ISegment, number> {
     getAll(includeChangeRequestUsageData?: boolean): Promise<ISegment[]>;

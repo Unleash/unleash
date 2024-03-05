@@ -18,7 +18,7 @@ jest.mock('response-time', () => {
 const isDefined = async (timeInfo: any, limit = 10) => {
     let counter = 0;
     while (timeInfo === undefined) {
-        console.log('Waiting for event to be triggered');
+        // Waiting for event to be triggered
         await new Promise((resolve) => setTimeout(resolve, 10));
         counter++;
         if (counter > limit) {
@@ -368,7 +368,6 @@ describe('responseTimeMetrics new behavior', () => {
     ])(
         'when path is %s and route is undefined, reports %s',
         async (path: string, expected: string) => {
-            console.log(`path: ${path}, expected: ${expected}`);
             let timeInfo: any;
             // register a listener
             eventBus.on(REQUEST_TIME, (data) => {
@@ -391,7 +390,6 @@ describe('responseTimeMetrics new behavior', () => {
 
             // @ts-expect-error req and res doesn't have all properties
             storeRequestedRoute(req, res, () => {});
-            console.log(res);
             // @ts-expect-error req and res doesn't have all properties
             middleware(reqWithoutRoute, res);
 

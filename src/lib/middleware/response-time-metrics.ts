@@ -20,7 +20,6 @@ export const storeRequestedRoute: RequestHandler = (req, res, next) => {
 
 function collapse(path: string): string {
     let prefix = '';
-    console.log('collapse', path);
     if (path) {
         if (path.startsWith('/api/admin')) {
             prefix = '/api/admin/';

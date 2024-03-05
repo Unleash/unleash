@@ -3,16 +3,13 @@
 exports.up = function(db, cb) {
     db.runSql(
         `
-        CREATE TABLE IF NOT EXISTS environment_type_trends (
-            id VARCHAR(255) NOT NULL,
-            environment_type VARCHAR(255) NOT NULL,
-            total_updates INTEGER NOT NULL,
-            PRIMARY KEY (id, environment_type)
-        );`,
+        ALTER TABLE IF EXISTS environment_type_trends
+            ADD COLUMN created_at timestamp default now();
+        `,
         cb,
     );
 };
 
 exports.down = function(db, cb) {
-    db.runSql('DROP TABLE IF EXISTS environment_type_trends;', cb);
+    db.runSql('ALTER TABLE IF EXISTS environment_type_trends DROP COLUMN created_at;', cb);
 };

@@ -2191,6 +2191,42 @@ test('should clone feature toggle without replacing groupId', async () => {
         });
 });
 
+test('should clone feature toggle WITHOUT createdAt field', async () => {
+    const featureName = 'feature.toggle.base.5';
+    const cloneName = 'feature.toggle.clone.5';
+    const type = 'eExperiment';
+    const description = 'Lorem ipsum...';
+    const originalCreatedAt = new Date(2011, 11, 11);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: featureName,
+            description,
+            type,
+            createdAt: originalCreatedAt,
+        })
+        .expect(201);
+
+    await app.request
+        .post(`/api/admin/projects/default/features/${featureName}/clone`)
+        .send({ name: cloneName })
+        .expect(201);
+    await app.request
+        .get(`/api/admin/projects/default/features/${cloneName}`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.name).toBe(cloneName);
+            expect(res.body.type).toBe(type);
+            expect(res.body.project).toBe('default');
+            expect(res.body.description).toBe(description);
+            expect(new Date(res.body.createdAt).getFullYear()).toBe(
+                new Date().getFullYear(),
+            );
+            expect(res.body.createdAt).not.toBe('2011-12-11T00:00:00.000Z');
+        });
+});
+
 test('Should not allow changing project to target project without the same enabled environments', async () => {
     const envNameNotInBoth = 'not-in-both';
     const featureName = 'feature.dont.allow.change.project';

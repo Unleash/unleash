@@ -33,9 +33,9 @@ const StyledRingContent = styled(Box)(({ theme }) => ({
 
 const StyledInsightsContainer = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(4),
-    padding: theme.spacing(1.5),
+    padding: theme.spacing(1.5, 2),
     background: theme.palette.background.elevation2,
-    borderRadius: `${theme.shape.borderRadius}px`,
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
     display: 'flex',
     alignItems: 'center',
 }));
@@ -43,6 +43,7 @@ const StyledInsightsContainer = styled(Box)(({ theme }) => ({
 const StyledHeaderContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    marginBottom: theme.spacing(0.5),
 }));
 
 const StyledTextContainer = styled(Box)(({ theme }) => ({

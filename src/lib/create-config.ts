@@ -267,6 +267,7 @@ const defaultAuthentication: IAuthOption = {
     initialAdminUser: {
         username: process.env.UNLEASH_DEFAULT_ADMIN_USERNAME ?? 'admin',
         password: process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD ?? 'unleash4all',
+        email: process.env.UNLEASH_DEFAULT_ADMIN_EMAIL ?? 'admin@unleash.com',
     },
     initApiTokens: [],
 };

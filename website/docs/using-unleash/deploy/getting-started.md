@@ -31,10 +31,11 @@ To run multiple replicas of Unleash simply point all instances to the same datab
 - username: `admin`
 - password: `unleash4all`
 
-If you'd like the default admin user to be created with a different username and password, you may define the following environment variables when running Unleash:
+If you'd like the default admin user to be created with a different username, password and email, you may define the following environment variables when running Unleash:
 
 - `UNLEASH_DEFAULT_ADMIN_USERNAME`
 - `UNLEASH_DEFAULT_ADMIN_PASSWORD`
+- `UNLEASH_DEFAULT_ADMIN_EMAIL`
 
 The way of defining these variables may vary depending on how you run Unleash.
 

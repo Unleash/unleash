@@ -95,6 +95,7 @@ test('should create initial admin user', async () => {
         initialAdminUser: {
             username: 'admin',
             password: 'unleash4all',
+            email: 'admin@unleash.com',
         },
     });
     await expect(async () =>
@@ -116,6 +117,7 @@ test('should not init default user if we already have users', async () => {
         initialAdminUser: {
             username: 'admin',
             password: 'unleash4all',
+            email: 'admin@unleash.com',
         },
     });
     const users = await userService.getAll();

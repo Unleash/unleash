@@ -12,6 +12,10 @@ import {
     StyledDescription,
 } from './LinkCell.styles';
 
+//@ts-ignore
+import removeMd from 'remove-markdown';
+import { SimpleMarkdown } from 'component/common/Markdown/Markdown';
+
 interface ILinkCellProps {
     title?: string;
     to?: string;
@@ -26,23 +30,25 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
     subtitle,
     children,
 }) => {
+    const subTitleClean = removeMd(subtitle);
+    
     const { searchQuery } = useSearchHighlightContext();
 
     const renderSubtitle = (
         <ConditionallyRender
-            condition={Boolean(subtitle && subtitle.length > 40)}
+            condition={Boolean(subTitleClean && subTitleClean.length > 40)}
             show={
-                <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
+                <HtmlTooltip title={<SimpleMarkdown>{subtitle || ''}</SimpleMarkdown>} placement='bottom-start' arrow>
                     <StyledDescription data-loading>
                         <Highlighter search={searchQuery}>
-                            {subtitle}
+                            {subTitleClean}
                         </Highlighter>
                     </StyledDescription>
                 </HtmlTooltip>
             }
             elseShow={
                 <StyledDescription data-loading>
-                    <Highlighter search={searchQuery}>{subtitle}</Highlighter>
+                    <Highlighter search={searchQuery}>{subTitleClean}</Highlighter>
                 </StyledDescription>
             }
         />
@@ -53,15 +59,15 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
             <StyledTitle
                 data-loading
                 style={{
-                    WebkitLineClamp: subtitle ? 1 : 2,
-                    lineClamp: subtitle ? 1 : 2,
+                    WebkitLineClamp: subTitleClean ? 1 : 2,
+                    lineClamp: subTitleClean ? 1 : 2,
                 }}
             >
                 <Highlighter search={searchQuery}>{title}</Highlighter>
                 {children}
             </StyledTitle>
             <ConditionallyRender
-                condition={Boolean(subtitle)}
+                condition={Boolean(subTitleClean)}
                 show={renderSubtitle}
             />
         </StyledContainer>

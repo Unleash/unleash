@@ -5,6 +5,7 @@ import { getDefaultVariant } from 'unleash-client/lib/variant';
 export type IFlagKey =
     | 'accessLogs'
     | 'anonymiseEventLog'
+    | 'descriptionAsMarkdown'
     | 'encryptEmails'
     | 'enableLicense'
     | 'enableLicenseChecker'
@@ -59,6 +60,10 @@ export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {
     anonymiseEventLog: false,
+    descriptionAsMarkdown: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DESCRIPTION_AS_MARKDOWN,
+        false,
+    ),
     enableLicense: false,
     enableLicenseChecker: false,
     embedProxy: parseEnvVarBoolean(

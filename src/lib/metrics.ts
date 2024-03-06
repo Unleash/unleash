@@ -77,6 +77,14 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
+        const frontendApiEvaluationDuration = createSummary({
+            name: 'frontend_api_duration_seconds',
+            help: 'Frontend API evaluation duration time',
+            labelNames: ['action'],
+            percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
+            maxAgeSeconds: 600,
+            ageBuckets: 5,
+        });
         const dbDuration = createSummary({
             name: 'db_query_duration_seconds',
             help: 'DB query duration time',
@@ -399,6 +407,10 @@ export default class MetricsMonitor {
 
         eventBus.on(events.SCHEDULER_JOB_TIME, ({ jobId, time }) => {
             schedulerDuration.labels(jobId).observe(time);
+        });
+
+        eventBus.on(events.FRONTEND_API_TIME, ({ action, time }) => {
+            frontendApiEvaluationDuration.labels(action).observe(time);
         });
 
         eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {

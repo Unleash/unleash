@@ -16,7 +16,8 @@ import {
 } from '../types/settings/frontend-settings';
 import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
-import { PROXY_REPOSITORY_CREATED } from '../metric-events';
+import { FRONTEND_API_TIME, PROXY_REPOSITORY_CREATED } from '../metric-events';
+import metricsHelper from '../util/metrics-helper';
 
 type Config = Pick<
     IUnleashConfig,
@@ -45,6 +46,8 @@ export class ProxyService {
 
     private readonly services: Services;
 
+    private readonly timer: Function;
+
     /**
      * This is intentionally a Promise becasue we want to be able to await
      * until the client (which might be being created by a different request) is ready
@@ -60,6 +63,10 @@ export class ProxyService {
         this.logger = config.getLogger('services/proxy-service.ts');
         this.stores = stores;
         this.services = services;
+        this.timer = (action) =>
+            metricsHelper.wrapTimer(config.eventBus, FRONTEND_API_TIME, {
+                action,
+            });
     }
 
     async getProxyFeatures(
@@ -67,11 +74,12 @@ export class ProxyService {
         context: Context,
     ): Promise<ProxyFeatureSchema[]> {
         const client = await this.clientForProxyToken(token);
+
+        const stopTimer = this.timer('evaluateEnabledFeatures');
+
         const definitions = client.getFeatureToggleDefinitions() || [];
-
         const sessionId = context.sessionId || String(Math.random());
-
-        return definitions
+        const enabledFeatures = definitions
             .filter((feature) =>
                 client.isEnabled(feature.name, { ...context, sessionId }),
             )
@@ -84,6 +92,10 @@ export class ProxyService {
                 }),
                 impressionData: Boolean(feature.impressionData),
             }));
+
+        stopTimer();
+
+        return enabledFeatures;
     }
 
     async registerProxyMetrics(

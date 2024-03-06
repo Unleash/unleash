@@ -2,6 +2,7 @@ import { Alert, styled } from '@mui/material';
 import { IActionSetEvent } from 'interfaces/action';
 import { ProjectActionsEventsDetailsAction } from './ProjectActionsEventsDetailsAction';
 import { ProjectActionsEventsDetailsSource } from './ProjectActionsEventsDetailsSource/ProjectActionsEventsDetailsSource';
+import { CheckCircleOutline } from '@mui/icons-material';
 
 const StyledDetails = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -28,7 +29,10 @@ export const ProjectActionsEventsDetails = ({
 
     return (
         <StyledDetails>
-            <StyledAlert severity={state === 'failed' ? 'error' : 'success'}>
+            <StyledAlert
+                severity={state === 'failed' ? 'error' : 'success'}
+                icon={state === 'success' ? <CheckCircleOutline /> : undefined}
+            >
                 {stateText}
             </StyledAlert>
             <ProjectActionsEventsDetailsSource signal={signal} />

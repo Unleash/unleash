@@ -14,6 +14,7 @@ const StyledCell = styled(Box)({
 });
 
 const StyledIcon = styled(Avatar)(({ theme }) => ({
+    background: 'transparent',
     borderRadius: theme.shape.borderRadius,
     overflow: 'hidden',
     width: theme.spacing(3),

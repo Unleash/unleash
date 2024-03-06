@@ -24,10 +24,13 @@ export const withDbLock =
         const client = new Client({
             ...dbConfig,
         });
+        let lockAcquired = false;
         try {
             await client.connect();
             // wait to obtain a lock
             await client.query('SELECT pg_advisory_lock($1)', [config.lockKey]);
+            lockAcquired = true;
+
             const promise = fn(...args);
             const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(
@@ -41,9 +44,11 @@ export const withDbLock =
             config.logger.error(`Locking error: ${e.message}`);
             throw e;
         } finally {
-            await client.query('SELECT pg_advisory_unlock($1)', [
-                config.lockKey,
-            ]);
+            if (lockAcquired) {
+                await client.query('SELECT pg_advisory_unlock($1)', [
+                    config.lockKey,
+                ]);
+            }
             await client.end();
         }
     };

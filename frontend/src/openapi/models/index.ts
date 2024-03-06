@@ -515,6 +515,7 @@ export * from './eventsSchema';
 export * from './eventsSchemaVersion';
 export * from './executiveSummarySchema';
 export * from './executiveSummarySchemaFlagTrendsItem';
+export * from './executiveSummarySchemaEnvironmentTypeTrendsItem';
 export * from './executiveSummarySchemaFlags';
 export * from './executiveSummarySchemaMetricsSummaryTrendsItem';
 export * from './executiveSummarySchemaProjectFlagTrendsItem';

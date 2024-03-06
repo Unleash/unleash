@@ -32,6 +32,7 @@ interface IIntegrationIconProps {
 }
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    background: 'transparent',
     marginRight: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
     overflow: 'hidden',
@@ -52,7 +53,7 @@ const StyledCustomIcon = styled(Icon)({
 });
 
 const StyledSignalsIcon = styled(StyledCustomIcon)(({ theme }) => ({
-    background: theme.palette.primary.main,
+    background: theme.palette.background.alternative,
     color: theme.palette.primary.contrastText,
 }));
 

@@ -12,6 +12,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { Add } from '@mui/icons-material';
 import { ProjectActionsPreviewPayload } from './ProjectActionsPreviewPayload';
 import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -104,7 +105,12 @@ export const ProjectActionsFormStepSource = ({
                     setSourceId(parseInt(v));
                 }}
             />
-            <ProjectActionsPreviewPayload payload={lastSourcePayload} />
+            <ConditionallyRender
+                condition={Boolean(sourceId)}
+                show={
+                    <ProjectActionsPreviewPayload payload={lastSourcePayload} />
+                }
+            />
             <StyledDivider />
             {filters.map((filter, index) => (
                 <ProjectActionsFilterItem

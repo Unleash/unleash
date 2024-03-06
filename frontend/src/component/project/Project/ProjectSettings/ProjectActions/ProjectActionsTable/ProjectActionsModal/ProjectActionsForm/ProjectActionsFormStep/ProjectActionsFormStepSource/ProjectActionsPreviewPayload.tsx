@@ -12,6 +12,13 @@ const LazyReactJSONEditor = lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
 );
 
+const StyledNoSignalsSpan = styled('span')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    marginTop: theme.spacing(1.5),
+    marginBottom: theme.spacing(-0.75),
+    height: theme.spacing(3),
+}));
+
 const StyledAccordion = styled(Accordion)({
     backgroundColor: 'transparent',
     boxShadow: 'none',
@@ -52,7 +59,11 @@ export const ProjectActionsPreviewPayload = ({
     payload,
 }: IProjectActionsPreviewPayloadProps) => {
     if (!payload) {
-        return null;
+        return (
+            <StyledNoSignalsSpan>
+                No signals were received from this source yet.
+            </StyledNoSignalsSpan>
+        );
     }
 
     return (

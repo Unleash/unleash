@@ -59,10 +59,10 @@ const StyledCard = styled('div', {
         '&:after': {
             content: '""',
             width: 'auto',
-            height: theme.spacing(0.75),
+            height: theme.spacing(1),
             position: 'absolute',
             zIndex: -1,
-            bottom: theme.spacing(-0.75),
+            bottom: theme.spacing(-1),
             left: theme.spacing(1),
             right: theme.spacing(1),
             borderBottomLeftRadius: `${theme.shape.borderRadiusMedium}px`,

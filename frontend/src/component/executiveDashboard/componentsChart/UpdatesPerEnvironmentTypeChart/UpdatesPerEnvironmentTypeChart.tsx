@@ -14,9 +14,9 @@ interface IUpdatesPerEnvironmnetTypeChart {
     isLoading?: boolean;
 }
 
-function groupByDate(
+const groupByDate = (
     items: ExecutiveSummarySchemaEnvironmentTypeTrendsItem[],
-): Record<string, ExecutiveSummarySchemaEnvironmentTypeTrendsItem[]> {
+): Record<string, ExecutiveSummarySchemaEnvironmentTypeTrendsItem[]> => {
     if (!items) {
         return {};
     }
@@ -50,10 +50,10 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
         const grouped = groupByDate(environmentTypeTrends);
         const labels = environmentTypeTrends?.map((item) => item.date);
         const datasets = Object.entries(grouped).map(
-            ([environementType, trends]) => {
-                const color = getProjectColor(environementType);
+            ([environmentType, trends]) => {
+                const color = getProjectColor(environmentType);
                 return {
-                    label: environementType,
+                    label: environmentType,
                     data: trends.map((item) => item.totalUpdates),
                     borderColor: color,
                     backgroundColor: color,

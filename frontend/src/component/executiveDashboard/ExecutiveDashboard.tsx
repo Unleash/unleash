@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { Box, styled, useTheme } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
@@ -46,7 +46,6 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
 }));
 
 export const ExecutiveDashboard: VFC = () => {
-    const theme = useTheme();
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
     const stateConfig = {
         projects: withDefault(ArrayParam, [allOption.id]),
@@ -200,7 +199,7 @@ export const ExecutiveDashboard: VFC = () => {
             <Widget
                 title='Updates per environment type'
                 tooltip='Summary of all configuration updates per environment type'
-                sx={{ mt: theme.spacing(2) }}
+                sx={{ mt: theme => theme.spacing(2) }}
             >
                 <UpdatesPerEnvironmentTypeChart
                     environmentTypeTrends={environmentTypeTrends}

@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, styled, useTheme } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
@@ -25,6 +25,7 @@ import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProj
 import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
+import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -45,6 +46,7 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
 }));
 
 export const ExecutiveDashboard: VFC = () => {
+    const theme = useTheme();
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
     const stateConfig = {
         projects: withDefault(ArrayParam, [allOption.id]),
@@ -65,7 +67,8 @@ export const ExecutiveDashboard: VFC = () => {
         executiveDashboardData.metricsSummaryTrends,
         projects,
     );
-    const { users } = executiveDashboardData;
+
+    const { users, environmentTypeTrends } = executiveDashboardData;
 
     const summary = useFilteredFlagsSummary(projectsData);
     const isOneProjectSelected = projects.length === 1;
@@ -193,6 +196,16 @@ export const ExecutiveDashboard: VFC = () => {
                 tooltip='Summary of all flag evaluations reported by SDKs.'
             >
                 <MetricsSummaryChart metricsSummaryTrends={metricsData} />
+            </Widget>
+            <Widget
+                title='Updates per environment type'
+                tooltip='Summary of all configuration updates per environment type'
+                sx={{ mt: theme.spacing(2) }}
+            >
+                <UpdatesPerEnvironmentTypeChart
+                    environmentTypeTrends={environmentTypeTrends}
+                    isLoading={loading}
+                />
             </Widget>
         </>
     );

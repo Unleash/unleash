@@ -68,7 +68,9 @@ export class GlobalFrontendApiRepository extends EventEmitter {
     }
 
     getToggles(token: IApiUser): FeatureInterface[] {
-        return this.featuresByEnvironment[token.environment].filter(
+        return this.featuresByEnvironment[
+            this.environmentNameForToken(token)
+        ].filter(
             (feature) =>
                 feature.project && token.projects.includes(feature.project),
         );
@@ -100,7 +102,7 @@ export class GlobalFrontendApiRepository extends EventEmitter {
         await this.refreshData();
     }
 
-    private environmentNameForToken(): string {
+    private environmentNameForToken(token: IApiUser): string {
         if (this.token.environment === ALL_ENVS) {
             return 'default';
         }

@@ -199,7 +199,7 @@ export const ExecutiveDashboard: VFC = () => {
             <Widget
                 title='Updates per environment type'
                 tooltip='Summary of all configuration updates per environment type'
-                sx={{ mt: theme => theme.spacing(2) }}
+                sx={{ mt: (theme) => theme.spacing(2) }}
             >
                 <UpdatesPerEnvironmentTypeChart
                     environmentTypeTrends={environmentTypeTrends}

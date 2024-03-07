@@ -37,7 +37,7 @@ const groupByDate = (
     );
 
     return grouped;
-}
+};
 
 export const UpdatesPerEnvironmentTypeChart: VFC<
     IUpdatesPerEnvironmnetTypeChart

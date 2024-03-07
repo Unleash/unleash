@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react';
 import { Paper, Typography, styled, SxProps } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Theme } from "@mui/material/styles/createTheme";
+import { Theme } from '@mui/material/styles/createTheme';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(3),

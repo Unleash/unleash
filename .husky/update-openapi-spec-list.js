@@ -18,9 +18,12 @@ fs.readdir(directoryPath, (err, files) => {
 
     // Append export statements to index.ts
     const script = path.basename(__filename);
-    const message = `/* Auto-generated file by ${script}. Do not edit. \n * To run it manually execute node ${script} from ${path.basename(
-        __dirname,
-    )} \n */\n`;
+    const message = `/** 
+ * Auto-generated file by ${script}. Do not edit. 
+ * To run it manually execute \`node ${script}\` from ${path.basename(
+     __dirname,
+ )}
+ */\n`;
     fs.writeFileSync(indexPath, `${message}${exports}\n${message}`, (err) => {
         if (err) {
             console.error('Could not append to file.', err);

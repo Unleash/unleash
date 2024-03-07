@@ -210,31 +210,6 @@ export default class ClientFeatureToggleReadModel {
         );
     }
 
-    private addSegmentToStrategy(
-        feature: PartialDeep<IFeatureToggleClient>,
-        row: Record<string, any>,
-    ) {
-        feature.strategies
-            ?.find((s) => s?.id === row.strategy_id)
-            ?.constraints?.push(...row.segment_constraints);
-    }
-
-    private addSegmentIdsToStrategy(
-        feature: PartialDeep<IFeatureToggleClient>,
-        row: Record<string, any>,
-    ) {
-        const strategy = feature.strategies?.find(
-            (s) => s?.id === row.strategy_id,
-        );
-        if (!strategy) {
-            return;
-        }
-        if (!strategy.segments) {
-            strategy.segments = [];
-        }
-        strategy.segments.push(row.segment_id);
-    }
-
     async getClient(): Promise<Record<string, IFeatureToggleClient[]>> {
         return this.getAll();
     }

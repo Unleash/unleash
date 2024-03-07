@@ -8,7 +8,6 @@ import {
     Unleash,
     UnleashEvents,
 } from 'unleash-client';
-import { ProxyRepository } from '../proxy';
 import { ApiTokenType } from '../types/models/api-token';
 import {
     FrontendSettings,
@@ -17,6 +16,7 @@ import {
 import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
 import { PROXY_REPOSITORY_CREATED } from '../metric-events';
+import { ProxyRepository } from '../proxy';
 
 type Config = Pick<
     IUnleashConfig,
@@ -68,7 +68,6 @@ export class ProxyService {
     ): Promise<ProxyFeatureSchema[]> {
         const client = await this.clientForProxyToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
-
         const sessionId = context.sessionId || String(Math.random());
 
         return definitions
@@ -125,7 +124,6 @@ export class ProxyService {
             this.services,
             token,
         );
-
         const client = new Unleash({
             appName: 'proxy',
             url: 'unused',

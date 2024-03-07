@@ -1,4 +1,4 @@
-import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
+import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from '../features/events/event-service';
 import HealthService from './health-service';
@@ -96,8 +96,8 @@ import {
 } from '../features/client-feature-toggles/createClientFeatureToggleService';
 import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 import {
-    createFeatureSearchService,
     createFakeFeatureSearchService,
+    createFeatureSearchService,
 } from '../features/feature-search/createFeatureSearchService';
 import { FeatureSearchService } from '../features/feature-search/feature-search-service';
 import {

@@ -126,6 +126,7 @@ import {
     requestsPerSecondSchema,
     requestsPerSecondSegmentedSchema,
     resetPasswordSchema,
+    resourceLimitsSchema,
     roleSchema,
     sdkContextSchema,
     sdkFlatContextSchema,
@@ -431,6 +432,7 @@ export const schemas: UnleashSchemas = {
     inactiveUserSchema,
     inactiveUsersSchema,
     recordUiErrorSchema,
+    resourceLimitsSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

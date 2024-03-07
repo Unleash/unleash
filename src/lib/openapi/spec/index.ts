@@ -179,3 +179,4 @@ export * from './record-ui-error-schema';
 export * from './project-application-schema';
 export * from './project-applications-schema';
 export * from './application-environment-instances-schema';
+export * from './resource-limits-schema';

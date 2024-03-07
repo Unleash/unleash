@@ -182,6 +182,16 @@ exports[`should create default config 1`] = `
     "passwordResetMaxPerMinute": 1,
     "simpleLoginMaxPerMinute": 10,
   },
+  "resourceLimits": {
+    "actionSetActions": 10,
+    "actionSetFilterValues": 25,
+    "actionSetFilters": 5,
+    "actionSetsPerProject": 5,
+    "segmentValues": 1000,
+    "signalEndpoints": 5,
+    "signalTokensPerEndpoint": 5,
+    "strategySegments": 5,
+  },
   "secureHeaders": false,
   "segmentValuesLimit": 1000,
   "server": {

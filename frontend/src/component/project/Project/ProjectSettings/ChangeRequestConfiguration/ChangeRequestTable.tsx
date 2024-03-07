@@ -306,8 +306,11 @@ export const ChangeRequestTable: VFC = () => {
                     condition={!dialogState.isEnabled}
                     show={
                         <Typography variant='body2' color='text.secondary'>
-                            To enable change requests for an environment, you need to ensure that your Unleash Admin has created the necessary custom project roles in your Unleash instance. 
-                            This will allow you to assign project members from the project access page.
+                            To enable change requests for an environment, you
+                            need to ensure that your Unleash Admin has created
+                            the necessary custom project roles in your Unleash
+                            instance. This will allow you to assign project
+                            members from the project access page.
                         </Typography>
                     }
                 />

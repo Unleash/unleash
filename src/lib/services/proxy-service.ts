@@ -16,8 +16,7 @@ import {
 import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
 import { PROXY_REPOSITORY_CREATED } from '../metric-events';
-import { GlobalFrontendApiRepository } from '../proxy/global-frontend-api-repository';
-import { FrontendApiRepository } from '../proxy/frontend-api-repository';
+import { ProxyRepository } from '../proxy';
 
 type Config = Pick<
     IUnleashConfig,
@@ -46,8 +45,6 @@ export class ProxyService {
 
     private readonly services: Services;
 
-    private readonly globalFrontendApiRepository: GlobalFrontendApiRepository;
-
     /**
      * This is intentionally a Promise becasue we want to be able to await
      * until the client (which might be being created by a different request) is ready
@@ -58,17 +55,11 @@ export class ProxyService {
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    constructor(
-        config: Config,
-        stores: Stores,
-        services: Services,
-        globalFrontendApiRepository: GlobalFrontendApiRepository,
-    ) {
+    constructor(config: Config, stores: Stores, services: Services) {
         this.config = config;
         this.logger = config.getLogger('services/proxy-service.ts');
         this.stores = stores;
         this.services = services;
-        this.globalFrontendApiRepository = globalFrontendApiRepository;
     }
 
     async getProxyFeatures(
@@ -127,15 +118,10 @@ export class ProxyService {
     }
 
     private async createClientForProxyToken(token: IApiUser): Promise<Unleash> {
-        // const repository = new ProxyRepository(
-        //     this.config,
-        //     this.stores,
-        //     this.services,
-        //     token,
-        // );
-        const repository = new FrontendApiRepository(
+        const repository = new ProxyRepository(
             this.config,
-            this.globalFrontendApiRepository,
+            this.stores,
+            this.services,
             token,
         );
         const client = new Unleash({

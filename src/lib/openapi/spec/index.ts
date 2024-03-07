@@ -1,4 +1,6 @@
-/* Auto-generated file. Do not edit. */
+/* Auto-generated file by update-openapi-spec-list.js. Do not edit. 
+ * To run it manually execute node update-openapi-spec-list.js from .husky 
+ */
 export * from './addon-create-update-schema';
 export * from './addon-parameter-schema';
 export * from './addon-schema';
@@ -197,4 +199,6 @@ export * from './variant-flag-schema';
 export * from './variant-schema';
 export * from './variants-schema';
 export * from './version-schema';
-/* Auto-generated file. Do not edit. */
+/* Auto-generated file by update-openapi-spec-list.js. Do not edit. 
+ * To run it manually execute node update-openapi-spec-list.js from .husky 
+ */

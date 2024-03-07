@@ -200,7 +200,7 @@
   "resolutions": {
     "async": "^3.2.4",
     "db-migrate/rc/minimist": "^1.2.5",
-    "es5-ext": "0.10.63",
+    "es5-ext": "0.10.64",
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",

@@ -5,6 +5,12 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 Generally, the intention is that `unleash-server` should always provide support for clients one major version lower than the current one. This should make it possible to upgrade `unleash` gradually.
 
+## Upgrading to 5.7 and later from versions < 5.6.11
+
+When upgrading to Unleash 5.7 and later from versions < 5.6.11, you should first update to 5.6.11 and ensure all your Unleash instances are running 5.6.11 before upgrading to 5.7 or later. Any Unleash instances left on earlier versions after the backing database has been updated will continue to work, but you will not be able to log in to them.
+
+Once you have upgraded to version 5.7 and above, you can no longer downgrade to versions before 5.7.
+
 ## Upgrading directly from v3.x to v5.x
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/qmusq_9mE2E"]}/>

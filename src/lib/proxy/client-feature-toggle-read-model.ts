@@ -10,6 +10,9 @@ import { ensureStringValue, mapValues } from '../util';
 import { Db } from '../db/db';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import Raw = Knex.Raw;
+import metricsHelper from '../util/metrics-helper';
+import { DB_TIME } from '../metric-events';
+import EventEmitter from 'events';
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
@@ -20,11 +23,19 @@ export interface IGetAllFeatures {
 export default class ClientFeatureToggleReadModel {
     private db: Db;
 
-    constructor(db: Db) {
+    private timer: Function;
+
+    constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
+        this.timer = (action) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'client-feature-toggle-read-model',
+                action,
+            });
     }
 
     private async getAll(): Promise<Record<string, IFeatureToggleClient[]>> {
+        const stopTimer = this.timer(`getAll`);
         const selectColumns = [
             'features.name as name',
             'features.description as description',
@@ -32,10 +43,8 @@ export default class ClientFeatureToggleReadModel {
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
-            'features.last_seen_at as last_seen_at',
             'features.created_at as created_at',
             'fe.variants as variants',
-            'fe.last_seen_at as env_last_seen_at',
             'fe.enabled as enabled',
             'fe.environment as environment',
             'fs.id as strategy_id',
@@ -56,23 +65,24 @@ export default class ClientFeatureToggleReadModel {
         let query = this.db('features')
             .modify(FeatureToggleStore.filterByArchived, false)
             .leftJoin(
-                this.db('feature_strategies').select('*').as('fs'),
-                'fs.feature_name',
-                'features.name',
-            )
-            .leftJoin(
                 this.db('feature_environments')
                     .select(
                         'feature_name',
                         'enabled',
                         'environment',
                         'variants',
-                        'last_seen_at',
                     )
                     .as('fe'),
                 'fe.feature_name',
                 'features.name',
             )
+            .leftJoin('feature_strategies as fs', function () {
+                this.on('fs.feature_name', '=', 'features.name').andOn(
+                    'fs.environment',
+                    '=',
+                    'fe.environment',
+                );
+            })
             .leftJoin(
                 'feature_strategy_segment as fss',
                 `fss.feature_strategy_id`,
@@ -82,8 +92,8 @@ export default class ClientFeatureToggleReadModel {
             .leftJoin('dependent_features as df', 'df.child', 'features.name');
 
         query = query.select(selectColumns);
-
         const rows = await query;
+        stopTimer();
 
         const data = this.getAggregatedData(rows);
         return data;
@@ -108,38 +118,60 @@ export default class ClientFeatureToggleReadModel {
                     name: row.name,
                     strategies: [],
                     variants: row.variants || [],
-                    dependencies: [],
                     impressionData: row.impression_data,
                     enabled: !!row.enabled,
                     description: row.description,
                     project: row.project,
                     stale: row.stale,
                     type: row.type,
-                    lastSeenAt: row.last_seen_at,
                 };
                 featureTogglesByEnv[environment].push(feature);
             } else {
-                if (
-                    this.isUnseenStrategyRow(feature, row) &&
-                    !row.strategy_disabled
-                ) {
-                    feature.strategies?.push(this.rowToStrategy(row));
-                }
                 if (this.isNewTag(feature, row)) {
                     this.addTag(feature, row);
                 }
-                if (row.parent) {
-                    feature.dependencies = feature.dependencies || [];
-                    feature.dependencies.push({
-                        feature: row.parent,
-                        enabled: row.parent_enabled,
-                        ...(row.parent_enabled
-                            ? { variants: row.parent_variants }
-                            : {}),
-                    });
-                }
+            }
+            if (row.parent) {
+                feature.dependencies = feature.dependencies || [];
+                feature.dependencies.push({
+                    feature: row.parent,
+                    enabled: row.parent_enabled,
+                    ...(row.parent_enabled
+                        ? { variants: row.parent_variants }
+                        : {}),
+                });
+            }
+
+            if (
+                this.isUnseenStrategyRow(feature, row) &&
+                !row.strategy_disabled
+            ) {
+                feature.strategies?.push(this.rowToStrategy(row));
             }
         });
+        Object.keys(featureTogglesByEnv).forEach((envKey) => {
+            featureTogglesByEnv[envKey] = featureTogglesByEnv[envKey].map(
+                (featureToggle) => ({
+                    ...featureToggle,
+                    strategies: featureToggle.strategies
+                        ?.sort((strategy1, strategy2) => {
+                            if (
+                                typeof strategy1.sortOrder === 'number' &&
+                                typeof strategy2.sortOrder === 'number'
+                            ) {
+                                return (
+                                    strategy1.sortOrder - strategy2.sortOrder
+                                );
+                            }
+                            return 0;
+                        })
+                        .map(({ id, title, sortOrder, ...strategy }) => ({
+                            ...strategy,
+                        })),
+                }),
+            );
+        });
+
         return featureTogglesByEnv;
     }
 

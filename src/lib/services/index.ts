@@ -295,7 +295,10 @@ export const createServices = (
         ? createClientFeatureToggleService(db, config)
         : createFakeClientFeatureToggleService(config);
 
-    const clientFeatureToggleReadModel = new ClientFeatureToggleReadModel(db!);
+    const clientFeatureToggleReadModel = new ClientFeatureToggleReadModel(
+        db!,
+        config.eventBus,
+    );
     const globalFrontendApiRepository = new GlobalFrontendApiRepository(
         config,
         segmentReadModel,

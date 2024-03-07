@@ -77,7 +77,6 @@ export class ProxyService {
     ): Promise<ProxyFeatureSchema[]> {
         const client = await this.clientForProxyToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
-
         const sessionId = context.sessionId || String(Math.random());
 
         return definitions
@@ -139,7 +138,6 @@ export class ProxyService {
             this.globalFrontendApiRepository,
             token,
         );
-
         const client = new Unleash({
             appName: 'proxy',
             url: 'unused',

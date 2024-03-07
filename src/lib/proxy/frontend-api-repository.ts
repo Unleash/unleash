@@ -9,7 +9,7 @@ import { IApiUser } from '../types/api-user';
 import { IUnleashConfig } from '../types';
 import { UnleashEvents } from 'unleash-client';
 import { Logger } from '../logger';
-import { GlobalFrontendApiRepository } from './global-frontend-api-repository';
+import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 
 type Config = Pick<IUnleashConfig, 'getLogger'>;
 
@@ -23,13 +23,13 @@ export class FrontendApiRepository
 
     private readonly token: IApiUser;
 
-    private globalFrontendApiRepository: GlobalFrontendApiRepository;
+    private globalFrontendApiRepository: GlobalFrontendApiCache;
 
     private running: boolean;
 
     constructor(
         config: Config,
-        globalFrontendApiRepository: GlobalFrontendApiRepository,
+        globalFrontendApiRepository: GlobalFrontendApiCache,
         token: IApiUser,
     ) {
         super();

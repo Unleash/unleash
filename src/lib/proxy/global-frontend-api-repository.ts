@@ -2,29 +2,20 @@ import EventEmitter from 'events';
 import { Segment } from 'unleash-client/lib/strategy/strategy';
 import { FeatureInterface } from 'unleash-client/lib/feature';
 import { IApiUser } from '../types/api-user';
-import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
+import { ISegmentReadModel, IUnleashConfig } from '../types';
 import {
     mapFeaturesForClient,
     mapSegmentsForClient,
 } from '../features/playground/offline-unleash-client';
 import { ALL_ENVS } from '../util/constants';
 import { Logger } from '../logger';
-import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
-import { SegmentReadModel } from '../features/segment/segment-read-model';
+import ConfigurationRevisionService, {
+    UPDATE_REVISION,
+} from '../features/feature-toggle/configuration-revision-service';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
 import { mapValues } from '../util';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
-
-type Stores = Pick<
-    IUnleashStores,
-    'projectStore' | 'eventStore' | 'segmentReadModel'
->;
-
-type Services = Pick<
-    IUnleashServices,
-    'featureToggleServiceV2' | 'configurationRevisionService'
->;
 
 export class GlobalFrontendApiRepository extends EventEmitter {
     private readonly config: Config;
@@ -33,11 +24,9 @@ export class GlobalFrontendApiRepository extends EventEmitter {
 
     private readonly clientFeatureToggleReadModel: ClientFeatureToggleReadModel;
 
-    private readonly segmentReadModel: SegmentReadModel;
+    private readonly segmentReadModel: ISegmentReadModel;
 
     private readonly configurationRevisionService: ConfigurationRevisionService;
-
-    private readonly token: IApiUser;
 
     private featuresByEnvironment: Record<string, FeatureInterface[]>;
 
@@ -45,22 +34,27 @@ export class GlobalFrontendApiRepository extends EventEmitter {
 
     private interval: number;
 
-    private timer: NodeJS.Timeout | null;
-
     private running: boolean;
 
     constructor(
         config: Config,
-        segmentReadModel: SegmentReadModel,
+        segmentReadModel: ISegmentReadModel,
         clientFeatureToggleReadModel: ClientFeatureToggleReadModel,
+        configurationRevisionService: ConfigurationRevisionService,
     ) {
         super();
         this.config = config;
         this.logger = config.getLogger('proxy-repository.ts');
         this.clientFeatureToggleReadModel = clientFeatureToggleReadModel;
+        this.configurationRevisionService = configurationRevisionService;
         this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.interval = config.frontendApi.refreshIntervalInMs;
+        this.refreshData();
+        this.configurationRevisionService.on(
+            UPDATE_REVISION,
+            this.onUpdateRevisionEvent,
+        );
     }
 
     getSegment(id: number): Segment | undefined {
@@ -68,6 +62,7 @@ export class GlobalFrontendApiRepository extends EventEmitter {
     }
 
     getToggles(token: IApiUser): FeatureInterface[] {
+        console.log('***', Object.keys(this.featuresByEnvironment));
         return this.featuresByEnvironment[
             this.environmentNameForToken(token)
         ].filter(
@@ -103,10 +98,10 @@ export class GlobalFrontendApiRepository extends EventEmitter {
     }
 
     private environmentNameForToken(token: IApiUser): string {
-        if (this.token.environment === ALL_ENVS) {
+        if (token.environment === ALL_ENVS) {
             return 'default';
         }
 
-        return this.token.environment;
+        return token.environment;
     }
 }

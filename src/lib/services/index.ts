@@ -111,6 +111,8 @@ import {
 import { InactiveUsersService } from '../users/inactive/inactive-users-service';
 import { SegmentReadModel } from '../features/segment/segment-read-model';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
+import { GlobalFrontendApiRepository } from '../proxy/global-frontend-api-repository';
+import ClientFeatureToggleReadModel from '../proxy/client-feature-toggle-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -293,12 +295,24 @@ export const createServices = (
         ? createClientFeatureToggleService(db, config)
         : createFakeClientFeatureToggleService(config);
 
-    const proxyService = new ProxyService(config, stores, {
-        featureToggleServiceV2,
-        clientMetricsServiceV2,
-        settingService,
+    const clientFeatureToggleReadModel = new ClientFeatureToggleReadModel(db!);
+    const globalFrontendApiRepository = new GlobalFrontendApiRepository(
+        config,
+        segmentReadModel,
+        clientFeatureToggleReadModel,
         configurationRevisionService,
-    });
+    );
+    const proxyService = new ProxyService(
+        config,
+        stores,
+        {
+            featureToggleServiceV2,
+            clientMetricsServiceV2,
+            settingService,
+            configurationRevisionService,
+        },
+        globalFrontendApiRepository,
+    );
 
     const edgeService = new EdgeService({ apiTokenService }, config);
 

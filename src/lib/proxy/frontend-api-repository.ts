@@ -36,6 +36,7 @@ export class FrontendApiRepository
         this.config = config;
         this.logger = config.getLogger('frontend-api-repository.ts');
         this.token = token;
+        this.globalFrontendApiRepository = globalFrontendApiRepository;
     }
 
     getTogglesWithSegmentData(): EnhancedFeatureInterface[] {

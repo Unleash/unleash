@@ -1,15 +1,12 @@
 import { Knex } from 'knex';
-import { Logger, LogProvider } from '../logger';
 import {
     IFeatureToggleClient,
     IFeatureToggleQuery,
-    IFlagResolver,
     IStrategyConfig,
     ITag,
     PartialDeep,
 } from '../types';
 import { ensureStringValue, mapValues } from '../util';
-import EventEmitter from 'events';
 import { Db } from '../db/db';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
 import Raw = Knex.Raw;
@@ -23,19 +20,8 @@ export interface IGetAllFeatures {
 export default class ClientFeatureToggleReadModel {
     private db: Db;
 
-    private logger: Logger;
-
-    private flagResolver: IFlagResolver;
-
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db) {
         this.db = db;
-        this.logger = getLogger('client-feature-toggle-read-model.ts');
-        this.flagResolver = flagResolver;
     }
 
     private async getAll(): Promise<Record<string, IFeatureToggleClient[]>> {

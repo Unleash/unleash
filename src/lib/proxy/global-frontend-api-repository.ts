@@ -64,8 +64,8 @@ export class GlobalFrontendApiRepository extends EventEmitter {
         this.interval = config.frontendApi.refreshIntervalInMs;
     }
 
-    getSegments(token: IApiUser): Segment | undefined {
-        return this.segments;
+    getSegment(id: number): Segment | undefined {
+        return this.segments.find((segment) => segment.id === id);
     }
 
     getToggles(token: IApiUser): FeatureInterface[] {

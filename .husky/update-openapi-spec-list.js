@@ -18,8 +18,8 @@ fs.readdir(directoryPath, (err, files) => {
 
     // Append export statements to index.ts
     const script = path.basename(__filename);
-    const message = `/** 
- * Auto-generated file by ${script}. Do not edit. 
+    const message = `/**
+ * Auto-generated file by ${script}. Do not edit.
  * To run it manually execute \`node ${script}\` from ${path.basename(
      __dirname,
  )}

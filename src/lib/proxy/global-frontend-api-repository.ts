@@ -10,6 +10,8 @@ import {
 import { ALL_ENVS } from '../util/constants';
 import { Logger } from '../logger';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
+import { SegmentReadModel } from '../features/segment/segment-read-model';
+import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
@@ -28,9 +30,9 @@ export class GlobalFrontendApiRepository extends EventEmitter {
 
     private readonly logger: Logger;
 
-    private readonly stores: Stores;
+    private readonly clientFeatureToggleReadModel: ClientFeatureToggleReadModel;
 
-    private readonly services: Services;
+    private readonly segmentReadModel: SegmentReadModel;
 
     private readonly configurationRevisionService: ConfigurationRevisionService;
 
@@ -48,18 +50,14 @@ export class GlobalFrontendApiRepository extends EventEmitter {
 
     constructor(
         config: Config,
-        stores: Stores,
-        services: Services,
-        token: IApiUser,
+        segmentReadModel: SegmentReadModel,
+        clientFeatureToggleReadModel: ClientFeatureToggleReadModel,
     ) {
         super();
         this.config = config;
         this.logger = config.getLogger('proxy-repository.ts');
-        this.stores = stores;
-        this.services = services;
-        this.configurationRevisionService =
-            services.configurationRevisionService;
-        this.token = token;
+        this.clientFeatureToggleReadModel = clientFeatureToggleReadModel;
+        this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.interval = config.frontendApi.refreshIntervalInMs;
     }
@@ -69,21 +67,22 @@ export class GlobalFrontendApiRepository extends EventEmitter {
     }
 
     getToggles(token: IApiUser): FeatureInterface[] {
-        return this.features;
+        return this.features.filter(
+            (feature) =>
+                feature.project && token.projects.includes(feature.project),
+        );
     }
 
     private async getAllFeatures(): Promise<FeatureInterface[]> {
         const mappedFeatures = mapFeaturesForClient(
-            // TODO: refactor into read model
-            await this.services.featureToggleServiceV2.getClientFeatures(),
+            // TODO: extract projects and envs from actually used frontend tokens
+            await this.clientFeatureToggleReadModel.getClient(),
         );
         return mappedFeatures;
     }
 
     private async getAllSegments(): Promise<Segment[]> {
-        return mapSegmentsForClient(
-            await this.stores.segmentReadModel.getAll(),
-        );
+        return mapSegmentsForClient(await this.segmentReadModel.getAll());
     }
 
     // TODO: fetch only relevant projects/environments based on tokens

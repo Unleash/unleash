@@ -50,6 +50,7 @@ import {
 } from './util/segments';
 import FlagResolver from './util/flag-resolver';
 import { validateOrigins } from './util/validateOrigin';
+import { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
@@ -573,6 +574,35 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         91,
     );
 
+    const resourceLimits: ResourceLimitsSchema = {
+        segmentValues: segmentValuesLimit,
+        strategySegments: strategySegmentsLimit,
+        signalEndpoints: parseEnvVarNumber(
+            process.env.UNLEASH_SIGNAL_ENDPOINTS_LIMIT,
+            5,
+        ),
+        actionSetActions: parseEnvVarNumber(
+            process.env.UNLEASH_ACTION_SET_ACTIONS_LIMIT,
+            10,
+        ),
+        actionSetsPerProject: parseEnvVarNumber(
+            process.env.UNLEASH_ACTION_SETS_PER_PROJECT_LIMIT,
+            5,
+        ),
+        actionSetFilters: parseEnvVarNumber(
+            process.env.UNLEASH_ACTION_SET_FILTERS_LIMIT,
+            5,
+        ),
+        actionSetFilterValues: parseEnvVarNumber(
+            process.env.UNLEASH_ACTION_SET_FILTER_VALUES_LIMIT,
+            25,
+        ),
+        signalTokensPerEndpoint: parseEnvVarNumber(
+            process.env.UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT,
+            5,
+        ),
+    };
+
     return {
         db,
         session,
@@ -600,6 +630,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         inlineSegmentConstraints,
         segmentValuesLimit,
         strategySegmentsLimit,
+        resourceLimits,
         clientFeatureCaching,
         accessControlMaxAge,
         prometheusApi,

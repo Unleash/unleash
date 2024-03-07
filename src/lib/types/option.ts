@@ -5,6 +5,7 @@ import { ILegacyApiTokenCreate } from './models/api-token';
 import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { IUnleashServices } from './services';
+import { ResourceLimitsSchema } from '../openapi/spec/resource-limits-schema';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -235,8 +236,11 @@ export interface IUnleashConfig {
     environmentEnableOverrides?: string[];
     frontendApi: IFrontendApi;
     inlineSegmentConstraints: boolean;
+    /** @deprecated: use resourceLimits.segmentValues */
     segmentValuesLimit: number;
+    /** @deprecated: use resourceLimits.strategySegments */
     strategySegmentsLimit: number;
+    resourceLimits: ResourceLimitsSchema;
     metricsRateLimiting: IMetricsRateLimiting;
     dailyMetricsStorageDays: number;
     clientFeatureCaching: IClientCachingOption;

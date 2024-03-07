@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ExecutiveSummarySchemaEnvironmentTypeTrendsItem } from './executiveSummarySchemaEnvironmentTypeTrendsItem';
 import type { ExecutiveSummarySchemaFlags } from './executiveSummarySchemaFlags';
 import type { ExecutiveSummarySchemaFlagTrendsItem } from './executiveSummarySchemaFlagTrendsItem';
 import type { ExecutiveSummarySchemaMetricsSummaryTrendsItem } from './executiveSummarySchemaMetricsSummaryTrendsItem';
@@ -14,6 +15,8 @@ import type { ExecutiveSummarySchemaUserTrendsItem } from './executiveSummarySch
  * Executive summary of Unleash usage
  */
 export interface ExecutiveSummarySchema {
+    /** How updates per environment type changed over time */
+    environmentTypeTrends: ExecutiveSummarySchemaEnvironmentTypeTrendsItem[];
     /** High level flag count statistics */
     flags: ExecutiveSummarySchemaFlags;
     /** How number of flags changed over time */

@@ -1,7 +1,8 @@
 import { FC, ReactNode } from 'react';
-import { Paper, Typography, styled } from '@mui/material';
+import { Paper, Typography, styled, SxProps } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Theme } from '@mui/material/styles/createTheme';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(3),
@@ -13,6 +14,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 export const Widget: FC<{
     title: ReactNode;
     tooltip?: ReactNode;
+    sx?: SxProps<Theme>;
 }> = ({ title, children, tooltip, ...rest }) => (
     <StyledPaper elevation={0} {...rest}>
         <Typography

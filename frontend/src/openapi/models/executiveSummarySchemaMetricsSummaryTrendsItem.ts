@@ -5,6 +5,8 @@
  */
 
 export type ExecutiveSummarySchemaMetricsSummaryTrendsItem = {
+    /** A UTC date when metrics summary was captured. Time is the very end of a given day. */
+    date: string;
     /** Project id of the project the impressions summary belong to */
     project: string;
     /** Total number of applications the impression data belong to */

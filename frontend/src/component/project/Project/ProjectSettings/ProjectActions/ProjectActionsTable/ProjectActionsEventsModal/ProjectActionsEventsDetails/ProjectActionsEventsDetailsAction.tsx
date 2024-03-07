@@ -76,13 +76,11 @@ export const ProjectActionsEventsDetailsAction = ({
     const actionState =
         state === 'success' ? (
             <StyledSuccessIcon />
-        ) : state === 'failed' ? (
-            <StyledFailedIcon />
         ) : state === 'started' ? (
             <CircularProgress size={20} />
-        ) : (
+        ) : state === 'not started' ? (
             <span>Not started</span>
-        );
+        ) : null;
 
     return (
         <StyledAction state={state}>

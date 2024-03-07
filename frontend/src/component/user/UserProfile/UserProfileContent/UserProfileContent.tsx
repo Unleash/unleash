@@ -59,10 +59,6 @@ const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     },
 }));
 
-const StyledLinkPrivacy = styled(StyledLink)(({ theme }) => ({
-    alignSelf: 'flex-start',
-}));
-
 const StyledLogoutButton = styled(Button)(({ theme }) => ({
     width: '100%',
     height: theme.spacing(5),
@@ -115,7 +111,7 @@ export const UserProfileContent = ({
 
                 <StyledDivider />
 
-                <StyledLinkPrivacy
+                <StyledLink
                     component='a'
                     href='https://www.getunleash.io/privacy-policy'
                     underline='hover'
@@ -123,7 +119,7 @@ export const UserProfileContent = ({
                     target='_blank'
                 >
                     Privacy Policy <OpenInNew />
-                </StyledLinkPrivacy>
+                </StyledLink>
 
                 <StyledDivider />
 

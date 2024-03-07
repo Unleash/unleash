@@ -9,6 +9,7 @@ const StyledCell = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    padding: theme.spacing(2),
 }));
 
 const StyledActionItems = styled('div')(({ theme }) => ({

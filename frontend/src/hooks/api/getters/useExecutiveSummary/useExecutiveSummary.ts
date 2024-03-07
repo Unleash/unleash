@@ -34,6 +34,7 @@ export const useExecutiveDashboard = (
             flagTrends: [],
             projectFlagTrends: [],
             metricsSummaryTrends: [],
+            environmentTypeTrends: [],
         },
         refetchExecutiveDashboard,
         loading: !error && !data,

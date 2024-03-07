@@ -53,6 +53,8 @@ import { validateOrigins } from './util/validateOrigin';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
+type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
 export function authTypeFromString(
     s?: string,
     defaultType: IAuthType = IAuthType.OPEN_SOURCE,
@@ -179,35 +181,39 @@ const dateHandlingCallback = (connection, callback) => {
     });
 };
 
-const defaultDbOptions: IDBOption = {
-    user: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    host: process.env.DATABASE_HOST,
-    port: parseEnvVarNumber(process.env.DATABASE_PORT, 5432),
-    database: process.env.DATABASE_NAME || 'unleash',
-    ssl:
-        process.env.DATABASE_SSL != null
-            ? JSON.parse(process.env.DATABASE_SSL)
-            : { rejectUnauthorized: false },
-    driver: 'postgres',
-    version: process.env.DATABASE_VERSION,
-    acquireConnectionTimeout: secondsToMilliseconds(30),
-    pool: {
-        min: parseEnvVarNumber(process.env.DATABASE_POOL_MIN, 0),
-        max: parseEnvVarNumber(process.env.DATABASE_POOL_MAX, 4),
-        idleTimeoutMillis: parseEnvVarNumber(
-            process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
-            secondsToMilliseconds(30),
-        ),
-        ...(parseEnvVarBoolean(process.env.ALLOW_NON_STANDARD_DB_DATES, false)
-            ? { afterCreate: dateHandlingCallback }
-            : {}),
-        propagateCreateError: false,
-    },
-    schema: process.env.DATABASE_SCHEMA || 'public',
-    disableMigration: false,
-    applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
-};
+const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
+    {
+        user: process.env.DATABASE_USERNAME,
+        password: process.env.DATABASE_PASSWORD,
+        host: process.env.DATABASE_HOST,
+        port: parseEnvVarNumber(process.env.DATABASE_PORT, 5432),
+        database: process.env.DATABASE_NAME || 'unleash',
+        ssl:
+            process.env.DATABASE_SSL != null
+                ? JSON.parse(process.env.DATABASE_SSL)
+                : { rejectUnauthorized: false },
+        driver: 'postgres',
+        version: process.env.DATABASE_VERSION,
+        acquireConnectionTimeout: secondsToMilliseconds(30),
+        pool: {
+            min: parseEnvVarNumber(process.env.DATABASE_POOL_MIN, 0),
+            max: parseEnvVarNumber(process.env.DATABASE_POOL_MAX, 4),
+            idleTimeoutMillis: parseEnvVarNumber(
+                process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
+                secondsToMilliseconds(30),
+            ),
+            ...(parseEnvVarBoolean(
+                process.env.ALLOW_NON_STANDARD_DB_DATES,
+                false,
+            )
+                ? { afterCreate: dateHandlingCallback }
+                : {}),
+            propagateCreateError: false,
+        },
+        schema: process.env.DATABASE_SCHEMA || 'public',
+        disableMigration: false,
+        applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
+    };
 
 const defaultSessionOption: ISessionOption = {
     ttlHours: parseEnvVarNumber(process.env.SESSION_TTL_HOURS, 48),
@@ -271,7 +277,7 @@ const defaultAuthentication: IAuthOption = {
     initApiTokens: [],
 };
 
-const defaultImport: IImportOption = {
+const defaultImport: WithOptional<IImportOption, 'file'> = {
     file: process.env.IMPORT_FILE,
     dropBeforeImport: parseEnvVarBoolean(
         process.env.IMPORT_DROP_BEFORE_IMPORT,
@@ -291,7 +297,6 @@ const defaultEmail: IEmailOption = {
 
 const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
     if (typeof dbConfig.port === 'string') {
-        // eslint-disable-next-line no-param-reassign
         dbConfig.port = Number.parseInt(dbConfig.port, 10);
     }
     return dbConfig;
@@ -300,7 +305,6 @@ const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
 const removeUndefinedKeys = (o: object): object =>
     Object.keys(o).reduce((a, key) => {
         if (o[key] !== undefined) {
-            // eslint-disable-next-line no-param-reassign
             a[key] = o[key];
             return a;
         }
@@ -316,7 +320,6 @@ const formatServerOptions = (
         };
     }
 
-    /* eslint-disable-next-line */
     return {
         ...serverOptions,
         baseUriPath: formatBaseUri(
@@ -467,7 +470,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     ]);
 
     const logLevel =
-        options.logLevel || LogLevel[process.env.LOG_LEVEL] || LogLevel.error;
+        options.logLevel || LogLevel[process.env.LOG_LEVEL ?? LogLevel.error];
     const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
     validateLogProvider(getLogger);
 
@@ -488,9 +491,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const authentication: IAuthOption = mergeAll([
         defaultAuthentication,
-        options.authentication
+        (options.authentication
             ? removeUndefinedKeys(options.authentication)
-            : options.authentication,
+            : options.authentication) || {},
         { initApiTokens: initApiTokens },
     ]);
 
@@ -512,7 +515,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     if (server.pipe) {
         listen = { path: server.pipe };
     } else {
-        listen = { host: server.host || undefined, port: server.port };
+        listen = { host: server.host || undefined, port: server.port ?? 4242 };
     }
 
     const frontendApi = options.frontendApi || {

@@ -5,8 +5,9 @@ import { ISignalEndpoint } from 'interfaces/signal';
 import { Link as RouterLink } from 'react-router-dom';
 import { ComponentType } from 'react';
 import { wrapperStyles } from 'component/common/Table/cells/LinkCell/LinkCell.styles';
-import { SignalsIcon } from 'component/integrations/IntegrationList/IntegrationIcon/IntegrationIcon';
+import signals from 'assets/icons/signals.svg';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledCell = styled(Box)({
     display: 'flex',
@@ -53,9 +54,11 @@ export const ProjectActionsSourceCell = ({
                 <TextCell>
                     <StyledCell>
                         <HtmlTooltip title='Signal endpoint' arrow>
-                            <StyledIcon alt='Signal endpoint' variant='rounded'>
-                                <SignalsIcon />
-                            </StyledIcon>
+                            <StyledIcon
+                                src={formatAssetPath(signals)}
+                                alt='Signal endpoint'
+                                variant='rounded'
+                            />
                         </HtmlTooltip>
                         <StyledLink
                             component={RouterLink}

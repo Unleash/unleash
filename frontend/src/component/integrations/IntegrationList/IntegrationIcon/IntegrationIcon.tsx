@@ -1,15 +1,16 @@
 import { ReactNode } from 'react';
-import { Avatar, Icon, styled } from '@mui/material';
+import { Avatar, styled } from '@mui/material';
 import { DeviceHub } from '@mui/icons-material';
 import { formatAssetPath } from 'utils/formatPath';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 
-import slackIcon from 'assets/icons/slack.svg';
-import jiraCommentIcon from 'assets/icons/jira-comment.svg';
-import jiraIcon from 'assets/icons/jira.svg';
-import webhooksIcon from 'assets/icons/webhooks.svg';
-import teamsIcon from 'assets/icons/teams.svg';
 import dataDogIcon from 'assets/icons/datadog.svg';
+import jiraIcon from 'assets/icons/jira.svg';
+import jiraCommentIcon from 'assets/icons/jira-comment.svg';
+import signals from 'assets/icons/signals.svg';
+import slackIcon from 'assets/icons/slack.svg';
+import teamsIcon from 'assets/icons/teams.svg';
+import webhooksIcon from 'assets/icons/webhooks.svg';
 import unleashIcon from 'assets/icons/unleash-integration.svg';
 import android from 'assets/icons/sdks/Logo-android.svg';
 import dotnet from 'assets/icons/sdks/Logo-net.svg';
@@ -41,25 +42,6 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     fontSize: '28px',
 }));
 
-const StyledCustomIcon = styled(Icon)({
-    '&&&': {
-        display: 'flex',
-        height: '100%',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 'inherit',
-    },
-});
-
-const StyledSignalsIcon = styled(StyledCustomIcon)(({ theme }) => ({
-    background: theme.palette.background.alternative,
-    color: theme.palette.primary.contrastText,
-}));
-
-const signalsIcon = <StyledSignalsIcon>sensors</StyledSignalsIcon>;
-export const SignalsIcon = () => signalsIcon;
-
 const integrations: Record<
     string,
     {
@@ -67,13 +49,14 @@ const integrations: Record<
         title: string;
     }
 > = {
-    slack: { title: 'Slack', icon: slackIcon },
-    'slack-app': { title: 'Slack', icon: slackIcon },
-    'jira-comment': { title: 'Jira', icon: jiraCommentIcon },
-    webhook: { title: 'Webhook', icon: webhooksIcon },
-    teams: { title: 'Teams', icon: teamsIcon },
     datadog: { title: 'Datadog', icon: dataDogIcon },
     jira: { title: 'Jira', icon: jiraIcon },
+    'jira-comment': { title: 'Jira', icon: jiraCommentIcon },
+    signals: { title: 'Signals', icon: signals },
+    slack: { title: 'Slack', icon: slackIcon },
+    'slack-app': { title: 'Slack', icon: slackIcon },
+    teams: { title: 'Teams', icon: teamsIcon },
+    webhook: { title: 'Webhook', icon: webhooksIcon },
     unleash: { title: 'Unleash', icon: unleashIcon },
     android: { title: 'Android', icon: android },
     dotnet: { title: 'Dotnet', icon: dotnet },
@@ -88,10 +71,6 @@ const integrations: Record<
     react: { title: 'React', icon: react },
     ruby: { title: 'Ruby', icon: ruby },
     rust: { title: 'Rust', icon: rust },
-    signals: {
-        title: 'Signals',
-        icon: signalsIcon,
-    },
     svelte: { title: 'Svelte', icon: svelte },
     vue: { title: 'Vue', icon: vue },
 };

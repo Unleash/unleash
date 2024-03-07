@@ -432,10 +432,24 @@ export default class ClientFeatureToggleReadModel {
         strategy.segments.push(row.segment_id);
     }
 
-    async getClient(): Promise<IFeatureToggleClient[]> {
-        return this.getAll({
-            featureQuery: { project: [ALL_PROJECTS] },
-            archived: false,
+    async getClient(): Promise<Record<string, IFeatureToggleClient[]>> {
+        const envNames = await this.db('environments').select('name');
+        const environments: string[] = envNames.map(({ name }) => name);
+        const results = await Promise.all(
+            environments.map((environment) =>
+                this.getAll({
+                    featureQuery: { project: [ALL_PROJECTS], environment },
+                    archived: false,
+                }),
+            ),
+        );
+
+        const featuresByEnv: Record<string, IFeatureToggleClient[]> = {};
+
+        environments.forEach((key, index) => {
+            featuresByEnv[key] = results[index];
         });
+
+        return featuresByEnv;
     }
 }

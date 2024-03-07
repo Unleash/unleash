@@ -12,6 +12,7 @@ import { Logger } from '../logger';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import { SegmentReadModel } from '../features/segment/segment-read-model';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
+import { mapValues } from '../util';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
@@ -38,7 +39,7 @@ export class GlobalFrontendApiRepository extends EventEmitter {
 
     private readonly token: IApiUser;
 
-    private features: FeatureInterface[];
+    private featuresByEnvironment: Record<string, FeatureInterface[]>;
 
     private segments: Segment[];
 
@@ -67,18 +68,17 @@ export class GlobalFrontendApiRepository extends EventEmitter {
     }
 
     getToggles(token: IApiUser): FeatureInterface[] {
-        return this.features.filter(
+        return this.featuresByEnvironment[token.environment].filter(
             (feature) =>
                 feature.project && token.projects.includes(feature.project),
         );
     }
 
-    private async getAllFeatures(): Promise<FeatureInterface[]> {
-        const mappedFeatures = mapFeaturesForClient(
-            // TODO: extract projects and envs from actually used frontend tokens
-            await this.clientFeatureToggleReadModel.getClient(),
-        );
-        return mappedFeatures;
+    private async getAllFeatures(): Promise<
+        Record<string, FeatureInterface[]>
+    > {
+        const features = await this.clientFeatureToggleReadModel.getClient();
+        return mapValues(features, mapFeaturesForClient);
     }
 
     private async getAllSegments(): Promise<Segment[]> {
@@ -89,7 +89,7 @@ export class GlobalFrontendApiRepository extends EventEmitter {
     // TODO: also consider not fetching disabled features, because those are not returned by frontend API
     private async refreshData() {
         try {
-            this.features = await this.getAllFeatures();
+            this.featuresByEnvironment = await this.getAllFeatures();
             this.segments = await this.getAllSegments();
         } catch (e) {
             this.logger.error('Cannot load data for token', e);

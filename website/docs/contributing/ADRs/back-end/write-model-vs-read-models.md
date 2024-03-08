@@ -37,3 +37,44 @@ Solution: Expose *External Read Model* aka *View Model* that returns all the dat
 Solution: Cross module queries can be handled with the *Internal Read Model*. Internal means it's used internally between our modules and not exposed to the UI.
   Internal read models are typically narrowly focused on answering one question and usually require *simple queries* compared to external read models. By introducing internal
   read model other business modules are not coupled to our module's service/store/write model and can't call write model methods from another module by accident.
+
+## Example
+
+Before (one multi-purpose class)
+```typescript
+class SegmentStore {
+    // used to perform actions on segment
+    create(segment: Segment): Promise<Segment> {}
+    get(id: number): Promise<Segment> {}
+    update(id: number, segment: Segment): Promise<Segment> {}
+    delete(id: number): Promise<void> {}
+    
+    // used by UI
+    getAll(): Promise<SegmentWithUsageInfo[]> {}
+    
+    // used by another module checking existing names
+    getSegmentNames(): Promise<string[]> {}
+}
+```
+
+After (3 role-based classes so clients depends only on method they use)
+```typescript
+// used to perform actions on segment
+class SegmentStore {
+    create(segment: Segment): Promise<Segment> {}
+    get(id: number): Promise<Segment> {}
+    update(id: number, segment: Segment): Promise<Segment> {}
+    delete(id: number): Promise<void> {}
+}
+
+// used by UI
+class SegmentViewModel {
+    getAll(): Promise<SegmentWithUsageInfo[]> {}
+}
+
+// used by another module checking existing names
+class SegmentReadModel {
+    getSegmentNames(): Promise<string[]> {}
+}
+```
+

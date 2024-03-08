@@ -39,7 +39,7 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { INavigationMenuItem } from "../../../interfaces/route";
+import { INavigationMenuItem } from '../../../interfaces/route';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -172,7 +172,8 @@ const Header: VFC = () => {
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
 
-    const excludeInsights = (r: INavigationMenuItem) => !r.title.includes('Insights')
+    const excludeInsights = (r: INavigationMenuItem) =>
+        !r.title.includes('Insights');
 
     const filteredMainRoutes = {
         mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)

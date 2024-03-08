@@ -61,4 +61,4 @@ export const clientMetricsEnvSchema = {
     },
 } as const;
 
-export type ClientMetricsSchema = FromSchema<typeof clientMetricsEnvSchema>;
+export type ClientMetricsEnvSchema = FromSchema<typeof clientMetricsEnvSchema>;

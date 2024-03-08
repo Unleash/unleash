@@ -1,11 +1,5 @@
 import { Knex } from 'knex';
-import {
-    IFeatureToggleClient,
-    IFeatureToggleQuery,
-    IStrategyConfig,
-    ITag,
-    PartialDeep,
-} from '../types';
+import { IFeatureToggleClient, IStrategyConfig, PartialDeep } from '../types';
 import { ensureStringValue, mapValues } from '../util';
 import { Db } from '../db/db';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
@@ -14,12 +8,6 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
-
-export interface IGetAllFeatures {
-    featureQuery?: IFeatureToggleQuery;
-    archived: boolean;
-    userId?: number;
-}
 
 export default class ClientFeatureToggleReadModel
     implements IClientFeatureToggleReadModel
@@ -37,7 +25,9 @@ export default class ClientFeatureToggleReadModel
             });
     }
 
-    private async getAll(): Promise<Record<string, IFeatureToggleClient[]>> {
+    private async getAll(): Promise<
+        Record<string, Record<string, IFeatureToggleClient>>
+    > {
         const stopTimer = this.timer(`getAll`);
         const selectColumns = [
             'features.name as name',
@@ -52,7 +42,6 @@ export default class ClientFeatureToggleReadModel
             'fe.environment as environment',
             'fs.id as strategy_id',
             'fs.strategy_name as strategy_name',
-            'fs.title as strategy_title',
             'fs.disabled as strategy_disabled',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
@@ -102,23 +91,25 @@ export default class ClientFeatureToggleReadModel
         return data;
     }
 
-    getAggregatedData(rows): Record<string, IFeatureToggleClient[]> {
-        const featureTogglesByEnv: Record<string, IFeatureToggleClient[]> = {};
+    getAggregatedData(
+        rows,
+    ): Record<string, Record<string, IFeatureToggleClient>> {
+        const featureTogglesByEnv: Record<
+            string,
+            Record<string, IFeatureToggleClient>
+        > = {};
 
         rows.forEach((row) => {
             const environment = row.environment;
+            const featureName = row.name;
 
             if (!featureTogglesByEnv[environment]) {
-                featureTogglesByEnv[environment] = [];
+                featureTogglesByEnv[environment] = {};
             }
 
-            let feature = featureTogglesByEnv[environment].find(
-                (f) => f.name === row.name,
-            );
-
-            if (!feature) {
-                feature = {
-                    name: row.name,
+            if (!featureTogglesByEnv[environment][featureName]) {
+                featureTogglesByEnv[environment][featureName] = {
+                    name: featureName,
                     strategies: [],
                     variants: row.variants || [],
                     impressionData: row.impression_data,
@@ -127,13 +118,12 @@ export default class ClientFeatureToggleReadModel
                     project: row.project,
                     stale: row.stale,
                     type: row.type,
+                    dependencies: [],
                 };
-                featureTogglesByEnv[environment].push(feature);
-            } else {
-                if (this.isNewTag(feature, row)) {
-                    this.addTag(feature, row);
-                }
             }
+
+            const feature = featureTogglesByEnv[environment][featureName];
+
             if (row.parent) {
                 feature.dependencies = feature.dependencies || [];
                 feature.dependencies.push({
@@ -149,30 +139,20 @@ export default class ClientFeatureToggleReadModel
                 this.isUnseenStrategyRow(feature, row) &&
                 !row.strategy_disabled
             ) {
-                feature.strategies?.push(this.rowToStrategy(row));
+                feature.strategies = feature.strategies || [];
+                feature.strategies.push(this.rowToStrategy(row));
             }
         });
-        Object.keys(featureTogglesByEnv).forEach((envKey) => {
-            featureTogglesByEnv[envKey] = featureTogglesByEnv[envKey].map(
-                (featureToggle) => ({
-                    ...featureToggle,
-                    strategies: featureToggle.strategies
-                        ?.sort((strategy1, strategy2) => {
-                            if (
-                                typeof strategy1.sortOrder === 'number' &&
-                                typeof strategy2.sortOrder === 'number'
-                            ) {
-                                return (
-                                    strategy1.sortOrder - strategy2.sortOrder
-                                );
-                            }
-                            return 0;
+        Object.values(featureTogglesByEnv).forEach((envFeatures) => {
+            Object.values(envFeatures).forEach((feature) => {
+                if (feature.strategies) {
+                    feature.strategies = feature.strategies
+                        .sort((a, b) => {
+                            return (a.sortOrder || 0) - (b.sortOrder || 0);
                         })
-                        .map(({ id, title, sortOrder, ...strategy }) => ({
-                            ...strategy,
-                        })),
-                }),
-            );
+                        .map(({ id, sortOrder, ...strategy }) => strategy);
+                }
+            });
         });
 
         return featureTogglesByEnv;
@@ -191,13 +171,6 @@ export default class ClientFeatureToggleReadModel
         return strategy;
     }
 
-    private static rowToTag(row: Record<string, any>): ITag {
-        return {
-            value: row.tag_value,
-            type: row.tag_type,
-        };
-    }
-
     private isUnseenStrategyRow(
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
@@ -208,30 +181,9 @@ export default class ClientFeatureToggleReadModel
         );
     }
 
-    private addTag(
-        feature: Record<string, any>,
-        row: Record<string, any>,
-    ): void {
-        const tags = feature.tags || [];
-        const newTag = ClientFeatureToggleReadModel.rowToTag(row);
-        feature.tags = [...tags, newTag];
-    }
-
-    private isNewTag(
-        feature: PartialDeep<IFeatureToggleClient>,
-        row: Record<string, any>,
-    ): boolean {
-        return (
-            row.tag_type &&
-            row.tag_value &&
-            !feature.tags?.some(
-                (tag) =>
-                    tag?.type === row.tag_type && tag?.value === row.tag_value,
-            )
-        );
-    }
-
-    async getClient(): Promise<Record<string, IFeatureToggleClient[]>> {
+    async getClient(): Promise<
+        Record<string, Record<string, IFeatureToggleClient>>
+    > {
         return this.getAll();
     }
 }

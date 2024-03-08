@@ -6,7 +6,12 @@ import noLogger from '../../test/fixtures/no-logger';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
 import EventEmitter from 'events';
-import { IApiUser, IFeatureToggleClient, ISegment } from '../types';
+import {
+    IApiUser,
+    IFeatureToggleClient,
+    IFlagResolver,
+    ISegment,
+} from '../types';
 import { UPDATE_REVISION } from '../features/feature-toggle/configuration-revision-service';
 
 const state = async (
@@ -33,11 +38,17 @@ const defaultFeature: IFeatureToggleClient = {
 };
 const defaultSegment = { name: 'segment', id: 1 } as ISegment;
 
+const alwaysOnFlagResolver = {
+    isEnabled() {
+        return true;
+    },
+} as unknown as IFlagResolver;
+
 const createCache = (
     segment: ISegment = defaultSegment,
     features: Record<string, IFeatureToggleClient[]> = {},
 ) => {
-    const config = { getLogger: noLogger };
+    const config = { getLogger: noLogger, flagResolver: alwaysOnFlagResolver };
     const segmentReadModel = new FakeSegmentReadModel([segment as ISegment]);
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel(
         features,

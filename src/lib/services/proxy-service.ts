@@ -17,6 +17,8 @@ import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
 import { PROXY_REPOSITORY_CREATED } from '../metric-events';
 import { ProxyRepository } from '../proxy';
+import { FrontendApiRepository } from '../proxy/frontend-api-repository';
+import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
 
 type Config = Pick<
     IUnleashConfig,
@@ -45,21 +47,31 @@ export class ProxyService {
 
     private readonly services: Services;
 
+    private readonly globalFrontendApiCache: GlobalFrontendApiCache;
+
     /**
-     * This is intentionally a Promise becasue we want to be able to await
+     * This is intentionally a Promise because we want to be able to await
      * until the client (which might be being created by a different request) is ready
      * Check this test that fails if we don't use a Promise: src/test/e2e/api/proxy/proxy.concurrency.e2e.test.ts
      */
     private readonly clients: Map<ApiUser['secret'], Promise<Unleash>> =
         new Map();
+    private readonly newClients: Map<ApiUser['secret'], Promise<Unleash>> =
+        new Map();
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    constructor(config: Config, stores: Stores, services: Services) {
+    constructor(
+        config: Config,
+        stores: Stores,
+        services: Services,
+        globalFrontendApiCache: GlobalFrontendApiCache,
+    ) {
         this.config = config;
         this.logger = config.getLogger('services/proxy-service.ts');
         this.stores = stores;
         this.services = services;
+        this.globalFrontendApiCache = globalFrontendApiCache;
     }
 
     async getProxyFeatures(
@@ -74,6 +86,33 @@ export class ProxyService {
             .filter((feature) =>
                 client.isEnabled(feature.name, { ...context, sessionId }),
             )
+            .map((feature) => ({
+                name: feature.name,
+                enabled: Boolean(feature.enabled),
+                variant: client.getVariant(feature.name, {
+                    ...context,
+                    sessionId,
+                }),
+                impressionData: Boolean(feature.impressionData),
+            }));
+    }
+
+    async getNewProxyFeatures(
+        token: IApiUser,
+        context: Context,
+    ): Promise<ProxyFeatureSchema[]> {
+        const client = await this.newClientForProxyToken(token);
+        const definitions = client.getFeatureToggleDefinitions() || [];
+        const sessionId = context.sessionId || String(Math.random());
+
+        return definitions
+            .filter((feature) => {
+                const enabled = client.isEnabled(feature.name, {
+                    ...context,
+                    sessionId,
+                });
+                return enabled;
+            })
             .map((feature) => ({
                 name: feature.name,
                 enabled: Boolean(feature.enabled),
@@ -117,11 +156,52 @@ export class ProxyService {
         return client;
     }
 
+    private async newClientForProxyToken(token: IApiUser): Promise<Unleash> {
+        ProxyService.assertExpectedTokenType(token);
+
+        let newClient = this.newClients.get(token.secret);
+        if (!newClient) {
+            newClient = this.createNewClientForProxyToken(token);
+            this.newClients.set(token.secret, newClient);
+            // TODO: do we need this twice?
+            // this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
+        }
+
+        return newClient;
+    }
+
     private async createClientForProxyToken(token: IApiUser): Promise<Unleash> {
         const repository = new ProxyRepository(
             this.config,
             this.stores,
             this.services,
+            token,
+        );
+        const client = new Unleash({
+            appName: 'proxy',
+            url: 'unused',
+            storageProvider: new InMemStorageProvider(),
+            disableMetrics: true,
+            repository,
+            disableAutoStart: true,
+            skipInstanceCountWarning: true,
+        });
+
+        client.on(UnleashEvents.Error, (error) => {
+            this.logger.error('We found an event error', error);
+        });
+
+        await client.start();
+
+        return client;
+    }
+
+    private async createNewClientForProxyToken(
+        token: IApiUser,
+    ): Promise<Unleash> {
+        const repository = new FrontendApiRepository(
+            this.config,
+            this.globalFrontendApiCache,
             token,
         );
         const client = new Unleash({

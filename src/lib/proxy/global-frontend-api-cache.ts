@@ -13,7 +13,7 @@ import { UPDATE_REVISION } from '../features/feature-toggle/configuration-revisi
 import { mapValues } from '../util';
 import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 
-type Config = Pick<IUnleashConfig, 'getLogger'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>;
 
 export type GlobalFrontendApiCacheState = 'starting' | 'ready' | 'updated';
 
@@ -92,6 +92,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
             this.segments = await this.getAllSegments();
             if (this.status === 'starting') {
                 this.status = 'ready';
+                this.status = 'ready';
                 this.emit('ready');
             } else if (this.status === 'ready' || this.status === 'updated') {
                 this.status = 'updated';
@@ -103,7 +104,9 @@ export class GlobalFrontendApiCache extends EventEmitter {
     }
 
     private async onUpdateRevisionEvent() {
-        await this.refreshData();
+        if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
+            await this.refreshData();
+        }
     }
 
     private environmentNameForToken(token: IApiUser): string {

@@ -72,6 +72,10 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
 
     const limitedData = data?.slice(0, 5);
 
+    const nullSafeValue = (value: number | null) => {
+        return value === null ? 0 : value;
+    };
+
     return (
         <Box
             sx={(theme) => ({
@@ -109,17 +113,23 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▣ '}
-                        title={`Total requests: ${point.value.totalRequests}`}
+                        title={`Total requests: ${nullSafeValue(
+                            point.value.totalRequests,
+                        )}`}
                         color={'info'}
                     />
                     <InfoLine
                         iconChar={'▲ '}
-                        title={`Exposed: ${point.value.totalYes}`}
+                        title={`Exposed: ${nullSafeValue(
+                            point.value.totalYes,
+                        )}`}
                         color={'success'}
                     />
                     <InfoLine
                         iconChar={'▼ '}
-                        title={`Not exposed: ${point.value.totalNo}`}
+                        title={`Not exposed: ${nullSafeValue(
+                            point.value.totalNo,
+                        )}`}
                         color={'error'}
                     />
                     <Divider
@@ -127,12 +137,20 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoSummary
                         data={[
-                            { key: 'Flags', value: point.value.totalFlags },
+                            {
+                                key: 'Flags',
+                                value: nullSafeValue(point.value.totalFlags),
+                            },
                             {
                                 key: 'Environments',
-                                value: point.value.totalEnvironments,
+                                value: nullSafeValue(
+                                    point.value.totalEnvironments,
+                                ),
                             },
-                            { key: 'Apps', value: point.value.totalApps },
+                            {
+                                key: 'Apps',
+                                value: nullSafeValue(point.value.totalApps),
+                            },
                         ]}
                     />
                 </StyledTooltipItemContainer>

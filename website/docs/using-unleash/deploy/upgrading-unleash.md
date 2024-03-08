@@ -7,7 +7,7 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 ## Upgrading to 5.7 and later from versions < 5.6.11
 
-When running on high-availability (multiple Unleash instances), upgrading from versions lower than 5.6.11 to major will cause a temporary UI unavailability while old versions and new versions are both serving traffic, due to a compatibility issue. If you can afford having a small period of time with the UI unavailable (note the SDKs will not be affected), then  you can safely upgrade.
+When running on high-availability (multiple Unleash instances), upgrading from versions lower than 5.6.11 to version 5.7 or higher will cause a temporary UI unavailability while old versions and new versions are both serving traffic, due to a compatibility issue. If you can afford having a small period of time with the UI unavailable (note the SDKs will not be affected), then  you can safely upgrade.
 
 If you rather want to avoid that, you should first update to 5.6.11 and ensure all your Unleash instances are running 5.6.11 before upgrading to 5.7 or later. Any Unleash instances left on earlier versions after the backing database has been updated will continue to work, but you will not be able to log in to them, but the SDKs will continue working fine.
 

@@ -29,6 +29,8 @@ interface IProjectActionsFormStepActionsProps {
     setActions: React.Dispatch<React.SetStateAction<ActionsActionState[]>>;
     actorId: number;
     setActorId: React.Dispatch<React.SetStateAction<number>>;
+    validateActorId: (actorId: number) => boolean;
+    validated: boolean;
 }
 
 export const ProjectActionsFormStepActions = ({
@@ -38,6 +40,8 @@ export const ProjectActionsFormStepActions = ({
     setActions,
     actorId,
     setActorId,
+    validateActorId,
+    validated,
 }: IProjectActionsFormStepActionsProps) => {
     const projectId = useRequiredPathParam('projectId');
 
@@ -91,6 +95,7 @@ export const ProjectActionsFormStepActions = ({
                 options={serviceAccountOptions}
                 value={`${actorId}`}
                 onChange={(v) => {
+                    validateActorId(Number(v));
                     setActorId(parseInt(v));
                 }}
             />
@@ -107,6 +112,7 @@ export const ProjectActionsFormStepActions = ({
                             actions.filter((a) => a.id !== action.id),
                         )
                     }
+                    validated={validated}
                 />
             ))}
             <StyledButtonContainer>

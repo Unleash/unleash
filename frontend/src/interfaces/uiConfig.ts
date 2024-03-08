@@ -79,6 +79,7 @@ export type UiFlags = {
     featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     sdkReporting?: boolean;
+    descriptionAsMarkdown?: boolean;
 };
 
 export interface IVersionInfo {

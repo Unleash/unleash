@@ -2,7 +2,10 @@
   "name": "unleash-frontend-local",
   "version": "0.0.0",
   "private": true,
-  "files": ["index.js", "build"],
+  "files": [
+    "index.js",
+    "build"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -142,11 +145,18 @@
     }
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "remove-markdown": "^0.5.0"
   }
 }

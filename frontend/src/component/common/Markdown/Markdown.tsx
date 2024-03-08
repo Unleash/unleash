@@ -22,3 +22,7 @@ const LinkRenderer = ({
 export const Markdown = (props: ComponentProps<typeof ReactMarkdown>) => (
     <ReactMarkdown components={{ a: LinkRenderer }} {...props} />
 );
+
+export const SimpleMarkdown = (props: ComponentProps<typeof ReactMarkdown>) => (
+    <ReactMarkdown components={{ a: LinkRenderer }} skipHtml allowedElements={['a', 'p', 'strong', 'em']} {...props} />
+);

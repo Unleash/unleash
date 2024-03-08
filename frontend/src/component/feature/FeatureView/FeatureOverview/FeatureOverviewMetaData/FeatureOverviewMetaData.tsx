@@ -7,6 +7,8 @@ import { Edit } from '@mui/icons-material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { Markdown, SimpleMarkdown } from 'component/common/Markdown/Markdown';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -63,6 +65,7 @@ const StyledDescription = styled('p')({
 const FeatureOverviewMetaData = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
+    const descriptionAsMarkdown = useUiFlag('descriptionAsMarkdown');
     const { feature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
 
@@ -93,7 +96,9 @@ const FeatureOverviewMetaData = () => {
                                 <div>Description:</div>
                                 <StyledDescriptionContainer>
                                     <StyledDescription>
-                                        {description}
+                                        <ConditionallyRender condition={descriptionAsMarkdown} 
+                                            show={<SimpleMarkdown>{description || ''}</SimpleMarkdown>} 
+                                            elseShow={description || ''} />
                                     </StyledDescription>
                                     <PermissionIconButton
                                         projectId={projectId}

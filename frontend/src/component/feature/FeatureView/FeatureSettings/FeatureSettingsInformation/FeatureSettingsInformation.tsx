@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { SimpleMarkdown } from 'component/common/Markdown/Markdown';
 
 interface IFeatureSettingsInformationProps {
     projectId: string;
@@ -25,10 +28,13 @@ export const FeatureSettingsInformation = ({
 }: IFeatureSettingsInformationProps) => {
     const { feature } = useFeature(projectId, featureId);
     const navigate = useNavigate();
+    const descriptionAsMarkdown = useUiFlag('descriptionAsMarkdown');
 
     const onEdit = () => {
         navigate(`/projects/${projectId}/features/${featureId}/edit`);
     };
+
+    const description = feature.description || 'no description';
 
     return (
         <>
@@ -49,11 +55,10 @@ export const FeatureSettingsInformation = ({
             </Typography>
             <Typography>
                 Description:{' '}
-                <strong>
-                    {!feature.description?.length
-                        ? 'no description'
-                        : feature.description}
-                </strong>
+                <ConditionallyRender 
+                        condition={descriptionAsMarkdown} 
+                        show={<SimpleMarkdown>{description}</SimpleMarkdown>} 
+                        elseShow={description} />
             </Typography>
             <Typography>
                 Type: <strong>{feature.type}</strong>

@@ -92,7 +92,6 @@ export class GlobalFrontendApiCache extends EventEmitter {
             this.segments = await this.getAllSegments();
             if (this.status === 'starting') {
                 this.status = 'ready';
-                this.status = 'ready';
                 this.emit('ready');
             } else if (this.status === 'ready' || this.status === 'updated') {
                 this.status = 'updated';

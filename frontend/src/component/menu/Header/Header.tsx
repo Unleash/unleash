@@ -40,6 +40,7 @@ import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { INavigationMenuItem } from '../../../interfaces/route';
+import { Badge } from '../../common/Badge/Badge';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -128,6 +129,18 @@ const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
     color: 'inherit',
     cursor: 'pointer',
 }));
+
+const StyledSpan = styled('span')({
+    height: '16px',
+    paddingBottom: 16,
+});
+
+const StyledBadge = styled(Badge)({
+    height: '16px',
+    maxHeight: '16px',
+    padding: 0.25,
+    marginBottom: 0,
+});
 
 const styledIconProps = (theme: Theme) => ({
     color: theme.palette.neutral.main,
@@ -255,7 +268,16 @@ const Header: VFC = () => {
                         <ConditionallyRender
                             condition={insightsDashboard}
                             show={
-                                <StyledLink to='/insights'>Insights</StyledLink>
+                                <StyledLink to='/insights' sx={{ margin: 0 }}>
+                                    <div>
+                                        <span>Insights</span>{' '}
+                                        <StyledSpan>
+                                            <StyledBadge color='success'>
+                                                Beta
+                                            </StyledBadge>
+                                        </StyledSpan>
+                                    </div>
+                                </StyledLink>
                             }
                         />
                         <StyledAdvancedNavButton

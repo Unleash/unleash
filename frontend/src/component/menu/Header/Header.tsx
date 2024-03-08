@@ -148,6 +148,20 @@ const styledIconProps = (theme: Theme) => ({
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
+const StyledLinkWithBetaBagde = ({
+    title,
+    to,
+}: { title: string; to: string }) => (
+    <StyledLink to={path} sx={{ margin: 0 }}>
+        <div>
+            <span>{title}</span>{' '}
+            <StyledSpan>
+                <StyledBadge color='success'>Beta</StyledBadge>
+            </StyledSpan>
+        </div>
+    </StyledLink>
+);
+
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
     href?: string;
@@ -268,16 +282,10 @@ const Header: VFC = () => {
                         <ConditionallyRender
                             condition={insightsDashboard}
                             show={
-                                <StyledLink to='/insights' sx={{ margin: 0 }}>
-                                    <div>
-                                        <span>Insights</span>{' '}
-                                        <StyledSpan>
-                                            <StyledBadge color='success'>
-                                                Beta
-                                            </StyledBadge>
-                                        </StyledSpan>
-                                    </div>
-                                </StyledLink>
+                                <StyledLinkWithBetaBagde
+                                    to={'/insights'}
+                                    title={'Insights'}
+                                />
                             }
                         />
                         <StyledAdvancedNavButton

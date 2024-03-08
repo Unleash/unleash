@@ -73,7 +73,7 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
     const limitedData = data?.slice(0, 5);
 
     const nullSafeValue = (value: number | null) => {
-        return value === null ? 0 : value;
+        return value ?? 0;
     };
 
     return (

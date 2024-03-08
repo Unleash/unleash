@@ -13,6 +13,7 @@ import Raw = Knex.Raw;
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
+import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
@@ -20,7 +21,9 @@ export interface IGetAllFeatures {
     userId?: number;
 }
 
-export default class ClientFeatureToggleReadModel {
+export default class ClientFeatureToggleReadModel
+    implements IClientFeatureToggleReadModel
+{
     private db: Db;
 
     private timer: Function;

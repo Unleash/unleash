@@ -9,38 +9,36 @@ import {
 } from '../features/playground/offline-unleash-client';
 import { ALL_ENVS } from '../util/constants';
 import { Logger } from '../logger';
-import ConfigurationRevisionService, {
-    UPDATE_REVISION,
-} from '../features/feature-toggle/configuration-revision-service';
-import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
+import { UPDATE_REVISION } from '../features/feature-toggle/configuration-revision-service';
 import { mapValues } from '../util';
+import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 
-type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
+type Config = Pick<IUnleashConfig, 'getLogger'>;
 
-export class GlobalFrontendApiRepository extends EventEmitter {
+export type GlobalFrontendApiCacheState = 'starting' | 'ready' | 'updated';
+
+export class GlobalFrontendApiCache extends EventEmitter {
     private readonly config: Config;
 
     private readonly logger: Logger;
 
-    private readonly clientFeatureToggleReadModel: ClientFeatureToggleReadModel;
+    private readonly clientFeatureToggleReadModel: IClientFeatureToggleReadModel;
 
     private readonly segmentReadModel: ISegmentReadModel;
 
-    private readonly configurationRevisionService: ConfigurationRevisionService;
+    private readonly configurationRevisionService: EventEmitter;
 
-    private featuresByEnvironment: Record<string, FeatureInterface[]>;
+    private featuresByEnvironment: Record<string, FeatureInterface[]> = {};
 
-    private segments: Segment[];
+    private segments: Segment[] = [];
 
-    private interval: number;
-
-    private running: boolean;
+    private status: GlobalFrontendApiCacheState = 'starting';
 
     constructor(
         config: Config,
         segmentReadModel: ISegmentReadModel,
-        clientFeatureToggleReadModel: ClientFeatureToggleReadModel,
-        configurationRevisionService: ConfigurationRevisionService,
+        clientFeatureToggleReadModel: IClientFeatureToggleReadModel,
+        configurationRevisionService: EventEmitter,
     ) {
         super();
         this.config = config;
@@ -49,7 +47,6 @@ export class GlobalFrontendApiRepository extends EventEmitter {
         this.configurationRevisionService = configurationRevisionService;
         this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
-        this.interval = config.frontendApi.refreshIntervalInMs;
         this.refreshData();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
@@ -62,6 +59,11 @@ export class GlobalFrontendApiRepository extends EventEmitter {
     }
 
     getToggles(token: IApiUser): FeatureInterface[] {
+        if (
+            this.featuresByEnvironment[this.environmentNameForToken(token)] ==
+            null
+        )
+            return [];
         return this.featuresByEnvironment[
             this.environmentNameForToken(token)
         ].filter(
@@ -88,6 +90,13 @@ export class GlobalFrontendApiRepository extends EventEmitter {
         try {
             this.featuresByEnvironment = await this.getAllFeatures();
             this.segments = await this.getAllSegments();
+            if (this.status === 'starting') {
+                this.status = 'ready';
+                this.emit('ready');
+            } else if (this.status === 'ready' || this.status === 'updated') {
+                this.status = 'updated';
+                this.emit('updated');
+            }
         } catch (e) {
             this.logger.error('Cannot load data for token', e);
         }

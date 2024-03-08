@@ -32,6 +32,11 @@ test('proxy service fetching features from global cache', async () => {
                 },
             ];
         },
+        getToggle(name: string, token: IApiUser): FeatureInterface {
+            return this.getToggles(token).find(
+                (t) => t.name === name,
+            ) as FeatureInterface;
+        },
     } as GlobalFrontendApiCache;
     const proxyService = new ProxyService(
         { getLogger: noLogger } as unknown as Config,

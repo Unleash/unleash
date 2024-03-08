@@ -1,5 +1,5 @@
 import { IFeatureToggleClient } from '../types';
 
 export interface IClientFeatureToggleReadModel {
-    getClient(): Promise<Record<string, IFeatureToggleClient[]>>;
+    getClient(): Promise<Record<string, Record<string, IFeatureToggleClient>>>;
 }

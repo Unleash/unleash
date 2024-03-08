@@ -39,6 +39,7 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { INavigationMenuItem } from "../../../interfaces/route";
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -171,12 +172,16 @@ const Header: VFC = () => {
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
 
+    const excludeInsights = (r: INavigationMenuItem) => !r.title.includes('Insights')
+
     const filteredMainRoutes = {
         mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
             .filter(filterByConfig(uiConfig))
+            .filter(excludeInsights)
             .map(mapRouteLink),
         mobileRoutes: getCondensedRoutes(routes.mobileRoutes)
             .filter(filterByConfig(uiConfig))
+            .filter(excludeInsights)
             .map(mapRouteLink),
         adminRoutes,
     };
@@ -248,15 +253,15 @@ const Header: VFC = () => {
 
                 <StyledNav>
                     <StyledLinks>
+                        <StyledLink to='/projects'>Projects</StyledLink>
+                        <StyledLink to={'/search'}>Search</StyledLink>
+                        <StyledLink to='/playground'>Playground</StyledLink>
                         <ConditionallyRender
                             condition={insightsDashboard}
                             show={
                                 <StyledLink to='/insights'>Insights</StyledLink>
                             }
                         />
-                        <StyledLink to='/projects'>Projects</StyledLink>
-                        <StyledLink to={'/search'}>Search</StyledLink>
-                        <StyledLink to='/playground'>Playground</StyledLink>
                         <StyledAdvancedNavButton
                             onClick={(e) => setConfigRef(e.currentTarget)}
                             aria-controls={configRef ? configId : undefined}

@@ -23,20 +23,20 @@ export class FrontendApiRepository
 
     private readonly token: IApiUser;
 
-    private globalFrontendApiRepository: GlobalFrontendApiCache;
+    private globalFrontendApiCache: GlobalFrontendApiCache;
 
     private running: boolean;
 
     constructor(
         config: Config,
-        globalFrontendApiRepository: GlobalFrontendApiCache,
+        globalFrontendApiCache: GlobalFrontendApiCache,
         token: IApiUser,
     ) {
         super();
         this.config = config;
         this.logger = config.getLogger('frontend-api-repository.ts');
         this.token = token;
-        this.globalFrontendApiRepository = globalFrontendApiRepository;
+        this.globalFrontendApiCache = globalFrontendApiCache;
     }
 
     getTogglesWithSegmentData(): EnhancedFeatureInterface[] {
@@ -45,18 +45,18 @@ export class FrontendApiRepository
     }
 
     getSegment(id: number): Segment | undefined {
-        return this.globalFrontendApiRepository.getSegment(id);
+        return this.globalFrontendApiCache.getSegment(id);
     }
 
     getToggle(name: string): FeatureInterface {
         //@ts-ignore (we must update the node SDK to allow undefined)
-        return this.globalFrontendApiRepository
-            .getToggles(this.token)
-            .find((feature) => feature.name);
+        return this.getToggles(this.token).find(
+            (feature) => feature.name === name,
+        );
     }
 
     getToggles(): FeatureInterface[] {
-        return this.globalFrontendApiRepository.getToggles(this.token);
+        return this.globalFrontendApiCache.getToggles(this.token);
     }
 
     async start(): Promise<void> {

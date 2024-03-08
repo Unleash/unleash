@@ -4,7 +4,7 @@ import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-mode
 export default class FakeClientFeatureToggleReadModel
     implements IClientFeatureToggleReadModel
 {
-    constructor(private value: Record<string, IFeatureToggleClient[]>) {}
+    constructor(private value: Record<string, IFeatureToggleClient[]> = {}) {}
 
     getClient(): Promise<Record<string, IFeatureToggleClient[]>> {
         return Promise.resolve(this.value);

@@ -42,7 +42,7 @@ export abstract class CRUDStore<
         db: Db,
         { eventBus }: CrudStoreConfig,
         options?: Partial<{
-            toRow: (item: WriteModel) => RowWriteModel;
+            toRow: (item: Partial<WriteModel>) => RowWriteModel;
             fromRow: (item: RowReadModel) => ReadModel;
         }>,
     ) {

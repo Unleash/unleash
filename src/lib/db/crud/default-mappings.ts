@@ -11,13 +11,13 @@ const snakeToCamelCase = (str: string) =>
  * @returns a modified version of item with all fields in snake_case
  */
 export const defaultToRow = <WriteModel, WriteRow>(
-    item: WriteModel,
-): WriteRow => {
-    const row: Partial<WriteRow> = {};
+    item: Partial<WriteModel>,
+): Partial<WriteRow> => {
+    const row = {};
     Object.entries(item as Record<string, any>).forEach(([key, value]) => {
         row[camelToSnakeCase(key)] = value;
     });
-    return row as WriteRow;
+    return row;
 };
 
 /**
@@ -25,10 +25,12 @@ export const defaultToRow = <WriteModel, WriteRow>(
  * @param row is the input object
  * @returns a modified version of row with all fields in camelCase
  */
-export const defaultFromRow = <ReadModel, ReadRow>(row: ReadRow): ReadModel => {
-    const model: Partial<ReadModel> = {};
+export const defaultFromRow = <ReadModel, ReadRow>(
+    row: Partial<ReadRow>,
+): Partial<ReadModel> => {
+    const model = {};
     Object.entries(row as Record<string, any>).forEach(([key, value]) => {
         model[snakeToCamelCase(key)] = value;
     });
-    return model as ReadModel;
+    return model;
 };

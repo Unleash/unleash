@@ -34,16 +34,16 @@ export abstract class CRUDStore<
 
     protected readonly timer: (action: string) => Function;
 
-    protected toRow: (item: Partial<WriteModel>) => RowWriteModel;
-    protected fromRow: (item: RowReadModel) => ReadModel;
+    protected toRow: (item: Partial<WriteModel>) => Partial<RowWriteModel>;
+    protected fromRow: (item: Partial<RowReadModel>) => Partial<ReadModel>;
 
     constructor(
         tableName: string,
         db: Db,
         { eventBus }: CrudStoreConfig,
         options?: Partial<{
-            toRow: (item: Partial<WriteModel>) => RowWriteModel;
-            fromRow: (item: RowReadModel) => ReadModel;
+            toRow: (item: Partial<WriteModel>) => Partial<RowWriteModel>;
+            fromRow: (item: RowReadModel) => Partial<ReadModel>;
         }>,
     ) {
         this.tableName = tableName;
@@ -64,14 +64,14 @@ export abstract class CRUDStore<
             allQuery = allQuery.where(this.toRow(query) as Record<string, any>);
         }
         const items = await allQuery;
-        return items.map(this.fromRow);
+        return items.map(this.fromRow) as ReadModel[];
     }
 
     async insert(item: WriteModel): Promise<ReadModel> {
         const rows = await this.db(this.tableName)
             .insert(this.toRow(item))
             .returning('*');
-        return this.fromRow(rows[0]);
+        return this.fromRow(rows[0]) as ReadModel;
     }
 
     async bulkInsert(items: WriteModel[]): Promise<ReadModel[]> {
@@ -81,7 +81,7 @@ export abstract class CRUDStore<
         const rows = await this.db(this.tableName)
             .insert(items.map(this.toRow))
             .returning('*');
-        return rows.map(this.fromRow);
+        return rows.map(this.fromRow) as ReadModel[];
     }
 
     async update(id: IdType, item: Partial<WriteModel>): Promise<ReadModel> {
@@ -89,7 +89,7 @@ export abstract class CRUDStore<
             .where({ id })
             .update(this.toRow(item))
             .returning('*');
-        return this.fromRow(rows[0]);
+        return this.fromRow(rows[0]) as ReadModel;
     }
 
     async delete(id: IdType): Promise<void> {
@@ -127,6 +127,6 @@ export abstract class CRUDStore<
         if (!row) {
             throw new NotFoundError(`No item with id ${id}`);
         }
-        return this.fromRow(row);
+        return this.fromRow(row) as ReadModel;
     }
 }

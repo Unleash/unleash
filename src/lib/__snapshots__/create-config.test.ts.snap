@@ -115,6 +115,7 @@ exports[`should create default config 1`] = `
         },
       },
       "filterInvalidClientMetrics": false,
+      "globalFrontendApiCache": false,
       "googleAuthEnabled": false,
       "inMemoryScheduledChangeRequests": false,
       "increaseUnleashWidth": false,

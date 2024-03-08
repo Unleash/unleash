@@ -10,6 +10,7 @@ import {
     emptyResponse,
     getStandardResponses,
     ProxyClientSchema,
+    ProxyFeatureSchema,
     proxyFeaturesSchema,
     ProxyFeaturesSchema,
 } from '../../openapi';
@@ -20,6 +21,7 @@ import NotImplementedError from '../../error/not-implemented-error';
 import NotFoundError from '../../error/notfound-error';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
+import isEqual from 'lodash.isequal';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -173,10 +175,32 @@ export default class FrontendAPIController extends Controller {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {
             throw new NotFoundError();
         }
-        const toggles = await this.services.proxyService.getProxyFeatures(
-            req.user,
-            FrontendAPIController.createContext(req),
-        );
+        let toggles: ProxyFeatureSchema[];
+        let newToggles: ProxyFeatureSchema[];
+        if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
+            [toggles, newToggles] = await Promise.all([
+                this.services.proxyService.getProxyFeatures(
+                    req.user,
+                    FrontendAPIController.createContext(req),
+                ),
+                this.services.proxyService.getNewProxyFeatures(
+                    req.user,
+                    FrontendAPIController.createContext(req),
+                ),
+            ]);
+            if (!isEqual(toggles, newToggles)) {
+                this.logger.warn(
+                    'old features and new feature are different',
+                    toggles.length,
+                    newToggles.length,
+                );
+            }
+        } else {
+            toggles = await this.services.proxyService.getProxyFeatures(
+                req.user,
+                FrontendAPIController.createContext(req),
+            );
+        }
 
         res.set('Cache-control', 'no-cache');
 

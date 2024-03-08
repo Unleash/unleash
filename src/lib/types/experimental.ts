@@ -53,7 +53,8 @@ export type IFlagKey =
     | 'sdkReporting'
     | 'responseTimeMetricsFix'
     | 'scimApi'
-    | 'displayEdgeBanner';
+    | 'displayEdgeBanner'
+    | 'globalFrontendApiCache';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -260,6 +261,10 @@ const flags: IFlags = {
     ),
     responseTimeMetricsFix: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_METRICS_FIX,
+        false,
+    ),
+    globalFrontendApiCache: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_FRONTEND_API_CACHE,
         false,
     ),
 };

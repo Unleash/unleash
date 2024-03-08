@@ -1,4 +1,4 @@
-import { IUnleashConfig, IUnleashStores, IUnleashServices } from '../types';
+import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from '../features/events/event-service';
 import HealthService from './health-service';
@@ -96,8 +96,8 @@ import {
 } from '../features/client-feature-toggles/createClientFeatureToggleService';
 import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 import {
-    createFeatureSearchService,
     createFakeFeatureSearchService,
+    createFeatureSearchService,
 } from '../features/feature-search/createFeatureSearchService';
 import { FeatureSearchService } from '../features/feature-search/feature-search-service';
 import {
@@ -111,6 +111,9 @@ import {
 import { InactiveUsersService } from '../users/inactive/inactive-users-service';
 import { SegmentReadModel } from '../features/segment/segment-read-model';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
+import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
+import ClientFeatureToggleReadModel from '../proxy/client-feature-toggle-read-model';
+import FakeClientFeatureToggleReadModel from '../proxy/fake-client-feature-toggle-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -293,12 +296,27 @@ export const createServices = (
         ? createClientFeatureToggleService(db, config)
         : createFakeClientFeatureToggleService(config);
 
-    const proxyService = new ProxyService(config, stores, {
-        featureToggleServiceV2,
-        clientMetricsServiceV2,
-        settingService,
+    const clientFeatureToggleReadModel = db
+        ? new ClientFeatureToggleReadModel(db, config.eventBus)
+        : new FakeClientFeatureToggleReadModel();
+    const globalFrontendApiCache = new GlobalFrontendApiCache(
+        config,
+        segmentReadModel,
+        clientFeatureToggleReadModel,
         configurationRevisionService,
-    });
+    );
+
+    const proxyService = new ProxyService(
+        config,
+        stores,
+        {
+            featureToggleServiceV2,
+            clientMetricsServiceV2,
+            settingService,
+            configurationRevisionService,
+        },
+        globalFrontendApiCache,
+    );
 
     const edgeService = new EdgeService({ apiTokenService }, config);
 

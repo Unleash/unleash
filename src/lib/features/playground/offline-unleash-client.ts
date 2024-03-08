@@ -14,7 +14,12 @@ type NonEmptyList<T> = [T, ...T[]];
 export const mapFeaturesForClient = (
     features: FeatureConfigurationClient[],
 ): FeatureInterface[] =>
-    features.map((feature) => ({
+    features.map((feature) => mapFeatureForClient(feature));
+
+export const mapFeatureForClient = (
+    feature: FeatureConfigurationClient,
+): FeatureInterface => {
+    return {
         impressionData: false,
         ...feature,
         variants: (feature.variants || []).map((variant) => ({
@@ -47,7 +52,8 @@ export const mapFeaturesForClient = (
                 })) || [],
         })),
         dependencies: feature.dependencies,
-    }));
+    };
+};
 
 export const mapSegmentsForClient = (segments: ISegment[]): Segment[] =>
     serializeDates(segments) as Segment[];

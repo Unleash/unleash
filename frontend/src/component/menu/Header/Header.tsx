@@ -152,7 +152,7 @@ const StyledLinkWithBetaBagde = ({
     title,
     to,
 }: { title: string; to: string }) => (
-    <StyledLink to={path} sx={{ margin: 0 }}>
+    <StyledLink to={to} sx={{ margin: 0 }}>
         <div>
             <span>{title}</span>{' '}
             <StyledSpan>

@@ -72,10 +72,6 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
 
     const limitedData = data?.slice(0, 5);
 
-    const nullSafeValue = (value: number | null) => {
-        return value ?? 0;
-    };
-
     return (
         <Box
             sx={(theme) => ({
@@ -113,23 +109,19 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▣ '}
-                        title={`Total requests: ${nullSafeValue(
-                            point.value.totalRequests,
-                        )}`}
+                        title={`Total requests: ${
+                            point.value.totalRequests ?? 0
+                        }`}
                         color={'info'}
                     />
                     <InfoLine
                         iconChar={'▲ '}
-                        title={`Exposed: ${nullSafeValue(
-                            point.value.totalYes,
-                        )}`}
+                        title={`Exposed: ${point.value.totalYes ?? 0}`}
                         color={'success'}
                     />
                     <InfoLine
                         iconChar={'▼ '}
-                        title={`Not exposed: ${nullSafeValue(
-                            point.value.totalNo,
-                        )}`}
+                        title={`Not exposed: ${point.value.totalNo ?? 0}`}
                         color={'error'}
                     />
                     <Divider
@@ -139,17 +131,15 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                         data={[
                             {
                                 key: 'Flags',
-                                value: nullSafeValue(point.value.totalFlags),
+                                value: point.value.totalFlags ?? 0,
                             },
                             {
                                 key: 'Environments',
-                                value: nullSafeValue(
-                                    point.value.totalEnvironments,
-                                ),
+                                value: point.value.totalEnvironments ?? 0,
                             },
                             {
                                 key: 'Apps',
-                                value: nullSafeValue(point.value.totalApps),
+                                value: point.value.totalApps ?? 0,
                             },
                         ]}
                     />

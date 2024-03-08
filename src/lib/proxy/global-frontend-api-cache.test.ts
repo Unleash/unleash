@@ -46,7 +46,7 @@ const alwaysOnFlagResolver = {
 
 const createCache = (
     segment: ISegment = defaultSegment,
-    features: Record<string, IFeatureToggleClient[]> = {},
+    features: Record<string, Record<string, IFeatureToggleClient>> = {},
 ) => {
     const config = { getLogger: noLogger, flagResolver: alwaysOnFlagResolver };
     const segmentReadModel = new FakeSegmentReadModel([segment as ISegment]);
@@ -82,28 +82,28 @@ test('Can read initial segment', async () => {
 
 test('Can read initial features', async () => {
     const { cache } = createCache(defaultSegment, {
-        development: [
-            {
+        development: {
+            featureA: {
                 ...defaultFeature,
                 name: 'featureA',
                 enabled: true,
                 project: 'projectA',
             },
-            {
+            featureB: {
                 ...defaultFeature,
                 name: 'featureB',
                 enabled: true,
                 project: 'projectB',
             },
-        ],
-        production: [
-            {
+        },
+        production: {
+            featureA: {
                 ...defaultFeature,
                 name: 'featureA',
                 enabled: false,
                 project: 'projectA',
             },
-        ],
+        },
     });
 
     const featuresBeforeRead = cache.getToggles({
@@ -150,15 +150,15 @@ test('Can refresh data on revision update', async () => {
     await state(cache, 'ready');
 
     clientFeatureToggleReadModel.setValue({
-        development: [
-            {
+        development: {
+            featureA: {
                 ...defaultFeature,
                 name: 'featureA',
                 enabled: false,
                 strategies: [{ name: 'default' }],
                 project: 'projectA',
             },
-        ],
+        },
     });
     configurationRevisionService.emit(UPDATE_REVISION);
 

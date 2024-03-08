@@ -53,7 +53,7 @@ export const CreateProjectApiTokenForm = () => {
 
     usePageTitle(pageTitle);
 
-    const PATH = `api/admin/project/${projectId}/api-tokens`;
+    const PATH = `api/admin/projects/${projectId}/api-tokens`;
     const permission = CREATE_PROJECT_API_TOKEN;
 
     const handleSubmit = async (e: Event) => {

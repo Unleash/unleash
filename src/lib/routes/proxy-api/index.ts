@@ -188,11 +188,14 @@ export default class FrontendAPIController extends Controller {
                     FrontendAPIController.createContext(req),
                 ),
             ]);
-            if (!isEqual(toggles, newToggles)) {
+            if (
+                !isEqual(
+                    toggles.sort((a, b) => a.name.localeCompare(b.name)),
+                    newToggles.sort((a, b) => a.name.localeCompare(b.name)),
+                )
+            ) {
                 this.logger.warn(
-                    'old features and new feature are different',
-                    toggles.length,
-                    newToggles.length,
+                    `old features and new features are different. Old count ${toggles.length}, new count ${newToggles.length}`,
                 );
             }
         } else {

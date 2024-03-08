@@ -138,6 +138,18 @@ test('Can read initial features', async () => {
         projects: ['*'],
     } as IApiUser);
     expect(defaultProjectFeatures.length).toBe(0);
+
+    const singleToggle = cache.getToggle('featureA', {
+        environment: 'development',
+        projects: ['*'],
+    } as IApiUser);
+
+    expect(singleToggle).toMatchObject({
+        ...defaultFeature,
+        name: 'featureA',
+        enabled: true,
+        impressionData: false,
+    });
 });
 
 test('Can refresh data on revision update', async () => {

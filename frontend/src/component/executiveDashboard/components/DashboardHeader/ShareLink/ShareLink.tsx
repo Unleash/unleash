@@ -1,13 +1,45 @@
-import { VFC, useState } from 'react';
+import { VFC, useEffect, useState } from 'react';
 import { Share } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { LinkField } from 'component/admin/users/LinkField/LinkField';
+import { useSearchParams } from 'react-router-dom';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+
+const createShareLink = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('share', 'true');
+    return url.toString();
+};
 
 export const ShareLink: VFC = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const url = new URL(window.location.href);
-    url.searchParams.set('share', 'true');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { trackEvent } = usePlausibleTracker();
+
+    useEffect(() => {
+        if (searchParams.get('share')) {
+            // Remove share query param from URL
+            setSearchParams((params) => {
+                params.delete('share');
+                return params;
+            });
+
+            trackEvent('insights-share', {
+                props: {
+                    eventType: 'link-opened',
+                },
+            })
+        }
+    }, [searchParams]);
+
+    const onCopyEvent = () => {
+        trackEvent('insights-share', {
+            props: {
+                eventType: 'link-copied',
+            },
+        })
+    }
 
     return (
         <>
@@ -30,9 +62,10 @@ export const ShareLink: VFC = () => {
                         currently selected filter.
                     </Typography>
                     <LinkField
-                        inviteLink={url.toString()}
+                        inviteLink={createShareLink()}
                         successTitle='Successfully copied the link.'
                         errorTitle='Could not copy the link.'
+                        onCopy={onCopyEvent}
                     />
                 </Box>
             </Dialogue>

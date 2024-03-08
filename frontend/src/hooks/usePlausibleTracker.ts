@@ -57,7 +57,8 @@ export type CustomEvents =
     | 'feedback'
     | 'feature-metrics'
     | 'search-bar'
-    | 'sdk-reporting';
+    | 'sdk-reporting'
+    | 'insights-share';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

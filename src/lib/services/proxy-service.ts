@@ -20,17 +20,17 @@ import { ProxyRepository } from '../proxy';
 import { FrontendApiRepository } from '../proxy/frontend-api-repository';
 import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
 
-type Config = Pick<
+export type Config = Pick<
     IUnleashConfig,
     'getLogger' | 'frontendApi' | 'frontendApiOrigins' | 'eventBus'
 >;
 
-type Stores = Pick<
+export type Stores = Pick<
     IUnleashStores,
     'projectStore' | 'eventStore' | 'segmentReadModel'
 >;
 
-type Services = Pick<
+export type Services = Pick<
     IUnleashServices,
     | 'featureToggleServiceV2'
     | 'clientMetricsServiceV2'

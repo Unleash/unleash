@@ -1,4 +1,4 @@
-import { ProxyService } from './proxy-service';
+import { ProxyService, Config } from './proxy-service';
 import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
 import { IApiUser } from '../types';
 import { FeatureInterface } from 'unleash-client/lib/feature';
@@ -8,7 +8,7 @@ import { ApiTokenType } from '../types/models/api-token';
 test('proxy service fetching features from global cache', async () => {
     const irrelevant = {} as any;
     const globalFrontendApiCache = {
-        getToggles(token: IApiUser): FeatureInterface[] {
+        getToggles(_: IApiUser): FeatureInterface[] {
             return [
                 {
                     name: 'toggleA',
@@ -32,12 +32,9 @@ test('proxy service fetching features from global cache', async () => {
                 },
             ];
         },
-        getSegment(id: number) {
-            return undefined;
-        },
     } as GlobalFrontendApiCache;
     const proxyService = new ProxyService(
-        { getLogger: noLogger } as any,
+        { getLogger: noLogger } as unknown as Config,
         irrelevant,
         irrelevant,
         globalFrontendApiCache,

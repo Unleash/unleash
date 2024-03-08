@@ -172,17 +172,12 @@ const Header: VFC = () => {
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
 
-    const excludeInsights = (r: INavigationMenuItem) =>
-        !r.title.includes('Insights');
-
     const filteredMainRoutes = {
         mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
             .filter(filterByConfig(uiConfig))
-            .filter(excludeInsights)
             .map(mapRouteLink),
         mobileRoutes: getCondensedRoutes(routes.mobileRoutes)
             .filter(filterByConfig(uiConfig))
-            .filter(excludeInsights)
             .map(mapRouteLink),
         adminRoutes,
     };

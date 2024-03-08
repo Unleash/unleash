@@ -62,7 +62,7 @@ test('upsert upserts', async () => {
 });
 
 test('getAll returns all', async () => {
-    trafficDataUsageStore.deleteAll();
+    await trafficDataUsageStore.deleteAll();
     const data1 = {
         day: new Date(),
         trafficGroup: 'default3',
@@ -83,7 +83,7 @@ test('getAll returns all', async () => {
 });
 
 test('delete deletes the specified item', async () => {
-    trafficDataUsageStore.deleteAll();
+    await trafficDataUsageStore.deleteAll();
     const data1 = {
         day: new Date(),
         trafficGroup: 'default3',
@@ -110,7 +110,7 @@ test('delete deletes the specified item', async () => {
 });
 
 test('can query for specific items', async () => {
-    trafficDataUsageStore.deleteAll();
+    await trafficDataUsageStore.deleteAll();
     const data1 = {
         day: new Date(),
         trafficGroup: 'default3',

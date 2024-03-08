@@ -6,7 +6,12 @@ import noLogger from '../../test/fixtures/no-logger';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
 import EventEmitter from 'events';
-import { IApiUser, IFeatureToggleClient, ISegment } from '../types';
+import {
+    IApiUser,
+    IFeatureToggleClient,
+    IFlagResolver,
+    ISegment,
+} from '../types';
 import { UPDATE_REVISION } from '../features/feature-toggle/configuration-revision-service';
 
 const state = async (
@@ -33,11 +38,17 @@ const defaultFeature: IFeatureToggleClient = {
 };
 const defaultSegment = { name: 'segment', id: 1 } as ISegment;
 
+const alwaysOnFlagResolver = {
+    isEnabled() {
+        return true;
+    },
+} as unknown as IFlagResolver;
+
 const createCache = (
     segment: ISegment = defaultSegment,
-    features: Record<string, IFeatureToggleClient[]> = {},
+    features: Record<string, Record<string, IFeatureToggleClient>> = {},
 ) => {
-    const config = { getLogger: noLogger };
+    const config = { getLogger: noLogger, flagResolver: alwaysOnFlagResolver };
     const segmentReadModel = new FakeSegmentReadModel([segment as ISegment]);
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel(
         features,
@@ -71,28 +82,28 @@ test('Can read initial segment', async () => {
 
 test('Can read initial features', async () => {
     const { cache } = createCache(defaultSegment, {
-        development: [
-            {
+        development: {
+            featureA: {
                 ...defaultFeature,
                 name: 'featureA',
                 enabled: true,
                 project: 'projectA',
             },
-            {
+            featureB: {
                 ...defaultFeature,
                 name: 'featureB',
                 enabled: true,
                 project: 'projectB',
             },
-        ],
-        production: [
-            {
+        },
+        production: {
+            featureA: {
                 ...defaultFeature,
                 name: 'featureA',
                 enabled: false,
                 project: 'projectA',
             },
-        ],
+        },
     });
 
     const featuresBeforeRead = cache.getToggles({
@@ -127,6 +138,18 @@ test('Can read initial features', async () => {
         projects: ['*'],
     } as IApiUser);
     expect(defaultProjectFeatures.length).toBe(0);
+
+    const singleToggle = cache.getToggle('featureA', {
+        environment: 'development',
+        projects: ['*'],
+    } as IApiUser);
+
+    expect(singleToggle).toMatchObject({
+        ...defaultFeature,
+        name: 'featureA',
+        enabled: true,
+        impressionData: false,
+    });
 });
 
 test('Can refresh data on revision update', async () => {
@@ -139,15 +162,15 @@ test('Can refresh data on revision update', async () => {
     await state(cache, 'ready');
 
     clientFeatureToggleReadModel.setValue({
-        development: [
-            {
+        development: {
+            featureA: {
                 ...defaultFeature,
                 name: 'featureA',
                 enabled: false,
                 strategies: [{ name: 'default' }],
                 project: 'projectA',
             },
-        ],
+        },
     });
     configurationRevisionService.emit(UPDATE_REVISION);
 

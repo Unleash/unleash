@@ -2,18 +2,23 @@ import EventEmitter from 'events';
 import { Segment } from 'unleash-client/lib/strategy/strategy';
 import { FeatureInterface } from 'unleash-client/lib/feature';
 import { IApiUser } from '../types/api-user';
-import { ISegmentReadModel, IUnleashConfig } from '../types';
 import {
-    mapFeaturesForClient,
+    IFeatureToggleClient,
+    ISegmentReadModel,
+    IUnleashConfig,
+} from '../types';
+import {
+    mapFeatureForClient,
     mapSegmentsForClient,
 } from '../features/playground/offline-unleash-client';
 import { ALL_ENVS } from '../util/constants';
 import { Logger } from '../logger';
 import { UPDATE_REVISION } from '../features/feature-toggle/configuration-revision-service';
-import { mapValues } from '../util';
 import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 
-type Config = Pick<IUnleashConfig, 'getLogger'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>;
+
+type FrontendApiFeatureCache = Record<string, Record<string, FeatureInterface>>;
 
 export type GlobalFrontendApiCacheState = 'starting' | 'ready' | 'updated';
 
@@ -28,7 +33,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private readonly configurationRevisionService: EventEmitter;
 
-    private featuresByEnvironment: Record<string, FeatureInterface[]> = {};
+    private featuresByEnvironment: FrontendApiFeatureCache = {};
 
     private segments: Segment[] = [];
 
@@ -58,30 +63,40 @@ export class GlobalFrontendApiCache extends EventEmitter {
         return this.segments.find((segment) => segment.id === id);
     }
 
+    getToggle(name: string, token: IApiUser): FeatureInterface {
+        const features = this.getTogglesByEnvironment(
+            this.environmentNameForToken(token),
+        );
+        return features[name];
+    }
+
     getToggles(token: IApiUser): FeatureInterface[] {
-        if (
-            this.featuresByEnvironment[this.environmentNameForToken(token)] ==
-            null
-        )
-            return [];
-        return this.featuresByEnvironment[
-            this.environmentNameForToken(token)
-        ].filter(
-            (feature) =>
-                token.projects.includes('*') ||
-                (feature.project && token.projects.includes(feature.project)),
+        const features = this.getTogglesByEnvironment(
+            this.environmentNameForToken(token),
+        );
+        return this.filterTogglesByProjects(features, token.projects);
+    }
+
+    private filterTogglesByProjects(
+        features: Record<string, FeatureInterface>,
+        projects: string[],
+    ): FeatureInterface[] {
+        if (projects.includes('*')) {
+            return Object.values(features);
+        }
+        return Object.values(features).filter(
+            (feature) => feature.project && projects.includes(feature.project),
         );
     }
 
-    private async getAllFeatures(): Promise<
-        Record<string, FeatureInterface[]>
-    > {
-        const features = await this.clientFeatureToggleReadModel.getClient();
-        return mapValues(features, mapFeaturesForClient);
-    }
+    private getTogglesByEnvironment(
+        environment: string,
+    ): Record<string, FeatureInterface> {
+        const features = this.featuresByEnvironment[environment];
 
-    private async getAllSegments(): Promise<Segment[]> {
-        return mapSegmentsForClient(await this.segmentReadModel.getAll());
+        if (features == null) return {};
+
+        return features;
     }
 
     // TODO: fetch only relevant projects/environments based on tokens
@@ -102,8 +117,19 @@ export class GlobalFrontendApiCache extends EventEmitter {
         }
     }
 
+    private async getAllFeatures(): Promise<FrontendApiFeatureCache> {
+        const features = await this.clientFeatureToggleReadModel.getClient();
+        return this.mapFeatures(features);
+    }
+
+    private async getAllSegments(): Promise<Segment[]> {
+        return mapSegmentsForClient(await this.segmentReadModel.getAll());
+    }
+
     private async onUpdateRevisionEvent() {
-        await this.refreshData();
+        if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
+            await this.refreshData();
+        }
     }
 
     private environmentNameForToken(token: IApiUser): string {
@@ -111,5 +137,21 @@ export class GlobalFrontendApiCache extends EventEmitter {
             return 'default';
         }
         return token.environment;
+    }
+
+    private mapFeatures(
+        features: Record<string, Record<string, IFeatureToggleClient>>,
+    ): FrontendApiFeatureCache {
+        const entries = Object.entries(features).map(([key, value]) => [
+            key,
+            Object.fromEntries(
+                Object.entries(value).map(([innerKey, innerValue]) => [
+                    innerKey,
+                    mapFeatureForClient(innerValue),
+                ]),
+            ),
+        ]);
+
+        return Object.fromEntries(entries);
     }
 }

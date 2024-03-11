@@ -10,12 +10,10 @@ import {
     createFeatureToggleService,
 } from '../features';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
-import EventStore from '../features/events/event-store';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
-import FakeEventStore from '../../test/fixtures/fake-event-store';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
 import { IUnleashConfig } from '../types';
 import { Db } from '../db/db';
@@ -25,6 +23,7 @@ export const createProxyService = (
     config: IUnleashConfig,
     // client metrics service needs to be shared because it uses in-memory cache
     clientMetricsServiceV2: ClientMetricsServiceV2,
+    configurationRevisionService: ConfigurationRevisionService,
 ): ProxyService => {
     const segmentReadModel = new SegmentReadModel(db);
     const settingStore = new SettingStore(db, config.getLogger);
@@ -36,15 +35,6 @@ export const createProxyService = (
     );
     // TODO: remove this dependency after we migrate frontend API
     const featureToggleServiceV2 = createFeatureToggleService(db, config);
-    const eventStore = new EventStore(
-        db,
-        config.getLogger,
-        config.flagResolver,
-    );
-    const configurationRevisionService = new ConfigurationRevisionService(
-        { eventStore },
-        config,
-    );
     const clientFeatureToggleReadModel = new ClientFeatureToggleReadModel(
         db,
         config.eventBus,
@@ -71,6 +61,7 @@ export const createProxyService = (
 export const createFakeProxyService = (
     config: IUnleashConfig,
     clientMetricsServiceV2: ClientMetricsServiceV2,
+    configurationRevisionService: ConfigurationRevisionService,
 ): ProxyService => {
     const segmentReadModel = new FakeSegmentReadModel();
     const settingStore = new FakeSettingStore();
@@ -82,11 +73,6 @@ export const createFakeProxyService = (
     );
     // TODO: remove this dependency after we migrate frontend API
     const featureToggleServiceV2 = createFakeFeatureToggleService(config);
-    const eventStore = new FakeEventStore();
-    const configurationRevisionService = new ConfigurationRevisionService(
-        { eventStore },
-        config,
-    );
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel();
     const globalFrontendApiCache = new GlobalFrontendApiCache(
         config,

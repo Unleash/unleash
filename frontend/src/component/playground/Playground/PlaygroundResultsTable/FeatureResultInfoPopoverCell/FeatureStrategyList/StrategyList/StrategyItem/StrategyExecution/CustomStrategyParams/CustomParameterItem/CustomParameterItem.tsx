@@ -1,5 +1,5 @@
 import { Box, styled, Typography, useTheme } from '@mui/material';
-import { CancelOutlined } from '@mui/icons-material';
+import CancelOutlined from '@mui/icons-material/CancelOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 

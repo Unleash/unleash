@@ -1,6 +1,6 @@
 import React, { forwardRef, Fragment, useImperativeHandle } from 'react';
 import { styled, Tooltip } from '@mui/material';
-import { HelpOutline } from '@mui/icons-material';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';

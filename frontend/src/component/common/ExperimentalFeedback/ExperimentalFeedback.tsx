@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Divider, Typography, styled } from '@mui/material';
-import { PermMedia, Send } from '@mui/icons-material';
+import PermMedia from '@mui/icons-material/PermMedia';
+import Send from '@mui/icons-material/Send';
 import { CustomEvents, usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

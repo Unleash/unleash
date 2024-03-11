@@ -1,7 +1,7 @@
 import { Button, Divider, Typography, styled } from '@mui/material';
 import demoQR from 'assets/img/demo-qr.png';
 import { formatAssetPath } from 'utils/formatPath';
-import { Launch } from '@mui/icons-material';
+import Launch from '@mui/icons-material/Launch';
 import { DemoDialog } from '../DemoDialog';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

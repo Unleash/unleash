@@ -1,7 +1,7 @@
 import { VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { Edit } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
 import { IconButton, Tooltip } from '@mui/material';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { IStrategy } from 'interfaces/strategy';

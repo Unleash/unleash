@@ -9,7 +9,9 @@ import {
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
-import { Delete, Edit, Label } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
+import Label from '@mui/icons-material/Label';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

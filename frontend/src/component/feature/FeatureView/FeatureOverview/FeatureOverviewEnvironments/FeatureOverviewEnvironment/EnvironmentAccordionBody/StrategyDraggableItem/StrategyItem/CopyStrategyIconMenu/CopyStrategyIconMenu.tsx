@@ -7,7 +7,8 @@ import {
     MenuItem,
     Tooltip,
 } from '@mui/material';
-import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
+import CopyIcon from '@mui/icons-material/AddToPhotos';
+import Lock from '@mui/icons-material/Lock';
 import { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';

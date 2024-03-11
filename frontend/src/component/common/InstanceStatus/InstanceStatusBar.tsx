@@ -1,7 +1,8 @@
 import { styled, Button, Typography } from '@mui/material';
 import { IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
-import { InfoOutlined, WarningAmber } from '@mui/icons-material';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import WarningAmber from '@mui/icons-material/WarningAmber';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';

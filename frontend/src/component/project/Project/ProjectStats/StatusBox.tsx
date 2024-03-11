@@ -1,5 +1,6 @@
 import type { FC, ReactNode } from 'react';
-import { CallMade, SouthEast } from '@mui/icons-material';
+import CallMade from '@mui/icons-material/CallMade';
+import SouthEast from '@mui/icons-material/SouthEast';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';

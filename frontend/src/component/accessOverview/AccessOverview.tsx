@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material';
-import { Download } from '@mui/icons-material';
+import Download from '@mui/icons-material/Delete';
 import { useAccessOverviewApi } from 'hooks/api/actions/useAccessOverviewApi/useAccessOverviewApi';
 
 export const AccessOverview = () => {

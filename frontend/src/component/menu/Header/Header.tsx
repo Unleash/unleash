@@ -26,11 +26,9 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { flexRow, focusable } from 'themes/themeStyles';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
 import { getRoutes, getCondensedRoutes } from 'component/menu/routes';
-import {
-    DarkModeOutlined,
-    KeyboardArrowDown,
-    LightModeOutlined,
-} from '@mui/icons-material';
+import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
 import { useId } from 'hooks/useId';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';

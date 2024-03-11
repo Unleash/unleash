@@ -8,7 +8,7 @@ import useApplications from 'hooks/api/getters/useApplications/useApplications';
 import { StrategyDetails } from './StrategyDetails/StrategyDetails';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { Edit } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureSchema } from 'openapi/models';

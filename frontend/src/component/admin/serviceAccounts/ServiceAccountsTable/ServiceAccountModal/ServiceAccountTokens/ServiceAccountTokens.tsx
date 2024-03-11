@@ -1,4 +1,4 @@
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import {
     Button,
     IconButton,

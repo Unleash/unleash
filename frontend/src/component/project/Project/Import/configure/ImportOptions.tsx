@@ -1,5 +1,5 @@
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { KeyboardArrowDownOutlined } from '@mui/icons-material';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { FC, useEffect } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { IMPORT_ENVIRONMENT } from 'utils/testIds';

@@ -1,5 +1,5 @@
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { WarningAmber } from '@mui/icons-material';
+import WarningAmber from '@mui/icons-material/WarningAmber';
 import { styled } from '@mui/material';
 
 const StyledWarningAmber = styled(WarningAmber)(({ theme }) => ({

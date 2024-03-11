@@ -4,7 +4,7 @@ import { DateTimeCell } from 'component/common/Table/cells/DateTimeCell/DateTime
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { SortableTableHeader, TableCell, Table } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { Assessment } from '@mui/icons-material';
+import Assessment from '@mui/icons-material/Assessment';
 import { useMemo } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';

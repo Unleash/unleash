@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Avatar, Icon, Link } from '@mui/material';
-import { Warning } from '@mui/icons-material';
+import Warning from '@mui/icons-material/Warning';
 import { styles as themeStyles } from 'component/common';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';

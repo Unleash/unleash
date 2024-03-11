@@ -1,4 +1,5 @@
-import { FilterList, History } from '@mui/icons-material';
+import FilterList from '@mui/icons-material/FilterList';
+import History from '@mui/icons-material/History';
 import { Box, Divider, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {

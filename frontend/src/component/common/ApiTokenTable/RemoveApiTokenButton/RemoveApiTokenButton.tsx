@@ -1,4 +1,4 @@
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import { styled } from '@mui/material';
 import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { useState } from 'react';

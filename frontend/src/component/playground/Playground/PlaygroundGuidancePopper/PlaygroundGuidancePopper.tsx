@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { Close, Help } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
+import Help from '@mui/icons-material/Help';
 import { Box, IconButton, Popper, Paper } from '@mui/material';
 import { PlaygroundGuidance } from '../PlaygroundGuidance/PlaygroundGuidance';
 

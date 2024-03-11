@@ -17,7 +17,7 @@ import {
     StyledFlexAlignCenterBox,
     StyledSuccessIcon,
 } from '../ChangeRequestSidebar';
-import { CloudCircle } from '@mui/icons-material';
+import CloudCircle from '@mui/icons-material/CloudCircle';
 import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';

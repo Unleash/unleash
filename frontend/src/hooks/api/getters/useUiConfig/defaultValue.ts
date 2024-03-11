@@ -1,4 +1,4 @@
-import { LibraryBooks } from '@mui/icons-material';
+import LibraryBooks from '@mui/icons-material/LibraryBooks';
 import { IUiConfig } from 'interfaces/uiConfig';
 
 export const defaultValue: IUiConfig = {

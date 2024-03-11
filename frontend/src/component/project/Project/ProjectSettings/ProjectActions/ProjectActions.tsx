@@ -10,7 +10,7 @@ import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuar
 import { ProjectActionsTable } from './ProjectActionsTable/ProjectActionsTable';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { useTheme } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { IActionSet } from 'interfaces/action';
 import { useState } from 'react';
 

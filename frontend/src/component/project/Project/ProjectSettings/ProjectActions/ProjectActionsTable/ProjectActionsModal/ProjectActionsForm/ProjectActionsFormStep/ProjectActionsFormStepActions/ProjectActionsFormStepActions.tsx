@@ -6,7 +6,7 @@ import { ProjectActionsActionItem } from './ProjectActionsActionItem';
 import { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { IServiceAccount } from 'interfaces/service-account';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 

@@ -11,7 +11,8 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { Delete, PowerSettingsNew } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import PowerSettingsNew from '@mui/icons-material/PowerSettingsNew';
 import {
     DELETE_ADDON,
     UPDATE_ADDON,

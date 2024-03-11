@@ -4,7 +4,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IGroupUser } from 'interfaces/group';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { VirtualizedTable } from 'component/common/Table';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';

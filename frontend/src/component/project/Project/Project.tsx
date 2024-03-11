@@ -15,7 +15,7 @@ import {
     StyledTopRow,
 } from './Project.styles';
 import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
-import { FileUpload } from '@mui/icons-material';
+import FileUpload from '@mui/icons-material/FileUpload';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';

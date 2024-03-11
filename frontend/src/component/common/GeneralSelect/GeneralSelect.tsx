@@ -8,7 +8,7 @@ import {
     SelectChangeEvent,
 } from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
-import { KeyboardArrowDownOutlined } from '@mui/icons-material';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 

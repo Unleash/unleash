@@ -12,7 +12,7 @@ import {
     Avatar,
     Typography,
 } from '@mui/material';
-import { Apps } from '@mui/icons-material';
+import Apps from '@mui/icons-material/Apps';
 
 import styles from './common.module.scss';
 import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender';

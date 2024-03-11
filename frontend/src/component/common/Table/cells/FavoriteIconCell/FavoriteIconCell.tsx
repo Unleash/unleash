@@ -1,9 +1,7 @@
 import { VFC } from 'react';
 import { Box, IconButton, styled } from '@mui/material';
-import {
-    Star as StarIcon,
-    StarBorder as StarBorderIcon,
-} from '@mui/icons-material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledCell = styled(Box)(({ theme }) => ({

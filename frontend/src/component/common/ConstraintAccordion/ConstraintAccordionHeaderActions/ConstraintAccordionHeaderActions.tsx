@@ -1,6 +1,7 @@
 import React from 'react';
 import { IconButton, styled, Tooltip } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 
 interface ConstraintAccordionHeaderActionsProps {

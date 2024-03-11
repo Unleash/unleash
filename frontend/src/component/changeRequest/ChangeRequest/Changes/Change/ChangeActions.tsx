@@ -23,7 +23,9 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { Delete, Edit, MoreVert } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
+import MoreVert from '@mui/icons-material/MoreVert';
 import { EditChange } from './EditChange';
 
 const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {

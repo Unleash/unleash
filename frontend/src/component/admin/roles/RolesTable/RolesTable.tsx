@@ -13,7 +13,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { SupervisedUserCircle } from '@mui/icons-material';
+import SupervisedUserCircle from '@mui/icons-material/SupervisedUserCircle';
 import { RolesActionsCell } from './RolesActionsCell/RolesActionsCell';
 import { RolesCell } from './RolesCell/RolesCell';
 import { RoleDeleteDialog } from './RoleDeleteDialog/RoleDeleteDialog';

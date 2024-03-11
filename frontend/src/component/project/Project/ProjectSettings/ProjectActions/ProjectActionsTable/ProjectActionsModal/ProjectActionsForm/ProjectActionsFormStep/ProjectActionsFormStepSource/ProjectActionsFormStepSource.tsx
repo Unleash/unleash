@@ -9,7 +9,7 @@ import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
 import { ActionsFilterState } from '../../useProjectActionsForm';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { ProjectActionsPreviewPayload } from './ProjectActionsPreviewPayload';
 import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

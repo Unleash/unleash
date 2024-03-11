@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { Link, useNavigate } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';

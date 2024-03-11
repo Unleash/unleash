@@ -1,4 +1,4 @@
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { Button, Chip, Stack, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { useState } from 'react';

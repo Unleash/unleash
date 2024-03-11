@@ -1,5 +1,5 @@
 import { TextField, InputAdornment, Chip } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import Search from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IConstraintValueSearchProps {

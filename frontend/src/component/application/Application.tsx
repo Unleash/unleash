@@ -10,7 +10,8 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { Delete, Link as LinkIcon } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import LinkIcon from '@mui/icons-material/Link';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ConnectedInstances } from './ConnectedInstances/ConnectedInstances';

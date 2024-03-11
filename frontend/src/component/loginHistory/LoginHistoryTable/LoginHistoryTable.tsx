@@ -21,7 +21,7 @@ import { useLoginHistoryApi } from 'hooks/api/actions/useLoginHistoryApi/useLogi
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { Download } from '@mui/icons-material';
+import Download from '@mui/icons-material/Download';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>

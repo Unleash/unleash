@@ -7,14 +7,12 @@ import {
     Tooltip,
     useMediaQuery,
 } from '@mui/material';
-import {
-    Archive,
-    FileCopy,
-    Label,
-    WatchLater,
-    LibraryAdd,
-    Check,
-} from '@mui/icons-material';
+import Archive from '@mui/icons-material/Archive';
+import FileCopy from '@mui/icons-material/FileCopy';
+import Label from '@mui/icons-material/Label';
+import WatchLater from '@mui/icons-material/WatchLater';
+import LibraryAdd from '@mui/icons-material/LibraryAdd';
+import Check from '@mui/icons-material/Check';
 import {
     Link,
     Route,

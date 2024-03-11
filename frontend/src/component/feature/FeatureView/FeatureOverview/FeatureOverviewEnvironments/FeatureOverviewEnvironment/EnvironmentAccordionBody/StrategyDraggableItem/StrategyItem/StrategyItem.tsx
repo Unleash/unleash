@@ -1,5 +1,5 @@
 import { DragEventHandler, FC } from 'react';
-import { Edit } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';

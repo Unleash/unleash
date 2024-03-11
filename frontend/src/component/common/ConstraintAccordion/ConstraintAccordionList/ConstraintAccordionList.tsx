@@ -5,7 +5,7 @@ import React, {
     useImperativeHandle,
 } from 'react';
 import { Button, styled, Tooltip } from '@mui/material';
-import { HelpOutline } from '@mui/icons-material';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
 import produce from 'immer';

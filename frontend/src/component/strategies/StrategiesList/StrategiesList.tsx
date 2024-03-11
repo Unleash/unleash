@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Link, Typography, styled } from '@mui/material';
-import { Extension } from '@mui/icons-material';
+import Extension from '@mui/icons-material/Extension';
 import {
     Table,
     SortableTableHeader,

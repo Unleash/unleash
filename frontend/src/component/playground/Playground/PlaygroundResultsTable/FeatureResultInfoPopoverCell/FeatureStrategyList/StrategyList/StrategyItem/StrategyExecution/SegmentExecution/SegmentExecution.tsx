@@ -1,7 +1,7 @@
 import { Fragment, VFC } from 'react';
 import { PlaygroundSegmentSchema, PlaygroundRequestSchema } from 'openapi';
 import { ConstraintExecution } from '../ConstraintExecution/ConstraintExecution';
-import { CancelOutlined } from '@mui/icons-material';
+import CancelOutlined from '@mui/icons-material/CancelOutlined';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

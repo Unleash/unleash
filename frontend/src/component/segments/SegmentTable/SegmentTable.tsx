@@ -18,7 +18,7 @@ import { useMemo, useState } from 'react';
 import { SegmentEmpty } from 'component/segments/SegmentEmpty';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { DonutLarge } from '@mui/icons-material';
+import DonutLarge from '@mui/icons-material/DonutLarge';
 import { SegmentActionCell } from 'component/segments/SegmentActionCell/SegmentActionCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';

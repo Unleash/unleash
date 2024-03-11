@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
 import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
-import { InfoOutlined } from '@mui/icons-material';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import React, { useState } from 'react';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentTable';

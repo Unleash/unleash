@@ -1,7 +1,8 @@
 import { VFC } from 'react';
 import { styled } from '@mui/material';
 import { Box, IconButton } from '@mui/material';
-import { CloudCircle, DragIndicator } from '@mui/icons-material';
+import CloudCircle from '@mui/icons-material/CloudCircle';
+import DragIndicator from '@mui/icons-material/DragIndicator';
 import { IEnvironment } from 'interfaces/environments';
 
 const StyledCell = styled(Box)(({ theme }) => ({

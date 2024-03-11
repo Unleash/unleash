@@ -11,7 +11,7 @@ import {
     Tabs,
     Typography,
 } from '@mui/material';
-import { Link as LinkIcon } from '@mui/icons-material';
+import LinkIcon from '@mui/icons-material/Link';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';

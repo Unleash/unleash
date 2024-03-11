@@ -1,4 +1,4 @@
-import { Download } from '@mui/icons-material';
+import Download from '@mui/icons-material/Download';
 import {
     Button,
     Table,

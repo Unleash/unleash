@@ -1,14 +1,12 @@
 import { VFC } from 'react';
 import { ChangeRequestType } from '../changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
-import {
-    AccessTime,
-    Check,
-    CircleOutlined,
-    Close,
-    Error as ErrorIcon,
-    PauseCircle,
-} from '@mui/icons-material';
+import AccessTime from '@mui/icons-material/AccessTime';
+import Check from '@mui/icons-material/Check';
+import CircleOutlined from '@mui/icons-material/CircleOutlined';
+import Close from '@mui/icons-material/Close';
+import ErrorIcon from '@mui/icons-material/Error';
+import PauseCircle from '@mui/icons-material/PauseCircle';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IChangeRequestStatusBadgeProps {

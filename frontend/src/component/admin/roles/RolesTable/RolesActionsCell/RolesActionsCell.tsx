@@ -1,4 +1,5 @@
-import { Delete, Edit } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import { Box, styled } from '@mui/material';
 import { PREDEFINED_ROLE_TYPES } from '@server/util/constants';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';

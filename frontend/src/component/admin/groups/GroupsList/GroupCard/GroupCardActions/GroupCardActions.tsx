@@ -10,7 +10,10 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { Delete, Edit, GroupRounded, MoreVert } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
+import GroupRounded from '@mui/icons-material/GroupRounded';
+import MoreVert from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
 
 const StyledActions = styled('div')(({ theme }) => ({

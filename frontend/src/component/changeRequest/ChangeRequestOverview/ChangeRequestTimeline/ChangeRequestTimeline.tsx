@@ -11,7 +11,7 @@ import {
     ChangeRequestState,
 } from '../../changeRequest.types';
 import { HtmlTooltip } from '../../../common/HtmlTooltip/HtmlTooltip';
-import { Error as ErrorIcon } from '@mui/icons-material';
+import ErrorIcon from '@mui/icons-material/Error';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 

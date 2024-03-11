@@ -1,4 +1,4 @@
-import { History } from '@mui/icons-material';
+import History from '@mui/icons-material/History';
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { VFC } from 'react';

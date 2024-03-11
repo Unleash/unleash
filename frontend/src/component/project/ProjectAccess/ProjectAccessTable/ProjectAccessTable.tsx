@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
-import { Add, Delete, Edit } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import { sortTypes } from 'utils/sortTypes';
 import useProjectAccess, {
     ENTITY_TYPE,

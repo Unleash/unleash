@@ -14,7 +14,7 @@ import { GroupCard } from './GroupCard/GroupCard';
 import { GroupEmpty } from './GroupEmpty/GroupEmpty';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { NAVIGATE_TO_CREATE_GROUP } from 'utils/testIds';
 import { EditGroupUsers } from '../Group/EditGroupUsers/EditGroupUsers';
 import { RemoveGroup } from '../RemoveGroup/RemoveGroup';

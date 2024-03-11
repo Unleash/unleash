@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ISegment } from 'interfaces/segment';
-import { Clear, VisibilityOff, Visibility } from '@mui/icons-material';
+import Clear from '@mui/icons-material/Clear';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { constraintAccordionListId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { styled, Theme, Tooltip } from '@mui/material';

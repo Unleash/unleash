@@ -1,4 +1,4 @@
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import { Box, styled } from '@mui/material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';

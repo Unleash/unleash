@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from '@mui/material';
-import { Lock } from '@mui/icons-material';
+import Lock from '@mui/icons-material/Lock';
 import React from 'react';
 import {
     TooltipResolver,

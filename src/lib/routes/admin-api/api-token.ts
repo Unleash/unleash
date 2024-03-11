@@ -41,7 +41,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { ProxyService } from '../../services/proxy-service';
+import { ProxyService } from '../../proxy/proxy-service';
 import { extractUserId, extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
 

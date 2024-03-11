@@ -9,11 +9,13 @@ import { Row } from './row-type';
 export type CrudStoreConfig = Pick<IUnleashConfig, 'eventBus'>;
 
 /**
- * This abstract class defines the basic operations for a CRUD store
+ * This abstract class defines the basic operations for a CRUD store.
+ *
+ * It accepts one model as input and one model as output that generally includes auto-generated properties such as the id or createdAt.
  *
  * Provides default types for:
- * - RowReadModel turning the properties of ReadModel from camelCase to snake_case
- * - RowWriteModel turning the properties of WriteModel from camelCase to snake_case
+ * - RowModelOutput turning the properties of ModelOutput from camelCase to snake_case
+ * - RowModelInput turning the properties of ModelInput from camelCase to snake_case
  * - IdType assumming it's a number
  *
  * These types can be overridden to suit different needs.
@@ -21,12 +23,12 @@ export type CrudStoreConfig = Pick<IUnleashConfig, 'eventBus'>;
  * Default implementations of toRow and fromRow are provided, but can be overridden.
  */
 export abstract class CRUDStore<
-    ReadModel extends { id: IdType },
-    WriteModel,
-    RowReadModel = Row<ReadModel>,
-    RowWriteModel = Row<WriteModel>,
+    ModelOutput extends { id: IdType },
+    ModelInput,
+    RowModelOutput = Row<ModelOutput>,
+    RowModelInput = Row<ModelInput>,
     IdType = number,
-> implements Store<ReadModel, IdType>
+> implements Store<ModelOutput, IdType>
 {
     protected db: Db;
 
@@ -34,16 +36,16 @@ export abstract class CRUDStore<
 
     protected readonly timer: (action: string) => Function;
 
-    protected toRow: (item: Partial<WriteModel>) => Partial<RowWriteModel>;
-    protected fromRow: (item: Partial<RowReadModel>) => Partial<ReadModel>;
+    protected toRow: (item: Partial<ModelInput>) => Partial<RowModelInput>;
+    protected fromRow: (item: Partial<RowModelOutput>) => Partial<ModelOutput>;
 
     constructor(
         tableName: string,
         db: Db,
         { eventBus }: CrudStoreConfig,
         options?: Partial<{
-            toRow: (item: Partial<WriteModel>) => Partial<RowWriteModel>;
-            fromRow: (item: RowReadModel) => Partial<ReadModel>;
+            toRow: (item: Partial<ModelInput>) => Partial<RowModelInput>;
+            fromRow: (item: RowModelOutput) => Partial<ModelOutput>;
         }>,
     ) {
         this.tableName = tableName;
@@ -53,43 +55,43 @@ export abstract class CRUDStore<
                 store: tableName,
                 action,
             });
-        this.toRow = options?.toRow ?? defaultToRow<WriteModel, RowWriteModel>;
+        this.toRow = options?.toRow ?? defaultToRow<ModelInput, RowModelInput>;
         this.fromRow =
-            options?.fromRow ?? defaultFromRow<ReadModel, RowReadModel>;
+            options?.fromRow ?? defaultFromRow<ModelOutput, RowModelOutput>;
     }
 
-    async getAll(query?: Partial<WriteModel>): Promise<ReadModel[]> {
+    async getAll(query?: Partial<ModelInput>): Promise<ModelOutput[]> {
         let allQuery = this.db(this.tableName);
         if (query) {
             allQuery = allQuery.where(this.toRow(query) as Record<string, any>);
         }
         const items = await allQuery;
-        return items.map(this.fromRow) as ReadModel[];
+        return items.map(this.fromRow) as ModelOutput[];
     }
 
-    async insert(item: WriteModel): Promise<ReadModel> {
+    async insert(item: ModelInput): Promise<ModelOutput> {
         const rows = await this.db(this.tableName)
             .insert(this.toRow(item))
             .returning('*');
-        return this.fromRow(rows[0]) as ReadModel;
+        return this.fromRow(rows[0]) as ModelOutput;
     }
 
-    async bulkInsert(items: WriteModel[]): Promise<ReadModel[]> {
+    async bulkInsert(items: ModelInput[]): Promise<ModelOutput[]> {
         if (!items || items.length === 0) {
             return [];
         }
         const rows = await this.db(this.tableName)
             .insert(items.map(this.toRow))
             .returning('*');
-        return rows.map(this.fromRow) as ReadModel[];
+        return rows.map(this.fromRow) as ModelOutput[];
     }
 
-    async update(id: IdType, item: Partial<WriteModel>): Promise<ReadModel> {
+    async update(id: IdType, item: Partial<ModelInput>): Promise<ModelOutput> {
         const rows = await this.db(this.tableName)
             .where({ id })
             .update(this.toRow(item))
             .returning('*');
-        return this.fromRow(rows[0]) as ReadModel;
+        return this.fromRow(rows[0]) as ModelOutput;
     }
 
     async delete(id: IdType): Promise<void> {
@@ -111,7 +113,7 @@ export abstract class CRUDStore<
         return present;
     }
 
-    async count(query?: Partial<WriteModel>): Promise<number> {
+    async count(query?: Partial<ModelInput>): Promise<number> {
         let countQuery = this.db(this.tableName).count('*');
         if (query) {
             countQuery = countQuery.where(
@@ -122,11 +124,11 @@ export abstract class CRUDStore<
         return Number(count);
     }
 
-    async get(id: IdType): Promise<ReadModel> {
+    async get(id: IdType): Promise<ModelOutput> {
         const row = await this.db(this.tableName).where({ id }).first();
         if (!row) {
             throw new NotFoundError(`No item with id ${id}`);
         }
-        return this.fromRow(row) as ReadModel;
+        return this.fromRow(row) as ModelOutput;
     }
 }

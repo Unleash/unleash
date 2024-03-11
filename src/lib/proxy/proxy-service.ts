@@ -82,7 +82,10 @@ export class ProxyService {
 
         return definitions
             .filter((feature) =>
-                client.isEnabled(feature.name, { ...context, sessionId }),
+                client.isEnabled(feature.name, {
+                    ...context,
+                    sessionId,
+                }),
             )
             .map((feature) => ({
                 name: feature.name,
@@ -155,7 +158,10 @@ export class ProxyService {
             );
 
         await this.services.clientMetricsServiceV2.registerClientMetrics(
-            { ...metrics, environment },
+            {
+                ...metrics,
+                environment,
+            },
             ip,
         );
     }

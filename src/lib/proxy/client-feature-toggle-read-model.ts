@@ -36,7 +36,6 @@ export default class ClientFeatureToggleReadModel
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
-            'features.created_at as created_at',
             'fe.variants as variants',
             'fe.enabled as enabled',
             'fe.environment as environment',
@@ -118,7 +117,6 @@ export default class ClientFeatureToggleReadModel
                     project: row.project,
                     stale: row.stale,
                     type: row.type,
-                    dependencies: [],
                 };
             }
 
@@ -142,6 +140,9 @@ export default class ClientFeatureToggleReadModel
                 feature.strategies = feature.strategies || [];
                 feature.strategies.push(this.rowToStrategy(row));
             }
+            if (row.segment_id) {
+                this.addSegmentIdsToStrategy(feature, row);
+            }
         });
         Object.values(featureTogglesByEnv).forEach((envFeatures) => {
             Object.values(envFeatures).forEach((feature) => {
@@ -156,6 +157,22 @@ export default class ClientFeatureToggleReadModel
         });
 
         return featureTogglesByEnv;
+    }
+
+    private addSegmentIdsToStrategy(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ) {
+        const strategy = feature.strategies?.find(
+            (s) => s?.id === row.strategy_id,
+        );
+        if (!strategy) {
+            return;
+        }
+        if (!strategy.segments) {
+            strategy.segments = [];
+        }
+        strategy.segments.push(row.segment_id);
     }
 
     private rowToStrategy(row: Record<string, any>): IStrategyConfig {

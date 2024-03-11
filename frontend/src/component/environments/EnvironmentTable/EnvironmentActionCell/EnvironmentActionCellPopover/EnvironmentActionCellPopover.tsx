@@ -20,7 +20,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
-import AddToPhotos from '@mui/icons-material/AddToPhotos';
+import CopyIcon from '@mui/icons-material/AddToPhotos';
 import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

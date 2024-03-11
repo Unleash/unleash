@@ -109,17 +109,19 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▣ '}
-                        title={`Total requests: ${point.value.totalRequests}`}
+                        title={`Total requests: ${
+                            point.value.totalRequests ?? 0
+                        }`}
                         color={'info'}
                     />
                     <InfoLine
                         iconChar={'▲ '}
-                        title={`Exposed: ${point.value.totalYes}`}
+                        title={`Exposed: ${point.value.totalYes ?? 0}`}
                         color={'success'}
                     />
                     <InfoLine
                         iconChar={'▼ '}
-                        title={`Not exposed: ${point.value.totalNo}`}
+                        title={`Not exposed: ${point.value.totalNo ?? 0}`}
                         color={'error'}
                     />
                     <Divider
@@ -127,12 +129,18 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoSummary
                         data={[
-                            { key: 'Flags', value: point.value.totalFlags },
+                            {
+                                key: 'Flags',
+                                value: point.value.totalFlags ?? 0,
+                            },
                             {
                                 key: 'Environments',
-                                value: point.value.totalEnvironments,
+                                value: point.value.totalEnvironments ?? 0,
                             },
-                            { key: 'Apps', value: point.value.totalApps },
+                            {
+                                key: 'Apps',
+                                value: point.value.totalApps ?? 0,
+                            },
                         ]}
                     />
                 </StyledTooltipItemContainer>

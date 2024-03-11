@@ -23,6 +23,7 @@ export type ActionsActionState = Omit<
     'id' | 'createdAt' | 'createdByUserId'
 > & {
     id: string;
+    error?: string;
 };
 
 const DEFAULT_PROJECT_ACTIONS_FORM_ERRORS = {
@@ -99,11 +100,12 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     };
 
     useEffect(() => {
-        clearError(ErrorField.FILTERS);
-        if (filters.some(({ error }) => error)) {
-            setError(ErrorField.FILTERS, 'One or more filters have errors.');
-        }
+        validateFilters(filters);
     }, [filters]);
+
+    useEffect(() => {
+        validateActions(actions);
+    }, [actions]);
 
     const isEmpty = (value: string) => !value.length;
 
@@ -137,6 +139,16 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         return true;
     };
 
+    const validateFilters = (filters: ActionsFilterState[]) => {
+        if (filters.some(({ error }) => error)) {
+            setError(ErrorField.FILTERS, 'One or more filters have errors.');
+            return false;
+        }
+
+        clearError(ErrorField.FILTERS);
+        return true;
+    };
+
     const validateActorId = (sourceId: number) => {
         if (isIdEmpty(sourceId)) {
             setError(ErrorField.ACTOR, 'Service account is required.');
@@ -148,8 +160,14 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     };
 
     const validateActions = (actions: ActionsActionState[]) => {
-        if (actions.length === 0) {
+        if (actions.filter(({ action }) => Boolean(action)).length === 0) {
             setError(ErrorField.ACTIONS, 'At least one action is required.');
+            return false;
+        }
+
+        clearError(ErrorField.ACTIONS);
+        if (actions.some(({ error }) => error)) {
+            setError(ErrorField.ACTIONS, 'One or more actions have errors.');
             return false;
         }
 
@@ -160,12 +178,19 @@ export const useProjectActionsForm = (action?: IActionSet) => {
     const validate = () => {
         const validName = validateName(name);
         const validSourceId = validateSourceId(sourceId);
+        const validFilters = validateFilters(filters);
         const validActorId = validateActorId(actorId);
         const validActions = validateActions(actions);
 
         setValidated(true);
 
-        return validName && validSourceId && validActorId && validActions;
+        return (
+            validName &&
+            validSourceId &&
+            validFilters &&
+            validActorId &&
+            validActions
+        );
     };
 
     return {
@@ -187,6 +212,8 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         setErrors,
         validated,
         validateName,
+        validateSourceId,
+        validateActorId,
         validate,
         reloadForm,
     };

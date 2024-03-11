@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import useSWR from 'swr';
 import { IRole } from 'interfaces/role';
 import { IServiceAccount } from 'interfaces/service-account';
 import { IMatrixPermission } from 'interfaces/permissions';
 import { IPermission } from 'interfaces/user';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 interface IServiceAccountAccessMatrix {
     root: IMatrixPermission[];
@@ -30,7 +30,7 @@ interface IServiceAccountAccessMatrixOutput
 }
 
 export const useServiceAccountAccessMatrix = (
-    id: number,
+    id?: number,
     project?: string,
     environment?: string,
 ): IServiceAccountAccessMatrixOutput => {
@@ -39,10 +39,9 @@ export const useServiceAccountAccessMatrix = (
     }`;
     const url = `api/admin/service-account/${id}/permissions${queryParams}`;
 
-    const { data, error, mutate } = useSWR<IServiceAccountAccessMatrixResponse>(
-        formatApiPath(url),
-        fetcher,
-    );
+    const { data, error, mutate } = useConditionalSWR<
+        IServiceAccountAccessMatrixResponse | undefined
+    >(Boolean(id), undefined, formatApiPath(url), fetcher);
 
     return useMemo(
         () => ({

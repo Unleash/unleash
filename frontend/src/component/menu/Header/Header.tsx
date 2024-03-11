@@ -39,6 +39,8 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { INavigationMenuItem } from '../../../interfaces/route';
+import { Badge } from '../../common/Badge/Badge';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -128,11 +130,37 @@ const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
     cursor: 'pointer',
 }));
 
+const StyledSpan = styled('span')({
+    height: '16px',
+    paddingBottom: 16,
+});
+
+const StyledBadge = styled(Badge)({
+    height: '16px',
+    maxHeight: '16px',
+    padding: 0.25,
+    marginBottom: 0,
+});
+
 const styledIconProps = (theme: Theme) => ({
     color: theme.palette.neutral.main,
 });
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
+
+const StyledLinkWithBetaBagde = ({
+    title,
+    to,
+}: { title: string; to: string }) => (
+    <StyledLink to={to} sx={{ margin: 0 }}>
+        <div>
+            <span>{title}</span>{' '}
+            <StyledSpan>
+                <StyledBadge color='success'>Beta</StyledBadge>
+            </StyledSpan>
+        </div>
+    </StyledLink>
+);
 
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
@@ -248,15 +276,18 @@ const Header: VFC = () => {
 
                 <StyledNav>
                     <StyledLinks>
-                        <ConditionallyRender
-                            condition={insightsDashboard}
-                            show={
-                                <StyledLink to='/insights'>Insights</StyledLink>
-                            }
-                        />
                         <StyledLink to='/projects'>Projects</StyledLink>
                         <StyledLink to={'/search'}>Search</StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
+                        <ConditionallyRender
+                            condition={insightsDashboard}
+                            show={
+                                <StyledLinkWithBetaBagde
+                                    to={'/insights'}
+                                    title={'Insights'}
+                                />
+                            }
+                        />
                         <StyledAdvancedNavButton
                             onClick={(e) => setConfigRef(e.currentTarget)}
                             aria-controls={configRef ? configId : undefined}

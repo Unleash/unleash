@@ -39,7 +39,6 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { INavigationMenuItem } from '../../../interfaces/route';
 import { Badge } from '../../common/Badge/Badge';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({

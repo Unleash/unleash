@@ -25,7 +25,7 @@ export default class ClientFeatureToggleReadModel
             });
     }
 
-    private async getAll(): Promise<
+    public async getAll(): Promise<
         Record<string, Record<string, IFeatureToggleClient>>
     > {
         const stopTimer = this.timer(`getAll`);
@@ -179,11 +179,5 @@ export default class ClientFeatureToggleReadModel
             row.strategy_id &&
             !feature.strategies?.find((s) => s?.id === row.strategy_id)
         );
-    }
-
-    async getClient(): Promise<
-        Record<string, Record<string, IFeatureToggleClient>>
-    > {
-        return this.getAll();
     }
 }

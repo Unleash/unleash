@@ -287,6 +287,7 @@ export const theme = {
                 gradientStale: colors.red[300],
                 gradientPotentiallyStale: colors.orange[500],
             },
+            series: colors.chartSeries,
         },
     },
 };

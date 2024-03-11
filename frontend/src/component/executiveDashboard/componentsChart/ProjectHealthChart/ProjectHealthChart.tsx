@@ -88,7 +88,6 @@ export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
         <LineChart
             key={isAggregate ? 'aggregate' : 'project'}
             data={data}
-            isLocalTooltip
             TooltipComponent={isAggregate ? undefined : HealthTooltip}
             overrideOptions={
                 notEnoughData

@@ -15,7 +15,6 @@ export const TimeToProductionChart: VFC<IFlagsProjectChartProps> = ({
     return (
         <LineChart
             data={data}
-            isLocalTooltip
             overrideOptions={{
                 parsing: {
                     yAxisKey: 'timeToProduction',

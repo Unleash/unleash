@@ -19,6 +19,7 @@ import { PROXY_REPOSITORY_CREATED } from '../metric-events';
 import { ProxyRepository } from '../proxy';
 import { FrontendApiRepository } from '../proxy/frontend-api-repository';
 import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
+import isEqual from 'lodash.isequal';
 
 export type Config = Pick<
     IUnleashConfig,
@@ -95,6 +96,25 @@ export class ProxyService {
                 }),
                 impressionData: Boolean(feature.impressionData),
             }));
+    }
+
+    async compareToggleDefinitions(token: IApiUser) {
+        const oldClient = await this.clientForProxyToken(token);
+        const oldDefinitions = oldClient.getFeatureToggleDefinitions() || [];
+
+        const newClient = await this.newClientForProxyToken(token);
+        const newDefinitions = newClient.getFeatureToggleDefinitions() || [];
+
+        if (
+            !isEqual(
+                oldDefinitions.sort((a, b) => a.name.localeCompare(b.name)),
+                newDefinitions.sort((a, b) => a.name.localeCompare(b.name)),
+            )
+        ) {
+            this.logger.warn(
+                `old features definitions and new features definitions are different. Old definitions count ${oldDefinitions.length}, new count ${newDefinitions.length}`,
+            );
+        }
     }
 
     async getNewProxyFeatures(

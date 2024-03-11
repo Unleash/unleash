@@ -72,8 +72,9 @@ export const ProjectActionsActionItem = ({
 
         return requiredPermissions.some((requiredPermission) =>
             permissions.some(
-                ({ permission, environment }) =>
+                ({ permission, project, environment }) =>
                     permission === requiredPermission &&
+                    project === projectId &&
                     environment === actionEnvironment,
             ),
         );

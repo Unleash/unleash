@@ -1,5 +1,5 @@
 import { ProxyService, Config } from './proxy-service';
-import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
+import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import { IApiUser } from '../types';
 import { FeatureInterface } from 'unleash-client/lib/feature';
 import noLogger from '../../test/fixtures/no-logger';

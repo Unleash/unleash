@@ -81,6 +81,8 @@ export const ProjectActionsModal = ({
         setActions,
         errors,
         validateName,
+        validateSourceId,
+        validateActorId,
         validate,
         validated,
         reloadForm,
@@ -127,11 +129,13 @@ export const ProjectActionsModal = ({
                 ),
         },
         actorId,
-        actions: actions.map(({ action, sortOrder, executionParams }) => ({
-            action,
-            sortOrder,
-            executionParams,
-        })),
+        actions: actions
+            .filter(({ action }) => Boolean(action))
+            .map(({ action, sortOrder, executionParams }) => ({
+                action,
+                sortOrder,
+                executionParams,
+            })),
     };
 
     const formatApiCode = () => `curl --location --request ${
@@ -206,6 +210,8 @@ export const ProjectActionsModal = ({
                         setActions={setActions}
                         errors={errors}
                         validateName={validateName}
+                        validateSourceId={validateSourceId}
+                        validateActorId={validateActorId}
                         validated={validated}
                     />
                     <StyledButtonContainer>

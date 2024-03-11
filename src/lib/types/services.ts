@@ -28,7 +28,7 @@ import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
 import { PlaygroundService } from '../features/playground/playground-service';
 import { GroupService } from '../services/group-service';
-import { ProxyService } from '../services/proxy-service';
+import { ProxyService } from '../proxy/proxy-service';
 import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';

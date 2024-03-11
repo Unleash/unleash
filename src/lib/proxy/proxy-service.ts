@@ -16,9 +16,9 @@ import {
 import { validateOrigins } from '../util';
 import { BadDataError, InvalidTokenError } from '../error';
 import { PROXY_REPOSITORY_CREATED } from '../metric-events';
-import { ProxyRepository } from '../proxy';
-import { FrontendApiRepository } from '../proxy/frontend-api-repository';
-import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
+import { ProxyRepository } from './index';
+import { FrontendApiRepository } from './frontend-api-repository';
+import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import isEqual from 'lodash.isequal';
 
 export type Config = Pick<
@@ -26,10 +26,7 @@ export type Config = Pick<
     'getLogger' | 'frontendApi' | 'frontendApiOrigins' | 'eventBus'
 >;
 
-export type Stores = Pick<
-    IUnleashStores,
-    'projectStore' | 'eventStore' | 'segmentReadModel'
->;
+export type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 export type Services = Pick<
     IUnleashServices,

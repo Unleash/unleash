@@ -37,6 +37,7 @@ interface IProjectActionsFormStepSourceProps {
     setSourceId: React.Dispatch<React.SetStateAction<number>>;
     filters: ActionsFilterState[];
     setFilters: React.Dispatch<React.SetStateAction<ActionsFilterState[]>>;
+    validateSourceId: (sourceId: number) => boolean;
 }
 
 export const ProjectActionsFormStepSource = ({
@@ -44,6 +45,7 @@ export const ProjectActionsFormStepSource = ({
     setSourceId,
     filters,
     setFilters,
+    validateSourceId,
 }: IProjectActionsFormStepSourceProps) => {
     const { signalEndpoints, loading: signalEndpointsLoading } =
         useSignalEndpoints();
@@ -102,6 +104,7 @@ export const ProjectActionsFormStepSource = ({
                 options={signalEndpointOptions}
                 value={`${sourceId}`}
                 onChange={(v) => {
+                    validateSourceId(Number(v));
                     setSourceId(parseInt(v));
                 }}
             />

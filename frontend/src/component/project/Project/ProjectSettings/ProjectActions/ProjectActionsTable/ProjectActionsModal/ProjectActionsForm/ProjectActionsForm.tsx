@@ -57,6 +57,8 @@ interface IProjectActionsFormProps {
     setActions: React.Dispatch<React.SetStateAction<ActionsActionState[]>>;
     errors: ProjectActionsFormErrors;
     validateName: (name: string) => boolean;
+    validateSourceId: (sourceId: number) => boolean;
+    validateActorId: (actorId: number) => boolean;
     validated: boolean;
 }
 
@@ -77,6 +79,8 @@ export const ProjectActionsForm = ({
     setActions,
     errors,
     validateName,
+    validateSourceId,
+    validateActorId,
     validated,
 }: IProjectActionsFormProps) => {
     const { serviceAccounts, loading: serviceAccountsLoading } =
@@ -142,6 +146,7 @@ export const ProjectActionsForm = ({
                 setSourceId={setSourceId}
                 filters={filters}
                 setFilters={setFilters}
+                validateSourceId={validateSourceId}
             />
 
             <ProjectActionsFormStepActions
@@ -151,6 +156,8 @@ export const ProjectActionsForm = ({
                 setActions={setActions}
                 actorId={actorId}
                 setActorId={setActorId}
+                validateActorId={validateActorId}
+                validated={validated}
             />
 
             <ConditionallyRender

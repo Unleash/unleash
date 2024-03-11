@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices, NONE } from '../../types';
-import { Logger } from '../../logger';
-import { IApiUser } from '../../types/api-user';
+import Controller from '../routes/controller';
+import { IUnleashConfig, IUnleashServices, NONE } from '../types';
+import { Logger } from '../logger';
+import { IApiUser } from '../types/api-user';
 import {
     ClientMetricsSchema,
     createRequestSchema,
@@ -13,12 +13,12 @@ import {
     ProxyFeatureSchema,
     proxyFeaturesSchema,
     ProxyFeaturesSchema,
-} from '../../openapi';
+} from '../openapi';
 import { Context } from 'unleash-client';
-import { enrichContextWithIp } from '../../proxy';
-import { corsOriginMiddleware } from '../../middleware';
-import NotImplementedError from '../../error/not-implemented-error';
-import NotFoundError from '../../error/notfound-error';
+import { enrichContextWithIp } from './index';
+import { corsOriginMiddleware } from '../middleware';
+import NotImplementedError from '../error/not-implemented-error';
+import NotFoundError from '../error/notfound-error';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 

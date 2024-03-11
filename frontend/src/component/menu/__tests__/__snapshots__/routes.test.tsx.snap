@@ -15,7 +15,6 @@ exports[`returns all baseRoutes 1`] = `
     "enterprise": false,
     "flag": "executiveDashboard",
     "menu": {
-      "advanced": true,
       "mobile": true,
     },
     "path": "/insights",

@@ -23,6 +23,8 @@ import { ClientMetricsSchema } from '../../../../lib/openapi';
 import { nameSchema } from '../../../schema/feature-schema';
 
 export default class ClientMetricsServiceV2 {
+    private static instance: ClientMetricsServiceV2;
+
     private config: IUnleashConfig;
 
     private unsavedMetrics: IClientMetricsEnv[] = [];
@@ -35,7 +37,7 @@ export default class ClientMetricsServiceV2 {
 
     private logger: Logger;
 
-    constructor(
+    private constructor(
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
@@ -47,6 +49,21 @@ export default class ClientMetricsServiceV2 {
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
         this.flagResolver = config.flagResolver;
+    }
+
+    static getInstance(
+        { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
+        config: IUnleashConfig,
+        lastSeenService: LastSeenService,
+    ) {
+        if (!ClientMetricsServiceV2.instance) {
+            ClientMetricsServiceV2.instance = new ClientMetricsServiceV2(
+                { clientMetricsStoreV2 },
+                config,
+                lastSeenService,
+            );
+        }
+        return ClientMetricsServiceV2.instance;
     }
 
     async clearMetrics(hoursAgo: number) {

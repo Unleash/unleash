@@ -37,7 +37,7 @@ export default class ClientMetricsServiceV2 {
 
     private logger: Logger;
 
-    private constructor(
+    constructor(
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
@@ -49,21 +49,6 @@ export default class ClientMetricsServiceV2 {
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
         this.flagResolver = config.flagResolver;
-    }
-
-    static getInstance(
-        { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
-        config: IUnleashConfig,
-        lastSeenService: LastSeenService,
-    ) {
-        if (!ClientMetricsServiceV2.instance) {
-            ClientMetricsServiceV2.instance = new ClientMetricsServiceV2(
-                { clientMetricsStoreV2 },
-                config,
-                lastSeenService,
-            );
-        }
-        return ClientMetricsServiceV2.instance;
     }
 
     async clearMetrics(hoursAgo: number) {

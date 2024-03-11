@@ -159,7 +159,7 @@ test('get daily client metrics for a toggle', async () => {
         getLogger() {},
     } as unknown as IUnleashConfig;
     const lastSeenService = {} as LastSeenService;
-    const service = ClientMetricsServiceV2.getInstance(
+    const service = new ClientMetricsServiceV2(
         { clientMetricsStoreV2 },
         config,
         lastSeenService,

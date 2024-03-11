@@ -133,7 +133,7 @@ export const createServices = (
     const lastSeenService = db
         ? createLastSeenService(db, config)
         : createFakeLastSeenService(config);
-    const clientMetricsServiceV2 = ClientMetricsServiceV2.getInstance(
+    const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
         config,
         lastSeenService,

@@ -11,7 +11,7 @@ export default class FakeClientFeatureToggleReadModel
         > = {},
     ) {}
 
-    getClient(): Promise<Record<string, Record<string, IFeatureToggleClient>>> {
+    getAll(): Promise<Record<string, Record<string, IFeatureToggleClient>>> {
         return Promise.resolve(this.value);
     }
 

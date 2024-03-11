@@ -118,7 +118,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
     }
 
     private async getAllFeatures(): Promise<FrontendApiFeatureCache> {
-        const features = await this.clientFeatureToggleReadModel.getClient();
+        const features = await this.clientFeatureToggleReadModel.getAll();
         return this.mapFeatures(features);
     }
 

@@ -21,10 +21,7 @@ import { PROXY_FEATURES_FOR_TOKEN_TIME } from '../metric-events';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
-type Stores = Pick<
-    IUnleashStores,
-    'projectStore' | 'eventStore' | 'segmentReadModel'
->;
+type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 type Services = Pick<
     IUnleashServices,

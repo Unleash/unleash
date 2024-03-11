@@ -25,10 +25,7 @@ export type Config = Pick<
     'getLogger' | 'frontendApi' | 'frontendApiOrigins' | 'eventBus'
 >;
 
-export type Stores = Pick<
-    IUnleashStores,
-    'projectStore' | 'eventStore' | 'segmentReadModel'
->;
+export type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 export type Services = Pick<
     IUnleashServices,

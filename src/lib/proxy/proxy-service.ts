@@ -102,8 +102,8 @@ export class ProxyService {
         const oldClient = await this.clientForProxyToken(token);
         const oldDefinitions = oldClient.getFeatureToggleDefinitions() || [];
 
-        const newClient = await this.newClientForProxyToken(token);
-        const newDefinitions = newClient.getFeatureToggleDefinitions() || [];
+        const newDefinitions =
+            this.globalFrontendApiCache.getToggles(token) || [];
 
         if (
             !isEqual(

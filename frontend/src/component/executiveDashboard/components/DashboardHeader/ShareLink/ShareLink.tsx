@@ -29,7 +29,7 @@ export const ShareLink: VFC = () => {
                 props: {
                     eventType: 'link-opened',
                 },
-            })
+            });
         }
     }, [searchParams]);
 
@@ -38,8 +38,8 @@ export const ShareLink: VFC = () => {
             props: {
                 eventType: 'link-copied',
             },
-        })
-    }
+        });
+    };
 
     return (
         <>

@@ -31,7 +31,7 @@ import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from '../features/playground/playground-service';
 import { GroupService } from './group-service';
-import { ProxyService } from '../proxy/proxy-service';
+import { FrontendApiService } from '../features/frontend-api/frontend-api-service';
 import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
@@ -112,9 +112,9 @@ import { InactiveUsersService } from '../users/inactive/inactive-users-service';
 import { SegmentReadModel } from '../features/segment/segment-read-model';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
 import {
-    createFakeProxyService,
-    createProxyService,
-} from '../proxy/createProxyService';
+    createFakeFrontendApiService,
+    createFrontendApiService,
+} from '../features/frontend-api/createFrontendApiService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -295,14 +295,14 @@ export const createServices = (
         ? createClientFeatureToggleService(db, config)
         : createFakeClientFeatureToggleService(config);
 
-    const proxyService = db
-        ? createProxyService(
+    const frontendApiService = db
+        ? createFrontendApiService(
               db,
               config,
               clientMetricsServiceV2,
               configurationRevisionService,
           )
-        : createFakeProxyService(
+        : createFakeFrontendApiService(
               config,
               clientMetricsServiceV2,
               configurationRevisionService,
@@ -373,7 +373,7 @@ export const createServices = (
         clientSpecService,
         playgroundService,
         groupService,
-        proxyService,
+        frontendApiService,
         edgeService,
         patService,
         publicSignupTokenService,
@@ -428,7 +428,7 @@ export {
     ClientSpecService,
     PlaygroundService,
     GroupService,
-    ProxyService,
+    FrontendApiService,
     EdgeService,
     PatService,
     PublicSignupTokenService,

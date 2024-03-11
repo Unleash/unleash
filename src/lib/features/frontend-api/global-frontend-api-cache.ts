@@ -1,19 +1,19 @@
 import EventEmitter from 'events';
 import { Segment } from 'unleash-client/lib/strategy/strategy';
 import { FeatureInterface } from 'unleash-client/lib/feature';
-import { IApiUser } from '../types/api-user';
+import { IApiUser } from '../../types/api-user';
 import {
     IFeatureToggleClient,
     ISegmentReadModel,
     IUnleashConfig,
-} from '../types';
+} from '../../types';
 import {
     mapFeatureForClient,
     mapSegmentsForClient,
-} from '../features/playground/offline-unleash-client';
-import { ALL_ENVS } from '../util/constants';
-import { Logger } from '../logger';
-import { UPDATE_REVISION } from '../features/feature-toggle/configuration-revision-service';
+} from '../playground/offline-unleash-client';
+import { ALL_ENVS } from '../../util/constants';
+import { Logger } from '../../logger';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
 import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>;

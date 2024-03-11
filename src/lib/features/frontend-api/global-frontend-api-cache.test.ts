@@ -2,8 +2,8 @@ import {
     GlobalFrontendApiCache,
     GlobalFrontendApiCacheState,
 } from './global-frontend-api-cache';
-import noLogger from '../../test/fixtures/no-logger';
-import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
+import noLogger from '../../../test/fixtures/no-logger';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
 import EventEmitter from 'events';
 import {
@@ -11,8 +11,8 @@ import {
     IFeatureToggleClient,
     IFlagResolver,
     ISegment,
-} from '../types';
-import { UPDATE_REVISION } from '../features/feature-toggle/configuration-revision-service';
+} from '../../types';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
 
 const state = async (
     cache: GlobalFrontendApiCache,

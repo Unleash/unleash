@@ -5,10 +5,10 @@ import {
     EnhancedFeatureInterface,
     FeatureInterface,
 } from 'unleash-client/lib/feature';
-import { IApiUser } from '../types/api-user';
-import { IUnleashConfig } from '../types';
+import { IApiUser } from '../../types/api-user';
+import { IUnleashConfig } from '../../types';
 import { UnleashEvents } from 'unleash-client';
-import { Logger } from '../logger';
+import { Logger } from '../../logger';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 
 type Config = Pick<IUnleashConfig, 'getLogger'>;

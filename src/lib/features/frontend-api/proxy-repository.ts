@@ -5,19 +5,19 @@ import {
     EnhancedFeatureInterface,
     FeatureInterface,
 } from 'unleash-client/lib/feature';
-import { IApiUser } from '../types/api-user';
-import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
+import { IApiUser } from '../../types/api-user';
+import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../../types';
 import {
     mapFeaturesForClient,
     mapSegmentsForClient,
-} from '../features/playground/offline-unleash-client';
-import { ALL_ENVS } from '../util/constants';
+} from '../playground/offline-unleash-client';
+import { ALL_ENVS } from '../../util/constants';
 import { UnleashEvents } from 'unleash-client';
-import { Logger } from '../logger';
+import { Logger } from '../../logger';
 import ConfigurationRevisionService, {
     UPDATE_REVISION,
-} from '../features/feature-toggle/configuration-revision-service';
-import { PROXY_FEATURES_FOR_TOKEN_TIME } from '../metric-events';
+} from '../feature-toggle/configuration-revision-service';
+import { PROXY_FEATURES_FOR_TOKEN_TIME } from '../../metric-events';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
@@ -28,6 +28,7 @@ type Services = Pick<
     'featureToggleServiceV2' | 'configurationRevisionService'
 >;
 
+// TODO: remove after finished migration to global frontend api cache
 export class ProxyRepository
     extends EventEmitter
     implements RepositoryInterface

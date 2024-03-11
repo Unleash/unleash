@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import Controller from '../routes/controller';
-import { IUnleashConfig, IUnleashServices, NONE } from '../types';
-import { Logger } from '../logger';
-import { IApiUser } from '../types/api-user';
+import Controller from '../../routes/controller';
+import { IUnleashConfig, IUnleashServices, NONE } from '../../types';
+import { Logger } from '../../logger';
+import { IApiUser } from '../../types/api-user';
 import {
     ClientMetricsSchema,
     createRequestSchema,
@@ -13,12 +13,12 @@ import {
     ProxyFeatureSchema,
     proxyFeaturesSchema,
     ProxyFeaturesSchema,
-} from '../openapi';
+} from '../../openapi';
 import { Context } from 'unleash-client';
 import { enrichContextWithIp } from './index';
-import { corsOriginMiddleware } from '../middleware';
-import NotImplementedError from '../error/not-implemented-error';
-import NotFoundError from '../error/notfound-error';
+import { corsOriginMiddleware } from '../../middleware';
+import NotImplementedError from '../../error/not-implemented-error';
+import NotFoundError from '../../error/notfound-error';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import isEqual from 'lodash.isequal';
@@ -34,7 +34,7 @@ interface ApiUserRequest<
 
 type Services = Pick<
     IUnleashServices,
-    'settingService' | 'proxyService' | 'openApiService'
+    'settingService' | 'frontendApiService' | 'openApiService'
 >;
 
 export default class FrontendAPIController extends Controller {
@@ -44,7 +44,7 @@ export default class FrontendAPIController extends Controller {
 
     constructor(config: IUnleashConfig, services: Services) {
         super(config);
-        this.logger = config.getLogger('proxy-api/index.ts');
+        this.logger = config.getLogger('frontend-api-controller.ts');
         this.services = services;
 
         // Support CORS requests for the frontend endpoints.
@@ -54,7 +54,7 @@ export default class FrontendAPIController extends Controller {
         this.route({
             method: 'get',
             path: '',
-            handler: this.getProxyFeatures,
+            handler: this.getFrontendApiFeatures,
             permission: NONE,
             middleware: [
                 this.services.openApiService.validPath({
@@ -89,7 +89,7 @@ export default class FrontendAPIController extends Controller {
         this.route({
             method: 'post',
             path: '/client/metrics',
-            handler: this.registerProxyMetrics,
+            handler: this.registerFrontendApiMetrics,
             permission: NONE,
             middleware: [
                 this.services.openApiService.validPath({
@@ -117,7 +117,7 @@ export default class FrontendAPIController extends Controller {
         this.route({
             method: 'post',
             path: '/client/register',
-            handler: this.registerProxyClient,
+            handler: this.registerFrontendApiClient,
             permission: NONE,
             middleware: [
                 this.services.openApiService.validPath({
@@ -168,7 +168,7 @@ export default class FrontendAPIController extends Controller {
         res.status(error.statusCode).json(error);
     }
 
-    private async getProxyFeatures(
+    private async getFrontendApiFeatures(
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
@@ -179,11 +179,11 @@ export default class FrontendAPIController extends Controller {
         let newToggles: ProxyFeatureSchema[] = [];
         if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
             [toggles, newToggles] = await Promise.all([
-                this.services.proxyService.getProxyFeatures(
+                this.services.frontendApiService.getFrontendApiFeatures(
                     req.user,
                     FrontendAPIController.createContext(req),
                 ),
-                this.services.proxyService.getNewProxyFeatures(
+                this.services.frontendApiService.getNewFrontendApiFeatures(
                     req.user,
                     FrontendAPIController.createContext(req),
                 ),
@@ -199,10 +199,11 @@ export default class FrontendAPIController extends Controller {
                 );
             }
         } else {
-            toggles = await this.services.proxyService.getProxyFeatures(
-                req.user,
-                FrontendAPIController.createContext(req),
-            );
+            toggles =
+                await this.services.frontendApiService.getFrontendApiFeatures(
+                    req.user,
+                    FrontendAPIController.createContext(req),
+                );
         }
 
         const returnedToggles = this.config.flagResolver.isEnabled(
@@ -221,7 +222,7 @@ export default class FrontendAPIController extends Controller {
         );
     }
 
-    private async registerProxyMetrics(
+    private async registerFrontendApiMetrics(
         req: ApiUserRequest<unknown, unknown, ClientMetricsSchema>,
         res: Response,
     ) {
@@ -234,7 +235,7 @@ export default class FrontendAPIController extends Controller {
             return;
         }
 
-        await this.services.proxyService.registerProxyMetrics(
+        await this.services.frontendApiService.registerFrontendApiMetrics(
             req.user,
             req.body,
             req.ip,
@@ -242,7 +243,7 @@ export default class FrontendAPIController extends Controller {
         res.sendStatus(200);
     }
 
-    private async registerProxyClient(
+    private async registerFrontendApiClient(
         req: ApiUserRequest<unknown, unknown, ProxyClientSchema>,
         res: Response<string>,
     ) {

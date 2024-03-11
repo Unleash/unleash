@@ -1,11 +1,6 @@
 import { ProxyService } from './proxy-service';
 import { SegmentReadModel } from '../features/segment/segment-read-model';
 import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2';
-import {
-    createFakeLastSeenService,
-    createLastSeenService,
-} from '../features/metrics/last-seen/createLastSeenService';
-import { ClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2';
 import SettingService from '../services/setting-service';
 import SettingStore from '../db/setting-store';
 import {
@@ -19,7 +14,6 @@ import EventStore from '../features/events/event-store';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
-import FakeClientMetricsStoreV2 from '../features/metrics/client-metrics/fake-client-metrics-store-v2';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
@@ -29,19 +23,10 @@ import { Db } from '../db/db';
 export const createProxyService = (
     db: Db,
     config: IUnleashConfig,
+    // client metrics service needs to be shared because it uses in-memory cache
+    clientMetricsServiceV2: ClientMetricsServiceV2,
 ): ProxyService => {
     const segmentReadModel = new SegmentReadModel(db);
-    const lastSeenService = createLastSeenService(db, config);
-    const clientMetricsStoreV2 = new ClientMetricsStoreV2(
-        db,
-        config.getLogger,
-        config.flagResolver,
-    );
-    const clientMetricsServiceV2 = new ClientMetricsServiceV2(
-        { clientMetricsStoreV2 },
-        config,
-        lastSeenService,
-    );
     const settingStore = new SettingStore(db, config.getLogger);
     const eventService = createEventsService(db, config);
     const settingService = new SettingService(
@@ -85,15 +70,9 @@ export const createProxyService = (
 
 export const createFakeProxyService = (
     config: IUnleashConfig,
+    clientMetricsServiceV2: ClientMetricsServiceV2,
 ): ProxyService => {
     const segmentReadModel = new FakeSegmentReadModel();
-    const lastSeenService = createFakeLastSeenService(config);
-    const clientMetricsStoreV2 = new FakeClientMetricsStoreV2();
-    const clientMetricsServiceV2 = new ClientMetricsServiceV2(
-        { clientMetricsStoreV2 },
-        config,
-        lastSeenService,
-    );
     const settingStore = new FakeSettingStore();
     const eventService = createFakeEventsService(config);
     const settingService = new SettingService(

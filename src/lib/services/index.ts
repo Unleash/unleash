@@ -298,8 +298,8 @@ export const createServices = (
         : createFakeClientFeatureToggleService(config);
 
     const proxyService = db
-        ? createProxyService(db, config)
-        : createFakeProxyService(config);
+        ? createProxyService(db, config, clientMetricsServiceV2)
+        : createFakeProxyService(config, clientMetricsServiceV2);
 
     const edgeService = new EdgeService({ apiTokenService }, config);
 

@@ -9,6 +9,10 @@ export interface IFeatureToggleClientStore {
         featureQuery: Partial<IFeatureToggleQuery>,
     ): Promise<IFeatureToggleClient[]>;
 
+    getFrontendApiClient(
+        featureQuery: Partial<IFeatureToggleQuery>,
+    ): Promise<IFeatureToggleClient[]>;
+
     getPlayground(
         featureQuery: Partial<IFeatureToggleQuery>,
     ): Promise<IFeatureToggleClient[]>;

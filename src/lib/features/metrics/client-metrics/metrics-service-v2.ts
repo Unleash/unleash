@@ -23,8 +23,6 @@ import { ClientMetricsSchema } from '../../../../lib/openapi';
 import { nameSchema } from '../../../schema/feature-schema';
 
 export default class ClientMetricsServiceV2 {
-    private static instance: ClientMetricsServiceV2;
-
     private config: IUnleashConfig;
 
     private unsavedMetrics: IClientMetricsEnv[] = [];

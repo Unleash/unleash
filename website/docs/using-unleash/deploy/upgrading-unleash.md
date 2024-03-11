@@ -11,7 +11,7 @@ When running on high-availability (multiple Unleash instances), upgrading from v
 
 If you rather want to avoid that, you should first update to 5.6.11 and ensure all your Unleash instances are running 5.6.11 before upgrading to 5.7 or later. Any Unleash instances left on earlier versions after the backing database has been updated will continue to work, but you will not be able to log in to them, but the SDKs will continue working fine.
 
-Once you have upgraded to version 5.7 and above, you can no longer downgrade to versions before 5.7.
+Once you have upgraded to version 5.7 and above, you can no longer downgrade to versions before 5.7 without manual changes to the database.
 
 ## Upgrading directly from v3.x to v5.x
 

@@ -14,8 +14,8 @@ export type CrudStoreConfig = Pick<IUnleashConfig, 'eventBus'>;
  * It accepts one model as input and one model as output that generally includes auto-generated properties such as the id or createdAt.
  *
  * Provides default types for:
- * - RowModelOutput turning the properties of ModelOutput from camelCase to snake_case
- * - RowModelInput turning the properties of ModelInput from camelCase to snake_case
+ * - OutputRowModel turning the properties of OutputModel from camelCase to snake_case
+ * - InputRowModel turning the properties of InputModel from camelCase to snake_case
  * - IdType assumming it's a number
  *
  * These types can be overridden to suit different needs.
@@ -23,12 +23,12 @@ export type CrudStoreConfig = Pick<IUnleashConfig, 'eventBus'>;
  * Default implementations of toRow and fromRow are provided, but can be overridden.
  */
 export abstract class CRUDStore<
-    ModelOutput extends { id: IdType },
-    ModelInput,
-    RowModelOutput = Row<ModelOutput>,
-    RowModelInput = Row<ModelInput>,
+    OutputModel extends { id: IdType },
+    InputModel,
+    OutputRowModel = Row<OutputModel>,
+    InputRowModel = Row<InputModel>,
     IdType = number,
-> implements Store<ModelOutput, IdType>
+> implements Store<OutputModel, IdType>
 {
     protected db: Db;
 
@@ -36,16 +36,16 @@ export abstract class CRUDStore<
 
     protected readonly timer: (action: string) => Function;
 
-    protected toRow: (item: Partial<ModelInput>) => Partial<RowModelInput>;
-    protected fromRow: (item: Partial<RowModelOutput>) => Partial<ModelOutput>;
+    protected toRow: (item: Partial<InputModel>) => Partial<InputRowModel>;
+    protected fromRow: (item: Partial<OutputRowModel>) => Partial<OutputModel>;
 
     constructor(
         tableName: string,
         db: Db,
         { eventBus }: CrudStoreConfig,
         options?: Partial<{
-            toRow: (item: Partial<ModelInput>) => Partial<RowModelInput>;
-            fromRow: (item: RowModelOutput) => Partial<ModelOutput>;
+            toRow: (item: Partial<InputModel>) => Partial<InputRowModel>;
+            fromRow: (item: OutputRowModel) => Partial<OutputModel>;
         }>,
     ) {
         this.tableName = tableName;
@@ -55,43 +55,43 @@ export abstract class CRUDStore<
                 store: tableName,
                 action,
             });
-        this.toRow = options?.toRow ?? defaultToRow<ModelInput, RowModelInput>;
+        this.toRow = options?.toRow ?? defaultToRow<InputModel, InputRowModel>;
         this.fromRow =
-            options?.fromRow ?? defaultFromRow<ModelOutput, RowModelOutput>;
+            options?.fromRow ?? defaultFromRow<OutputModel, OutputRowModel>;
     }
 
-    async getAll(query?: Partial<ModelInput>): Promise<ModelOutput[]> {
+    async getAll(query?: Partial<InputModel>): Promise<OutputModel[]> {
         let allQuery = this.db(this.tableName);
         if (query) {
             allQuery = allQuery.where(this.toRow(query) as Record<string, any>);
         }
         const items = await allQuery;
-        return items.map(this.fromRow) as ModelOutput[];
+        return items.map(this.fromRow) as OutputModel[];
     }
 
-    async insert(item: ModelInput): Promise<ModelOutput> {
+    async insert(item: InputModel): Promise<OutputModel> {
         const rows = await this.db(this.tableName)
             .insert(this.toRow(item))
             .returning('*');
-        return this.fromRow(rows[0]) as ModelOutput;
+        return this.fromRow(rows[0]) as OutputModel;
     }
 
-    async bulkInsert(items: ModelInput[]): Promise<ModelOutput[]> {
+    async bulkInsert(items: InputModel[]): Promise<OutputModel[]> {
         if (!items || items.length === 0) {
             return [];
         }
         const rows = await this.db(this.tableName)
             .insert(items.map(this.toRow))
             .returning('*');
-        return rows.map(this.fromRow) as ModelOutput[];
+        return rows.map(this.fromRow) as OutputModel[];
     }
 
-    async update(id: IdType, item: Partial<ModelInput>): Promise<ModelOutput> {
+    async update(id: IdType, item: Partial<InputModel>): Promise<OutputModel> {
         const rows = await this.db(this.tableName)
             .where({ id })
             .update(this.toRow(item))
             .returning('*');
-        return this.fromRow(rows[0]) as ModelOutput;
+        return this.fromRow(rows[0]) as OutputModel;
     }
 
     async delete(id: IdType): Promise<void> {
@@ -113,7 +113,7 @@ export abstract class CRUDStore<
         return present;
     }
 
-    async count(query?: Partial<ModelInput>): Promise<number> {
+    async count(query?: Partial<InputModel>): Promise<number> {
         let countQuery = this.db(this.tableName).count('*');
         if (query) {
             countQuery = countQuery.where(
@@ -124,11 +124,11 @@ export abstract class CRUDStore<
         return Number(count);
     }
 
-    async get(id: IdType): Promise<ModelOutput> {
+    async get(id: IdType): Promise<OutputModel> {
         const row = await this.db(this.tableName).where({ id }).first();
         if (!row) {
             throw new NotFoundError(`No item with id ${id}`);
         }
-        return this.fromRow(row) as ModelOutput;
+        return this.fromRow(row) as OutputModel;
     }
 }

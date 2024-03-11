@@ -1064,7 +1064,7 @@ class FeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.clientFeatureToggleStore.getClient(
+        const result = await this.clientFeatureToggleStore.getFrontendApiClient(
             query || {},
         );
         return result.map(

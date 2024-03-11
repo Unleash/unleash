@@ -54,6 +54,12 @@ export default class FakeClientFeatureToggleStore
         return this.getFeatures(query);
     }
 
+    async getFrontendApiClient(
+        query?: IFeatureToggleQuery,
+    ): Promise<IFeatureToggleClient[]> {
+        return this.getFeatures(query);
+    }
+
     async getPlayground(
         query?: IFeatureToggleQuery,
     ): Promise<IFeatureToggleClient[]> {

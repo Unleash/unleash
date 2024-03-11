@@ -25,7 +25,7 @@ import Raw = Knex.Raw;
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
-    requestType: 'client' | 'admin' | 'playground';
+    requestType: 'client' | 'admin' | 'playground' | 'frontend';
     userId?: number;
 }
 
@@ -71,7 +71,7 @@ export default class FeatureToggleClientStore
         const isAdmin = requestType === 'admin';
         const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
-        const stopTimer = this.timer(`getFeatureAdmin${requestType}`);
+        const stopTimer = this.timer(`getAllBy${requestType}`);
 
         let selectColumns = [
             'features.name as name',
@@ -351,6 +351,16 @@ export default class FeatureToggleClientStore
             featureQuery,
             archived: false,
             requestType: 'client',
+        });
+    }
+
+    async getFrontendApiClient(
+        featureQuery?: IFeatureToggleQuery,
+    ): Promise<IFeatureToggleClient[]> {
+        return this.getAll({
+            featureQuery,
+            archived: false,
+            requestType: 'frontend',
         });
     }
 

@@ -21,6 +21,7 @@ import NotImplementedError from '../error/not-implemented-error';
 import NotFoundError from '../error/notfound-error';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
+import isEqual from 'lodash.isequal';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -174,15 +175,41 @@ export default class FrontendAPIController extends Controller {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {
             throw new NotFoundError();
         }
-        const toggles: ProxyFeatureSchema[] =
-            await this.services.proxyService.getProxyFeatures(
+        let toggles: ProxyFeatureSchema[];
+        let newToggles: ProxyFeatureSchema[] = [];
+        if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
+            [toggles, newToggles] = await Promise.all([
+                this.services.proxyService.getProxyFeatures(
+                    req.user,
+                    FrontendAPIController.createContext(req),
+                ),
+                this.services.proxyService.getNewProxyFeatures(
+                    req.user,
+                    FrontendAPIController.createContext(req),
+                ),
+            ]);
+            if (
+                !isEqual(
+                    toggles.sort((a, b) => a.name.localeCompare(b.name)),
+                    newToggles.sort((a, b) => a.name.localeCompare(b.name)),
+                )
+            ) {
+                this.logger.warn(
+                    `old features and new features are different. Old count ${toggles.length}, new count ${newToggles.length}`,
+                );
+            }
+        } else {
+            toggles = await this.services.proxyService.getProxyFeatures(
                 req.user,
                 FrontendAPIController.createContext(req),
             );
-        if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
-            // deliberately run comparison without blocking
-            void this.services.proxyService.compareToggleDefinitions(req.user);
         }
+
+        const returnedToggles = this.config.flagResolver.isEnabled(
+            'returnGlobalFrontendApiCache',
+        )
+            ? newToggles
+            : toggles;
 
         res.set('Cache-control', 'no-cache');
 
@@ -190,7 +217,7 @@ export default class FrontendAPIController extends Controller {
             200,
             res,
             proxyFeaturesSchema.$id,
-            { toggles },
+            { toggles: returnedToggles },
         );
     }
 

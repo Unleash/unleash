@@ -44,6 +44,7 @@ import {
     ProjectUserUpdateRoleEvent,
     RoleName,
     SYSTEM_USER,
+    SYSTEM_USER_ID,
 } from '../../types';
 import {
     IProjectAccessModel,
@@ -701,8 +702,11 @@ export default class ProjectService {
         );
     }
 
-    private isAdmin(roles: IRoleWithProject[]): boolean {
-        return roles.some((r) => r.name === RoleName.ADMIN);
+    private isAdmin(userId: number, roles: IRoleWithProject[]): boolean {
+        return (
+            userId === SYSTEM_USER_ID ||
+            roles.some((r) => r.name === RoleName.ADMIN)
+        );
     }
 
     private isProjectOwner(
@@ -723,7 +727,7 @@ export default class ProjectService {
             projectId,
         );
         if (
-            this.isAdmin(userRoles) ||
+            this.isAdmin(userAddingAccess, userRoles) ||
             this.isProjectOwner(userRoles, projectId)
         ) {
             return true;

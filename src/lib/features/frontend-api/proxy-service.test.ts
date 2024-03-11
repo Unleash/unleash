@@ -1,11 +1,11 @@
-import { ProxyService, Config } from './proxy-service';
+import { FrontendApiService, Config } from './frontend-api-service';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
-import { IApiUser } from '../types';
+import { IApiUser } from '../../types';
 import { FeatureInterface } from 'unleash-client/lib/feature';
-import noLogger from '../../test/fixtures/no-logger';
-import { ApiTokenType } from '../types/models/api-token';
+import noLogger from '../../../test/fixtures/no-logger';
+import { ApiTokenType } from '../../types/models/api-token';
 
-test('proxy service fetching features from global cache', async () => {
+test('frontend api service fetching features from global cache', async () => {
     const irrelevant = {} as any;
     const globalFrontendApiCache = {
         getToggles(_: IApiUser): FeatureInterface[] {
@@ -38,14 +38,14 @@ test('proxy service fetching features from global cache', async () => {
             ) as FeatureInterface;
         },
     } as GlobalFrontendApiCache;
-    const proxyService = new ProxyService(
+    const frontendApiService = new FrontendApiService(
         { getLogger: noLogger } as unknown as Config,
         irrelevant,
         irrelevant,
         globalFrontendApiCache,
     );
 
-    const features = await proxyService.getNewProxyFeatures(
+    const features = await frontendApiService.getNewFrontendApiFeatures(
         {
             projects: ['irrelevant'],
             environment: 'irrelevant',

@@ -24,7 +24,7 @@ import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
 import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { ProxyService } from '../../services';
+import { FrontendApiService } from '../../services';
 import MaintenanceService from '../../features/maintenance/maintenance-service';
 import memoizee from 'memoizee';
 import { minutesToMilliseconds } from 'date-fns';
@@ -35,7 +35,7 @@ class ConfigController extends Controller {
 
     private settingService: SettingService;
 
-    private proxyService: ProxyService;
+    private frontendApiService: FrontendApiService;
 
     private emailService: EmailService;
 
@@ -54,7 +54,7 @@ class ConfigController extends Controller {
             settingService,
             emailService,
             openApiService,
-            proxyService,
+            frontendApiService,
             maintenanceService,
             clientInstanceService,
         }: Pick<
@@ -63,7 +63,7 @@ class ConfigController extends Controller {
             | 'settingService'
             | 'emailService'
             | 'openApiService'
-            | 'proxyService'
+            | 'frontendApiService'
             | 'maintenanceService'
             | 'clientInstanceService'
         >,
@@ -73,7 +73,7 @@ class ConfigController extends Controller {
         this.settingService = settingService;
         this.emailService = emailService;
         this.openApiService = openApiService;
-        this.proxyService = proxyService;
+        this.frontendApiService = frontendApiService;
         this.maintenanceService = maintenanceService;
         this.clientInstanceService = clientInstanceService;
         this.usesOldEdgeFunction = memoizee(
@@ -136,7 +136,7 @@ class ConfigController extends Controller {
             maintenanceMode,
             usesOldEdge,
         ] = await Promise.all([
-            this.proxyService.getFrontendSettings(false),
+            this.frontendApiService.getFrontendSettings(false),
             this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
             this.maintenanceService.isMaintenanceMode(),
             this.usesOldEdgeFunction(),
@@ -190,7 +190,7 @@ class ConfigController extends Controller {
         res: Response<string>,
     ): Promise<void> {
         if (req.body.frontendSettings) {
-            await this.proxyService.setFrontendSettings(
+            await this.frontendApiService.setFrontendSettings(
                 req.body.frontendSettings,
                 extractUsername(req),
                 req.user.id,

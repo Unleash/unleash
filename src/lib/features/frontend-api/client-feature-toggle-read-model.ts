@@ -1,11 +1,15 @@
 import { Knex } from 'knex';
-import { IFeatureToggleClient, IStrategyConfig, PartialDeep } from '../types';
-import { ensureStringValue, mapValues } from '../util';
-import { Db } from '../db/db';
-import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
+import {
+    IFeatureToggleClient,
+    IStrategyConfig,
+    PartialDeep,
+} from '../../types';
+import { ensureStringValue, mapValues } from '../../util';
+import { Db } from '../../db/db';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import Raw = Knex.Raw;
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+import metricsHelper from '../../util/metrics-helper';
+import { DB_TIME } from '../../metric-events';
 import EventEmitter from 'events';
 import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 

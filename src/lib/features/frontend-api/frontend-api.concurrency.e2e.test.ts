@@ -1,8 +1,11 @@
-import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { randomId } from '../../../../lib/util';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import {
+    IUnleashTest,
+    setupAppWithAuth,
+} from '../../../test/e2e/helpers/test-helper';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
+import { randomId } from '../../util';
+import { ApiTokenType } from '../../types/models/api-token';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -25,7 +28,7 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
-    app.services.proxyService.stopAll();
+    app.services.frontendApiService.stopAll();
     jest.clearAllMocks();
 });
 

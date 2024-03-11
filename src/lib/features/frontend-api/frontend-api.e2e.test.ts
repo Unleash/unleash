@@ -1,21 +1,24 @@
-import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { randomId } from '../../../../lib/util';
+import {
+    IUnleashTest,
+    setupAppWithAuth,
+} from '../../../test/e2e/helpers/test-helper';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
+import { randomId } from '../../util';
 import {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
-} from '../../../../lib/types/models/api-token';
+} from '../../types/models/api-token';
 import { startOfHour } from 'date-fns';
 import {
     FEATURE_UPDATED,
     IConstraint,
     IStrategyConfig,
     SYSTEM_USER,
-} from '../../../../lib/types';
-import { ProxyRepository } from '../../../../lib/proxy';
-import { Logger } from '../../../../lib/logger';
+} from '../../types';
+import { ProxyRepository } from './index';
+import { Logger } from '../../logger';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -32,7 +35,7 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
-    app.services.proxyService.stopAll();
+    app.services.frontendApiService.stopAll();
     jest.clearAllMocks();
 });
 

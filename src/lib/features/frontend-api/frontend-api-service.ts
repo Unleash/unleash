@@ -1,25 +1,24 @@
-import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
-import { Logger } from '../logger';
-import { ClientMetricsSchema, ProxyFeatureSchema } from '../openapi';
-import ApiUser, { IApiUser } from '../types/api-user';
+import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../../types';
+import { Logger } from '../../logger';
+import { ClientMetricsSchema, ProxyFeatureSchema } from '../../openapi';
+import ApiUser, { IApiUser } from '../../types/api-user';
 import {
     Context,
     InMemStorageProvider,
     Unleash,
     UnleashEvents,
 } from 'unleash-client';
-import { ApiTokenType } from '../types/models/api-token';
+import { ApiTokenType } from '../../types/models/api-token';
 import {
     FrontendSettings,
     frontendSettingsKey,
-} from '../types/settings/frontend-settings';
-import { validateOrigins } from '../util';
-import { BadDataError, InvalidTokenError } from '../error';
-import { PROXY_REPOSITORY_CREATED } from '../metric-events';
-import { ProxyRepository } from './index';
+} from '../../types/settings/frontend-settings';
+import { validateOrigins } from '../../util';
+import { BadDataError, InvalidTokenError } from '../../error';
+import { PROXY_REPOSITORY_CREATED } from '../../metric-events';
 import { FrontendApiRepository } from './frontend-api-repository';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
-import isEqual from 'lodash.isequal';
+import { ProxyRepository } from './proxy-repository';
 
 export type Config = Pick<
     IUnleashConfig,
@@ -36,7 +35,7 @@ export type Services = Pick<
     | 'configurationRevisionService'
 >;
 
-export class ProxyService {
+export class FrontendApiService {
     private readonly config: Config;
 
     private readonly logger: Logger;
@@ -50,7 +49,7 @@ export class ProxyService {
     /**
      * This is intentionally a Promise because we want to be able to await
      * until the client (which might be being created by a different request) is ready
-     * Check this test that fails if we don't use a Promise: src/test/e2e/api/proxy/proxy.concurrency.e2e.test.ts
+     * Check this test that fails if we don't use a Promise: frontend-api.concurrency.e2e.test.ts
      */
     private readonly clients: Map<ApiUser['secret'], Promise<Unleash>> =
         new Map();
@@ -66,17 +65,17 @@ export class ProxyService {
         globalFrontendApiCache: GlobalFrontendApiCache,
     ) {
         this.config = config;
-        this.logger = config.getLogger('services/proxy-service.ts');
+        this.logger = config.getLogger('services/frontend-api-service.ts');
         this.stores = stores;
         this.services = services;
         this.globalFrontendApiCache = globalFrontendApiCache;
     }
 
-    async getProxyFeatures(
+    async getFrontendApiFeatures(
         token: IApiUser,
         context: Context,
     ): Promise<ProxyFeatureSchema[]> {
-        const client = await this.clientForProxyToken(token);
+        const client = await this.clientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId = context.sessionId || String(Math.random());
 
@@ -98,30 +97,11 @@ export class ProxyService {
             }));
     }
 
-    async compareToggleDefinitions(token: IApiUser) {
-        const oldClient = await this.clientForProxyToken(token);
-        const oldDefinitions = oldClient.getFeatureToggleDefinitions() || [];
-
-        const newClient = await this.newClientForProxyToken(token);
-        const newDefinitions = newClient.getFeatureToggleDefinitions() || [];
-
-        if (
-            !isEqual(
-                oldDefinitions.sort((a, b) => a.name.localeCompare(b.name)),
-                newDefinitions.sort((a, b) => a.name.localeCompare(b.name)),
-            )
-        ) {
-            this.logger.warn(
-                `old features definitions and new features definitions are different. Old definitions count ${oldDefinitions.length}, new count ${newDefinitions.length}`,
-            );
-        }
-    }
-
-    async getNewProxyFeatures(
+    async getNewFrontendApiFeatures(
         token: IApiUser,
         context: Context,
     ): Promise<ProxyFeatureSchema[]> {
-        const client = await this.newClientForProxyToken(token);
+        const client = await this.newClientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId = context.sessionId || String(Math.random());
 
@@ -144,12 +124,12 @@ export class ProxyService {
             }));
     }
 
-    async registerProxyMetrics(
+    async registerFrontendApiMetrics(
         token: IApiUser,
         metrics: ClientMetricsSchema,
         ip: string,
     ): Promise<void> {
-        ProxyService.assertExpectedTokenType(token);
+        FrontendApiService.assertExpectedTokenType(token);
 
         const environment =
             this.services.clientMetricsServiceV2.resolveMetricsEnvironment(
@@ -166,12 +146,12 @@ export class ProxyService {
         );
     }
 
-    private async clientForProxyToken(token: IApiUser): Promise<Unleash> {
-        ProxyService.assertExpectedTokenType(token);
+    private async clientForFrontendApiToken(token: IApiUser): Promise<Unleash> {
+        FrontendApiService.assertExpectedTokenType(token);
 
         let client = this.clients.get(token.secret);
         if (!client) {
-            client = this.createClientForProxyToken(token);
+            client = this.createClientForFrontendApiToken(token);
             this.clients.set(token.secret, client);
             this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
         }
@@ -179,12 +159,14 @@ export class ProxyService {
         return client;
     }
 
-    private async newClientForProxyToken(token: IApiUser): Promise<Unleash> {
-        ProxyService.assertExpectedTokenType(token);
+    private async newClientForFrontendApiToken(
+        token: IApiUser,
+    ): Promise<Unleash> {
+        FrontendApiService.assertExpectedTokenType(token);
 
         let newClient = this.newClients.get(token.secret);
         if (!newClient) {
-            newClient = this.createNewClientForProxyToken(token);
+            newClient = this.createNewClientForFrontendApiToken(token);
             this.newClients.set(token.secret, newClient);
             // TODO: do we need this twice?
             // this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
@@ -193,7 +175,9 @@ export class ProxyService {
         return newClient;
     }
 
-    private async createClientForProxyToken(token: IApiUser): Promise<Unleash> {
+    private async createClientForFrontendApiToken(
+        token: IApiUser,
+    ): Promise<Unleash> {
         const repository = new ProxyRepository(
             this.config,
             this.stores,
@@ -219,7 +203,7 @@ export class ProxyService {
         return client;
     }
 
-    private async createNewClientForProxyToken(
+    private async createNewClientForFrontendApiToken(
         token: IApiUser,
     ): Promise<Unleash> {
         const repository = new FrontendApiRepository(
@@ -228,7 +212,7 @@ export class ProxyService {
             token,
         );
         const client = new Unleash({
-            appName: 'proxy',
+            appName: 'frontend-api',
             url: 'unused',
             storageProvider: new InMemStorageProvider(),
             disableMetrics: true,
@@ -246,7 +230,7 @@ export class ProxyService {
         return client;
     }
 
-    async deleteClientForProxyToken(secret: string): Promise<void> {
+    async deleteClientForFrontendApiToken(secret: string): Promise<void> {
         const clientPromise = this.clients.get(secret);
         if (clientPromise) {
             const client = await clientPromise;

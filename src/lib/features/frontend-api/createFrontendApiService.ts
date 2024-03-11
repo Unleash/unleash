@@ -1,30 +1,30 @@
-import { ProxyService } from './proxy-service';
-import { SegmentReadModel } from '../features/segment/segment-read-model';
-import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2';
-import SettingService from '../services/setting-service';
-import SettingStore from '../db/setting-store';
+import { FrontendApiService } from './frontend-api-service';
+import { SegmentReadModel } from '../segment/segment-read-model';
+import ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2';
+import SettingService from '../../services/setting-service';
+import SettingStore from '../../db/setting-store';
 import {
     createEventsService,
     createFakeEventsService,
     createFakeFeatureToggleService,
     createFeatureToggleService,
-} from '../features';
-import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
+} from '../index';
+import ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
-import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
+import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
-import { IUnleashConfig } from '../types';
-import { Db } from '../db/db';
+import { IUnleashConfig } from '../../types';
+import { Db } from '../../db/db';
 
-export const createProxyService = (
+export const createFrontendApiService = (
     db: Db,
     config: IUnleashConfig,
     // client metrics service needs to be shared because it uses in-memory cache
     clientMetricsServiceV2: ClientMetricsServiceV2,
     configurationRevisionService: ConfigurationRevisionService,
-): ProxyService => {
+): FrontendApiService => {
     const segmentReadModel = new SegmentReadModel(db);
     const settingStore = new SettingStore(db, config.getLogger);
     const eventService = createEventsService(db, config);
@@ -45,7 +45,7 @@ export const createProxyService = (
         clientFeatureToggleReadModel,
         configurationRevisionService,
     );
-    return new ProxyService(
+    return new FrontendApiService(
         config,
         { segmentReadModel },
         {
@@ -58,11 +58,11 @@ export const createProxyService = (
     );
 };
 
-export const createFakeProxyService = (
+export const createFakeFrontendApiService = (
     config: IUnleashConfig,
     clientMetricsServiceV2: ClientMetricsServiceV2,
     configurationRevisionService: ConfigurationRevisionService,
-): ProxyService => {
+): FrontendApiService => {
     const segmentReadModel = new FakeSegmentReadModel();
     const settingStore = new FakeSettingStore();
     const eventService = createFakeEventsService(config);
@@ -80,7 +80,7 @@ export const createFakeProxyService = (
         clientFeatureToggleReadModel,
         configurationRevisionService,
     );
-    return new ProxyService(
+    return new FrontendApiService(
         config,
         { segmentReadModel },
         {

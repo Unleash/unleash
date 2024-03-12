@@ -85,6 +85,14 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
+        const operationDuration = createSummary({
+            name: 'operation_duration_seconds',
+            help: 'Operation duration time',
+            labelNames: ['operationId'],
+            percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
+            maxAgeSeconds: 600,
+            ageBuckets: 5,
+        });
         const featureToggleUpdateTotal = createCounter({
             name: 'feature_toggle_update_total',
             help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature toggle is created.',
@@ -399,6 +407,10 @@ export default class MetricsMonitor {
 
         eventBus.on(events.SCHEDULER_JOB_TIME, ({ jobId, time }) => {
             schedulerDuration.labels(jobId).observe(time);
+        });
+
+        eventBus.on(events.OPERATION_TIME, ({ operationId, time }) => {
+            operationDuration.labels(operationId).observe(time);
         });
 
         eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {

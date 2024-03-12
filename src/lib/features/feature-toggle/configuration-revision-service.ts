@@ -80,6 +80,6 @@ export default class ConfigurationRevisionService extends EventEmitter {
     }
 
     destroy(): void {
-        ConfigurationRevisionService.instance.removeAllListeners();
+        ConfigurationRevisionService.instance?.removeAllListeners();
     }
 }

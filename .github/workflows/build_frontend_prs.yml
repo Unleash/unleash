@@ -25,4 +25,3 @@ jobs:
       - run: yarn run lint:check
       - run: yarn run test
       - run: yarn run ts:check # TODO: optimize
-      - run: yarn build

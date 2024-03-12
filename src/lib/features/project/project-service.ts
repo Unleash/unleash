@@ -8,6 +8,7 @@ import { nameType } from '../../routes/util';
 import { projectSchema } from '../../services/project-schema';
 import NotFoundError from '../../error/notfound-error';
 import {
+    ADMIN_TOKEN_USER,
     CreateProject,
     DEFAULT_PROJECT,
     FeatureToggle,
@@ -705,6 +706,7 @@ export default class ProjectService {
     private isAdmin(userId: number, roles: IRoleWithProject[]): boolean {
         return (
             userId === SYSTEM_USER_ID ||
+            userId === ADMIN_TOKEN_USER.id ||
             roles.some((r) => r.name === RoleName.ADMIN)
         );
     }

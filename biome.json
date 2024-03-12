@@ -74,7 +74,8 @@
       "src/migrations/*.js",
       "src/migrations/*.json",
       "src/test/examples/*.json",
-      "coverage"
+      "coverage",
+      ".docusaurus"
     ],
     "indentWidth": 4
   },

@@ -110,7 +110,6 @@ export class GlobalFrontendApiCache extends EventEmitter {
     }
 
     // TODO: fetch only relevant projects/environments based on tokens
-    // TODO: also consider not fetching disabled features, because those are not returned by frontend API
     private async refreshData() {
         try {
             const stopTimer = this.timer('refreshData');

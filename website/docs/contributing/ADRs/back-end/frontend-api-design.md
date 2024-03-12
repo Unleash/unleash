@@ -4,9 +4,10 @@ title: "ADR: Frontend API design"
 
 ## Background
 
-Frontend API (previously known as proxy API) had memory and I/O issues. 
+Previous version of the Frontend API (known as proxy API) had memory and I/O issues when a large number of tokens was used. 
+
 To better understand how it worked you need to know that Frontend API is Unleash Node SDK exposed over the API.
-Node SDK allows to plug in a custom repository so that it can fetch the toggles from a database. 
+Node SDK allows to plug in a custom repository so that it can fetch the toggles from a database instead of making remote HTTP calls. 
 
 Every time a new Frontend API token was used we created a new SDK client with its own proxy repository. Proxy repository was fetching
 the flags for a project and environment extracted from a token. 
@@ -23,11 +24,11 @@ To address these challenges, we came up with a new design:
 
 [Frontend API after](/img/frontend-api-after.png)
 
-We decided to swap ProxyRepository with FrontendApiRepository. FrontendApiRepository doesn't store any flags on its own but always filters
+We decided to swap ProxyRepository with a drop-in replacement FrontendApiRepository. FrontendApiRepository doesn't store any flags on its own but always filters
 the flags that we keep in a GlobalFrontendApiCache. The cache stores all the flags and updates on every revision ID change. 
 
 Consequences:
-* for a large number of tokens the memory footprint is reduced since we only store one copy of each flag in the cache and every repository
+* memory improvements: for a large number of tokens the memory footprint is reduced since we only store one copy of each flag in the cache and every repository
 filters the data that it needs for a given project and environment obtained from the token
-* for a large number of tokens the number of DB calls is reduced since only the cache needs to be updated
+* I/O improvements: for a large number of tokens the number of DB calls is reduced to one per revision ID update since only the cache needs to be updated
 

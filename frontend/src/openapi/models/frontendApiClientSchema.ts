@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyClientSchemaStarted } from './proxyClientSchemaStarted';
+import type { FrontendApiClientSchemaStarted } from './frontendApiClientSchemaStarted';
 
 /**
  * Frontend SDK client registration information
  */
-export interface ProxyClientSchema {
+export interface FrontendApiClientSchema {
     /** Name of the application using Unleash */
     appName: string;
     /**
@@ -23,7 +23,7 @@ export interface ProxyClientSchema {
     /** Optional field that describes the sdk version (name:version) */
     sdkVersion?: string;
     /** When this client started. Should be reported as ISO8601 time. */
-    started: ProxyClientSchemaStarted;
+    started: FrontendApiClientSchemaStarted;
     /** List of strategies implemented by this application */
     strategies: string[];
 }

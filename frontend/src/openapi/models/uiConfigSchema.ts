@@ -6,6 +6,7 @@
 import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
+import type { ResourceLimitsSchema } from './resourceLimitsSchema';
 import type { VersionSchema } from './versionSchema';
 
 /**
@@ -36,11 +37,19 @@ export interface UiConfigSchema {
     name?: string;
     /** Whether to enable the Unleash network view or not. */
     networkViewEnabled?: boolean;
-    /** The maximum number of values that can be used in a single segment. */
+    /** A map of resource names and their limits. */
+    resourceLimits?: ResourceLimitsSchema;
+    /**
+     * The maximum number of values that can be used in a single segment.
+     * @deprecated
+     */
     segmentValuesLimit?: number;
     /** The slogan to display in the UI footer. */
     slogan?: string;
-    /** The maximum number of segments that can be applied to a single strategy. */
+    /**
+     * The maximum number of segments that can be applied to a single strategy.
+     * @deprecated
+     */
     strategySegmentsLimit?: number;
     /** The URL of the Unleash instance. */
     unleashUrl: string;

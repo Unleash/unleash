@@ -16,7 +16,7 @@ import { Logger } from '../../logger';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
 import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 import metricsHelper from '../../util/metrics-helper';
-import { METHOD_TIME } from '../../metric-events';
+import { FUNCTION_TIME } from '../../metric-events';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>;
 
@@ -56,10 +56,10 @@ export class GlobalFrontendApiCache extends EventEmitter {
         this.configurationRevisionService = configurationRevisionService;
         this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
-        this.timer = (operationId) =>
-            metricsHelper.wrapTimer(config.eventBus, METHOD_TIME, {
+        this.timer = (functionName) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
                 className: 'GlobalFrontendApiCache',
-                operationId,
+                functionName,
             });
 
         this.refreshData();

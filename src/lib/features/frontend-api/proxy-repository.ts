@@ -18,7 +18,7 @@ import ConfigurationRevisionService, {
     UPDATE_REVISION,
 } from '../feature-toggle/configuration-revision-service';
 import {
-    METHOD_TIME,
+    FUNCTION_TIME,
     PROXY_FEATURES_FOR_TOKEN_TIME,
 } from '../../metric-events';
 import metricsHelper from '../../util/metrics-helper';
@@ -78,10 +78,10 @@ export class ProxyRepository
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.interval = config.frontendApi.refreshIntervalInMs;
 
-        this.methodTimer = (operationId) =>
-            metricsHelper.wrapTimer(config.eventBus, METHOD_TIME, {
+        this.methodTimer = (functionName) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
                 className: 'ProxyRepository',
-                operationId,
+                functionName,
             });
     }
 

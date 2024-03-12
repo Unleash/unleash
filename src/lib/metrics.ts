@@ -85,10 +85,10 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
-        const methodDuration = createSummary({
-            name: 'method_duration_seconds',
-            help: 'Method duration time',
-            labelNames: ['method', 'className'],
+        const functionDuration = createSummary({
+            name: 'function_duration_seconds',
+            help: 'Function duration time',
+            labelNames: ['functionName', 'className'],
             percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
             maxAgeSeconds: 600,
             ageBuckets: 5,
@@ -413,9 +413,14 @@ export default class MetricsMonitor {
             schedulerDuration.labels(jobId).observe(time);
         });
 
-        eventBus.on(events.METHOD_TIME, ({ method, className, time }) => {
-            methodDuration.labels({ method, className }).observe(time);
-        });
+        eventBus.on(
+            events.FUNCTION_TIME,
+            ({ functionName, className, time }) => {
+                functionDuration
+                    .labels({ functionName, className })
+                    .observe(time);
+            },
+        );
 
         eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {
             eventCreatedByMigration.inc(updated);

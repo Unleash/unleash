@@ -123,6 +123,11 @@ const PremiumFeatures = {
         url: '', // FIXME: url
         label: 'Dashboard',
     },
+    'inactive-users': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: '',
+        label: 'Automatic clean-up of inactive users',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

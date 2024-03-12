@@ -2,12 +2,15 @@
   "name": "unleash-frontend-local",
   "version": "0.0.0",
   "private": true,
-  "files": ["index.js", "build"],
+  "files": [
+    "index.js",
+    "build"
+  ],
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "yarn run lint:material:icons && vite build",
     "dev": "vite",
     "start": "vite",
     "start:prod": "vite build && vite preview",
@@ -19,6 +22,7 @@
     "test": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest run",
     "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn test -u",
     "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch",
+    "lint:material:icons": "./check-imports.rc",
     "lint": "biome lint src --apply",
     "lint:check": "biome check src",
     "fmt": "biome format src --write",
@@ -142,7 +146,11 @@
     }
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

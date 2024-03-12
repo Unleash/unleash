@@ -195,7 +195,7 @@ export default class FrontendAPIController extends Controller {
                 )
             ) {
                 this.logger.warn(
-                    `old features and new features are different. Old count ${toggles.length}, new count ${newToggles.length}`,
+                    `old features and new features are different. Old count ${toggles.length}, new count ${newToggles.length}, projects ${req.user.projects}, environment ${req.user.environment}`,
                 );
             }
         } else {

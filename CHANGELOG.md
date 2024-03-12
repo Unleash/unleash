@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.10.1] - 2024-03-12
+
+### Bug Fixes
+
+- Admin token requests does not automatically have id ([#6501](https://github.com/Unleash/unleash/issues/6501)) ([#6513](https://github.com/Unleash/unleash/issues/6513))
+
+- Path metric labels ([#6400](https://github.com/Unleash/unleash/issues/6400)) ([#6518](https://github.com/Unleash/unleash/issues/6518))
+
+
+### Miscellaneous Tasks
+
+- Make Inactive users an enterprise feature ([#6510](https://github.com/Unleash/unleash/issues/6510)) ([#6519](https://github.com/Unleash/unleash/issues/6519))
+
+
 ## [5.10.0] - 2024-03-05
 
 ### Bug Fixes

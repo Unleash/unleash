@@ -10,7 +10,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "./check-imports.rc && vite build",
+    "build": "yarn run lint:material:icons && vite build",
     "dev": "vite",
     "start": "vite",
     "start:prod": "vite build && vite preview",
@@ -22,6 +22,7 @@
     "test": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest run",
     "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn test -u",
     "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch",
+    "lint:material:icons": "./check-imports.rc",
     "lint": "biome lint src --apply",
     "lint:check": "biome check src",
     "fmt": "biome format src --write",

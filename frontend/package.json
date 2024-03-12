@@ -2,12 +2,15 @@
   "name": "unleash-frontend-local",
   "version": "0.0.0",
   "private": true,
-  "files": ["index.js", "build"],
+  "files": [
+    "index.js",
+    "build"
+  ],
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "./check-imports.rc && vite build",
     "dev": "vite",
     "start": "vite",
     "start:prod": "vite build && vite preview",
@@ -142,7 +145,11 @@
     }
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

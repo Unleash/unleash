@@ -5,6 +5,6 @@
  */
 
 /**
- * Match the payload of the observable event
+ * Match the payload of the signal
  */
 export type CreateActionsSchemaMatchPayload = { [key: string]: any };

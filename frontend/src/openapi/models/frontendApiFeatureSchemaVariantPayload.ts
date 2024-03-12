@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyFeatureSchemaVariantPayloadType } from './proxyFeatureSchemaVariantPayloadType';
+import type { FrontendApiFeatureSchemaVariantPayloadType } from './frontendApiFeatureSchemaVariantPayloadType';
 
 /**
  * Extra data configured for this variant
  */
-export type ProxyFeatureSchemaVariantPayload = {
+export type FrontendApiFeatureSchemaVariantPayload = {
     /** The format of the payload. */
-    type: ProxyFeatureSchemaVariantPayloadType;
+    type: FrontendApiFeatureSchemaVariantPayloadType;
     /** The payload value stringified. */
     value: string;
 };

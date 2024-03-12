@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyFeatureSchemaVariantPayload } from './proxyFeatureSchemaVariantPayload';
+import type { FrontendApiFeatureSchemaVariantPayload } from './frontendApiFeatureSchemaVariantPayload';
 
 /**
  * Variant details
  */
-export type ProxyFeatureSchemaVariant = {
+export type FrontendApiFeatureSchemaVariant = {
     /** Whether the variant is enabled or not. */
     enabled: boolean;
     /** Whether the feature is enabled or not. */
@@ -21,5 +21,5 @@ export type ProxyFeatureSchemaVariant = {
     /** The variants name. Is unique for this feature toggle */
     name: string;
     /** Extra data configured for this variant */
-    payload?: ProxyFeatureSchemaVariantPayload;
+    payload?: FrontendApiFeatureSchemaVariantPayload;
 };

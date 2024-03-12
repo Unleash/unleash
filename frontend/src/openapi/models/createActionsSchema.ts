@@ -7,16 +7,18 @@ import type { CreateActionSchema } from './createActionSchema';
 import type { CreateActionsSchemaMatch } from './createActionsSchemaMatch';
 
 /**
- * An action set defines actions that Unleash performs when an observable event is matched.
+ * An action set defines actions that Unleash performs when a signal is matched.
  */
 export interface CreateActionsSchema {
     /** The list of actions to execute in sequential order when the action set is triggered */
     actions: CreateActionSchema[];
     /** The id of the service account that will execute the action */
     actorId: number;
+    /** The description of the action set */
+    description?: string | null;
     /** Whether this action set is enabled or not */
     enabled?: boolean;
-    /** Defines a matching rule for the observable event that will trigger the action set */
+    /** Defines a matching rule for the signal that will trigger the action set */
     match: CreateActionsSchemaMatch;
     /** The name of the action set */
     name: string;

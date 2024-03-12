@@ -1,7 +1,7 @@
 import { Button, Typography, styled } from '@mui/material';
 import { DemoDialog } from '../DemoDialog';
-import { GitHub } from '@mui/icons-material';
-import { Launch } from '@mui/icons-material';
+import GitHub from '@mui/icons-material/GitHub';
+import Launch from '@mui/icons-material/Launch';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledDemoDialog = styled(DemoDialog)(({ theme }) => ({

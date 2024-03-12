@@ -11,7 +11,9 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { Delete, Edit, MoreVert } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
+import MoreVert from '@mui/icons-material/MoreVert';
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,

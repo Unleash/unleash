@@ -18,7 +18,7 @@ import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/Feat
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 
 const LazyReactJSONEditor = React.lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),

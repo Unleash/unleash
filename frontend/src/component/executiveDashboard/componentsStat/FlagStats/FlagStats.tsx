@@ -1,4 +1,4 @@
-import { Settings } from '@mui/icons-material';
+import Settings from '@mui/icons-material/Settings';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

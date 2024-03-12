@@ -6,7 +6,7 @@ import { styled, useTheme, Box } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { duotoneDark, duotoneLight } from '@uiw/codemirror-theme-duotone';
 import Check from '@mui/icons-material/Check';
-import { Error as ErrorIcon } from '@mui/icons-material';
+import ErrorIcon from '@mui/icons-material/Error';
 import UIContext from 'contexts/UIContext';
 
 interface IPlaygroundEditorProps {

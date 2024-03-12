@@ -4,7 +4,8 @@ import {
     TextField,
     TextFieldProps,
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState, VFC } from 'react';
 
 const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {

@@ -1,6 +1,6 @@
 import Input from 'component/common/Input/Input';
 import { Button, styled } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { trim } from 'component/common/util';
 import { StrategyParameters } from './StrategyParameters/StrategyParameters';
 import { IStrategyParameter } from 'interfaces/strategy';

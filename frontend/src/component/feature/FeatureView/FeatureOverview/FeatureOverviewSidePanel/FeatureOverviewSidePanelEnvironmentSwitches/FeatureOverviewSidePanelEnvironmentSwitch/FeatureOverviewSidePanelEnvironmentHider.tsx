@@ -1,6 +1,7 @@
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IconButton, styled } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVisibilityToggle = styled(IconButton, {

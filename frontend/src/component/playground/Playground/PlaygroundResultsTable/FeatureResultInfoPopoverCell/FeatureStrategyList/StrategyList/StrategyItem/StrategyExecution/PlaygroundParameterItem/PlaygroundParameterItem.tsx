@@ -1,7 +1,7 @@
 import { Chip, Typography, useTheme, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { CancelOutlined } from '@mui/icons-material';
+import CancelOutlined from '@mui/icons-material/CancelOutlined';
 
 interface IConstraintItemProps {
     value: Array<string | number>;

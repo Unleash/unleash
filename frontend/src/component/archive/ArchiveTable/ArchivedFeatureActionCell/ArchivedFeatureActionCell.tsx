@@ -1,6 +1,7 @@
 import { VFC } from 'react';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { Delete, Undo } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Undo from '@mui/icons-material/Undo';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
     DELETE_FEATURE,

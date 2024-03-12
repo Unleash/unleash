@@ -1,5 +1,5 @@
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';

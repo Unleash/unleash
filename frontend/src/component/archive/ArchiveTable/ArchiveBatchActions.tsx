@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { Button } from '@mui/material';
-import { Delete, Undo } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Undo from '@mui/icons-material/Undo';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,

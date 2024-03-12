@@ -1,8 +1,6 @@
-import {
-    Person as UserIcon,
-    Topic as TopicIcon,
-    CloudCircle as CloudCircleIcon,
-} from '@mui/icons-material';
+import UserIcon from '@mui/icons-material/Person';
+import TopicIcon from '@mui/icons-material/Topic';
+import CloudCircleIcon from '@mui/icons-material/CloudCircle';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
     PROJECT_PERMISSION_TYPE,

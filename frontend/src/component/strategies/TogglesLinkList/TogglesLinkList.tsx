@@ -5,7 +5,8 @@ import {
     ListItemText,
     Tooltip,
 } from '@mui/material';
-import { Pause, PlayArrow } from '@mui/icons-material';
+import Pause from '@mui/icons-material/Pause';
+import PlayArrow from '@mui/icons-material/PlayArrow';
 import styles from 'component/common/common.module.scss';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

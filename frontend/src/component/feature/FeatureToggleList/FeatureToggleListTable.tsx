@@ -55,7 +55,7 @@ import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureTogg
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useFeedback } from '../../feedbackNew/useFeedback';
-import { ReviewsOutlined } from '@mui/icons-material';
+import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',

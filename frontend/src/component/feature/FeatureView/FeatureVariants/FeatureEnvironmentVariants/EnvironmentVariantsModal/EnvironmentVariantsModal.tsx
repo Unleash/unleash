@@ -7,7 +7,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Operation } from 'fast-json-patch';
-import { CloudCircle } from '@mui/icons-material';
+import CloudCircle from '@mui/icons-material/CloudCircle';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';

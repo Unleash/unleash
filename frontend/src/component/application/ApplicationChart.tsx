@@ -8,12 +8,10 @@ import {
 } from 'openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HelpIcon } from '../common/HelpIcon/HelpIcon';
-import {
-    CheckCircle,
-    CloudCircle,
-    Flag,
-    WarningAmberRounded,
-} from '@mui/icons-material';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import CloudCircle from '@mui/icons-material/CloudCircle';
+import Flag from '@mui/icons-material/Flag';
+import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import TimeAgo from 'react-timeago';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getApplicationIssueMode } from './ApplicationIssues/ApplicationIssues';

@@ -5,7 +5,7 @@ import {
     IFeedbackCESState,
 } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { FeedbackCESForm } from 'component/feedback/FeedbackCES/FeedbackCESForm';
-import { CloseOutlined } from '@mui/icons-material';
+import CloseOutlined from '@mui/icons-material/CloseOutlined';
 
 export interface IFeedbackCESProps {
     state?: IFeedbackCESState;

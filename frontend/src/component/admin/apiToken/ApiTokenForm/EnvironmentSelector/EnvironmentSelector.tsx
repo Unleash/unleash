@@ -1,5 +1,5 @@
 import { TokenType } from '../../../../../interfaces/token';
-import { KeyboardArrowDownOutlined } from '@mui/icons-material';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import React from 'react';
 import {
     StyledInputDescription,

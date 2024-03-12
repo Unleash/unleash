@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
-import { Close, HelpOutline } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import {
     Box,
     IconButton,

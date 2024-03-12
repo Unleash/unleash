@@ -1,5 +1,5 @@
 import { styled, Tooltip, TooltipProps } from '@mui/material';
-import { HelpOutline } from '@mui/icons-material';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 const StyledContainer = styled('span')<{ size: string | undefined }>(

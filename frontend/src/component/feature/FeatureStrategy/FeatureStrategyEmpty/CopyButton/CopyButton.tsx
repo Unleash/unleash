@@ -7,7 +7,7 @@ import {
     MenuItem,
     Tooltip,
 } from '@mui/material';
-import { Lock } from '@mui/icons-material';
+import Lock from '@mui/icons-material/Lock';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';

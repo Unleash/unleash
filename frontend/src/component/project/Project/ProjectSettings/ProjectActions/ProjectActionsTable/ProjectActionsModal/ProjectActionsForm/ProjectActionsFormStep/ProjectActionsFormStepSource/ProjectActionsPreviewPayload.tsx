@@ -1,4 +1,4 @@
-import { ArrowForwardIosSharp } from '@mui/icons-material';
+import ArrowForwardIosSharp from '@mui/icons-material/ArrowForwardIosSharp';
 import {
     Accordion,
     AccordionDetails,

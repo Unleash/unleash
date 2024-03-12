@@ -6,7 +6,7 @@ import {
     VFC,
 } from 'react';
 import { Menu } from '@mui/material';
-import { ArrowDropDown } from '@mui/icons-material';
+import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import { DropdownButton } from './DropdownButton/DropdownButton';
 
 export interface IDropdownMenuProps {

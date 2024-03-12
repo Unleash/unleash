@@ -12,7 +12,9 @@ import {
     styled,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Delete, Edit, Visibility } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
+import Visibility from '@mui/icons-material/Visibility';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';

@@ -1,6 +1,7 @@
 import { VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Delete, Edit } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import {
     DELETE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,

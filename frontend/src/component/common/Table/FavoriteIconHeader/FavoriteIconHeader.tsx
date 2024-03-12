@@ -1,9 +1,7 @@
 import { useState, VFC } from 'react';
 import { IconButton } from '@mui/material';
-import {
-    Star as StarIcon,
-    StarBorder as StarBorderIcon,
-} from '@mui/icons-material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from '../../TooltipResolver/TooltipResolver';
 

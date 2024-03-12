@@ -4,7 +4,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { Check, Close } from '@mui/icons-material';
+import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
 import { Box } from '@mui/material';
 import { IMatrixPermission } from 'interfaces/permissions';
 

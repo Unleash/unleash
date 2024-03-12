@@ -1,4 +1,4 @@
-import { CloudCircle } from '@mui/icons-material';
+import CloudCircle from '@mui/icons-material/CloudCircle';
 import { styled, Link } from '@mui/material';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';

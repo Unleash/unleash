@@ -10,7 +10,9 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { Add, FileDownload, MoreVert } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import FileDownload from '@mui/icons-material/FileDownload';
+import MoreVert from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';

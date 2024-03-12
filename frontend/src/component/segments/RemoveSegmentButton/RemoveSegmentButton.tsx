@@ -4,7 +4,7 @@ import {
     DELETE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import { SEGMENT_DELETE_BTN_ID } from 'utils/testIds';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

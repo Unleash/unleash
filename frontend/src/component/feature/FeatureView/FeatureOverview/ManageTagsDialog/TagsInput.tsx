@@ -13,7 +13,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { AutocompleteRenderGetTagProps } from '@mui/material/Autocomplete/Autocomplete';
 
 export type TagOption = {

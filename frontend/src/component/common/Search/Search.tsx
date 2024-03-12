@@ -8,7 +8,8 @@ import {
     styled,
     Tooltip,
 } from '@mui/material';
-import { Close, Search as SearchIcon } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import { IGetSearchContextOutput } from 'hooks/useSearch';

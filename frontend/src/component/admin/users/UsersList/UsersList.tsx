@@ -33,7 +33,7 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
-import { Download } from '@mui/icons-material';
+import Download from '@mui/icons-material/Download';
 import { StyledUsersLinkDiv } from '../Users.styles';
 import { useUiFlag } from 'hooks/useUiFlag';
 

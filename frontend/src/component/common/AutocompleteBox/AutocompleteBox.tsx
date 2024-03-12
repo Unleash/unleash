@@ -1,5 +1,5 @@
 import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import {
     Autocomplete,
     InputAdornment,

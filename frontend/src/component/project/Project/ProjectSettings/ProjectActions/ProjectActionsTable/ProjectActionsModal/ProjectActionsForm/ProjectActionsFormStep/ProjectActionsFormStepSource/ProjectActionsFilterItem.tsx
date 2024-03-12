@@ -6,7 +6,7 @@ import {
     styled,
 } from '@mui/material';
 import { ActionsFilterState } from '../../useProjectActionsForm';
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import Input from 'component/common/Input/Input';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';

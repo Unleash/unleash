@@ -1,6 +1,6 @@
 const REQUEST_TIME = 'request_time';
 const DB_TIME = 'db_time';
-const FUNCTION_TIME = 'operation_time';
+const FUNCTION_TIME = 'function_time';
 const SCHEDULER_JOB_TIME = 'scheduler_job_time';
 const FEATURES_CREATED_BY_PROCESSED = 'features_created_by_processed';
 const EVENTS_CREATED_BY_PROCESSED = 'events_created_by_processed';

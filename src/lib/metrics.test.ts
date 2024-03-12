@@ -172,7 +172,7 @@ test('should collect metrics for db query timings', async () => {
     );
 });
 
-test('should collect metrics for operation timings', async () => {
+test('should collect metrics for function timings', async () => {
     eventBus.emit(FUNCTION_TIME, {
         functionName: 'getToggles',
         className: 'ToggleService',

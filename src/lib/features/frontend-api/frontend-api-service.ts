@@ -63,7 +63,7 @@ export class FrontendApiService {
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    private timer: (string) => any;
+    private timer: Function;
 
     constructor(
         config: Config,

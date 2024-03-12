@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 
-import EventEmitter from 'events';
 import getApp from '../../../lib/app';
 import { createTestConfig } from '../../config/test-config';
 import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
@@ -323,10 +322,6 @@ async function createApp(
     const unleashSession = sessionDb(config, undefined);
     const app = await getApp(config, stores, services, unleashSession, db);
     const request = supertest.agent(app);
-    // seems like this prevents the following issue in tests:
-    // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 UPDATE_REVISION listeners added to [ConfigurationRevisionService]. Use emitter.setMaxListeners() to increase limit
-    const emitter = new EventEmitter();
-    emitter.setMaxListeners(0);
 
     const destroy = async () => {
         // iterate on the keys of services and if the services at that key has a function called destroy then call it

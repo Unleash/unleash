@@ -7,7 +7,7 @@ import ApiUser from '../types/api-user';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store';
 import { ApiTokenType } from '../types/models/api-token';
-import { ISegmentStore } from '../types';
+import { ISegmentStore, SYSTEM_USER_ID } from '../types';
 import FakeSegmentStore from '../../test/fixtures/fake-segment-store';
 
 let config: IUnleashConfig;
@@ -71,6 +71,65 @@ test('should give api-user ADMIN permission', async () => {
     const hasAccess = await req.checkRbac(perms.ADMIN);
 
     expect(hasAccess).toBe(true);
+});
+
+describe('ADMIN tokens should have user id -1337 when only passed through rbac-middleware', () => {
+    /// Will be -42 (ADMIN_USER.id) when we have the api-token-middleware run first
+    test('Should give ADMIN api-user userid -1337 (SYSTEM_USER_ID)', async () => {
+        const accessService = {
+            hasPermission: jest.fn(),
+        };
+
+        const func = rbacMiddleware(
+            config,
+            { featureToggleStore, segmentStore },
+            accessService,
+        );
+
+        const cb = jest.fn();
+        const req: any = {
+            user: new ApiUser({
+                tokenName: 'api',
+                permissions: [perms.ADMIN],
+                project: '*',
+                environment: '*',
+                type: ApiTokenType.ADMIN,
+                secret: 'a',
+            }),
+        };
+        func(req, undefined, cb);
+        const hasAccess = await req.checkRbac(perms.ADMIN);
+        expect(req.user.id).toBe(SYSTEM_USER_ID);
+        expect(hasAccess).toBe(true);
+    });
+    /// Will be -42 (ADMIN_USER.id) when we have the api-token-middleware run first
+    test('Also when checking against permission NONE, userid should still be -1337', async () => {
+        const accessService = {
+            hasPermission: jest.fn(),
+        };
+
+        const func = rbacMiddleware(
+            config,
+            { featureToggleStore, segmentStore },
+            accessService,
+        );
+
+        const cb = jest.fn();
+        const req: any = {
+            user: new ApiUser({
+                tokenName: 'api',
+                permissions: [perms.ADMIN],
+                project: '*',
+                environment: '*',
+                type: ApiTokenType.ADMIN,
+                secret: 'a',
+            }),
+        };
+        func(req, undefined, cb);
+        const hasAccess = await req.checkRbac(perms.NONE);
+        expect(req.user.id).toBe(SYSTEM_USER_ID);
+        expect(hasAccess).toBe(true);
+    });
 });
 
 test('should not give api-user ADMIN permission', async () => {

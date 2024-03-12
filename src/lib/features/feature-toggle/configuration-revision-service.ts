@@ -78,4 +78,8 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
         return this.revisionId;
     }
+
+    destroy(): void {
+        ConfigurationRevisionService.instance?.removeAllListeners();
+    }
 }

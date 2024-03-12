@@ -52,6 +52,9 @@ describe('responseTimeMetrics old behavior', () => {
         getAppCountSnapshot: jest.fn(),
     };
     const eventBus = new EventEmitter();
+    afterEach(() => {
+        eventBus.removeAllListeners();
+    });
 
     test('uses baseUrl and route path to report metrics', async () => {
         let timeInfo: any;

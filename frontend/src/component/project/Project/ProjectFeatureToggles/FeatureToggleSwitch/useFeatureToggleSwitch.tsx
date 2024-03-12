@@ -1,4 +1,4 @@
-import { ComponentProps, useCallback, useState } from 'react';
+import { type ComponentProps, useCallback, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
@@ -10,7 +10,7 @@ import {
     isProdGuardEnabled,
 } from 'component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnvironmentDialog';
-import {
+import type {
     OnFeatureToggleSwitchArgs,
     UseFeatureToggleSwitchType,
 } from './FeatureToggleSwitch.types';

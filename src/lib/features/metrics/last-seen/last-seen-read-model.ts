@@ -1,5 +1,5 @@
-import { Db } from '../../../db/db';
-import { ILastSeenReadModel } from './types/last-seen-read-model-type';
+import type { Db } from '../../../db/db';
+import type { ILastSeenReadModel } from './types/last-seen-read-model-type';
 
 const TABLE = 'last_seen_at_metrics';
 

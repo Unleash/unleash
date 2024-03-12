@@ -11,7 +11,7 @@ import {
 import { useCallback } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
-import { MoveListItem } from 'hooks/useDragItem';
+import type { MoveListItem } from 'hooks/useDragItem';
 import useToast from 'hooks/useToast';
 import useEnvironmentApi, {
     createSortOrderPayload,
@@ -25,7 +25,7 @@ import { EnvironmentIconCell } from './EnvironmentIconCell/EnvironmentIconCell';
 import { Search } from 'component/common/Search/Search';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IEnvironment } from 'interfaces/environments';
+import type { IEnvironment } from 'interfaces/environments';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),

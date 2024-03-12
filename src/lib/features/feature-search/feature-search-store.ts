@@ -1,18 +1,18 @@
 import { Knex } from 'knex';
-import EventEmitter from 'events';
+import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
-import { Logger, LogProvider } from '../../logger';
-import {
+import type { Logger, LogProvider } from '../../logger';
+import type {
     IEnvironmentOverview,
     IFeatureOverview,
     IFeatureSearchStore,
     ITag,
 } from '../../types';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import { Db } from '../../db/db';
+import type { Db } from '../../db/db';
 import Raw = Knex.Raw;
-import {
+import type {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';

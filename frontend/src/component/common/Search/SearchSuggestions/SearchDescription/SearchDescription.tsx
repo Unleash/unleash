@@ -2,9 +2,9 @@ import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     getSearchTextGenerator,
-    IGetSearchContextOutput,
+    type IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 
 const StyledHeader = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

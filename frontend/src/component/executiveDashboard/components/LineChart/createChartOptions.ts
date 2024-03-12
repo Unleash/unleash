@@ -1,7 +1,7 @@
-import { Theme } from '@mui/material';
+import type { Theme } from '@mui/material';
 import { format, subMonths } from 'date-fns';
-import { ILocationSettings } from 'hooks/useLocationSettings';
-import { TooltipState } from './ChartTooltip/ChartTooltip';
+import type { ILocationSettings } from 'hooks/useLocationSettings';
+import type { TooltipState } from './ChartTooltip/ChartTooltip';
 import { createTooltip } from './createTooltip';
 import { legendOptions } from './legendOptions';
 

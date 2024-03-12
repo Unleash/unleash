@@ -1,6 +1,6 @@
-import EventEmitter from 'events';
-import { Logger, LogProvider } from '../../logger';
-import { IMaintenanceStatus } from '../maintenance/maintenance-service';
+import type EventEmitter from 'events';
+import type { Logger, LogProvider } from '../../logger';
+import type { IMaintenanceStatus } from '../maintenance/maintenance-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 
 // returns between min and max seconds in ms

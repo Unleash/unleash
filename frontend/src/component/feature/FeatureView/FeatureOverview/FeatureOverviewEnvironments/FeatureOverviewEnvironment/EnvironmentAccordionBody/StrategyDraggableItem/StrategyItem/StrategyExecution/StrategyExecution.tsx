@@ -1,4 +1,4 @@
-import { Fragment, useMemo, VFC } from 'react';
+import { Fragment, useMemo, type VFC } from 'react';
 import { Box, Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
@@ -15,8 +15,8 @@ import {
 } from 'utils/parseParameter';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { Badge } from 'component/common/Badge/Badge';
-import { CreateFeatureStrategySchema } from 'openapi';
-import { IFeatureStrategyPayload } from 'interfaces/strategy';
+import type { CreateFeatureStrategySchema } from 'openapi';
+import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;

@@ -1,6 +1,6 @@
 import {
     Dialog,
-    DialogProps,
+    type DialogProps,
     IconButton,
     Typography,
     styled,

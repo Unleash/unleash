@@ -1,5 +1,5 @@
-import Ajv, { ErrorObject } from 'ajv';
-import { SchemaId, schemas } from './index';
+import Ajv, { type ErrorObject } from 'ajv';
+import { type SchemaId, schemas } from './index';
 import { omitKeys } from '../util/omit-keys';
 
 export interface ISchemaValidationErrors<S = SchemaId> {

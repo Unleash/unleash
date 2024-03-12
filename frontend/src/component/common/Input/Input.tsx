@@ -1,5 +1,5 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
-import { TextField, OutlinedTextFieldProps, styled } from '@mui/material';
+import { TextField, type OutlinedTextFieldProps, styled } from '@mui/material';
 import { useStyles } from './Input.styles';
 
 interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {

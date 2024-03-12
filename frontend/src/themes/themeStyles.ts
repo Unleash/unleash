@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material';
-import { CSSProperties } from 'react';
+import type { Theme } from '@mui/material';
+import type { CSSProperties } from 'react';
 
 export const focusable = (theme: Theme) => ({
     '&:focus-visible': {

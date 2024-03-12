@@ -1,4 +1,4 @@
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { RoleDeleteDialogRootRole } from './RoleDeleteDialogRootRole/RoleDeleteDialogRootRole';
 import { RoleDeleteDialogProjectRole } from './RoleDeleteDialogProjectRole/RoleDeleteDialogProjectRole';
 import { CUSTOM_PROJECT_ROLE_TYPE } from 'constants/roles';

@@ -1,9 +1,9 @@
 import ClientInstanceService from './instance-service';
-import { IClientApp } from '../../../types/model';
+import type { IClientApp } from '../../../types/model';
 import FakeEventStore from '../../../../test/fixtures/fake-event-store';
 import { createTestConfig } from '../../../../test/config/test-config';
 import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
-import { IUnleashConfig } from '../../../types';
+import type { IUnleashConfig } from '../../../types';
 import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2';
 import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store';
 import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';

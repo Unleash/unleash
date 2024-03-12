@@ -1,5 +1,5 @@
 import { useActions } from 'hooks/api/getters/useActions/useActions';
-import { IAction, IActionSet, ParameterMatch } from 'interfaces/action';
+import type { IAction, IActionSet, ParameterMatch } from 'interfaces/action';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

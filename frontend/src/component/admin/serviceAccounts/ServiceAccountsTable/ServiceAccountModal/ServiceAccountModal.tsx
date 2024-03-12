@@ -11,13 +11,13 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 import {
-    IServiceAccountPayload,
+    type IServiceAccountPayload,
     useServiceAccountsApi,
 } from 'hooks/api/actions/useServiceAccountsApi/useServiceAccountsApi';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
@@ -25,15 +25,15 @@ import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
     calculateExpirationDate,
     ExpirationOption,
-    IPersonalAPITokenFormErrors,
+    type IPersonalAPITokenFormErrors,
     PersonalAPITokenForm,
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
 import { useServiceAccountTokensApi } from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
-import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

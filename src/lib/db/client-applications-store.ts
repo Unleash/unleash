@@ -1,14 +1,14 @@
-import EventEmitter from 'events';
+import type EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error';
-import {
+import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
 } from '../types/stores/client-applications-store';
-import { Logger, LogProvider } from '../logger';
-import { Db } from './db';
-import { IApplicationOverview } from '../features/metrics/instance/models';
+import type { Logger, LogProvider } from '../logger';
+import type { Db } from './db';
+import type { IApplicationOverview } from '../features/metrics/instance/models';
 import { applySearchFilters } from '../features/feature-search/search-utils';
 
 const COLUMNS = [

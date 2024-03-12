@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { userSchema } from './user-schema';
 import { permissionSchema } from './permission-schema';
 import { feedbackResponseSchema } from './feedback-response-schema';

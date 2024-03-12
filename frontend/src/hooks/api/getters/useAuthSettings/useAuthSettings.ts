@@ -1,4 +1,4 @@
-import { mutate, SWRConfiguration } from 'swr';
+import { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';

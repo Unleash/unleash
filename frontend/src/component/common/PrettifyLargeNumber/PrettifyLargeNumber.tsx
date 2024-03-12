@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import millify from 'millify';
 import { Tooltip } from '@mui/material';
 import { LARGE_NUMBER_PRETTIFIED } from 'utils/testIds';

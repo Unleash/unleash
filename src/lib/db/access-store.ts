@@ -1,8 +1,8 @@
-import { EventEmitter } from 'events';
+import type { EventEmitter } from 'events';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { Logger } from '../logger';
-import {
+import type { Logger } from '../logger';
+import type {
     IAccessInfo,
     IAccessStore,
     IProjectRoleUsage,
@@ -12,7 +12,7 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { IPermission, IUserAccessOverview } from '../types/model';
+import type { IPermission, IUserAccessOverview } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
@@ -20,8 +20,8 @@ import {
     ROOT_PERMISSION_TYPE,
     ROOT_ROLE_TYPES,
 } from '../util/constants';
-import { Db } from './db';
-import {
+import type { Db } from './db';
+import type {
     IdPermissionRef,
     NamePermissionRef,
     PermissionRef,

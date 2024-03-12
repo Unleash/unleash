@@ -1,8 +1,8 @@
 import { Alert, styled, Typography } from '@mui/material';
 import { UserToken } from 'component/admin/apiToken/ConfirmToken/UserToken/UserToken';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
-import { FC } from 'react';
+import type { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { FC } from 'react';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),

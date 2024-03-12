@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
-import { ILegalValue } from 'interfaces/context';
+import type { ILegalValue } from 'interfaces/context';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const useContextForm = (

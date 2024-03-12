@@ -1,7 +1,7 @@
 import SettingService from '../../../lib/services/setting-service';
 import { createTestConfig } from '../../config/test-config';
-import dbInit, { ITestDb } from '../helpers/database-init';
-import { IUnleashStores } from '../../../lib/types/stores';
+import dbInit, { type ITestDb } from '../helpers/database-init';
+import type { IUnleashStores } from '../../../lib/types/stores';
 import {
     SETTING_CREATED,
     SETTING_DELETED,

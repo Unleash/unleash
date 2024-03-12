@@ -7,8 +7,11 @@ import {
     styled,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ITutorialTopic, ITutorialTopicStep } from 'component/demo/demo-topics';
-import { TooltipRenderProps } from 'react-joyride';
+import type {
+    ITutorialTopic,
+    ITutorialTopicStep,
+} from 'component/demo/demo-topics';
+import type { TooltipRenderProps } from 'react-joyride';
 import CloseIcon from '@mui/icons-material/Close';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({

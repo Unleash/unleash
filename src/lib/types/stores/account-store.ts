@@ -1,5 +1,5 @@
-import { IUser } from '../user';
-import { Store } from './store';
+import type { IUser } from '../user';
+import type { Store } from './store';
 
 export interface IUserLookup {
     id?: number;

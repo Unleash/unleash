@@ -1,18 +1,18 @@
 import { randomId } from '../../util/random-id';
-import { IFeatureToggleClient, ISegment } from '../../types/model';
+import type { IFeatureToggleClient, ISegment } from '../../types/model';
 import { collectIds } from '../../util/collect-ids';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import {
     addStrategyToFeatureEnv,
     createFeatureToggle,
 } from '../../../test/e2e/helpers/app.utils';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
-import { StrategiesUsingSegment } from './segment-service-interface';
-import { IUser } from '../../types';
+import type { StrategiesUsingSegment } from './segment-service-interface';
+import type { IUser } from '../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;

@@ -1,6 +1,6 @@
-import React, { VFC } from 'react';
+import React, { type VFC } from 'react';
 import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import { FeatureEnvironmentSchema } from 'openapi';
+import type { FeatureEnvironmentSchema } from 'openapi';
 
 interface IFeatureSeenCellProps {
     feature: {

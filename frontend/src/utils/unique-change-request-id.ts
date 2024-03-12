@@ -1,4 +1,4 @@
-import { IUiConfig } from 'interfaces/uiConfig';
+import type { IUiConfig } from 'interfaces/uiConfig';
 
 export const getUniqueChangeRequestId = (
     uiConfig: Pick<IUiConfig, 'baseUriPath' | 'versionInfo'>,

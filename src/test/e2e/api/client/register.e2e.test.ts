@@ -1,6 +1,6 @@
 import faker from 'faker';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import { type IUnleashTest, setupApp } from '../../helpers/test-helper';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import version from '../../../../lib/util/version';
 

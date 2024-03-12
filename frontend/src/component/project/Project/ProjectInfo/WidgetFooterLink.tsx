@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Link, Typography } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 interface IWidgetFooterLinkProps {
     to: string;

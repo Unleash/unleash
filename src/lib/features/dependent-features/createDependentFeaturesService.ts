@@ -1,10 +1,10 @@
-import { Db } from '../../db/db';
+import type { Db } from '../../db/db';
 import { DependentFeaturesService } from './dependent-features-service';
 import { DependentFeaturesStore } from './dependent-features-store';
 import { DependentFeaturesReadModel } from './dependent-features-read-model';
 import { FakeDependentFeaturesStore } from './fake-dependent-features-store';
 import { FakeDependentFeaturesReadModel } from './fake-dependent-features-read-model';
-import { IUnleashConfig } from '../../types';
+import type { IUnleashConfig } from '../../types';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,

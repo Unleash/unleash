@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
-import { Logger } from '../../logger';
-import AddonService from '../../services/addon-service';
+import type { IUnleashConfig, IUnleashServices } from '../../types';
+import type { Logger } from '../../logger';
+import type AddonService from '../../services/addon-service';
 
 import { extractUsername } from '../../util/extract-user';
 import {
@@ -11,18 +11,21 @@ import {
     NONE,
     UPDATE_ADDON,
 } from '../../types/permissions';
-import { IAuthRequest } from '../unleash-types';
+import type { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { OpenApiService } from '../../services/openapi-service';
-import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
+import type { OpenApiService } from '../../services/openapi-service';
+import { type AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { AddonsSchema, addonsSchema } from '../../openapi/spec/addons-schema';
+import {
+    type AddonsSchema,
+    addonsSchema,
+} from '../../openapi/spec/addons-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { AddonCreateUpdateSchema } from '../../openapi/spec/addon-create-update-schema';
+import type { AddonCreateUpdateSchema } from '../../openapi/spec/addon-create-update-schema';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
 

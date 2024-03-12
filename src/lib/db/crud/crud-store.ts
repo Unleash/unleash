@@ -1,10 +1,10 @@
 import { NotFoundError } from '../../error';
 import { DB_TIME } from '../../metric-events';
-import { Db, IUnleashConfig } from '../../server-impl';
-import { Store } from '../../types/stores/store';
+import type { Db, IUnleashConfig } from '../../server-impl';
+import type { Store } from '../../types/stores/store';
 import metricsHelper from '../../util/metrics-helper';
 import { defaultFromRow, defaultToRow } from './default-mappings';
-import { Row } from './row-type';
+import type { Row } from './row-type';
 
 export type CrudStoreConfig = Pick<IUnleashConfig, 'eventBus'>;
 

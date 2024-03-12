@@ -1,6 +1,6 @@
 import 'chartjs-adapter-date-fns';
 import { useMemo, type VFC } from 'react';
-import { type ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
 import { useProjectChartData } from 'component/executiveDashboard/hooks/useProjectChartData';
 import {

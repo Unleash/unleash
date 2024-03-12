@@ -5,13 +5,13 @@ import { createDb } from '../../../lib/db/db-pool';
 import { getDbConfig } from './database-config';
 import { createTestConfig } from '../../config/test-config';
 import dbState from './database.json';
-import { LogProvider } from '../../../lib/logger';
+import type { LogProvider } from '../../../lib/logger';
 import noLoggerProvider from '../../fixtures/no-logger';
-import EnvironmentStore from '../../../lib/features/project-environments/environment-store';
-import { IUnleashStores } from '../../../lib/types';
-import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
+import type EnvironmentStore from '../../../lib/features/project-environments/environment-store';
+import type { IUnleashStores } from '../../../lib/types';
+import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import { IUnleashOptions, Knex } from '../../../lib/server-impl';
+import type { IUnleashOptions, Knex } from '../../../lib/server-impl';
 
 // require('db-migrate-shared').log.silence(false);
 

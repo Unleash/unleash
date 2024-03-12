@@ -1,10 +1,10 @@
 import { Alert, Box, Button, styled, Typography } from '@mui/material';
-import { FC, useContext, useState } from 'react';
+import { type FC, useContext, useState } from 'react';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
 import {
     ChangeRequestTimeline,
-    ISuggestChangeTimelineProps,
+    type ISuggestChangeTimelineProps,
 } from './ChangeRequestTimeline/ChangeRequestTimeline';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -31,7 +31,7 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
-import { PlausibleChangeRequestState } from '../changeRequest.types';
+import type { PlausibleChangeRequestState } from '../changeRequest.types';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',

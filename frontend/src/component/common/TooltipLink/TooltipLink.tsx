@@ -1,6 +1,9 @@
-import { ReactNode } from 'react';
-import { Link, LinkProps, styled } from '@mui/material';
-import { HtmlTooltip, IHtmlTooltipProps } from '../HtmlTooltip/HtmlTooltip';
+import type { ReactNode } from 'react';
+import { Link, type LinkProps, styled } from '@mui/material';
+import {
+    HtmlTooltip,
+    type IHtmlTooltipProps,
+} from '../HtmlTooltip/HtmlTooltip';
 
 const StyledLink = styled(Link, {
     shouldForwardProp: (prop) => prop !== 'highlighted',

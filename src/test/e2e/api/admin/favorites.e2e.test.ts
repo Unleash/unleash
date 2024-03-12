@@ -1,9 +1,9 @@
-import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import { IUnleashStores, RoleName } from '../../../../lib/types';
-import { AccessService } from '../../../../lib/services';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
+import { type IUnleashStores, RoleName } from '../../../../lib/types';
+import type { AccessService } from '../../../../lib/services';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { IRole } from '../../../../lib/types/stores/access-store';
+import type { IRole } from '../../../../lib/types/stores/access-store';
 
 let app: IUnleashTest;
 let db: ITestDb;

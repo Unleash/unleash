@@ -1,4 +1,4 @@
-import { IdType, Row } from 'react-table';
+import type { IdType, Row } from 'react-table';
 
 /**
  * For `react-table`.
@@ -58,9 +58,11 @@ export const sortTypes = {
         _desc?: boolean,
     ) => {
         const aVal =
-            parseInt(`${a?.values?.[id] || 0}`, 10) || Number.MAX_SAFE_INTEGER;
+            Number.parseInt(`${a?.values?.[id] || 0}`, 10) ||
+            Number.MAX_SAFE_INTEGER;
         const bVal =
-            parseInt(`${b?.values?.[id] || 0}`, 10) || Number.MAX_SAFE_INTEGER;
+            Number.parseInt(`${b?.values?.[id] || 0}`, 10) ||
+            Number.MAX_SAFE_INTEGER;
         return aVal - bVal;
     },
 };

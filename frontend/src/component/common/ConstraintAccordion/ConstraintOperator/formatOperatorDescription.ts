@@ -1,4 +1,4 @@
-import { Operator } from 'constants/operators';
+import type { Operator } from 'constants/operators';
 
 export const formatOperatorDescription = (operator: Operator): string => {
     return constraintOperatorDescriptions[operator];

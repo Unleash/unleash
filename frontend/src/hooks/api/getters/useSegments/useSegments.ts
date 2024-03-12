@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface IUseSegmentsOutput {

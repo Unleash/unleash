@@ -1,5 +1,5 @@
-import { ITag } from '../../lib/types/model';
-import {
+import type { ITag } from '../../lib/types/model';
+import type {
     IFeatureAndTag,
     IFeatureTag,
     IFeatureTagStore,

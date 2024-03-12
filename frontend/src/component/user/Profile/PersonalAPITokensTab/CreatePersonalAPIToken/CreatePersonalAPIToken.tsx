@@ -3,15 +3,15 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { FC, FormEvent, useEffect, useState } from 'react';
+import { type FC, type FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
 import { usePersonalAPITokensApi } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
-import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import {
     calculateExpirationDate,
     ExpirationOption,
-    IPersonalAPITokenFormErrors,
+    type IPersonalAPITokenFormErrors,
     PersonalAPITokenForm,
 } from './PersonalAPITokenForm/PersonalAPITokenForm';
 

@@ -1,11 +1,12 @@
-import { styled, SxProps, Theme } from '@mui/material';
-import React, {
+import { styled, type SxProps, type Theme } from '@mui/material';
+import type React from 'react';
+import {
     cloneElement,
-    FC,
-    ForwardedRef,
+    type FC,
+    type ForwardedRef,
     forwardRef,
-    ReactElement,
-    ReactNode,
+    type ReactElement,
+    type ReactNode,
 } from 'react';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 

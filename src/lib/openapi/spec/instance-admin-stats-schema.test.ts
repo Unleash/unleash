@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { InstanceAdminStatsSchema } from './instance-admin-stats-schema';
+import type { InstanceAdminStatsSchema } from './instance-admin-stats-schema';
 
 test('instanceAdminStatsSchema', () => {
     const data: InstanceAdminStatsSchema = {

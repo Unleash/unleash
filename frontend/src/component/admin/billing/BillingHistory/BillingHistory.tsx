@@ -8,7 +8,7 @@ import {
 } from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { useMemo, VFC } from 'react';
+import { useMemo, type VFC } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

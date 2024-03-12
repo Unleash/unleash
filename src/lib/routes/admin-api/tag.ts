@@ -1,32 +1,32 @@
-import { Request, Response } from 'express';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import TagService from '../../services/tag-service';
-import { Logger } from '../../logger';
+import type { Request, Response } from 'express';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type TagService from '../../services/tag-service';
+import type { Logger } from '../../logger';
 
 import Controller from '../controller';
 
 import { NONE, UPDATE_FEATURE } from '../../types/permissions';
 import { extractUsername } from '../../util/extract-user';
-import { IAuthRequest } from '../unleash-types';
+import type { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
-import { tagsSchema, TagsSchema } from '../../openapi/spec/tags-schema';
-import { TagSchema } from '../../openapi/spec/tag-schema';
-import { OpenApiService } from '../../services/openapi-service';
+import { tagsSchema, type TagsSchema } from '../../openapi/spec/tags-schema';
+import type { TagSchema } from '../../openapi/spec/tag-schema';
+import type { OpenApiService } from '../../services/openapi-service';
 import {
     tagWithVersionSchema,
-    TagWithVersionSchema,
+    type TagWithVersionSchema,
 } from '../../openapi/spec/tag-with-version-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import FeatureTagService from '../../services/feature-tag-service';
-import { IFlagResolver } from '../../types';
+import type FeatureTagService from '../../services/feature-tag-service';
+import type { IFlagResolver } from '../../types';
 
 const version = 1;
 

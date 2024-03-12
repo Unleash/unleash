@@ -1,5 +1,5 @@
-import { IRole } from 'interfaces/role';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IRole } from 'interfaces/role';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';

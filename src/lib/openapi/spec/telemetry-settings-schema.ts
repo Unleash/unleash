@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 
 export const telemetrySettingsSchema = {
     $id: '#/components/schemas/telemetrySettingsSchema',

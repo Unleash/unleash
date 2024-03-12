@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { IOverride } from 'interfaces/featureToggle';
+import type { IOverride } from 'interfaces/featureToggle';
 
 type OverridesReducerAction =
     | { type: 'SET'; payload: IOverride[] }

@@ -1,19 +1,19 @@
 import {
     FEATURE_POTENTIALLY_STALE_ON,
-    IEvent,
-    IUnleashConfig,
-    IUnleashStores,
+    type IEvent,
+    type IUnleashConfig,
+    type IUnleashStores,
 } from '../types';
 import { createTestConfig } from '../../test/config/test-config';
 import FeatureToggleService from '../features/feature-toggle/feature-toggle-service';
-import { AccessService } from './access-service';
-import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
-import { ISegmentService } from '../features/segment/segment-service-interface';
-import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
+import type { AccessService } from './access-service';
+import type { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import type { ISegmentService } from '../features/segment/segment-service-interface';
+import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import type { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
 import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
-import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
+import type { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 
 test('Should only store events for potentially stale on', async () => {
     expect.assertions(2);

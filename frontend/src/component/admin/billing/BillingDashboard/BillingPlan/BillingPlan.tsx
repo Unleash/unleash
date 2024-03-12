@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
-    IInstanceStatus,
+    type IInstanceStatus,
     InstanceState,
     InstancePlan,
 } from 'interfaces/instance';

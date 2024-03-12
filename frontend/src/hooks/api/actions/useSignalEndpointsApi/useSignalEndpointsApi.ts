@@ -1,4 +1,4 @@
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import useAPI from '../useApi/useApi';
 
 const ENDPOINT = 'api/admin/signal-endpoints';

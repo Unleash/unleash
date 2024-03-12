@@ -1,5 +1,5 @@
-import { Logger } from '../../logger';
-import {
+import type { Logger } from '../../logger';
+import type {
     IEventStore,
     IFlagResolver,
     IUnleashConfig,

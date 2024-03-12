@@ -1,32 +1,32 @@
-import FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
-import { IUnleashServices } from '../../types/services';
+import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
+import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
+import type { IUnleashServices } from '../../types/services';
 import { ALL } from '../../types/models/api-token';
-import { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema';
-import { Logger } from '../../logger';
-import {
+import type { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema';
+import type { Logger } from '../../logger';
+import type {
     IFlagResolver,
     ISegment,
     ISegmentReadModel,
     IUnleashConfig,
 } from '../../types';
 import { offlineUnleashClient } from './offline-unleash-client';
-import { FeatureInterface } from '../../features/playground/feature-evaluator/feature';
-import {
+import type { FeatureInterface } from '../../features/playground/feature-evaluator/feature';
+import type {
     EvaluatedPlaygroundStrategy,
     FeatureStrategiesEvaluationResult,
 } from '../../features/playground/feature-evaluator/client';
-import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';
-import {
+import type {
     AdvancedPlaygroundFeatureSchema,
     playgroundStrategyEvaluation,
 } from '../../openapi';
-import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
+import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 import { validateQueryComplexity } from './validateQueryComplexity';
-import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { getDefaultVariant } from './feature-evaluator/variant';
 
 type EvaluationInput = {

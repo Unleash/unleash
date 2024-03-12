@@ -3,7 +3,7 @@ import {
     ENVIRONMENT_PERMISSION_TYPE,
     PROJECT_PERMISSION_TYPE,
 } from '@server/util/constants';
-import {
+import type {
     IPermission,
     ICheckedPermissions,
     IPermissionCategory,

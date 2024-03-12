@@ -1,6 +1,6 @@
 import {
     Histogram as PromHistogram,
-    HistogramConfiguration,
+    type HistogramConfiguration,
 } from 'prom-client';
 
 export type Histogram<T extends string = string> = {

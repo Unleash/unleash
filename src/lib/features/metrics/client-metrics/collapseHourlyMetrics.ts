@@ -1,4 +1,4 @@
-import {
+import type {
     IClientMetricsEnv,
     IClientMetricsEnvVariant,
 } from './client-metrics-store-v2-type';

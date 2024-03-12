@@ -1,9 +1,9 @@
 import { weightTypes } from 'constants/weightTypes';
-import { IUiConfig } from 'interfaces/uiConfig';
-import { INavigationMenuItem } from 'interfaces/route';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import type { IUiConfig } from 'interfaces/uiConfig';
+import type { INavigationMenuItem } from 'interfaces/route';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid, parseISO } from 'date-fns';
-import { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
+import type { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 import { formatDateYMD } from '../../utils/formatDate';
 
 /**
@@ -107,7 +107,7 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
         throw new Error('There must be at least one variable variant');
     }
 
-    const percentage = parseInt(
+    const percentage = Number.parseInt(
         String(remainingPercentage / variableVariantCount),
     );
 

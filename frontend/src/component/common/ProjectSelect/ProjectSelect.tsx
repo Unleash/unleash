@@ -1,5 +1,5 @@
-import { ComponentProps, Dispatch, SetStateAction, VFC } from 'react';
-import { Autocomplete, SxProps, TextField } from '@mui/material';
+import type { ComponentProps, Dispatch, SetStateAction, VFC } from 'react';
+import { Autocomplete, type SxProps, TextField } from '@mui/material';
 import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 

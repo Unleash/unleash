@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { Box, styled } from '@mui/material';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

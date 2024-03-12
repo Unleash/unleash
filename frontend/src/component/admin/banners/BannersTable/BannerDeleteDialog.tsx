@@ -1,5 +1,5 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IInternalBanner } from 'interfaces/banner';
+import type { IInternalBanner } from 'interfaces/banner';
 
 interface IBannerDeleteDialogProps {
     banner?: IInternalBanner;

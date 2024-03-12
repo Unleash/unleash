@@ -1,5 +1,6 @@
-import React, { Fragment, useState } from 'react';
-import { ISegment } from 'interfaces/segment';
+import type React from 'react';
+import { Fragment, useState } from 'react';
+import type { ISegment } from 'interfaces/segment';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';

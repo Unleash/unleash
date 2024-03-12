@@ -1,4 +1,4 @@
-import { ExportQuerySchema } from 'openapi';
+import type { ExportQuerySchema } from 'openapi';
 import useAPI from '../useApi/useApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

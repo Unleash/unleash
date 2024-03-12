@@ -1,4 +1,4 @@
-import { MouseEvent, useState, VFC } from 'react';
+import { type MouseEvent, useState, type VFC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import CopyIcon from '@mui/icons-material/AddToPhotos';
 import Lock from '@mui/icons-material/Lock';
-import { IFeatureStrategyPayload } from 'interfaces/strategy';
+import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';

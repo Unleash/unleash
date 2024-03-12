@@ -1,5 +1,5 @@
 import { parseISO, isPast } from 'date-fns';
-import { IInstanceStatus, InstanceState } from 'interfaces/instance';
+import { type IInstanceStatus, InstanceState } from 'interfaces/instance';
 import differenceInDays from 'date-fns/differenceInDays';
 
 const TRIAL_EXPIRES_SOON_DAYS_THRESHOLD = 10;

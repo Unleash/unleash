@@ -2,7 +2,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import {
-    SortingRule,
+    type SortingRule,
     useFlexLayout,
     useRowSelect,
     useSortBy,
@@ -21,12 +21,12 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ArchivedFeatureActionCell } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
-import { FeatureSchema } from 'openapi';
+import type { FeatureSchema } from 'openapi';
 import { useSearch } from 'hooks/useSearch';
 import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
 import { useSearchParams } from 'react-router-dom';
 import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';

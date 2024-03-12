@@ -15,7 +15,7 @@ import {
     FEATURE_VARIANTS_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
 } from '../types/events';
-import { IAddonDefinition } from '../types/model';
+import type { IAddonDefinition } from '../types/model';
 
 const teamsDefinition: IAddonDefinition = {
     name: 'teams',

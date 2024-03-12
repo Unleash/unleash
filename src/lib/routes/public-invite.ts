@@ -1,11 +1,11 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 
 import Controller from './controller';
 import { NONE } from '../types/permissions';
-import { Logger } from '../logger';
-import { IAuthRequest } from './unleash-types';
-import { IUnleashConfig, IUnleashServices } from '../types';
-import { OpenApiService } from '../services/openapi-service';
+import type { Logger } from '../logger';
+import type { IAuthRequest } from './unleash-types';
+import type { IUnleashConfig, IUnleashServices } from '../types';
+import type { OpenApiService } from '../services/openapi-service';
 import { createRequestSchema } from '../openapi/util/create-request-schema';
 import { createResponseSchema } from '../openapi/util/create-response-schema';
 import { serializeDates } from '../types/serialize-dates';
@@ -13,9 +13,9 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../openapi/util/standard-responses';
-import { PublicSignupTokenService } from '../services/public-signup-token-service';
-import { UserSchema, userSchema } from '../openapi/spec/user-schema';
-import { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
+import type { PublicSignupTokenService } from '../services/public-signup-token-service';
+import { type UserSchema, userSchema } from '../openapi/spec/user-schema';
+import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
 
 interface TokenParam {
     token: string;

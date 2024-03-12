@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { StrategySchema } from './strategy-schema';
+import type { StrategySchema } from './strategy-schema';
 
 test('strategySchema', () => {
     const data: StrategySchema = {

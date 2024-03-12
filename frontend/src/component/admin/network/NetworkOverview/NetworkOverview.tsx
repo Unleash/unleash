@@ -4,7 +4,7 @@ import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInst
 import { Alert, Typography, styled, useTheme } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
 import { useMemo } from 'react';
-import {
+import type {
     RequestsPerSecondSchema,
     RequestsPerSecondSchemaDataResultItem,
 } from 'openapi';
@@ -73,7 +73,7 @@ const asNetworkAppData = (
 ) => {
     const values = (result.values || []) as ResultValue[];
     const data = values.filter((value) => isRecent(value));
-    const reqs = data.length ? parseFloat(data[data.length - 1][1]) : 0;
+    const reqs = data.length ? Number.parseFloat(data[data.length - 1][1]) : 0;
     return {
         label: result.label,
         reqs,

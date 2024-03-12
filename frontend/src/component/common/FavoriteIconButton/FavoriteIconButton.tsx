@@ -1,5 +1,5 @@
-import { VFC } from 'react';
-import { IconButton, IconButtonProps } from '@mui/material';
+import type { VFC } from 'react';
+import { IconButton, type IconButtonProps } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';

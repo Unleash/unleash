@@ -1,8 +1,8 @@
-import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
+import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, IconButton, Typography, useTheme, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
-import React from 'react';
+import type React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     checkForEmptyValues,

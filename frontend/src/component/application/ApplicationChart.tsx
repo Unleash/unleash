@@ -1,8 +1,8 @@
 import { Box, Divider, styled, Typography, useTheme } from '@mui/material';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useNavigate } from 'react-router-dom';
-import { FC, useLayoutEffect, useRef, useState } from 'react';
-import {
+import { type FC, useLayoutEffect, useRef, useState } from 'react';
+import type {
     ApplicationOverviewEnvironmentSchema,
     ApplicationOverviewSchema,
 } from 'openapi';

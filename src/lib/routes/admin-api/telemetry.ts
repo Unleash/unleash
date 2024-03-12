@@ -1,14 +1,14 @@
-import { Response } from 'express';
-import { OpenApiService } from '../../services';
-import { IAuthRequest } from '../unleash-types';
-import { IUnleashConfig } from '../../types/option';
+import type { Response } from 'express';
+import type { OpenApiService } from '../../services';
+import type { IAuthRequest } from '../unleash-types';
+import type { IUnleashConfig } from '../../types/option';
 import Controller from '../controller';
 import { NONE } from '../../types/permissions';
-import { IUnleashServices } from '../../types';
+import type { IUnleashServices } from '../../types';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     telemetrySettingsSchema,
-    TelemetrySettingsSchema,
+    type TelemetrySettingsSchema,
 } from '../../openapi/spec/telemetry-settings-schema';
 
 class TelemetryController extends Controller {

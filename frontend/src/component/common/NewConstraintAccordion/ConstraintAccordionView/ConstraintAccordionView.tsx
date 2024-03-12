@@ -3,11 +3,11 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    SxProps,
-    Theme,
+    type SxProps,
+    type Theme,
     styled,
 } from '@mui/material';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
 import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
 import { oneOf } from 'utils/oneOf';

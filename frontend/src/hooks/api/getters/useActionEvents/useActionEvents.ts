@@ -1,11 +1,11 @@
 import useSWRInfinite, {
-    SWRInfiniteConfiguration,
-    SWRInfiniteKeyLoader,
+    type SWRInfiniteConfiguration,
+    type SWRInfiniteKeyLoader,
 } from 'swr/infinite';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { IActionSetEvent } from 'interfaces/action';
+import type { IActionSetEvent } from 'interfaces/action';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 type ActionEventsResponse = {

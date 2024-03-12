@@ -1,6 +1,6 @@
 import { StrategyParameter } from './StrategyParameter/StrategyParameter';
-import React from 'react';
-import { IStrategyParameter } from 'interfaces/strategy';
+import type React from 'react';
+import type { IStrategyParameter } from 'interfaces/strategy';
 
 interface IStrategyParametersProps {
     input: IStrategyParameter[];

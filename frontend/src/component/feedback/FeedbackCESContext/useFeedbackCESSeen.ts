@@ -1,6 +1,6 @@
 import { useAuthFeedback } from 'hooks/api/getters/useAuth/useAuthFeedback';
 import { useAuthFeedbackApi } from 'hooks/api/actions/useAuthFeedbackApi/useAuthFeedbackApi';
-import { IFeedbackCESState } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
+import type { IFeedbackCESState } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { useCallback } from 'react';
 
 interface IUseFeedbackCESSeen {

@@ -1,9 +1,9 @@
 import { InactiveUsersService } from './inactive-users-service';
-import { IUnleashConfig } from '../../server-impl';
-import { Db } from '../../server-impl';
+import type { IUnleashConfig } from '../../server-impl';
+import type { Db } from '../../server-impl';
 import { InactiveUsersStore } from './inactive-users-store';
 import { FakeInactiveUsersStore } from './fakes/fake-inactive-users-store';
-import { UserService } from '../../services';
+import type { UserService } from '../../services';
 
 export const DAYS_TO_BE_COUNTED_AS_INACTIVE = 180;
 export const createInactiveUsersService = (

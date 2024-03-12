@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import { IPublicSignupTokens } from 'interfaces/publicSignupTokens';
+import type { IPublicSignupTokens } from 'interfaces/publicSignupTokens';
 
 export const url = 'api/admin/invite-link/tokens';
 

@@ -1,9 +1,9 @@
-import { Button, ButtonProps } from '@mui/material';
+import { Button, type ButtonProps } from '@mui/material';
 import Lock from '@mui/icons-material/Lock';
 import React from 'react';
 import {
     TooltipResolver,
-    ITooltipResolverProps,
+    type ITooltipResolverProps,
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
 import { useId } from 'hooks/useId';

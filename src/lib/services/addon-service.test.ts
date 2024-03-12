@@ -11,9 +11,9 @@ import {
 import createStores from '../../test/fixtures/store';
 
 import AddonService from './addon-service';
-import { IAddonDto } from '../types/stores/addon-store';
+import type { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
-import { IAddonProviders } from '../addons';
+import type { IAddonProviders } from '../addons';
 import EventService from '../features/events/event-service';
 import { SYSTEM_USER } from '../types';
 import { EventEmitter } from 'stream';

@@ -1,14 +1,14 @@
 import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { IUser } from 'interfaces/user';
-import { VFC } from 'react';
+import type { IUser } from 'interfaces/user';
+import type { VFC } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { IGroupUser } from 'interfaces/group';
+import type { IGroupUser } from 'interfaces/group';
 import { UG_USERS_ID } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',

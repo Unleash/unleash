@@ -1,11 +1,11 @@
 import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
-import { useMemo, VFC } from 'react';
+import { useMemo, type VFC } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
     CategoryScale,
     Chart as ChartJS,
-    ChartDataset,
-    ChartOptions,
+    type ChartDataset,
+    type ChartOptions,
     Legend,
     LinearScale,
     LineElement,
@@ -15,11 +15,11 @@ import {
     Tooltip,
 } from 'chart.js';
 import {
-    ILocationSettings,
+    type ILocationSettings,
     useLocationSettings,
 } from 'hooks/useLocationSettings';
 import { formatDateHM } from 'utils/formatDate';
-import { RequestsPerSecondSchema } from 'openapi';
+import type { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
 import { Alert, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
@@ -27,7 +27,7 @@ import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
-import { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles/createTheme';
 
 const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'];
 
@@ -173,7 +173,7 @@ const toChartData = (
                 label: `${endpoint}: ${appName}`,
                 borderColor: color.main,
                 backgroundColor: color.main,
-                data: createChartPoints(values, (y) => parseFloat(y)),
+                data: createChartPoints(values, (y) => Number.parseFloat(y)),
                 elements: {
                     point: {
                         radius: 4,

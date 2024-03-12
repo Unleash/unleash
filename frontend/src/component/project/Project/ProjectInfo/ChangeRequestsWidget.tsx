@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import useLoading from 'hooks/useLoading';
 import { Box, styled, Typography } from '@mui/material';
-import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
+import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 
 import {
     StyledCount,

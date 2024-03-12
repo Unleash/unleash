@@ -1,4 +1,4 @@
-import { useRef, useState, VFC } from 'react';
+import { useRef, useState, type VFC } from 'react';
 import {
     useTheme,
     IconButton,

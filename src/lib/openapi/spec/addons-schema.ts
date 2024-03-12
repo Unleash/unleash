@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { addonSchema } from './addon-schema';
 import { addonTypeSchema } from './addon-type-schema';
 import { addonParameterSchema } from './addon-parameter-schema';

@@ -1,4 +1,4 @@
-import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useToast from 'hooks/useToast';
 import copy from 'copy-to-clipboard';
 import FileCopy from '@mui/icons-material/FileCopy';

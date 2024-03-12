@@ -1,13 +1,13 @@
-import { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
+import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
 import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
-import { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { Segment } from './feature-evaluator/strategy/strategy';
-import { ISegment } from '../../types/model';
+import type { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
+import type { Segment } from './feature-evaluator/strategy/strategy';
+import type { ISegment } from '../../types/model';
 import { serializeDates } from '../../types/serialize-dates';
-import { Operator } from './feature-evaluator/constraint';
-import { PayloadType } from 'unleash-client';
-import { FeatureInterface } from 'unleash-client/lib/feature';
-import { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature';
+import type { Operator } from './feature-evaluator/constraint';
+import type { PayloadType } from 'unleash-client';
+import type { FeatureInterface } from 'unleash-client/lib/feature';
+import type { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature';
 
 type NonEmptyList<T> = [T, ...T[]];
 

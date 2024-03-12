@@ -1,14 +1,14 @@
 import {
     Autocomplete,
-    AutocompleteProps,
-    AutocompleteRenderOptionState,
+    type AutocompleteProps,
+    type AutocompleteRenderOptionState,
     Checkbox,
     TextField,
     styled,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 

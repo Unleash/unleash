@@ -1,10 +1,10 @@
 import ClientInstanceService from '../instance/instance-service';
-import { IClientApp } from '../../../types/model';
+import type { IClientApp } from '../../../types/model';
 import { secondsToMilliseconds } from 'date-fns';
 import { createTestConfig } from '../../../../test/config/test-config';
-import { IUnleashConfig, IUnleashStores } from '../../../types';
+import type { IUnleashConfig, IUnleashStores } from '../../../types';
 import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
-import { ITestDb } from '../../../../test/e2e/helpers/database-init';
+import type { ITestDb } from '../../../../test/e2e/helpers/database-init';
 
 const faker = require('faker');
 const dbInit = require('../../../../test/e2e/helpers/database-init');

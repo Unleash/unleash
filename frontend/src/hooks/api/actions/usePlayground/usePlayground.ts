@@ -1,5 +1,5 @@
 import useAPI from '../useApi/useApi';
-import {
+import type {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundResponseSchema,
 } from 'openapi';

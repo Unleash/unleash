@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import classnames from 'classnames';
 import { styled, TextField, Typography } from '@mui/material';
 import { trim } from 'component/common/util';
@@ -9,7 +10,7 @@ import PasswordChecker, {
 } from 'component/user/common/ResetPasswordForm/PasswordChecker';
 import { useThemeStyles } from 'themes/themeStyles';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher';
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 

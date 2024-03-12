@@ -1,23 +1,23 @@
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
 } from '../../../../lib/types/events';
-import { IRole } from '../../../../lib/types/stores/access-store';
-import { IEventStore } from '../../../../lib/types/stores/event-store';
-import { IUserStore } from '../../../../lib/types/stores/user-store';
+import type { IRole } from '../../../../lib/types/stores/access-store';
+import type { IEventStore } from '../../../../lib/types/stores/event-store';
+import type { IUserStore } from '../../../../lib/types/stores/user-store';
 import { RoleName } from '../../../../lib/types/model';
-import { IRoleStore } from '../../../../lib/types/stores/role-store';
+import type { IRoleStore } from '../../../../lib/types/stores/role-store';
 import { randomId } from '../../../../lib/util/random-id';
 import { omitKeys } from '../../../../lib/util/omit-keys';
-import { ISessionStore } from '../../../../lib/types/stores/session-store';
-import { IUnleashStores } from '../../../../lib/types';
+import type { ISessionStore } from '../../../../lib/types/stores/session-store';
+import type { IUnleashStores } from '../../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

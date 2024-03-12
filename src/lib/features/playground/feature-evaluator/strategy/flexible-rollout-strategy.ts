@@ -1,5 +1,5 @@
 import { Strategy } from './strategy';
-import { Context } from '../context';
+import type { Context } from '../context';
 import { normalizedStrategyValue } from './util';
 import { resolveContextValue } from '../helpers';
 

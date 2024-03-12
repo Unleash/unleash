@@ -1,5 +1,5 @@
 import { Alert, styled } from '@mui/material';
-import { IActionSetEvent } from 'interfaces/action';
+import type { IActionSetEvent } from 'interfaces/action';
 import { ProjectActionsEventsDetailsAction } from './ProjectActionsEventsDetailsAction';
 import { ProjectActionsEventsDetailsSource } from './ProjectActionsEventsDetailsSource/ProjectActionsEventsDetailsSource';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';

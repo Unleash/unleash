@@ -1,7 +1,7 @@
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const StyledContainer = styled(Box)(() => ({
     display: 'flex',

@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { Box, Typography, styled } from '@mui/material';
 
 type UserType = 'active' | 'inactive';

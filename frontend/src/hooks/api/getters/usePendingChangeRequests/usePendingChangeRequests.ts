@@ -1,6 +1,6 @@
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
+import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 const fetcher = (path: string) => {

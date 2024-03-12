@@ -36,7 +36,10 @@ export const MultipleValues = ({ values }: IMultipleValuesProps) => {
                 .filter((value) => value.includes(filter))
                 .map((value, index) => (
                     <StyledChip
-                        key={`${value}-${index}`}
+                        key={`${value}-${
+                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                            index
+                        }`}
                         label={
                             <StyledTruncator
                                 maxWidth='400'

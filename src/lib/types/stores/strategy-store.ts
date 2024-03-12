@@ -1,5 +1,5 @@
-import { CreateStrategySchema } from '../../openapi';
-import { Store } from './store';
+import type { CreateStrategySchema } from '../../openapi';
+import type { Store } from './store';
 
 export interface IStrategy {
     name: string;

@@ -1,7 +1,7 @@
 import getLogger from '../../../fixtures/no-logger';
-import dbInit, { ITestDb } from '../../helpers/database-init';
-import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import { IAuthType, IUnleashStores } from '../../../../lib/types';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
+import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
+import { IAuthType, type IUnleashStores } from '../../../../lib/types';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 
 let app: IUnleashTest;

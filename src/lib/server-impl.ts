@@ -1,4 +1,4 @@
-import stoppable, { StoppableServer } from 'stoppable';
+import stoppable, { type StoppableServer } from 'stoppable';
 import { promisify } from 'util';
 import version from './util/version';
 import { migrateDb } from '../migrator';
@@ -13,22 +13,22 @@ import sessionDb from './middleware/session-db';
 // Types
 import {
     IAuthType,
-    IUnleash,
-    IUnleashConfig,
-    IUnleashOptions,
-    IUnleashServices,
+    type IUnleash,
+    type IUnleashConfig,
+    type IUnleashOptions,
+    type IUnleashServices,
     RoleName,
-    CustomAuthHandler,
+    type CustomAuthHandler,
     SYSTEM_USER,
 } from './types';
 
-import User, { IUser } from './types/user';
-import ApiUser, { IApiUser } from './types/api-user';
-import { Logger, LogLevel } from './logger';
+import User, { type IUser } from './types/user';
+import ApiUser, { type IApiUser } from './types/api-user';
+import { type Logger, LogLevel } from './logger';
 import AuthenticationRequired from './types/authentication-required';
 import Controller from './routes/controller';
-import { IApiRequest, IAuthRequest } from './routes/unleash-types';
-import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
+import type { IApiRequest, IAuthRequest } from './routes/unleash-types';
+import type { SimpleAuthSettings } from './types/settings/simple-auth-settings';
 import { Knex } from 'knex';
 import * as permissions from './types/permissions';
 import * as eventType from './types/events';

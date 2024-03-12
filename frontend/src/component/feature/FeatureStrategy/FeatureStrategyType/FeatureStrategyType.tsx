@@ -1,12 +1,12 @@
-import { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import UserWithIdStrategy from 'component/feature/StrategyTypes/UserWithIdStrategy/UserWithId';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import produce from 'immer';
-import React from 'react';
-import { IFormErrors } from 'hooks/useFormErrors';
+import type React from 'react';
+import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IFeatureStrategyTypeProps {
     hasAccess: boolean;

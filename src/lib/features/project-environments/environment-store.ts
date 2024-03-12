@@ -1,17 +1,17 @@
-import EventEmitter from 'events';
-import { Db } from '../../db/db';
-import { Logger, LogProvider } from '../../logger';
+import type EventEmitter from 'events';
+import type { Db } from '../../db/db';
+import type { Logger, LogProvider } from '../../logger';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
-import {
+import type {
     IEnvironment,
     IEnvironmentCreate,
     IProjectEnvironment,
 } from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
-import { IEnvironmentStore } from './environment-store-type';
+import type { IEnvironmentStore } from './environment-store-type';
 import { snakeCaseKeys } from '../../util/snakeCase';
-import { CreateFeatureStrategySchema } from '../../openapi';
+import type { CreateFeatureStrategySchema } from '../../openapi';
 
 interface IEnvironmentsTable {
     name: string;
@@ -58,12 +58,14 @@ function mapRowWithCounts(
 ): IProjectEnvironment {
     return {
         ...mapRow(row),
-        projectCount: row.project_count ? parseInt(row.project_count, 10) : 0,
+        projectCount: row.project_count
+            ? Number.parseInt(row.project_count, 10)
+            : 0,
         apiTokenCount: row.api_token_count
-            ? parseInt(row.api_token_count, 10)
+            ? Number.parseInt(row.api_token_count, 10)
             : 0,
         enabledToggleCount: row.enabled_toggle_count
-            ? parseInt(row.enabled_toggle_count, 10)
+            ? Number.parseInt(row.enabled_toggle_count, 10)
             : 0,
     };
 }
@@ -74,10 +76,10 @@ function mapRowWithProjectCounts(
     return {
         ...mapRow(row),
         projectApiTokenCount: row.project_api_token_count
-            ? parseInt(row.project_api_token_count, 10)
+            ? Number.parseInt(row.project_api_token_count, 10)
             : 0,
         projectEnabledToggleCount: row.project_enabled_toggle_count
-            ? parseInt(row.project_enabled_toggle_count, 10)
+            ? Number.parseInt(row.project_enabled_toggle_count, 10)
             : 0,
         defaultStrategy: row.project_default_strategy
             ? (row.project_default_strategy as any)

@@ -1,7 +1,7 @@
 import { Alert, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { useProjectRoleAccessUsage } from 'hooks/api/getters/useProjectRoleAccessUsage/useProjectRoleAccessUsage';
 import { RoleDeleteDialogProjectRoleTable } from './RoleDeleteDialogProjectRoleTable';
 

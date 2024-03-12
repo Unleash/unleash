@@ -2,26 +2,26 @@ import supertest from 'supertest';
 
 import getApp from '../../../lib/app';
 import { createTestConfig } from '../../config/test-config';
-import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
+import { IAuthType, type IUnleashConfig } from '../../../lib/types/option';
 import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
 import {
     DEFAULT_PROJECT,
-    FeatureToggleDTO,
-    IUnleashStores,
+    type FeatureToggleDTO,
+    type IUnleashStores,
 } from '../../../lib/types';
-import { IUnleashServices } from '../../../lib/types/services';
-import { Db } from '../../../lib/db/db';
-import { IContextFieldDto } from '../../../lib/types/stores/context-field-store';
+import type { IUnleashServices } from '../../../lib/types/services';
+import type { Db } from '../../../lib/db/db';
+import type { IContextFieldDto } from '../../../lib/types/stores/context-field-store';
 import { DEFAULT_ENV } from '../../../lib/util';
-import {
+import type {
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     ImportTogglesSchema,
 } from '../../../lib/openapi';
-import { Knex } from 'knex';
-import TestAgent from 'supertest/lib/agent';
-import Test from 'supertest/lib/test';
+import type { Knex } from 'knex';
+import type TestAgent from 'supertest/lib/agent';
+import type Test from 'supertest/lib/test';
 
 process.env.NODE_ENV = 'test';
 

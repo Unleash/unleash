@@ -1,5 +1,5 @@
-import { OpenAPIV3 } from 'openapi-types';
-import { OpenApiTag } from './openapi-tags';
+import type { OpenAPIV3 } from 'openapi-types';
+import type { OpenApiTag } from './openapi-tags';
 
 type DeprecatedOpenAPITag =
     // Deprecated tag names. Please use a tag from the OpenAPITag type instead.

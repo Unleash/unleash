@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
-import { IInstanceStatus } from 'interfaces/instance';
-import { VFC } from 'react';
+import type { IInstanceStatus } from 'interfaces/instance';
+import type { VFC } from 'react';
 import { BillingInformation } from './BillingInformation/BillingInformation';
 import { BillingPlan } from './BillingPlan/BillingPlan';
 

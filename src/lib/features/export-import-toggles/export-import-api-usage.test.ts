@@ -1,9 +1,9 @@
 import { setupAppWithCustomAuth } from '../../../test/e2e/helpers/test-helper';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { DEFAULT_PROJECT } from '../../types';
 import { DEFAULT_ENV } from '../../util';
-import { ImportTogglesSchema } from '../../openapi';
+import type { ImportTogglesSchema } from '../../openapi';
 import { ApiTokenType } from '../../types/models/api-token';
 import { ApiUser } from '../../server-impl';
 

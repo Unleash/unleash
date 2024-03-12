@@ -2,10 +2,10 @@ import { VirtualizedTable } from 'component/common/Table';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { useMemo, useState } from 'react';
-import { useTable, useSortBy, useFlexLayout, Column } from 'react-table';
+import { useTable, useSortBy, useFlexLayout, type Column } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>

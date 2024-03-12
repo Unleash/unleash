@@ -7,8 +7,8 @@ import {
     createFakeGetProductionChanges,
     createGetProductionChanges,
 } from './getProductionChanges';
-import { IUnleashConfig } from '../../types';
-import { Db } from '../../db/db';
+import type { IUnleashConfig } from '../../types';
+import type { Db } from '../../db/db';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import UserStore from '../../db/user-store';
 import ProjectStore from '../project/project-store';

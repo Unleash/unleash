@@ -1,6 +1,6 @@
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IEvent } from 'interfaces/event';
+import type { IEvent } from 'interfaces/event';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { Link } from 'react-router-dom';

@@ -1,10 +1,10 @@
-import {
+import type {
     FeatureStrategySchema,
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
-import { IContextFieldDto } from '../../types/stores/context-field-store';
-import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
-import { ProjectFeaturesLimit } from './import-toggles-store-type';
+import type { IContextFieldDto } from '../../types/stores/context-field-store';
+import type { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
+import type { ProjectFeaturesLimit } from './import-toggles-store-type';
 
 export interface IErrorsParams {
     projectName: string;

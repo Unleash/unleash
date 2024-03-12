@@ -9,16 +9,17 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeedbackContext } from './useFeedback';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import useToast from 'hooks/useToast';
-import { ProvideFeedbackSchema } from 'openapi';
+import type { ProvideFeedbackSchema } from 'openapi';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { IToast } from 'interfaces/toast';
+import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
-import { FeedbackData, FeedbackMode } from './FeedbackContext';
+import type { FeedbackData, FeedbackMode } from './FeedbackContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 

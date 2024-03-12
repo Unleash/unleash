@@ -1,4 +1,4 @@
-import { IUnleashConfig, IUnleashStores } from '../types';
+import type { IUnleashConfig, IUnleashStores } from '../types';
 
 import EventStore from '../features/events/event-store';
 import FeatureToggleStore from '../features/feature-toggle/feature-toggle-store';
@@ -34,7 +34,7 @@ import { FavoriteFeaturesStore } from './favorite-features-store';
 import { FavoriteProjectsStore } from './favorite-projects-store';
 import { AccountStore } from './account-store';
 import ProjectStatsStore from './project-stats-store';
-import { Db } from './db';
+import type { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
 import PrivateProjectStore from '../features/private-project/privateProjectStore';
 import { DependentFeaturesStore } from '../features/dependent-features/dependent-features-store';

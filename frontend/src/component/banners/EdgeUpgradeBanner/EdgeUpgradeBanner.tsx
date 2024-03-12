@@ -1,7 +1,7 @@
 import { useUiFlag } from '../../../hooks/useUiFlag';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import { Banner } from '../Banner/Banner';
-import { IBanner } from '../../../interfaces/banner';
+import type { IBanner } from '../../../interfaces/banner';
 
 export const EdgeUpgradeBanner = () => {
     const displayUpgradeEdgeBanner = useUiFlag('displayUpgradeEdgeBanner');

@@ -1,7 +1,7 @@
-import { ClientFeaturesResponse, FeatureInterface } from '../feature';
-import { BootstrapProvider } from './bootstrap-provider';
-import { StorageProvider } from './storage-provider';
-import { Segment } from '../strategy/strategy';
+import type { ClientFeaturesResponse, FeatureInterface } from '../feature';
+import type { BootstrapProvider } from './bootstrap-provider';
+import type { StorageProvider } from './storage-provider';
+import type { Segment } from '../strategy/strategy';
 import { EventEmitter } from 'stream';
 import { UnleashEvents } from 'unleash-client';
 

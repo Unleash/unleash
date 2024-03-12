@@ -1,6 +1,6 @@
-import { type VFC } from 'react';
+import type { VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import { ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { LineChart } from '../../components/LineChart/LineChart';
 import { useProjectChartData } from '../../hooks/useProjectChartData';
 

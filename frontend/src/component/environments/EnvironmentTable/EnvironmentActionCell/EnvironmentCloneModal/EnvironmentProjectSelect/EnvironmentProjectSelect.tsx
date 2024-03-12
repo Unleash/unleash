@@ -1,6 +1,6 @@
 import {
     Autocomplete,
-    AutocompleteRenderGroupParams,
+    type AutocompleteRenderGroupParams,
     Checkbox,
     styled,
     TextField,

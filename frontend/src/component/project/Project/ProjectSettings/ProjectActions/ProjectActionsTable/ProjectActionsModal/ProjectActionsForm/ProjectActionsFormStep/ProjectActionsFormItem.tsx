@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 const StyledItem = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),

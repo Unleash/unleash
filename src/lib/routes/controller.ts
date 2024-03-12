@@ -1,22 +1,21 @@
-import { IRouter, Router, Request, Response, RequestHandler } from 'express';
-import { Logger } from '../logger';
-import { IUnleashConfig, NONE } from '../types';
+import {
+    type IRouter,
+    Router,
+    type Request,
+    type Response,
+    type RequestHandler,
+} from 'express';
+import type { Logger } from '../logger';
+import { type IUnleashConfig, NONE } from '../types';
 import { handleErrors } from './util';
 import requireContentType from '../middleware/content_type_checker';
 import { PermissionError } from '../error';
 import { storeRequestedRoute } from '../middleware/response-time-metrics';
 
-interface IRequestHandler<
-    P = any,
-    ResBody = any,
-    ReqBody = any,
-    ReqQuery = any,
-> {
-    (
-        req: Request<P, ResBody, ReqBody, ReqQuery>,
-        res: Response<ResBody>,
-    ): Promise<void> | void;
-}
+type IRequestHandler<P = any, ResBody = any, ReqBody = any, ReqQuery = any> = (
+    req: Request<P, ResBody, ReqBody, ReqQuery>,
+    res: Response<ResBody>,
+) => Promise<void> | void;
 
 type Permission = string | string[];
 

@@ -1,10 +1,10 @@
-import { Db, IUnleashConfig } from '../../server-impl';
+import type { Db, IUnleashConfig } from '../../server-impl';
 import EventStore from '../events/event-store';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import EnvironmentStore from '../project-environments/environment-store';
 import {
-    AccessService,
+    type AccessService,
     EventService,
     FavoritesService,
     GroupService,

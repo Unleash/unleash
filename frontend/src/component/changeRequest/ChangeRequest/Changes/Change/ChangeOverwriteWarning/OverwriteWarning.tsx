@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
-import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
-import { ChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
+import type { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import type { ChangesThatWouldBeOverwritten } from './strategy-change-diff-calculation';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
@@ -91,7 +91,10 @@ const DetailsTable: React.FC<{
                                             .split('\n')
                                             .map((line, index) => (
                                                 <code
-                                                    key={`${property}${line}${index}`}
+                                                    key={`${property}${line}${
+                                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                                        index
+                                                    }`}
                                                 >
                                                     {`${line}\n`}
                                                 </code>
@@ -106,7 +109,10 @@ const DetailsTable: React.FC<{
                                             .split('\n')
                                             .map((line, index) => (
                                                 <code
-                                                    key={`${property}${line}${index}`}
+                                                    key={`${property}${line}${
+                                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                                        index
+                                                    }`}
                                                 >
                                                     {`${line}\n`}
                                                 </code>

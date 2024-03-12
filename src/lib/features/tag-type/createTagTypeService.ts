@@ -1,5 +1,5 @@
-import { Db } from '../../db/db';
-import { IUnleashConfig } from '../../types';
+import type { Db } from '../../db/db';
+import type { IUnleashConfig } from '../../types';
 import TagTypeService from './tag-type-service';
 import TagTypeStore from './tag-type-store';
 import FakeTagTypeStore from './fake-tag-type-store';

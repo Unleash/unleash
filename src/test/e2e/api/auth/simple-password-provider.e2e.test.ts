@@ -1,10 +1,10 @@
 import { createTestConfig } from '../../../config/test-config';
-import { IUnleashConfig, IUnleashStores } from '../../../../lib/types';
+import type { IUnleashConfig, IUnleashStores } from '../../../../lib/types';
 import UserService from '../../../../lib/services/user-service';
 import { AccessService } from '../../../../lib/services/access-service';
-import { IUser } from '../../../../lib/types/user';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import type { IUser } from '../../../../lib/types/user';
+import { type IUnleashTest, setupApp } from '../../helpers/test-helper';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { EmailService } from '../../../../lib/services/email-service';
 import SessionService from '../../../../lib/services/session-service';

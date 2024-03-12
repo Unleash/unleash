@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Table as MUITable, TableProps } from '@mui/material';
+import type { FC } from 'react';
+import { Table as MUITable, type TableProps } from '@mui/material';
 
 export const Table: FC<
     TableProps & {

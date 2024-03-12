@@ -1,8 +1,8 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import AddonService from '../../../lib/services/addon-service';
-import { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types';
 
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service';

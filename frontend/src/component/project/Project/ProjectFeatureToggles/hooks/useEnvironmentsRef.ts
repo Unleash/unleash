@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { CreateFeatureStrategySchema } from 'openapi';
+import type { CreateFeatureStrategySchema } from 'openapi';
 /**
  * Don't revalidate if array content didn't change.
  * Needed for `columns` memo optimization.

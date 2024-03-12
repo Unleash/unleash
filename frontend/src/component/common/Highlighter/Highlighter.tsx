@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { safeRegExp } from '@server/util/escape-regex';
 import { styled } from '@mui/material';
 

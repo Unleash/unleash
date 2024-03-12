@@ -1,7 +1,7 @@
 import { Box, Divider, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     position: 'relative',

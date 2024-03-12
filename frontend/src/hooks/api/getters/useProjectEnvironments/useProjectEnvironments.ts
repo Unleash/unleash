@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { useMemo, useCallback } from 'react';
-import {
+import type {
     IEnvironmentResponse,
     IProjectEnvironment,
 } from 'interfaces/environments';

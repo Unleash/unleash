@@ -4,11 +4,11 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { FormEvent, useEffect, useState } from 'react';
-import { BannerVariant, IInternalBanner } from 'interfaces/banner';
+import { type FormEvent, useEffect, useState } from 'react';
+import type { BannerVariant, IInternalBanner } from 'interfaces/banner';
 import { useBanners } from 'hooks/api/getters/useBanners/useBanners';
 import {
-    AddOrUpdateBanner,
+    type AddOrUpdateBanner,
     useBannersApi,
 } from 'hooks/api/actions/useBannersApi/useBannersApi';
 import { BannerForm } from './BannerForm';

@@ -1,11 +1,11 @@
-import {
+import type {
     ChangeRequestState,
     ChangeRequestType,
     IChangeRequestFeature,
     IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
-import { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import { IUiConfig } from 'interfaces/uiConfig';
+import type { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import type { IUiConfig } from 'interfaces/uiConfig';
 import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
 
 type ChangeRequestConflictCreatedData = {

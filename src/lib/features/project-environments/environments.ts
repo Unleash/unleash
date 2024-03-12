@@ -1,27 +1,27 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../../routes/controller';
 import {
-    IUnleashConfig,
-    IUnleashServices,
+    type IUnleashConfig,
+    type IUnleashServices,
     serializeDates,
     SYSTEM_USER_ID,
     UPDATE_PROJECT,
 } from '../../types';
-import { Logger } from '../../logger';
-import EnvironmentService from './environment-service';
+import type { Logger } from '../../logger';
+import type EnvironmentService from './environment-service';
 import {
     createFeatureStrategySchema,
-    CreateFeatureStrategySchema,
+    type CreateFeatureStrategySchema,
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
-    ProjectEnvironmentSchema,
+    type ProjectEnvironmentSchema,
 } from '../../openapi';
-import { OpenApiService, ProjectService } from '../../services';
+import type { OpenApiService, ProjectService } from '../../services';
 import { extractUsername } from '../../util';
-import { IAuthRequest } from '../../routes/unleash-types';
-import { WithTransactional } from '../../db/transaction';
+import type { IAuthRequest } from '../../routes/unleash-types';
+import type { WithTransactional } from '../../db/transaction';
 
 const PREFIX = '/:projectId/environments';
 

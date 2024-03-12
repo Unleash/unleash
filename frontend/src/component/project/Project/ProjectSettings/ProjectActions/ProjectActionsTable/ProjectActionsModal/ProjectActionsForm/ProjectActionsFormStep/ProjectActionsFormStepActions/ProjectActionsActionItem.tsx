@@ -3,7 +3,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { ActionsActionState } from '../../useProjectActionsForm';
+import type { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

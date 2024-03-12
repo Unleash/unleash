@@ -1,5 +1,5 @@
 import { singleValueOperators } from 'constants/operators';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { oneOf } from 'utils/oneOf';
 import produce from 'immer';
 

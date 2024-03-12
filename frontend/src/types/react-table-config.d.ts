@@ -5,7 +5,7 @@
  * https://github.com/TanStack/react-table/issues/2970#issuecomment-756364081
  */
 
-import {
+import type {
     UseColumnOrderInstanceProps,
     UseColumnOrderState,
     UseExpandedHooks,

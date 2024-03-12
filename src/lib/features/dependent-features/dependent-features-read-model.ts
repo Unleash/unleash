@@ -1,6 +1,6 @@
-import { Db } from '../../db/db';
-import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
-import { IDependency, IFeatureDependency } from '../../types';
+import type { Db } from '../../db/db';
+import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
+import type { IDependency, IFeatureDependency } from '../../types';
 
 export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
     private db: Db;

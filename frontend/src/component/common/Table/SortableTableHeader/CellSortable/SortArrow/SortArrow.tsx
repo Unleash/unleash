@@ -1,10 +1,10 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import UnfoldMoreOutlined from '@mui/icons-material/UnfoldMoreOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import classnames from 'classnames';
-import { Theme } from '@mui/material';
+import type { Theme } from '@mui/material';
 
 interface ISortArrowProps {
     isSorted?: boolean;

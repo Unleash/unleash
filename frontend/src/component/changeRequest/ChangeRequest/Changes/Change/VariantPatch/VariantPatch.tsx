@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import {
+import type {
     ChangeRequestState,
     IChangeRequestPatchVariant,
 } from 'component/changeRequest/changeRequest.types';
@@ -8,7 +8,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { ChangeOverwriteWarning } from '../ChangeOverwriteWarning/ChangeOverwriteWarning';
 import { VariantDiff } from './VariantDiff';
 

@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 
 interface IFeatureStrategyTitleProps {
     title: string;

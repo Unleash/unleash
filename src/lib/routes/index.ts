@@ -1,7 +1,7 @@
 import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
 import { SimplePasswordProvider } from './auth/simple-password-provider';
-import { IUnleashConfig, IUnleashServices } from '../types';
+import type { IUnleashConfig, IUnleashServices } from '../types';
 import LogoutController from './logout';
 import rateLimit from 'express-rate-limit';
 import Controller from './controller';
@@ -12,7 +12,7 @@ import { HealthCheckController } from './health-check';
 import FrontendAPIController from '../features/frontend-api/frontend-api-controller';
 import EdgeController from './edge-api';
 import { PublicInviteController } from './public-invite';
-import { Db } from '../db/db';
+import type { Db } from '../db/db';
 import { minutesToMilliseconds } from 'date-fns';
 
 class IndexRouter extends Controller {

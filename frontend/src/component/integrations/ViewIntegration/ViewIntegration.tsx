@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { useParams } from 'react-router-dom';
 import NotFound from 'component/common/NotFound/NotFound';
 import { JiraIntegration } from './JiraIntegration/JiraIntegration';

@@ -1,7 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({
     display: '-webkit-box',

@@ -1,7 +1,7 @@
 // Copy of https://github.com/Unleash/unleash-proxy/blob/main/src/create-context.ts.
 
 /* eslint-disable prefer-object-spread */
-import { Context } from 'unleash-client';
+import type { Context } from 'unleash-client';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function createContext(value: any): Context {

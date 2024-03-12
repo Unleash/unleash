@@ -1,4 +1,4 @@
-import { useEffect, VFC } from 'react';
+import { useEffect, type VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';

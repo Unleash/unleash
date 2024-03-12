@@ -22,9 +22,9 @@ export const ChangesScheduledBadge = ({
             <TooltipLink
                 tooltip={
                     <>
-                        {scheduledChangeRequestIds?.map((id, index) => (
+                        {scheduledChangeRequestIds?.map((id) => (
                             <StyledLink
-                                key={`${project}-${index}`}
+                                key={`${project}-${id}`}
                                 to={`/projects/${project}/change-requests/${id}`}
                             >
                                 Change request #{id}

@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { applicationOverviewEnvironmentSchema } from './application-overview-environment-schema';
 import { applicationOverviewIssuesSchema } from './application-overview-issues-schema';
 import { applicationEnvironmentIssuesSchema } from './application-environment-issues-schema';

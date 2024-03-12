@@ -1,5 +1,5 @@
 import useAPI from '../useApi/useApi';
-import { IGroupUserModel } from 'interfaces/group';
+import type { IGroupUserModel } from 'interfaces/group';
 
 interface ICreateGroupPayload {
     name: string;

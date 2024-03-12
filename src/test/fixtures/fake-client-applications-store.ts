@@ -1,11 +1,11 @@
-import {
+import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
 } from '../../lib/types/stores/client-applications-store';
 import NotFoundError from '../../lib/error/notfound-error';
-import { IApplicationOverview } from '../../lib/features/metrics/instance/models';
+import type { IApplicationOverview } from '../../lib/features/metrics/instance/models';
 
 export default class FakeClientApplicationsStore
     implements IClientApplicationsStore

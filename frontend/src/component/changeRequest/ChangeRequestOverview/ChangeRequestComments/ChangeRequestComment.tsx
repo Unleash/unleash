@@ -1,9 +1,9 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import Paper from '@mui/material/Paper';
 import { Box, styled, Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { StyledAvatar } from './StyledAvatar';
-import { IChangeRequestComment } from '../../changeRequest.types';
+import type { IChangeRequestComment } from '../../changeRequest.types';
 import Linkify from 'react-linkify';
 
 const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({

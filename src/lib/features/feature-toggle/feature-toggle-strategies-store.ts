@@ -1,11 +1,11 @@
 import { Knex } from 'knex';
-import EventEmitter from 'events';
+import type EventEmitter from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
-import { Logger, LogProvider } from '../../logger';
+import type { Logger, LogProvider } from '../../logger';
 import NotFoundError from '../../error/notfound-error';
-import {
+import type {
     FeatureToggleWithEnvironment,
     IConstraint,
     IEnvironmentOverview,
@@ -22,8 +22,8 @@ import {
 } from '../../types';
 import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue, mapValues } from '../../util';
-import { IFeatureProjectUserParams } from './feature-toggle-controller';
-import { Db } from '../../db/db';
+import type { IFeatureProjectUserParams } from './feature-toggle-controller';
+import type { Db } from '../../db/db';
 import Raw = Knex.Raw;
 import { isAfter } from 'date-fns';
 

@@ -1,7 +1,7 @@
-import React from 'react';
+import type React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, styled } from '@mui/material';
-import {
+import type {
     IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
@@ -12,8 +12,8 @@ import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
-import { ISegment } from 'interfaces/segment';
-import { IFormErrors } from 'hooks/useFormErrors';
+import type { ISegment } from 'interfaces/segment';
+import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';

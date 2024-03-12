@@ -1,20 +1,20 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../../../routes/controller';
-import { IUnleashConfig } from '../../../types/option';
-import { IFlagResolver, IUnleashServices } from '../../../types';
-import { Logger } from '../../../logger';
-import ClientMetricsServiceV2 from './metrics-service-v2';
+import type { IUnleashConfig } from '../../../types/option';
+import type { IFlagResolver, IUnleashServices } from '../../../types';
+import type { Logger } from '../../../logger';
+import type ClientMetricsServiceV2 from './metrics-service-v2';
 import { NONE } from '../../../types/permissions';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import { OpenApiService } from '../../../services/openapi-service';
+import type { OpenApiService } from '../../../services/openapi-service';
 import { serializeDates } from '../../../types/serialize-dates';
 import {
-    FeatureUsageSchema,
+    type FeatureUsageSchema,
     featureUsageSchema,
 } from '../../../openapi/spec/feature-usage-schema';
 import {
     featureMetricsSchema,
-    FeatureMetricsSchema,
+    type FeatureMetricsSchema,
 } from '../../../openapi/spec/feature-metrics-schema';
 import { getStandardResponses } from '../../../openapi';
 

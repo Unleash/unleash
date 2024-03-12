@@ -18,12 +18,17 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { PAT_LIMIT } from '@server/util/constants';
 import { useServiceAccountTokens } from 'hooks/api/getters/useServiceAccountTokens/useServiceAccountTokens';
 import { useSearch } from 'hooks/useSearch';
-import {
+import type {
     INewPersonalAPIToken,
     IPersonalAPIToken,
 } from 'interfaces/personalAPIToken';
 import { useMemo, useState } from 'react';
-import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
+import {
+    useTable,
+    type SortingRule,
+    useSortBy,
+    useFlexLayout,
+} from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { ServiceAccountCreateTokenDialog } from './ServiceAccountCreateTokenDialog/ServiceAccountCreateTokenDialog';
 import { ServiceAccountTokenDialog } from 'component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountTokenDialog/ServiceAccountTokenDialog';
@@ -32,12 +37,12 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
-    ICreateServiceAccountTokenPayload,
+    type ICreateServiceAccountTokenPayload,
     useServiceAccountTokensApi,
 } from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 
 const StyledHeader = styled('div')(({ theme }) => ({

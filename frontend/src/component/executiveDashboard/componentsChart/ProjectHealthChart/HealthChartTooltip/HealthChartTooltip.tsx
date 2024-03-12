@@ -1,8 +1,8 @@
-import { type VFC } from 'react';
-import { type ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
+import type { VFC } from 'react';
+import type { ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Divider, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
-import { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
+import type { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
 import { HorizontalDistributionChart } from '../../../components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

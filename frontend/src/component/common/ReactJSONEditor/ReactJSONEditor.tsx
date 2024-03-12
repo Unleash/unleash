@@ -1,4 +1,8 @@
-import { JSONEditorPropsOptional, JSONEditor, Mode } from 'vanilla-jsoneditor';
+import {
+    type JSONEditorPropsOptional,
+    JSONEditor,
+    Mode,
+} from 'vanilla-jsoneditor';
 import { useContext, useEffect, useRef } from 'react';
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css';
 import { styled } from '@mui/material';

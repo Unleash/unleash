@@ -1,4 +1,4 @@
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { createTestConfig } from '../../../config/test-config';
 import {
@@ -11,8 +11,8 @@ import ResetTokenService from '../../../../lib/services/reset-token-service';
 import SessionService from '../../../../lib/services/session-service';
 import SettingService from '../../../../lib/services/setting-service';
 import UserService from '../../../../lib/services/user-service';
-import { ADMIN, IUnleashStores, IUser } from '../../../../lib/types';
-import { InactiveUsersService } from '../../../../lib/users/inactive/inactive-users-service';
+import { ADMIN, type IUnleashStores, type IUser } from '../../../../lib/types';
+import type { InactiveUsersService } from '../../../../lib/users/inactive/inactive-users-service';
 import { createInactiveUsersService } from '../../../../lib/users';
 
 let db: ITestDb;

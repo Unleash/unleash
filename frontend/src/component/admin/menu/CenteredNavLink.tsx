@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 
 const StyledNavLink = styled(NavLink)(({ theme }) => ({

@@ -1,6 +1,6 @@
 import {
     normalizeCustomContextProperties,
-    NormalizedContextProperties,
+    type NormalizedContextProperties,
     validateTokenFormat,
 } from './playground.utils';
 

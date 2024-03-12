@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
 import { Alert, List, ListItem, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
+import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 

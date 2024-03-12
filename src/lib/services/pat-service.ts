@@ -1,15 +1,15 @@
-import { IUnleashConfig, IUnleashStores } from '../types';
-import { Logger } from '../logger';
-import { IPatStore } from '../types/stores/pat-store';
+import type { IUnleashConfig, IUnleashStores } from '../types';
+import type { Logger } from '../logger';
+import type { IPatStore } from '../types/stores/pat-store';
 import { PAT_CREATED, PAT_DELETED } from '../types/events';
 import crypto from 'crypto';
-import { IUser } from '../types/user';
+import type { IUser } from '../types/user';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';
 import { PAT_LIMIT } from '../util/constants';
-import EventService from '../features/events/event-service';
-import { CreatePatSchema, PatSchema } from '../openapi';
+import type EventService from '../features/events/event-service';
+import type { CreatePatSchema, PatSchema } from '../openapi';
 
 export default class PatService {
     private config: IUnleashConfig;

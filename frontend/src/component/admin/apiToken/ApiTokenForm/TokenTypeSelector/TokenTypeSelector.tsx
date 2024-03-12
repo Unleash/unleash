@@ -7,7 +7,7 @@ import {
     RadioGroup,
     Typography,
 } from '@mui/material';
-import { TokenType } from 'interfaces/token';
+import type { TokenType } from 'interfaces/token';
 
 export type SelectOption = {
     key: string;

@@ -1,5 +1,6 @@
 import { Button, styled } from '@mui/material';
-import React, { SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import type React from 'react';
+import { type SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PasswordChecker from './PasswordChecker';
 import PasswordMatcher from './PasswordMatcher';

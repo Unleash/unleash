@@ -2,7 +2,7 @@ import { styled, Typography } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 

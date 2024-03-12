@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
-import {
+import type {
     ExecutiveSummarySchema,
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
 } from 'openapi';

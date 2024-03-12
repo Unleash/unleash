@@ -1,7 +1,7 @@
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { IEnvironment } from 'interfaces/environments';
+import type { IEnvironment } from 'interfaces/environments';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
@@ -9,7 +9,7 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import useToast from 'hooks/useToast';
 import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
 import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
-import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
 import { ENV_LIMIT } from 'constants/values';
 import { EnvironmentDeprecateToggleDialog } from './EnvironmentDeprecateToggleDialog/EnvironmentDeprecateToggleDialog';

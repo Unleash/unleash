@@ -1,7 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Button, Paper, Typography, styled, Link } from '@mui/material';
 import { basePath } from 'utils/formatPath';
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';

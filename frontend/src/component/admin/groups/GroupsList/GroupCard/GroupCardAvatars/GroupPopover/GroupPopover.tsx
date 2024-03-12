@@ -1,5 +1,5 @@
 import { Popover, styled } from '@mui/material';
-import { IGroupUser } from 'interfaces/group';
+import type { IGroupUser } from 'interfaces/group';
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
     pointerEvents: 'none',

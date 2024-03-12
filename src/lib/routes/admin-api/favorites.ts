@@ -1,10 +1,10 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../controller';
-import { FavoritesService, OpenApiService } from '../../services';
-import { Logger } from '../../logger';
-import { IUnleashConfig, IUnleashServices, NONE } from '../../types';
+import type { FavoritesService, OpenApiService } from '../../services';
+import type { Logger } from '../../logger';
+import { type IUnleashConfig, type IUnleashServices, NONE } from '../../types';
 import { emptyResponse, getStandardResponses } from '../../openapi';
-import { IAuthRequest } from '../unleash-types';
+import type { IAuthRequest } from '../unleash-types';
 
 export default class FavoritesController extends Controller {
     private favoritesService: FavoritesService;

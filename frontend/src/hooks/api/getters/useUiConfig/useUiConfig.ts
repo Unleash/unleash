@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import { defaultValue } from './defaultValue';
-import { IUiConfig } from 'interfaces/uiConfig';
+import type { IUiConfig } from 'interfaces/uiConfig';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useMemo, useCallback } from 'react';
 

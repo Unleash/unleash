@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
+import type { ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
 
 // NOTE: should we move project filtering to the backend?
 export const useFilteredFlagsSummary = (

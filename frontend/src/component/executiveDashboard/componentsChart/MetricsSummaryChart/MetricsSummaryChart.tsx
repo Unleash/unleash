@@ -1,6 +1,6 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import { ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { MetricsSummaryTooltip } from './MetricsChartTooltip/MetricsChartTooltip';
 import { useMetricsSummary } from '../../hooks/useMetricsSummary';

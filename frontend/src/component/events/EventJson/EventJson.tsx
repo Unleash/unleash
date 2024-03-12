@@ -1,4 +1,4 @@
-import { IEvent } from 'interfaces/event';
+import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/material';
 
 interface IEventJsonProps {

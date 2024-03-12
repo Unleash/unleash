@@ -1,13 +1,13 @@
-import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
-import { Logger } from '../logger';
-import { ISettingStore } from '../types/stores/settings-store';
+import type { IUnleashConfig } from '../types/option';
+import type { IUnleashStores } from '../types/stores';
+import type { Logger } from '../logger';
+import type { ISettingStore } from '../types/stores/settings-store';
 import {
     SettingCreatedEvent,
     SettingDeletedEvent,
     SettingUpdatedEvent,
 } from '../types/events';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 
 export default class SettingService {
     private config: IUnleashConfig;

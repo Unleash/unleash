@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Variant, getVariantValue } from 'utils/variants';
+import { type Variant, getVariantValue } from 'utils/variants';
 
 export const useVariant = <T = string>(variant?: Variant) => {
     return useMemo(() => {

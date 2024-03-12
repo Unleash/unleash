@@ -1,8 +1,8 @@
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { KILLSWITCH, PERMISSION } from 'constants/featureToggleTypes';
 import { expired, getDiffInDays } from '../utils';
 import { parseISO, subDays } from 'date-fns';
-import { FeatureTypeSchema } from 'openapi';
+import type { FeatureTypeSchema } from 'openapi';
 
 export const formatExpiredAt = (
     feature: IFeatureToggleListItem,

@@ -1,4 +1,4 @@
-import { PayloadType, Variant } from 'unleash-client';
+import { PayloadType, type Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
 

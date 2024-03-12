@@ -1,5 +1,5 @@
-import { IProjectStats } from '../../lib/features/project/project-service';
-import {
+import type { IProjectStats } from '../../lib/features/project/project-service';
+import type {
     ICreateEnabledDates,
     IProjectStatsStore,
 } from '../../lib/types/stores/project-stats-store-type';

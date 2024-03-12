@@ -1,5 +1,5 @@
-import { VFC } from 'react';
-import { ProjectApplicationSchema } from 'openapi';
+import type { VFC } from 'react';
+import type { ProjectApplicationSchema } from 'openapi';
 import { styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';

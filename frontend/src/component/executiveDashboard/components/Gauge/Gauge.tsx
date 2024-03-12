@@ -1,4 +1,4 @@
-import { Fragment, VFC } from 'react';
+import { Fragment, type VFC } from 'react';
 import { Box, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

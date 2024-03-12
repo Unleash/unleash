@@ -8,7 +8,7 @@ import {
 import UIContext from 'contexts/UIContext';
 import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
 import Toast from './Toast/Toast';
-import { IToast } from 'interfaces/toast';
+import type { IToast } from 'interfaces/toast';
 
 const ToastRenderer = () => {
     const { toastData, setToast } = useContext(UIContext);

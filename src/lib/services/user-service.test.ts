@@ -6,7 +6,7 @@ import AccessServiceMock from '../../test/fixtures/access-service-mock';
 import ResetTokenService from './reset-token-service';
 import { EmailService } from './email-service';
 import OwaspValidationError from '../error/owasp-validation-error';
-import { IUnleashConfig } from '../types/option';
+import type { IUnleashConfig } from '../types/option';
 import { createTestConfig } from '../../test/config/test-config';
 import SessionService from './session-service';
 import FakeSessionStore from '../../test/fixtures/fake-session-store';

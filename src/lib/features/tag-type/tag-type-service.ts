@@ -2,17 +2,17 @@ import NameExistsError from '../../error/name-exists-error';
 
 import { tagTypeSchema } from '../../services/tag-type-schema';
 
-import { IUnleashStores } from '../../types/stores';
+import type { IUnleashStores } from '../../types/stores';
 import {
     TAG_TYPE_CREATED,
     TAG_TYPE_DELETED,
     TAG_TYPE_UPDATED,
 } from '../../types/events';
 
-import { Logger } from '../../logger';
-import { ITagType, ITagTypeStore } from './tag-type-store-type';
-import { IUnleashConfig } from '../../types/option';
-import EventService from '../events/event-service';
+import type { Logger } from '../../logger';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type';
+import type { IUnleashConfig } from '../../types/option';
+import type EventService from '../events/event-service';
 import { SYSTEM_USER } from '../../types';
 
 export default class TagTypeService {

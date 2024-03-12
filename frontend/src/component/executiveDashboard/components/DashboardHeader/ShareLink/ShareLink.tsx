@@ -1,4 +1,4 @@
-import { VFC, useState } from 'react';
+import { type VFC, useState } from 'react';
 import Share from '@mui/icons-material/Share';
 import { Box, Button, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';

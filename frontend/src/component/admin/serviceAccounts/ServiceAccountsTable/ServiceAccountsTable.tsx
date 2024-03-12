@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -23,11 +23,11 @@ import { useServiceAccountsApi } from 'hooks/api/actions/useServiceAccountsApi/u
 import { ServiceAccountModal } from './ServiceAccountModal/ServiceAccountModal';
 import { ServiceAccountDeleteDialog } from './ServiceAccountDeleteDialog/ServiceAccountDeleteDialog';
 import { ServiceAccountsActionsCell } from './ServiceAccountsActionsCell/ServiceAccountsActionsCell';
-import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokenDialog } from './ServiceAccountTokenDialog/ServiceAccountTokenDialog';
 import { ServiceAccountTokensCell } from './ServiceAccountTokensCell/ServiceAccountTokensCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 
 export const ServiceAccountsTable = () => {

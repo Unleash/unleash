@@ -13,8 +13,8 @@ import { AppsLinkList } from 'component/common';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import styles from '../../strategies.module.scss';
 import { TogglesLinkList } from 'component/strategies/TogglesLinkList/TogglesLinkList';
-import { IStrategy, IStrategyParameter } from 'interfaces/strategy';
-import { ApplicationSchema, FeatureSchema } from 'openapi';
+import type { IStrategy, IStrategyParameter } from 'interfaces/strategy';
+import type { ApplicationSchema, FeatureSchema } from 'openapi';
 
 interface IStrategyDetailsProps {
     strategy: IStrategy;
@@ -32,7 +32,12 @@ export const StrategyDetails = ({
     const renderParameters = (params: IStrategyParameter[]) => {
         if (params.length > 0) {
             return params.map(({ name, type, description, required }, i) => (
-                <ListItem key={`${name}-${i}`}>
+                <ListItem
+                    key={`${name}-${
+                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                        i
+                    }`}
+                >
                     <ConditionallyRender
                         condition={required}
                         show={

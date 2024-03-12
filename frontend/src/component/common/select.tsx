@@ -1,10 +1,10 @@
-import React from 'react';
+import type React from 'react';
 import {
     FormControl,
     InputLabel,
     MenuItem,
     Select,
-    SelectChangeEvent,
+    type SelectChangeEvent,
 } from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 

@@ -1,7 +1,11 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FILTER_ITEM } from 'utils/testIds';
-import { FilterItemParamHolder, Filters, IFilterItem } from './Filters';
+import {
+    type FilterItemParamHolder,
+    Filters,
+    type IFilterItem,
+} from './Filters';
 
 test('shoulder render all available filters', async () => {
     const availableFilters: IFilterItem[] = [

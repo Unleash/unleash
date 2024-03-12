@@ -1,14 +1,17 @@
 import { InvalidOperationError, PermissionError } from '../../error';
-import { CreateDependentFeatureSchema } from '../../openapi';
-import { IDependentFeaturesStore } from './dependent-features-store-type';
-import { FeatureDependency, FeatureDependencyId } from './dependent-features';
-import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
-import { EventService } from '../../services';
-import { IUser } from '../../server-impl';
+import type { CreateDependentFeatureSchema } from '../../openapi';
+import type { IDependentFeaturesStore } from './dependent-features-store-type';
+import type {
+    FeatureDependency,
+    FeatureDependencyId,
+} from './dependent-features';
+import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
+import type { EventService } from '../../services';
+import type { IUser } from '../../server-impl';
 import { SKIP_CHANGE_REQUEST } from '../../types';
-import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
+import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { extractUsernameFromUser } from '../../util';
-import { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type';
+import type { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type';
 
 interface IDependentFeaturesServiceDeps {
     dependentFeaturesStore: IDependentFeaturesStore;

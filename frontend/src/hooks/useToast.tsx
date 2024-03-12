@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import UIContext from '../contexts/UIContext';
-import { IToast } from '../interfaces/toast';
+import type { IToast } from '../interfaces/toast';
 
 const useToast = () => {
     const { setToast } = useContext(UIContext);

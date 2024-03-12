@@ -1,16 +1,16 @@
-import { Logger } from '../logger';
-import {
+import type { Logger } from '../logger';
+import type {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
 } from '../types/stores/context-field-store';
-import { IProjectStore } from '../features/project/project-store-type';
-import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
-import { IFeatureStrategy, IFlagResolver } from '../types';
-import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import EventService from '../features/events/event-service';
+import type { IProjectStore } from '../features/project/project-store-type';
+import type { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
+import type { IFeatureStrategy, IFlagResolver } from '../types';
+import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import type EventService from '../features/events/event-service';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');

@@ -1,16 +1,16 @@
-import { IGroupStore, IStoreGroup } from '../types/stores/group-store';
+import type { IGroupStore, IStoreGroup } from '../types/stores/group-store';
 import NotFoundError from '../error/notfound-error';
 import Group, {
-    ICreateGroupUserModel,
-    IGroup,
-    IGroupModel,
-    IGroupProject,
-    IGroupRole,
-    IGroupUser,
+    type ICreateGroupUserModel,
+    type IGroup,
+    type IGroupModel,
+    type IGroupProject,
+    type IGroupRole,
+    type IGroupUser,
 } from '../types/group';
-import { Db } from './db';
+import type { Db } from './db';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../error';
-import { IGroupWithProjectRoles } from '../types/stores/access-store';
+import type { IGroupWithProjectRoles } from '../types/stores/access-store';
 import { PROJECT_ROLE_TYPES } from '../util';
 
 const T = {

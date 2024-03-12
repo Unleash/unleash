@@ -15,8 +15,10 @@ import { ALL_ENVS } from '../../util/constants';
 import { Logger } from '../../logger';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
 import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
+import metricsHelper from '../../util/metrics-helper';
+import { FUNCTION_TIME } from '../../metric-events';
 
-type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>;
+type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>;
 
 type FrontendApiFeatureCache = Record<string, Record<string, FeatureInterface>>;
 
@@ -39,6 +41,8 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private status: GlobalFrontendApiCacheState = 'starting';
 
+    private timer: Function;
+
     constructor(
         config: Config,
         segmentReadModel: ISegmentReadModel,
@@ -52,6 +56,12 @@ export class GlobalFrontendApiCache extends EventEmitter {
         this.configurationRevisionService = configurationRevisionService;
         this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
+        this.timer = (functionName) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'GlobalFrontendApiCache',
+                functionName,
+            });
+
         this.refreshData();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
@@ -103,6 +113,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
     // TODO: also consider not fetching disabled features, because those are not returned by frontend API
     private async refreshData() {
         try {
+            const stopTimer = this.timer('refreshData');
             this.featuresByEnvironment = await this.getAllFeatures();
             this.segments = await this.getAllSegments();
             if (this.status === 'starting') {
@@ -112,6 +123,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
                 this.status = 'updated';
                 this.emit('updated');
             }
+            stopTimer();
         } catch (e) {
             this.logger.error('Cannot load data for token', e);
         }

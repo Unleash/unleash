@@ -2,7 +2,7 @@ import { register } from 'prom-client';
 import EventEmitter from 'events';
 import { IEventStore } from './types/stores/event-store';
 import { createTestConfig } from '../test/config/test-config';
-import { DB_TIME, OPERATION_TIME, REQUEST_TIME } from './metric-events';
+import { DB_TIME, FUNCTION_TIME, REQUEST_TIME } from './metric-events';
 import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
@@ -172,15 +172,16 @@ test('should collect metrics for db query timings', async () => {
     );
 });
 
-test('should collect metrics for operation timings', async () => {
-    eventBus.emit(OPERATION_TIME, {
-        operationId: 'getToggles',
+test('should collect metrics for function timings', async () => {
+    eventBus.emit(FUNCTION_TIME, {
+        functionName: 'getToggles',
+        className: 'ToggleService',
         time: 0.1337,
     });
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /operation_duration_seconds\{quantile="0\.99",operationId="getToggles"\} 0.1337/,
+        /function_duration_seconds\{quantile="0\.99",functionName="getToggles",className="ToggleService"\} 0.1337/,
     );
 });
 

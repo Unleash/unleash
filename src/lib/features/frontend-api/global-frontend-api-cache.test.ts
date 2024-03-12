@@ -48,7 +48,11 @@ const createCache = (
     segment: ISegment = defaultSegment,
     features: Record<string, Record<string, IFeatureToggleClient>> = {},
 ) => {
-    const config = { getLogger: noLogger, flagResolver: alwaysOnFlagResolver };
+    const config = {
+        getLogger: noLogger,
+        flagResolver: alwaysOnFlagResolver,
+        eventBus: <any>{ emit: jest.fn() },
+    };
     const segmentReadModel = new FakeSegmentReadModel([segment as ISegment]);
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel(
         features,

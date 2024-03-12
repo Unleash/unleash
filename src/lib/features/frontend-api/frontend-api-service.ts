@@ -16,7 +16,7 @@ import {
 import { validateOrigins } from '../../util';
 import { BadDataError, InvalidTokenError } from '../../error';
 import {
-    OPERATION_TIME,
+    FUNCTION_TIME,
     FRONTEND_API_REPOSITORY_CREATED,
     PROXY_REPOSITORY_CREATED,
 } from '../../metric-events';
@@ -77,9 +77,10 @@ export class FrontendApiService {
         this.services = services;
         this.globalFrontendApiCache = globalFrontendApiCache;
 
-        this.timer = (operationId) =>
-            metricsHelper.wrapTimer(config.eventBus, OPERATION_TIME, {
-                operationId,
+        this.timer = (functionName) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'FrontendApiService',
+                functionName,
             });
     }
 

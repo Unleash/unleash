@@ -17,7 +17,11 @@ import { Logger } from '../../logger';
 import ConfigurationRevisionService, {
     UPDATE_REVISION,
 } from '../feature-toggle/configuration-revision-service';
-import { PROXY_FEATURES_FOR_TOKEN_TIME } from '../../metric-events';
+import {
+    FUNCTION_TIME,
+    PROXY_FEATURES_FOR_TOKEN_TIME,
+} from '../../metric-events';
+import metricsHelper from '../../util/metrics-helper';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
@@ -55,6 +59,8 @@ export class ProxyRepository
 
     private running: boolean;
 
+    private methodTimer: Function;
+
     constructor(
         config: Config,
         stores: Stores,
@@ -71,6 +77,12 @@ export class ProxyRepository
         this.token = token;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.interval = config.frontendApi.refreshIntervalInMs;
+
+        this.methodTimer = (functionName) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'ProxyRepository',
+                functionName,
+            });
     }
 
     getTogglesWithSegmentData(): EnhancedFeatureInterface[] {
@@ -135,8 +147,10 @@ export class ProxyRepository
 
     private async loadDataForToken() {
         try {
+            const stopTimer = this.methodTimer('loadDataForToken');
             this.features = await this.featuresForToken();
             this.segments = await this.segmentsForToken();
+            stopTimer();
         } catch (e) {
             this.logger.error('Cannot load data for token', e);
         }

@@ -1,4 +1,4 @@
-import { IApiUser, IUnleashConfig, IUnleashStores } from '../../types';
+import { IApiUser, IUnleashConfig } from '../../types';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import { FrontendApiService } from './frontend-api-service';
 import { createFrontendApiService } from './createFrontendApiService';
@@ -15,7 +15,6 @@ import {
     PROXY_REPOSITORY_CREATED,
 } from '../../metric-events';
 
-let stores: IUnleashStores;
 let db: ITestDb;
 let frontendApiService: FrontendApiService;
 let featureToggleService: FeatureToggleService;
@@ -24,7 +23,7 @@ let config: IUnleashConfig;
 
 beforeAll(async () => {
     db = await dbInit('frontend_api_service', getLogger);
-    stores = db.stores;
+    const stores = db.stores;
     config = createTestConfig({
         experimental: {
             flags: {

@@ -84,7 +84,8 @@ export default class ClientFeatureToggleReadModel
                 `fs.id`,
             )
             .leftJoin('segments', `segments.id`, `fss.segment_id`)
-            .leftJoin('dependent_features as df', 'df.child', 'features.name');
+            .leftJoin('dependent_features as df', 'df.child', 'features.name')
+            .where('fe.enabled', true);
 
         query = query.select(selectColumns);
         const rows = await query;

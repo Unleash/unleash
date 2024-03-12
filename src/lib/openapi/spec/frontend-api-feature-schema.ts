@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const proxyFeatureSchema = {
-    $id: '#/components/schemas/proxyFeatureSchema',
+export const frontendApiFeatureSchema = {
+    $id: '#/components/schemas/frontendApiFeatureSchema',
     type: 'object',
     required: ['name', 'enabled', 'impressionData'],
     additionalProperties: false,
@@ -75,4 +75,6 @@ export const proxyFeatureSchema = {
     components: {},
 } as const;
 
-export type ProxyFeatureSchema = FromSchema<typeof proxyFeatureSchema>;
+export type FrontendApiFeatureSchema = FromSchema<
+    typeof frontendApiFeatureSchema
+>;

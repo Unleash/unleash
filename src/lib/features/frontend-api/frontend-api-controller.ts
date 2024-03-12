@@ -9,10 +9,10 @@ import {
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
-    ProxyClientSchema,
-    ProxyFeatureSchema,
-    proxyFeaturesSchema,
-    ProxyFeaturesSchema,
+    FrontendApiClientSchema,
+    FrontendApiFeatureSchema,
+    frontendApiFeaturesSchema,
+    FrontendApiFeaturesSchema,
 } from '../../openapi';
 import { Context } from 'unleash-client';
 import { enrichContextWithIp } from './index';
@@ -61,13 +61,13 @@ export default class FrontendAPIController extends Controller {
                     tags: ['Frontend API'],
                     operationId: 'getFrontendFeatures',
                     responses: {
-                        200: createResponseSchema('proxyFeaturesSchema'),
+                        200: createResponseSchema('frontendApiFeaturesSchema'),
                         ...getStandardResponses(401, 404),
                     },
                     summary:
                         'Retrieve enabled feature toggles for the provided context.',
                     description:
-                        'This endpoint returns the list of feature toggles that the proxy evaluates to enabled for the given context. Context values are provided as query parameters. If the Frontend API is disabled 404 is returned.',
+                        'This endpoint returns the list of feature toggles that the frontend API evaluates to enabled for the given context. Context values are provided as query parameters. If the Frontend API is disabled 404 is returned.',
                 }),
             ],
         });
@@ -126,7 +126,7 @@ export default class FrontendAPIController extends Controller {
                     description:
                         'This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.',
                     operationId: 'registerFrontendClient',
-                    requestBody: createRequestSchema('proxyClientSchema'),
+                    requestBody: createRequestSchema('frontendApiClientSchema'),
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
@@ -170,13 +170,13 @@ export default class FrontendAPIController extends Controller {
 
     private async getFrontendApiFeatures(
         req: ApiUserRequest,
-        res: Response<ProxyFeaturesSchema>,
+        res: Response<FrontendApiFeaturesSchema>,
     ) {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {
             throw new NotFoundError();
         }
-        let toggles: ProxyFeatureSchema[];
-        let newToggles: ProxyFeatureSchema[] = [];
+        let toggles: FrontendApiFeatureSchema[];
+        let newToggles: FrontendApiFeatureSchema[] = [];
         if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
             [toggles, newToggles] = await Promise.all([
                 this.services.frontendApiService.getFrontendApiFeatures(
@@ -217,7 +217,7 @@ export default class FrontendAPIController extends Controller {
         this.services.openApiService.respondWithValidation(
             200,
             res,
-            proxyFeaturesSchema.$id,
+            frontendApiFeaturesSchema.$id,
             { toggles: returnedToggles },
         );
     }
@@ -244,7 +244,7 @@ export default class FrontendAPIController extends Controller {
     }
 
     private async registerFrontendApiClient(
-        req: ApiUserRequest<unknown, unknown, ProxyClientSchema>,
+        req: ApiUserRequest<unknown, unknown, FrontendApiClientSchema>,
         res: Response<string>,
     ) {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {

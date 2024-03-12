@@ -4,6 +4,8 @@ import { IApiUser } from '../../types';
 import { FeatureInterface } from 'unleash-client/lib/feature';
 import noLogger from '../../../test/fixtures/no-logger';
 import { ApiTokenType } from '../../types/models/api-token';
+import EventEmitter from 'events';
+import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events';
 
 test('frontend api service fetching features from global cache', async () => {
     const irrelevant = {} as any;
@@ -38,8 +40,13 @@ test('frontend api service fetching features from global cache', async () => {
             ) as FeatureInterface;
         },
     } as GlobalFrontendApiCache;
+    const eventBus = new EventEmitter();
+    let createdFrontendRepositoriesCount = 0;
+    eventBus.on(FRONTEND_API_REPOSITORY_CREATED, () => {
+        createdFrontendRepositoriesCount++;
+    });
     const frontendApiService = new FrontendApiService(
-        { getLogger: noLogger } as unknown as Config,
+        { getLogger: noLogger, eventBus } as unknown as Config,
         irrelevant,
         irrelevant,
         globalFrontendApiCache,
@@ -56,4 +63,5 @@ test('frontend api service fetching features from global cache', async () => {
 
     expect(features).toMatchObject([{ name: 'toggleA' }]);
     expect(features).toHaveLength(1);
+    expect(createdFrontendRepositoriesCount).toBe(1);
 });

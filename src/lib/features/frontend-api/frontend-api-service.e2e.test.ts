@@ -1,4 +1,4 @@
-import { IApiUser, IUnleashConfig } from '../../types';
+import { IApiUser, IUnleashConfig, IUnleashStores } from '../../types';
 import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import { FrontendApiService } from './frontend-api-service';
 import { createFrontendApiService } from './createFrontendApiService';
@@ -15,6 +15,7 @@ import {
     PROXY_REPOSITORY_CREATED,
 } from '../../metric-events';
 
+let stores: IUnleashStores;
 let db: ITestDb;
 let frontendApiService: FrontendApiService;
 let featureToggleService: FeatureToggleService;
@@ -23,7 +24,7 @@ let config: IUnleashConfig;
 
 beforeAll(async () => {
     db = await dbInit('frontend_api_service', getLogger);
-    const stores = db.stores;
+    stores = db.stores;
     config = createTestConfig({
         experimental: {
             flags: {
@@ -54,29 +55,65 @@ beforeAll(async () => {
 afterAll(async () => {
     await db.destroy();
 });
-test('Compare Frontend API implementations', async () => {
-    const project = 'default';
-    const environment = 'default';
-    const user = 'user@example.com';
+
+const createProject = async (project: string) => {
+    await stores.projectStore.create({
+        name: project,
+        description: '',
+        id: project,
+    });
+    await stores.projectStore.addEnvironmentToProject(project, 'development');
+    await stores.projectStore.addEnvironmentToProject(project, 'production');
+};
+
+const createEnvironment = async (environment: string) => {
+    await stores.environmentStore.create({ name: environment, type: 'test' });
+};
+
+const createFeature = async (project: string, featureName: string) => {
     await featureToggleService.createFeatureToggle(
         project,
-        { name: 'enabledFeature', description: '' },
-        user,
+        { name: featureName, description: '' },
+        'user@example.com',
         1,
     );
-    await featureToggleService.createFeatureToggle(
-        project,
-        { name: 'disabledFeature', description: '' },
-        user,
-        1,
-    );
+};
+
+const enableFeature = async (
+    project: string,
+    featureName: string,
+    environment: string,
+) => {
     await featureToggleService.unprotectedUpdateEnabled(
         project,
-        'enabledFeature',
+        featureName,
         environment,
         true,
-        user,
+        'user@example.com',
     );
+};
+
+test('Compare Frontend API implementations', async () => {
+    const projectA = 'projectA';
+    const projectB = 'projectB';
+
+    await createEnvironment('development');
+    await createEnvironment('production');
+
+    await createProject(projectA);
+    await createProject(projectB);
+
+    await createFeature(projectA, 'featureA'); // include
+    await createFeature(projectA, 'featureB'); // another env
+    await createFeature(projectA, 'featureC'); // not enabled
+    await createFeature(projectA, 'featureD'); // include
+    await enableFeature(projectA, 'featureA', 'development');
+    await enableFeature(projectA, 'featureD', 'development');
+    await enableFeature(projectA, 'featureB', 'production');
+
+    await createFeature(projectB, 'featureE'); // another project
+    await enableFeature(projectB, 'featureE', 'development');
+
     await configurationRevisionService.updateMaxRevisionId();
 
     let proxyRepositoriesCount = 0;
@@ -91,8 +128,8 @@ test('Compare Frontend API implementations', async () => {
 
     const oldFeatures = await frontendApiService.getFrontendApiFeatures(
         {
-            projects: [project],
-            environment,
+            projects: [projectA],
+            environment: 'development',
             type: ApiTokenType.FRONTEND,
         } as IApiUser,
         { sessionId: '1234' },
@@ -100,8 +137,8 @@ test('Compare Frontend API implementations', async () => {
 
     const newFeatures = await frontendApiService.getNewFrontendApiFeatures(
         {
-            projects: [project],
-            environment,
+            projects: [projectA],
+            environment: 'development',
             type: ApiTokenType.FRONTEND,
         } as IApiUser,
         { sessionId: '1234' },
@@ -110,4 +147,5 @@ test('Compare Frontend API implementations', async () => {
     expect(proxyRepositoriesCount).toBe(1);
     expect(frontendRepositoriesCount).toBe(1);
     expect(oldFeatures).toEqual(newFeatures);
+    expect(newFeatures.length).toBe(2);
 });

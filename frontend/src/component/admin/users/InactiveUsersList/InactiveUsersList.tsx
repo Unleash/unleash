@@ -1,37 +1,36 @@
-import {
-    IInactiveUser,
-    useInactiveUsers,
-} from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
-import { useUsers } from '../../../../hooks/api/getters/useUsers/useUsers';
+import {IInactiveUser, useInactiveUsers,} from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
+import {useUsers} from '../../../../hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
+import {useInactiveUsersApi} from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
 import useToast from '../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../utils/formatUnknownError';
-import { IUser } from '../../../../interfaces/user';
-import React, { useMemo, useState } from 'react';
-import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { IRole } from '../../../../interfaces/role';
-import { RoleCell } from '../../../common/Table/cells/RoleCell/RoleCell';
-import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
-import { PageContent } from '../../../common/PageContent/PageContent';
-import { PageHeader } from '../../../common/PageHeader/PageHeader';
-import { Button } from '@mui/material';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
-import { TablePlaceholder, VirtualizedTable } from '../../../common/Table';
+import {formatUnknownError} from '../../../../utils/formatUnknownError';
+import {IUser} from '../../../../interfaces/user';
+import React, {useMemo, useState} from 'react';
+import {TimeAgoCell} from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
+import {IRole} from '../../../../interfaces/role';
+import {RoleCell} from '../../../common/Table/cells/RoleCell/RoleCell';
+import {HighlightCell} from '../../../common/Table/cells/HighlightCell/HighlightCell';
+import {PageContent} from '../../../common/PageContent/PageContent';
+import {PageHeader} from '../../../common/PageHeader/PageHeader';
+import {Button} from '@mui/material';
+import {useFlexLayout, useSortBy, useTable} from 'react-table';
+import {ConditionallyRender} from '../../../common/ConditionallyRender/ConditionallyRender';
+import {TablePlaceholder, VirtualizedTable} from '../../../common/Table';
 
-import { DateCell } from '../../../common/Table/cells/DateCell/DateCell';
-import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import {DateCell} from '../../../common/Table/cells/DateCell/DateCell';
+import {InactiveUsersActionCell} from './InactiveUsersActionCell/InactiveUsersActionCell';
+import {TextCell} from '../../../common/Table/cells/TextCell/TextCell';
 import DeleteUser from './DeleteUser/DeleteUser';
-import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers';
-import { Link } from 'react-router-dom';
-import { StyledUsersLinkDiv } from '../Users.styles';
+import {DeleteInactiveUsers} from './DeleteInactiveUsers/DeleteInactiveUsers';
+import {Link} from 'react-router-dom';
+import {StyledUsersLinkDiv} from '../Users.styles';
+import useUiConfig from "../../../../hooks/api/getters/useUiConfig/useUiConfig";
 
 export const InactiveUsersList = () => {
     const { removeUser, userApiErrors } = useAdminUsersApi();
     const { deleteInactiveUsers, errors: inactiveUsersApiErrors } =
         useInactiveUsersApi();
+    const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { inactiveUsers, refetchInactiveUsers, loading, error } =
         useInactiveUsers();

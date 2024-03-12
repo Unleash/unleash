@@ -1,44 +1,46 @@
-import React, { useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import React, {useMemo, useState} from 'react';
+import {TablePlaceholder, VirtualizedTable} from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
 import ResetPassword from './ResetPassword/ResetPassword';
 import DeleteUser from './DeleteUser/DeleteUser';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import {ConditionallyRender} from 'component/common/ConditionallyRender/ConditionallyRender';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
-import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
+import {useUsers} from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import { useAccessOverviewApi } from 'hooks/api/actions/useAccessOverviewApi/useAccessOverviewApi';
-import { IUser } from 'interfaces/user';
-import { IRole } from 'interfaces/role';
+import {useAccessOverviewApi} from 'hooks/api/actions/useAccessOverviewApi/useAccessOverviewApi';
+import {IUser} from 'interfaces/user';
+import {IRole} from 'interfaces/role';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { useUsersPlan } from 'hooks/useUsersPlan';
-import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
-import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { UserTypeCell } from './UserTypeCell/UserTypeCell';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
-import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { Link, useNavigate } from 'react-router-dom';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
+import {formatUnknownError} from 'utils/formatUnknownError';
+import {useUsersPlan} from 'hooks/useUsersPlan';
+import {PageContent} from 'component/common/PageContent/PageContent';
+import {PageHeader} from 'component/common/PageHeader/PageHeader';
+import {Button, IconButton, Tooltip, useMediaQuery} from '@mui/material';
+import {SearchHighlightProvider} from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import {UserTypeCell} from './UserTypeCell/UserTypeCell';
+import {useFlexLayout, useSortBy, useTable} from 'react-table';
+import {sortTypes} from 'utils/sortTypes';
+import {HighlightCell} from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import {TextCell} from 'component/common/Table/cells/TextCell/TextCell';
+import {Link, useNavigate} from 'react-router-dom';
+import {DateCell} from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
-import { Search } from 'component/common/Search/Search';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
-import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
-import { useSearch } from 'hooks/useSearch';
-import { Download } from '@mui/icons-material';
-import { StyledUsersLinkDiv } from '../Users.styles';
-import { useUiFlag } from 'hooks/useUiFlag';
+import {TimeAgoCell} from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import {UsersActionsCell} from './UsersActionsCell/UsersActionsCell';
+import {Search} from 'component/common/Search/Search';
+import {UserAvatar} from 'component/common/UserAvatar/UserAvatar';
+import {useConditionallyHiddenColumns} from 'hooks/useConditionallyHiddenColumns';
+import {UserLimitWarning} from './UserLimitWarning/UserLimitWarning';
+import {RoleCell} from 'component/common/Table/cells/RoleCell/RoleCell';
+import {useSearch} from 'hooks/useSearch';
+import {Download} from '@mui/icons-material';
+import {StyledUsersLinkDiv} from '../Users.styles';
+import {useUiFlag} from 'hooks/useUiFlag';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const UsersList = () => {
     const navigate = useNavigate();
+    const { isEnterprise } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
@@ -315,9 +317,16 @@ const UsersList = () => {
             }
         >
             <UserLimitWarning />
-            <StyledUsersLinkDiv>
-                <Link to='/admin/users/inactive'>View inactive users</Link>
-            </StyledUsersLinkDiv>
+            <ConditionallyRender
+                condition={isEnterprise()}
+                show={
+                    <StyledUsersLinkDiv>
+                        <Link to='/admin/users/inactive'>
+                            View inactive users
+                        </Link>
+                    </StyledUsersLinkDiv>
+                }
+            />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

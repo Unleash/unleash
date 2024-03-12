@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { proxyFeatureSchema } from './proxy-feature-schema';
+import { frontendApiFeatureSchema } from './frontend-api-feature-schema';
 
-export const proxyFeaturesSchema = {
-    $id: '#/components/schemas/proxyFeaturesSchema',
+export const frontendApiFeaturesSchema = {
+    $id: '#/components/schemas/frontendApiFeaturesSchema',
     type: 'object',
     required: ['toggles'],
     additionalProperties: false,
@@ -12,15 +12,17 @@ export const proxyFeaturesSchema = {
             description: 'The actual features returned to the Frontend SDK',
             type: 'array',
             items: {
-                $ref: proxyFeatureSchema.$id,
+                $ref: frontendApiFeatureSchema.$id,
             },
         },
     },
     components: {
         schemas: {
-            proxyFeatureSchema,
+            proxyFeatureSchema: frontendApiFeatureSchema,
         },
     },
 } as const;
 
-export type ProxyFeaturesSchema = FromSchema<typeof proxyFeaturesSchema>;
+export type FrontendApiFeaturesSchema = FromSchema<
+    typeof frontendApiFeaturesSchema
+>;

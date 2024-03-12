@@ -1,6 +1,6 @@
 import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../../types';
 import { Logger } from '../../logger';
-import { ClientMetricsSchema, ProxyFeatureSchema } from '../../openapi';
+import { ClientMetricsSchema, FrontendApiFeatureSchema } from '../../openapi';
 import ApiUser, { IApiUser } from '../../types/api-user';
 import {
     Context,
@@ -15,7 +15,7 @@ import {
 } from '../../types/settings/frontend-settings';
 import { validateOrigins } from '../../util';
 import { BadDataError, InvalidTokenError } from '../../error';
-import { PROXY_REPOSITORY_CREATED } from '../../metric-events';
+import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events';
 import { FrontendApiRepository } from './frontend-api-repository';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import { ProxyRepository } from './proxy-repository';
@@ -74,7 +74,7 @@ export class FrontendApiService {
     async getFrontendApiFeatures(
         token: IApiUser,
         context: Context,
-    ): Promise<ProxyFeatureSchema[]> {
+    ): Promise<FrontendApiFeatureSchema[]> {
         const client = await this.clientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId = context.sessionId || String(Math.random());
@@ -100,7 +100,7 @@ export class FrontendApiService {
     async getNewFrontendApiFeatures(
         token: IApiUser,
         context: Context,
-    ): Promise<ProxyFeatureSchema[]> {
+    ): Promise<FrontendApiFeatureSchema[]> {
         const client = await this.newClientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId = context.sessionId || String(Math.random());
@@ -153,7 +153,7 @@ export class FrontendApiService {
         if (!client) {
             client = this.createClientForFrontendApiToken(token);
             this.clients.set(token.secret, client);
-            this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
+            this.config.eventBus.emit(FRONTEND_API_REPOSITORY_CREATED);
         }
 
         return client;
@@ -168,8 +168,7 @@ export class FrontendApiService {
         if (!newClient) {
             newClient = this.createNewClientForFrontendApiToken(token);
             this.newClients.set(token.secret, newClient);
-            // TODO: do we need this twice?
-            // this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
+            this.config.eventBus.emit(FRONTEND_API_REPOSITORY_CREATED);
         }
 
         return newClient;

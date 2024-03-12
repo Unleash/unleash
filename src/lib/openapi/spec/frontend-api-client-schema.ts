@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const proxyClientSchema = {
-    $id: '#/components/schemas/proxyClientSchema',
+export const frontendApiClientSchema = {
+    $id: '#/components/schemas/frontendApiClientSchema',
     type: 'object',
     required: ['appName', 'interval', 'started', 'strategies'],
     description: 'Frontend SDK client registration information',
@@ -50,4 +50,6 @@ export const proxyClientSchema = {
     components: {},
 } as const;
 
-export type ProxyClientSchema = FromSchema<typeof proxyClientSchema>;
+export type FrontendApiClientSchema = FromSchema<
+    typeof frontendApiClientSchema
+>;

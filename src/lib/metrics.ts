@@ -236,6 +236,10 @@ export default class MetricsMonitor {
             name: 'proxy_repositories_created',
             help: 'Proxy repositories created',
         });
+        const frontendApiRepositoriesCreated = createCounter({
+            name: 'frontend_api_repositories_created',
+            help: 'Frontend API repositories created',
+        });
         const mapFeaturesForClientDuration = createHistogram({
             name: 'map_features_for_client_duration',
             help: 'Duration of mapFeaturesForClient function',
@@ -415,6 +419,10 @@ export default class MetricsMonitor {
 
         eventBus.on(events.PROXY_REPOSITORY_CREATED, () => {
             proxyRepositoriesCreated.inc();
+        });
+
+        eventBus.on(events.FRONTEND_API_REPOSITORY_CREATED, () => {
+            frontendApiRepositoriesCreated.inc();
         });
 
         eventBus.on(events.PROXY_FEATURES_FOR_TOKEN_TIME, ({ duration }) => {

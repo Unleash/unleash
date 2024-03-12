@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ActionSetEventSchemaActionSet } from './actionSetEventSchemaActionSet';
-import type { ObservableEventSchema } from './observableEventSchema';
+import type { SignalSchema } from './signalSchema';
 import type { ActionSetEventSchemaState } from './actionSetEventSchemaState';
 
 /**
@@ -19,10 +19,10 @@ export interface ActionSetEventSchema {
     createdAt: string;
     /** The action set event's ID. Action set event IDs are incrementing integers. In other words, a more recently created action set event will always have a higher ID than an older one. */
     id: number;
-    /** The observable event that triggered this action set event. */
-    observableEvent: ObservableEventSchema;
-    /** The ID of the observable event that triggered this action set event. */
-    observableEventId: number;
+    /** The signal that triggered this action set event. */
+    signal: SignalSchema;
+    /** The ID of the signal that triggered this action set event. */
+    signalId: number;
     /** The state of the action set event. Can be one of `started`, `success`, or `failed`. */
     state: ActionSetEventSchemaState;
 }

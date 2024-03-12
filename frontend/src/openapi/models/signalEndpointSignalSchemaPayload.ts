@@ -5,6 +5,6 @@
  */
 
 /**
- * Match the payload of the signal
+ * The payload of the signal.
  */
-export type ActionsSchemaMatchPayload = { [key: string]: any };
+export type SignalEndpointSignalSchemaPayload = { [key: string]: any };

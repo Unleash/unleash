@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyFeatureSchemaVariant } from './proxyFeatureSchemaVariant';
+import type { FrontendApiFeatureSchemaVariant } from './frontendApiFeatureSchemaVariant';
 
 /**
  * Frontend API feature
  */
-export interface ProxyFeatureSchema {
+export interface FrontendApiFeatureSchema {
     /** Always set to `true`. */
     enabled: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
@@ -16,5 +16,5 @@ export interface ProxyFeatureSchema {
     /** Unique feature name. */
     name: string;
     /** Variant details */
-    variant?: ProxyFeatureSchemaVariant;
+    variant?: FrontendApiFeatureSchemaVariant;
 }

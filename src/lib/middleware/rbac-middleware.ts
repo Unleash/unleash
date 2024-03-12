@@ -1,7 +1,7 @@
 import {
+    ADMIN,
     CREATE_FEATURE,
     DELETE_FEATURE,
-    ADMIN,
     UPDATE_FEATURE,
     UPDATE_PROJECT_SEGMENT,
 } from '../types/permissions';
@@ -9,6 +9,7 @@ import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import User from '../types/user';
 import { Request } from 'express';
+import { extractUserId } from '../util';
 
 interface PermissionChecker {
     hasPermission(
@@ -56,7 +57,14 @@ const rbacMiddleware = (
             }
 
             if (user.isAPI) {
-                return user.permissions.includes(ADMIN);
+                if (user.permissions.includes(ADMIN)) {
+                    if (!req.user.id) {
+                        req.user.id = extractUserId(req);
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
             }
 
             if (!user.id) {

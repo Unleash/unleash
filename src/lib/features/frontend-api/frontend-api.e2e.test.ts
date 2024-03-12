@@ -24,7 +24,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 const TEST_USER_ID = -9999;
 beforeAll(async () => {
-    db = await dbInit('proxy', getLogger);
+    db = await dbInit('frontend_api', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -347,7 +347,7 @@ test('should accept client registration requests', async () => {
         .expect((res) => expect(res.text).toEqual('OK'));
 });
 
-test('should store proxy client metrics', async () => {
+test('should store frontend api client metrics', async () => {
     const now = new Date();
     const appName = randomId();
     const instanceId = randomId();

@@ -8,6 +8,7 @@ import { nameType } from '../../routes/util';
 import { projectSchema } from '../../services/project-schema';
 import NotFoundError from '../../error/notfound-error';
 import {
+    ADMIN_TOKEN_USER,
     CreateProject,
     DEFAULT_PROJECT,
     FeatureToggle,
@@ -44,6 +45,7 @@ import {
     ProjectUserUpdateRoleEvent,
     RoleName,
     SYSTEM_USER,
+    SYSTEM_USER_ID,
 } from '../../types';
 import {
     IProjectAccessModel,
@@ -701,8 +703,12 @@ export default class ProjectService {
         );
     }
 
-    private isAdmin(roles: IRoleWithProject[]): boolean {
-        return roles.some((r) => r.name === RoleName.ADMIN);
+    private isAdmin(userId: number, roles: IRoleWithProject[]): boolean {
+        return (
+            userId === SYSTEM_USER_ID ||
+            userId === ADMIN_TOKEN_USER.id ||
+            roles.some((r) => r.name === RoleName.ADMIN)
+        );
     }
 
     private isProjectOwner(
@@ -723,7 +729,7 @@ export default class ProjectService {
             projectId,
         );
         if (
-            this.isAdmin(userRoles) ||
+            this.isAdmin(userAddingAccess, userRoles) ||
             this.isProjectOwner(userRoles, projectId)
         ) {
             return true;

@@ -7,11 +7,11 @@
 /**
  * The format of the payload.
  */
-export type ProxyFeatureSchemaVariantPayloadType =
-    (typeof ProxyFeatureSchemaVariantPayloadType)[keyof typeof ProxyFeatureSchemaVariantPayloadType];
+export type FrontendApiFeatureSchemaVariantPayloadType =
+    (typeof FrontendApiFeatureSchemaVariantPayloadType)[keyof typeof FrontendApiFeatureSchemaVariantPayloadType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ProxyFeatureSchemaVariantPayloadType = {
+export const FrontendApiFeatureSchemaVariantPayloadType = {
     json: 'json',
     csv: 'csv',
     string: 'string',

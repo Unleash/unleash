@@ -18,11 +18,13 @@ export type ActionSetEventSchemaActionSet = {
     createdAt: string;
     /** The ID of the user that created this action set. */
     createdByUserId: number;
+    /** The description of the action set */
+    description?: string | null;
     /** Whether this action set is enabled or not */
     enabled?: boolean;
     /** The ID of the action set. */
     id: number;
-    /** Defines a matching rule for the observable event that will trigger the action set */
+    /** Defines a matching rule for the signal that will trigger the action set */
     match: ActionSetEventSchemaActionSetMatch;
     /** The name of the action set */
     name: string;

@@ -12,7 +12,7 @@ let db: ITestDb;
 let appErrorLogs: string[] = [];
 
 beforeAll(async () => {
-    db = await dbInit('proxy_concurrency', getLogger);
+    db = await dbInit('frontend_api_concurrency', getLogger);
     const baseLogger = getLogger();
     const appLogger = {
         ...baseLogger,

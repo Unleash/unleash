@@ -7,4 +7,4 @@
 /**
  * When this client started. Should be reported as ISO8601 time.
  */
-export type ProxyClientSchemaStarted = string | number;
+export type FrontendApiClientSchemaStarted = string | number;

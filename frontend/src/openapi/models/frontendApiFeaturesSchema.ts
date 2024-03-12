@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProxyFeatureSchema } from './proxyFeatureSchema';
+import type { FrontendApiFeatureSchema } from './frontendApiFeatureSchema';
 
 /**
  * Frontend SDK features list
  */
-export interface ProxyFeaturesSchema {
+export interface FrontendApiFeaturesSchema {
     /** The actual features returned to the Frontend SDK */
-    toggles: ProxyFeatureSchema[];
+    toggles: FrontendApiFeatureSchema[];
 }

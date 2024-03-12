@@ -47,7 +47,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
     ) {
         super();
         this.config = config;
-        this.logger = config.getLogger('proxy-repository.ts');
+        this.logger = config.getLogger('global-frontend-api-cache.ts');
         this.clientFeatureToggleReadModel = clientFeatureToggleReadModel;
         this.configurationRevisionService = configurationRevisionService;
         this.segmentReadModel = segmentReadModel;

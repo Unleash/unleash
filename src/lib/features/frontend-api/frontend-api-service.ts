@@ -16,12 +16,14 @@ import {
 import { validateOrigins } from '../../util';
 import { BadDataError, InvalidTokenError } from '../../error';
 import {
+    OPERATION_TIME,
     FRONTEND_API_REPOSITORY_CREATED,
     PROXY_REPOSITORY_CREATED,
 } from '../../metric-events';
 import { FrontendApiRepository } from './frontend-api-repository';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import { ProxyRepository } from './proxy-repository';
+import metricsHelper from '../../util/metrics-helper';
 
 export type Config = Pick<
     IUnleashConfig,
@@ -61,6 +63,8 @@ export class FrontendApiService {
 
     private cachedFrontendSettings?: FrontendSettings;
 
+    private timer: Function;
+
     constructor(
         config: Config,
         stores: Stores,
@@ -72,17 +76,23 @@ export class FrontendApiService {
         this.stores = stores;
         this.services = services;
         this.globalFrontendApiCache = globalFrontendApiCache;
+
+        this.timer = (operationId) =>
+            metricsHelper.wrapTimer(config.eventBus, OPERATION_TIME, {
+                operationId,
+            });
     }
 
     async getFrontendApiFeatures(
         token: IApiUser,
         context: Context,
     ): Promise<FrontendApiFeatureSchema[]> {
+        const stopTimer = this.timer('getFrontendApiFeatures');
         const client = await this.clientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId = context.sessionId || String(Math.random());
 
-        return definitions
+        const resultDefinitions = definitions
             .filter((feature) =>
                 client.isEnabled(feature.name, {
                     ...context,
@@ -98,17 +108,20 @@ export class FrontendApiService {
                 }),
                 impressionData: Boolean(feature.impressionData),
             }));
+        stopTimer();
+        return resultDefinitions;
     }
 
     async getNewFrontendApiFeatures(
         token: IApiUser,
         context: Context,
     ): Promise<FrontendApiFeatureSchema[]> {
+        const stopTimer = this.timer('getNewFrontendApiFeatures');
         const client = await this.newClientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId = context.sessionId || String(Math.random());
 
-        return definitions
+        const resultDefinitions = definitions
             .filter((feature) => {
                 const enabled = client.isEnabled(feature.name, {
                     ...context,
@@ -125,6 +138,8 @@ export class FrontendApiService {
                 }),
                 impressionData: Boolean(feature.impressionData),
             }));
+        stopTimer();
+        return resultDefinitions;
     }
 
     async registerFrontendApiMetrics(

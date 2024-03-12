@@ -7,8 +7,9 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import Input from 'component/common/Input/Input';
 import { BannerVariant } from 'interfaces/banner';
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
-import Visibility from '@mui/icons-material/Visibility';
+//import Visibility from '@mui/icons-material/Visibility';
 import { BannerDialog } from 'component/banners/Banner/BannerDialog/BannerDialog';
+import { Visibility } from '@mui/icons-material';
 
 const StyledForm = styled('div')(({ theme }) => ({
     display: 'flex',

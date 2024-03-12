@@ -13,7 +13,6 @@ import Extension from '@mui/icons-material/Extension';
 import FlagRounded from '@mui/icons-material/FlagRounded';
 import Report from '@mui/icons-material/Report';
 import Timeline from '@mui/icons-material/Timeline';
-import { SvgIconComponent } from '@mui/icons-material';
 import {
     CREATE_FEATURE,
     CREATE_STRATEGY,
@@ -80,7 +79,7 @@ export const ApplicationView = () => {
         viewUrl: string;
         name: string;
         description: string;
-        Icon: SvgIconComponent;
+        Icon: React.ElementType;
         i: number;
     }) => (
         <ListItem key={`found_${name}-${i}`}>

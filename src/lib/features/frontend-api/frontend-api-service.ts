@@ -15,7 +15,10 @@ import {
 } from '../../types/settings/frontend-settings';
 import { validateOrigins } from '../../util';
 import { BadDataError, InvalidTokenError } from '../../error';
-import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events';
+import {
+    FRONTEND_API_REPOSITORY_CREATED,
+    PROXY_REPOSITORY_CREATED,
+} from '../../metric-events';
 import { FrontendApiRepository } from './frontend-api-repository';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import { ProxyRepository } from './proxy-repository';
@@ -153,7 +156,7 @@ export class FrontendApiService {
         if (!client) {
             client = this.createClientForFrontendApiToken(token);
             this.clients.set(token.secret, client);
-            this.config.eventBus.emit(FRONTEND_API_REPOSITORY_CREATED);
+            this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
         }
 
         return client;

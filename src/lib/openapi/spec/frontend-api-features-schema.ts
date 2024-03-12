@@ -18,7 +18,7 @@ export const frontendApiFeaturesSchema = {
     },
     components: {
         schemas: {
-            proxyFeatureSchema: frontendApiFeatureSchema,
+            frontendApiFeatureSchema,
         },
     },
 } as const;

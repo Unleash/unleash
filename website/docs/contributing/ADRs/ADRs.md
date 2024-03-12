@@ -26,6 +26,7 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [POST/PUT API payload](./back-end/POST-PUT-api-payload.md)
 * [Specificity in database column references](./back-end/specificity-db-columns.md)
 * [Write model vs Read models](./back-end/write-model-vs-read-models.md)
+* [Frontend API Design](./back-end/frontend-api-design.md)
 
 ## Front-end ADRs
 

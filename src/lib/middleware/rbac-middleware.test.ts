@@ -73,7 +73,8 @@ test('should give api-user ADMIN permission', async () => {
     expect(hasAccess).toBe(true);
 });
 
-describe('ADMIN tokens should have user id -1337', () => {
+describe('ADMIN tokens should have user id -1337 when only passed through rbac-middleware', () => {
+    /// Will be -42 (ADMIN_USER.id) when we have the api-token-middleware run first
     test('Should give ADMIN api-user userid -1337 (SYSTEM_USER_ID)', async () => {
         const accessService = {
             hasPermission: jest.fn(),
@@ -101,6 +102,7 @@ describe('ADMIN tokens should have user id -1337', () => {
         expect(req.user.id).toBe(SYSTEM_USER_ID);
         expect(hasAccess).toBe(true);
     });
+    /// Will be -42 (ADMIN_USER.id) when we have the api-token-middleware run first
     test('Also when checking against permission NONE, userid should still be -1337', async () => {
         const accessService = {
             hasPermission: jest.fn(),

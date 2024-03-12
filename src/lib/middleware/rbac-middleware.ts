@@ -9,7 +9,7 @@ import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import User from '../types/user';
 import { Request } from 'express';
-import { SYSTEM_USER_ID } from '../types';
+import { extractUserId } from '../util';
 
 interface PermissionChecker {
     hasPermission(
@@ -59,7 +59,7 @@ const rbacMiddleware = (
             if (user.isAPI) {
                 if (user.permissions.includes(ADMIN)) {
                     if (!req.user.id) {
-                        req.user.id = SYSTEM_USER_ID;
+                        req.user.id = extractUserId(req);
                     }
                     return true;
                 } else {

@@ -1,4 +1,3 @@
-import React from 'react';
 import Component from './Figure';
 import Layout from '@theme/Layout';
 import { BrowserRouter } from 'react-router-dom';

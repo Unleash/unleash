@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Component = ({ level, description }) => {
     return (
         <div

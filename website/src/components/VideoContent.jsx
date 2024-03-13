@@ -1,4 +1,3 @@
-import React from 'react';
 import Admonition from '@theme/Admonition';
 
 const Component = ({ videoUrls }) => {
@@ -12,9 +11,8 @@ const Component = ({ videoUrls }) => {
                         height='auto'
                         src={url}
                         title='YouTube video player'
-                        frameBorder='0'
                         allowFullScreen
-                    ></iframe>
+                    />
                 ))
             ) : (
                 <Admonition type='danger'>

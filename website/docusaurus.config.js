@@ -785,7 +785,7 @@ module.exports = {
                         to: '/how-to/how-to-environment-import-export',
                     },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
-                createRedirects: function (toPath) {
+                createRedirects: (toPath) => {
                     if (
                         toPath.indexOf('/docs/') === -1 &&
                         toPath.indexOf('index.html') === -1

@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from '@docusaurus/Link';
 
 const LinkBox = ({ level, header, description, link }) => {

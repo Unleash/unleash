@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Component = () => {
     return (
         <div className='unleash-academy-banner academy-general-banner'>
@@ -12,7 +10,7 @@ const Component = () => {
                     <li>100% Free & online</li>
                     <li>Valuable certification</li>
                 </ul>
-                <div className='small-logo'></div>
+                <div className='small-logo' />
                 <a
                     href='https://docs.google.com/forms/d/1iPUk2I0k5xMzicn9aLMcPF3b9ub3ZwdVjRxCxWxV7js/viewform'
                     className='unleash-action-button'
@@ -20,7 +18,7 @@ const Component = () => {
                     Get certified
                 </a>
             </div>
-            <div className='big-logo'></div>
+            <div className='big-logo' />
         </div>
     );
 };

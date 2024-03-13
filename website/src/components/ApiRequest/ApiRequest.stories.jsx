@@ -1,4 +1,3 @@
-import React from 'react';
 import Component from './index';
 import Layout from '@theme/Layout';
 import { BrowserRouter } from 'react-router-dom';

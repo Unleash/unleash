@@ -7,6 +7,7 @@ interface ILinkFieldProps {
     small?: boolean;
     successTitle?: string;
     errorTitle?: string;
+    onCopy?: () => void;
 }
 
 export const LinkField = ({
@@ -14,6 +15,7 @@ export const LinkField = ({
     small,
     successTitle = 'Successfully copied invite link.',
     errorTitle = 'Could not copy invite link.',
+    onCopy,
 }: ILinkFieldProps) => {
     const { setToastData } = useToast();
 
@@ -32,6 +34,7 @@ export const LinkField = ({
                         type: 'success',
                         title: successTitle,
                     });
+                    onCopy?.();
                 })
                 .catch(() => {
                     setError();

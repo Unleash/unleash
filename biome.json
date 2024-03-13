@@ -75,6 +75,8 @@
       "src/migrations/*.json",
       "src/test/examples/*.json",
       "coverage",
+      "website/build",
+      "website/global.js",
       ".docusaurus"
     ],
     "indentWidth": 4

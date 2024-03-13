@@ -13,6 +13,7 @@ import Add from '@mui/icons-material/Add';
 import { ProjectActionsPreviewPayload } from './ProjectActionsPreviewPayload';
 import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { flattenPayload } from '@server/util/flattenPayload';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -86,7 +87,9 @@ export const ProjectActionsFormStepSource = ({
         const lastSourcePayload = signalEndpointSignals[0]?.payload;
         return {
             lastSourcePayload,
-            filterSuggestions: Object.keys(lastSourcePayload || {}),
+            filterSuggestions: Object.keys(
+                flattenPayload(lastSourcePayload) || {},
+            ).sort(),
         };
     }, [signalEndpointSignals]);
 

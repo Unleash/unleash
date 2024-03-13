@@ -22,7 +22,8 @@ import { IPrivateProjectChecker } from '../../private-project/privateProjectChec
 import { IFlagResolver, SYSTEM_USER } from '../../../types';
 import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
 import { Logger } from '../../../logger';
-import { findOutdatedSDKs } from './findOutdatedSdks';
+import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks';
+import { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema';
 
 export default class ClientInstanceService {
     apps = {};
@@ -259,6 +260,12 @@ export default class ClientInstanceService {
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {
         return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
+    }
+
+    async getOutdatedSdks(): Promise<OutdatedSdksSchema['sdks']> {
+        const sdkApps = await this.clientInstanceStore.groupApplicationsBySdk();
+
+        return sdkApps.filter((sdkApp) => isOutdatedSdk(sdkApp.sdkVersion));
     }
 
     async usesSdkOlderThan(

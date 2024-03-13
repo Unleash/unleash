@@ -4,6 +4,7 @@ import {
     INewClientInstance,
 } from '../../lib/types/stores/client-instance-store';
 import NotFoundError from '../../lib/error/notfound-error';
+import groupBy from 'lodash.groupby';
 
 export default class FakeClientInstanceStore implements IClientInstanceStore {
     instances: IClientInstance[] = [];
@@ -32,10 +33,19 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
     }
 
     async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
-        return Promise.resolve(
-            this.instances.filter((instance) =>
-                instance.sdkVersion?.startsWith(sdkName),
-            ),
+        return this.instances.filter((instance) =>
+            instance.sdkVersion?.startsWith(sdkName),
+        );
+    }
+
+    async groupApplicationsBySdk(): Promise<
+        { sdkVersion: string; applications: string[] }[]
+    > {
+        return Object.entries(groupBy(this.instances, 'sdkVersion')).map(
+            ([sdkVersion, apps]) => ({
+                sdkVersion,
+                applications: apps.map((item) => item.appName),
+            }),
         );
     }
 

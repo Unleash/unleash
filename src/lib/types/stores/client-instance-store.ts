@@ -26,6 +26,9 @@ export interface IClientInstanceStore
         environment: string,
     ): Promise<IClientInstance[]>;
     getBySdkName(sdkName: string): Promise<IClientInstance[]>;
+    groupApplicationsBySdk(): Promise<
+        { sdkVersion: string; applications: string[] }[]
+    >;
     getDistinctApplications(): Promise<string[]>;
     getDistinctApplicationsCount(daysBefore?: number): Promise<number>;
     deleteForApplication(appName: string): Promise<void>;

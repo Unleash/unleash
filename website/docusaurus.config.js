@@ -101,7 +101,7 @@ module.exports = {
                         {
                             type: 'doc',
                             docId: 'unleash-academy/managing-unleash-for-devops',
-                            label: 'Managing Unleash for DevOps/Admins'
+                            label: 'Managing Unleash for DevOps/Admins',
                         },
                     ],
                 },
@@ -112,18 +112,18 @@ module.exports = {
                     html: '<span class="hide-at-small-sizes">Unleash </span>Certification',
                     items: [
                         {
-                          label: 'Foundational Unleash',
-                          href: 'https://docs.google.com/forms/d/1iPUk2I0k5xMzicn9aLMcPF3b9ub3ZwdVjRxCxWxV7js/viewform',
+                            label: 'Foundational Unleash',
+                            href: 'https://docs.google.com/forms/d/1iPUk2I0k5xMzicn9aLMcPF3b9ub3ZwdVjRxCxWxV7js/viewform',
                         },
                         {
-                          label: 'Advanced Unleash for Developers',
-                          href: 'https://docs.google.com/forms/d/1NUL9hyO8Ys916TB6fPV3-jkvD97OmPXZ8_TO84Wjqgc/viewform',
+                            label: 'Advanced Unleash for Developers',
+                            href: 'https://docs.google.com/forms/d/1NUL9hyO8Ys916TB6fPV3-jkvD97OmPXZ8_TO84Wjqgc/viewform',
                         },
                         {
-                          label: 'Managing Unleash for DevOps/Admins',
-                          href: 'https://docs.google.com/forms/d/1JlIqmXI3P7dj0n-OiUs2IYsYXgmqw23BChaemlSgHJA/viewform',
+                            label: 'Managing Unleash for DevOps/Admins',
+                            href: 'https://docs.google.com/forms/d/1JlIqmXI3P7dj0n-OiUs2IYsYXgmqw23BChaemlSgHJA/viewform',
                         },
-                  ],
+                    ],
                 },
                 {
                     type: 'html',
@@ -224,9 +224,9 @@ module.exports = {
             // Optional medium-zoom options at
             // https://www.npmjs.com/package/medium-zoom#options
             options: {
-                background: 'var(--ifm-background-color)'
+                background: 'var(--ifm-background-color)',
             },
-        }
+        },
     },
     presets: [
         [
@@ -364,7 +364,10 @@ module.exports = {
                         to: '/reference/integrations/slack',
                     },
                     {
-                        from: ['/addons/slack-app', '/reference/addons/slack-app'],
+                        from: [
+                            '/addons/slack-app',
+                            '/reference/addons/slack-app',
+                        ],
                         to: '/reference/integrations/slack-app',
                     },
                     {
@@ -484,10 +487,7 @@ module.exports = {
                         to: '/reference/projects',
                     },
                     {
-                        from: [
-                            '/user_guide/rbac',
-                            '/advanced/groups',
-                        ],
+                        from: ['/user_guide/rbac', '/advanced/groups'],
                         to: '/reference/rbac',
                     },
                     {
@@ -612,10 +612,7 @@ module.exports = {
                         to: '/',
                     },
                     {
-                        from: [
-                            '/topics/feature-flags/tutorials',
-                            '/tutorials',
-                        ],
+                        from: ['/topics/feature-flags/tutorials', '/tutorials'],
                         to: '/feature-flag-tutorials',
                     },
                     {
@@ -631,10 +628,7 @@ module.exports = {
                         to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
                     },
                     {
-                        from: [
-                            '/tutorials/academy',
-                            '/unleash-academy',
-                        ],
+                        from: ['/tutorials/academy', '/unleash-academy'],
                         to: '/unleash-academy/introduction',
                     },
                     {
@@ -651,7 +645,7 @@ module.exports = {
                     },
                     {
                         from: '/developer-guide',
-                        to: '/contributing'
+                        to: '/contributing',
                     },
                     {
                         from: [
@@ -710,10 +704,7 @@ module.exports = {
                         to: '/using-unleash/troubleshooting/feature-not-available',
                     },
                     {
-                        from: [
-                            '/reference/deploy',
-                            '/deploy',
-                        ],
+                        from: ['/reference/deploy', '/deploy'],
                         to: '/using-unleash/deploy',
                     },
                     {
@@ -793,10 +784,8 @@ module.exports = {
                         ],
                         to: '/how-to/how-to-environment-import-export',
                     },
-
-
                 ].map(addDocsRoutePrefix), // add /docs prefixes
-                createRedirects: function (toPath) {
+                createRedirects: (toPath) => {
                     if (
                         toPath.indexOf('/docs/') === -1 &&
                         toPath.indexOf('index.html') === -1
@@ -867,7 +856,5 @@ module.exports = {
             async: true,
         },
     ],
-    clientModules: [
-        require.resolve('./global.js'),
-    ],
+    clientModules: [require.resolve('./global.js')],
 };

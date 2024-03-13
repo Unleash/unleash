@@ -112,6 +112,7 @@ export * from './login-schema';
 export * from './maintenance-schema';
 export * from './me-schema';
 export * from './name-schema';
+export * from './outdated-sdks-schema';
 export * from './override-schema';
 export * from './parameters-schema';
 export * from './parent-feature-options-schema';

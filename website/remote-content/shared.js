@@ -93,8 +93,10 @@ module.exports.modifyContent =
         const generationTime = new Date();
 
         const processedFilename = (() => {
-            const constructed =
-                path.join(filePath(data) ?? '', data.slugName) + '.md';
+            const constructed = `${path.join(
+                filePath(data) ?? '',
+                data.slugName,
+            )}.md`;
 
             // ensure the file path does *not* start with a leading /
             return constructed.charAt(0) === '/'

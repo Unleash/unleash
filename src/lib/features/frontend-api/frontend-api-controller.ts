@@ -179,14 +179,15 @@ export default class FrontendAPIController extends Controller {
         let toggles: FrontendApiFeatureSchema[];
         let newToggles: FrontendApiFeatureSchema[] = [];
         if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
+            const context = FrontendAPIController.createContext(req);
             [toggles, newToggles] = await Promise.all([
                 this.services.frontendApiService.getFrontendApiFeatures(
                     req.user,
-                    FrontendAPIController.createContext(req),
+                    context,
                 ),
                 this.services.frontendApiService.getNewFrontendApiFeatures(
                     req.user,
-                    FrontendAPIController.createContext(req),
+                    context,
                 ),
             ]);
             const sortedToggles = toggles.sort((a, b) =>
@@ -201,9 +202,10 @@ export default class FrontendAPIController extends Controller {
                         toggles.length
                     }, new count ${newToggles.length}, projects ${
                         req.user.projects
-                    }, environment ${req.user.environment}, diff ${diff(
-                        sortedToggles,
-                        sortedNewToggles,
+                    }, environment ${
+                        req.user.environment
+                    }, diff ${JSON.stringify(
+                        diff(sortedToggles, sortedNewToggles),
                     )}`,
                 );
             }

@@ -23,6 +23,8 @@ import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import isEqual from 'lodash.isequal';
 import { diff } from 'json-diff';
+import metricsHelper from '../../util/metrics-helper';
+import { FUNCTION_TIME } from '../../metric-events';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -43,10 +45,18 @@ export default class FrontendAPIController extends Controller {
 
     private services: Services;
 
+    private timer: Function;
+
     constructor(config: IUnleashConfig, services: Services) {
         super(config);
         this.logger = config.getLogger('frontend-api-controller.ts');
         this.services = services;
+
+        this.timer = (functionName) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'FrontendAPIController',
+                functionName,
+            });
 
         // Support CORS requests for the frontend endpoints.
         // Preflight requests are handled in `app.ts`.
@@ -181,14 +191,8 @@ export default class FrontendAPIController extends Controller {
         if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
             const context = FrontendAPIController.createContext(req);
             [toggles, newToggles] = await Promise.all([
-                this.services.frontendApiService.getFrontendApiFeatures(
-                    req.user,
-                    context,
-                ),
-                this.services.frontendApiService.getNewFrontendApiFeatures(
-                    req.user,
-                    context,
-                ),
+                this.getTimedFrontendApiFeatures(req.user, context),
+                this.getTimedNewFrontendApiFeatures(req.user, context),
             ]);
             const sortedToggles = toggles.sort((a, b) =>
                 a.name.localeCompare(b.name),
@@ -231,6 +235,28 @@ export default class FrontendAPIController extends Controller {
             frontendApiFeaturesSchema.$id,
             { toggles: returnedToggles },
         );
+    }
+
+    private async getTimedFrontendApiFeatures(req, context) {
+        const stopTimer = this.timer('getFrontendApiFeatures');
+        const features =
+            await this.services.frontendApiService.getFrontendApiFeatures(
+                req.user,
+                context,
+            );
+        stopTimer();
+        return features;
+    }
+
+    private async getTimedNewFrontendApiFeatures(req, context) {
+        const stopTimer = this.timer('getNewFrontendApiFeatures');
+        const features =
+            await this.services.frontendApiService.getNewFrontendApiFeatures(
+                req.user,
+                context,
+            );
+        stopTimer();
+        return features;
     }
 
     private async registerFrontendApiMetrics(

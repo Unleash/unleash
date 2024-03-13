@@ -54,7 +54,7 @@ export default class FrontendAPIController extends Controller {
 
         this.timer = (functionName) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
-                className: 'FrontendApiService',
+                className: 'FrontendAPIController',
                 functionName,
             });
 

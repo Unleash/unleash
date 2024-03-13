@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export type BannerVariant = 'info' | 'warning' | 'error' | 'success';
 
 export interface IBanner {
@@ -9,7 +11,7 @@ export interface IBanner {
     linkText?: string;
     plausibleEvent?: string;
     dialogTitle?: string;
-    dialog?: string;
+    dialog?: ReactNode;
 }
 
 export interface IInternalBanner extends Omit<IBanner, 'plausibleEvent'> {

@@ -16,9 +16,7 @@ export const OutdatedSdksBanner = () => {
         <>
             <ConditionallyRender
                 condition={displayOutdatedSdksBanner}
-                show={
-                    <Banner key={'upgradeSdks'} banner={outdatedSdksBanner} />
-                }
+                show={<Banner banner={outdatedSdksBanner} />}
             />
         </>
     );

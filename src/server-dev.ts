@@ -52,7 +52,12 @@ process.nextTick(async () => {
                         sdkReporting: true,
                         outdatedSdksBanner: true,
                         globalFrontendApiCache: true,
+<<<<<<< HEAD
                         returnGlobalFrontendApiCache: false,
+=======
+                        returnGlobalFrontendApiCache: true,
+                        projectOverviewRefactor: true,
+>>>>>>> 14b7e4c1a (feat: setup ff)
                     },
                 },
                 authentication: {

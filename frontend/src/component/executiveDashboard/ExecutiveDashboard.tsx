@@ -49,8 +49,7 @@ const StickyWrapper = styled(Box)(({ theme }) => ({
     position: 'sticky',
     top: 0,
     zIndex: 1000,
-    display: 'block',
-    padding: theme.spacing(1,0,4),
+    padding: theme.spacing(2,0,4),
     background: theme.palette.background.application,
 }));
 

@@ -3,9 +3,9 @@ title: How to Implement Feature Flags in Sveltekit using Unleash
 description: "How to use Unleash feature flags with Sveltekit."
 ---
 
-Hello and welcome to another article. This is about adding feature flags to an app made with [SvelteKit](https://kit.svelte.dev/) and [Unleash](https://www.getunleash.io/). We'll make a paired-down habits app to keep track of your new year's resolutions.
+Hello and welcome to another tutorial. This is about adding feature flags to an app made with [SvelteKit](https://kit.svelte.dev/) and [Unleash](https://www.getunleash.io/). We'll make a paired-down habits app to keep track of your new year's resolutions.
 
-This is not meant to be a complete product, but enough to show you the different approaches to working with feature flags in a "fullstack" framework. The final code is available in [this repo](https://github.com/alvinometric/unleash-sveltekit).
+This is not meant to be a complete product, but enough to show you the different approaches to working with feature flags in a "fullstack" framework like Next.js or Sveltekit. The final code is available on GitHub in [this repo](https://github.com/alvinometric/unleash-sveltekit).
 
 ## Setup
 
@@ -25,7 +25,7 @@ npm i date-fns @unleash/proxy-client-svelte unleash-client
 
 We'll use Svelte stores to keep track of a global array of habits. For the sake of simplicity, we won't store these habits anywhere yet (feel free to add localStorage or a database). Our basic habit app will only consist of 3 files.
 
-First, a global store that will contain our habits and their completion dates.
+First, a global store that will contain our habits and their completion dates. Just JavaScript, no Svelte yet.
 
 ```js
 // src/lib/stores.js
@@ -221,7 +221,7 @@ Then create a feature flag called `maxHabitsIncreased`
 
 ![alt text](./feat.png)
 
-Bbased on whether this flag is enabled or not, we'll set the `maxHabits` value to either 6 or 2.
+Bbased on whether this flag is enabled or not, we'll set the `maxHabits` value to either 6 or 2. You could set this directly in a flag value if you wanted as well.
 
 ### Basic toggle
 
@@ -244,6 +244,8 @@ We'll use the official [Unleash Svelte SDK](https://docs.getunleash.io/reference
   <App />
 </FlagProvider>
 ```
+
+Note that I’m using the URL and API key directly in the code right now, but you’d want to put these in an env file.
 
 Now that our SDK is setup, we can modify our `App.svelte` to set the value of the variable based on the feature flag.
 

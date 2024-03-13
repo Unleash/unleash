@@ -7,7 +7,6 @@ import {
 } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
-import { getProjectColor } from '../../executive-dashboard-utils';
 
 interface IUpdatesPerEnvironmnetTypeChart {
     environmentTypeTrends: ExecutiveSummarySchema['environmentTypeTrends'];
@@ -39,10 +38,30 @@ const groupByDate = (
     return grouped;
 };
 
+const useEnvironmentTypeColor = () => {
+    const theme = useTheme();
+
+    return (environmentType: string) => {
+        switch (environmentType) {
+            case 'production':
+                return theme.palette.charts.series[3];
+            case 'staging':
+                return theme.palette.charts.series[1];
+            case 'development':
+                return theme.palette.charts.series[0];
+            case 'test':
+                return theme.palette.charts.series[2];
+            default:
+                return theme.palette.charts.series[4];
+        }
+    };
+};
+
 export const UpdatesPerEnvironmentTypeChart: VFC<
     IUpdatesPerEnvironmnetTypeChart
 > = ({ environmentTypeTrends, isLoading }) => {
     const theme = useTheme();
+    const getEnvironmentTypeColor = useEnvironmentTypeColor();
     const notEnoughData = environmentTypeTrends?.length < 2;
     const placeholderData = usePlaceholderData({ fill: true, type: 'double' });
 
@@ -51,7 +70,7 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
         const labels = environmentTypeTrends?.map((item) => item.date);
         const datasets = Object.entries(grouped).map(
             ([environmentType, trends]) => {
-                const color = getProjectColor(environmentType);
+                const color = getEnvironmentTypeColor(environmentType);
                 return {
                     label: environmentType,
                     data: trends.map((item) => item.totalUpdates),

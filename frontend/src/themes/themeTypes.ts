@@ -145,6 +145,7 @@ declare module '@mui/material/styles' {
                 gradientStale: string;
                 gradientPotentiallyStale: string;
             };
+            series: string[];
         };
     }
     interface Theme extends CustomTheme {}

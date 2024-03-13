@@ -302,6 +302,7 @@ const theme = {
                 gradientStale: '#8A3E45',
                 gradientPotentiallyStale: '#875D21',
             },
+            series: colors.chartSeries,
         },
     },
 };

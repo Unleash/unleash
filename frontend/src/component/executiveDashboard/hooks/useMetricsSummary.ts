@@ -4,7 +4,7 @@ import {
     ExecutiveSummarySchema,
     ExecutiveSummarySchemaMetricsSummaryTrendsItem,
 } from 'openapi';
-import { getProjectColor } from '../executive-dashboard-utils';
+import { useProjectColor } from './useProjectColor';
 
 type MetricsSummaryTrends = ExecutiveSummarySchema['metricsSummaryTrends'];
 
@@ -33,6 +33,7 @@ export const useMetricsSummary = (
     metricsSummaryTrends: MetricsSummaryTrends,
 ) => {
     const theme = useTheme();
+    const getProjectColor = useProjectColor();
 
     const data = useMemo(() => {
         const groupedMetrics = groupDataByProject(metricsSummaryTrends);

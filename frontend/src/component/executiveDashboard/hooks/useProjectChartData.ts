@@ -3,13 +3,14 @@ import {
     ExecutiveSummarySchema,
     ExecutiveSummarySchemaProjectFlagTrendsItem,
 } from '../../../openapi';
-import { getProjectColor } from '../executive-dashboard-utils';
+import { useProjectColor } from './useProjectColor';
 import { useTheme } from '@mui/material';
 
 type ProjectFlagTrends = ExecutiveSummarySchema['projectFlagTrends'];
 
 export const useProjectChartData = (projectFlagTrends: ProjectFlagTrends) => {
     const theme = useTheme();
+    const getProjectColor = useProjectColor();
 
     const data = useMemo(() => {
         const groupedFlagTrends = projectFlagTrends.reduce<

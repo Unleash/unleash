@@ -1,3 +1,5 @@
+// biome-ignore lint: Docusaurus doesn't work without the React import
+import React from 'react';
 import Admonition from '@theme/Admonition';
 
 const Component = ({ videoUrls }) => {

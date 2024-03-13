@@ -1,3 +1,6 @@
+// biome-ignore lint: Docusaurus doesn't work without the React import
+import React from 'react';
+
 const Component = ({ level, description }) => {
     return (
         <div

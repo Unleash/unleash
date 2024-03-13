@@ -7,6 +7,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 
 const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
 const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
+const NetworkTrafficUsage = lazy(() => import('./NetworkTrafficUsage/NetworkTrafficUsage'));
 
 const tabs = [
     {
@@ -17,6 +18,10 @@ const tabs = [
         label: 'Traffic',
         path: '/admin/network/traffic',
     },
+    {
+        label: 'Data Usage',
+        path: '/admin/network/data-usage',
+    }
 ];
 
 export const Network = () => {
@@ -52,6 +57,7 @@ export const Network = () => {
                 <Routes>
                     <Route path='traffic' element={<NetworkTraffic />} />
                     <Route path='*' element={<NetworkOverview />} />
+                    <Route path='data-usage' element={<NetworkTrafficUsage />} />
                 </Routes>
             </PageContent>
         </div>

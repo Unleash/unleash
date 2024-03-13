@@ -1,11 +1,11 @@
 ---
-title: How to Implement Feature Flags in Sveltekit using Unleash
+title: How to Implement Feature Flags in SvelteKit
 description: "How to use Unleash feature flags with Sveltekit."
 ---
 
 Hello and welcome to another tutorial. This is about adding feature flags to an app made with [SvelteKit](https://kit.svelte.dev/) and [Unleash](https://www.getunleash.io/). We'll make a paired-down habits app to keep track of your new year's resolutions.
 
-This is not meant to be a complete product, but enough to show you the different approaches to working with feature flags in a "fullstack" framework like Next.js or Sveltekit. The final code is available on GitHub in [this repo](https://github.com/alvinometric/unleash-sveltekit).
+While this is not meant to be a complete product, we can leverage feature flags using a full stack framework like Next.js or Sveltekit. The completed code for this implementation is available in [a Github repository](https://github.com/alvinometric/unleash-sveltekit).
 
 ## Setup
 
@@ -15,13 +15,13 @@ Create a skeleton Sveltekit project named "habits".
 npm create svelte@latest habits
 ```
 
-We'll need a few more dependencies, let's install them now so it's out of the way.
+We'll need a few more dependencies. You can install these in one command below:
 
 ```
 npm i date-fns @unleash/proxy-client-svelte unleash-client
 ```
 
-## Let's make a basic habits app
+## Create a basic habits app
 
 We'll use Svelte stores to keep track of a global array of habits. For the sake of simplicity, we won't store these habits anywhere yet (feel free to add localStorage or a database). Our basic habit app will only consist of 3 files.
 
@@ -79,7 +79,7 @@ Then, we'll create an `App.svelte` file for our main logic.
 
 ```
 
-Then, update the `+page.svelte` file (our index route) to include our app.
+Next, update the `+page.svelte` file (our index route) to include our app.
 
 ```svelte
 <script>
@@ -90,7 +90,7 @@ Then, update the `+page.svelte` file (our index route) to include our app.
 <App />
 ```
 
-And we finish the basic app with a component for each habit that be checked on and off.
+To complete the basic setup of the app,  add a component for each habit that be checked on and off using this code snippet:
 
 ```svelte
 <script>
@@ -138,13 +138,13 @@ And we finish the basic app with a component for each habit that be checked on a
 </tr>
 ```
 
-And now here's our full app in all its glory, basically a table with checkboxes.
+Now we have a fully functioning Svelte app in all its glory! Essentially, it's a table with checkboxes.
 
 ![Pasted image 20240202174256.png](./20240202174256.png)
 
 ## Adding habits and premium features
 
-Now this is not a very user-friendly app. Let's add a few things:
+We have the basics of the app set up, but we could make it more user-friendly. Let's add some more functionality:
 
 - Add the ability for users create their own habits
 - Limit the number of habits a user can create to a certain amount so we can turn this into a commercial product.
@@ -217,15 +217,15 @@ On to the main topic, adding feature flags.
 Go to your Unleash dashboard, and create new project (you're welcome to use the default project here).
 ![alt text](./proj.png)
 
-Then create a feature flag called `maxHabitsIncreased`
+Next, create a feature flag called `maxHabitsIncreased`.
 
 ![alt text](./feat.png)
 
-Bbased on whether this flag is enabled or not, we'll set the `maxHabits` value to either 6 or 2. You could set this directly in a flag value if you wanted as well.
+Based on whether this flag is enabled or not, we'll set the `maxHabits` value to either 6 or 2. You could set this directly in a flag value if you wanted as well.
 
 ### Basic toggle
 
-We'll use the official [Unleash Svelte SDK](https://docs.getunleash.io/reference/sdks/svelte). We'll wrap our `App.svelte` with a context provider exported from the SDK, like so:
+We'll use the official [Unleash Svelte SDK](https://docs.getunleash.io/reference/sdks/svelte) to wrap a context provider around `App.svelte` like so:
 
 ```svelte
 <script>
@@ -258,10 +258,10 @@ Now that our SDK is setup, we can modify our `App.svelte` to set the value of th
 
 ## Conclusion
 
-That's it, you have a Sveltekit app with fleature flags. More precisely, you've learned:
+You now have a Sveltekit app with feature flags. More precisely, you've learned:
 
 - How to make a habit tracking app with Sveltekit
-- How to add feature flags and how to add them to a fullstack app
+- How to add a feature flag to a full stack app using Unleash
 - The different approaches to feature flagging on a static vs SSR context
 
 Enjoy, see you soon.

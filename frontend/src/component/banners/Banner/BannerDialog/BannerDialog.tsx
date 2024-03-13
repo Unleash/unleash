@@ -31,7 +31,11 @@ export const BannerDialog = ({
                 setOpen(false);
             }}
         >
-            {typeof children === 'string' ? <StyledMarkdown>{children}</StyledMarkdown> : children}
+            {typeof children === 'string' ? (
+                <StyledMarkdown>{children}</StyledMarkdown>
+            ) : (
+                children
+            )}
         </Dialogue>
     );
 };

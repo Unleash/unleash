@@ -7,7 +7,7 @@ import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SortableTableHeader } from 'component/common/Table';
-import { CheckCircleOutlined } from '@mui/icons-material';
+import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 

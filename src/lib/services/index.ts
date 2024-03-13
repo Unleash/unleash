@@ -31,7 +31,7 @@ import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from '../features/playground/playground-service';
 import { GroupService } from './group-service';
-import { ProxyService } from './proxy-service';
+import { FrontendApiService } from '../features/frontend-api/frontend-api-service';
 import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
@@ -111,9 +111,10 @@ import {
 import { InactiveUsersService } from '../users/inactive/inactive-users-service';
 import { SegmentReadModel } from '../features/segment/segment-read-model';
 import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
-import { GlobalFrontendApiCache } from '../proxy/global-frontend-api-cache';
-import ClientFeatureToggleReadModel from '../proxy/client-feature-toggle-read-model';
-import FakeClientFeatureToggleReadModel from '../proxy/fake-client-feature-toggle-read-model';
+import {
+    createFakeFrontendApiService,
+    createFrontendApiService,
+} from '../features/frontend-api/createFrontendApiService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -287,36 +288,25 @@ export const createServices = (
         segmentReadModel,
     );
 
-    const configurationRevisionService = new ConfigurationRevisionService(
-        stores,
-        config,
-    );
+    const configurationRevisionService =
+        ConfigurationRevisionService.getInstance(stores, config);
 
     const clientFeatureToggleService = db
         ? createClientFeatureToggleService(db, config)
         : createFakeClientFeatureToggleService(config);
 
-    const clientFeatureToggleReadModel = db
-        ? new ClientFeatureToggleReadModel(db, config.eventBus)
-        : new FakeClientFeatureToggleReadModel();
-    const globalFrontendApiCache = new GlobalFrontendApiCache(
-        config,
-        segmentReadModel,
-        clientFeatureToggleReadModel,
-        configurationRevisionService,
-    );
-
-    const proxyService = new ProxyService(
-        config,
-        stores,
-        {
-            featureToggleServiceV2,
-            clientMetricsServiceV2,
-            settingService,
-            configurationRevisionService,
-        },
-        globalFrontendApiCache,
-    );
+    const frontendApiService = db
+        ? createFrontendApiService(
+              db,
+              config,
+              clientMetricsServiceV2,
+              configurationRevisionService,
+          )
+        : createFakeFrontendApiService(
+              config,
+              clientMetricsServiceV2,
+              configurationRevisionService,
+          );
 
     const edgeService = new EdgeService({ apiTokenService }, config);
 
@@ -383,7 +373,7 @@ export const createServices = (
         clientSpecService,
         playgroundService,
         groupService,
-        proxyService,
+        frontendApiService,
         edgeService,
         patService,
         publicSignupTokenService,
@@ -438,7 +428,7 @@ export {
     ClientSpecService,
     PlaygroundService,
     GroupService,
-    ProxyService,
+    FrontendApiService,
     EdgeService,
     PatService,
     PublicSignupTokenService,

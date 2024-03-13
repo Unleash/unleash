@@ -1,4 +1,5 @@
-import { Check, Close } from '@mui/icons-material';
+import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
 import { styled } from '@mui/material';
 
 interface ICheckMarkBadgeProps {

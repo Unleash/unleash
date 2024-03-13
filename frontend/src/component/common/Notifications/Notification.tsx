@@ -12,7 +12,7 @@ import {
 } from 'openapi';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import TimeAgo from 'react-timeago';
-import { ToggleOffOutlined } from '@mui/icons-material';
+import ToggleOffOutlined from '@mui/icons-material/ToggleOffOutlined';
 import { flexRow } from 'themes/themeStyles';
 
 const StyledContainerBox = styled(Box, {

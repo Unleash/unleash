@@ -1,5 +1,5 @@
 import { ISegment } from 'interfaces/segment';
-import { Edit } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
     UPDATE_SEGMENT,

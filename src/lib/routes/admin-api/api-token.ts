@@ -41,7 +41,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { ProxyService } from '../../services/proxy-service';
+import { FrontendApiService } from '../../features/frontend-api/frontend-api-service';
 import { extractUserId, extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
 
@@ -121,7 +121,7 @@ export class ApiTokenController extends Controller {
 
     private accessService: AccessService;
 
-    private proxyService: ProxyService;
+    private frontendApiService: FrontendApiService;
 
     private openApiService: OpenApiService;
 
@@ -134,20 +134,20 @@ export class ApiTokenController extends Controller {
         {
             apiTokenService,
             accessService,
-            proxyService,
+            frontendApiService,
             openApiService,
         }: Pick<
             IUnleashServices,
             | 'apiTokenService'
             | 'accessService'
-            | 'proxyService'
+            | 'frontendApiService'
             | 'openApiService'
         >,
     ) {
         super(config);
         this.apiTokenService = apiTokenService;
         this.accessService = accessService;
-        this.proxyService = proxyService;
+        this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('api-token-controller.js');
@@ -411,7 +411,7 @@ export class ApiTokenController extends Controller {
             extractUsername(req),
             req.user.id,
         );
-        await this.proxyService.deleteClientForProxyToken(token);
+        await this.frontendApiService.deleteClientForFrontendApiToken(token);
         res.status(200).end();
     }
 

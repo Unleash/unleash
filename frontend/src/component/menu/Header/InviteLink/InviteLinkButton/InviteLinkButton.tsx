@@ -3,7 +3,7 @@ import { ClickAwayListener, IconButton, styled, Tooltip } from '@mui/material';
 import { useId } from 'hooks/useId';
 import { focusable } from 'themes/themeStyles';
 import AccessContext from 'contexts/AccessContext';
-import { PersonAdd } from '@mui/icons-material';
+import PersonAdd from '@mui/icons-material/PersonAdd';
 import { InviteLinkContent } from '../InviteLinkContent';
 
 const StyledContainer = styled('div')(() => ({

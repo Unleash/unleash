@@ -1,7 +1,7 @@
 import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, IconButton, Typography, useTheme, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
-import { CloseOutlined } from '@mui/icons-material';
+import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {

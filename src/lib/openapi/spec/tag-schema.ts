@@ -1,7 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../services/tag-schema';
 
-export const TAG_MIN_LENGTH = 2;
-export const TAG_MAX_LENGTH = 50;
 export const tagSchema = {
     $id: '#/components/schemas/tagSchema',
     type: 'object',

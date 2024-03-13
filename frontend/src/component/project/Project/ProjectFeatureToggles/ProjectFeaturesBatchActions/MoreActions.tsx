@@ -11,7 +11,8 @@ import {
 } from '@mui/material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { MoreVert, WatchLater } from '@mui/icons-material';
+import MoreVert from '@mui/icons-material/MoreVert';
+import WatchLater from '@mui/icons-material/WatchLater';
 import type { FeatureSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';

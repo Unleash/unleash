@@ -6,7 +6,7 @@ export * from './addons';
 export * from './db';
 export * from './middleware';
 export * from './openapi';
-export * from './proxy';
+export * from './features/frontend-api';
 export * from './routes';
 export * from './services';
 export * from './types';

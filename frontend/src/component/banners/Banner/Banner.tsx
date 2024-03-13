@@ -1,9 +1,7 @@
-import {
-    Check,
-    ErrorOutlineRounded,
-    InfoOutlined,
-    WarningAmber,
-} from '@mui/icons-material';
+import Check from '@mui/icons-material/Check';
+import ErrorOutlineRounded from '@mui/icons-material/ErrorOutlineRounded';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import WarningAmber from '@mui/icons-material/WarningAmber';
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';

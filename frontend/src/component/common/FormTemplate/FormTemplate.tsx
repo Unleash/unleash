@@ -8,8 +8,9 @@ import {
     Divider,
     styled,
 } from '@mui/material';
-import { FileCopy, Info } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import FileCopy from '@mui/icons-material/FileCopy';
+import Info from '@mui/icons-material/Info';
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';

@@ -26,7 +26,7 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
             isLocalTooltip
             TooltipComponent={MetricsSummaryTooltip}
             overrideOptions={{
-                parsing: { yAxisKey: 'totalRequests', xAxisKey: 'week' },
+                parsing: { yAxisKey: 'totalRequests', xAxisKey: 'date' },
             }}
             cover={notEnoughData ? <NotEnoughData /> : false}
         />

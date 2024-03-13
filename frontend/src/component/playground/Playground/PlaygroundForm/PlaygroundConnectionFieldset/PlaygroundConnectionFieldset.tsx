@@ -21,7 +21,7 @@ import {
     extractProjectEnvironmentFromToken,
     validateTokenFormat,
 } from '../../playground.utils';
-import { Clear } from '@mui/icons-material';
+import Clear from '@mui/icons-material/Clear';
 import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect';
 
 interface IPlaygroundConnectionFieldsetProps {

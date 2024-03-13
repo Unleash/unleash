@@ -3,7 +3,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { ISegment } from 'interfaces/segment';
 import { SEGMENT_DIALOG_NAME_ID } from 'utils/testIds';
-import { styled } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 
 const StyledInput = styled(Input)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -46,6 +46,11 @@ export const SegmentDeleteConfirm = ({
             onClose={handleCancel}
             formId={formId}
         >
+            <Alert sx={{ marginBottom: 2 }} severity='warning'>
+                Deleted segments may be referenced in strategies if the feature
+                flag is archived. Removing the segment will also remove the
+                segments from strategies of archived flags.
+            </Alert>
             <p>
                 In order to delete this segment, please enter the name of the
                 segment in the field below: <strong>{segment?.name}</strong>

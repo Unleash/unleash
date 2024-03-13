@@ -7,7 +7,7 @@ import {
     Tooltip,
     Link,
 } from '@mui/material';
-import { Delete } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

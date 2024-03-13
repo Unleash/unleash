@@ -12,7 +12,7 @@ import AccessContext from 'contexts/AccessContext';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table';

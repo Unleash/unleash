@@ -66,7 +66,7 @@ export const routes: IRoute[] = [
         title: 'Insights',
         component: ExecutiveDashboard,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { mobile: true },
         flag: 'executiveDashboard',
         enterprise: false,
     },

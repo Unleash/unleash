@@ -1,7 +1,7 @@
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { CREATE_API_TOKEN_BUTTON } from 'utils/testIds';
 import { useNavigate } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 interface ICreateApiTokenButton {
     path: string;
     permission: string | string[];

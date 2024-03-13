@@ -21,7 +21,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { sortTypes } from 'utils/sortTypes';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ContextActionsCell } from '../ContextActionsCell';
-import { Adjust } from '@mui/icons-material';
+import Adjust from '@mui/icons-material/Adjust';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 import { UsedInCell } from '../UsedInCell';

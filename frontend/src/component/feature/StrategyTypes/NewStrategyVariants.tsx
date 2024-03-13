@@ -12,7 +12,7 @@ import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVariantForms = styled('div')({

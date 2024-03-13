@@ -28,7 +28,7 @@ export const scheduleServices = async (
         eventService,
         versionService,
         lastSeenService,
-        proxyService,
+        frontendApiService,
         clientMetricsServiceV2,
     } = services;
 
@@ -126,7 +126,7 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        proxyService.fetchFrontendSettings.bind(proxyService),
+        frontendApiService.fetchFrontendSettings.bind(frontendApiService),
         minutesToMilliseconds(2),
         'fetchFrontendSettings',
         0,

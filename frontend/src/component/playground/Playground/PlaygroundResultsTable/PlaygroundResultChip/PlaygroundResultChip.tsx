@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as FeatureEnabledIcon } from 'assets/icons/isenabled-true.svg';
 import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-false.svg';
-import { WarningOutlined } from '@mui/icons-material';
+import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 
 interface IResultChipProps {

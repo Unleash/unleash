@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import { Cloud } from '@mui/icons-material';
+import Cloud from '@mui/icons-material/Cloud';
 
 interface IEnvironmentIcon {
     enabled: boolean;

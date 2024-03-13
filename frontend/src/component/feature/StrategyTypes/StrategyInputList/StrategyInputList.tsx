@@ -7,7 +7,7 @@ import {
     styled,
     TextFieldProps,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADD_TO_STRATEGY_INPUT_LIST, STRATEGY_INPUT_LIST } from 'utils/testIds';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';

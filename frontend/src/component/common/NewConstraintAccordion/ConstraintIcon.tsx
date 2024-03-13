@@ -1,6 +1,6 @@
 import { VFC } from 'react';
 import { Box } from '@mui/material';
-import { TrackChanges } from '@mui/icons-material';
+import TrackChanges from '@mui/icons-material/TrackChanges';
 
 interface IConstraintIconProps {
     compact?: boolean;

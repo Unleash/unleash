@@ -26,11 +26,9 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { flexRow, focusable } from 'themes/themeStyles';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
 import { getRoutes, getCondensedRoutes } from 'component/menu/routes';
-import {
-    DarkModeOutlined,
-    KeyboardArrowDown,
-    LightModeOutlined,
-} from '@mui/icons-material';
+import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
 import { useId } from 'hooks/useId';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
@@ -39,6 +37,7 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { Badge } from '../../common/Badge/Badge';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -128,11 +127,37 @@ const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
     cursor: 'pointer',
 }));
 
+const StyledSpan = styled('span')({
+    height: '16px',
+    paddingBottom: 16,
+});
+
+const StyledBadge = styled(Badge)({
+    height: '16px',
+    maxHeight: '16px',
+    padding: 0.25,
+    marginBottom: 0,
+});
+
 const styledIconProps = (theme: Theme) => ({
     color: theme.palette.neutral.main,
 });
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
+
+const StyledLinkWithBetaBagde = ({
+    title,
+    to,
+}: { title: string; to: string }) => (
+    <StyledLink to={to} sx={{ margin: 0 }}>
+        <div>
+            <span>{title}</span>{' '}
+            <StyledSpan>
+                <StyledBadge color='success'>Beta</StyledBadge>
+            </StyledSpan>
+        </div>
+    </StyledLink>
+);
 
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
@@ -248,15 +273,18 @@ const Header: VFC = () => {
 
                 <StyledNav>
                     <StyledLinks>
-                        <ConditionallyRender
-                            condition={insightsDashboard}
-                            show={
-                                <StyledLink to='/insights'>Insights</StyledLink>
-                            }
-                        />
                         <StyledLink to='/projects'>Projects</StyledLink>
                         <StyledLink to={'/search'}>Search</StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
+                        <ConditionallyRender
+                            condition={insightsDashboard}
+                            show={
+                                <StyledLinkWithBetaBagde
+                                    to={'/insights'}
+                                    title={'Insights'}
+                                />
+                            }
+                        />
                         <StyledAdvancedNavButton
                             onClick={(e) => setConfigRef(e.currentTarget)}
                             aria-controls={configRef ? configId : undefined}

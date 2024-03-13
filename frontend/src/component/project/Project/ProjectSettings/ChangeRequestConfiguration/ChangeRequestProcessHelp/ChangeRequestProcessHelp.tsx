@@ -8,7 +8,7 @@ import {
     Box,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { HelpOutline } from '@mui/icons-material';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import { ReactComponent as ChangeRequestProcessWithScheduleImage } from 'assets/img/changeRequestProcessWithSchedule.svg';
 
 type IChangeRequestProcessHelpProps = {};

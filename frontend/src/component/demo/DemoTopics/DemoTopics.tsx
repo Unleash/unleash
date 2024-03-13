@@ -9,7 +9,9 @@ import {
     linearProgressClasses,
     styled,
 } from '@mui/material';
-import { CheckCircle, CircleOutlined, ExpandMore } from '@mui/icons-material';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import CircleOutlined from '@mui/icons-material/CircleOutlined';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import { ITutorialTopic } from '../demo-topics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';

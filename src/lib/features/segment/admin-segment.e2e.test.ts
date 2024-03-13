@@ -290,6 +290,36 @@ test('should not delete segments used by strategies', async () => {
     expect((await fetchSegments()).length).toEqual(1);
 });
 
+test('should delete segments used by strategies in archived feature toggles', async () => {
+    await app.createSegment({
+        name: 'a',
+        constraints: [],
+    });
+    const toggle = mockFeatureToggle();
+    await createFeatureToggle(app, toggle);
+    const [segment] = await fetchSegments();
+
+    await addStrategyToFeatureEnv(
+        app,
+        { ...toggle.strategies[0] },
+        'default',
+        toggle.name,
+    );
+    const [feature] = await fetchFeatures();
+    //@ts-ignore
+    await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
+    const segments = await fetchSegments();
+    expect(segments.length).toEqual(1);
+
+    await app.archiveFeature(feature.name);
+
+    await app.request
+        .delete(`${SEGMENTS_BASE_PATH}/${segments[0].id}`)
+        .expect(204);
+
+    expect((await fetchSegments()).length).toEqual(0);
+});
+
 test('should list strategies by segment', async () => {
     await app.createSegment({
         name: 'S1',

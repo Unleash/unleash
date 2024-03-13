@@ -1,12 +1,10 @@
 import { styled } from '@mui/material';
-import {
-    Cancel,
-    CheckCircle,
-    Schedule,
-    Edit,
-    Error as ErrorIcon,
-    PauseCircle,
-} from '@mui/icons-material';
+import Cancel from '@mui/icons-material/Cancel';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Schedule from '@mui/icons-material/Schedule';
+import Edit from '@mui/icons-material/Edit';
+import ErrorIcon from '@mui/icons-material/Error';
+import PauseCircle from '@mui/icons-material/PauseCircle';
 import { Box, Typography, Divider } from '@mui/material';
 
 const styledComponentPropCheck = () => (prop: string) =>

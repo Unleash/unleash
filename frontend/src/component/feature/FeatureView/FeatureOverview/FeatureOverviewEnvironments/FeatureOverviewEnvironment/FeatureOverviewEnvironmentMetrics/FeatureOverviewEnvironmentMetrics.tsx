@@ -1,4 +1,4 @@
-import { FiberManualRecord } from '@mui/icons-material';
+import FiberManualRecord from '@mui/icons-material/FiberManualRecord';
 import { useTheme } from '@mui/system';
 import { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { calculatePercentage } from 'utils/calculatePercentage';

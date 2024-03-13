@@ -7,7 +7,7 @@ import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCel
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
-import { Key } from '@mui/icons-material';
+import Key from '@mui/icons-material/Key';
 
 export const useApiTokenTable = (
     tokens: IApiToken[],

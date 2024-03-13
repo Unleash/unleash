@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { Card, Box } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
 import { flexRow } from 'themes/themeStyles';
 

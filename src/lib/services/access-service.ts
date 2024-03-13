@@ -31,8 +31,8 @@ import { roleSchema } from '../schema/role-schema';
 import {
     ALL_ENVS,
     ALL_PROJECTS,
-    CUSTOM_ROOT_ROLE_TYPE,
     CUSTOM_PROJECT_ROLE_TYPE,
+    CUSTOM_ROOT_ROLE_TYPE,
     ROOT_ROLE_TYPES,
 } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
@@ -219,7 +219,7 @@ export class AccessService {
     /**
      * Returns all roles the user has in the project.
      * Including roles via groups.
-     * In addition it includes root roles
+     * In addition, it includes root roles
      * @param userId user to find roles for
      * @param project project to find roles for
      */

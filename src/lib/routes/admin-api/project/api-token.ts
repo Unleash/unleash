@@ -25,7 +25,7 @@ import {
     ApiTokenService,
     OpenApiService,
     ProjectService,
-    ProxyService,
+    FrontendApiService,
 } from '../../../services';
 import { extractUserId, extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
@@ -48,7 +48,7 @@ export class ProjectApiTokenController extends Controller {
 
     private accessService: AccessService;
 
-    private proxyService: ProxyService;
+    private frontendApiService: FrontendApiService;
 
     private openApiService: OpenApiService;
 
@@ -61,14 +61,14 @@ export class ProjectApiTokenController extends Controller {
         {
             apiTokenService,
             accessService,
-            proxyService,
+            frontendApiService,
             openApiService,
             projectService,
         }: Pick<
             IUnleashServices,
             | 'apiTokenService'
             | 'accessService'
-            | 'proxyService'
+            | 'frontendApiService'
             | 'openApiService'
             | 'projectService'
         >,
@@ -76,7 +76,7 @@ export class ProjectApiTokenController extends Controller {
         super(config);
         this.apiTokenService = apiTokenService;
         this.accessService = accessService;
-        this.proxyService = proxyService;
+        this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
         this.projectService = projectService;
         this.logger = config.getLogger('project-api-token-controller.js');
@@ -226,7 +226,9 @@ export class ProjectApiTokenController extends Controller {
                 extractUsername(req),
                 user.id,
             );
-            await this.proxyService.deleteClientForProxyToken(token);
+            await this.frontendApiService.deleteClientForFrontendApiToken(
+                token,
+            );
             res.status(200).end();
         } else if (!storedToken) {
             res.status(404).end();

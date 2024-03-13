@@ -1,4 +1,4 @@
-import { InfoOutlined } from '@mui/icons-material';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { IconButton, Popover, styled, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import React, { useState, VFC } from 'react';

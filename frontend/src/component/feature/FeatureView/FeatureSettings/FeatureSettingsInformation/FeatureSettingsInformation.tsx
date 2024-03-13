@@ -1,5 +1,5 @@
 import { styled, Typography } from '@mui/material';
-import { Edit } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';

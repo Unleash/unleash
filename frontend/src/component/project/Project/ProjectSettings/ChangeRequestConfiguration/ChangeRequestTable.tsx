@@ -26,7 +26,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { KeyboardArrowDownOutlined } from '@mui/icons-material';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

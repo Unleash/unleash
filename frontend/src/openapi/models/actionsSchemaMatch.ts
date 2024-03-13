@@ -4,15 +4,16 @@
  * See `gen:api` script in package.json
  */
 import type { ActionsSchemaMatchPayload } from './actionsSchemaMatchPayload';
+import type { ActionsSchemaMatchSource } from './actionsSchemaMatchSource';
 
 /**
- * Defines a matching rule for the observable event that will trigger the action set
+ * Defines a matching rule for the signal that will trigger the action set
  */
 export type ActionsSchemaMatch = {
-    /** Match the payload of the observable event */
+    /** Match the payload of the signal */
     payload: ActionsSchemaMatchPayload;
-    /** Match the source of the observable event */
-    source: string;
-    /** Match the source id of the observable event */
+    /** Match the source of the signal */
+    source: ActionsSchemaMatchSource;
+    /** Match the source id of the signal */
     sourceId: number;
 };

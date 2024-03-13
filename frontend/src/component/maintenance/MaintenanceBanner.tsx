@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { ErrorOutlineRounded } from '@mui/icons-material';
+import ErrorOutlineRounded from '@mui/icons-material/ErrorOutlineRounded';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
 const StyledErrorRoundedIcon = styled(ErrorOutlineRounded)(({ theme }) => ({

@@ -28,7 +28,7 @@ import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
 import { PlaygroundService } from '../features/playground/playground-service';
 import { GroupService } from '../services/group-service';
-import { ProxyService } from '../services/proxy-service';
+import { FrontendApiService } from '../features/frontend-api/frontend-api-service';
 import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
@@ -76,7 +76,7 @@ export interface IUnleashServices {
     projectHealthService: ProjectHealthService;
     projectService: ProjectService;
     playgroundService: PlaygroundService;
-    proxyService: ProxyService;
+    frontendApiService: FrontendApiService;
     publicSignupTokenService: PublicSignupTokenService;
     resetTokenService: ResetTokenService;
     sessionService: SessionService;

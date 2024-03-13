@@ -1,7 +1,7 @@
 import { Badge } from 'component/common/Badge/Badge';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
-import { Person as UserIcon } from '@mui/icons-material';
+import UserIcon from '@mui/icons-material/Person';
 import { RoleDescription } from 'component/common/RoleDescription/RoleDescription';
 
 interface IRoleBadgeProps {

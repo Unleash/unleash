@@ -85,6 +85,14 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
+        const functionDuration = createSummary({
+            name: 'function_duration_seconds',
+            help: 'Function duration time',
+            labelNames: ['functionName', 'className'],
+            percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
+            maxAgeSeconds: 600,
+            ageBuckets: 5,
+        });
         const featureToggleUpdateTotal = createCounter({
             name: 'feature_toggle_update_total',
             help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature toggle is created.',
@@ -235,6 +243,10 @@ export default class MetricsMonitor {
         const proxyRepositoriesCreated = createCounter({
             name: 'proxy_repositories_created',
             help: 'Proxy repositories created',
+        });
+        const frontendApiRepositoriesCreated = createCounter({
+            name: 'frontend_api_repositories_created',
+            help: 'Frontend API repositories created',
         });
         const mapFeaturesForClientDuration = createHistogram({
             name: 'map_features_for_client_duration',
@@ -401,6 +413,15 @@ export default class MetricsMonitor {
             schedulerDuration.labels(jobId).observe(time);
         });
 
+        eventBus.on(
+            events.FUNCTION_TIME,
+            ({ functionName, className, time }) => {
+                functionDuration
+                    .labels({ functionName, className })
+                    .observe(time);
+            },
+        );
+
         eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {
             eventCreatedByMigration.inc(updated);
         });
@@ -415,6 +436,10 @@ export default class MetricsMonitor {
 
         eventBus.on(events.PROXY_REPOSITORY_CREATED, () => {
             proxyRepositoriesCreated.inc();
+        });
+
+        eventBus.on(events.FRONTEND_API_REPOSITORY_CREATED, () => {
+            frontendApiRepositoriesCreated.inc();
         });
 
         eventBus.on(events.PROXY_FEATURES_FOR_TOKEN_TIME, ({ duration }) => {

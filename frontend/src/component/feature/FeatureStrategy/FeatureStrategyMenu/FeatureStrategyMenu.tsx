@@ -7,7 +7,7 @@ import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { Popover, styled } from '@mui/material';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
-import { MoreVert } from '@mui/icons-material';
+import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IFeatureStrategyMenuProps {

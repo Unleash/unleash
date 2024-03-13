@@ -12,13 +12,17 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('config_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -53,7 +57,7 @@ test('gets ui config with disablePasswordAuth', async () => {
 
 test('gets ui config with frontendSettings', async () => {
     const frontendApiOrigins = ['https://example.net'];
-    await app.services.proxyService.setFrontendSettings(
+    await app.services.frontendApiService.setFrontendSettings(
         { frontendApiOrigins },
         randomId(),
         -9999,

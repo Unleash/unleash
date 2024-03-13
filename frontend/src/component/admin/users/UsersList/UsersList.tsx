@@ -33,12 +33,14 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
-import { Download } from '@mui/icons-material';
+import Download from '@mui/icons-material/Download';
 import { StyledUsersLinkDiv } from '../Users.styles';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const UsersList = () => {
     const navigate = useNavigate();
+    const { isEnterprise } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
@@ -315,9 +317,16 @@ const UsersList = () => {
             }
         >
             <UserLimitWarning />
-            <StyledUsersLinkDiv>
-                <Link to='/admin/users/inactive'>View inactive users</Link>
-            </StyledUsersLinkDiv>
+            <ConditionallyRender
+                condition={isEnterprise()}
+                show={
+                    <StyledUsersLinkDiv>
+                        <Link to='/admin/users/inactive'>
+                            View inactive users
+                        </Link>
+                    </StyledUsersLinkDiv>
+                }
+            />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

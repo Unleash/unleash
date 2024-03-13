@@ -9,7 +9,7 @@ import {
     Link,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { ILegalValue } from 'interfaces/context';
 import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';

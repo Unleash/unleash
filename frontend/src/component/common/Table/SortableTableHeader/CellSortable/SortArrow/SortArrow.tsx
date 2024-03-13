@@ -1,9 +1,7 @@
 import { VFC } from 'react';
-import {
-    KeyboardArrowDown,
-    KeyboardArrowUp,
-    UnfoldMoreOutlined,
-} from '@mui/icons-material';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import UnfoldMoreOutlined from '@mui/icons-material/UnfoldMoreOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import classnames from 'classnames';
 import { Theme } from '@mui/material';

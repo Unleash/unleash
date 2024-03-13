@@ -4,7 +4,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { useMediaQuery } from '@mui/material';
 import { CREATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ADD_NEW_STRATEGY_ID } from 'utils/testIds';
-import { Add } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 
 export const AddStrategyButton = () => {

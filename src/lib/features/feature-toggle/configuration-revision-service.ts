@@ -1,4 +1,3 @@
-import { EventEmitter } from 'stream';
 import { Logger } from '../../logger';
 import {
     IEventStore,
@@ -6,10 +5,13 @@ import {
     IUnleashConfig,
     IUnleashStores,
 } from '../../types';
+import EventEmitter from 'events';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
 export default class ConfigurationRevisionService extends EventEmitter {
+    private static instance: ConfigurationRevisionService;
+
     private logger: Logger;
 
     private eventStore: IEventStore;
@@ -18,7 +20,7 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     private flagResolver: IFlagResolver;
 
-    constructor(
+    private constructor(
         { eventStore }: Pick<IUnleashStores, 'eventStore'>,
         {
             getLogger,
@@ -30,6 +32,23 @@ export default class ConfigurationRevisionService extends EventEmitter {
         this.eventStore = eventStore;
         this.flagResolver = flagResolver;
         this.revisionId = 0;
+    }
+
+    static getInstance(
+        { eventStore }: Pick<IUnleashStores, 'eventStore'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+    ) {
+        if (!ConfigurationRevisionService.instance) {
+            ConfigurationRevisionService.instance =
+                new ConfigurationRevisionService(
+                    { eventStore },
+                    { getLogger, flagResolver },
+                );
+        }
+        return ConfigurationRevisionService.instance;
     }
 
     async getMaxRevisionId(): Promise<number> {
@@ -58,5 +77,9 @@ export default class ConfigurationRevisionService extends EventEmitter {
         }
 
         return this.revisionId;
+    }
+
+    destroy(): void {
+        ConfigurationRevisionService.instance?.removeAllListeners();
     }
 }

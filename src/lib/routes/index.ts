@@ -9,7 +9,7 @@ import { AdminApi } from './admin-api';
 import ClientApi from './client-api';
 
 import { HealthCheckController } from './health-check';
-import FrontendAPIController from './proxy-api';
+import FrontendAPIController from '../features/frontend-api/frontend-api-controller';
 import EdgeController from './edge-api';
 import { PublicInviteController } from './public-invite';
 import { Db } from '../db/db';

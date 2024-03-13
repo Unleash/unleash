@@ -205,6 +205,20 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return rows.map(mapRow);
     }
 
+    async groupApplicationsBySdk(): Promise<
+        { sdkVersion: string; applications: string[] }[]
+    > {
+        const rows = await this.db
+            .select([
+                'sdk_version as sdkVersion',
+                this.db.raw('ARRAY_AGG(DISTINCT app_name) as applications'),
+            ])
+            .from(TABLE)
+            .groupBy('sdk_version');
+
+        return rows;
+    }
+
     async getDistinctApplications(): Promise<string[]> {
         const rows = await this.db
             .distinct('app_name')

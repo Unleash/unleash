@@ -29,6 +29,10 @@ import {
     applicationEnvironmentInstancesSchema,
     ApplicationEnvironmentInstancesSchema,
 } from '../../openapi/spec/application-environment-instances-schema';
+import {
+    outdatedSdksSchema,
+    OutdatedSdksSchema,
+} from '../../openapi/spec/outdated-sdks-schema';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -177,6 +181,25 @@ class MetricsController extends Controller {
                 }),
             ],
         });
+        this.route({
+            method: 'get',
+            path: '/sdks/outdated',
+            handler: this.getOutdatedSdks,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getOutdatedSdks',
+                    summary: 'Get outdated SDKs',
+                    description:
+                        'Returns a list of the outdated SDKS with the applications using them.',
+                    responses: {
+                        200: createResponseSchema('outdatedSdksSchema'),
+                        ...getStandardResponses(404),
+                    },
+                }),
+            ],
+        });
     }
 
     async deprecated(req: Request, res: Response): Promise<void> {
@@ -274,6 +297,20 @@ class MetricsController extends Controller {
             res,
             applicationOverviewSchema.$id,
             serializeDates(overview),
+        );
+    }
+
+    async getOutdatedSdks(req: Request, res: Response<OutdatedSdksSchema>) {
+        if (!this.flagResolver.isEnabled('sdkReporting')) {
+            throw new NotFoundError();
+        }
+        const outdatedSdks = await this.clientInstanceService.getOutdatedSdks();
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            outdatedSdksSchema.$id,
+            { sdks: outdatedSdks },
         );
     }
 

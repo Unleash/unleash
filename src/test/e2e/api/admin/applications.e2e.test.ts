@@ -85,7 +85,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('should show correct number of total', async () => {
+test('should show correct application metrics', async () => {
     await Promise.all([
         app.createFeature('toggle-name-1'),
         app.createFeature('toggle-name-2'),
@@ -94,7 +94,7 @@ test('should show correct number of total', async () => {
             appName: metrics.appName,
             instanceId: metrics.instanceId,
             strategies: ['default'],
-            sdkVersion: 'unleash-client-test',
+            sdkVersion: 'unleash-client-node:3.2.1',
             started: Date.now(),
             interval: 10,
         }),
@@ -102,7 +102,7 @@ test('should show correct number of total', async () => {
             appName: metrics.appName,
             instanceId: 'another-instance',
             strategies: ['default'],
-            sdkVersion: 'unleash-client-test2',
+            sdkVersion: 'unleash-client-node:3.2.2',
             started: Date.now(),
             interval: 10,
         }),
@@ -129,7 +129,10 @@ test('should show correct number of total', async () => {
             {
                 instanceCount: 2,
                 name: 'default',
-                sdks: ['unleash-client-test', 'unleash-client-test2'],
+                sdks: [
+                    'unleash-client-node:3.2.1',
+                    'unleash-client-node:3.2.2',
+                ],
             },
         ],
         featureCount: 3,
@@ -143,12 +146,31 @@ test('should show correct number of total', async () => {
         )
         .expect(200);
 
-    expect(instancesBody).toMatchObject({
-        instances: [
-            { instanceId: 'instanceId', sdkVersion: 'unleash-client-test' },
+    expect(
+        instancesBody.instances.sort((a, b) =>
+            a.instanceId.localeCompare(b.instanceId),
+        ),
+    ).toMatchObject([
+        {
+            instanceId: 'another-instance',
+            sdkVersion: 'unleash-client-node:3.2.2',
+        },
+        { instanceId: 'instanceId', sdkVersion: 'unleash-client-node:3.2.1' },
+    ]);
+
+    const { body: outdatedSdks } = await app.request
+        .get(`/api/admin/metrics/sdks/outdated`)
+        .expect(200);
+
+    expect(outdatedSdks).toMatchObject({
+        sdks: [
             {
-                instanceId: 'another-instance',
-                sdkVersion: 'unleash-client-test2',
+                sdkVersion: 'unleash-client-node:3.2.1',
+                applications: ['appName'],
+            },
+            {
+                sdkVersion: 'unleash-client-node:3.2.2',
+                applications: ['appName'],
             },
         ],
     });

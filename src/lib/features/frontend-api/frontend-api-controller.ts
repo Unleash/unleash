@@ -22,6 +22,7 @@ import NotFoundError from '../../error/notfound-error';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import isEqual from 'lodash.isequal';
+import { diff } from 'json-diff';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -188,14 +189,22 @@ export default class FrontendAPIController extends Controller {
                     FrontendAPIController.createContext(req),
                 ),
             ]);
-            if (
-                !isEqual(
-                    toggles.sort((a, b) => a.name.localeCompare(b.name)),
-                    newToggles.sort((a, b) => a.name.localeCompare(b.name)),
-                )
-            ) {
+            const sortedToggles = toggles.sort((a, b) =>
+                a.name.localeCompare(b.name),
+            );
+            const sortedNewToggles = newToggles.sort((a, b) =>
+                a.name.localeCompare(b.name),
+            );
+            if (!isEqual(sortedToggles, sortedNewToggles)) {
                 this.logger.warn(
-                    `old features and new features are different. Old count ${toggles.length}, new count ${newToggles.length}, projects ${req.user.projects}, environment ${req.user.environment}`,
+                    `old features and new features are different. Old count ${
+                        toggles.length
+                    }, new count ${newToggles.length}, projects ${
+                        req.user.projects
+                    }, environment ${req.user.environment}, diff ${diff(
+                        sortedToggles,
+                        sortedNewToggles,
+                    )}`,
                 );
             }
         } else {

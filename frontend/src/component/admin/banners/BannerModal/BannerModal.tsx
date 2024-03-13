@@ -61,7 +61,9 @@ export const BannerModal = ({ banner, open, setOpen }: IBannerModalProps) => {
         setLink(banner?.link || '');
         setLinkText(banner?.linkText || '');
         setDialogTitle(banner?.dialogTitle || '');
-        setDialog(banner?.dialog || '');
+        if(typeof banner?.dialog === 'string') {
+            setDialog(banner?.dialog || '');
+        }
     }, [open, banner]);
 
     const editing = banner !== undefined;

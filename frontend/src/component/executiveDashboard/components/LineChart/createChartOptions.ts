@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material';
-import { format, subMonths } from 'date-fns';
 import { ILocationSettings } from 'hooks/useLocationSettings';
 import { TooltipState } from './ChartTooltip/ChartTooltip';
 import { createTooltip } from './createTooltip';
@@ -76,7 +75,6 @@ export const createOptions = (
                     maxRotation: 90,
                     minRotation: 23.5,
                 },
-                min: format(subMonths(new Date(), 3), 'yyyy-MM-dd'),
             },
         },
     }) as const;

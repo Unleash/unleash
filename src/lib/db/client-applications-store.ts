@@ -317,7 +317,6 @@ export default class ClientApplicationsStore
         if (!rows.length) {
             throw new NotFoundError(`Could not find appName=${appName}`);
         }
-
         const existingStrategies: string[] = await this.db
             .select('name')
             .from('strategies')

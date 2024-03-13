@@ -191,8 +191,8 @@ export default class FrontendAPIController extends Controller {
         if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
             const context = FrontendAPIController.createContext(req);
             [toggles, newToggles] = await Promise.all([
-                this.getTimedFrontendApiFeatures(req.user, context),
-                this.getTimedNewFrontendApiFeatures(req.user, context),
+                this.getTimedFrontendApiFeatures(req, context),
+                this.getTimedNewFrontendApiFeatures(req, context),
             ]);
             const sortedToggles = toggles.sort((a, b) =>
                 a.name.localeCompare(b.name),

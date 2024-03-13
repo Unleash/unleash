@@ -87,4 +87,14 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
                 count: this.db.raw('stat_traffic_usage.count + EXCLUDED.count'),
             });
     }
+
+    async getTrafficDataUsageForPeriod(
+        period: string,
+    ): Promise<IStatTrafficUsage[]> {
+        const rows = await this.db<IStatTrafficUsage>(TABLE).whereRaw(
+            `to_char(day, 'YYYY-MM') = ?`,
+            [period],
+        );
+        return rows.map(mapRow);
+    }
 }

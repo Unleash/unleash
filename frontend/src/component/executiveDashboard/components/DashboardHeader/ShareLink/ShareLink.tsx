@@ -1,5 +1,5 @@
 import { VFC, useEffect, useState } from 'react';
-import { Share } from '@mui/icons-material';
+import Share from '@mui/icons-material/Share';
 import { Box, Button, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { LinkField } from 'component/admin/users/LinkField/LinkField';

@@ -1,4 +1,4 @@
-import { ReactNode, VFC } from 'react';
+import { ReactNode, VFC, useState } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
@@ -8,6 +8,7 @@ import {
     styled,
     useMediaQuery,
     useTheme,
+    Box,
 } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';

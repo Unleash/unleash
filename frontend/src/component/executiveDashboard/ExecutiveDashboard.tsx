@@ -45,6 +45,15 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
+const StickyWrapper = styled(Box)(({ theme }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+    display: 'block',
+    padding: theme.spacing(1,0,4),
+    background: theme.palette.background.application,
+}));
+
 export const ExecutiveDashboard: VFC = () => {
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
     const stateConfig = {
@@ -74,7 +83,7 @@ export const ExecutiveDashboard: VFC = () => {
 
     return (
         <>
-            <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
+            <StickyWrapper>
                 <DashboardHeader
                     actions={
                         <ProjectSelect
@@ -85,7 +94,7 @@ export const ExecutiveDashboard: VFC = () => {
                         />
                     }
                 />
-            </Box>
+            </StickyWrapper>
             <StyledGrid>
                 <ConditionallyRender
                     condition={showAllProjects}

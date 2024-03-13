@@ -25,7 +25,6 @@ export const UsersPerProjectChart: VFC<IUsersPerProjectChartProps> = ({
     return (
         <LineChart
             data={notEnoughData ? placeholderData : data}
-            isLocalTooltip
             overrideOptions={{
                 parsing: {
                     yAxisKey: 'users',

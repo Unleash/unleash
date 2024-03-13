@@ -1,4 +1,4 @@
-import Settings from '@mui/icons-material/Settings';
+import Icon from '@mui/material/Icon';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -57,11 +57,12 @@ const StyledFlagCountPerUser = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
 }));
 
-const StyledSettingsIcon = styled(Settings)(({ theme }) => ({
+const StyledIcon = styled(Icon)(({ theme }) => ({
     color: theme.palette.primary.main,
     width: '15px',
     height: '15px',
     marginRight: theme.spacing(0.5),
+    fontSize: '15px!important',
 }));
 
 interface IFlagStatsProps {
@@ -87,7 +88,7 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                     <StyledInsightsContainer>
                         <StyledTextContainer>
                             <StyledHeaderContainer>
-                                <StyledSettingsIcon />
+                                <StyledIcon>award_star</StyledIcon>
                                 <Typography
                                     fontWeight='bold'
                                     variant='body2'

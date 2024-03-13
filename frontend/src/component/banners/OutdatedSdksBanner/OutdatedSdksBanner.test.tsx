@@ -7,7 +7,7 @@ import { OutdatedSdksBanner } from './OutdatedSdksBanner';
 const server = testServerSetup();
 
 const setupApi = (outdatedSdks: OutdatedSdksSchema) => {
-    testServerRoute(server, 'api/admin/metrics/sdks/outdated', outdatedSdks);
+    testServerRoute(server, '/api/admin/metrics/sdks/outdated', outdatedSdks);
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             sdkReporting: true,

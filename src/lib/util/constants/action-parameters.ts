@@ -18,20 +18,20 @@ const projectParameter: ActionDefinitionParameter = {
     hidden: true,
 };
 
-const featureToggleParameter: ActionDefinitionParameter = {
-    name: 'featureName',
-    label: 'Feature toggle',
-    type: 'featureToggle',
-};
-
 const environmentParameter: ActionDefinitionParameter = {
     name: 'environment',
     label: 'Environment',
     type: 'environment',
 };
 
+const featureToggleParameter: ActionDefinitionParameter = {
+    name: 'featureName',
+    label: 'Feature toggle',
+    type: 'featureToggle',
+};
+
 export const toggleFeatureParameters = [
     projectParameter,
-    featureToggleParameter,
     environmentParameter,
+    featureToggleParameter,
 ];

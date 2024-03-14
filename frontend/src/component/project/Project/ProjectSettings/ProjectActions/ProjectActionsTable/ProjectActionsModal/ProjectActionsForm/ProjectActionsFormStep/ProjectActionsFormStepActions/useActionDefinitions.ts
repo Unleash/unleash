@@ -38,10 +38,10 @@ export const useActionDefinitions = (projectId: string): ActionDefinitions => {
             string[]
         > = {
             project: [],
-            featureToggle: features.map(({ name }) => name).sort(),
             environment: project.environments.map(
                 ({ environment }) => environment,
             ),
+            featureToggle: features.map(({ name }) => name).sort(),
         };
 
         const actionDefinitionsWithParameterOptions = new Map<

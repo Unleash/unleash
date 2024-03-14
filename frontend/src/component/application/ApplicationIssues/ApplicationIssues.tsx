@@ -230,7 +230,10 @@ export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
             ),
         ),
     ];
-    const issueCount = mode.issueCount;
+    const issueCount =
+        outdatedSdks.length +
+        missingFeatures.length +
+        application.issues.missingStrategies.length;
     return (
         <WarningContainer>
             <WarningHeader>

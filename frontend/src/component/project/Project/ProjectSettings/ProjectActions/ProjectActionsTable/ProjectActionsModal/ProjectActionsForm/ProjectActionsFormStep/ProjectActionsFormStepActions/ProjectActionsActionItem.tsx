@@ -1,5 +1,11 @@
-import { Alert, IconButton, Tooltip, styled } from '@mui/material';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import {
+    Alert,
+    Autocomplete,
+    IconButton,
+    TextField,
+    Tooltip,
+    styled,
+} from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ActionsActionState } from '../../useProjectActionsForm';
@@ -7,8 +13,8 @@ import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
 import { useEffect, useMemo } from 'react';
-import { ACTIONS } from '@server/util/constants/actions';
 import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameter/ProjectActionsActionParameterAutocomplete';
+import { ActionDefinitions } from './useActionDefinitions';
 
 const StyledItemBody = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -22,11 +28,22 @@ const StyledItemRow = styled('div')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
     width: '100%',
+    flexWrap: 'wrap',
 }));
 
-const StyledFieldContainer = styled('div')({
+const StyledFieldContainer = styled('div')(({ theme }) => ({
     flex: 1,
-});
+    minWidth: theme.spacing(25),
+}));
+
+const StyledActionOption = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    '& > span:last-of-type': {
+        fontSize: theme.fontSizes.smallerBody,
+        color: theme.palette.text.secondary,
+    },
+}));
 
 interface IProjectActionsItemProps {
     action: ActionsActionState;
@@ -34,8 +51,7 @@ interface IProjectActionsItemProps {
     stateChanged: (action: ActionsActionState) => void;
     actorId: number;
     onDelete: () => void;
-    featureToggles: string[];
-    environments: string[];
+    actionDefinitions: ActionDefinitions;
     validated: boolean;
 }
 
@@ -45,8 +61,7 @@ export const ProjectActionsActionItem = ({
     stateChanged,
     actorId,
     onDelete,
-    featureToggles,
-    environments,
+    actionDefinitions,
     validated,
 }: IProjectActionsItemProps) => {
     const { action: actionName, executionParams, error } = action;
@@ -57,7 +72,7 @@ export const ProjectActionsActionItem = ({
         executionParams.environment as string,
     );
 
-    const actionDefinition = ACTIONS.get(actionName);
+    const actionDefinition = actionDefinitions.get(actionName);
 
     const hasPermission = useMemo(() => {
         const requiredPermissions = actionDefinition?.permissions;
@@ -112,61 +127,83 @@ export const ProjectActionsActionItem = ({
         </>
     );
 
+    const renderActionOption = (
+        props: React.HTMLAttributes<HTMLLIElement>,
+        option: { label: string; description?: string },
+    ) => (
+        <li {...props}>
+            <StyledActionOption>
+                <span>{option.label}</span>
+                <span>{option.description}</span>
+            </StyledActionOption>
+        </li>
+    );
+
+    const actionOptions = [...actionDefinitions].map(
+        ([key, actionDefinition]) => ({
+            key,
+            ...actionDefinition,
+        }),
+    );
+
+    const parameters =
+        actionDefinition?.parameters.filter(({ hidden }) => !hidden) || [];
+
     return (
         <ProjectActionsFormItem index={index} header={header} separator='THEN'>
             <StyledItemBody>
                 <StyledItemRow>
                     <StyledFieldContainer>
-                        <GeneralSelect
-                            label='Action'
-                            name='action'
-                            options={[...ACTIONS].map(([key, { label }]) => ({
-                                key,
-                                label,
-                            }))}
-                            value={actionName}
-                            onChange={(selected) =>
+                        <Autocomplete
+                            options={actionOptions}
+                            autoHighlight
+                            autoSelect
+                            value={actionOptions.find(
+                                ({ key }) => key === actionName,
+                            )}
+                            onChange={(_, value) =>
                                 stateChanged({
                                     ...action,
-                                    action: selected,
+                                    action: value ? value.key : '',
                                 })
                             }
-                            fullWidth
-                        />
-                    </StyledFieldContainer>
-                    <StyledFieldContainer>
-                        <ProjectActionsActionParameterAutocomplete
-                            label='Environment'
-                            value={executionParams.environment as string}
-                            onChange={(selected) =>
-                                stateChanged({
-                                    ...action,
-                                    executionParams: {
-                                        ...executionParams,
-                                        environment: selected,
-                                    },
-                                })
-                            }
-                            options={environments}
-                        />
-                    </StyledFieldContainer>
-                    <StyledFieldContainer>
-                        <ProjectActionsActionParameterAutocomplete
-                            label='Flag name'
-                            value={executionParams.featureName as string}
-                            onChange={(selected) =>
-                                stateChanged({
-                                    ...action,
-                                    executionParams: {
-                                        ...executionParams,
-                                        featureName: selected,
-                                    },
-                                })
-                            }
-                            options={featureToggles}
+                            renderOption={renderActionOption}
+                            getOptionLabel={({ label }) => label}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    size='small'
+                                    label='Action'
+                                />
+                            )}
                         />
                     </StyledFieldContainer>
                 </StyledItemRow>
+                <ConditionallyRender
+                    condition={parameters.length > 0}
+                    show={
+                        <StyledItemRow>
+                            {parameters.map(({ name, label, options }) => (
+                                <StyledFieldContainer key={name}>
+                                    <ProjectActionsActionParameterAutocomplete
+                                        label={label}
+                                        value={executionParams[name] as string}
+                                        onChange={(value) =>
+                                            stateChanged({
+                                                ...action,
+                                                executionParams: {
+                                                    ...executionParams,
+                                                    [name]: value,
+                                                },
+                                            })
+                                        }
+                                        options={options}
+                                    />
+                                </StyledFieldContainer>
+                            ))}
+                        </StyledItemRow>
+                    }
+                />
                 <ConditionallyRender
                     condition={validated && Boolean(error)}
                     show={<Alert severity='error'>{error}</Alert>}

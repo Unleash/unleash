@@ -3,6 +3,7 @@ import { Paper, Typography, styled, SxProps } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Theme } from '@mui/material/styles/createTheme';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(3),
@@ -29,7 +30,11 @@ export const Widget: FC<{
             {title}
             <ConditionallyRender
                 condition={Boolean(tooltip)}
-                show={<HelpIcon htmlTooltip tooltip={tooltip} />}
+                show={
+                    <HelpIcon htmlTooltip tooltip={tooltip}>
+                        <InfoOutlined />
+                    </HelpIcon>
+                }
             />
         </Typography>
         {children}

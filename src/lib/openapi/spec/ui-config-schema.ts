@@ -84,8 +84,13 @@ export const uiConfigSchema = {
             $ref: resourceLimitsSchema.$id,
             description: resourceLimitsSchema.description,
             example: {
-                segmentValues: 100,
-                strategySegments: 5,
+                ...Object.entries(resourceLimitsSchema.properties).reduce(
+                    (acc, [prop, { example }]) => ({
+                        ...acc,
+                        [prop]: example,
+                    }),
+                    {},
+                ),
             },
         },
         networkViewEnabled: {

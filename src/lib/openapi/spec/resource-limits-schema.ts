@@ -17,46 +17,46 @@ export const resourceLimitsSchema = {
     additionalProperties: false,
     properties: {
         segmentValues: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description: 'The maximum number of values per segment allowed.',
         },
         strategySegments: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description: 'The maximum number of strategy segments allowed.',
         },
         actionSetActions: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description:
                 'The maximum number of actions per action set allowed.',
         },
         actionSetsPerProject: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description:
                 'The maximum number of action set definitions per project allowed.',
         },
         actionSetFilters: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description:
                 'The maximum number of filters per action set allowed.',
         },
         actionSetFilterValues: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description:
                 'The maximum number of filter values inside an action set allowed.',
         },
         signalEndpoints: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description: 'The maximum number of signal endpoints allowed.',
         },
         signalTokensPerEndpoint: {
-            type: 'number',
+            type: 'integer',
             example: 10,
             description:
                 'The maximum number of signal tokens per endpoint allowed.',

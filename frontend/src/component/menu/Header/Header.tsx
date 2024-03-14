@@ -190,7 +190,6 @@ const Header: VFC = () => {
     const onConfigureClose = () => setConfigRef(null);
 
     const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
-    const celebatoryUnleash = useUiFlag('celebrateUnleash');
     const insightsDashboard = useUiFlag('executiveDashboard');
 
     const routes = getRoutes();
@@ -252,7 +251,7 @@ const Header: VFC = () => {
                     <ThemeMode
                         darkmode={
                             <ConditionallyRender
-                                condition={celebatoryUnleash}
+                                condition={false}
                                 show={<CelebatoryUnleashLogoWhite />}
                                 elseShow={
                                     <StyledUnleashLogoWhite aria-label='Unleash logo' />
@@ -261,7 +260,7 @@ const Header: VFC = () => {
                         }
                         lightmode={
                             <ConditionallyRender
-                                condition={celebatoryUnleash}
+                                condition={false}
                                 show={<StyledCelebatoryLogo />}
                                 elseShow={
                                     <StyledUnleashLogo aria-label='Unleash logo' />

@@ -30,7 +30,6 @@ export type IFlagKey =
     | 'stripHeadersOnAPI'
     | 'signals'
     | 'automatedActions'
-    | 'celebrateUnleash'
     | 'increaseUnleashWidth'
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
@@ -145,10 +144,6 @@ const flags: IFlags = {
     ),
     automatedActions: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_AUTOMATED_ACTIONS,
-        false,
-    ),
-    celebrateUnleash: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
         false,
     ),
     increaseUnleashWidth: parseEnvVarBoolean(

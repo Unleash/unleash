@@ -138,9 +138,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
     }
 
     private async onUpdateRevisionEvent() {
-        if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
-            await this.refreshData();
-        }
+        await this.refreshData();
     }
 
     private environmentNameForToken(token: IApiUser): string {

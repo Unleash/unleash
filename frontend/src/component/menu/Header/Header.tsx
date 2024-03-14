@@ -145,16 +145,14 @@ const styledIconProps = (theme: Theme) => ({
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
-const StyledLinkWithBetaBagde = ({
+const StyledLinkWithBetaBadge = ({
     title,
     to,
 }: { title: string; to: string }) => (
     <StyledLink to={to} sx={{ margin: 0 }}>
         <div>
             <span>{title}</span>{' '}
-            <StyledSpan>
-                <StyledBadge color='success'>Beta</StyledBadge>
-            </StyledSpan>
+            <Badge color='success'>Beta</Badge>
         </div>
     </StyledLink>
 );
@@ -279,7 +277,7 @@ const Header: VFC = () => {
                         <ConditionallyRender
                             condition={insightsDashboard}
                             show={
-                                <StyledLinkWithBetaBagde
+                                <StyledLinkWithBetaBadge
                                     to={'/insights'}
                                     title={'Insights'}
                                 />

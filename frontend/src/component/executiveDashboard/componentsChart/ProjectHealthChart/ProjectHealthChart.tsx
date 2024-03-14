@@ -8,9 +8,12 @@ import {
     NotEnoughData,
 } from 'component/executiveDashboard/components/LineChart/LineChart';
 import { useTheme } from '@mui/material';
+import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
 interface IFlagsProjectChartProps {
-    projectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'];
+    projectFlagTrends: GroupedDataByProject<
+        ExecutiveSummarySchema['projectFlagTrends']
+    >;
     isAggregate?: boolean;
 }
 

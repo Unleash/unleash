@@ -28,14 +28,18 @@ export const createOptions = (
             tooltip: {
                 enabled: false,
                 position: 'nearest',
+                interaction: {
+                    axis: 'xy',
+                    mode: 'nearest',
+                },
                 external: createTooltip(setTooltip),
             },
         },
         locale: locationSettings.locale,
         interaction: {
             intersect: false,
-            axis: 'x',
-            mode: 'index',
+            axis: 'xy',
+            mode: 'nearest',
         },
         elements: {
             point: {

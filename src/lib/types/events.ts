@@ -1345,13 +1345,11 @@ export class UserDeletedEvent extends BaseEvent {
     }
 }
 
-interface IUserEventData extends Partial<IUserWithRootRole> {
-    id: number;
-    name: string;
-    username: string;
-    email: string;
-    rootRole: number;
-}
+interface IUserEventData
+    extends Pick<
+        IUserWithRootRole,
+        'id' | 'name' | 'username' | 'email' | 'rootRole'
+    > {}
 
 function mapUserToData(user: IUserEventData): any {
     return {

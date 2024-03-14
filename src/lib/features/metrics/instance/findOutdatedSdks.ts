@@ -14,7 +14,8 @@ const config: SDKConfig = {
     'unleash-client-php': '2.3.0',
 };
 
-export const isOutdatedSdk = (sdkVersion: string) => {
+export const isOutdatedSdk = (sdkVersion: string | null) => {
+    if (sdkVersion == null) return false;
     const result = sdkVersion.split(':');
     if (result.length !== 2) return false;
     const [sdkName, version] = result;
@@ -24,8 +25,8 @@ export const isOutdatedSdk = (sdkVersion: string) => {
     return false;
 };
 
-export function findOutdatedSDKs(sdkVersions: string[]): string[] {
+export function findOutdatedSDKs(sdkVersions: (string | null)[]): string[] {
     const uniqueSdkVersions = Array.from(new Set(sdkVersions));
 
-    return uniqueSdkVersions.filter(isOutdatedSdk);
+    return uniqueSdkVersions.filter(isOutdatedSdk) as string[];
 }

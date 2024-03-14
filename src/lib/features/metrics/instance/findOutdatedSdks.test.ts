@@ -52,7 +52,7 @@ describe('findOutdatedSDKs', () => {
     });
 
     it('should ignore invalid SDK versions', () => {
-        const sdkVersions = ['unleash-client-node', '1.2.3'];
+        const sdkVersions = ['unleash-client-node', '1.2.3', null];
         const result = findOutdatedSDKs(sdkVersions);
         expect(result).toEqual([]);
     });

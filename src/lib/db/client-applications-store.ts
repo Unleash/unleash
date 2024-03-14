@@ -294,7 +294,6 @@ export default class ClientApplicationsStore
         const query = this.db
             .with('latest_metrics', (qb) => {
                 qb.select('cme.app_name', 'cme.environment', 'cme.feature_name')
-                    .max('timestamp as timestamp')
                     .from('client_metrics_env as cme')
                     .groupBy(
                         'cme.app_name',

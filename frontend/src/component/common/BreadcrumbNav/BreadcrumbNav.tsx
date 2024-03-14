@@ -49,7 +49,8 @@ const BreadcrumbNav = () => {
                 item !== 'create-toggle' &&
                 item !== 'settings' &&
                 item !== 'profile',
-        );
+        )
+        .map(decodeURI);
 
     return (
         <StyledBreadcrumbContainer>

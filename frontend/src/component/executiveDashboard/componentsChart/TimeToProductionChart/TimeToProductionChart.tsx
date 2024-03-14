@@ -7,13 +7,13 @@ import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
 import { TimeToProductionTooltip } from './TimeToProductionTooltip/TimeToProductionTooltip';
 
-interface IFlagsProjectChartProps {
+interface ITimeToProductionChartProps {
     projectFlagTrends: GroupedDataByProject<
         ExecutiveSummarySchema['projectFlagTrends']
     >;
 }
 
-export const TimeToProductionChart: VFC<IFlagsProjectChartProps> = ({
+export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
     projectFlagTrends,
 }) => {
     const data = useProjectChartData(projectFlagTrends);

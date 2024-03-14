@@ -16,13 +16,13 @@ Since every token had a dedicated repository with 10 tokens we were making 10 DB
 What's more each repository kept its own copy of the flags. What it means in practice is that two different tokens with the same
 project and environments would store the same flags twice. 
 
-[Frontend API before](/img/frontend-api-before.png)
+![Frontend API before](/img/frontend-api-before.png)
 
 ## Decision
 
 To address these challenges, we came up with a new design:
 
-[Frontend API after](/img/frontend-api-after.png)
+![Frontend API after](/img/frontend-api-after.png)
 
 We decided to swap ProxyRepository with a drop-in replacement FrontendApiRepository. FrontendApiRepository doesn't store any flags on its own but always filters
 the flags that we keep in a GlobalFrontendApiCache. The cache stores all the flags and updates on every revision ID change. 

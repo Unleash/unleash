@@ -2,7 +2,6 @@ import { type FC } from 'react';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
 import { HorizontalDistributionChart } from '../../components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { UserDistributionInfo } from './UserDistributionInfo';
@@ -73,9 +72,8 @@ interface IUserStatsProps {
 }
 
 export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
-    const showInactiveUsers = useUiFlag('showInactiveUsers');
     const showDistribution =
-        showInactiveUsers && active !== undefined && inactive !== undefined;
+        active !== undefined && inactive !== undefined;
     const activeUsersPercentage = ((active || 0) / count) * 100;
 
     return (

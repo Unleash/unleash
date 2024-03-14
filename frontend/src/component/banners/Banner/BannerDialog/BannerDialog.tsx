@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import { ReactNode } from 'react';
@@ -22,20 +22,31 @@ export const BannerDialog = ({
     title,
     children,
 }: IBannerDialogProps) => {
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <Dialogue
             title={title}
             open={open}
             secondaryButtonText='Close'
-            onClose={() => {
-                setOpen(false);
-            }}
+            onClose={handleClose}
         >
-            {typeof children === 'string' ? (
-                <StyledMarkdown>{children}</StyledMarkdown>
-            ) : (
-                children
-            )}
+            <Box
+                onClick={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (target.nodeName === 'A') {
+                        handleClose();
+                    }
+                }}
+            >
+                {typeof children === 'string' ? (
+                    <StyledMarkdown>{children}</StyledMarkdown>
+                ) : (
+                    children
+                )}
+            </Box>
         </Dialogue>
     );
 };

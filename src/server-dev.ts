@@ -50,6 +50,7 @@ process.nextTick(async () => {
                         executiveDashboard: true,
                         userAccessUIEnabled: true,
                         sdkReporting: true,
+                        outdatedSdksBanner: true,
                         globalFrontendApiCache: true,
                         returnGlobalFrontendApiCache: true,
                     },

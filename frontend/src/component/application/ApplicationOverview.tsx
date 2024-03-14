@@ -79,7 +79,7 @@ const ApplicationOverview = () => {
                 <ApplicationContainer>
                     <ApplicationHeader>
                         <ProjectContainer>
-                            Projects using this application
+                            Application is connected to these projects:
                             {data.projects.map((project) => (
                                 <Badge
                                     sx={{ cursor: 'pointer' }}

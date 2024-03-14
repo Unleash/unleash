@@ -9,8 +9,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Add from '@mui/icons-material/Add';
 import { IServiceAccount } from 'interfaces/service-account';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { useActionDefinitions } from './useActionDefinitions';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -46,14 +45,7 @@ export const ProjectActionsFormStepActions = ({
     validated,
 }: IProjectActionsFormStepActionsProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const { project } = useProjectOverview(projectId);
-    const { features } = useFeatureSearch({ project: `IS:${projectId}` });
-
-    const featureToggles = features.map(({ name }) => name).sort();
-
-    const environments = project.environments.map(
-        ({ environment }) => environment,
-    );
+    const actionDefinitions = useActionDefinitions(projectId);
 
     const addAction = (projectId: string) => {
         const id = uuidv4();
@@ -122,8 +114,7 @@ export const ProjectActionsFormStepActions = ({
                             actions.filter((a) => a.id !== action.id),
                         )
                     }
-                    featureToggles={featureToggles}
-                    environments={environments}
+                    actionDefinitions={actionDefinitions}
                     validated={validated}
                 />
             ))}

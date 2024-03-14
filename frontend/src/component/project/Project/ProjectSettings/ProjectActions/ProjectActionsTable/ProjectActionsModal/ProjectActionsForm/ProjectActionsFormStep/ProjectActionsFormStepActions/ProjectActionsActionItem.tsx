@@ -2,14 +2,13 @@ import { Alert, IconButton, Tooltip, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
 import { useEffect, useMemo } from 'react';
 import { ACTIONS } from '@server/util/constants/actions';
+import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameter/ProjectActionsActionParameterAutocomplete';
 
 const StyledItemBody = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -35,6 +34,8 @@ interface IProjectActionsItemProps {
     stateChanged: (action: ActionsActionState) => void;
     actorId: number;
     onDelete: () => void;
+    featureToggles: string[];
+    environments: string[];
     validated: boolean;
 }
 
@@ -44,11 +45,12 @@ export const ProjectActionsActionItem = ({
     stateChanged,
     actorId,
     onDelete,
+    featureToggles,
+    environments,
     validated,
 }: IProjectActionsItemProps) => {
     const { action: actionName, executionParams, error } = action;
     const projectId = useRequiredPathParam('projectId');
-    const { project } = useProjectOverview(projectId);
     const { permissions } = useServiceAccountAccessMatrix(
         actorId,
         projectId,
@@ -97,12 +99,6 @@ export const ProjectActionsActionItem = ({
         }
     }, [actionDefinition, executionParams]);
 
-    const environments = project.environments.map(
-        ({ environment }) => environment,
-    );
-
-    const { features } = useFeatureSearch({ project: `IS:${projectId}` });
-
     const header = (
         <>
             <span>Action {index + 1}</span>
@@ -139,13 +135,8 @@ export const ProjectActionsActionItem = ({
                         />
                     </StyledFieldContainer>
                     <StyledFieldContainer>
-                        <GeneralSelect
+                        <ProjectActionsActionParameterAutocomplete
                             label='Environment'
-                            name='environment'
-                            options={environments.map((environment) => ({
-                                label: environment,
-                                key: environment,
-                            }))}
                             value={executionParams.environment as string}
                             onChange={(selected) =>
                                 stateChanged({
@@ -156,17 +147,12 @@ export const ProjectActionsActionItem = ({
                                     },
                                 })
                             }
-                            fullWidth
+                            options={environments}
                         />
                     </StyledFieldContainer>
                     <StyledFieldContainer>
-                        <GeneralSelect
+                        <ProjectActionsActionParameterAutocomplete
                             label='Flag name'
-                            name='flag'
-                            options={features.map((feature) => ({
-                                label: feature.name,
-                                key: feature.name,
-                            }))}
                             value={executionParams.featureName as string}
                             onChange={(selected) =>
                                 stateChanged({
@@ -177,7 +163,7 @@ export const ProjectActionsActionItem = ({
                                     },
                                 })
                             }
-                            fullWidth
+                            options={featureToggles}
                         />
                     </StyledFieldContainer>
                 </StyledItemRow>

@@ -27,13 +27,15 @@ export const createOptions = (
             },
             tooltip: {
                 enabled: false,
+                position: 'nearest',
                 external: createTooltip(setTooltip),
             },
         },
         locale: locationSettings.locale,
         interaction: {
-            intersect: localTooltip || false,
+            intersect: false,
             axis: 'x',
+            mode: 'index',
         },
         elements: {
             point: {

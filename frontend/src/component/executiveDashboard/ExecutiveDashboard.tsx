@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -45,7 +45,19 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
+const StickyWrapper = styled(Box)<{ scrolled?: boolean }>(
+    ({ theme, scrolled }) => ({
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+        background: theme.palette.background.application,
+        transition: 'padding 0.3s ease',
+    }),
+);
+
 export const ExecutiveDashboard: VFC = () => {
+    const [scrolled, setScrolled] = useState(false);
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
     const stateConfig = {
         projects: withDefault(ArrayParam, [allOption.id]),
@@ -72,9 +84,21 @@ export const ExecutiveDashboard: VFC = () => {
     const summary = useFilteredFlagsSummary(projectsData);
     const isOneProjectSelected = projects.length === 1;
 
+    const handleScroll = () => {
+        if (!scrolled && window.scrollY > 0) {
+            setScrolled(true);
+        } else if (scrolled && window.scrollY === 0) {
+            setScrolled(false);
+        }
+    };
+
+    if (typeof window !== 'undefined') {
+        window.addEventListener('scroll', handleScroll);
+    }
+
     return (
         <>
-            <Box sx={(theme) => ({ paddingBottom: theme.spacing(4) })}>
+            <StickyWrapper scrolled={scrolled}>
                 <DashboardHeader
                     actions={
                         <ProjectSelect
@@ -85,7 +109,7 @@ export const ExecutiveDashboard: VFC = () => {
                         />
                     }
                 />
-            </Box>
+            </StickyWrapper>
             <StyledGrid>
                 <ConditionallyRender
                     condition={showAllProjects}

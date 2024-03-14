@@ -73,7 +73,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 x={206}
                 y={72}
                 fill={theme.palette.charts.health.text}
-                fontSize={12}
+                fontSize={13}
                 textAnchor='middle'
             >
                 Healthy
@@ -100,7 +100,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 x={53}
                 y={81}
                 fill={theme.palette.charts.health.text}
-                fontSize={12}
+                fontSize={13}
                 textAnchor='middle'
             >
                 Stale
@@ -127,7 +127,7 @@ export const HealthStats: VFC<IHealthStatsProps> = ({
                 x={144}
                 y={232}
                 fill={theme.palette.charts.health.text}
-                fontSize={12}
+                fontSize={13}
                 textAnchor='middle'
             >
                 <tspan x={144} dy='0'>

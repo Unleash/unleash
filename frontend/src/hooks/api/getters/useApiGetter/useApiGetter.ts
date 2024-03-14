@@ -1,5 +1,6 @@
 import useSWR, { SWRConfiguration, Key } from 'swr';
 import { useCallback } from 'react';
+import handleErrorResponses from '../httpErrorResponseHandler';
 
 interface IUseApiGetterOutput<T> {
     data?: T;
@@ -25,4 +26,10 @@ export const useApiGetter = <T>(
         refetch,
         loading: !error && !data,
     };
+};
+
+export const fetcher = (path: string, errorTarget: string) => {
+    return fetch(path)
+        .then(handleErrorResponses(errorTarget))
+        .then((res) => res.json());
 };

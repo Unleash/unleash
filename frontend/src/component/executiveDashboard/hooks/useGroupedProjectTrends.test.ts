@@ -1,10 +1,11 @@
 import { useGroupedProjectTrends } from './useGroupedProjectTrends';
+import { renderHook } from '@testing-library/react-hooks';
 
 describe('useGroupedProjectTrends', () => {
     test('returns an empty object when input data is empty', () => {
         const input: any[] = [];
-        const result = useGroupedProjectTrends(input);
-        expect(result).toEqual({});
+        const { result } = renderHook(() => useGroupedProjectTrends(input));
+        expect(result.current).toEqual({});
     });
 
     test('groups data by project correctly', () => {
@@ -13,8 +14,8 @@ describe('useGroupedProjectTrends', () => {
             { project: 'project2', data: 'data2' },
             { project: 'project1', data: 'data3' },
         ];
-        const result = useGroupedProjectTrends(input);
-        expect(result).toEqual({
+        const { result } = renderHook(() => useGroupedProjectTrends(input));
+        expect(result.current).toEqual({
             project1: [
                 { project: 'project1', data: 'data1' },
                 { project: 'project1', data: 'data3' },
@@ -38,8 +39,8 @@ describe('useGroupedProjectTrends', () => {
                 data: { some: { complex: { type: 'data3' } } },
             },
         ];
-        const result = useGroupedProjectTrends(input);
-        expect(result).toEqual({
+        const { result } = renderHook(() => useGroupedProjectTrends(input));
+        expect(result.current).toEqual({
             project1: [
                 {
                     project: 'project1',

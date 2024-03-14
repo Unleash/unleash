@@ -12,7 +12,7 @@ test('decode URI encoded path in breadcrumbs nav', async () => {
             />
         </Routes>,
         {
-            route: '/applications/my app/my instance',
+            route: '/applications/my%20app/my%20instance',
         },
     );
 

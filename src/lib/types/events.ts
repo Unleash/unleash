@@ -1304,11 +1304,11 @@ export class PotentiallyStaleOnEvent extends BaseEvent {
 }
 
 export class UserCreatedEvent extends BaseEvent {
-    readonly data: IUserWithRootRole;
+    readonly data: IUserEventData;
 
     constructor(eventData: {
         createdBy: string | IUser;
-        userCreated: IUserWithRootRole;
+        userCreated: IUserEventData;
         createdByUserId: number;
     }) {
         super(USER_CREATED, eventData.createdBy, eventData.createdByUserId);
@@ -1317,13 +1317,13 @@ export class UserCreatedEvent extends BaseEvent {
 }
 
 export class UserUpdatedEvent extends BaseEvent {
-    readonly data: IUserWithRootRole;
-    readonly preData: IUserWithRootRole;
+    readonly data: IUserEventData;
+    readonly preData: IUserEventData;
 
     constructor(eventData: {
         createdBy: string | IUser;
-        preUser: IUserWithRootRole;
-        postUser: IUserWithRootRole;
+        preUser: IUserEventData;
+        postUser: IUserEventData;
         createdByUserId: number;
     }) {
         super(USER_UPDATED, eventData.createdBy, eventData.createdByUserId);
@@ -1333,11 +1333,11 @@ export class UserUpdatedEvent extends BaseEvent {
 }
 
 export class UserDeletedEvent extends BaseEvent {
-    readonly preData: IUserWithRootRole;
+    readonly preData: IUserEventData;
 
     constructor(eventData: {
         createdBy: string | IUser;
-        deletedUser: IUserWithRootRole;
+        deletedUser: IUserEventData;
         createdByUserId: number;
     }) {
         super(USER_DELETED, eventData.createdBy, eventData.createdByUserId);
@@ -1345,7 +1345,13 @@ export class UserDeletedEvent extends BaseEvent {
     }
 }
 
-function mapUserToData(user: IUserWithRootRole): any {
+interface IUserEventData
+    extends Pick<
+        IUserWithRootRole,
+        'id' | 'name' | 'username' | 'email' | 'rootRole'
+    > {}
+
+function mapUserToData(user: IUserEventData): any {
     return {
         id: user.id,
         name: user.name,

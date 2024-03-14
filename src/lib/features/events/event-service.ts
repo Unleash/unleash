@@ -104,16 +104,10 @@ export default class EventService {
         };
     }
 
-    /**
-     * @deprecated use storeUserEvent instead
-     */
     async storeEvent(event: IBaseEvent): Promise<void> {
         return this.storeEvents([event]);
     }
 
-    /**
-     * @deprecated use storeUserEvents instead
-     */
     async storeEvents(events: IBaseEvent[]): Promise<void> {
         let enhancedEvents = events;
         for (const enhancer of [this.enhanceEventsWithTags.bind(this)]) {
@@ -122,10 +116,18 @@ export default class EventService {
         return this.eventStore.batchStore(enhancedEvents);
     }
 
+    /**
+     * @deprecated this is tech debt, we should migrate to storeEvents and send the right
+     * userId and username parameters in IBaseEvent
+     */
     async storeUserEvent(event: IUserEvent): Promise<void> {
         return this.storeUserEvents([event]);
     }
 
+    /**
+     * @deprecated this is tech debt, we should migrate to storeEvents and send the right
+     * userId and username parameters in IBaseEvent
+     */
     async storeUserEvents(events: IUserEvent[]): Promise<void> {
         let enhancedEvents = events.map(({ byUser, ...event }) => {
             return {

@@ -292,6 +292,16 @@ export default class ClientApplicationsStore
         appName: string,
     ): Promise<IApplicationOverview> {
         const query = this.db
+            .with('latest_metrics', (qb) => {
+                qb.select('cme.app_name', 'cme.environment', 'cme.feature_name')
+                    .max('timestamp as timestamp')
+                    .from('client_metrics_env as cme')
+                    .groupBy(
+                        'cme.app_name',
+                        'cme.environment',
+                        'cme.feature_name',
+                    );
+            })
             .select([
                 'f.project',
                 'cme.environment',
@@ -302,7 +312,7 @@ export default class ClientApplicationsStore
                 'a.strategies',
             ])
             .from({ a: 'client_applications' })
-            .leftJoin('client_metrics_env as cme', 'cme.app_name', 'a.app_name')
+            .leftJoin('latest_metrics as cme', 'cme.app_name', 'a.app_name')
             .leftJoin('features as f', 'cme.feature_name', 'f.name')
             .leftJoin('client_instances as ci', function () {
                 this.on('ci.app_name', '=', 'cme.app_name').andOn(

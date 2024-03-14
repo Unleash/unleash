@@ -35,4 +35,40 @@ test('Display all application issues', async () => {
     );
     await screen.findByText(`We detected the following outdated SDKs`);
     await screen.findByText(`unleash-client-php:1.13.0`);
+    await screen.findByText(`We detected 4 issues in this application`);
+});
+
+test('Each SDK version should be displayed once', async () => {
+    const application: ApplicationOverviewSchema = {
+        projects: ['default'],
+        featureCount: 0,
+        environments: [
+            {
+                issues: {
+                    missingFeatures: [],
+                    outdatedSdks: ['unleash-client-php:1.13.0'],
+                },
+                sdks: [],
+                instanceCount: 0,
+                lastSeen: new Date().toISOString(),
+                name: 'development',
+            },
+            {
+                issues: {
+                    missingFeatures: [],
+                    outdatedSdks: ['unleash-client-php:1.13.0'],
+                },
+                sdks: [],
+                instanceCount: 0,
+                lastSeen: new Date().toISOString(),
+                name: 'production',
+            },
+        ],
+        issues: {
+            missingStrategies: [],
+        },
+    };
+    render(<ApplicationIssues application={application} />);
+
+    await screen.findByText(`We detected 1 issue in this application`);
 });

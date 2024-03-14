@@ -4,6 +4,16 @@ export const resourceLimitsSchema = {
     $id: '#/components/schemas/resourceLimitsSchema',
     type: 'object',
     description: 'A map of resource names and their limits.',
+    required: [
+        'segmentValues',
+        'strategySegments',
+        'actionSetActions',
+        'actionSetsPerProject',
+        'actionSetFilters',
+        'actionSetFilterValues',
+        'signalEndpoints',
+        'signalTokensPerEndpoint',
+    ],
     additionalProperties: false,
     properties: {
         segmentValues: {

@@ -45,7 +45,6 @@ export type IFlagKey =
     | 'showInactiveUsers'
     | 'inMemoryScheduledChangeRequests'
     | 'collectTrafficDataUsage'
-    | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
@@ -227,10 +226,6 @@ const flags: IFlags = {
     ),
     showInactiveUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
-        false,
-    ),
-    useMemoizedActiveTokens: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
         false,
     ),
     inMemoryScheduledChangeRequests: parseEnvVarBoolean(

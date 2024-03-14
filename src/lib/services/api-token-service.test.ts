@@ -31,7 +31,6 @@ test('Should init api token', async () => {
         },
         experimental: {
             flags: {
-                useMemoizedActiveTokens: true,
             },
         },
     });

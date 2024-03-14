@@ -5,7 +5,6 @@ import { createTestConfig } from '../../config/test-config';
 import { ApiTokenType, IApiToken } from '../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { addDays, subDays } from 'date-fns';
-import ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EventService } from '../../../lib/services';
 import { IUnleashStores } from '../../../lib/types';
@@ -20,7 +19,6 @@ beforeAll(async () => {
         server: { baseUriPath: '/test' },
         experimental: {
             flags: {
-                useMemoizedActiveTokens: true,
             },
         },
     });

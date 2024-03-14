@@ -87,11 +87,13 @@ export const ProjectActionsActionItem = ({
             ...action,
             error: undefined,
         });
-        if (
-            actionDefinition?.required.some(
-                (required) => !executionParams[required],
-            )
-        ) {
+
+        const requiredParameters =
+            actionDefinition?.parameters
+                .filter(({ optional }) => !optional)
+                .map(({ name }) => name) || [];
+
+        if (requiredParameters.some((required) => !executionParams[required])) {
             stateChanged({
                 ...action,
                 error: 'Please fill all required fields.',

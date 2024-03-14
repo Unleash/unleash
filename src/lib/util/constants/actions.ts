@@ -9,8 +9,6 @@ export type ActionDefinition = {
     category?: string;
     permissions: string[];
     parameters: ActionDefinitionParameter[];
-    // TODO: Remove this in favor of parameters (filter by !optional)
-    required: string[];
 };
 
 export const ACTIONS = new Map<string, ActionDefinition>([
@@ -22,7 +20,6 @@ export const ACTIONS = new Map<string, ActionDefinition>([
             category: 'Feature toggles',
             permissions: ['UPDATE_FEATURE_ENVIRONMENT'],
             parameters: toggleFeatureParameters,
-            required: ['project', 'environment', 'featureName'],
         },
     ],
     [
@@ -34,7 +31,6 @@ export const ACTIONS = new Map<string, ActionDefinition>([
             category: 'Feature toggles',
             permissions: ['UPDATE_FEATURE_ENVIRONMENT'],
             parameters: toggleFeatureParameters,
-            required: ['project', 'environment', 'featureName'],
         },
     ],
 ]);

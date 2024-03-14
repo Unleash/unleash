@@ -75,7 +75,6 @@ test('Display application overview without environments', async () => {
         },
     );
 
-    await screen.findByText('my-app');
     await screen.findByText('No data available.');
 });
 

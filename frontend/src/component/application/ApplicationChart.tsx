@@ -14,7 +14,7 @@ import Flag from '@mui/icons-material/Flag';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import TimeAgo from 'react-timeago';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { getApplicationIssueMode } from './ApplicationIssues/ApplicationIssues';
+import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues';
 
 const StyledTable = styled('table')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -196,7 +196,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     const navigate = useNavigate();
     const theme = useTheme();
 
-    const mode = getApplicationIssueMode(data);
+    const mode = getApplicationIssues(data);
 
     return (
         <Box sx={{ width }}>

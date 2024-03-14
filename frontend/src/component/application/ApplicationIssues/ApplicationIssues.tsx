@@ -95,6 +95,17 @@ interface IOutdatedSDKsProps {
     sdks: string[];
 }
 
+type ApplicationIssues =
+    | {
+          applicationMode: 'success';
+      }
+    | {
+          applicationMode: 'warning';
+          issueCount: number;
+          outdatedSdks: string[];
+          missingFeatures: string[];
+      };
+
 const FeaturesMissing = ({ features }: IFeaturesMissingProps) => {
     const { hasAccess } = useContext(AccessContext);
     const length = features.length;
@@ -186,38 +197,9 @@ const OutdatedSDKs = ({ sdks }: IOutdatedSDKsProps) => {
     );
 };
 
-export const getApplicationIssueMode = (
+export const getApplicationIssues = (
     application: ApplicationOverviewSchema,
-):
-    | {
-          applicationMode: 'success';
-      }
-    | {
-          applicationMode: 'warning';
-          issueCount: number;
-      } => {
-    const issueCount =
-        application.issues.missingStrategies.length +
-        application.environments
-            .map(
-                (env) =>
-                    env.issues.missingFeatures.length +
-                    env.issues.outdatedSdks.length,
-            )
-            .reduce((sum, num) => sum + num, 0);
-
-    return {
-        issueCount,
-        applicationMode: issueCount > 0 ? 'warning' : 'success',
-    };
-};
-
-export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
-    const mode = getApplicationIssueMode(application);
-
-    if (mode.applicationMode === 'success') {
-        return null;
-    }
+): ApplicationIssues => {
     const outdatedSdks = [
         ...new Set(
             application.environments.flatMap((env) => env.issues.outdatedSdks),
@@ -234,6 +216,22 @@ export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
         outdatedSdks.length +
         missingFeatures.length +
         application.issues.missingStrategies.length;
+
+    return {
+        issueCount,
+        outdatedSdks,
+        missingFeatures,
+        applicationMode: issueCount > 0 ? 'warning' : 'success',
+    };
+};
+
+export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
+    const mode = getApplicationIssues(application);
+
+    if (mode.applicationMode === 'success') {
+        return null;
+    }
+    const { issueCount, outdatedSdks, missingFeatures } = mode;
     return (
         <WarningContainer>
             <WarningHeader>

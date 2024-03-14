@@ -127,18 +127,6 @@ const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
     cursor: 'pointer',
 }));
 
-const StyledSpan = styled('span')({
-    height: '16px',
-    paddingBottom: 16,
-});
-
-const StyledBadge = styled(Badge)({
-    height: '16px',
-    maxHeight: '16px',
-    padding: 0.25,
-    marginBottom: 0,
-});
-
 const styledIconProps = (theme: Theme) => ({
     color: theme.palette.neutral.main,
 });

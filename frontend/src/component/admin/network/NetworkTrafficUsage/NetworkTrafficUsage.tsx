@@ -1,6 +1,6 @@
 import { useMemo, VFC, useState, useEffect } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, useTheme } from '@mui/material';
+import useTheme from '@mui/material/styles/useTheme';
+import styled from '@mui/material/styles/styled';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Box from '@mui/system/Box';
 import Select from 'component/common/select';
@@ -14,15 +14,24 @@ import {
     Title,
     Tooltip,
     Legend,
-    ChartData,
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
 import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import { Theme } from '@emotion/react';
-import { useLocationSettings } from 'hooks/useLocationSettings';
+import { Theme } from '@mui/material/styles/createTheme';
+import Grid from '@mui/material/Grid';
 
 type ChartDatasetType = ChartDataset<'bar'>;
+
+const StyledHeader = styled('h3')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+    fontSize: theme.fontSizes.bodySize,
+    margin: 0,
+    marginTop: theme.spacing(1),
+    fontWeight: theme.fontWeight.bold,
+}));
 
 const padMonth = (month: number): string => {
     return month < 10 ? `0${month}` : `${month}`;
@@ -34,7 +43,7 @@ const toSelectablePeriod = (date: Date, label?: string): { key:string, dayCount:
     return {
         key: period,
         dayCount,
-        label: label || date.toLocaleString('default', { month: 'long', year: 'numeric' }),
+        label: label || date.toLocaleString('en-US', { month: 'long', year: 'numeric' }),
     };
 };
 
@@ -42,6 +51,7 @@ const getSelectablePeriods = (): { key: string, dayCount: number, label: string 
     const current = new Date(Date.now());
     const selectablePeriods = [toSelectablePeriod(current, 'Current month')];
     for (let monthAdd = 1; monthAdd < 13; monthAdd++) {
+        // JavaScript wraps around the year, so we don't need to handle that.
         const date = new Date(current.getFullYear(), current.getMonth() - monthAdd, 1);
         selectablePeriods.push(toSelectablePeriod(date));
     }
@@ -59,68 +69,117 @@ const getDayLabels = (dayCount: number): number[] => {
     return [...Array(dayCount).keys()].map((i) => i + 1);
 }
 
-
 const toChartData = (
-    theme: Theme,
     days: number[],
-    traffic?: any,
+    traffic: any,
+    endpointsInfo: Record<string, { label: string, color: string, order: number, }>,
 ): ChartDatasetType[] => {
     if (!traffic || !traffic.usage || !traffic.usage.apiData) {
         return [];
     }
 
-    const data = traffic.usage.apiData.map((item: any) => {
+    const data = traffic.usage.apiData
+    .filter((item: { apiPath: string }) => !!endpointsInfo[item.apiPath])
+    .sort((item1: any, item2: any) => endpointsInfo[item1.apiPath].order - endpointsInfo[item2.apiPath].order)
+    .map((item: any) => {
         const daysRec = days.reduce((acc, day: number) => {
             acc[`d${day}`] = 0;
             return acc;
-        }, {} as Record<string, any>);
+        }, {} as Record<string, number>);
     
         for (const dayKey in item.days) {
             const day = item.days[dayKey];
             const dayNum = new Date(Date.parse(day.day)).getDate();
             daysRec[`d${dayNum}`] = day.trafficGroups[0].count;
         }
+        const epInfo = endpointsInfo[item.apiPath];
+
         return {
-            label: item.apiPath,
+            label: epInfo.label,
             data: Object.values(daysRec),
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: epInfo.color,
+            hoverBackgroundColor: epInfo.color,
         };
     });
     
     return data;
 };
 
-const createBarChartOptions = (theme: any, locationSettings: any): ChartOptions<'bar'> => ({
+const createBarChartOptions = (theme: Theme): ChartOptions<'bar'> => ({
     plugins: {
         legend: {
           position: 'bottom',
+          labels: {
+            color: theme.palette.text.primary,
+            pointStyle: 'circle',
+            usePointStyle: true,
+            boxHeight: 6,
+            padding: 15,
+            boxPadding: 5,
+          },
         },
       },
       responsive: true,
       scales: {
         x: {
           stacked: true,
+          ticks: {
+            color: theme.palette.text.secondary,
+          },
+          grid: {
+            display: false,
+          }
         },
         y: {
           stacked: true,
+          ticks: {
+            color: theme.palette.text.secondary,
+            maxTicksLimit: 5,
+          },
+          grid: {
+            drawBorder: false,
+          }
         },
       },
+    elements: {
+        bar: {
+            borderRadius: 5,
+        }
+    },
+    interaction: {
+        mode: 'index',
+        intersect: false,
+    },
 });
 
 export const NetworkTrafficUsage: VFC = () => {
     usePageTitle('Network - Data Usage');
-    const { locationSettings } = useLocationSettings();
     const theme = useTheme();
-    const options = useMemo(() => {
-        return createBarChartOptions(theme, locationSettings);
-    }, [theme, locationSettings]);
 
-    const [selectablePeriods, setSelectablePeriods] = useState<{
-        key: string;
-        dayCount: number;
-        label: string;
-    }[]>(getSelectablePeriods());
-    const [record, setRecord] = useState<Record<string, { key: string, dayCount: number, label: string }>>(toPeriodsRecord(selectablePeriods));
+    const endpointsInfo = {
+        '/api/admin': {
+            label: 'Admin',
+            color: '#6D66D9',
+            order: 1,
+        },
+        '/api/frontend': {
+            label: 'Frontend',
+            color: '#A39EFF',
+            order: 2,
+        },
+        '/api/client': {
+            label: 'Server',
+            color: '#D8D6FF',
+            order: 3,
+        },
+    }
+
+    const options = useMemo(() => {
+        return createBarChartOptions(theme);
+    }, [theme]);
+
+    const selectablePeriods = getSelectablePeriods();
+    const record = toPeriodsRecord(selectablePeriods);
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
 
     const traffic = useInstanceTrafficMetrics(period);
@@ -128,21 +187,15 @@ export const NetworkTrafficUsage: VFC = () => {
     const [labels, setLabels] = useState<number[]>([]);
 
     const [datasets, setDatasets] = useState<ChartDatasetType[]>([]);
-    const [data, setData] = useState<ChartData<'bar', number[]>>({
+
+    const data = {
         labels,
         datasets,
-    });
+    };
     
     useEffect(() => {
-        setDatasets(toChartData(theme, labels, traffic));
-    }, [labels]);
-
-    useEffect(() => {
-        setData({
-            labels,
-            datasets,
-        });
-    }, [labels, datasets]);
+        setDatasets(toChartData(labels, traffic, endpointsInfo));
+    }, [labels, traffic]);
 
     useEffect(() => {
         if (record && period) {
@@ -151,41 +204,37 @@ export const NetworkTrafficUsage: VFC = () => {
         }
     }, [period]);
 
-    const onPeriodChange = (value: string) => {
-        setPeriod(value);
-    };
-
     return (
-        <ConditionallyRender
-            condition={data.datasets.length === 0 && !true}
-            show={<Alert severity='warning'>No data available.</Alert>}
-            elseShow={
-                <>
+        <>
+            <Grid container component='header' spacing={2}>
+                <Grid item xs={12} md={10}>
+                    <StyledHeader>Number of requests to Unleash</StyledHeader>
+                </Grid>
+                <Grid item xs={12} md={2}>
                     <Select
                         id='dataperiod-select'
                         name='dataperiod'
-                        label={'Select period:'}
                         options={selectablePeriods}
                         value={period}
-                        onChange={(e) => onPeriodChange(e.target.value)}
+                        onChange={(e) => setPeriod(e.target.value)}
                         style={{
                             minWidth: '100%',
                             marginBottom: theme.spacing(2),
                         }}
                         formControlStyles={{ width: '100%' }}
                         />
-                    <Box sx={{ display: 'grid', gap: 4 }}>
-                        <div style={{ height: 400 }}>
-                            <Bar
-                                data={data}
-                                options={options}
-                                aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
-                            />
-                        </div>
-                    </Box>
-                </>
-            }
-        />
+                </Grid>
+            </Grid>
+            <Box sx={{ display: 'grid', gap: 4 }}>
+                <div>
+                    <Bar
+                        data={data}
+                        options={options}
+                        aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
+                    />
+                </div>
+            </Box>
+        </>
     );
 };
 

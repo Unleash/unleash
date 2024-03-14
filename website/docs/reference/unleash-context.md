@@ -38,7 +38,7 @@ Some SDK implementations of the Unleash Context allow for the values in the `pro
 
 As an example: You've created a custom field called `groupId`. You know group IDs will always be numeric. You then create a constraint on a strategy that says the user must be in group `123456`. If you were to set the property `groupId` to the number `123456` in the `properties` field on the SDK side, the constraint check would fail, because in most languages the number `123456` is not equal to the string `123456` (i.e. `123456 != "123456"`).
 
-
+For operators that work on non-string types, such as numeric and date time operators, these will convert the string value to the appropriate type before performing the comparison. This means that if you use a numeric greater than operator for the value `"5"`, it will convert that value to the number `5` before doing the comparison. If the value can't be converted, the constraint will fail.
 
 ## Custom context fields
 

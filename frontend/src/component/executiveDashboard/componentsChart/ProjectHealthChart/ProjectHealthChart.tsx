@@ -10,14 +10,14 @@ import {
 import { useTheme } from '@mui/material';
 import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
-interface IFlagsProjectChartProps {
+interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<
         ExecutiveSummarySchema['projectFlagTrends']
     >;
     isAggregate?: boolean;
 }
 
-export const ProjectHealthChart: VFC<IFlagsProjectChartProps> = ({
+export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
     projectFlagTrends,
     isAggregate,
 }) => {

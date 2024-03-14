@@ -105,14 +105,14 @@ export default class EventService {
     }
 
     /**
-     * @deprecated use storeUserEvent instead
+     * For events arising from user actions you should prefer to use storeUserEvents instead
      */
     async storeEvent(event: IBaseEvent): Promise<void> {
         return this.storeEvents([event]);
     }
 
     /**
-     * @deprecated use storeUserEvents instead
+     * For events arising from user actions you should prefer to use storeUserEvents instead
      */
     async storeEvents(events: IBaseEvent[]): Promise<void> {
         let enhancedEvents = events;

@@ -130,6 +130,7 @@ exports[`should create default config 1`] = `
       },
       "migrationLock": true,
       "newStrategyConfigurationFeedback": false,
+      "outdatedSdksBanner": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
       "queryMissingTokens": false,

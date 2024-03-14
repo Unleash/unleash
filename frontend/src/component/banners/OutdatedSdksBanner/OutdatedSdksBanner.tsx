@@ -12,7 +12,7 @@ export const OutdatedSdksBanner = () => {
     const {
         data: { sdks },
     } = useOutdatedSdks();
-    const flagEnabled = useUiFlag('sdkReporting');
+    const flagEnabled = useUiFlag('outdatedSdksBanner');
 
     const outdatedSdksBanner: IBanner = {
         message: `We noticed that you're using outdated SDKs. `,

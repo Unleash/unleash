@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { OutdatedSdksSchema } from 'openapi';
@@ -30,7 +30,14 @@ test('Show outdated SDKs and apps using them', async () => {
 
     link.click();
 
+    await screen.findByText('Outdated SDKs');
     await screen.findByText('unleash-node-client:3.2.1');
-    await screen.findByText('application1');
+    const application = await screen.findByText('application1');
     await screen.findByText('application2');
+
+    application.click(); // clicking on an application link should close the modal
+
+    await waitFor(() => {
+        expect(screen.queryByText('Outdated SDKs')).not.toBeInTheDocument();
+    });
 });

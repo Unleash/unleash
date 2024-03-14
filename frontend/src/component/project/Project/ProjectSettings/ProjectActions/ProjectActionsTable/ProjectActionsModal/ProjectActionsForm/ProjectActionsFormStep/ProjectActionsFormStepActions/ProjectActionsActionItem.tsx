@@ -1,11 +1,4 @@
-import {
-    Alert,
-    Autocomplete,
-    IconButton,
-    TextField,
-    Tooltip,
-    styled,
-} from '@mui/material';
+import { Alert, IconButton, Tooltip, styled } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ActionsActionState } from '../../useProjectActionsForm';
@@ -15,6 +8,7 @@ import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccou
 import { useEffect, useMemo } from 'react';
 import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameter/ProjectActionsActionParameterAutocomplete';
 import { ActionDefinitions } from './useActionDefinitions';
+import { ProjectActionsActionSelect } from './ProjectActionsActionSelect';
 
 const StyledItemBody = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,15 +28,6 @@ const StyledItemRow = styled('div')(({ theme }) => ({
 const StyledFieldContainer = styled('div')(({ theme }) => ({
     flex: 1,
     minWidth: theme.spacing(25),
-}));
-
-const StyledActionOption = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    '& > span:last-of-type': {
-        fontSize: theme.fontSizes.smallerBody,
-        color: theme.palette.text.secondary,
-    },
 }));
 
 interface IProjectActionsItemProps {
@@ -127,25 +112,6 @@ export const ProjectActionsActionItem = ({
         </>
     );
 
-    const renderActionOption = (
-        props: React.HTMLAttributes<HTMLLIElement>,
-        option: { label: string; description?: string },
-    ) => (
-        <li {...props}>
-            <StyledActionOption>
-                <span>{option.label}</span>
-                <span>{option.description}</span>
-            </StyledActionOption>
-        </li>
-    );
-
-    const actionOptions = [...actionDefinitions].map(
-        ([key, actionDefinition]) => ({
-            key,
-            ...actionDefinition,
-        }),
-    );
-
     const parameters =
         actionDefinition?.parameters.filter(({ hidden }) => !hidden) || [];
 
@@ -154,28 +120,15 @@ export const ProjectActionsActionItem = ({
             <StyledItemBody>
                 <StyledItemRow>
                     <StyledFieldContainer>
-                        <Autocomplete
-                            options={actionOptions}
-                            autoHighlight
-                            autoSelect
-                            value={actionOptions.find(
-                                ({ key }) => key === actionName,
-                            )}
-                            onChange={(_, value) =>
+                        <ProjectActionsActionSelect
+                            value={actionName}
+                            onChange={(value) =>
                                 stateChanged({
                                     ...action,
-                                    action: value ? value.key : '',
+                                    action: value,
                                 })
                             }
-                            renderOption={renderActionOption}
-                            getOptionLabel={({ label }) => label}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    size='small'
-                                    label='Action'
-                                />
-                            )}
+                            actionDefinitions={actionDefinitions}
                         />
                     </StyledFieldContainer>
                 </StyledItemRow>

@@ -139,8 +139,7 @@ const StyledLinkWithBetaBadge = ({
 }: { title: string; to: string }) => (
     <StyledLink to={to} sx={{ margin: 0 }}>
         <div>
-            <span>{title}</span>{' '}
-            <Badge color='success'>Beta</Badge>
+            <span>{title}</span> <Badge color='success'>Beta</Badge>
         </div>
     </StyledLink>
 );

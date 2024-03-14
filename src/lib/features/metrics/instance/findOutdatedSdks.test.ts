@@ -4,7 +4,7 @@ describe('findOutdatedSDKs', () => {
     it('should return an empty array when all SDKs are up to date', () => {
         const sdkVersions = [
             'unleash-client-node:6.0.0',
-            'unleash-client-php:2.0.0',
+            'unleash-client-php:3.0.0',
         ];
         const result = findOutdatedSDKs(sdkVersions);
         expect(result).toEqual([]);
@@ -45,14 +45,14 @@ describe('findOutdatedSDKs', () => {
     it('should correctly handle semver versions', () => {
         const sdkVersions = [
             'unleash-client-node:6.1.0',
-            'unleash-client-php:1.20.3-beta.0',
+            'unleash-client-php:3.20.3-beta.0',
         ];
         const result = findOutdatedSDKs(sdkVersions);
         expect(result).toEqual([]);
     });
 
     it('should ignore invalid SDK versions', () => {
-        const sdkVersions = ['unleash-client-node', '1.2.3'];
+        const sdkVersions = ['unleash-client-node', '1.2.3', null];
         const result = findOutdatedSDKs(sdkVersions);
         expect(result).toEqual([]);
     });

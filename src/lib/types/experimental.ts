@@ -16,7 +16,6 @@ export type IFlagKey =
     | 'featuresExportImport'
     | 'caseInsensitiveInOperators'
     | 'strictSchemaValidation'
-    | 'proPlanAutoCharge'
     | 'personalAccessTokensKillSwitch'
     | 'migrationLock'
     | 'demo'
@@ -102,10 +101,6 @@ const flags: IFlags = {
     ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
-        false,
-    ),
-    proPlanAutoCharge: parseEnvVarBoolean(
-        process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(

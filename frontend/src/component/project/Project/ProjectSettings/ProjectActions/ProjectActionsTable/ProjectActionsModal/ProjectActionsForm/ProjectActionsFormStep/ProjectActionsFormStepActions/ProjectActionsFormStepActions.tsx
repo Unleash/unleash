@@ -9,7 +9,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Add from '@mui/icons-material/Add';
 import { IServiceAccount } from 'interfaces/service-account';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useActionDefinitions } from './useActionDefinitions';
+import { useActionConfigurations } from 'hooks/api/getters/useActionConfigurations/useActionConfigurations';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -45,7 +45,7 @@ export const ProjectActionsFormStepActions = ({
     validated,
 }: IProjectActionsFormStepActionsProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const actionDefinitions = useActionDefinitions(projectId);
+    const { actionConfigurations } = useActionConfigurations(projectId);
 
     const addAction = (projectId: string) => {
         const id = uuidv4();
@@ -114,7 +114,7 @@ export const ProjectActionsFormStepActions = ({
                             actions.filter((a) => a.id !== action.id),
                         )
                     }
-                    actionDefinitions={actionDefinitions}
+                    actionConfigurations={actionConfigurations}
                     validated={validated}
                 />
             ))}

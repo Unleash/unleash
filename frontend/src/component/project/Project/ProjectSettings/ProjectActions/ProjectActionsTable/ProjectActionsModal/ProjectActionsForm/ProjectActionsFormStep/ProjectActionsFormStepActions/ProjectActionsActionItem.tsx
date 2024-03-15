@@ -7,7 +7,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
 import { useEffect, useMemo } from 'react';
 import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameter/ProjectActionsActionParameterAutocomplete';
-import { ActionDefinitions } from './useActionDefinitions';
+import { ActionConfigurations } from 'interfaces/action';
 import { ProjectActionsActionSelect } from './ProjectActionsActionSelect';
 
 const StyledItemBody = styled('div')(({ theme }) => ({
@@ -36,7 +36,7 @@ interface IProjectActionsItemProps {
     stateChanged: (action: ActionsActionState) => void;
     actorId: number;
     onDelete: () => void;
-    actionDefinitions: ActionDefinitions;
+    actionConfigurations: ActionConfigurations;
     validated: boolean;
 }
 
@@ -46,7 +46,7 @@ export const ProjectActionsActionItem = ({
     stateChanged,
     actorId,
     onDelete,
-    actionDefinitions,
+    actionConfigurations,
     validated,
 }: IProjectActionsItemProps) => {
     const { action: actionName, executionParams, error } = action;
@@ -57,10 +57,10 @@ export const ProjectActionsActionItem = ({
         executionParams.environment as string,
     );
 
-    const actionDefinition = actionDefinitions.get(actionName);
+    const actionConfiguration = actionConfigurations.get(actionName);
 
     const hasPermission = useMemo(() => {
-        const requiredPermissions = actionDefinition?.permissions;
+        const requiredPermissions = actionConfiguration?.permissions;
 
         const { environment: actionEnvironment } = executionParams;
 
@@ -80,7 +80,7 @@ export const ProjectActionsActionItem = ({
                     environment === actionEnvironment,
             ),
         );
-    }, [actionDefinition, permissions]);
+    }, [actionConfiguration, permissions]);
 
     useEffect(() => {
         stateChanged({
@@ -89,7 +89,7 @@ export const ProjectActionsActionItem = ({
         });
 
         const requiredParameters =
-            actionDefinition?.parameters
+            actionConfiguration?.parameters
                 .filter(({ optional }) => !optional)
                 .map(({ name }) => name) || [];
 
@@ -99,7 +99,7 @@ export const ProjectActionsActionItem = ({
                 error: 'Please fill all required fields.',
             });
         }
-    }, [actionDefinition, executionParams]);
+    }, [actionConfiguration, executionParams]);
 
     const header = (
         <>
@@ -115,7 +115,7 @@ export const ProjectActionsActionItem = ({
     );
 
     const parameters =
-        actionDefinition?.parameters.filter(({ hidden }) => !hidden) || [];
+        actionConfiguration?.parameters.filter(({ hidden }) => !hidden) || [];
 
     return (
         <ProjectActionsFormItem index={index} header={header} separator='THEN'>
@@ -130,7 +130,7 @@ export const ProjectActionsActionItem = ({
                                     action: value,
                                 })
                             }
-                            actionDefinitions={actionDefinitions}
+                            actionConfigurations={actionConfigurations}
                         />
                     </StyledFieldContainer>
                 </StyledItemRow>

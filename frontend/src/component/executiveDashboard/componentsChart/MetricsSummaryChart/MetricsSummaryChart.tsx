@@ -5,9 +5,12 @@ import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { MetricsSummaryTooltip } from './MetricsChartTooltip/MetricsChartTooltip';
 import { useMetricsSummary } from '../../hooks/useMetricsSummary';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
+import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
 interface IMetricsSummaryChartProps {
-    metricsSummaryTrends: ExecutiveSummarySchema['metricsSummaryTrends'];
+    metricsSummaryTrends: GroupedDataByProject<
+        ExecutiveSummarySchema['metricsSummaryTrends']
+    >;
 }
 
 export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
@@ -15,7 +18,7 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
 }) => {
     const data = useMetricsSummary(metricsSummaryTrends);
     const notEnoughData = useMemo(
-        () => (data.datasets.some((d) => d.data.length > 1) ? false : true),
+        () => !data.datasets.some((d) => d.data.length > 1),
         [data],
     );
     const placeholderData = usePlaceholderData();

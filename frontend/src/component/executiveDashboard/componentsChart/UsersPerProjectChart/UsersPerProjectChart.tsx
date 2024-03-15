@@ -4,9 +4,12 @@ import { ExecutiveSummarySchema } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { useProjectChartData } from 'component/executiveDashboard/hooks/useProjectChartData';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
+import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
 interface IUsersPerProjectChartProps {
-    projectFlagTrends: ExecutiveSummarySchema['projectFlagTrends'];
+    projectFlagTrends: GroupedDataByProject<
+        ExecutiveSummarySchema['projectFlagTrends']
+    >;
 }
 
 export const UsersPerProjectChart: VFC<IUsersPerProjectChartProps> = ({

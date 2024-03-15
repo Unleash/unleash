@@ -45,7 +45,7 @@ export const ProjectActionsActionSelect = ({
             options={actionOptions}
             autoHighlight
             autoSelect
-            value={actionOptions.find(({ key }) => key === value)}
+            value={actionOptions.find(({ key }) => key === value) || null}
             onChange={(_, value) => onChange(value ? value.key : '')}
             renderOption={renderActionOption}
             getOptionLabel={({ label }) => label}

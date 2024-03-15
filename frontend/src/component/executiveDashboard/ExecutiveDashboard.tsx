@@ -158,7 +158,7 @@ export const ExecutiveDashboard: VFC = () => {
                     elseShow={
                         <ChartWidget title='Users per project'>
                             <UsersPerProjectChart
-                                projectFlagTrends={projectsData}
+                                projectFlagTrends={groupedProjectsData}
                             />
                         </ChartWidget>
                     }
@@ -189,7 +189,7 @@ export const ExecutiveDashboard: VFC = () => {
                     elseShow={
                         <ChartWidget title='Flags per project'>
                             <FlagsProjectChart
-                                projectFlagTrends={projectsData}
+                                projectFlagTrends={groupedProjectsData}
                             />
                         </ChartWidget>
                     }

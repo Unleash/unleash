@@ -173,10 +173,7 @@ export const PaginatedApplicationList = () => {
                                 </div>
                             </SearchHighlightProvider>
                         }
-                    />
-                    <ConditionallyRender
-                        condition={data.length === 0 && !loading}
-                        show={renderNoResults(query)}
+                        elseShow={renderNoResults(query)}
                     />
                 </div>
             </PageContent>

@@ -110,7 +110,6 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
                               yAxisKey: 'totalRequests',
                               xAxisKey: 'date',
                           },
-                          interaction: {},
                       }
             }
             cover={notEnoughData ? <NotEnoughData /> : false}

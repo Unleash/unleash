@@ -56,8 +56,9 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
 
     const aggregatedPerDay = useMemo(() => {
         const result = averageTimeToProduction(
-            Object.values(projectsDatasets.datasets)
-                .flatMap((item) => item.data),
+            Object.values(projectsDatasets.datasets).flatMap(
+                (item) => item.data,
+            ),
         );
         const data = Object.entries(result)
             .map(([date, timeToProduction]) => ({ date, timeToProduction }))

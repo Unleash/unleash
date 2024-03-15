@@ -1,6 +1,13 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Box, Button, Divider, styled } from '@mui/material';
+import {
+    Alert,
+    Box,
+    Button,
+    Divider,
+    LinearProgress,
+    styled,
+} from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 import { ApplicationIssues } from './ApplicationIssues/ApplicationIssues';
@@ -9,7 +16,7 @@ import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { Badge } from '../common/Badge/Badge';
 import { useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useFeedback } from '../feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 
@@ -70,6 +77,15 @@ const ApplicationOverview = () => {
                 'What should be improved on the application overview page?',
         });
     };
+
+    if (loading) {
+        return (
+            <div>
+                <p>Loading...</p>
+                <LinearProgress />
+            </div>
+        );
+    }
 
     return (
         <ConditionallyRender

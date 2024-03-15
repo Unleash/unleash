@@ -1,7 +1,7 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { ExecutiveSummarySchema } from 'openapi';
-import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
+import { fillGradientPrimary, LineChart, NotEnoughData } from "../../components/LineChart/LineChart";
 import { useProjectChartData } from '../../hooks/useProjectChartData';
 import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
@@ -70,10 +70,11 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'Avg time to production',
+                    label: 'Time to production',
                     data,
                     borderColor: theme.palette.primary.light,
-                    fill: false,
+                    backgroundColor: fillGradientPrimary,
+                    fill: true,
                     order: 3,
                 },
             ],

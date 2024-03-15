@@ -218,7 +218,7 @@ export const ExecutiveDashboard: VFC = () => {
                 </ChartWidget>
                 <Widget
                     title='Average time to production'
-                    tooltip='How long did it take on average from a feature toggle was created until it was enabled in an environment of type production. This is calculated only from feature toggles with the type of "release". '
+                    tooltip='How long did it take on average from a feature toggle was created until it was enabled in an environment of type production. This is calculated only from feature toggles with the type of "release" and averaged across selected projects.  '
                 >
                     <TimeToProduction daysToProduction={avgDaysToProduction} />
                 </Widget>

@@ -6,8 +6,8 @@ import { useProjectChartData } from 'component/executiveDashboard/hooks/useProje
 import {
     fillGradientPrimary,
     LineChart,
-    NotEnoughData
-} from "component/executiveDashboard/components/LineChart/LineChart";
+    NotEnoughData,
+} from 'component/executiveDashboard/components/LineChart/LineChart';
 import { useTheme } from '@mui/material';
 import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 

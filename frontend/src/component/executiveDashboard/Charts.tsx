@@ -1,34 +1,36 @@
-import { ConditionallyRender } from "../common/ConditionallyRender/ConditionallyRender";
-import { Widget } from "./components/Widget/Widget";
-import { UserStats } from "./componentsStat/UserStats/UserStats";
-import { UsersChart } from "./componentsChart/UsersChart/UsersChart";
-import { UsersPerProjectChart } from "./componentsChart/UsersPerProjectChart/UsersPerProjectChart";
-import { FlagStats } from "./componentsStat/FlagStats/FlagStats";
-import { FlagsChart } from "./componentsChart/FlagsChart/FlagsChart";
-import { FlagsProjectChart } from "./componentsChart/FlagsProjectChart/FlagsProjectChart";
-import { HealthStats } from "./componentsStat/HealthStats/HealthStats";
-import { ProjectHealthChart } from "./componentsChart/ProjectHealthChart/ProjectHealthChart";
-import { TimeToProduction } from "./componentsStat/TimeToProduction/TimeToProduction";
-import { TimeToProductionChart } from "./componentsChart/TimeToProductionChart/TimeToProductionChart";
-import { MetricsSummaryChart } from "./componentsChart/MetricsSummaryChart/MetricsSummaryChart";
-import {
-    UpdatesPerEnvironmentTypeChart
-} from "./componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart";
-import { ExecutiveSummarySchema } from "../../openapi";
-import { GroupedDataByProject } from "./hooks/useGroupedProjectTrends";
-import { Box, styled } from "@mui/material";
-import { allOption } from "../common/ProjectSelect/ProjectSelect";
-import { VFC } from "react";
+import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
+import { Widget } from './components/Widget/Widget';
+import { UserStats } from './componentsStat/UserStats/UserStats';
+import { UsersChart } from './componentsChart/UsersChart/UsersChart';
+import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
+import { FlagStats } from './componentsStat/FlagStats/FlagStats';
+import { FlagsChart } from './componentsChart/FlagsChart/FlagsChart';
+import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProjectChart';
+import { HealthStats } from './componentsStat/HealthStats/HealthStats';
+import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart';
+import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction';
+import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
+import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
+import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart';
+import { ExecutiveSummarySchema } from '../../openapi';
+import { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
+import { Box, styled } from '@mui/material';
+import { allOption } from '../common/ProjectSelect/ProjectSelect';
+import { VFC } from 'react';
 
 interface IChartsProps {
-    flagTrends: ExecutiveSummarySchema["flagTrends"];
-    projectsData: ExecutiveSummarySchema["projectFlagTrends"];
-    groupedProjectsData: GroupedDataByProject<ExecutiveSummarySchema['projectFlagTrends']>
+    flagTrends: ExecutiveSummarySchema['flagTrends'];
+    projectsData: ExecutiveSummarySchema['projectFlagTrends'];
+    groupedProjectsData: GroupedDataByProject<
+        ExecutiveSummarySchema['projectFlagTrends']
+    >;
     metricsData: ExecutiveSummarySchema['metricsSummaryTrends'];
-    groupedMetricsData: GroupedDataByProject<ExecutiveSummarySchema['metricsSummaryTrends']>
-    users: ExecutiveSummarySchema['users']
-    userTrends: ExecutiveSummarySchema['userTrends']
-    environmentTypeTrends: ExecutiveSummarySchema["environmentTypeTrends"]
+    groupedMetricsData: GroupedDataByProject<
+        ExecutiveSummarySchema['metricsSummaryTrends']
+    >;
+    users: ExecutiveSummarySchema['users'];
+    userTrends: ExecutiveSummarySchema['userTrends'];
+    environmentTypeTrends: ExecutiveSummarySchema['environmentTypeTrends'];
     summary: {
         total: number;
         active: number;
@@ -36,12 +38,11 @@ interface IChartsProps {
         potentiallyStale: number;
         averageUsers: number;
         averageHealth?: string;
-    }
-    avgDaysToProduction: number,
-    loading: boolean,
-    projects: string[]
+    };
+    avgDaysToProduction: number;
+    loading: boolean;
+    projects: string[];
 }
-
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -61,8 +62,18 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
-
-export const Charts: VFC<IChartsProps> = ({projects, users, summary, userTrends, groupedProjectsData, flagTrends, avgDaysToProduction, groupedMetricsData,environmentTypeTrends, loading}) => {
+export const Charts: VFC<IChartsProps> = ({
+    projects,
+    users,
+    summary,
+    userTrends,
+    groupedProjectsData,
+    flagTrends,
+    avgDaysToProduction,
+    groupedMetricsData,
+    environmentTypeTrends,
+    loading,
+}) => {
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
 
@@ -184,9 +195,7 @@ export const Charts: VFC<IChartsProps> = ({projects, users, summary, userTrends,
                 </ChartWidget>
             </StyledGrid>
             <Widget
-                title={  showAllProjects
-                    ? 'Metrics'
-                    : 'Metrics per project'}
+                title={showAllProjects ? 'Metrics' : 'Metrics per project'}
                 tooltip='Summary of all flag evaluations reported by SDKs.'
             >
                 <MetricsSummaryChart
@@ -205,5 +214,5 @@ export const Charts: VFC<IChartsProps> = ({projects, users, summary, userTrends,
                 />
             </Widget>
         </>
-    )
-}
+    );
+};

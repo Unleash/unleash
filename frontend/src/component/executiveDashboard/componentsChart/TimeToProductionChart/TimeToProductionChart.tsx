@@ -1,7 +1,11 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { ExecutiveSummarySchema } from 'openapi';
-import { fillGradientPrimary, LineChart, NotEnoughData } from "../../components/LineChart/LineChart";
+import {
+    fillGradientPrimary,
+    LineChart,
+    NotEnoughData,
+} from '../../components/LineChart/LineChart';
 import { useProjectChartData } from '../../hooks/useProjectChartData';
 import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';

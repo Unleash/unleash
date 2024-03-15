@@ -1,12 +1,15 @@
-import { useState, VFC } from "react";
-import { Box, styled } from "@mui/material";
-import { ArrayParam, withDefault } from "use-query-params";
-import { usePersistentTableState } from "hooks/usePersistentTableState";
-import { allOption, ProjectSelect } from "component/common/ProjectSelect/ProjectSelect";
-import { useExecutiveDashboard } from "hooks/api/getters/useExecutiveSummary/useExecutiveSummary";
-import { DashboardHeader } from "./components/DashboardHeader/DashboardHeader";
-import { useDashboardData } from "./hooks/useDashboardData";
-import { Charts } from "./Charts";
+import { useState, VFC } from 'react';
+import { Box, styled } from '@mui/material';
+import { ArrayParam, withDefault } from 'use-query-params';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import {
+    allOption,
+    ProjectSelect,
+} from 'component/common/ProjectSelect/ProjectSelect';
+import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
+import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
+import { useDashboardData } from './hooks/useDashboardData';
+import { Charts } from './Charts';
 
 const StickyWrapper = styled(Box)<{ scrolled?: boolean }>(
     ({ theme, scrolled }) => ({

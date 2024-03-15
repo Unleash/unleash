@@ -28,9 +28,9 @@ test('Display applications list', async () => {
     );
 });
 
-test('Display no applications', async () => {
+test('Display no applications connected', async () => {
     setupApi([]);
     render(<PaginatedApplicationList />);
 
-    await screen.findByText('Warning');
+    await screen.findByText(/To connect your application to Unleash/);
 });

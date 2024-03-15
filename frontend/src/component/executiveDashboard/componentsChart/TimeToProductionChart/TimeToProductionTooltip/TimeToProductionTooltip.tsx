@@ -24,12 +24,12 @@ const getInterval = (days?: number) => {
         const weeks = days / 7;
         if (weeks > 6) {
             const months = weeks / 4.34524;
-            return months.toFixed(2) + ' months';
+            return `${months.toFixed(2)} months`;
         } else {
-            return weeks.toFixed(1) + ' weeks';
+            return `${weeks.toFixed(1)} weeks`;
         }
     } else {
-        return days + ' days';
+        return `${days} days`;
     }
 };
 

@@ -118,7 +118,7 @@
     "tss-react": "4.9.4",
     "typescript": "4.8.4",
     "use-query-params": "^2.2.1",
-    "vanilla-jsoneditor": "^0.21.0",
+    "vanilla-jsoneditor": "^0.22.0",
     "vite": "5.1.5",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "3.3.0",

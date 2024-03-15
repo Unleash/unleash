@@ -12,13 +12,13 @@ import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
 // Types
 import {
+    CustomAuthHandler,
     IAuthType,
     IUnleash,
     IUnleashConfig,
     IUnleashOptions,
     IUnleashServices,
     RoleName,
-    CustomAuthHandler,
     SYSTEM_USER,
 } from './types';
 
@@ -58,6 +58,13 @@ async function createApp(
         if (server) {
             const stopServer = promisify(server.stop);
             await stopServer();
+        }
+        if (typeof config.shutdownHook === 'function') {
+            try {
+                await config.shutdownHook();
+            } catch (e) {
+                logger.error('Failure when executing shutdown hook', e);
+            }
         }
         services.schedulerService.stop();
         services.addonService.destroy();

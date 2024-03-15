@@ -29,7 +29,7 @@ const getInterval = (days?: number) => {
             return `${weeks.toFixed(1)} weeks`;
         }
     } else {
-        return `${days} days`;
+        return `${days.toFixed(2)} days`;
     }
 };
 

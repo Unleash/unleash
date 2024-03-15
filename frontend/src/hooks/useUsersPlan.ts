@@ -15,9 +15,7 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
     const { instanceStatus } = useInstanceStatus();
     const { uiConfig } = useUiConfig();
 
-    const isBillingUsers = Boolean(
-        instanceStatus?.plan === InstancePlan.PRO,
-    );
+    const isBillingUsers = Boolean(instanceStatus?.plan === InstancePlan.PRO);
     const seats = instanceStatus?.seats ?? 5;
 
     const planUsers = useMemo(

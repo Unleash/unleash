@@ -16,7 +16,7 @@ import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { Badge } from '../common/Badge/Badge';
 import { useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useFeedback } from '../feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 

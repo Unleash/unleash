@@ -21,6 +21,7 @@ export const isOutdatedSdk = (sdkVersion: string | null) => {
     const [sdkName, version] = result;
     const minVersion = config[sdkName];
     if (!minVersion) return false;
+    if (!semver.valid(version)) return false;
     if (semver.lt(version, minVersion)) return true;
     return false;
 };

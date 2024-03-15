@@ -222,11 +222,16 @@ export const ExecutiveDashboard: VFC = () => {
                     <TimeToProduction daysToProduction={avgDaysToProduction} />
                 </Widget>
                 <ChartWidget
-                    title='Time to production'
+                    title={
+                        showAllProjects
+                            ? 'Average time to production'
+                            : 'Time to production per project'
+                    }
                     tooltip='How the average time to production changes over time'
                 >
                     <TimeToProductionChart
                         projectFlagTrends={groupedProjectsData}
+                        isAggregate={showAllProjects}
                     />
                 </ChartWidget>
             </StyledGrid>

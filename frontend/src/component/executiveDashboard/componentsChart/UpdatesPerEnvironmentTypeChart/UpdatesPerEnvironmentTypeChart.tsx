@@ -86,12 +86,16 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
     return (
         <LineChart
             data={notEnoughData || isLoading ? placeholderData : data}
-            overrideOptions={{
-                parsing: {
-                    yAxisKey: 'totalUpdates',
-                    xAxisKey: 'date',
-                },
-            }}
+            overrideOptions={
+                notEnoughData
+                    ? {}
+                    : {
+                          parsing: {
+                              yAxisKey: 'totalUpdates',
+                              xAxisKey: 'date',
+                          },
+                      }
+            }
             TooltipComponent={UpdatesPerEnvironmentTypeChartTooltip}
             cover={notEnoughData ? <NotEnoughData /> : isLoading}
         />

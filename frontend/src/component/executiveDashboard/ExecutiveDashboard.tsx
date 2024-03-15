@@ -209,6 +209,7 @@ export const ExecutiveDashboard: VFC = () => {
                     title={
                         showAllProjects ? 'Healthy flags' : 'Health per project'
                     }
+                    tooltip='How the health changes over time'
                 >
                     <ProjectHealthChart
                         projectFlagTrends={groupedProjectsData}

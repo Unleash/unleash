@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import Controller from '../controller';
 
@@ -13,18 +13,18 @@ import {
     DELETE_CONTEXT_FIELD,
     NONE,
 } from '../../types/permissions';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import ContextService from '../../services/context-service';
-import { Logger } from '../../logger';
-import { IAuthRequest } from '../unleash-types';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type ContextService from '../../services/context-service';
+import type { Logger } from '../../logger';
+import type { IAuthRequest } from '../unleash-types';
 
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import {
     contextFieldSchema,
-    ContextFieldSchema,
+    type ContextFieldSchema,
 } from '../../openapi/spec/context-field-schema';
-import { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
+import type { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -32,17 +32,17 @@ import {
 } from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
-import { NameSchema } from '../../openapi/spec/name-schema';
+import type { NameSchema } from '../../openapi/spec/name-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import {
-    ContextFieldStrategiesSchema,
+    type ContextFieldStrategiesSchema,
     contextFieldStrategiesSchema,
 } from '../../openapi/spec/context-field-strategies-schema';
-import { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema';
-import { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
+import type { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema';
+import type { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
 
 interface ContextParam {
     contextField: string;

@@ -1,5 +1,5 @@
-import { ISignal, SignalSource } from './signal';
-import { IConstraint } from './strategy';
+import type { ISignal, SignalSource } from './signal';
+import type { IConstraint } from './strategy';
 
 type ActionSetState = 'started' | 'success' | 'failed';
 

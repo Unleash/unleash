@@ -1,10 +1,10 @@
-import {
+import type {
     FeatureToggle,
     IFeatureToggleClient,
     IFeatureToggleQuery,
 } from '../../../types/model';
-import { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type';
-import { IGetAdminFeatures } from '../client-feature-toggle-store';
+import type { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type';
+import type { IGetAdminFeatures } from '../client-feature-toggle-store';
 
 export default class FakeClientFeatureToggleStore
     implements IFeatureToggleClientStore

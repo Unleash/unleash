@@ -1,4 +1,4 @@
-import { type VFC } from 'react';
+import type { VFC } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';

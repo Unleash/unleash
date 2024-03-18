@@ -1,5 +1,5 @@
-import { IUnleashContextDefinition } from 'interfaces/context';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IUnleashContextDefinition } from 'interfaces/context';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 
 const PROJECT = 'demo-app';

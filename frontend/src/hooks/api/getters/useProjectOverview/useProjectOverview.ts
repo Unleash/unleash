@@ -1,7 +1,7 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { getProjectOverviewFetcher } from './getProjectOverviewFetcher';
-import { IProjectOverview } from 'interfaces/project';
+import type { IProjectOverview } from 'interfaces/project';
 
 const fallbackProject: IProjectOverview = {
     featureTypeCounts: [],

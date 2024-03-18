@@ -1,5 +1,5 @@
 import { Box, Divider, styled } from '@mui/material';
-import { FC, VFC } from 'react';
+import type { FC, VFC } from 'react';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

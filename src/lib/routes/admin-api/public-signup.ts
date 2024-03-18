@@ -1,32 +1,32 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 
 import Controller from '../controller';
 import {
     ADMIN,
-    IUnleashConfig,
-    IUnleashServices,
+    type IUnleashConfig,
+    type IUnleashServices,
     serializeDates,
 } from '../../types';
-import { Logger } from '../../logger';
-import {
+import type { Logger } from '../../logger';
+import type {
     AccessService,
     OpenApiService,
     PublicSignupTokenService,
 } from '../../services';
-import { IAuthRequest } from '../unleash-types';
+import type { IAuthRequest } from '../unleash-types';
 import {
     createRequestSchema,
     createResponseSchema,
     getStandardResponses,
-    PublicSignupTokenCreateSchema,
+    type PublicSignupTokenCreateSchema,
     publicSignupTokenSchema,
-    PublicSignupTokenSchema,
+    type PublicSignupTokenSchema,
     publicSignupTokensSchema,
-    PublicSignupTokensSchema,
-    PublicSignupTokenUpdateSchema,
+    type PublicSignupTokensSchema,
+    type PublicSignupTokenUpdateSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi';
-import UserService from '../../services/user-service';
+import type UserService from '../../services/user-service';
 import { extractUsername } from '../../util';
 
 interface TokenParam {

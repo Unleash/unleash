@@ -1,7 +1,7 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 
-import {
+import type {
     AccessService,
     IRoleUpdate,
     PermissionRef,
@@ -9,7 +9,7 @@ import {
 
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
-import {
+import type {
     ICreateGroupUserModel,
     IUnleashStores,
     IUser,
@@ -27,9 +27,9 @@ import {
     createProjectService,
 } from '../../../lib/features';
 import { BadDataError } from '../../../lib/error';
-import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
-import { ProjectService } from '../../../lib/services';
-import { IRole } from '../../../lib/types/stores/access-store';
+import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
+import type { ProjectService } from '../../../lib/services';
+import type { IRole } from '../../../lib/types/stores/access-store';
 
 let db: ITestDb;
 let stores: IUnleashStores;

@@ -1,13 +1,14 @@
-import React, { forwardRef, RefObject } from 'react';
+import type React from 'react';
+import { forwardRef, type RefObject } from 'react';
 import { Box, Button, styled, Tooltip, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import {
-    IConstraintAccordionListRef,
+    type IConstraintAccordionListRef,
     useConstraintAccordionList,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { NewConstraintAccordionList } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';

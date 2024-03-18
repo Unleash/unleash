@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import Plausible from 'plausible-tracker';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

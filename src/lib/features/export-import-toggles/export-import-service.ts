@@ -1,35 +1,35 @@
-import { Logger } from '../../logger';
-import { IStrategy } from '../../types/stores/strategy-store';
-import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
-import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { Logger } from '../../logger';
+import type { IStrategy } from '../../types/stores/strategy-store';
+import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
+import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
-    FeatureToggleDTO,
-    IContextFieldStore,
-    IFeatureEnvironmentStore,
-    IFeatureStrategy,
-    IFeatureStrategySegment,
-    IFeatureTagStore,
-    IFlagResolver,
-    ITagTypeStore,
-    IUnleashConfig,
-    IUnleashServices,
-    IUnleashStores,
-    IVariant,
-    WithRequired,
+    type FeatureToggleDTO,
+    type IContextFieldStore,
+    type IFeatureEnvironmentStore,
+    type IFeatureStrategy,
+    type IFeatureStrategySegment,
+    type IFeatureTagStore,
+    type IFlagResolver,
+    type ITagTypeStore,
+    type IUnleashConfig,
+    type IUnleashServices,
+    type IUnleashStores,
+    type IVariant,
+    type WithRequired,
 } from '../../types';
-import {
+import type {
     ExportQuerySchema,
     ExportResultSchema,
     FeatureStrategySchema,
     ImportTogglesSchema,
     ImportTogglesValidateSchema,
 } from '../../openapi';
-import { IUser } from '../../types/user';
+import type { IUser } from '../../types/user';
 import { BadDataError } from '../../error';
 import { extractUsernameFromUser } from '../../util';
-import {
+import type {
     AccessService,
     ContextService,
     DependentFeaturesService,
@@ -40,18 +40,21 @@ import {
     TagTypeService,
 } from '../../services';
 import { isValidField } from './import-context-validation';
-import {
+import type {
     IImportTogglesStore,
     ProjectFeaturesLimit,
 } from './import-toggles-store-type';
-import { ImportPermissionsService, Mode } from './import-permissions-service';
+import {
+    ImportPermissionsService,
+    type Mode,
+} from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
-import { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
-import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
+import type { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
+import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
 import groupBy from 'lodash.groupby';
 import { allSettledWithRejection } from '../../util/allSettledWithRejection';
-import { ISegmentReadModel } from '../segment/segment-read-model-type';
+import type { ISegmentReadModel } from '../segment/segment-read-model-type';
 
 export type IImportService = {
     validate(

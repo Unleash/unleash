@@ -1,4 +1,4 @@
-import { ISignal } from 'interfaces/signal';
+import type { ISignal } from 'interfaces/signal';
 import { ProjectActionsEventsDetailsSourceSignalEndpoint } from './ProjectActionsEventsDetailsSourceSignalEndpoint';
 
 interface IProjectActionsEventsDetailsSourceProps {

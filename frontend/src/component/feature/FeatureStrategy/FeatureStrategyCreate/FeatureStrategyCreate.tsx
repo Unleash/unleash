@@ -7,7 +7,10 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
-import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
+import type {
+    IFeatureStrategy,
+    IFeatureStrategyPayload,
+} from 'interfaces/strategy';
 import {
     createStrategyPayload,
     featureStrategyDocsLink,
@@ -16,13 +19,13 @@ import {
     formatFeaturePath,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';

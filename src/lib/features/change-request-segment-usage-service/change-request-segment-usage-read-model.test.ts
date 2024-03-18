@@ -1,7 +1,7 @@
-import { IUser } from '../../server-impl';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import type { IUser } from '../../server-impl';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
-import { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
+import type { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
 import { createChangeRequestSegmentUsageReadModel } from './createChangeRequestSegmentUsageReadModel';
 import { randomId } from '../../../lib/util';
 

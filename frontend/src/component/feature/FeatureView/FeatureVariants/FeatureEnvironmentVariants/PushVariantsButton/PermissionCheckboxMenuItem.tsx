@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { Checkbox, MenuItem } from '@mui/material';
 

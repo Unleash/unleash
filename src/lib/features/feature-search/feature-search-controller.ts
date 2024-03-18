@@ -1,22 +1,22 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../../routes/controller';
-import { FeatureSearchService, OpenApiService } from '../../services';
+import type { FeatureSearchService, OpenApiService } from '../../services';
 import {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
+    type IFlagResolver,
+    type IUnleashConfig,
+    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import {
     createResponseSchema,
     getStandardResponses,
     searchFeaturesSchema,
 } from '../../openapi';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import {
-    FeatureSearchQueryParameters,
+    type FeatureSearchQueryParameters,
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters';
 import { normalizeQueryParams } from './search-utils';

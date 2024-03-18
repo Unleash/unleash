@@ -1,9 +1,9 @@
-import { useEffect, useState, VFC } from 'react';
+import { useEffect, useState, type VFC } from 'react';
 import { Box, Icon, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AddFilterButton } from '../AddFilterButton';
 import { FilterDateItem } from 'component/common/FilterDateItem/FilterDateItem';
-import { FilterItem, FilterItemParams } from '../FilterItem/FilterItem';
+import { FilterItem, type FilterItemParams } from '../FilterItem/FilterItem';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',

@@ -2,7 +2,8 @@ import { Button, Chip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import Input from 'component/common/Input/Input';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { parseParameterStrings } from 'utils/parseParameter';
 

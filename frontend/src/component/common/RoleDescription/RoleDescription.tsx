@@ -1,4 +1,4 @@
-import { SxProps, Theme, styled } from '@mui/material';
+import { type SxProps, type Theme, styled } from '@mui/material';
 import SupervisedUserCircle from '@mui/icons-material/SupervisedUserCircle';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import { useRole } from 'hooks/api/getters/useRole/useRole';

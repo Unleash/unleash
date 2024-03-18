@@ -1,4 +1,5 @@
-import React, { SyntheticEvent, useState } from 'react';
+import type React from 'react';
+import { type SyntheticEvent, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -9,7 +10,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import { DialogStrategyRemove } from './DialogStrategyRemove';
 import { DisableEnableStrategyDialog } from './DisableEnableStrategyDialog/DisableEnableStrategyDialog';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';

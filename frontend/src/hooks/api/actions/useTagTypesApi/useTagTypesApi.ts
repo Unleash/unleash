@@ -1,4 +1,4 @@
-import { ITagPayload } from 'interfaces/tags';
+import type { ITagPayload } from 'interfaces/tags';
 import useAPI from '../useApi/useApi';
 
 const useTagTypesApi = () => {

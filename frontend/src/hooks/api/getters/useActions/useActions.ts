@@ -3,7 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { IActionSet } from 'interfaces/action';
+import type { IActionSet } from 'interfaces/action';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const DEFAULT_DATA = {

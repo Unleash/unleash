@@ -1,6 +1,6 @@
-import { IStrategyConfig } from '../../../types';
-import { FeatureStrategiesEvaluationResult } from './client';
-import { Context } from './context';
+import type { IStrategyConfig } from '../../../types';
+import type { FeatureStrategiesEvaluationResult } from './client';
+import type { Context } from './context';
 
 export type FallbackFunction = (name: string, context: Context) => boolean;
 

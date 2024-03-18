@@ -1,4 +1,4 @@
-import { ITag } from './tags';
+import type { ITag } from './tags';
 
 export interface IEvent {
     id: number;

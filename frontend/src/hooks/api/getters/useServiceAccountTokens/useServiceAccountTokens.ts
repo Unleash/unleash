@@ -1,5 +1,5 @@
-import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
-import { PatsSchema } from 'openapi';
+import type { IPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { PatsSchema } from 'openapi';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';

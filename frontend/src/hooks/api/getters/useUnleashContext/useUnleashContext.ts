@@ -1,7 +1,7 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IUnleashContextDefinition } from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 
 interface IUnleashContextOutput {
     context: IUnleashContextDefinition[];

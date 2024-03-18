@@ -1,4 +1,4 @@
-import { useMemo, VFC } from 'react';
+import { useMemo, type VFC } from 'react';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Tooltip } from '@mui/material';

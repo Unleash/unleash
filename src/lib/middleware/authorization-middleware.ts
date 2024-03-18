@@ -1,6 +1,6 @@
-import { IAuthRequest } from '../routes/unleash-types';
-import { NextFunction, Response } from 'express';
-import { LogProvider } from '../logger';
+import type { IAuthRequest } from '../routes/unleash-types';
+import type { NextFunction, Response } from 'express';
+import type { LogProvider } from '../logger';
 import { AuthenticationRequired } from '../server-impl';
 import UnauthorizedError from '../error/unauthorized-error';
 

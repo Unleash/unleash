@@ -1,7 +1,7 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../../controller';
-import { Logger } from '../../../logger';
-import {
+import type { Logger } from '../../../logger';
+import type {
     IFlagResolver,
     IUnleashConfig,
     IUnleashServices,
@@ -12,17 +12,17 @@ import {
     resourceCreatedResponseSchema,
 } from '../../../openapi/util/create-response-schema';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import { OpenApiService } from '../../../services/openapi-service';
+import type { OpenApiService } from '../../../services/openapi-service';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 
-import PatService from '../../../services/pat-service';
+import type PatService from '../../../services/pat-service';
 import { NONE } from '../../../types/permissions';
-import { IAuthRequest } from '../../unleash-types';
+import type { IAuthRequest } from '../../unleash-types';
 import { serializeDates } from '../../../types/serialize-dates';
-import { PatSchema, patSchema } from '../../../openapi/spec/pat-schema';
-import { PatsSchema, patsSchema } from '../../../openapi/spec/pats-schema';
+import { type PatSchema, patSchema } from '../../../openapi/spec/pat-schema';
+import { type PatsSchema, patsSchema } from '../../../openapi/spec/pats-schema';
 import {
-    CreatePatSchema,
+    type CreatePatSchema,
     createPatSchema,
 } from '../../../openapi/spec/create-pat-schema';
 import { ForbiddenError, NotFoundError } from '../../../error';

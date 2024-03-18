@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from 'react';
+import type { ChangeEventHandler } from 'react';
 import { StyledAddonParameterContainer } from '../../IntegrationForm.styles';
 import type { AddonParameterSchema, AddonSchema } from 'openapi';
 import { IntegrationParameterTextField } from './IntegrationParameterTextField';

@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 interface IPercentageCircleProps {
     percentage: number;

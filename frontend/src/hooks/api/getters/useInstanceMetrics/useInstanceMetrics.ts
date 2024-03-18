@@ -1,8 +1,8 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { RequestsPerSecondSchema } from 'openapi';
+import type { RequestsPerSecondSchema } from 'openapi';
 
 export interface IInstanceMetricsResponse {
     metrics: RequestsPerSecondSchema;

@@ -1,11 +1,11 @@
-import {
+import type {
     IChangeRequestPatchVariant,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import { IFeatureVariant } from 'interfaces/featureToggle';
-import { ISegment } from 'interfaces/segment';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { ISegment } from 'interfaces/segment';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import isEqual from 'lodash.isequal';
 import omit from 'lodash.omit';
 

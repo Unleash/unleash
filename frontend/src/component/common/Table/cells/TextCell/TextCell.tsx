@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Box, styled, SxProps, Theme } from '@mui/material';
+import type { FC } from 'react';
+import { Box, styled, type SxProps, type Theme } from '@mui/material';
 
 interface ITextCellProps {
     value?: string | null;

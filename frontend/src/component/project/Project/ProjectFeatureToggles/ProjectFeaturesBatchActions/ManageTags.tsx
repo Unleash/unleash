@@ -1,8 +1,8 @@
-import { useMemo, useState, VFC } from 'react';
+import { useMemo, useState, type VFC } from 'react';
 import { Button } from '@mui/material';
 import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
 import type { FeatureSchema } from 'openapi';
-import { ITag } from 'interfaces/tags';
+import type { ITag } from 'interfaces/tags';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';

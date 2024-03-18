@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState, VFC } from 'react';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import { useEffect, useMemo, useState, type VFC } from 'react';
+import {
+    type SortingRule,
+    useFlexLayout,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
@@ -8,7 +13,7 @@ import Edit from '@mui/icons-material/Edit';
 import { sortTypes } from 'utils/sortTypes';
 import useProjectAccess, {
     ENTITY_TYPE,
-    IProjectAccess,
+    type IProjectAccess,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
@@ -40,8 +45,8 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectGroupView } from '../ProjectGroupView/ProjectGroupView';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { IUser } from 'interfaces/user';
-import { IGroup } from 'interfaces/group';
+import type { IUser } from 'interfaces/user';
+import type { IGroup } from 'interfaces/group';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';

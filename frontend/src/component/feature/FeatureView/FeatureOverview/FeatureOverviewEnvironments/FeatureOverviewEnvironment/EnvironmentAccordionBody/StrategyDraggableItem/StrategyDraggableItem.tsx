@@ -1,20 +1,20 @@
-import { DragEventHandler, RefObject, useRef } from 'react';
+import { type DragEventHandler, type RefObject, useRef } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItem } from './StrategyItem/StrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import {
     useStrategyChangesFromRequest,
-    UseStrategyChangeFromRequestResult,
+    type UseStrategyChangeFromRequestResult,
 } from './StrategyItem/useStrategyChangesFromRequest';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
-import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
+import type { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import {
-    ScheduledChangeRequestViewModel,
+    type ScheduledChangeRequestViewModel,
     useScheduledChangeRequestsWithStrategy,
 } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 

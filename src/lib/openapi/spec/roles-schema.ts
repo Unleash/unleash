@@ -1,5 +1,5 @@
 import { roleSchema } from './role-schema';
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 
 export const rolesSchema = {
     $id: '#/components/schemas/rolesSchema',

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionEditBody } from './ConstraintAccordionEditBody/ConstraintAccordionEditBody';
 import { ConstraintAccordionEditHeader } from './ConstraintAccordionEditHeader/ConstraintAccordionEditHeader';
 import {
@@ -12,9 +12,9 @@ import { cleanConstraint } from 'utils/cleanConstraint';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IUnleashContextDefinition } from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 import { useConstraintInput } from './ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import { Operator } from 'constants/operators';
+import type { Operator } from 'constants/operators';
 import { ResolveInput } from './ConstraintAccordionEditBody/ResolveInput/ResolveInput';
 
 interface IConstraintAccordionEditProps {

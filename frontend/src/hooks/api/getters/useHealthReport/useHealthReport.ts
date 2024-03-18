@@ -1,6 +1,6 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
-import { IProjectHealthReport } from 'interfaces/project';
+import type { IProjectHealthReport } from 'interfaces/project';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 

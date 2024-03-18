@@ -1,4 +1,4 @@
-import { Store } from './store';
+import type { Store } from './store';
 
 export interface IResetTokenCreate {
     reset_token: string;

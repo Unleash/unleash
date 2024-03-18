@@ -2,10 +2,10 @@ import Webhook from './webhook';
 import SlackAddon from './slack';
 import TeamsAddon from './teams';
 import DatadogAddon from './datadog';
-import Addon from './addon';
-import { LogProvider } from '../logger';
+import type Addon from './addon';
+import type { LogProvider } from '../logger';
 import SlackAppAddon from './slack-app';
-import { IFlagResolver } from '../types';
+import type { IFlagResolver } from '../types';
 
 export interface IAddonProviders {
     [key: string]: Addon;

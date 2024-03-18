@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Icon, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { Box } from '@mui/system';
-import { IFilterItem } from './Filters/Filters';
+import type { IFilterItem } from './Filters/Filters';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),

@@ -4,7 +4,7 @@ import {
     FormControlLabel,
     styled,
     Switch,
-    Theme,
+    type Theme,
     Typography,
     Link,
 } from '@mui/material';
@@ -21,7 +21,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
-import { FeatureNamingType } from 'interfaces/project';
+import type { FeatureNamingType } from 'interfaces/project';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 interface IFeatureToggleForm {

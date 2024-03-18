@@ -1,12 +1,17 @@
-import { useEffect, useReducer, useState, VFC } from 'react';
+import { useEffect, useReducer, useState, type VFC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { AutocompleteProps, Link, styled, Typography } from '@mui/material';
+import {
+    type AutocompleteProps,
+    Link,
+    styled,
+    Typography,
+} from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { TagTypeSelect } from './TagTypeSelect';
-import { TagOption, TagsInput } from './TagsInput';
+import { type TagOption, TagsInput } from './TagsInput';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
-import { ITag, ITagType } from 'interfaces/tags';
+import type { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 

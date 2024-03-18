@@ -13,11 +13,11 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IPayload } from 'interfaces/featureToggle';
+import type { IPayload } from 'interfaces/featureToggle';
 import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { WeightType } from 'constants/variantTypes';
-import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
+import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
 import Delete from '@mui/icons-material/Delete';
 
 const LazyReactJSONEditor = React.lazy(

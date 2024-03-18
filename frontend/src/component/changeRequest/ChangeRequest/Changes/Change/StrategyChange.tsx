@@ -1,4 +1,4 @@
-import { VFC, FC, ReactNode } from 'react';
+import type { VFC, FC, ReactNode } from 'react';
 import { Box, styled, Tooltip, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -7,7 +7,7 @@ import {
     StrategyTooltipLink,
 } from '../../StrategyTooltipLink/StrategyTooltipLink';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
-import {
+import type {
     ChangeRequestState,
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,

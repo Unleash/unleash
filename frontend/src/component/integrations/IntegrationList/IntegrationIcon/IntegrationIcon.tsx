@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Avatar, styled } from '@mui/material';
 import DeviceHub from '@mui/icons-material/DeviceHub';
 import { formatAssetPath } from 'utils/formatPath';

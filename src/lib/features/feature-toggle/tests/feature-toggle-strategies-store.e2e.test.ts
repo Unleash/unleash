@@ -1,8 +1,10 @@
-import { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type';
-import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
+import type { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type';
+import type { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type';
+import dbInit, {
+    type ITestDb,
+} from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
-import { IUnleashStores } from '../../../types';
+import type { IUnleashStores } from '../../../types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

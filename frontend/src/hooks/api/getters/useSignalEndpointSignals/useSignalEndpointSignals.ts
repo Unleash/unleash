@@ -1,11 +1,11 @@
 import useSWRInfinite, {
-    SWRInfiniteConfiguration,
-    SWRInfiniteKeyLoader,
+    type SWRInfiniteConfiguration,
+    type SWRInfiniteKeyLoader,
 } from 'swr/infinite';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { ISignalEndpointSignal } from 'interfaces/signal';
+import type { ISignalEndpointSignal } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/signal-endpoints';

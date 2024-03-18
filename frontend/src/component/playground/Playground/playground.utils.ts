@@ -1,8 +1,8 @@
-import {
+import type {
     PlaygroundResponseSchema,
     AdvancedPlaygroundResponseSchema,
 } from 'openapi';
-import { IEnvironment } from 'interfaces/environments';
+import type { IEnvironment } from 'interfaces/environments';
 import { ensureArray } from '@server/util/ensureArray';
 
 export const resolveProjects = (

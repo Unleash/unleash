@@ -2,24 +2,24 @@ import * as mime from 'mime';
 import YAML from 'js-yaml';
 import multer from 'multer';
 import { format as formatDate } from 'date-fns';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../controller';
 import { ADMIN } from '../../types/permissions';
 import { extractUsername } from '../../util/extract-user';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import { Logger } from '../../logger';
-import StateService from '../../services/state-service';
-import { IAuthRequest } from '../unleash-types';
-import { OpenApiService } from '../../services/openapi-service';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type { Logger } from '../../logger';
+import type StateService from '../../services/state-service';
+import type { IAuthRequest } from '../unleash-types';
+import type { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     exportQueryParameters,
-    ExportQueryParameters,
+    type ExportQueryParameters,
 } from '../../openapi/spec/export-query-parameters';
 import { emptyResponse } from '../../openapi/util/standard-responses';
-import { OpenAPIV3 } from 'openapi-types';
+import type { OpenAPIV3 } from 'openapi-types';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {

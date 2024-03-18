@@ -1,8 +1,8 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { NotificationsSchema } from 'openapi';
+import type { NotificationsSchema } from 'openapi';
 
 export const useNotifications = (options: SWRConfiguration = {}) => {
     const path = formatApiPath(`api/admin/notifications`);

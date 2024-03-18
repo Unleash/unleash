@@ -1,5 +1,10 @@
 import { SYSTEM_USER } from '../../lib/types';
-import { IApiRequest, IApiUser, IAuthRequest, IUser } from '../server-impl';
+import type {
+    IApiRequest,
+    IApiUser,
+    IAuthRequest,
+    IUser,
+} from '../server-impl';
 
 export function extractUsernameFromUser(user: IUser | IApiUser): string {
     return (user as IUser)?.email || user?.username || SYSTEM_USER.username;

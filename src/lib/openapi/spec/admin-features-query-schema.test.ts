@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { AdminFeaturesQuerySchema } from './admin-features-query-schema';
+import type { AdminFeaturesQuerySchema } from './admin-features-query-schema';
 
 test('adminFeaturesQuerySchema empty', () => {
     const data: AdminFeaturesQuerySchema = {};

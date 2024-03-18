@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
+import type {
     ActionsFilterState,
     ActionsActionState,
     ProjectActionsFormErrors,

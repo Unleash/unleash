@@ -1,7 +1,7 @@
 import {
-    ApiTokenSchema,
+    type ApiTokenSchema,
     apiTokenSchema,
-    ApiTokensSchema,
+    type ApiTokensSchema,
     apiTokensSchema,
     createRequestSchema,
     createResponseSchema,
@@ -9,18 +9,18 @@ import {
     resourceCreatedResponseSchema,
 } from '../../../openapi';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import { IUser } from '../../../types/user';
+import type { IUser } from '../../../types/user';
 import {
     ADMIN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_PROJECT_API_TOKEN,
-    IUnleashConfig,
-    IUnleashServices,
+    type IUnleashConfig,
+    type IUnleashServices,
     READ_PROJECT_API_TOKEN,
     serializeDates,
 } from '../../../types';
-import { ApiTokenType, IApiToken } from '../../../types/models/api-token';
-import {
+import { ApiTokenType, type IApiToken } from '../../../types/models/api-token';
+import type {
     AccessService,
     ApiTokenService,
     OpenApiService,
@@ -28,10 +28,10 @@ import {
     FrontendApiService,
 } from '../../../services';
 import { extractUserId, extractUsername } from '../../../util';
-import { IAuthRequest } from '../../unleash-types';
+import type { IAuthRequest } from '../../unleash-types';
 import Controller from '../../controller';
-import { Logger } from '../../../logger';
-import { Response } from 'express';
+import type { Logger } from '../../../logger';
+import type { Response } from 'express';
 import { timingSafeEqual } from 'crypto';
 import { createApiToken } from '../../../schema/api-token-schema';
 import { OperationDeniedError } from '../../../error';

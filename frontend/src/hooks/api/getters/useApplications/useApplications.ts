@@ -1,4 +1,4 @@
-import { ApplicationsSchema } from '../../../../openapi';
+import type { ApplicationsSchema } from '../../../../openapi';
 import { createPaginatedHook } from '../usePaginatedData/usePaginatedData';
 
 const prefixKey = 'api/admin/metrics/applications?';

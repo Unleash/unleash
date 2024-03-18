@@ -1,6 +1,9 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import { Box, Paper, Button, styled } from '@mui/material';
-import { CustomEvents, usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import {
+    type CustomEvents,
+    usePlausibleTracker,
+} from 'hooks/usePlausibleTracker';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { createLocalStorage } from 'utils/createLocalStorage';
 

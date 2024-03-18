@@ -1,7 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
-import { IFeatureToggle } from 'interfaces/featureToggle';
-import { FC, useState } from 'react';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
+import { type FC, useState } from 'react';
 import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
 import { DependencyActions } from './DependencyActions';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';

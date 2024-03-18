@@ -1,6 +1,6 @@
-import { IUnleashTest, setupAppWithBaseUrl } from '../helpers/test-helper';
+import { type IUnleashTest, setupAppWithBaseUrl } from '../helpers/test-helper';
 
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 
 let db: ITestDb;
 let app: IUnleashTest;

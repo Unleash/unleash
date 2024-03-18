@@ -1,6 +1,6 @@
 import { Paper, styled } from '@mui/material';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 const StyledMainHeader = styled(Paper)(({ theme }) => ({

@@ -4,13 +4,13 @@ import {
     FEATURE_DELETED,
     FeatureCreatedEvent,
     FeatureDeletedEvent,
-    IEvent,
+    type IEvent,
 } from '../../../lib/types/events';
 
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { IEventStore } from '../../../lib/types/stores/event-store';
-import { IUnleashStores } from '../../../lib/types';
+import type { IEventStore } from '../../../lib/types/stores/event-store';
+import type { IUnleashStores } from '../../../lib/types';
 
 let db: ITestDb;
 let stores: IUnleashStores;

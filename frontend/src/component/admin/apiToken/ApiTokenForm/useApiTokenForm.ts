@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { IApiTokenCreate } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import type { IApiTokenCreate } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import { TokenType } from 'interfaces/token';
 import {
     ADMIN,
@@ -10,7 +10,7 @@ import {
     CREATE_PROJECT_API_TOKEN,
 } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
-import { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
+import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
 import { useUiFlag } from '../../../../hooks/useUiFlag';
 
 export type ApiTokenFormErrorType = 'username' | 'projects';

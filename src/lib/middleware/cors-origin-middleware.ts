@@ -1,6 +1,6 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import cors from 'cors';
-import { IUnleashConfig, IUnleashServices } from '../types';
+import type { IUnleashConfig, IUnleashServices } from '../types';
 
 export const resolveOrigin = (allowedOrigins: string[]): string | string[] => {
     if (allowedOrigins.length === 0) {

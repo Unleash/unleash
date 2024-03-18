@@ -1,4 +1,9 @@
-import { ChangeEventHandler, FormEventHandler, useState, VFC } from 'react';
+import {
+    type ChangeEventHandler,
+    type FormEventHandler,
+    useState,
+    type VFC,
+} from 'react';
 import { Button, TextField } from '@mui/material';
 import styles from './SimpleAuth.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +12,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 
 interface ISimpleAuthProps {
     authDetails: IAuthEndpointDetailsResponse;

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 const StyledTabLink = styled(Link)(({ theme }) => ({

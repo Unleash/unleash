@@ -1,4 +1,4 @@
-import {
+import type {
     IFeatureStrategyPayload,
     IFeatureStrategy,
     IFeatureStrategySortOrder,

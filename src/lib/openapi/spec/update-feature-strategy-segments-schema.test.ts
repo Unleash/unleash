@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { UpdateFeatureStrategySegmentsSchema } from './update-feature-strategy-segments-schema';
+import type { UpdateFeatureStrategySegmentsSchema } from './update-feature-strategy-segments-schema';
 
 test('updateFeatureStrategySegmentsSchema schema', () => {
     const data: UpdateFeatureStrategySegmentsSchema = {

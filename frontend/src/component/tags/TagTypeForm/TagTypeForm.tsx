@@ -1,7 +1,7 @@
 import Input from 'component/common/Input/Input';
 import { TextField, Button, styled } from '@mui/material';
 
-import React from 'react';
+import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';
 

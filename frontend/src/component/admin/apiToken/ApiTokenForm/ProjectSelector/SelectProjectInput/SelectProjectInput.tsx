@@ -1,4 +1,4 @@
-import { Fragment, useState, ChangeEvent, VFC } from 'react';
+import { Fragment, useState, type ChangeEvent, type VFC } from 'react';
 import {
     Checkbox,
     FormControlLabel,
@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 
-import {
+import type {
     AutocompleteRenderGroupParams,
     AutocompleteRenderInputParams,
     AutocompleteRenderOptionState,
@@ -17,7 +17,7 @@ import {
 
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
+import type { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
 import { SelectAllButton } from './SelectAllButton/SelectAllButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

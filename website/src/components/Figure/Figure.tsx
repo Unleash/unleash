@@ -62,7 +62,7 @@
 
 
 **/
-import React from 'react';
+import type React from 'react';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import './styles.module.css';

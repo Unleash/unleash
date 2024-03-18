@@ -1,4 +1,5 @@
-import React, { useRef, useState, useContext } from 'react';
+import type React from 'react';
+import { useRef, useState, useContext } from 'react';
 import { Button, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -12,16 +13,16 @@ import {
     UPDATE_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';
 import {
     ConstraintAccordionList,
-    IConstraintAccordionListRef,
+    type IConstraintAccordionListRef,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { SegmentFormStep, SegmentFormMode } from './SegmentForm';
+import type { SegmentFormStep, SegmentFormMode } from './SegmentForm';
 import {
     AutocompleteBox,
-    IAutocompleteBoxOption,
+    type IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
 import {
     SegmentDocsValuesInfo,

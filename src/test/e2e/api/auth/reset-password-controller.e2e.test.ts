@@ -1,17 +1,17 @@
-import { URL } from 'url';
+import type { URL } from 'url';
 import EventEmitter from 'events';
 import { createTestConfig } from '../../../config/test-config';
-import { IUnleashConfig } from '../../../../lib/types/option';
+import type { IUnleashConfig } from '../../../../lib/types/option';
 import UserService from '../../../../lib/services/user-service';
 import { AccessService } from '../../../../lib/services/access-service';
 import ResetTokenService from '../../../../lib/services/reset-token-service';
-import { IUser } from '../../../../lib/types/user';
+import type { IUser } from '../../../../lib/types/user';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupApp,
     setupAppWithAuth,
 } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { EmailService } from '../../../../lib/services/email-service';
 import SessionStore from '../../../../lib/db/session-store';
@@ -21,7 +21,7 @@ import SettingService from '../../../../lib/services/setting-service';
 import FakeSettingStore from '../../../fixtures/fake-setting-store';
 import { GroupService } from '../../../../lib/services/group-service';
 import { EventService } from '../../../../lib/services';
-import { IUnleashStores } from '../../../../lib/types';
+import type { IUnleashStores } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let stores: IUnleashStores;

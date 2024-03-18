@@ -1,4 +1,4 @@
-import { IRoute } from 'interfaces/route';
+import type { IRoute } from 'interfaces/route';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { LoginRedirect } from 'component/common/LoginRedirect/LoginRedirect';
 

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { styled, Typography } from '@mui/material';
 
 import {

@@ -1,24 +1,24 @@
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import {
     DEFAULT_PROJECT,
-    IContextFieldStore,
-    IEnvironmentStore,
-    IEventStore,
-    IFeatureToggleStore,
-    IProjectStore,
-    IUnleashStores,
+    type IContextFieldStore,
+    type IEnvironmentStore,
+    type IEventStore,
+    type IFeatureToggleStore,
+    type IProjectStore,
+    type IUnleashStores,
     RoleName,
 } from '../../types';
-import { ImportTogglesSchema, VariantsSchema } from '../../openapi';
-import { IContextFieldDto } from '../../types/stores/context-field-store';
-import { AccessService } from '../../services';
+import type { ImportTogglesSchema, VariantsSchema } from '../../openapi';
+import type { IContextFieldDto } from '../../types/stores/context-field-store';
+import type { AccessService } from '../../services';
 import { DEFAULT_ENV } from '../../util';
-import { IRole } from '../../types/stores/access-store';
+import type { IRole } from '../../types/stores/access-store';
 
 let app: IUnleashTest;
 let db: ITestDb;

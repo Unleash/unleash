@@ -1,4 +1,8 @@
-import { allOperators, dateOperators, Operator } from 'constants/operators';
+import {
+    allOperators,
+    dateOperators,
+    type Operator,
+} from 'constants/operators';
 import { oneOf } from 'utils/oneOf';
 
 export const CURRENT_TIME_CONTEXT_FIELD = 'currentTime';

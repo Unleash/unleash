@@ -1,10 +1,10 @@
 import { createTestConfig } from '../../config/test-config';
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import StateService from '../../../lib/services/state-service';
 import oldFormat from '../../examples/variantsexport_v3.json';
 import { WeightType } from '../../../lib/types/model';
 import { EventService } from '../../../lib/services';
-import { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

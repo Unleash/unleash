@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { TagTypesSchema } from './tag-types-schema';
+import type { TagTypesSchema } from './tag-types-schema';
 
 test('tagTypesSchema', () => {
     const data: TagTypesSchema = {

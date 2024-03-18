@@ -1,5 +1,6 @@
 import { Alert, styled } from '@mui/material';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';

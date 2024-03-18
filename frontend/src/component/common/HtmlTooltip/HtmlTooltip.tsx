@@ -1,5 +1,10 @@
-import { styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
-import { SpacingArgument } from '@mui/system/createTheme/createSpacing';
+import {
+    styled,
+    Tooltip,
+    tooltipClasses,
+    type TooltipProps,
+} from '@mui/material';
+import type { SpacingArgument } from '@mui/system/createTheme/createSpacing';
 
 const StyledHtmlTooltipBody = styled('div')(({ theme }) => ({
     overflow: 'auto',

@@ -1,7 +1,7 @@
 import { Banner } from 'component/banners/Banner/Banner';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useVariant } from 'hooks/useVariant';
-import { IBanner } from 'interfaces/banner';
+import type { IBanner } from 'interfaces/banner';
 
 export const ExternalBanners = () => {
     const { uiConfig } = useUiConfig();

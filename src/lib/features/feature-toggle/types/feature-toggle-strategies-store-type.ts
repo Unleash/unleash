@@ -1,4 +1,4 @@
-import {
+import type {
     FeatureToggleWithEnvironment,
     IDependency,
     IFeatureOverview,
@@ -6,8 +6,8 @@ import {
     IStrategyConfig,
     IVariant,
 } from '../../../types/model';
-import { Store } from '../../../types/stores/store';
-import { IFeatureProjectUserParams } from '../feature-toggle-controller';
+import type { Store } from '../../../types/stores/store';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
 
 export interface FeatureConfigurationClient {
     name: string;

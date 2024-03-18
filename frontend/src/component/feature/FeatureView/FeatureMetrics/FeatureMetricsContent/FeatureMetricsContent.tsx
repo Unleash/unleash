@@ -1,5 +1,5 @@
 import { FeatureMetricsTable } from '../FeatureMetricsTable/FeatureMetricsTable';
-import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
+import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { FeatureMetricsStatsRaw } from '../FeatureMetricsStats/FeatureMetricsStatsRaw';
 import { Box, Typography } from '@mui/material';
 import { useId } from 'hooks/useId';

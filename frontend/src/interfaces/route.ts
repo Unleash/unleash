@@ -1,5 +1,5 @@
-import { VoidFunctionComponent } from 'react';
-import { UiFlags, IUiConfig } from 'interfaces/uiConfig';
+import type { VoidFunctionComponent } from 'react';
+import type { UiFlags, IUiConfig } from 'interfaces/uiConfig';
 
 export interface IRoute {
     path: string;

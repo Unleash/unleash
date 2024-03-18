@@ -1,4 +1,4 @@
-import {
+import type {
     ICreateGroupModel,
     IGroup,
     IGroupModel,
@@ -7,9 +7,9 @@ import {
     IGroupRole,
     IGroupUser,
 } from '../types/group';
-import { IUnleashConfig, IUnleashStores } from '../types';
-import { IGroupStore } from '../types/stores/group-store';
-import { Logger } from '../logger';
+import type { IUnleashConfig, IUnleashStores } from '../types';
+import type { IGroupStore } from '../types/stores/group-store';
+import type { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import {
     GROUP_CREATED,
@@ -17,12 +17,12 @@ import {
     GROUP_UPDATED,
     GROUP_USER_ADDED,
     GROUP_USER_REMOVED,
-    IBaseEvent,
+    type IBaseEvent,
 } from '../types/events';
 import NameExistsError from '../error/name-exists-error';
-import { IAccountStore } from '../types/stores/account-store';
-import { IUser } from '../types/user';
-import EventService from '../features/events/event-service';
+import type { IAccountStore } from '../types/stores/account-store';
+import type { IUser } from '../types/user';
+import type EventService from '../features/events/event-service';
 
 export class GroupService {
     private groupStore: IGroupStore;

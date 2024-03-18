@@ -1,5 +1,5 @@
-import { ErrorRequestHandler } from 'express';
-import { LogProvider } from '../logger';
+import type { ErrorRequestHandler } from 'express';
+import type { LogProvider } from '../logger';
 import { handleErrors } from '../routes/util';
 
 export const catchAllErrorHandler = (

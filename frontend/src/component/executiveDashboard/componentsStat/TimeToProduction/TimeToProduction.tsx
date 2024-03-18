@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Typography, styled } from '@mui/material';
 import { Gauge } from '../../components/Gauge/Gauge';
 

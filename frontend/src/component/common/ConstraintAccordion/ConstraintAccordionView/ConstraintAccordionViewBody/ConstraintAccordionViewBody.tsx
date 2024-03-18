@@ -1,4 +1,4 @@
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { MultipleValues } from './MultipleValues/MultipleValues';

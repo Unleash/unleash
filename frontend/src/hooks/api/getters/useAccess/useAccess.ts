@@ -1,9 +1,9 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IGroup } from 'interfaces/group';
-import { IUser } from 'interfaces/user';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IGroup } from 'interfaces/group';
+import type { IUser } from 'interfaces/user';
+import type { IServiceAccount } from 'interfaces/service-account';
 
 export interface IUseAccessOutput {
     users?: IUser[];

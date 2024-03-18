@@ -1,18 +1,18 @@
-import { IUnleashConfig } from '../types/option';
-import { IFavoriteProjectsStore, IUnleashStores } from '../types/stores';
-import { Logger } from '../logger';
-import { IFavoriteFeaturesStore } from '../types/stores/favorite-features';
-import { IFavoriteFeature, IFavoriteProject } from '../types/favorites';
+import type { IUnleashConfig } from '../types/option';
+import type { IFavoriteProjectsStore, IUnleashStores } from '../types/stores';
+import type { Logger } from '../logger';
+import type { IFavoriteFeaturesStore } from '../types/stores/favorite-features';
+import type { IFavoriteFeature, IFavoriteProject } from '../types/favorites';
 import {
     FEATURE_FAVORITED,
     FEATURE_UNFAVORITED,
     PROJECT_FAVORITED,
     PROJECT_UNFAVORITED,
 } from '../types';
-import { IUser } from '../types/user';
+import type { IUser } from '../types/user';
 import { extractUsernameFromUser } from '../util';
-import { IFavoriteProjectKey } from '../types/stores/favorite-projects';
-import EventService from '../features/events/event-service';
+import type { IFavoriteProjectKey } from '../types/stores/favorite-projects';
+import type EventService from '../features/events/event-service';
 
 export interface IFavoriteFeatureProps {
     feature: string;

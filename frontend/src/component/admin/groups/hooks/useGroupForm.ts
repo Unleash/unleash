@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useQueryParams from 'hooks/useQueryParams';
-import { IGroupUser } from 'interfaces/group';
+import type { IGroupUser } from 'interfaces/group';
 
 export const useGroupForm = (
     initialName = '',

@@ -1,6 +1,6 @@
-import { Application } from 'express';
+import type { Application } from 'express';
 import authorizationMiddleware from './authorization-middleware';
-import { LogProvider } from '../logger';
+import type { LogProvider } from '../logger';
 
 function ossAuthHook(
     app: Application,

@@ -1,5 +1,5 @@
 import { differenceInDays } from 'date-fns';
-import { ICreateEnabledDates } from '../../../types/stores/project-stats-store-type';
+import type { ICreateEnabledDates } from '../../../types/stores/project-stats-store-type';
 
 const calculateTimeToProdForFeatures = (
     items: ICreateEnabledDates[],

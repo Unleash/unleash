@@ -1,4 +1,4 @@
-import { FC, VFC } from 'react';
+import type { FC, VFC } from 'react';
 import TimeAgo from 'react-timeago';
 import { styled, Tooltip, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

@@ -13,7 +13,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { formatApiPath } from 'utils/formatPath';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
-import { IInvoice } from 'interfaces/invoice';
+import type { IInvoice } from 'interfaces/invoice';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 

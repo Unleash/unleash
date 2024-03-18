@@ -10,7 +10,7 @@ import { updateWeight } from 'component/common/util';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import {
+import type {
     IFeatureEnvironmentWithCrEnabled,
     IFeatureVariant,
 } from 'interfaces/featureToggle';

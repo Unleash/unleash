@@ -1,4 +1,4 @@
-import { IProject } from 'interfaces/project';
+import type { IProject } from 'interfaces/project';
 
 export type ListItemType = Pick<
     IProject['features'][number],

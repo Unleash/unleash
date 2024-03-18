@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAsyncDebounce } from 'react-table';
 import {
     Box,
@@ -12,7 +13,7 @@ import Close from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
-import { IGetSearchContextOutput } from 'hooks/useSearch';
+import type { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';

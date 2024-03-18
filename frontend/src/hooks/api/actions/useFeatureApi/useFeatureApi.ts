@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
-import { ITag } from 'interfaces/tags';
-import { Operation } from 'fast-json-patch';
-import { IConstraint } from 'interfaces/strategy';
-import { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
+import type { ITag } from 'interfaces/tags';
+import type { Operation } from 'fast-json-patch';
+import type { IConstraint } from 'interfaces/strategy';
+import type { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
 import useAPI from '../useApi/useApi';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const useFeatureApi = () => {
     const { makeRequest, makeLightRequest, createRequest, errors, loading } =

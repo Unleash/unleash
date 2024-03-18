@@ -1,6 +1,6 @@
 import { Button, styled, TextField, Typography } from '@mui/material';
 import { AlertTitle, Alert } from '@mui/material';
-import { SyntheticEvent, useState } from 'react';
+import { type SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';

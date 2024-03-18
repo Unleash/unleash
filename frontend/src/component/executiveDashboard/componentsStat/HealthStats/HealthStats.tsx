@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { useTheme } from '@mui/material';
 

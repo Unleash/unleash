@@ -1,6 +1,6 @@
-import fc, { Arbitrary } from 'fast-check';
+import fc, { type Arbitrary } from 'fast-check';
 import { validateSchema } from '../validate';
-import { SdkContextSchema, sdkContextSchema } from './sdk-context-schema';
+import { type SdkContextSchema, sdkContextSchema } from './sdk-context-schema';
 import { commonISOTimestamp } from '../../../test/arbitraries.test';
 
 export const generate = (): Arbitrary<SdkContextSchema> =>

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import {
     Button,
     FormControl,
@@ -19,7 +20,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 
 const initialState = {
     enabled: false,

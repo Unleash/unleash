@@ -1,7 +1,7 @@
 import { Alert, IconButton, Tooltip, styled } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ActionsActionState } from '../../useProjectActionsForm';
+import type { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';

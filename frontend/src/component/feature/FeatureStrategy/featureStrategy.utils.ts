@@ -1,5 +1,5 @@
-import { IFeatureToggle } from 'interfaces/featureToggle';
-import { deepOmit, DeepOmit } from '../../../utils/deepOmit';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
+import { deepOmit, type DeepOmit } from '../../../utils/deepOmit';
 
 export const comparisonModerator = (
     data: IFeatureToggle,

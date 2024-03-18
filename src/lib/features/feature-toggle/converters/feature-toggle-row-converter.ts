@@ -1,4 +1,4 @@
-import {
+import type {
     PartialDeep,
     IFeatureToggleClient,
     IStrategyConfig,
@@ -9,7 +9,7 @@ import {
 } from '../../../types';
 
 import { mapValues, ensureStringValue } from '../../../util';
-import { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
+import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
 
 export class FeatureToggleRowConverter {
     private flagResolver: IFlagResolver;

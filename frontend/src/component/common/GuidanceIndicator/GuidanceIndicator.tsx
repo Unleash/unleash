@@ -1,5 +1,5 @@
 import { styled, useTheme } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 const StyledIndicator = styled('div')(({ style, theme }) => ({
     width: '25px',

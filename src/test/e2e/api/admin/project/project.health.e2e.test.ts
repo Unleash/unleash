@@ -1,10 +1,10 @@
-import dbInit, { ITestDb } from '../../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../../helpers/database-init';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
-import { IUser } from '../../../../../lib/types';
+import type { IUser } from '../../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;

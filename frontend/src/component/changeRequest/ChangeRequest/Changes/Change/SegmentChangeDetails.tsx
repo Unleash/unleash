@@ -1,6 +1,6 @@
-import { VFC, FC, ReactNode } from 'react';
+import type { VFC, FC, ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
-import {
+import type {
     ChangeRequestState,
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,

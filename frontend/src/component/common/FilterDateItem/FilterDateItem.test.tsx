@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
-import { FilterDateItem, IFilterDateItemProps } from './FilterDateItem';
+import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
+import { FilterDateItem, type IFilterDateItemProps } from './FilterDateItem';
 
 const getDate = (option: string) => screen.getByText(option);
 

@@ -1,4 +1,4 @@
-import { useMemo, useState, VFC } from 'react';
+import { useMemo, useState, type VFC } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
     Table,

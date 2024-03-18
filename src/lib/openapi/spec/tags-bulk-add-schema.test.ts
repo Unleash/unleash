@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { TagsBulkAddSchema } from './tags-bulk-add-schema';
+import type { TagsBulkAddSchema } from './tags-bulk-add-schema';
 
 test('tagsBulkAddSchema', () => {
     const data: TagsBulkAddSchema = {

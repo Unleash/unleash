@@ -1,13 +1,13 @@
-import { Logger } from '../logger';
-import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
-import {
+import type { Logger } from '../logger';
+import type { IUnleashConfig } from '../types/option';
+import type { IUnleashStores } from '../types/stores';
+import type {
     IMinimalStrategy,
     IStrategy,
     IStrategyStore,
 } from '../types/stores/strategy-store';
 import NotFoundError from '../error/notfound-error';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 
 const strategySchema = require('./strategy-schema');
 const NameExistsError = require('../error/name-exists-error');

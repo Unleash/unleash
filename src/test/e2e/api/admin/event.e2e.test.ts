@@ -1,10 +1,10 @@
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { FEATURE_CREATED, IBaseEvent } from '../../../../lib/types/events';
+import { FEATURE_CREATED, type IBaseEvent } from '../../../../lib/types/events';
 import { randomId } from '../../../../lib/util/random-id';
 import { EventService } from '../../../../lib/services';
 import { EventEmitter } from 'stream';

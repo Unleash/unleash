@@ -12,10 +12,10 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
-import {
+import type {
     IEnvironment,
     IEnvironmentClonePayload,
 } from 'interfaces/environments';
@@ -27,9 +27,9 @@ import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/Environment
 import { SelectProjectInput } from 'component/admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectProjectInput';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useApiTokensApi, {
-    IApiTokenCreate,
+    type IApiTokenCreate,
 } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
-import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledForm = styled('form')(() => ({

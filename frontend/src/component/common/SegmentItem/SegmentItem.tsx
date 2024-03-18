@@ -1,7 +1,7 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import { Link } from 'react-router-dom';
 import DonutLarge from '@mui/icons-material/DonutLarge';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import {
     Accordion,
     AccordionDetails,

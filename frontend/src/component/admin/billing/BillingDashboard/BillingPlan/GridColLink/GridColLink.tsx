@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 const StyledSpan = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

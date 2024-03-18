@@ -1,5 +1,5 @@
-import { CreateFeatureStrategySchema } from '../openapi';
-import { IFeatureStrategy } from './strategy';
+import type { CreateFeatureStrategySchema } from '../openapi';
+import type { IFeatureStrategy } from './strategy';
 
 export interface IEnvironment {
     name: string;

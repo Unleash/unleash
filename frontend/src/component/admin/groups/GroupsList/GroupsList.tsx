@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState, VFC } from 'react';
+import { useEffect, useMemo, useState, type VFC } from 'react';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { IGroup } from 'interfaces/group';
+import type { IGroup } from 'interfaces/group';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

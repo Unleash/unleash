@@ -1,12 +1,12 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IRole } from 'interfaces/role';
-import { IGroup } from 'interfaces/group';
-import { IUser } from 'interfaces/user';
+import type { IRole } from 'interfaces/role';
+import type { IGroup } from 'interfaces/group';
+import type { IUser } from 'interfaces/user';
 import { mapGroupUsers } from '../useGroup/useGroup';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 
 export enum ENTITY_TYPE {
     USER = 'USERS',

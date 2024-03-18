@@ -1,12 +1,12 @@
-import EventEmitter from 'events';
-import { Logger, LogProvider } from '../logger';
-import {
+import type EventEmitter from 'events';
+import type { Logger, LogProvider } from '../logger';
+import type {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
 } from '../types/stores/client-instance-store';
 import { subDays } from 'date-fns';
-import { Db } from './db';
+import type { Db } from './db';
 
 const metricsHelper = require('../util/metrics-helper');
 const { DB_TIME } = require('../metric-events');

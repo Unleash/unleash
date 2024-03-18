@@ -31,13 +31,13 @@ import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
 import { IFavoriteFeaturesStore } from './stores/favorite-features';
 import { IFavoriteProjectsStore } from './stores/favorite-projects';
 import { IAccountStore } from './stores/account-store';
-import { IProjectStatsStore } from './stores/project-stats-store-type';
+import type { IProjectStatsStore } from './stores/project-stats-store-type';
 import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
 import { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType';
 import { IDependentFeaturesStore } from '../features/dependent-features/dependent-features-store-type';
 import { ILastSeenStore } from '../features/metrics/last-seen/types/last-seen-store-type';
 import { IFeatureSearchStore } from '../features/feature-search/feature-search-store-type';
-import { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type';
+import type { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type';
 import { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type';
 import { ISegmentReadModel } from '../features/segment/segment-read-model-type';
 

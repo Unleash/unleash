@@ -1,5 +1,9 @@
-import { IGroupStore, IStoreGroup } from '../../lib/types/stores/group-store';
-import Group, {
+import type {
+    IGroupStore,
+    IStoreGroup,
+} from '../../lib/types/stores/group-store';
+import type Group from '../../lib/types/group';
+import type {
     ICreateGroupUserModel,
     IGroup,
     IGroupModel,
@@ -7,7 +11,7 @@ import Group, {
     IGroupRole,
     IGroupUser,
 } from '../../lib/types/group';
-import { IGroupWithProjectRoles } from '../../lib/types/stores/access-store';
+import type { IGroupWithProjectRoles } from '../../lib/types/stores/access-store';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
     count(): Promise<number> {

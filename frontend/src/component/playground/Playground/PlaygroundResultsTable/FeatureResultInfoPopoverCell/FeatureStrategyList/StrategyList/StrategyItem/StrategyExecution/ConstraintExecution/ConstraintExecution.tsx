@@ -1,5 +1,8 @@
-import { Fragment, VFC } from 'react';
-import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
+import { Fragment, type VFC } from 'react';
+import type {
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+} from 'openapi';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';

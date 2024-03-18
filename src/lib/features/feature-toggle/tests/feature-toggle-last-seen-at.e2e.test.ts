@@ -1,6 +1,8 @@
-import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../../test/e2e/helpers/database-init';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     insertLastSeenAt,
     setupAppWithCustomConfig,
 } from '../../../../test/e2e/helpers/test-helper';

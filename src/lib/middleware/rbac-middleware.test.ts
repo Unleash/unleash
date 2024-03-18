@@ -1,13 +1,13 @@
 import rbacMiddleware from './rbac-middleware';
 import User from '../types/user';
 import * as perms from '../types/permissions';
-import { IUnleashConfig } from '../types/option';
+import type { IUnleashConfig } from '../types/option';
 import { createTestConfig } from '../../test/config/test-config';
 import ApiUser from '../types/api-user';
-import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store';
 import { ApiTokenType } from '../types/models/api-token';
-import { ISegmentStore, SYSTEM_USER_ID } from '../types';
+import { type ISegmentStore, SYSTEM_USER_ID } from '../types';
 import FakeSegmentStore from '../../test/fixtures/fake-segment-store';
 
 let config: IUnleashConfig;

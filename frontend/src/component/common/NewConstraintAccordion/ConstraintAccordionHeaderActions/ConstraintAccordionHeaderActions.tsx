@@ -1,10 +1,10 @@
-import React from 'react';
+import type React from 'react';
 import { IconButton, styled, Tooltip } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import Undo from '@mui/icons-material/Undo';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 interface ConstraintAccordionHeaderActionsProps {
     onDelete?: () => void;

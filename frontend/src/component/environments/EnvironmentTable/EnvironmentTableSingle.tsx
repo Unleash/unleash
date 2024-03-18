@@ -1,5 +1,5 @@
 import { styled, TableBody, TableRow } from '@mui/material';
-import { IEnvironment } from 'interfaces/environments';
+import type { IEnvironment } from 'interfaces/environments';
 import { useTable } from 'react-table';
 import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';

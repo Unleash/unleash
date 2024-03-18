@@ -1,11 +1,11 @@
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import User from '../../../../lib/types/user';
+import type User from '../../../../lib/types/user';
 import { SYSTEM_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;

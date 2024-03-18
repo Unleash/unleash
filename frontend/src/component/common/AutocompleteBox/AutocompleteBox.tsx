@@ -7,7 +7,7 @@ import {
     TextField,
     useTheme,
 } from '@mui/material';
-import { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
+import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
 import { useState } from 'react';
 
 interface IAutocompleteBoxProps {

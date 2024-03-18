@@ -1,4 +1,4 @@
-import supertest, { Test } from 'supertest';
+import supertest, { type Test } from 'supertest';
 import { createTestConfig } from '../../../test/config/test-config';
 
 import createStores from '../../../test/fixtures/store';
@@ -8,8 +8,8 @@ import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from '../../util/segments';
-import TestAgent from 'supertest/lib/agent';
-import { IUnleashStores } from '../../types';
+import type TestAgent from 'supertest/lib/agent';
+import type { IUnleashStores } from '../../types';
 
 const uiConfig = {
     headerBackground: 'red',

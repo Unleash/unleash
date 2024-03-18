@@ -1,6 +1,6 @@
-import { Logger, LogProvider } from '../logger';
-import { ISettingStore } from '../types/stores/settings-store';
-import { Db } from './db';
+import type { Logger, LogProvider } from '../logger';
+import type { ISettingStore } from '../types/stores/settings-store';
+import type { Db } from './db';
 
 const TABLE = 'settings';
 

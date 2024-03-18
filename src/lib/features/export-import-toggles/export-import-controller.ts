@@ -1,12 +1,12 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../../routes/controller';
-import { Logger } from '../../logger';
-import { IExportService, IImportService } from './export-import-service';
-import { OpenApiService } from '../../services';
-import { WithTransactional } from '../../db/transaction';
+import type { Logger } from '../../logger';
+import type { IExportService, IImportService } from './export-import-service';
+import type { OpenApiService } from '../../services';
+import type { WithTransactional } from '../../db/transaction';
 import {
-    IUnleashConfig,
-    IUnleashServices,
+    type IUnleashConfig,
+    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types';
@@ -14,13 +14,13 @@ import {
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
-    ExportQuerySchema,
+    type ExportQuerySchema,
     exportResultSchema,
     getStandardResponses,
-    ImportTogglesSchema,
+    type ImportTogglesSchema,
     importTogglesValidateSchema,
 } from '../../openapi';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import { extractUsername } from '../../util';
 import { BadDataError, InvalidOperationError } from '../../error';
 import ApiUser from '../../types/api-user';

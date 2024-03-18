@@ -1,12 +1,12 @@
-import React from 'react';
+import type React from 'react';
 import { Link } from 'react-router-dom';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import Clear from '@mui/icons-material/Clear';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { constraintAccordionListId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { styled, Theme, Tooltip } from '@mui/material';
+import { styled, type Theme, Tooltip } from '@mui/material';
 
 interface IFeatureStrategySegmentListProps {
     segment: ISegment;

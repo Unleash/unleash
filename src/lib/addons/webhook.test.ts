@@ -1,6 +1,6 @@
-import { Logger } from '../logger';
+import type { Logger } from '../logger';
 
-import { FEATURE_CREATED, IEvent } from '../types/events';
+import { FEATURE_CREATED, type IEvent } from '../types/events';
 
 import WebhookAddon from './webhook';
 

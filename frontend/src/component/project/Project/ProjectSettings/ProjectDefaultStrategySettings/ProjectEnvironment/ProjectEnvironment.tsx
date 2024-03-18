@@ -8,7 +8,7 @@ import {
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { PROJECT_ENVIRONMENT_ACCORDION } from 'utils/testIds';
-import { ProjectEnvironmentType } from '../../../../../../interfaces/environments';
+import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments';
 import ProjectEnvironmentDefaultStrategy from './ProjectEnvironmentDefaultStrategy/ProjectEnvironmentDefaultStrategy';
 
 interface IProjectEnvironmentProps {

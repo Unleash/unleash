@@ -1,16 +1,16 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../controller';
-import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import UserSplashService from '../../services/user-splash-service';
-import { IAuthRequest } from '../unleash-types';
+import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type UserSplashService from '../../services/user-splash-service';
+import type { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { splashRequestSchema } from '../../openapi/spec/splash-request-schema';
 import { getStandardResponses } from '../../openapi';
-import { SplashResponseSchema } from '../../openapi/spec/splash-response-schema';
+import type { SplashResponseSchema } from '../../openapi/spec/splash-response-schema';
 
 class UserSplashController extends Controller {
     private logger: Logger;

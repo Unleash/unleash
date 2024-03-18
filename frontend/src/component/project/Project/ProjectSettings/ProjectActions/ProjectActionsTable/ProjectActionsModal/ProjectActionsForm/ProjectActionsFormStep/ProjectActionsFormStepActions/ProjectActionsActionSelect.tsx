@@ -1,5 +1,5 @@
 import { Autocomplete, TextField, styled } from '@mui/material';
-import { ActionConfigurations } from 'interfaces/action';
+import type { ActionConfigurations } from 'interfaces/action';
 
 const StyledActionOption = styled('div')(({ theme }) => ({
     display: 'flex',

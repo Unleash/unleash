@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { getTogglePath } from 'utils/routePathHelpers';
-import { FeatureSchema } from 'openapi';
+import type { FeatureSchema } from 'openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const RedirectFeatureView = () => {

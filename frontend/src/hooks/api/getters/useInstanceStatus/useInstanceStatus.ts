@@ -1,4 +1,4 @@
-import { IInstanceStatus, InstancePlan } from 'interfaces/instance';
+import { type IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { useApiGetter } from 'hooks/api/getters/useApiGetter/useApiGetter';
 import { formatApiPath } from 'utils/formatPath';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../../../routes/controller';
 import { extractUsername } from '../../../util/extract-user';
 import { NONE, UPDATE_FEATURE } from '../../../types/permissions';
-import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types';
-import FeatureToggleService from '../feature-toggle-service';
+import type { IUnleashConfig } from '../../../types/option';
+import type { IUnleashServices } from '../../../types';
+import type FeatureToggleService from '../feature-toggle-service';
 import { featureSchema, querySchema } from '../../../schema/feature-schema';
-import { IFeatureToggleQuery } from '../../../types/model';
-import FeatureTagService from '../../../services/feature-tag-service';
-import { IAuthRequest } from '../../../routes/unleash-types';
+import type { IFeatureToggleQuery } from '../../../types/model';
+import type FeatureTagService from '../../../services/feature-tag-service';
+import type { IAuthRequest } from '../../../routes/unleash-types';
 import { DEFAULT_ENV } from '../../../util/constants';
 import {
     featuresSchema,
-    FeaturesSchema,
+    type FeaturesSchema,
 } from '../../../openapi/spec/features-schema';
-import { TagSchema } from '../../../openapi/spec/tag-schema';
-import { TagsSchema } from '../../../openapi/spec/tags-schema';
+import type { TagSchema } from '../../../openapi/spec/tag-schema';
+import type { TagsSchema } from '../../../openapi/spec/tags-schema';
 import { serializeDates } from '../../../types/serialize-dates';
-import { OpenApiService } from '../../../services/openapi-service';
+import type { OpenApiService } from '../../../services/openapi-service';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -28,8 +28,8 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../../openapi/util/standard-responses';
-import { UpdateTagsSchema } from '../../../openapi/spec/update-tags-schema';
-import { ValidateFeatureSchema } from '../../../openapi/spec/validate-feature-schema';
+import type { UpdateTagsSchema } from '../../../openapi/spec/update-tags-schema';
+import type { ValidateFeatureSchema } from '../../../openapi/spec/validate-feature-schema';
 
 const version = 1;
 

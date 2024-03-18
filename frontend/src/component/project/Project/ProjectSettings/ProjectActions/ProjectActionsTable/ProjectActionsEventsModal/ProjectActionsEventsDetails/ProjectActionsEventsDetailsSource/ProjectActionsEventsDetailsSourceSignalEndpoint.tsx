@@ -7,7 +7,7 @@ import {
     styled,
 } from '@mui/material';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
-import { ISignal } from 'interfaces/signal';
+import type { ISignal } from 'interfaces/signal';
 import { Suspense, lazy, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 

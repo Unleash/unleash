@@ -1,5 +1,5 @@
-import { ISegmentStore } from '../../lib/features/segment/segment-store-type';
-import { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
+import type { ISegmentStore } from '../../lib/features/segment/segment-store-type';
+import type { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
 
 export default class FakeSegmentStore implements ISegmentStore {
     count(): Promise<number> {

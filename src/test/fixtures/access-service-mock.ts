@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     AccessService,
-    AccessWithRoles,
+    type AccessWithRoles,
 } from '../../lib/services/access-service';
-import User from '../../lib/types/user';
+import type User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
-import { IRole } from '../../lib/types/stores/access-store';
-import { IAvailablePermissions, RoleName } from '../../lib/types/model';
+import type { IRole } from '../../lib/types/stores/access-store';
+import { type IAvailablePermissions, RoleName } from '../../lib/types/model';
 
 class AccessServiceMock extends AccessService {
     constructor() {

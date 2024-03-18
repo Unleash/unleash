@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Box, styled } from '@mui/material';
 
 type DistributionLineTypes = 'default' | 'success' | 'warning' | 'error';

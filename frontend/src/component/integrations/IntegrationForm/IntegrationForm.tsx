@@ -1,10 +1,10 @@
 import {
-    ChangeEventHandler,
-    FormEventHandler,
-    MouseEventHandler,
+    type ChangeEventHandler,
+    type FormEventHandler,
+    type MouseEventHandler,
     useEffect,
     useState,
-    VFC,
+    type VFC,
 } from 'react';
 import { Alert, Button, Divider, Typography } from '@mui/material';
 import produce from 'immer';

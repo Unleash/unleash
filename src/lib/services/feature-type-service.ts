@@ -1,13 +1,13 @@
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import { Logger } from '../logger';
-import {
+import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { Logger } from '../logger';
+import type {
     IFeatureType,
     IFeatureTypeStore,
 } from '../types/stores/feature-type-store';
 import NotFoundError from '../error/notfound-error';
-import EventService from '../features/events/event-service';
-import { FEATURE_TYPE_UPDATED, IUser } from '../types';
+import type EventService from '../features/events/event-service';
+import { FEATURE_TYPE_UPDATED, type IUser } from '../types';
 import { extractUsernameFromUser } from '../util';
 
 export default class FeatureTypeService {

@@ -1,6 +1,6 @@
 import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
-import { Db } from '../../db/db';
-import { IUnleashConfig } from '../../types';
+import type { Db } from '../../db/db';
+import type { IUnleashConfig } from '../../types';
 import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-store';
 import { ClientFeatureToggleService } from './client-feature-toggle-service';
 import { SegmentReadModel } from '../segment/segment-read-model';

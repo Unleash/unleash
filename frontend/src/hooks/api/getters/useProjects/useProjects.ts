@@ -1,8 +1,8 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
-import { IProjectCard } from 'interfaces/project';
+import type { IProjectCard } from 'interfaces/project';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useProjects = (options: SWRConfiguration = {}) => {

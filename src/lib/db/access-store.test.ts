@@ -1,7 +1,7 @@
-import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
-import { PermissionRef } from '../services/access-service';
-import { AccessStore } from './access-store';
+import type { PermissionRef } from '../services/access-service';
+import type { AccessStore } from './access-store';
 import { BadDataError } from '../error';
 
 let db: ITestDb;

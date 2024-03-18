@@ -7,10 +7,10 @@ import { RoleForm } from '../RoleForm/RoleForm';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { FormEvent, useEffect } from 'react';
+import { type FormEvent, useEffect } from 'react';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
-import { PredefinedRoleType } from 'interfaces/role';
+import type { PredefinedRoleType } from 'interfaces/role';
 import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
 const StyledForm = styled('form')(() => ({

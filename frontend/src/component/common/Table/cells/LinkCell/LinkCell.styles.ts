@@ -1,5 +1,5 @@
-import { Link, styled, Theme } from '@mui/material';
-import { ComponentType } from 'react';
+import { Link, styled, type Theme } from '@mui/material';
+import type { ComponentType } from 'react';
 
 export const wrapperStyles = (theme: Theme) => ({
     paddingTop: theme.spacing(1.5),

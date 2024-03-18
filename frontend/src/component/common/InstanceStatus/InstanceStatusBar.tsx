@@ -1,5 +1,5 @@
 import { styled, Button, Typography } from '@mui/material';
-import { IInstanceStatus, InstancePlan } from 'interfaces/instance';
+import { type IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import WarningAmber from '@mui/icons-material/WarningAmber';

@@ -15,7 +15,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
-import { ReactElement, useEffect } from 'react';
+import { type ReactElement, useEffect } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { setSessionStorageItem } from 'utils/storage';
 

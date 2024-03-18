@@ -1,15 +1,15 @@
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import assert from 'assert';
-import User from '../../../lib/types/user';
+import type User from '../../../lib/types/user';
 import { randomId } from '../../../lib/util/random-id';
-import {
+import type {
     IConstraint,
     IFeatureToggleClient,
     ISegment,
 } from '../../../lib/types/model';
-import { IUnleashTest, setupApp } from '../helpers/test-helper';
-import { UpsertSegmentSchema } from '../../../lib/openapi';
+import { type IUnleashTest, setupApp } from '../helpers/test-helper';
+import type { UpsertSegmentSchema } from '../../../lib/openapi';
 
 interface ISeedSegmentSpec {
     featuresCount: number;

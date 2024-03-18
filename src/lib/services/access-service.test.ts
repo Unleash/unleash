@@ -3,8 +3,8 @@ import getLogger from '../../test/fixtures/no-logger';
 import { createFakeAccessService } from '../features/access/createAccessService';
 import {
     AccessService,
-    IRoleCreation,
-    IRoleValidation,
+    type IRoleCreation,
+    type IRoleValidation,
 } from './access-service';
 import { createTestConfig } from '../../test/config/test-config';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util/constants';
@@ -14,8 +14,8 @@ import FakeRoleStore from '../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
 import AccessStoreMock from '../../test/fixtures/fake-access-store';
 import { GroupService } from '../services/group-service';
-import { IRole } from '../../lib/types/stores/access-store';
-import { IGroup, ROLE_CREATED, SYSTEM_USER } from '../../lib/types';
+import type { IRole } from '../../lib/types/stores/access-store';
+import { type IGroup, ROLE_CREATED, SYSTEM_USER } from '../../lib/types';
 import BadDataError from '../../lib/error/bad-data-error';
 import { createFakeEventsService } from '../../lib/features/events/createEventsService';
 

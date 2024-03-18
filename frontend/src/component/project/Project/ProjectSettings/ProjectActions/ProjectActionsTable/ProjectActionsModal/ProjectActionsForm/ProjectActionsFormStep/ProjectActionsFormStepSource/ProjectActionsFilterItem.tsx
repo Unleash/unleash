@@ -5,13 +5,13 @@ import {
     Tooltip,
     styled,
 } from '@mui/material';
-import { ActionsFilterState } from '../../useProjectActionsForm';
+import type { ActionsFilterState } from '../../useProjectActionsForm';
 import Delete from '@mui/icons-material/Delete';
 import Input from 'component/common/Input/Input';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
 import {
-    Operator,
+    type Operator,
     allOperators,
     dateOperators,
     inOperators,

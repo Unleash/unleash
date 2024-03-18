@@ -1,29 +1,29 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../controller';
-import { IUnleashServices } from '../../types/services';
-import { IUnleashConfig } from '../../types/option';
-import EnvironmentService from '../../features/project-environments/environment-service';
-import { Logger } from '../../logger';
+import type { IUnleashServices } from '../../types/services';
+import type { IUnleashConfig } from '../../types/option';
+import type EnvironmentService from '../../features/project-environments/environment-service';
+import type { Logger } from '../../logger';
 import { ADMIN, NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     environmentsSchema,
-    EnvironmentsSchema,
+    type EnvironmentsSchema,
 } from '../../openapi/spec/environments-schema';
 import {
     environmentSchema,
-    EnvironmentSchema,
+    type EnvironmentSchema,
 } from '../../openapi/spec/environment-schema';
-import { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
+import type { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import {
     environmentsProjectSchema,
-    EnvironmentsProjectSchema,
+    type EnvironmentsProjectSchema,
 } from '../../openapi/spec/environments-project-schema';
 
 interface EnvironmentParam {

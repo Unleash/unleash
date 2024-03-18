@@ -1,10 +1,14 @@
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
-import { IConstraint, IFeatureToggleClient, ISegment } from '../../types/model';
+import type {
+    IConstraint,
+    IFeatureToggleClient,
+    ISegment,
+} from '../../types/model';
 import { randomId } from '../../util/random-id';
 import User from '../../types/user';
 import {
@@ -13,7 +17,7 @@ import {
 } from '../../util/segments';
 import { collectIds } from '../../util/collect-ids';
 import { arraysHaveSameItems } from '../../util/arraysHaveSameItems';
-import {
+import type {
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     FeatureStrategySchema,

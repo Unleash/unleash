@@ -1,4 +1,4 @@
-import {
+import type {
     IFeatureEnvironment,
     IFeatureMetrics,
 } from '../interfaces/featureToggle';

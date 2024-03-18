@@ -2,7 +2,7 @@ import {
     setupAppWithAuth,
     setupAppWithCustomAuth,
 } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { RoleName } from '../../../../lib/types/model';
@@ -11,14 +11,14 @@ import {
     CREATE_CLIENT_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
-    IUnleashStores,
+    type IUnleashStores,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
     SYSTEM_USER_ID,
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types';
 import { addDays } from 'date-fns';
-import { AccessService, UserService } from '../../../../lib/services';
+import type { AccessService, UserService } from '../../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;

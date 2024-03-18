@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { bulkRegistrationSchema } from './bulk-registration-schema';
 import { dateSchema } from './date-schema';
 import { clientMetricsEnvSchema } from './client-metrics-env-schema';

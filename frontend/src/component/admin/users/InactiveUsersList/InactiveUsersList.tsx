@@ -1,5 +1,5 @@
 import {
-    IInactiveUser,
+    type IInactiveUser,
     useInactiveUsers,
 } from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
 import { useUsers } from '../../../../hooks/api/getters/useUsers/useUsers';
@@ -7,10 +7,11 @@ import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/use
 import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
 import useToast from '../../../../hooks/useToast';
 import { formatUnknownError } from '../../../../utils/formatUnknownError';
-import { IUser } from '../../../../interfaces/user';
-import React, { useMemo, useState } from 'react';
+import type { IUser } from '../../../../interfaces/user';
+import type React from 'react';
+import { useMemo, useState } from 'react';
 import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { IRole } from '../../../../interfaces/role';
+import type { IRole } from '../../../../interfaces/role';
 import { RoleCell } from '../../../common/Table/cells/RoleCell/RoleCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
 import { PageContent } from '../../../common/PageContent/PageContent';

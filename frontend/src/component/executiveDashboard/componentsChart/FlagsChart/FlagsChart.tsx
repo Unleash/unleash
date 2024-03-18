@@ -1,7 +1,7 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { useTheme } from '@mui/material';
-import { ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
 

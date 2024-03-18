@@ -1,11 +1,11 @@
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 
-import { ApiTokenType, IApiToken } from '../../types/models/api-token';
+import { ApiTokenType, type IApiToken } from '../../types/models/api-token';
 
 let app: IUnleashTest;
 let db: ITestDb;

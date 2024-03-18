@@ -9,11 +9,6 @@ const server = testServerSetup();
 
 const setupApi = (outdatedSdks: ProjectDoraMetricsSchema) => {
     testServerRoute(server, '/api/admin/projects/default/dora', outdatedSdks);
-    // testServerRoute(server, '/api/admin/ui-config', {
-    //     flags: {
-    //         outdatedSdksBanner: true,
-    //     },
-    // });
 };
 
 test('Show outdated SDKs and apps using them', async () => {

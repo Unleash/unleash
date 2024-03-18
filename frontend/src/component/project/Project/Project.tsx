@@ -310,15 +310,9 @@ export const Project = () => {
                 />
                 <Route path='environments' element={<ProjectEnvironment />} />
                 <Route path='archive' element={<ProjectFeaturesArchive />} />
-                <ConditionallyRender
-                    condition={Boolean(projectOverviewRefactor)}
-                    show={
-                        <Route
-                            path='insights'
-                            element={<div>Hello world</div>}
-                        />
-                    }
-                />
+                {Boolean(projectOverviewRefactor) && (
+                    <Route path='insights' element={<div>Hello world</div>} />
+                )}
                 <Route path='logs' element={<ProjectLog />} />
                 <Route
                     path='change-requests'

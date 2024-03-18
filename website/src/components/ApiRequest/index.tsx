@@ -8,8 +8,10 @@
    be necessary to separate into multiple components based on request
    types, for instance.
 
-**/
-import type React from 'react';
+ **/
+
+// biome-ignore lint/style/useImportType: <explanation>
+import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';

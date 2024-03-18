@@ -1,3 +1,4 @@
+// biome-ignore lint/correctness/noUnusedImports: Needs this for React to work
 import React from 'react';
 import Link from '@docusaurus/Link';
 

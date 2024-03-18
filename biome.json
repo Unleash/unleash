@@ -6,7 +6,8 @@
       "recommended": true,
       "correctness": {
         "noUnsafeOptionalChaining": "off",
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "off",
+        "noUnusedImports": "warn"
       },
       "complexity": {
         "noBannedTypes": "off",

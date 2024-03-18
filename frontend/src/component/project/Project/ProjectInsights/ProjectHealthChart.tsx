@@ -41,7 +41,7 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
     const staleRotation =
         activeRotation + (activeLength / circumference) * 360 + gapAngle;
 
-    const innerRadius = radius / 1.2; // Radius for the inner yellow circle
+    const innerRadius = radius / 1.2;
 
     return (
         <svg width='170' height='170' viewBox='0 0 100 100'>

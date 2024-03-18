@@ -7,7 +7,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
 import { useEffect, useMemo } from 'react';
 import { ProjectActionsActionParameter } from './ProjectActionsActionParameter/ProjectActionsActionParameter';
-import { ActionConfigurations } from 'interfaces/action';
+import type { ActionConfigurations } from 'interfaces/action';
 import { ProjectActionsActionSelect } from './ProjectActionsActionSelect';
 
 const StyledItemBody = styled('div')(({ theme }) => ({

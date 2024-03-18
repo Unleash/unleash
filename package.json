@@ -218,6 +218,7 @@
   },
   "lint-staged": {
     "*.{js,ts}": ["biome check --apply"],
+    "*.{jsx,tsx}": ["biome check --apply"],
     "*.json": ["biome format --write --no-errors-on-unmatched"]
   }
 }

@@ -158,7 +158,10 @@ class EventStore implements IEventStore {
         try {
             await this.db(TABLE).insert(events.map(this.eventToDbRow));
         } catch (error: unknown) {
-            this.logger.warn(`Failed to store events: ${error}`);
+            this.logger.warn(
+                `Failed to store events: ${JSON.stringify(events)}`,
+                error,
+            );
         }
     }
 

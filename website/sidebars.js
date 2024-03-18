@@ -151,6 +151,11 @@ module.exports = {
                     label: 'Next.js',
                     id: 'feature-flag-tutorials/nextjs/implementing-feature-flags',
                 },
+                {
+                    type: 'doc',
+                    label: 'Sveltekit',
+                    id: 'feature-flag-tutorials/sveltekit/feature-flags-sveltekit',
+                },
             ],
         },
         {

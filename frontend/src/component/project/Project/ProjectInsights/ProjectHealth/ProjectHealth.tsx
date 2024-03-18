@@ -71,26 +71,20 @@ export const ProjectHealth = () => {
                     <Box>
                         <StatusWithDot>
                             <Dot color={theme.palette.warning.border} />
-                            <>
-                                <Box sx={{ fontWeight: 'bold' }}>
-                                    Potentially stale
-                                </Box>
-                                <Link to='/feature-toggle-type'>
-                                    (configure)
-                                </Link>
-                            </>
+                            <Box sx={{ fontWeight: 'bold' }}>
+                                Potentially stale
+                            </Box>
+                            <Link to='/feature-toggle-type'>(configure)</Link>
                         </StatusWithDot>
                         <FlagsCount>3 feature flags</FlagsCount>
                     </Box>
                     <Box>
                         <StatusWithDot>
                             <Dot color={theme.palette.error.border} />
-                            <>
-                                <Box sx={{ fontWeight: 'bold' }}>Stale</Box>
-                                <Link to={`/projects/${projectId}`}>
-                                    (view flags)
-                                </Link>
-                            </>
+                            <Box sx={{ fontWeight: 'bold' }}>Stale</Box>
+                            <Link to={`/projects/${projectId}`}>
+                                (view flags)
+                            </Link>
                         </StatusWithDot>
                         <FlagsCount>5 feature flags</FlagsCount>
                     </Box>

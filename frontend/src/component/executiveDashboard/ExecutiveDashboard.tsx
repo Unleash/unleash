@@ -49,16 +49,16 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
-const StickyWrapper = styled(Box)<{ scrolled?: boolean }>(
-    ({ theme, scrolled }) => ({
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
-        background: theme.palette.background.application,
-        transition: 'padding 0.3s ease',
-    }),
-);
+const StickyWrapper = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'scrolled',
+})<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
+}));
 
 export const ExecutiveDashboard: VFC = () => {
     const [scrolled, setScrolled] = useState(false);

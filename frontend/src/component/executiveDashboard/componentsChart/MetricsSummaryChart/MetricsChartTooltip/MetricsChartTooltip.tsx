@@ -36,24 +36,24 @@ const InfoLine = ({
 );
 
 const InfoSummary = ({ data }: { data: { key: string; value: number }[] }) => (
-    <Typography variant={'body1'} component={'p'}>
-        <Box display={'flex'} flexDirection={'row'}>
-            {data.map(({ key, value }) => (
-                <div style={{ flex: 1, flexDirection: 'column' }}>
-                    <div
-                        style={{
-                            flex: 1,
-                            textAlign: 'center',
-                            marginBottom: '4px',
-                        }}
-                    >
+    <Box display={'flex'} flexDirection={'row'}>
+        {data.map(({ key, value }) => (
+            <div style={{ flex: 1, flexDirection: 'column' }} key={key}>
+                <div
+                    style={{
+                        flex: 1,
+                        textAlign: 'center',
+                        marginBottom: '4px',
+                    }}
+                >
+                    <Typography variant={'body1'} component={'p'}>
                         {key}
-                    </div>
-                    <div style={{ flex: 1, textAlign: 'center' }}>{value}</div>
+                    </Typography>
                 </div>
-            ))}
-        </Box>
-    </Typography>
+                <div style={{ flex: 1, textAlign: 'center' }}>{value}</div>
+            </div>
+        ))}
+    </Box>
 );
 
 export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({

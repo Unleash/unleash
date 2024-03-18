@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useTheme } from '@mui/material';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ProgressComponentProps {
     active: number;

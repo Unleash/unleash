@@ -1,5 +1,5 @@
 import { Button, styled } from '@mui/material';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
 const PORTAL_URL = formatApiPath('api/admin/invoices');

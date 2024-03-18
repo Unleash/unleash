@@ -1,19 +1,19 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import ResetTokenService from '../../../lib/services/reset-token-service';
 import UserService from '../../../lib/services/user-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { EmailService } from '../../../lib/services/email-service';
-import { IUnleashConfig } from '../../../lib/types/option';
+import type { IUnleashConfig } from '../../../lib/types/option';
 import { createTestConfig } from '../../config/test-config';
 import SessionService from '../../../lib/services/session-service';
 import InvalidTokenError from '../../../lib/error/invalid-token-error';
-import { IUser, IUserWithRootRole } from '../../../lib/types/user';
+import type { IUser, IUserWithRootRole } from '../../../lib/types/user';
 import SettingService from '../../../lib/services/setting-service';
 import FakeSettingStore from '../../fixtures/fake-setting-store';
 import { GroupService } from '../../../lib/services/group-service';
 import { EventService } from '../../../lib/services';
-import { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types';
 
 const config: IUnleashConfig = createTestConfig();
 

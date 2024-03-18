@@ -9,7 +9,7 @@ import {
     FrontendApiService,
     SettingService,
 } from '../../lib/services';
-import { ISettingStore } from '../../lib/types';
+import type { ISettingStore } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 

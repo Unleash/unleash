@@ -1,8 +1,8 @@
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { IProjectCard } from 'interfaces/project';
+import type { IProjectCard } from 'interfaces/project';
 import GeneralSelect, {
-    ISelectOption,
-    IGeneralSelectProps,
+    type ISelectOption,
+    type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 
 interface IFeatureProjectSelectProps

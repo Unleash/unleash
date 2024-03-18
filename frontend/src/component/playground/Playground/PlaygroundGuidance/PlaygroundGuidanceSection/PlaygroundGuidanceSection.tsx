@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 
 interface IPlaygroundGuidanceSectionProps {
     headerText: string;

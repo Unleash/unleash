@@ -5,7 +5,7 @@ import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetche
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
-import { IProjectCard } from 'interfaces/project';
+import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
@@ -20,7 +20,7 @@ import { useMediaQuery, styled } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
+import type { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { safeRegExp } from '@server/util/escape-regex';

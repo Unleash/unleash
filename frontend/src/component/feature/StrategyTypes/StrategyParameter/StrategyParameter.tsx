@@ -1,8 +1,8 @@
-import React from 'react';
+import type React from 'react';
 import { FormControlLabel, Switch, TextField } from '@mui/material';
 import StrategyInputList from '../StrategyInputList/StrategyInputList';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
-import {
+import type {
     IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
@@ -12,7 +12,7 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { InputCaption } from 'component/common/InputCaption/InputCaption';
-import { IFormErrors } from 'hooks/useFormErrors';
+import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IStrategyParameterProps {
     definition: IStrategyParameter;

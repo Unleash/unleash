@@ -1,38 +1,38 @@
 import memoizee from 'memoizee';
-import { Response } from 'express';
+import type { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
 import Controller from '../../routes/controller';
-import {
+import type {
     IClientSegment,
     IFlagResolver,
     IUnleashConfig,
     IUnleashServices,
 } from '../../types';
-import FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import { Logger } from '../../logger';
+import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
+import type { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
-import { IFeatureToggleQuery } from '../../types/model';
+import type { IFeatureToggleQuery } from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
-import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { ClientSpecService } from '../../services/client-spec-service';
-import { OpenApiService } from '../../services/openapi-service';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { ClientSpecService } from '../../services/client-spec-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
+import type { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
 import {
     clientFeatureSchema,
-    ClientFeatureSchema,
+    type ClientFeatureSchema,
 } from '../../openapi/spec/client-feature-schema';
 import {
     clientFeaturesSchema,
-    ClientFeaturesSchema,
+    type ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
-import ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
-import { ClientFeatureToggleService } from './client-feature-toggle-service';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
+import type { ClientFeatureToggleService } from './client-feature-toggle-service';
 
 const version = 2;
 

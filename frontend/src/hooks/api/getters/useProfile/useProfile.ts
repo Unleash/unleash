@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IProfile } from 'interfaces/profile';
+import type { IProfile } from 'interfaces/profile';
 
 export interface IUseProfileOutput {
     profile?: IProfile;

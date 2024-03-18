@@ -1,4 +1,4 @@
-import { ADMIN_TOKEN_USER, IApiUser } from '../../types';
+import { ADMIN_TOKEN_USER, type IApiUser } from '../../types';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createFakeEventsService } from '..';
 import { ApiTokenType } from '../../types/models/api-token';

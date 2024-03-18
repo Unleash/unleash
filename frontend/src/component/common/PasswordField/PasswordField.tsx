@@ -2,11 +2,12 @@ import {
     IconButton,
     InputAdornment,
     TextField,
-    TextFieldProps,
+    type TextFieldProps,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import React, { useState, VFC } from 'react';
+import type React from 'react';
+import { useState, type VFC } from 'react';
 
 const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
     const [showPassword, setShowPassword] = useState(false);

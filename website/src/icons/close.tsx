@@ -1,4 +1,3 @@
-// biome-ignore lint: Docusaurus doesn't work without the React import
 import React from 'react';
 import styles from './styles.module.css';
 

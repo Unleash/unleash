@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { requestsPerSecondSchema } from './requests-per-second-schema';
 export const requestsPerSecondSegmentedSchema = {
     $id: '#/components/schemas/requestsPerSecondSegmentedSchema',

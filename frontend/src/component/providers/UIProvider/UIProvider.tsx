@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import UIContext, { createEmptyToast, themeMode } from 'contexts/UIContext';
-import { IToast } from 'interfaces/toast';
+import UIContext, {
+    createEmptyToast,
+    type themeMode,
+} from 'contexts/UIContext';
+import type { IToast } from 'interfaces/toast';
 import { getLocalStorageItem } from 'utils/storage';
 
 const resolveMode = (): themeMode => {

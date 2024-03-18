@@ -1,12 +1,12 @@
 import { tagSchema } from './tag-schema';
 import NameExistsError from '../error/name-exists-error';
 import { TAG_CREATED, TAG_DELETED } from '../types/events';
-import { Logger } from '../logger';
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import { ITagStore } from '../types/stores/tag-store';
-import { ITag } from '../types/model';
-import EventService from '../features/events/event-service';
+import type { Logger } from '../logger';
+import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { ITagStore } from '../types/stores/tag-store';
+import type { ITag } from '../types/model';
+import type EventService from '../features/events/event-service';
 
 export default class TagService {
     private tagStore: ITagStore;

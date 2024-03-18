@@ -1,29 +1,29 @@
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
-import { IApplication, IApplicationOverview } from './models';
-import { IUnleashStores } from '../../../types/stores';
-import { IUnleashConfig } from '../../../types/option';
-import { IEventStore } from '../../../types/stores/event-store';
-import {
+import type { IApplication, IApplicationOverview } from './models';
+import type { IUnleashStores } from '../../../types/stores';
+import type { IUnleashConfig } from '../../../types/option';
+import type { IEventStore } from '../../../types/stores/event-store';
+import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
 } from '../../../types/stores/client-applications-store';
-import { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
-import { IStrategyStore } from '../../../types/stores/strategy-store';
-import { IClientInstanceStore } from '../../../types/stores/client-instance-store';
-import { IClientApp } from '../../../types/model';
+import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
+import type { IStrategyStore } from '../../../types/stores/strategy-store';
+import type { IClientInstanceStore } from '../../../types/stores/client-instance-store';
+import type { IClientApp } from '../../../types/model';
 import { clientRegisterSchema } from '../shared/schema';
 
-import { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
+import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
 import { clientMetricsSchema } from '../shared/schema';
-import { PartialSome } from '../../../types/partial';
-import { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
-import { IFlagResolver, SYSTEM_USER } from '../../../types';
+import type { PartialSome } from '../../../types/partial';
+import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
+import { type IFlagResolver, SYSTEM_USER } from '../../../types';
 import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
-import { Logger } from '../../../logger';
+import type { Logger } from '../../../logger';
 import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks';
-import { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema';
+import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema';
 
 export default class ClientInstanceService {
     apps = {};

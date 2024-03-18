@@ -1,13 +1,13 @@
-import { EventEmitter } from 'events';
+import type { EventEmitter } from 'events';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
-import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
-import { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
-import { UserSchema } from '../openapi/spec/user-schema';
-import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
-import { Db } from './db';
+import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
+import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
+import type { UserSchema } from '../openapi/spec/user-schema';
+import type { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
+import type { Db } from './db';
 
 const TABLE = 'public_signup_tokens';
 const TOKEN_USERS_TABLE = 'public_signup_tokens_user';

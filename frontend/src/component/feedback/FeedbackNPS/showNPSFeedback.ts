@@ -1,5 +1,5 @@
 import differenceInDays from 'date-fns/differenceInDays';
-import { IAuthFeedback } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import type { IAuthFeedback } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 
 export const PNPS_FEEDBACK_ID = 'pnps';
 

@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { ALL } from '../../types/models/api-token';
 import { sdkContextSchema } from './sdk-context-schema';
 

@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import { is } from 'type-is';
 import ContentTypeError from '../error/content-type-error';
 

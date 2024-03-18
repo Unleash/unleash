@@ -1,32 +1,32 @@
 import { sha256 } from 'js-sha256';
-import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../types/option';
-import {
+import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option';
+import type {
     IClientInstanceStore,
     IClientMetricsStoreV2,
     IEventStore,
     IUnleashStores,
 } from '../../types/stores';
-import { IContextFieldStore } from '../../types/stores/context-field-store';
-import { IEnvironmentStore } from '../project-environments/environment-store-type';
-import { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
-import { IGroupStore } from '../../types/stores/group-store';
-import { IProjectStore } from '../../features/project/project-store-type';
-import { IStrategyStore } from '../../types/stores/strategy-store';
-import { IUserStore } from '../../types/stores/user-store';
-import { ISegmentStore } from '../segment/segment-store-type';
-import { IRoleStore } from '../../types/stores/role-store';
-import VersionService from '../../services/version-service';
-import { ISettingStore } from '../../types/stores/settings-store';
+import type { IContextFieldStore } from '../../types/stores/context-field-store';
+import type { IEnvironmentStore } from '../project-environments/environment-store-type';
+import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
+import type { IGroupStore } from '../../types/stores/group-store';
+import type { IProjectStore } from '../../features/project/project-store-type';
+import type { IStrategyStore } from '../../types/stores/strategy-store';
+import type { IUserStore } from '../../types/stores/user-store';
+import type { ISegmentStore } from '../segment/segment-store-type';
+import type { IRoleStore } from '../../types/stores/role-store';
+import type VersionService from '../../services/version-service';
+import type { ISettingStore } from '../../types/stores/settings-store';
 import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
-    IApiTokenStore,
+    type IApiTokenStore,
 } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
-import { type GetActiveUsers } from './getActiveUsers';
-import { ProjectModeCount } from '../project/project-store';
-import { GetProductionChanges } from './getProductionChanges';
+import type { GetActiveUsers } from './getActiveUsers';
+import type { ProjectModeCount } from '../project/project-store';
+import type { GetProductionChanges } from './getProductionChanges';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 

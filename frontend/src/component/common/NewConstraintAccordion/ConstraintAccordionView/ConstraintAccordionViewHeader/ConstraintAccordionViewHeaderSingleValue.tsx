@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Chip, styled } from '@mui/material';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledSingleValueChip = styled(Chip)(({ theme }) => ({

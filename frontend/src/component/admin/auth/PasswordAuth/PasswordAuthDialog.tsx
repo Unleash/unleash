@@ -1,7 +1,7 @@
 import { Alert, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IAdminCount } from 'hooks/api/getters/useAdminCount/useAdminCount';
-import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import type { IAdminCount } from 'hooks/api/getters/useAdminCount/useAdminCount';
+import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 
 interface IPasswordAuthDialogProps {
     open: boolean;

@@ -5,7 +5,7 @@ import {
     Switch,
     Typography,
 } from '@mui/material';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 
 interface IFeatureStrategyEnabledDisabledProps {
     enabled: boolean;

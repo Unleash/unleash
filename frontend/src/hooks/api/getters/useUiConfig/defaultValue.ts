@@ -1,5 +1,5 @@
 import LibraryBooks from '@mui/icons-material/LibraryBooks';
-import { IUiConfig } from 'interfaces/uiConfig';
+import type { IUiConfig } from 'interfaces/uiConfig';
 
 export const defaultValue: IUiConfig = {
     name: 'Unleash',

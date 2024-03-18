@@ -1,6 +1,6 @@
-import { VFC } from 'react';
-import { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox';
-import {
+import type { VFC } from 'react';
+import type { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox';
+import type {
     AutocompleteRenderInputParams,
     AutocompleteRenderOptionState,
 } from '@mui/material/Autocomplete';

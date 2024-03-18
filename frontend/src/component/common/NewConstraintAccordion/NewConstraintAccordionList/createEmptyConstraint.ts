@@ -1,5 +1,5 @@
 import { dateOperators } from 'constants/operators';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { oneOf } from 'utils/oneOf';
 import { operatorsForContext } from 'utils/operatorsForContext';
 

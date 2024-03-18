@@ -10,7 +10,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ProjectEnterpriseSettingsForm from 'component/project/Project/ProjectEnterpriseSettingsForm/ProjectEnterpriseSettingsForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import { IProject } from 'component/../interfaces/project';
+import type { IProject } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

@@ -1,6 +1,12 @@
-import { Avatar, AvatarProps, styled, SxProps, Theme } from '@mui/material';
-import { IUser } from 'interfaces/user';
-import { FC } from 'react';
+import {
+    Avatar,
+    type AvatarProps,
+    styled,
+    type SxProps,
+    type Theme,
+} from '@mui/material';
+import type { IUser } from 'interfaces/user';
+import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({

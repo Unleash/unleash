@@ -1,4 +1,4 @@
-import { Db, IUnleashConfig } from '../../server-impl';
+import type { Db, IUnleashConfig } from '../../server-impl';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import RoleStore from '../../db/role-store';
@@ -12,7 +12,7 @@ import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import { IEventStore } from '../../types';
+import type { IEventStore } from '../../types';
 import { createEventsService } from '../events/createEventsService';
 
 export const createAccessService = (

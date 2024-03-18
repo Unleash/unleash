@@ -1,6 +1,6 @@
-import { Db } from '../../db/db';
-import { Logger, LogProvider } from '../../logger';
-import { IPrivateProjectStore } from './privateProjectStoreType';
+import type { Db } from '../../db/db';
+import type { Logger, LogProvider } from '../../logger';
+import type { IPrivateProjectStore } from './privateProjectStoreType';
 import { ADMIN_TOKEN_USER } from '../../types';
 
 export type ProjectAccess =

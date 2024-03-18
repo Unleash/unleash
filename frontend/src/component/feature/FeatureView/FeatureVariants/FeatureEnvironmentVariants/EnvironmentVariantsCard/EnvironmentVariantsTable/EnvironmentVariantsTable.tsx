@@ -12,7 +12,11 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { calculateVariantWeight } from 'component/common/util';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearch } from 'hooks/useSearch';
-import { IFeatureVariant, IOverride, IPayload } from 'interfaces/featureToggle';
+import type {
+    IFeatureVariant,
+    IOverride,
+    IPayload,
+} from 'interfaces/featureToggle';
 import { useMemo } from 'react';
 import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';

@@ -1,5 +1,5 @@
-import { IFeatureStrategy } from './strategy';
-import { ITag } from './tags';
+import type { IFeatureStrategy } from './strategy';
+import type { ITag } from './tags';
 
 /**
  * @deprecated use FeatureSchema from openapi

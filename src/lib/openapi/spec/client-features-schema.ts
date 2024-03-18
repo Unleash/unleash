@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { clientFeaturesQuerySchema } from './client-features-query-schema';
 import { clientSegmentSchema } from './client-segment-schema';
 import { constraintSchema } from './constraint-schema';

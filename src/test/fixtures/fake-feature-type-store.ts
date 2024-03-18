@@ -1,4 +1,4 @@
-import {
+import type {
     IFeatureType,
     IFeatureTypeStore,
 } from '../../lib/types/stores/feature-type-store';

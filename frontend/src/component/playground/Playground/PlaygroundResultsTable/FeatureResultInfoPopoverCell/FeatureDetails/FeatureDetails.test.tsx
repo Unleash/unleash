@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FeatureDetails } from './FeatureDetails';
-import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
+import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 
 const testCases = [
     {

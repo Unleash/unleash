@@ -13,42 +13,42 @@ import {
     FeatureStrategyAddEvent,
     FeatureStrategyRemoveEvent,
     FeatureStrategyUpdateEvent,
-    FeatureToggle,
-    FeatureToggleDTO,
-    FeatureToggleLegacy,
-    FeatureToggleWithDependencies,
-    FeatureToggleWithEnvironment,
+    type FeatureToggle,
+    type FeatureToggleDTO,
+    type FeatureToggleLegacy,
+    type FeatureToggleWithDependencies,
+    type FeatureToggleWithEnvironment,
     FeatureVariantEvent,
-    IConstraint,
-    IDependency,
-    IFeatureEnvironmentInfo,
-    IFeatureEnvironmentStore,
-    IFeatureNaming,
-    IFeatureOverview,
-    IFeatureStrategy,
-    IFeatureTagStore,
-    IFeatureToggleClientStore,
-    IFeatureToggleQuery,
-    IFeatureToggleStore,
-    IFeatureTypeCount,
-    IFlagResolver,
-    IProjectStore,
-    ISegment,
-    IStrategyConfig,
-    IStrategyStore,
-    IUnleashConfig,
-    IUnleashStores,
-    IVariant,
+    type IConstraint,
+    type IDependency,
+    type IFeatureEnvironmentInfo,
+    type IFeatureEnvironmentStore,
+    type IFeatureNaming,
+    type IFeatureOverview,
+    type IFeatureStrategy,
+    type IFeatureTagStore,
+    type IFeatureToggleClientStore,
+    type IFeatureToggleQuery,
+    type IFeatureToggleStore,
+    type IFeatureTypeCount,
+    type IFlagResolver,
+    type IProjectStore,
+    type ISegment,
+    type IStrategyConfig,
+    type IStrategyStore,
+    type IUnleashConfig,
+    type IUnleashStores,
+    type IVariant,
     PotentiallyStaleOnEvent,
-    Saved,
+    type Saved,
     SKIP_CHANGE_REQUEST,
     StrategiesOrderChangedEvent,
-    StrategyIds,
+    type StrategyIds,
     SYSTEM_USER_ID,
-    Unsaved,
+    type Unsaved,
     WeightType,
 } from '../../types';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import {
     ForbiddenError,
     FOREIGN_KEY_VIOLATION,
@@ -66,7 +66,7 @@ import {
     variantsArraySchema,
 } from '../../schema/feature-schema';
 import NotFoundError from '../../error/notfound-error';
-import {
+import type {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
 } from './types/feature-toggle-strategies-store-type';
@@ -78,7 +78,7 @@ import {
     SEMVER_OPERATORS,
     STRING_OPERATORS,
 } from '../../util';
-import { applyPatch, deepClone, Operation } from 'fast-json-patch';
+import { applyPatch, deepClone, type Operation } from 'fast-json-patch';
 import {
     validateDate,
     validateLegalValues,
@@ -86,27 +86,27 @@ import {
     validateSemver,
     validateString,
 } from '../../util/validators/constraint-types';
-import { IContextFieldStore } from '../../types/stores/context-field-store';
-import { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema';
+import type { IContextFieldStore } from '../../types/stores/context-field-store';
+import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema';
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
 } from '../playground/feature-evaluator/helpers';
-import { AccessService } from '../../services/access-service';
-import { IUser } from '../../server-impl';
-import { IFeatureProjectUserParams } from './feature-toggle-controller';
+import type { AccessService } from '../../services/access-service';
+import type { IUser } from '../../server-impl';
+import type { IFeatureProjectUserParams } from './feature-toggle-controller';
 import { unique } from '../../util/unique';
-import { ISegmentService } from '../segment/segment-service-interface';
-import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
+import type { ISegmentService } from '../segment/segment-service-interface';
+import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation';
-import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
-import EventService from '../events/event-service';
-import { DependentFeaturesService } from '../dependent-features/dependent-features-service';
-import { FeatureToggleInsert } from './feature-toggle-store';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
+import type EventService from '../events/event-service';
+import type { DependentFeaturesService } from '../dependent-features/dependent-features-service';
+import type { FeatureToggleInsert } from './feature-toggle-store';
 import ArchivedFeatureError from '../../error/archivedfeature-error';
 import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events';
-import { EventEmitter } from 'stream';
+import type { EventEmitter } from 'stream';
 
 interface IFeatureContext {
     featureName: string;

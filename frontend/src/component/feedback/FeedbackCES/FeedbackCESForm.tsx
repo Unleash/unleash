@@ -1,8 +1,9 @@
 import { Box, Button, styled, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import produce from 'immer';
 import useToast from 'hooks/useToast';
-import { IFeedbackCESState } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
+import type { IFeedbackCESState } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { FeedbackCESScore } from 'component/feedback/FeedbackCES/FeedbackCESScore';
 import { sendFeedbackInput } from 'component/feedback/FeedbackCES/sendFeedbackInput';
 

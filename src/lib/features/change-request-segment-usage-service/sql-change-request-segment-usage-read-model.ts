@@ -1,5 +1,5 @@
-import { Db } from '../../db/db';
-import {
+import type { Db } from '../../db/db';
+import type {
     ChangeRequestStrategy,
     IChangeRequestSegmentUsageReadModel,
 } from './change-request-segment-usage-read-model';

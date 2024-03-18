@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { PublicSignupTokenSchema } from './public-signup-token-schema';
+import type { PublicSignupTokenSchema } from './public-signup-token-schema';
 
 test('publicSignupTokenSchema', () => {
     const data: PublicSignupTokenSchema = {

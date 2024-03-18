@@ -1,11 +1,11 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ISegment } from 'interfaces/segment';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { ISegment } from 'interfaces/segment';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { formatStrategyName } from 'utils/strategyNames';
 import { styled } from '@mui/material';
-import {
+import type {
     ChangeRequestNewStrategy,
     ChangeRequestStrategy,
     ChangeRequestUpdatedStrategy,

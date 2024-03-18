@@ -1,5 +1,5 @@
 import Controller from '../controller';
-import { IUnleashServices, IUnleashConfig } from '../../types';
+import type { IUnleashServices, IUnleashConfig } from '../../types';
 import FeatureController from '../../features/feature-toggle/legacy/feature-toggle-legacy-controller';
 import { FeatureTypeController } from './feature-type';
 import ArchiveController from '../../features/feature-toggle/archive-feature-toggle-controller';
@@ -30,7 +30,7 @@ import TelemetryController from './telemetry';
 import FavoritesController from './favorites';
 import MaintenanceController from '../../features/maintenance/maintenance-controller';
 import { createKnexTransactionStarter } from '../../db/transaction';
-import { Db } from '../../db/db';
+import type { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 import { SegmentsController } from '../../features/segment/segment-controller';
 import FeatureSearchController from '../../features/feature-search/feature-search-controller';

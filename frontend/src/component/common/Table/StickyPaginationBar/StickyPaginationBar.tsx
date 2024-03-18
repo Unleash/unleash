@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { PaginationBar } from '../PaginationBar/PaginationBar';
-import { ComponentProps, FC } from 'react';
+import type { ComponentProps, FC } from 'react';
 
 const StyledStickyBar = styled('div')(({ theme }) => ({
     position: 'sticky',

@@ -1,4 +1,4 @@
-import { MouseEvent, useContext, useState, VFC } from 'react';
+import { type MouseEvent, useContext, useState, type VFC } from 'react';
 import {
     Button,
     ListItemIcon,
@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import Lock from '@mui/icons-material/Lock';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

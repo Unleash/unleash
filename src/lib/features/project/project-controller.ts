@@ -1,41 +1,45 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../../routes/controller';
 import {
-    IArchivedQuery,
-    IFlagResolver,
-    IProjectParam,
-    IUnleashConfig,
-    IUnleashServices,
+    type IArchivedQuery,
+    type IFlagResolver,
+    type IProjectParam,
+    type IUnleashConfig,
+    type IUnleashServices,
     NONE,
     serializeDates,
 } from '../../types';
 import ProjectFeaturesController from '../feature-toggle/feature-toggle-controller';
 import EnvironmentsController from '../project-environments/environments';
 import ProjectHealthReport from '../../routes/admin-api/project/health-report';
-import ProjectService from './project-service';
+import type ProjectService from './project-service';
 import VariantsController from '../../routes/admin-api/project/variants';
 import {
     createResponseSchema,
-    DeprecatedProjectOverviewSchema,
+    type DeprecatedProjectOverviewSchema,
     deprecatedProjectOverviewSchema,
-    ProjectDoraMetricsSchema,
+    type ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
     projectOverviewSchema,
-    ProjectsSchema,
+    type ProjectsSchema,
     projectsSchema,
 } from '../../openapi';
 import { getStandardResponses } from '../../openapi/util/standard-responses';
-import { AccessService, OpenApiService, SettingService } from '../../services';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type {
+    AccessService,
+    OpenApiService,
+    SettingService,
+} from '../../services';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token';
 import ProjectArchiveController from '../../routes/admin-api/project/project-archive';
 import { createKnexTransactionStarter } from '../../db/transaction';
-import { Db } from '../../db/db';
+import type { Db } from '../../db/db';
 import DependentFeaturesController from '../dependent-features/dependent-features-controller';
-import { ProjectOverviewSchema } from '../../openapi/spec/project-overview-schema';
+import type { ProjectOverviewSchema } from '../../openapi/spec/project-overview-schema';
 import {
     projectApplicationsSchema,
-    ProjectApplicationsSchema,
+    type ProjectApplicationsSchema,
 } from '../../openapi/spec/project-applications-schema';
 import { NotFoundError } from '../../error';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';

@@ -1,4 +1,4 @@
-import { FormEventHandler, useState, VFC } from 'react';
+import { type FormEventHandler, useState, type VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 import { Box, Button, Typography } from '@mui/material';

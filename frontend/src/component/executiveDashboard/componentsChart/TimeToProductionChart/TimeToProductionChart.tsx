@@ -1,9 +1,9 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import { ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { LineChart } from '../../components/LineChart/LineChart';
 import { useProjectChartData } from '../../hooks/useProjectChartData';
-import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
+import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
 import { TimeToProductionTooltip } from './TimeToProductionTooltip/TimeToProductionTooltip';
 

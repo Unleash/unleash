@@ -1,12 +1,12 @@
 import {
     GlobalFrontendApiCache,
-    GlobalFrontendApiCacheState,
+    type GlobalFrontendApiCacheState,
 } from './global-frontend-api-cache';
 import noLogger from '../../../test/fixtures/no-logger';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
 import EventEmitter from 'events';
-import {
+import type {
     IApiUser,
     IFeatureToggleClient,
     IFlagResolver,

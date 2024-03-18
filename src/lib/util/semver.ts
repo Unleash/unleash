@@ -1,4 +1,4 @@
-import semver, { SemVer } from 'semver';
+import semver, { type SemVer } from 'semver';
 
 export const parseStrictSemVer = (version: string): SemVer | null => {
     if (semver.clean(version) !== version) {

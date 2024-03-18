@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import {
     AutocompleteBox,
-    IAutocompleteBoxOption,
+    type IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';

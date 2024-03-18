@@ -3,8 +3,8 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';
 import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 import useToast from 'hooks/useToast';
-import { IGroup, IGroupUser } from 'interfaces/group';
-import { FC } from 'react';
+import type { IGroup, IGroupUser } from 'interfaces/group';
+import type { FC } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IRemoveGroupUserProps {

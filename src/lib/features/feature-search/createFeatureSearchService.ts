@@ -1,5 +1,5 @@
-import { Db } from '../../db/db';
-import { IUnleashConfig } from '../../types';
+import type { Db } from '../../db/db';
+import type { IUnleashConfig } from '../../types';
 
 import { FeatureSearchService } from './feature-search-service';
 import FakeFeatureSearchStore from './fake-feature-search-store';

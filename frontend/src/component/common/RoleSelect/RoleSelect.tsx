@@ -1,10 +1,10 @@
 import {
     Autocomplete,
-    AutocompleteProps,
+    type AutocompleteProps,
     TextField,
     styled,
 } from '@mui/material';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 

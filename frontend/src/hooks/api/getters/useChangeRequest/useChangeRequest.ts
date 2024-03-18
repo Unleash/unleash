@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
+import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 
 export const useChangeRequest = (projectId: string, id: string) => {
     const { data, error, mutate } = useSWR<ChangeRequestType>(

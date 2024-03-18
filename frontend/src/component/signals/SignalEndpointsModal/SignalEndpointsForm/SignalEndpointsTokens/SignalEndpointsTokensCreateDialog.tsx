@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { SignalEndpointTokenPayload } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
-import { ISignalEndpointToken } from 'interfaces/signal';
+import type { SignalEndpointTokenPayload } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
+import type { ISignalEndpointToken } from 'interfaces/signal';
 import { styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 

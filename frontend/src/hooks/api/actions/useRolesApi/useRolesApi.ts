@@ -1,4 +1,4 @@
-import { IPermission } from 'interfaces/permissions';
+import type { IPermission } from 'interfaces/permissions';
 import useAPI from '../useApi/useApi';
 
 interface IRolePayload {

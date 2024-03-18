@@ -1,4 +1,4 @@
-import { IFeedbackCESForm } from 'component/feedback/FeedbackCES/FeedbackCESForm';
+import type { IFeedbackCESForm } from 'component/feedback/FeedbackCES/FeedbackCESForm';
 
 interface IFeedbackEndpointRequestBody {
     source: 'app' | 'app:segments';

@@ -1,12 +1,12 @@
-import {
+import type {
     IClientSegment,
     IConstraint,
     IFeatureStrategySegment,
     ISegment,
 } from '../../types';
-import { ISegmentReadModel } from './segment-read-model-type';
+import type { ISegmentReadModel } from './segment-read-model-type';
 import NotFoundError from '../../error/notfound-error';
-import { Db } from '../../db/db';
+import type { Db } from '../../db/db';
 
 interface ISegmentRow {
     id: number;

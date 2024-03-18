@@ -1,9 +1,10 @@
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { IconButton, Popover, styled, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import React, { useState, VFC } from 'react';
+import type React from 'react';
+import { useState, type VFC } from 'react';
 import { VariantInformation } from './VariantInformation/VariantInformation';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 interface IVariantCellProps {
     variant: string;

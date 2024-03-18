@@ -1,9 +1,9 @@
 import * as responseTime from 'response-time';
-import EventEmitter from 'events';
+import type EventEmitter from 'events';
 import { REQUEST_TIME } from '../metric-events';
-import { IFlagResolver } from '../types/experimental';
-import { InstanceStatsService } from '../services';
-import { RequestHandler } from 'express';
+import type { IFlagResolver } from '../types/experimental';
+import type { InstanceStatsService } from '../services';
+import type { RequestHandler } from 'express';
 
 const _responseTime = responseTime.default;
 const appNameReportingThreshold = 1000;

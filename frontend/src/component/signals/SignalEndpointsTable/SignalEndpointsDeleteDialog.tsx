@@ -1,5 +1,5 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 
 interface ISignalEndpointsDeleteDialogProps {
     signalEndpoint?: ISignalEndpoint;

@@ -6,7 +6,7 @@ import {
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
-    IEvent,
+    type IEvent,
     SYSTEM_USER_ID,
 } from '../types';
 

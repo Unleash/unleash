@@ -6,7 +6,10 @@ import { Box, styled } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { StyledBoxSummary } from '../StrategyExecution.styles';
-import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
+import type {
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+} from 'openapi';
 import { getMappedParam } from '../helpers';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

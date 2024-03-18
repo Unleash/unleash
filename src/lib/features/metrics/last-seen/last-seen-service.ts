@@ -1,8 +1,8 @@
-import { Logger } from '../../../logger';
-import { IUnleashConfig } from '../../../server-impl';
-import { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type';
-import { ILastSeenStore } from './types/last-seen-store-type';
-import {
+import type { Logger } from '../../../logger';
+import type { IUnleashConfig } from '../../../server-impl';
+import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type';
+import type { ILastSeenStore } from './types/last-seen-store-type';
+import type {
     IFeatureToggleStore,
     IFlagResolver,
     IUnleashStores,

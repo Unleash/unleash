@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { IFeedbackCategory } from 'hooks/useSubmittedFeedback';
+import type { IFeedbackCategory } from 'hooks/useSubmittedFeedback';
 
 export type FeedbackMode = 'automatic' | 'manual';
 export interface IFeedbackContext {

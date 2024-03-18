@@ -1,11 +1,11 @@
-import { EventEmitter } from 'events';
-import { LogProvider, Logger } from '../logger';
-import {
+import type { EventEmitter } from 'events';
+import type { LogProvider, Logger } from '../logger';
+import type {
     IUserSplash,
     IUserSplashKey,
     IUserSplashStore,
 } from '../types/stores/user-splash-store';
-import { Db } from './db';
+import type { Db } from './db';
 
 const COLUMNS = ['user_id', 'splash_id', 'seen'];
 const TABLE = 'user_splash';

@@ -1,7 +1,7 @@
 import { Banner } from 'component/banners/Banner/Banner';
 import { useLicenseCheck } from 'hooks/api/getters/useLicense/useLicense';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { BannerVariant } from 'interfaces/banner';
+import type { BannerVariant } from 'interfaces/banner';
 
 export const LicenseBanner = () => {
     const { isEnterprise } = useUiConfig();

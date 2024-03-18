@@ -12,7 +12,7 @@ import theme from 'themes/theme';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { TabLink } from 'component/common/TabNav/TabLink';
 
 const StyledHeader = styled('div')(() => ({

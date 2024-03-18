@@ -1,20 +1,20 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../../routes/controller';
-import { IUnleashConfig, IUnleashServices, NONE } from '../../types';
-import { Logger } from '../../logger';
-import { IApiUser } from '../../types/api-user';
+import { type IUnleashConfig, type IUnleashServices, NONE } from '../../types';
+import type { Logger } from '../../logger';
+import type { IApiUser } from '../../types/api-user';
 import {
-    ClientMetricsSchema,
+    type ClientMetricsSchema,
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
-    FrontendApiClientSchema,
-    FrontendApiFeatureSchema,
+    type FrontendApiClientSchema,
+    type FrontendApiFeatureSchema,
     frontendApiFeaturesSchema,
-    FrontendApiFeaturesSchema,
+    type FrontendApiFeaturesSchema,
 } from '../../openapi';
-import { Context } from 'unleash-client';
+import type { Context } from 'unleash-client';
 import { enrichContextWithIp } from './index';
 import { corsOriginMiddleware } from '../../middleware';
 import NotImplementedError from '../../error/not-implemented-error';

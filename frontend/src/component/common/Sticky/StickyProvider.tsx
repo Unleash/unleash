@@ -1,4 +1,10 @@
-import { useState, useCallback, ReactNode, RefObject, useEffect } from 'react';
+import {
+    useState,
+    useCallback,
+    type ReactNode,
+    type RefObject,
+    useEffect,
+} from 'react';
 import { StickyContext } from './StickyContext';
 
 interface IStickyProviderProps {

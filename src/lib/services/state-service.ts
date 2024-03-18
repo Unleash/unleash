@@ -18,8 +18,8 @@ import {
 
 import { filterEqual, filterExisting, parseFile, readFile } from './state-util';
 
-import { IUnleashConfig } from '../types/option';
-import {
+import type { IUnleashConfig } from '../types/option';
+import type {
     FeatureToggle,
     IEnvironment,
     IFeatureEnvironment,
@@ -31,28 +31,28 @@ import {
     IStrategyConfig,
     ITag,
 } from '../types/model';
-import { Logger } from '../logger';
-import {
+import type { Logger } from '../logger';
+import type {
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import { IProjectStore } from '../features/project/project-store-type';
-import {
+import type { IProjectStore } from '../features/project/project-store-type';
+import type {
     ITagType,
     ITagTypeStore,
 } from '../features/tag-type/tag-type-store-type';
-import { ITagStore } from '../types/stores/tag-store';
-import { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
-import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
-import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IUnleashStores } from '../types/stores';
+import type { ITagStore } from '../types/stores/tag-store';
+import type { IStrategy, IStrategyStore } from '../types/stores/strategy-store';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
+import type { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type';
+import type { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
+import type { IUnleashStores } from '../types/stores';
 import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
-import { ISegmentStore } from '../features/segment/segment-store-type';
-import { PartialSome } from '../types/partial';
-import EventService from '../features/events/event-service';
+import type { ISegmentStore } from '../features/segment/segment-store-type';
+import type { PartialSome } from '../types/partial';
+import type EventService from '../features/events/event-service';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import requireContentType from './content_type_checker';
 
 const mockRequest: (contentType: string) => Request = (contentType) => ({

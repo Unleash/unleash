@@ -1,14 +1,14 @@
-import { DragEventHandler, FC, ReactNode } from 'react';
+import type { DragEventHandler, FC, ReactNode } from 'react';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, styled } from '@mui/material';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import {
     formatStrategyName,
     getFeatureStrategyIcon,
 } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { PlaygroundStrategySchema } from 'openapi';
+import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
 

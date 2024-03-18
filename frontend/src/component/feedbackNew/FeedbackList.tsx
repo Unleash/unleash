@@ -13,7 +13,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { useSearch } from 'hooks/useSearch';
 import theme from 'themes/theme';
 import { useState } from 'react';
-import { FeedbackSchema } from 'openapi';
+import type { FeedbackSchema } from 'openapi';
 
 interface IFeedbackSchemaCellProps {
     value?: string | null; // FIXME: proper type

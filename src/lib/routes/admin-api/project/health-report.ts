@@ -1,18 +1,18 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../../controller';
-import { IUnleashServices } from '../../../types/services';
-import { IUnleashConfig } from '../../../types/option';
-import ProjectHealthService from '../../../services/project-health-service';
-import { Logger } from '../../../logger';
-import { IProjectParam } from '../../../types/model';
+import type { IUnleashServices } from '../../../types/services';
+import type { IUnleashConfig } from '../../../types/option';
+import type ProjectHealthService from '../../../services/project-health-service';
+import type { Logger } from '../../../logger';
+import type { IProjectParam } from '../../../types/model';
 import { NONE } from '../../../types/permissions';
-import { OpenApiService } from '../../../services/openapi-service';
+import type { OpenApiService } from '../../../services/openapi-service';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import { serializeDates } from '../../../types/serialize-dates';
 import {
     healthReportSchema,
-    HealthReportSchema,
+    type HealthReportSchema,
 } from '../../../openapi/spec/health-report-schema';
 
 export default class ProjectHealthReport extends Controller {

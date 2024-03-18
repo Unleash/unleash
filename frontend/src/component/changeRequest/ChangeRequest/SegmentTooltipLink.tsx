@@ -1,14 +1,14 @@
-import {
+import type {
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
-import { FC } from 'react';
+import type { FC } from 'react';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({

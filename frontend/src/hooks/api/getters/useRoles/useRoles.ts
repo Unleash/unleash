@@ -1,4 +1,4 @@
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';

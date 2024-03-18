@@ -5,7 +5,7 @@ import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
-import { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
+import type { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
 
 export const DisableEnableStrategyDialog = ({
     isOpen,

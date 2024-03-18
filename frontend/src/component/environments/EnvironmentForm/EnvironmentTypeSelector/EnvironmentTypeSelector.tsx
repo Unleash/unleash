@@ -5,7 +5,7 @@ import {
     RadioGroup,
     styled,
 } from '@mui/material';
-import React from 'react';
+import type React from 'react';
 
 interface IEnvironmentTypeSelectorProps {
     onChange: (event: React.FormEvent<HTMLInputElement>) => void;

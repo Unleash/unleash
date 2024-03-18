@@ -1,7 +1,7 @@
 import { Button, styled } from '@mui/material';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
-import React from 'react';
+import type React from 'react';
 import { newOperators } from 'constants/operators';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { oneOf } from 'utils/oneOf';

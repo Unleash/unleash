@@ -3,11 +3,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { ProjectActionsActionItem } from './ProjectActionsActionItem';
-import { ActionsActionState } from '../../useProjectActionsForm';
+import type { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Add from '@mui/icons-material/Add';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useActionConfigurations } from 'hooks/api/getters/useActionConfigurations/useActionConfigurations';
 
@@ -98,7 +98,7 @@ export const ProjectActionsFormStepActions = ({
                 value={`${actorId}`}
                 onChange={(v) => {
                     validateActorId(Number(v));
-                    setActorId(parseInt(v));
+                    setActorId(Number.parseInt(v));
                 }}
             />
             <StyledDivider />

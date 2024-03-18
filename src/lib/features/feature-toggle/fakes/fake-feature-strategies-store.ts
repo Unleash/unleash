@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import {
+import type {
     FeatureToggleWithEnvironment,
     IFeatureOverview,
     IFeatureToggleClient,
@@ -8,8 +8,8 @@ import {
     FeatureToggle,
 } from '../../../types/model';
 import NotFoundError from '../../../error/notfound-error';
-import { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
-import { IFeatureProjectUserParams } from '../feature-toggle-controller';
+import type { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
 import { ALL_PROJECTS } from '../../../util';
 
 interface ProjectEnvironment {

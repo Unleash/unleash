@@ -1,16 +1,24 @@
-import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../../types';
-import { Logger } from '../../logger';
-import { ClientMetricsSchema, FrontendApiFeatureSchema } from '../../openapi';
-import ApiUser, { IApiUser } from '../../types/api-user';
+import type {
+    IUnleashConfig,
+    IUnleashServices,
+    IUnleashStores,
+} from '../../types';
+import type { Logger } from '../../logger';
+import type {
+    ClientMetricsSchema,
+    FrontendApiFeatureSchema,
+} from '../../openapi';
+import type ApiUser from '../../types/api-user';
+import type { IApiUser } from '../../types/api-user';
 import {
-    Context,
+    type Context,
     InMemStorageProvider,
     Unleash,
     UnleashEvents,
 } from 'unleash-client';
 import { ApiTokenType } from '../../types/models/api-token';
 import {
-    FrontendSettings,
+    type FrontendSettings,
     frontendSettingsKey,
 } from '../../types/settings/frontend-settings';
 import { validateOrigins } from '../../util';
@@ -20,7 +28,7 @@ import {
     PROXY_REPOSITORY_CREATED,
 } from '../../metric-events';
 import { FrontendApiRepository } from './frontend-api-repository';
-import { GlobalFrontendApiCache } from './global-frontend-api-cache';
+import type { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import { ProxyRepository } from './proxy-repository';
 
 export type Config = Pick<

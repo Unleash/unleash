@@ -3,7 +3,7 @@ import MaintenanceService from './maintenance-service';
 import SettingService from '../../services/setting-service';
 import { createTestConfig } from '../../../test/config/test-config';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
-import EventService from '../events/event-service';
+import type EventService from '../events/event-service';
 
 test('Scheduler should run scheduled functions if maintenance mode is off', async () => {
     const config = createTestConfig();

@@ -1,4 +1,4 @@
-import { IEnvironments } from 'interfaces/featureToggle';
+import type { IEnvironments } from 'interfaces/featureToggle';
 
 import { getLatestLastSeenAt } from './getLatestLastSeenAt';
 

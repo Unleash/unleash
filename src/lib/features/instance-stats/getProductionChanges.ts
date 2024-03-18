@@ -1,4 +1,4 @@
-import { type Db } from '../../server-impl';
+import type { Db } from '../../server-impl';
 
 export type GetProductionChanges = () => Promise<{
     last30: number;
@@ -17,12 +17,15 @@ export const createGetProductionChanges =
                     ON e.name = seu.environment
                   WHERE e.type = 'production';`);
         return {
-            last30: parseInt(productionChanges.rows[0]?.last_month || '0', 10),
-            last60: parseInt(
+            last30: Number.parseInt(
+                productionChanges.rows[0]?.last_month || '0',
+                10,
+            ),
+            last60: Number.parseInt(
                 productionChanges.rows[0]?.last_two_months || '0',
                 10,
             ),
-            last90: parseInt(
+            last90: Number.parseInt(
                 productionChanges.rows[0]?.last_quarter || '0',
                 10,
             ),

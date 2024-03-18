@@ -1,8 +1,8 @@
 import Mustache from 'mustache';
 import Addon from './addon';
 import definition from './webhook-definition';
-import { LogProvider } from '../logger';
-import { IEvent } from '../types/events';
+import type { LogProvider } from '../logger';
+import type { IEvent } from '../types/events';
 
 interface IParameters {
     url: string;

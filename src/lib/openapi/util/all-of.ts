@@ -1,4 +1,4 @@
-import { JSONSchema } from 'json-schema-to-ts';
+import type { JSONSchema } from 'json-schema-to-ts';
 
 // this function simplifies simple schemas and return allOf schema if it
 // doesn't know how to simplify it. It's a proof of concept but it can be extended

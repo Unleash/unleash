@@ -10,7 +10,7 @@ import theme from 'themes/theme';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useOnVisible } from 'hooks/useOnVisible';
-import { IEvent } from 'interfaces/event';
+import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/system';
 
 interface IEventLogProps {

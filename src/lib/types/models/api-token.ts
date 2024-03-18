@@ -1,5 +1,5 @@
 import BadDataError from '../../error/bad-data-error';
-import { IEnvironment } from '../model';
+import type { IEnvironment } from '../model';
 
 export const ALL = '*';
 

@@ -1,7 +1,7 @@
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import StrategyService from '../../services/strategy-service';
-import { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type StrategyService from '../../services/strategy-service';
+import type { Logger } from '../../logger';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
 import {
@@ -10,9 +10,9 @@ import {
     UPDATE_STRATEGY,
     NONE,
 } from '../../types/permissions';
-import { Request, Response } from 'express';
-import { IAuthRequest } from '../unleash-types';
-import { OpenApiService } from '../../services/openapi-service';
+import type { Request, Response } from 'express';
+import type { IAuthRequest } from '../unleash-types';
+import type { OpenApiService } from '../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
@@ -24,14 +24,14 @@ import {
 } from '../../openapi/util/create-response-schema';
 import {
     strategySchema,
-    StrategySchema,
+    type StrategySchema,
 } from '../../openapi/spec/strategy-schema';
 import {
     strategiesSchema,
-    StrategiesSchema,
+    type StrategiesSchema,
 } from '../../openapi/spec/strategies-schema';
-import { CreateStrategySchema } from '../../openapi/spec/create-strategy-schema';
-import { UpdateStrategySchema } from '../../openapi/spec/update-strategy-schema';
+import type { CreateStrategySchema } from '../../openapi/spec/create-strategy-schema';
+import type { UpdateStrategySchema } from '../../openapi/spec/update-strategy-schema';
 
 const version = 1;
 

@@ -1,4 +1,4 @@
-import { ReactNode, VFC } from 'react';
+import type { ReactNode, VFC } from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Drawer, List, styled } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -8,7 +8,7 @@ import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
 import { basePath } from 'utils/formatPath';
-import { INavigationMenuItem } from 'interfaces/route';
+import type { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';

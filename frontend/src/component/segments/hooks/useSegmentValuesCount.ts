@@ -1,4 +1,4 @@
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { useMemo } from 'react';
 
 export const useSegmentValuesCount = (constraints: IConstraint[]): number => {

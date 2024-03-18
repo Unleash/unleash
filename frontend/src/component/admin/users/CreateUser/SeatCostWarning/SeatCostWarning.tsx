@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Alert } from '@mui/material';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';

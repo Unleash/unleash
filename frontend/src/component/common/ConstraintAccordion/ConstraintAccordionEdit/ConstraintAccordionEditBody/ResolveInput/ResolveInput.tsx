@@ -1,5 +1,8 @@
-import { ILegalValue, IUnleashContextDefinition } from 'interfaces/context';
-import { IConstraint } from 'interfaces/strategy';
+import type {
+    ILegalValue,
+    IUnleashContextDefinition,
+} from 'interfaces/context';
+import type { IConstraint } from 'interfaces/strategy';
 import { DateSingleValue } from '../DateSingleValue/DateSingleValue';
 import { FreeTextInput } from '../FreeTextInput/FreeTextInput';
 import { RestrictiveLegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues';
@@ -15,9 +18,9 @@ import {
     SEMVER_OPERATORS_LEGAL_VALUES,
     DATE_OPERATORS_SINGLE_VALUE,
     IN_OPERATORS_FREETEXT,
-    Input,
+    type Input,
 } from '../useConstraintInput/useConstraintInput';
-import React from 'react';
+import type React from 'react';
 
 interface IResolveInputProps {
     contextDefinition: IUnleashContextDefinition;

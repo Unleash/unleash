@@ -1,9 +1,9 @@
-import { IUnleashConfig } from '../types';
-import { Logger } from '../logger';
-import { EdgeTokenSchema } from '../openapi/spec/edge-token-schema';
+import type { IUnleashConfig } from '../types';
+import type { Logger } from '../logger';
+import type { EdgeTokenSchema } from '../openapi/spec/edge-token-schema';
 import { constantTimeCompare } from '../util/constantTimeCompare';
-import { ValidatedEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema';
-import { ApiTokenService } from './api-token-service';
+import type { ValidatedEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema';
+import type { ApiTokenService } from './api-token-service';
 
 export default class EdgeService {
     private logger: Logger;

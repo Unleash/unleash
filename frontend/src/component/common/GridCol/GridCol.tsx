@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 export const GridCol: FC<{ vertical?: boolean }> = ({
     children,

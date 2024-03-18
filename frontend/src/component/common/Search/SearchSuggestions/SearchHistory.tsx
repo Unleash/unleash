@@ -1,7 +1,7 @@
 import History from '@mui/icons-material/History';
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { StyledCode } from './SearchInstructions/SearchInstructions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { onEnter } from './onEnter';

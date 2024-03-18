@@ -1,26 +1,26 @@
-import { Request, Response } from 'express';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import type { Request, Response } from 'express';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
 import { NONE } from '../../types/permissions';
 import Controller from '../../routes/controller';
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { getStandardResponses } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
-    PlaygroundResponseSchema,
+    type PlaygroundResponseSchema,
     playgroundResponseSchema,
 } from '../../openapi/spec/playground-response-schema';
-import { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
-import { PlaygroundService } from './playground-service';
-import { IFlagResolver } from '../../types';
-import { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
-import { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema';
+import type { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
+import type { PlaygroundService } from './playground-service';
+import type { IFlagResolver } from '../../types';
+import type { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
+import type { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema';
 import {
     advancedPlaygroundViewModel,
     playgroundViewModel,
 } from './playground-view-model';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import { extractUserIdFromUser } from '../../util';
 
 export default class PlaygroundController extends Controller {
@@ -121,8 +121,8 @@ export default class PlaygroundController extends Controller {
         // used for runtime control, do not remove
         const { payload } = this.flagResolver.getVariant('advancedPlayground');
         const limit =
-            payload?.value && Number.isInteger(parseInt(payload?.value))
-                ? parseInt(payload?.value)
+            payload?.value && Number.isInteger(Number.parseInt(payload?.value))
+                ? Number.parseInt(payload?.value)
                 : 15000;
 
         const result = await this.playgroundService.evaluateAdvancedQuery(

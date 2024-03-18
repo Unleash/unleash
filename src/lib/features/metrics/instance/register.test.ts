@@ -1,10 +1,10 @@
-import supertest, { Test } from 'supertest';
+import supertest, { type Test } from 'supertest';
 import { createTestConfig } from '../../../../test/config/test-config';
 import createStores from '../../../../test/fixtures/store';
 import getLogger from '../../../../test/fixtures/no-logger';
 import getApp from '../../../app';
 import { createServices } from '../../../services';
-import TestAgent from 'supertest/lib/agent';
+import type TestAgent from 'supertest/lib/agent';
 
 async function getSetup() {
     const stores = createStores();

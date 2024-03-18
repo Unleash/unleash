@@ -1,4 +1,4 @@
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { useEffect, useState } from 'react';
 import { useSegmentValidation } from 'hooks/api/getters/useSegmentValidation/useSegmentValidation';
 

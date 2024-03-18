@@ -1,26 +1,26 @@
-import { Request, Response } from 'express';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import EventService from '../../features/events/event-service';
+import type { Request, Response } from 'express';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type EventService from '../../features/events/event-service';
 import { ADMIN, NONE } from '../../types/permissions';
-import { IEvent, IEventList } from '../../types/events';
+import type { IEvent, IEventList } from '../../types/events';
 import Controller from '../controller';
 import { anonymiseKeys } from '../../util/anonymise';
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     eventsSchema,
-    EventsSchema,
+    type EventsSchema,
 } from '../../../lib/openapi/spec/events-schema';
 import { serializeDates } from '../../../lib/types/serialize-dates';
 import {
     featureEventsSchema,
-    FeatureEventsSchema,
+    type FeatureEventsSchema,
 } from '../../../lib/openapi/spec/feature-events-schema';
 import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
-import { IFlagResolver } from '../../types/experimental';
+import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type { IFlagResolver } from '../../types/experimental';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;

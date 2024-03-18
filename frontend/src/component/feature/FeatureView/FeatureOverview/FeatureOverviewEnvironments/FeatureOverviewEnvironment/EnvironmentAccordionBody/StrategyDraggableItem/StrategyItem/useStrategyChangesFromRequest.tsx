@@ -1,4 +1,4 @@
-import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
+import type { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { usePendingChangeRequestsForFeature } from 'hooks/api/getters/usePendingChangeRequestsForFeature/usePendingChangeRequestsForFeature';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 

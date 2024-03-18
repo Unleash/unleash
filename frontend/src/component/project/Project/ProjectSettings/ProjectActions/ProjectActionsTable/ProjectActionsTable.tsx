@@ -11,7 +11,7 @@ import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { useActionsApi } from 'hooks/api/actions/useActionsApi/useActionsApi';
-import { IActionSet } from 'interfaces/action';
+import type { IActionSet } from 'interfaces/action';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
 import { ProjectActionsSourceCell } from './ProjectActionsSourceCell';
 import { ProjectActionsFiltersCell } from './ProjectActionsFiltersCell';

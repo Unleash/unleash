@@ -1,10 +1,10 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import { promisify } from 'util';
-import { IUnleashConfig, NONE } from '../types';
+import { type IUnleashConfig, NONE } from '../types';
 import Controller from './controller';
-import { IAuthRequest } from './unleash-types';
-import { IUnleashServices } from '../types';
-import SessionService from '../services/session-service';
+import type { IAuthRequest } from './unleash-types';
+import type { IUnleashServices } from '../types';
+import type SessionService from '../services/session-service';
 
 class LogoutController extends Controller {
     private clearSiteDataOnLogout: boolean;

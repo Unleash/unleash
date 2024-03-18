@@ -1,9 +1,9 @@
 import {
-    CSSProperties,
-    MouseEventHandler,
-    ReactNode,
+    type CSSProperties,
+    type MouseEventHandler,
+    type ReactNode,
     useState,
-    VFC,
+    type VFC,
 } from 'react';
 import { Menu } from '@mui/material';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';

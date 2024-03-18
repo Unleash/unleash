@@ -1,8 +1,8 @@
-import { IUserFeedbackStore } from '../../../lib/types/stores/user-feedback-store';
-import { IUserStore } from '../../../lib/types/stores/user-store';
-import dbInit, { ITestDb } from '../helpers/database-init';
+import type { IUserFeedbackStore } from '../../../lib/types/stores/user-feedback-store';
+import type { IUserStore } from '../../../lib/types/stores/user-store';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { IUnleashStores, IUser } from '../../../lib/types';
+import type { IUnleashStores, IUser } from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

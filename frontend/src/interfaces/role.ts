@@ -1,5 +1,5 @@
-import { ROOT_ROLE_TYPE, PROJECT_ROLE_TYPE } from '@server/util/constants';
-import { IPermission } from './permissions';
+import type { ROOT_ROLE_TYPE, PROJECT_ROLE_TYPE } from '@server/util/constants';
+import type { IPermission } from './permissions';
 
 export type PredefinedRoleType =
     | typeof ROOT_ROLE_TYPE

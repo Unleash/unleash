@@ -1,4 +1,4 @@
-import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
+import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { TableBody, TableRow, useMediaQuery } from '@mui/material';
 import { DateTimeCell } from 'component/common/Table/cells/DateTimeCell/DateTimeCell';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';

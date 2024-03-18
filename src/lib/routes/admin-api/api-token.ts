@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 
 import Controller from '../controller';
 import {
@@ -12,16 +12,16 @@ import {
     UPDATE_CLIENT_API_TOKEN,
     UPDATE_FRONTEND_API_TOKEN,
 } from '../../types/permissions';
-import { ApiTokenService } from '../../services/api-token-service';
-import { Logger } from '../../logger';
-import { AccessService } from '../../services/access-service';
-import { IAuthRequest } from '../unleash-types';
-import { IUser } from '../../types/user';
-import { IUnleashConfig } from '../../types/option';
-import { ApiTokenType, IApiToken } from '../../types/models/api-token';
+import type { ApiTokenService } from '../../services/api-token-service';
+import type { Logger } from '../../logger';
+import type { AccessService } from '../../services/access-service';
+import type { IAuthRequest } from '../unleash-types';
+import type { IUser } from '../../types/user';
+import type { IUnleashConfig } from '../../types/option';
+import { ApiTokenType, type IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
-import { OpenApiService } from '../../services/openapi-service';
-import { IFlagResolver, IUnleashServices } from '../../types';
+import type { OpenApiService } from '../../services/openapi-service';
+import type { IFlagResolver, IUnleashServices } from '../../types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -29,19 +29,19 @@ import {
 } from '../../openapi/util/create-response-schema';
 import {
     apiTokensSchema,
-    ApiTokensSchema,
+    type ApiTokensSchema,
 } from '../../openapi/spec/api-tokens-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import {
     apiTokenSchema,
-    ApiTokenSchema,
+    type ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
-import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
+import type { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { FrontendApiService } from '../../features/frontend-api/frontend-api-service';
+import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service';
 import { extractUserId, extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
 

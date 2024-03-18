@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { BannerDialog } from './BannerDialog/BannerDialog';
 import { useState } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
-import { BannerVariant, IBanner } from 'interfaces/banner';
+import type { BannerVariant, IBanner } from 'interfaces/banner';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
 const DEFAULT_VARIANT = 'info';

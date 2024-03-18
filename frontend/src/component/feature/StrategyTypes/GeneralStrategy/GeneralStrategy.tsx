@@ -1,7 +1,10 @@
-import { IStrategy, IFeatureStrategyParameters } from 'interfaces/strategy';
+import type {
+    IStrategy,
+    IFeatureStrategyParameters,
+} from 'interfaces/strategy';
 import { styled } from '@mui/system';
 import { StrategyParameter } from 'component/feature/StrategyTypes/StrategyParameter/StrategyParameter';
-import { IFormErrors } from 'hooks/useFormErrors';
+import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IGeneralStrategyProps {
     parameters: IFeatureStrategyParameters;
@@ -30,7 +33,6 @@ const GeneralStrategy = ({
     return (
         <StyledContainer>
             {strategyDefinition.parameters.map((definition, index) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <div key={index}>
                     <StrategyParameter
                         definition={definition}

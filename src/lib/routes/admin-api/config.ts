@@ -1,34 +1,34 @@
-import { Response } from 'express';
-import { AuthedRequest } from '../../types/core';
-import { IUnleashServices } from '../../types/services';
-import { IAuthType, IUnleashConfig } from '../../types/option';
+import type { Response } from 'express';
+import type { AuthedRequest } from '../../types/core';
+import type { IUnleashServices } from '../../types/services';
+import { IAuthType, type IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
 import Controller from '../controller';
-import VersionService from '../../services/version-service';
-import SettingService from '../../services/setting-service';
+import type VersionService from '../../services/version-service';
+import type SettingService from '../../services/setting-service';
 import {
-    SimpleAuthSettings,
+    type SimpleAuthSettings,
     simpleAuthSettingsKey,
 } from '../../types/settings/simple-auth-settings';
 import { ADMIN, NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     uiConfigSchema,
-    UiConfigSchema,
+    type UiConfigSchema,
 } from '../../openapi/spec/ui-config-schema';
-import { OpenApiService } from '../../services/openapi-service';
-import { EmailService } from '../../services/email-service';
+import type { OpenApiService } from '../../services/openapi-service';
+import type { EmailService } from '../../services/email-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
-import { IAuthRequest } from '../unleash-types';
+import type { IAuthRequest } from '../unleash-types';
 import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
-import { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
+import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { FrontendApiService } from '../../services';
-import MaintenanceService from '../../features/maintenance/maintenance-service';
+import type { FrontendApiService } from '../../services';
+import type MaintenanceService from '../../features/maintenance/maintenance-service';
 import memoizee from 'memoizee';
 import { minutesToMilliseconds } from 'date-fns';
-import ClientInstanceService from '../../features/metrics/instance/instance-service';
+import type ClientInstanceService from '../../features/metrics/instance/instance-service';
 
 class ConfigController extends Controller {
     private versionService: VersionService;

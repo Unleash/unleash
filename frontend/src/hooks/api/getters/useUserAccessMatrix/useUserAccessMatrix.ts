@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import useSWR from 'swr';
-import { IRole } from 'interfaces/role';
-import { IUser } from 'interfaces/user';
-import { IMatrixPermission } from 'interfaces/permissions';
+import type { IRole } from 'interfaces/role';
+import type { IUser } from 'interfaces/user';
+import type { IMatrixPermission } from 'interfaces/permissions';
 
 interface IUserAccessMatrix {
     root: IMatrixPermission[];

@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -13,7 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
+import type { ICheckedPermissions, IPermission } from 'interfaces/permissions';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { getRoleKey } from 'utils/permissions';
 

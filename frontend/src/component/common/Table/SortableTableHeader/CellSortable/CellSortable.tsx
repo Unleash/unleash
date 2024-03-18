@@ -1,6 +1,6 @@
 import {
-    FC,
-    MouseEventHandler,
+    type FC,
+    type MouseEventHandler,
     useContext,
     useEffect,
     useMemo,

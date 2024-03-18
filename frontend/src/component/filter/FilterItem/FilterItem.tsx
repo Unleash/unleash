@@ -1,6 +1,6 @@
 import Search from '@mui/icons-material/Search';
 import { Box, InputAdornment, List, ListItemText } from '@mui/material';
-import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { type FC, type ReactNode, useEffect, useRef, useState } from 'react';
 import {
     StyledCheckbox,
     StyledDropdown,

@@ -2,7 +2,7 @@ import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { IntegrationForm } from '../IntegrationForm/IntegrationForm';
 import cloneDeep from 'lodash.clonedeep';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { AddonSchema } from 'openapi';
+import type { AddonSchema } from 'openapi';
 
 export const DEFAULT_DATA: Omit<AddonSchema, 'id'> = {
     provider: '',

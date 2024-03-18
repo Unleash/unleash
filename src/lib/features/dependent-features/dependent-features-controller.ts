@@ -1,25 +1,25 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../../routes/controller';
-import { OpenApiService } from '../../services';
+import type { OpenApiService } from '../../services';
 import {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
+    type IFlagResolver,
+    type IUnleashConfig,
+    type IUnleashServices,
     NONE,
     UPDATE_FEATURE_DEPENDENCY,
 } from '../../types';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import {
-    CreateDependentFeatureSchema,
+    type CreateDependentFeatureSchema,
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
-    ParentFeatureOptionsSchema,
+    type ParentFeatureOptionsSchema,
 } from '../../openapi';
-import { IAuthRequest } from '../../routes/unleash-types';
-import { DependentFeaturesService } from './dependent-features-service';
-import { WithTransactional } from '../../db/transaction';
+import type { IAuthRequest } from '../../routes/unleash-types';
+import type { DependentFeaturesService } from './dependent-features-service';
+import type { WithTransactional } from '../../db/transaction';
 
 interface ProjectParams {
     projectId: string;

@@ -1,6 +1,6 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
+import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 
 interface IChangeRequestStatusCellProps {

@@ -1,5 +1,5 @@
-import { ClientFeaturesResponse, FeatureInterface } from '../feature';
-import { Segment } from '../strategy/strategy';
+import type { ClientFeaturesResponse, FeatureInterface } from '../feature';
+import type { Segment } from '../strategy/strategy';
 
 export interface BootstrapProvider {
     readBootstrap(): Promise<ClientFeaturesResponse | undefined>;

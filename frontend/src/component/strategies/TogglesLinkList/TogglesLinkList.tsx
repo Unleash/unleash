@@ -10,7 +10,7 @@ import PlayArrow from '@mui/icons-material/PlayArrow';
 import styles from 'component/common/common.module.scss';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FeatureSchema } from 'openapi';
+import type { FeatureSchema } from 'openapi';
 
 interface ITogglesLinkListProps {
     toggles: FeatureSchema[];

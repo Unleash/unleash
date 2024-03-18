@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import classnames from 'classnames';
 import { Box, styled, Typography } from '@mui/material';
 import { modalStyles } from 'component/admin/users/util';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useThemeStyles } from 'themes/themeStyles';
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import useToast from 'hooks/useToast';

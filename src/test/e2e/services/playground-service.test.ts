@@ -1,5 +1,5 @@
 import {
-    PlaygroundFeatureEvaluationResult,
+    type PlaygroundFeatureEvaluationResult,
     PlaygroundService,
 } from '../../../lib/features/playground/playground-service';
 import {
@@ -9,17 +9,21 @@ import {
 import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config';
-import dbInit, { ITestDb } from '../helpers/database-init';
-import { IUnleashStores } from '../../../lib/types/stores';
-import FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
-import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
-import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
+import dbInit, { type ITestDb } from '../helpers/database-init';
+import type { IUnleashStores } from '../../../lib/types/stores';
+import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
+import {
+    type FeatureToggle,
+    type ISegment,
+    WeightType,
+} from '../../../lib/types/model';
+import type { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test';
-import { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
-import { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema';
-import { SegmentSchema } from '../../../lib/openapi/spec/segment-schema';
+import type { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
+import type { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema';
+import type { SegmentSchema } from '../../../lib/openapi/spec/segment-schema';
 import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema';
-import { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema';
+import type { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import { createFeatureToggleService } from '../../../lib/features';
 import { SegmentReadModel } from '../../../lib/features/segment/segment-read-model';

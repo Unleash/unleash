@@ -1,10 +1,10 @@
-import { Logger } from '../logger';
-import { IUser } from '../types/user';
-import { IUnleashConfig } from '../types/option';
-import { IAccountStore, IUnleashStores } from '../types/stores';
-import { AccessService } from './access-service';
+import type { Logger } from '../logger';
+import type { IUser } from '../types/user';
+import type { IUnleashConfig } from '../types/option';
+import type { IAccountStore, IUnleashStores } from '../types/stores';
+import type { AccessService } from './access-service';
 import { RoleName } from '../types/model';
-import { IAdminCount } from '../types/stores/account-store';
+import type { IAdminCount } from '../types/stores/account-store';
 
 interface IUserWithRole extends IUser {
     rootRole: number;

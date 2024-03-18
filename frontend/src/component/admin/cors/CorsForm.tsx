@@ -1,5 +1,6 @@
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { TextField, Box } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { useUiConfigApi } from 'hooks/api/actions/useUiConfigApi/useUiConfigApi';

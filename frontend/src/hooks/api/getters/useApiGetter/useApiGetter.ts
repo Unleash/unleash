@@ -1,4 +1,4 @@
-import useSWR, { SWRConfiguration, Key } from 'swr';
+import useSWR, { type SWRConfiguration, type Key } from 'swr';
 import { useCallback } from 'react';
 import handleErrorResponses from '../httpErrorResponseHandler';
 

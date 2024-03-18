@@ -1,5 +1,5 @@
 import Select from 'component/common/select';
-import { SelectChangeEvent, useTheme } from '@mui/material';
+import { type SelectChangeEvent, useTheme } from '@mui/material';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 
 type OptionType = { key: string; label: string };

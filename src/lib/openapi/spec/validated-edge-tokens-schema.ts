@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { edgeTokenSchema } from './edge-token-schema';
 
 export const validatedEdgeTokensSchema = {

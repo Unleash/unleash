@@ -13,7 +13,7 @@ import { Alert, styled, TableBody, TableRow } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Link } from 'react-router-dom';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
-import { IProjectEnvironment } from 'interfaces/environments';
+import type { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

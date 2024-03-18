@@ -1,10 +1,11 @@
-import React, { forwardRef, Fragment, useImperativeHandle } from 'react';
+import type React from 'react';
+import { forwardRef, Fragment, useImperativeHandle } from 'react';
 import { styled, Tooltip } from '@mui/material';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
+import { type IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
 import {
     constraintId,
     createEmptyConstraint,

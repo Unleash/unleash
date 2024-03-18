@@ -1,5 +1,5 @@
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import { RemoveSegmentButton } from 'component/segments/RemoveSegmentButton/RemoveSegmentButton';
 import { EditSegmentButton } from 'component/segments/EditSegmentButton/EditSegmentButton';
 

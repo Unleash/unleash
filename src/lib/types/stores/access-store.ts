@@ -1,7 +1,7 @@
-import { PermissionRef } from '../../services/access-service';
-import { IGroupModelWithProjectRole } from '../group';
-import { IPermission, IUserAccessOverview, IUserWithRole } from '../model';
-import { Store } from './store';
+import type { PermissionRef } from '../../services/access-service';
+import type { IGroupModelWithProjectRole } from '../group';
+import type { IPermission, IUserAccessOverview, IUserWithRole } from '../model';
+import type { Store } from './store';
 
 export interface IUserPermission {
     project?: string;

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { IProjectRoleUsageCount } from 'interfaces/project';
+import type { IProjectRoleUsageCount } from 'interfaces/project';
 
 export const useProjectRoleAccessUsage = (roleId?: number) => {
     const { isEnterprise } = useUiConfig();

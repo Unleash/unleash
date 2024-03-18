@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteProps, TextField } from '@mui/material';
+import { Autocomplete, type AutocompleteProps, TextField } from '@mui/material';
 
 interface IAccessMatrixSelectProps<T>
     extends Partial<AutocompleteProps<T, false, false, false>> {

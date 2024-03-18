@@ -1,6 +1,7 @@
 import { Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import React, { SyntheticEvent, useContext, useState } from 'react';
+import type React from 'react';
+import { type SyntheticEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProjectEditPath } from 'utils/routePathHelpers';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';

@@ -1,9 +1,9 @@
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     formatCurrentVersion,
     formatUpdateNotification,
-    IPartialUiConfig,
+    type IPartialUiConfig,
 } from './apidetails.helpers';
 import { FooterTitle } from 'component/menu/Footer/FooterTitle';
 

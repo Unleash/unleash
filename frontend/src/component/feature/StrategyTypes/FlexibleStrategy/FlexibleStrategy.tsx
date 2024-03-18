@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import { IFeatureStrategyParameters } from 'interfaces/strategy';
+import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import Input from 'component/common/Input/Input';
 import {

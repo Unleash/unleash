@@ -15,7 +15,7 @@ import FakeUserFeedbackStore from './fake-user-feedback-store';
 import FakeFeatureTagStore from './fake-feature-tag-store';
 import FakeEnvironmentStore from '../../lib/features/project-environments/fake-environment-store';
 import FakeStrategiesStore from './fake-strategies-store';
-import {
+import type {
     IImportTogglesStore,
     IPrivateProjectStore,
     IUnleashStores,

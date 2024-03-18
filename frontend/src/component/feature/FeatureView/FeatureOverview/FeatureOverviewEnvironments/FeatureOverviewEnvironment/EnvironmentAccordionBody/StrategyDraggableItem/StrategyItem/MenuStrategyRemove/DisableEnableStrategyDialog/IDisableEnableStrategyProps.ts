@@ -1,4 +1,4 @@
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 
 export interface IDisableEnableStrategyProps {
     projectId: string;

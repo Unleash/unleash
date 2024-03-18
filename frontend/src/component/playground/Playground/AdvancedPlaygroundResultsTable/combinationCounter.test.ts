@@ -1,5 +1,5 @@
 import { countCombinations } from './combinationCounter';
-import {
+import type {
     AdvancedPlaygroundEnvironmentFeatureSchema,
     AdvancedPlaygroundFeatureSchema,
 } from 'openapi';

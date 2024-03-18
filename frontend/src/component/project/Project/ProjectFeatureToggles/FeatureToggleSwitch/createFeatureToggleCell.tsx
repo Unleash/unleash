@@ -5,7 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import { FeatureToggleSwitch } from './FeatureToggleSwitch';
 import type { UseFeatureToggleSwitchType } from './FeatureToggleSwitch.types';
-import { ListItemType } from '../../PaginatedProjectFeatureToggles/ProjectFeatureToggles.types';
+import type { ListItemType } from '../../PaginatedProjectFeatureToggles/ProjectFeatureToggles.types';
 
 const StyledSwitchContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasWarning',

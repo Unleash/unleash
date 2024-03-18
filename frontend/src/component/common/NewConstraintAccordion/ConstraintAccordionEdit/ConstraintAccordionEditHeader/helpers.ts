@@ -14,7 +14,7 @@ import {
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
-    Operator,
+    type Operator,
 } from 'constants/operators';
 
 export const resolveText = (operator: Operator, contextName: string) => {

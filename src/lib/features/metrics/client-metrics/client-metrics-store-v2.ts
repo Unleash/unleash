@@ -1,5 +1,5 @@
-import { Logger, LogProvider } from '../../../logger';
-import {
+import type { Logger, LogProvider } from '../../../logger';
+import type {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
     IClientMetricsEnvVariant,
@@ -8,8 +8,8 @@ import {
 import NotFoundError from '../../../error/notfound-error';
 import { endOfDay, startOfHour } from 'date-fns';
 import { collapseHourlyMetrics, spreadVariants } from './collapseHourlyMetrics';
-import { Db } from '../../../db/db';
-import { IFlagResolver } from '../../../types';
+import type { Db } from '../../../db/db';
+import type { IFlagResolver } from '../../../types';
 
 interface ClientMetricsBaseTable {
     feature_name: string;

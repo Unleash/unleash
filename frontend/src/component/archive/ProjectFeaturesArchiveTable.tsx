@@ -1,6 +1,6 @@
 import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
-import { VFC } from 'react';
-import { SortingRule } from 'react-table';
+import type { VFC } from 'react';
+import type { SortingRule } from 'react-table';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { ArchiveTable } from './ArchiveTable/ArchiveTable';
 

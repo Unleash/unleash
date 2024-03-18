@@ -1,4 +1,4 @@
-import { ISegmentPayload } from 'interfaces/segment';
+import type { ISegmentPayload } from 'interfaces/segment';
 import useAPI from '../useApi/useApi';
 
 export const useSegmentsApi = () => {

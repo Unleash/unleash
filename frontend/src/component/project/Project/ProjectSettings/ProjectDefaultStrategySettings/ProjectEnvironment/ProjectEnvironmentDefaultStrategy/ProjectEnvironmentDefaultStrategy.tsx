@@ -5,9 +5,9 @@ import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { Link } from 'react-router-dom';
 import Edit from '@mui/icons-material/Edit';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
-import { ProjectEnvironmentType } from 'interfaces/environments';
+import type { ProjectEnvironmentType } from 'interfaces/environments';
 import { useMemo } from 'react';
-import { CreateFeatureStrategySchema } from 'openapi';
+import type { CreateFeatureStrategySchema } from 'openapi';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;

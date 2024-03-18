@@ -1,5 +1,5 @@
 import FiberManualRecord from '@mui/icons-material/FiberManualRecord';
-import React from 'react';
+import type React from 'react';
 import { styled } from '@mui/material';
 import { formTemplateSidebarWidth } from '../common/FormTemplate/FormTemplate.styles';
 

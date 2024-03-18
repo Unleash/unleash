@@ -1,32 +1,32 @@
 import crypto from 'crypto';
-import { Logger } from '../logger';
+import type { Logger } from '../logger';
 import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import ApiUser, { IApiUser } from '../types/api-user';
+import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import ApiUser, { type IApiUser } from '../types/api-user';
 import {
     ApiTokenType,
-    IApiToken,
-    ILegacyApiTokenCreate,
-    IApiTokenCreate,
+    type IApiToken,
+    type ILegacyApiTokenCreate,
+    type IApiTokenCreate,
     validateApiToken,
     validateApiTokenEnvironment,
     mapLegacyToken,
     mapLegacyTokenWithSecret,
 } from '../types/models/api-token';
-import { IApiTokenStore } from '../types/stores/api-token-store';
+import type { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
-import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import { constantTimeCompare } from '../util/constantTimeCompare';
 import {
     ADMIN_TOKEN_USER,
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
-    IFlagContext,
-    IFlagResolver,
-    IUser,
+    type IFlagContext,
+    type IFlagResolver,
+    type IUser,
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../types';
@@ -35,7 +35,7 @@ import {
     extractUsernameFromUser,
     omitKeys,
 } from '../util';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { IUnleashConfig } from '../server-impl';
+import type { IUnleashConfig } from '../server-impl';
 import { rewriteHTML } from './rewriteHTML';
 import path from 'path';
 import fetch from 'make-fetch-happen';

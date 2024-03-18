@@ -1,15 +1,15 @@
-import EventEmitter from 'events';
-import {
+import type EventEmitter from 'events';
+import type {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
 } from '../types/stores/feature-environment-store';
-import { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { IFeatureEnvironment, IVariant } from '../types/model';
+import type { IFeatureEnvironment, IVariant } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { v4 as uuidv4 } from 'uuid';
-import { Db } from './db';
+import type { Db } from './db';
 
 const T = {
     featureEnvs: 'feature_environments',

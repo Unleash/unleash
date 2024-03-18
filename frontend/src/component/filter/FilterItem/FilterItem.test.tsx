@@ -1,6 +1,10 @@
 import { screen, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FilterItem, FilterItemParams, IFilterItemProps } from './FilterItem';
+import {
+    FilterItem,
+    type FilterItemParams,
+    type IFilterItemProps,
+} from './FilterItem';
 
 const getOption = (option: string) =>
     screen.getByText(option).closest('li')!.querySelector('input')!;

@@ -1,4 +1,4 @@
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import {
     DELETE_SEGMENT,

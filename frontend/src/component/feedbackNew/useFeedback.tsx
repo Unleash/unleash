@@ -1,11 +1,11 @@
 import {
-    IFeedbackCategory,
+    type IFeedbackCategory,
     useUserSubmittedFeedback,
 } from 'hooks/useSubmittedFeedback';
 import {
     FeedbackContext,
-    FeedbackMode,
-    IFeedbackContext,
+    type FeedbackMode,
+    type IFeedbackContext,
 } from './FeedbackContext';
 import { useContext } from 'react';
 

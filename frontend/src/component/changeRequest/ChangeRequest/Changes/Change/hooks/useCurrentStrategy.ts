@@ -1,4 +1,4 @@
-import {
+import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,

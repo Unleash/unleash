@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { InstanceAdminStatsSchema } from 'openapi';
+import type { InstanceAdminStatsSchema } from 'openapi';
 
 export interface IInstanceStatsResponse {
     stats?: InstanceAdminStatsSchema;

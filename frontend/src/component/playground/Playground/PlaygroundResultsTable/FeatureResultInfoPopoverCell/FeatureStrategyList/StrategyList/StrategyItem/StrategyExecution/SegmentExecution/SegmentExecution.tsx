@@ -1,5 +1,5 @@
-import { Fragment, VFC } from 'react';
-import { PlaygroundSegmentSchema, PlaygroundRequestSchema } from 'openapi';
+import { Fragment, type VFC } from 'react';
+import type { PlaygroundSegmentSchema, PlaygroundRequestSchema } from 'openapi';
 import { ConstraintExecution } from '../ConstraintExecution/ConstraintExecution';
 import CancelOutlined from '@mui/icons-material/CancelOutlined';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';

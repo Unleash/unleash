@@ -1,17 +1,25 @@
 import memoizee from 'memoizee';
 import { ValidationError } from 'joi';
-import { getAddons, IAddonProviders } from '../addons';
+import { getAddons, type IAddonProviders } from '../addons';
 import * as events from '../types/events';
 import { addonSchema } from './addon-schema';
 import NameExistsError from '../error/name-exists-error';
-import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import { Logger } from '../logger';
-import TagTypeService from '../features/tag-type/tag-type-service';
-import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
-import { IUnleashStores, IUnleashConfig, SYSTEM_USER } from '../types';
-import { IAddonDefinition } from '../types/model';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
+import type { Logger } from '../logger';
+import type TagTypeService from '../features/tag-type/tag-type-service';
+import type {
+    IAddon,
+    IAddonDto,
+    IAddonStore,
+} from '../types/stores/addon-store';
+import {
+    type IUnleashStores,
+    type IUnleashConfig,
+    SYSTEM_USER,
+} from '../types';
+import type { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 import { omitKeys } from '../util';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);

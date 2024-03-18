@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, FC } from 'react';
+import { useState, useMemo, useCallback, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Link, Typography, styled } from '@mui/material';
 import Extension from '@mui/icons-material/Extension';
@@ -20,7 +20,7 @@ import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IStrategy } from 'interfaces/strategy';
+import type { IStrategy } from 'interfaces/strategy';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
 import { useTable, useSortBy } from 'react-table';

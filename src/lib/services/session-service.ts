@@ -1,7 +1,7 @@
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import { Logger } from '../logger';
-import { ISession, ISessionStore } from '../types/stores/session-store';
+import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { Logger } from '../logger';
+import type { ISession, ISessionStore } from '../types/stores/session-store';
 
 export default class SessionService {
     private logger: Logger;

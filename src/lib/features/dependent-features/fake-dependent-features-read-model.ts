@@ -1,5 +1,5 @@
-import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
-import { IDependency, IFeatureDependency } from '../../types';
+import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
+import type { IDependency, IFeatureDependency } from '../../types';
 
 export class FakeDependentFeaturesReadModel
     implements IDependentFeaturesReadModel

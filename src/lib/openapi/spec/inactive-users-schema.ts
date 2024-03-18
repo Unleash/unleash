@@ -1,5 +1,5 @@
 import { inactiveUserSchema } from './inactive-user-schema';
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 
 export const inactiveUsersSchema = {
     $id: '#/components/schemas/inactiveUsersSchema',

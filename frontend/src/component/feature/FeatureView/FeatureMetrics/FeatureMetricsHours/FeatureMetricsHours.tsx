@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import GeneralSelect, {
-    IGeneralSelectProps,
+    type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
@@ -28,7 +28,7 @@ export const FeatureMetricsHours = ({
     const { trackEvent } = usePlausibleTracker();
 
     const onChange: IGeneralSelectProps['onChange'] = (key) => {
-        setHoursBack(parseInt(key));
+        setHoursBack(Number.parseInt(key));
         trackEvent('feature-metrics', {
             props: {
                 eventType: 'change-period',

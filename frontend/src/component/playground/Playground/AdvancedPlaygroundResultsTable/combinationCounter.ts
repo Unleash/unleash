@@ -1,4 +1,4 @@
-import { AdvancedPlaygroundFeatureSchema } from 'openapi';
+import type { AdvancedPlaygroundFeatureSchema } from 'openapi';
 
 export const countCombinations = (
     features: AdvancedPlaygroundFeatureSchema[],

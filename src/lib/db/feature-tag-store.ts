@@ -1,15 +1,15 @@
-import { Logger, LogProvider } from '../logger';
-import { ITag } from '../types';
-import EventEmitter from 'events';
+import type { Logger, LogProvider } from '../logger';
+import type { ITag } from '../types';
+import type EventEmitter from 'events';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import {
+import type {
     IFeatureAndTag,
     IFeatureTag,
     IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import { Db } from './db';
+import type { Db } from './db';
 import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = ['feature_name', 'tag_type', 'tag_value'];

@@ -1,4 +1,4 @@
-import {
+import type {
     IFeatureToggle,
     ILastSeenEnvironments,
 } from 'interfaces/featureToggle';

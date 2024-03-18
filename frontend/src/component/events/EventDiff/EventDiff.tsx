@@ -1,7 +1,7 @@
 import { diff } from 'deep-diff';
-import { IEvent } from 'interfaces/event';
+import type { IEvent } from 'interfaces/event';
 import { useTheme } from '@mui/system';
-import { JSX, CSSProperties } from 'react';
+import type { JSX, CSSProperties } from 'react';
 
 const DIFF_PREFIXES: Record<string, string> = {
     A: ' ',

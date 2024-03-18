@@ -1,9 +1,9 @@
-import {
+import type {
     IEnvironmentProjectLink,
     IProjectMembersCount,
     ProjectModeCount,
 } from './project-store';
-import {
+import type {
     IEnvironment,
     IFeatureNaming,
     IProject,
@@ -11,8 +11,8 @@ import {
     IProjectWithCount,
     ProjectMode,
 } from '../../types/model';
-import { Store } from '../../types/stores/store';
-import { CreateFeatureStrategySchema } from '../../openapi';
+import type { Store } from '../../types/stores/store';
+import type { CreateFeatureStrategySchema } from '../../openapi';
 
 export interface IProjectInsert {
     id: string;

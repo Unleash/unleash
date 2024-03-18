@@ -1,6 +1,6 @@
 import { FrontendApiService } from './frontend-api-service';
 import { SegmentReadModel } from '../segment/segment-read-model';
-import ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2';
+import type ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2';
 import SettingService from '../../services/setting-service';
 import SettingStore from '../../db/setting-store';
 import {
@@ -9,14 +9,14 @@ import {
     createFakeFeatureToggleService,
     createFeatureToggleService,
 } from '../index';
-import ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model';
-import { IUnleashConfig } from '../../types';
-import { Db } from '../../db/db';
+import type { IUnleashConfig } from '../../types';
+import type { Db } from '../../db/db';
 
 export const createFrontendApiService = (
     db: Db,

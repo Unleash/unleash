@@ -1,4 +1,4 @@
-import { ReactNode, VFC, useState } from 'react';
+import { type ReactNode, type VFC, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -20,7 +20,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { FeatureSchema } from 'openapi';
+import type { FeatureSchema } from 'openapi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IProjectFeatureTogglesHeaderProps {

@@ -1,5 +1,5 @@
-import { Knex } from 'knex';
-import { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { Knex } from 'knex';
+import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 
 export interface NormalizeParamsDefaults {
     limitDefault: number;

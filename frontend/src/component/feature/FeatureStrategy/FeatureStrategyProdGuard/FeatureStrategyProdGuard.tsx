@@ -3,7 +3,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Alert } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { PRODUCTION } from 'constants/environmentTypes';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { createLocalStorage } from 'utils/createLocalStorage';
 
 interface IFeatureStrategyProdGuardProps {

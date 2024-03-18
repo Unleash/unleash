@@ -4,7 +4,7 @@ import {
     constraintStringTypeSchema,
 } from '../../schema/constraint-value-types';
 import BadDataError from '../../error/bad-data-error';
-import { ILegalValue } from '../../types/stores/context-field-store';
+import type { ILegalValue } from '../../types/stores/context-field-store';
 import { parseStrictSemVer } from '../semver';
 
 export const validateNumber = async (value: unknown): Promise<void> => {

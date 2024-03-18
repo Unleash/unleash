@@ -1,6 +1,6 @@
 import { TextField, Typography } from '@mui/material';
-import { AddonParameterSchema, AddonSchema } from 'openapi';
-import { ChangeEventHandler } from 'react';
+import type { AddonParameterSchema, AddonSchema } from 'openapi';
+import type { ChangeEventHandler } from 'react';
 import { styled } from '@mui/material';
 
 const MASKED_VALUE = '*****';

@@ -1,7 +1,8 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IGroupUser } from 'interfaces/group';
-import React, { useMemo, useState } from 'react';
+import type { IGroupUser } from 'interfaces/group';
+import type React from 'react';
+import { useMemo, useState } from 'react';
 import { GroupPopover } from './GroupPopover/GroupPopover';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 

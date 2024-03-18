@@ -1,11 +1,11 @@
-import {
+import type {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundResponseSchema,
     PlaygroundRequestSchema,
     PlaygroundResponseSchema,
     PlaygroundStrategySchema,
 } from '../../openapi';
-import {
+import type {
     AdvancedPlaygroundFeatureEvaluationResult,
     PlaygroundFeatureEvaluationResult,
 } from './playground-service';

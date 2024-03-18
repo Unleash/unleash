@@ -1,4 +1,5 @@
 import { Box, styled } from '@mui/material';
+import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 
 const Grid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -11,10 +12,6 @@ const Overview = styled(Box)(({ theme }) => ({
 }));
 
 const Health = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 5',
-}));
-
-const LeadTime = styled(Box)(({ theme }) => ({
     gridColumn: 'span 5',
 }));
 
@@ -38,7 +35,7 @@ export const ProjectInsights = () => {
                 flags
             </Overview>
             <Health>Project Health</Health>
-            <LeadTime>Lead time</LeadTime>
+            <LeadTimeForChanges />
             <ToggleTypesUsed>Toggle types used</ToggleTypesUsed>
             <ProjectMembers>Project members</ProjectMembers>
             <ChangeRequests>Change Requests</ChangeRequests>

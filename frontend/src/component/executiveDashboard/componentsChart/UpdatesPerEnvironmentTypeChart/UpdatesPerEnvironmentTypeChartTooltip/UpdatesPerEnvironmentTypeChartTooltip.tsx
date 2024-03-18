@@ -39,7 +39,7 @@ const InfoSummary = ({ data }: { data: { key: string; value: number }[] }) => (
     <Typography variant={'body1'} component={'p'}>
         <Box display={'flex'} flexDirection={'row'}>
             {data.map(({ key, value }) => (
-                <div style={{ flex: 1, flexDirection: 'column' }}>
+                <div style={{ flex: 1, flexDirection: 'column' }} key={key}>
                     <div
                         style={{
                             flex: 1,

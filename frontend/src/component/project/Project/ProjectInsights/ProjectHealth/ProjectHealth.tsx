@@ -1,7 +1,7 @@
 import { ProjectHealthChart } from './ProjectHealthChart';
 import { Alert, Box, styled, Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const Dot = styled('span', {
     shouldForwardProp: (prop) => prop !== 'color',

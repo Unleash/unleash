@@ -39,6 +39,10 @@ const StatusWithDot = styled(Box)(({ theme }) => ({
 export const ProjectHealth = () => {
     const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
+    const active = 15;
+    const stale = 10;
+    const potentiallyStale = 3;
+    const health = 93;
 
     return (
         <Container>
@@ -55,10 +59,10 @@ export const ProjectHealth = () => {
                 })}
             >
                 <ProjectHealthChart
-                    active={10}
-                    stale={10}
-                    potentiallyStale={3}
-                    health={98}
+                    active={active}
+                    stale={stale}
+                    potentiallyStale={potentiallyStale}
+                    health={health}
                 />
                 <FlagCounts>
                     <Box>
@@ -66,7 +70,7 @@ export const ProjectHealth = () => {
                             <Dot color={theme.palette.success.border} />
                             <Box sx={{ fontWeight: 'bold' }}>Active</Box>
                         </StatusWithDot>
-                        <FlagsCount>12 feature flags</FlagsCount>
+                        <FlagsCount>{active} feature flags</FlagsCount>
                     </Box>
                     <Box>
                         <StatusWithDot>
@@ -76,7 +80,9 @@ export const ProjectHealth = () => {
                             </Box>
                             <Link to='/feature-toggle-type'>(configure)</Link>
                         </StatusWithDot>
-                        <FlagsCount>3 feature flags</FlagsCount>
+                        <FlagsCount>
+                            {potentiallyStale} feature flags
+                        </FlagsCount>
                     </Box>
                     <Box>
                         <StatusWithDot>
@@ -86,7 +92,7 @@ export const ProjectHealth = () => {
                                 (view flags)
                             </Link>
                         </StatusWithDot>
-                        <FlagsCount>5 feature flags</FlagsCount>
+                        <FlagsCount>{stale} feature flags</FlagsCount>
                     </Box>
                 </FlagCounts>
             </Box>

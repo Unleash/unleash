@@ -60,18 +60,23 @@ export interface IActionSetEvent {
 type BaseParameter = {
     name: string;
     label: string;
-    hidden?: boolean;
     optional?: boolean;
 };
 
+type ActionConfigurationHiddenParameter = BaseParameter & {
+    type: 'hidden';
+};
+
 type ActionConfigurationSelectParameter = BaseParameter & {
+    type: 'select';
     options: string[];
 };
 
-type ActionConfigurationParameter = ActionConfigurationSelectParameter;
+export type ActionConfigurationParameter =
+    | ActionConfigurationHiddenParameter
+    | ActionConfigurationSelectParameter;
 
 export type ActionConfiguration = {
-    name: string;
     label: string;
     description?: string;
     category?: string;

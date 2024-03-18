@@ -6,7 +6,7 @@ import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
 import { useEffect, useMemo } from 'react';
-import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameter/ProjectActionsActionParameterAutocomplete';
+import { ProjectActionsActionParameter } from './ProjectActionsActionParameter/ProjectActionsActionParameter';
 import { ActionConfigurations } from 'interfaces/action';
 import { ProjectActionsActionSelect } from './ProjectActionsActionSelect';
 
@@ -115,7 +115,9 @@ export const ProjectActionsActionItem = ({
     );
 
     const parameters =
-        actionConfiguration?.parameters.filter(({ hidden }) => !hidden) || [];
+        actionConfiguration?.parameters.filter(
+            ({ type }) => type !== 'hidden',
+        ) || [];
 
     return (
         <ProjectActionsFormItem index={index} header={header} separator='THEN'>
@@ -138,21 +140,24 @@ export const ProjectActionsActionItem = ({
                     condition={parameters.length > 0}
                     show={
                         <StyledItemRow>
-                            {parameters.map(({ name, label, options }) => (
-                                <StyledFieldContainer key={name}>
-                                    <ProjectActionsActionParameterAutocomplete
-                                        label={label}
-                                        value={executionParams[name] as string}
+                            {parameters.map((parameter) => (
+                                <StyledFieldContainer key={parameter.name}>
+                                    <ProjectActionsActionParameter
+                                        parameter={parameter}
+                                        value={
+                                            executionParams[
+                                                parameter.name
+                                            ] as string
+                                        }
                                         onChange={(value) =>
                                             stateChanged({
                                                 ...action,
                                                 executionParams: {
                                                     ...executionParams,
-                                                    [name]: value,
+                                                    [parameter.name]: value,
                                                 },
                                             })
                                         }
-                                        options={options}
                                     />
                                 </StyledFieldContainer>
                             ))}

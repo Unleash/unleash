@@ -44,6 +44,7 @@ import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/Hid
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -311,7 +312,7 @@ export const Project = () => {
                 <Route path='environments' element={<ProjectEnvironment />} />
                 <Route path='archive' element={<ProjectFeaturesArchive />} />
                 {Boolean(projectOverviewRefactor) && (
-                    <Route path='insights' element={<div>Hello world</div>} />
+                    <Route path='insights' element={<ProjectInsights />} />
                 )}
                 <Route path='logs' element={<ProjectLog />} />
                 <Route

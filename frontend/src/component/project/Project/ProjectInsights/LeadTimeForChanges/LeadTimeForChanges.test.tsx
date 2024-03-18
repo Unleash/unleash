@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ProjectDoraMetricsSchema } from 'openapi';
+import type { ProjectDoraMetricsSchema } from 'openapi';
 import { LeadTimeForChanges } from './LeadTimeForChanges';
 import { Route, Routes } from 'react-router-dom';
 

@@ -93,7 +93,8 @@ export const ProjectSettings = () => {
             tabs={tabs}
             value={
                 tabs.find(
-                    ({ id }) => id && location.pathname?.includes(`/${id}`),
+                    ({ id }) =>
+                        id && location.pathname?.includes(`/settings/${id}`),
                 )?.id || tabs[0].id
             }
             onChange={onChange}

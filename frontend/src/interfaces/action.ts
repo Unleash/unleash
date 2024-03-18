@@ -56,3 +56,32 @@ export interface IActionSetEvent {
     signal: ISignal;
     actionSet: IActionSetEventActionSet;
 }
+
+type BaseParameter = {
+    name: string;
+    label: string;
+    optional?: boolean;
+};
+
+type ActionConfigurationHiddenParameter = BaseParameter & {
+    type: 'hidden';
+};
+
+type ActionConfigurationSelectParameter = BaseParameter & {
+    type: 'select';
+    options: string[];
+};
+
+export type ActionConfigurationParameter =
+    | ActionConfigurationHiddenParameter
+    | ActionConfigurationSelectParameter;
+
+export type ActionConfiguration = {
+    label: string;
+    description?: string;
+    category?: string;
+    permissions: string[];
+    parameters: ActionConfigurationParameter[];
+};
+
+export type ActionConfigurations = Map<string, ActionConfiguration>;

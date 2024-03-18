@@ -1,24 +1,24 @@
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { randomId } from '../../util';
 import {
     ApiTokenType,
-    IApiToken,
-    IApiTokenCreate,
+    type IApiToken,
+    type IApiTokenCreate,
 } from '../../types/models/api-token';
 import { startOfHour } from 'date-fns';
 import {
     FEATURE_UPDATED,
-    IConstraint,
-    IStrategyConfig,
+    type IConstraint,
+    type IStrategyConfig,
     SYSTEM_USER,
 } from '../../types';
 import { ProxyRepository } from './index';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 
 let app: IUnleashTest;
 let db: ITestDb;

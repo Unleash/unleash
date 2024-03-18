@@ -1,5 +1,5 @@
 import { styled, Menu, MenuItem } from '@mui/material';
-import { FC, useState, MouseEvent } from 'react';
+import { type FC, useState, type MouseEvent } from 'react';
 
 interface IFilterItemOperatorProps {
     options: string[];

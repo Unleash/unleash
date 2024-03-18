@@ -4,7 +4,7 @@ import { Alert, Checkbox } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
-import { ILegalValue } from 'interfaces/context';
+import type { ILegalValue } from 'interfaces/context';
 import {
     filterLegalValues,
     LegalValueLabel,

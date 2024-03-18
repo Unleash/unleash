@@ -1,5 +1,5 @@
-import { IPersonalAPIToken } from './personalAPIToken';
-import { IUser } from './user';
+import type { IPersonalAPIToken } from './personalAPIToken';
+import type { IUser } from './user';
 
 export interface IServiceAccount extends IUser {
     tokens: IPersonalAPIToken[];

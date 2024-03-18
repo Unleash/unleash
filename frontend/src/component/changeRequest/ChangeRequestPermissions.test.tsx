@@ -6,10 +6,10 @@ import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
 import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
-import { FC } from 'react';
-import { IPermission } from '../../interfaces/user';
+import type { FC } from 'react';
+import type { IPermission } from '../../interfaces/user';
 import { SWRConfig } from 'swr';
-import { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 
 const server = testServerSetup();

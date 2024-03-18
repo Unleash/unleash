@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { AccessProviderMock } from '../component/providers/AccessProvider/AccessProviderMock';
 import { useChangeRequestsEnabled } from './useChangeRequestsEnabled';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { testServerRoute, testServerSetup } from '../utils/testServer';
 import {
     SKIP_CHANGE_REQUEST,

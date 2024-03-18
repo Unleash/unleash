@@ -1,11 +1,11 @@
 import Input from 'component/common/Input/Input';
 import { Button, FormControl, Typography, Switch, styled } from '@mui/material';
-import React from 'react';
+import type React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EDIT } from 'constants/misc';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 
 const StyledForm = styled('form')(() => ({

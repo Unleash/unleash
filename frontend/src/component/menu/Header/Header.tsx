@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ import {
     IconButton,
     Tooltip,
     styled,
-    Theme,
+    type Theme,
     Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';

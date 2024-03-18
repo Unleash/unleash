@@ -1,16 +1,17 @@
-import React, {
+import type React from 'react';
+import {
     forwardRef,
     Fragment,
-    RefObject,
+    type RefObject,
     useImperativeHandle,
 } from 'react';
 import { Button, styled, Tooltip } from '@mui/material';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
+import { type IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
 import { objectId } from 'utils/objectId';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

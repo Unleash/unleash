@@ -1,20 +1,20 @@
 import {
     Autocomplete,
-    AutocompleteProps,
+    type AutocompleteProps,
     Checkbox,
     Chip,
     createFilterOptions,
-    FilterOptionsState,
+    type FilterOptionsState,
     TextField,
 } from '@mui/material';
-import React from 'react';
+import type React from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-import { ITag, ITagType } from 'interfaces/tags';
+import type { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Add from '@mui/icons-material/Add';
-import { AutocompleteRenderGetTagProps } from '@mui/material/Autocomplete/Autocomplete';
+import type { AutocompleteRenderGetTagProps } from '@mui/material/Autocomplete/Autocomplete';
 
 export type TagOption = {
     title: string;

@@ -1,5 +1,5 @@
-import { IChangeRequestApproval } from '../../changeRequest.types';
-import { FC } from 'react';
+import type { IChangeRequestApproval } from '../../changeRequest.types';
+import type { FC } from 'react';
 import { Typography } from '@mui/material';
 import { ChangeRequestRejector } from './ChangeRequestReviewer';
 

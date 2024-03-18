@@ -1,5 +1,5 @@
-import { VFC } from 'react';
-import { Box, styled, Theme, Typography } from '@mui/material';
+import type { VFC } from 'react';
+import { Box, styled, type Theme, Typography } from '@mui/material';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 interface IFeatureStaleCellProps {

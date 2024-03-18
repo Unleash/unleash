@@ -1,5 +1,5 @@
-import { Fragment, VFC } from 'react';
-import { PlaygroundSegmentSchema } from 'openapi';
+import { Fragment, type VFC } from 'react';
+import type { PlaygroundSegmentSchema } from 'openapi';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';

@@ -1,13 +1,13 @@
-import { Request, Response } from 'express';
-import { IUnleashConfig } from '../types/option';
-import { IUnleashServices } from '../types/services';
-import { Logger } from '../logger';
-import { OpenApiService } from '../services/openapi-service';
+import type { Request, Response } from 'express';
+import type { IUnleashConfig } from '../types/option';
+import type { IUnleashServices } from '../types/services';
+import type { Logger } from '../logger';
+import type { OpenApiService } from '../services/openapi-service';
 
 import Controller from './controller';
 import { NONE } from '../types/permissions';
 import { createResponseSchema } from '../openapi/util/create-response-schema';
-import { HealthCheckSchema } from '../openapi/spec/health-check-schema';
+import type { HealthCheckSchema } from '../openapi/spec/health-check-schema';
 
 export class HealthCheckController extends Controller {
     private logger: Logger;

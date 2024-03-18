@@ -1,5 +1,5 @@
-import { FC, ReactNode } from 'react';
-import {
+import type { FC, ReactNode } from 'react';
+import type {
     IFeatureChange,
     ChangeRequestType,
     IChangeRequestFeature,

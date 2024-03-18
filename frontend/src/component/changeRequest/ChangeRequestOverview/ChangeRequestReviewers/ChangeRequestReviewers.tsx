@@ -1,9 +1,9 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestRejections } from './ChangeRequestRejections';
 import { ChangeRequestApprovals } from './ChangeRequestApprovals';
-import { ChangeRequestType } from '../../changeRequest.types';
+import type { ChangeRequestType } from '../../changeRequest.types';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),

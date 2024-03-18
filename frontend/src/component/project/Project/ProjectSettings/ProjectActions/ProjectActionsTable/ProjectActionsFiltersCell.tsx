@@ -1,6 +1,6 @@
 import { styled, Typography } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IActionSet } from 'interfaces/action';
+import type { IActionSet } from 'interfaces/action';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { formatOperatorDescription } from 'component/common/NewConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 

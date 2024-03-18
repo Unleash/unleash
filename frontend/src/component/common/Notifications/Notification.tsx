@@ -6,7 +6,7 @@ import {
     ListItemButton,
     useTheme,
 } from '@mui/material';
-import {
+import type {
     NotificationsSchemaItem,
     NotificationsSchemaItemNotificationType,
 } from 'openapi';

@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import Delete from '@mui/icons-material/Delete';
 import Undo from '@mui/icons-material/Undo';

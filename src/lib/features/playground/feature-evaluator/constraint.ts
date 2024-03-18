@@ -1,5 +1,5 @@
 import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
-import { Context } from './context';
+import type { Context } from './context';
 import { resolveContextValue } from './helpers';
 
 export interface Constraint {

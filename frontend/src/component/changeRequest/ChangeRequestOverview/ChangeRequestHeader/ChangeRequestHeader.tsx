@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
-import { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
+import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import {
     StyledPaper,

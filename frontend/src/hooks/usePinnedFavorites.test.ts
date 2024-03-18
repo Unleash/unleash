@@ -1,4 +1,4 @@
-import { Row } from 'react-table';
+import type { Row } from 'react-table';
 import { sortTypesWithFavorites } from './usePinnedFavorites';
 
 const data = [

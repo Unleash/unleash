@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import {
-    SidePanelListColumn,
+    type SidePanelListColumn,
     StyledSidePanelListColumn,
 } from './SidePanelList';
 

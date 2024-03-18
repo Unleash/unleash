@@ -1,13 +1,13 @@
 import {
-    IUnleashConfig,
-    IUnleashStores,
-    IUser,
+    type IUnleashConfig,
+    type IUnleashStores,
+    type IUser,
     serializeDates,
 } from '../../types';
-import { IInactiveUsersStore } from './types/inactive-users-store-type';
-import { Logger } from '../../logger';
-import { InactiveUserSchema } from '../../openapi';
-import { UserService } from '../../services';
+import type { IInactiveUsersStore } from './types/inactive-users-store-type';
+import type { Logger } from '../../logger';
+import type { InactiveUserSchema } from '../../openapi';
+import type { UserService } from '../../services';
 import { DAYS_TO_BE_COUNTED_AS_INACTIVE } from './createInactiveUsersService';
 
 export class InactiveUsersService {

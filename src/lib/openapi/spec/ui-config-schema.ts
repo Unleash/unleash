@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { versionSchema } from './version-schema';
 import { variantFlagSchema } from './variant-flag-schema';
 import { resourceLimitsSchema } from './resource-limits-schema';

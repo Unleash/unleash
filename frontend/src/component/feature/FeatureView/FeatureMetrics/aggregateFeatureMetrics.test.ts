@@ -1,4 +1,4 @@
-import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
+import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
 
 describe('aggregateFeatureMetrics', () => {

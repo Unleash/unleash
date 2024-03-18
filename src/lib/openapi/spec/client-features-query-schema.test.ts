@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { ClientFeaturesQuerySchema } from './client-features-query-schema';
+import type { ClientFeaturesQuerySchema } from './client-features-query-schema';
 
 test('clientFeatureQuerySchema empty', () => {
     const data: ClientFeaturesQuerySchema = {};

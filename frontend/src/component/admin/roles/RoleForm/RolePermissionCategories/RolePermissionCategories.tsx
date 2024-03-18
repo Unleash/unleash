@@ -7,8 +7,8 @@ import {
     PROJECT_ROLE_TYPES,
 } from '@server/util/constants';
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
-import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
-import { PredefinedRoleType } from 'interfaces/role';
+import type { ICheckedPermissions, IPermission } from 'interfaces/permissions';
+import type { PredefinedRoleType } from 'interfaces/role';
 import {
     flattenProjectPermissions,
     getCategorizedProjectPermissions,

@@ -1,4 +1,4 @@
-import { SWRConfiguration } from 'swr';
+import type { SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';

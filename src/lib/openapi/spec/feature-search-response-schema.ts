@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { variantSchema } from './variant-schema';
 import { constraintSchema } from './constraint-schema';
 import { overrideSchema } from './override-schema';

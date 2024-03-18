@@ -1,9 +1,9 @@
-import { VFC, ReactElement } from 'react';
+import type { VFC, ReactElement } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import Check from '@mui/icons-material/Check';
 import ReportProblemOutlined from '@mui/icons-material/ReportProblemOutlined';
 import { styled } from '@mui/material';
-import { IReportTableRow } from 'component/project/Project/ProjectHealth/ReportTable/ReportTable';
+import type { IReportTableRow } from 'component/project/Project/ProjectHealth/ReportTable/ReportTable';
 
 const StyledTextPotentiallyStale = styled('span')(({ theme }) => ({
     display: 'flex',

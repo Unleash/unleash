@@ -1,4 +1,4 @@
-import { ActionConfigurationParameter } from 'interfaces/action';
+import type { ActionConfigurationParameter } from 'interfaces/action';
 import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameterAutocomplete';
 
 interface IProjectActionsActionParameterProps {

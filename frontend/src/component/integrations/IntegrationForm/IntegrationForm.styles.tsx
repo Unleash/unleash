@@ -1,6 +1,11 @@
 import { Paper, styled } from '@mui/material';
 import { TextField, Typography } from '@mui/material';
-import { forwardRef, type FC, type ReactNode, ComponentProps } from 'react';
+import {
+    forwardRef,
+    type FC,
+    type ReactNode,
+    type ComponentProps,
+} from 'react';
 
 export const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',

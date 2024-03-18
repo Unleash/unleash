@@ -1,6 +1,6 @@
 import EventStore from './event-store';
 import getLogger from '../../../test/fixtures/no-logger';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import { defaultExperimentalOptions } from '../../types/experimental';
 import FlagResolver from '../../util/flag-resolver';
 import { EventEmitter } from 'stream';

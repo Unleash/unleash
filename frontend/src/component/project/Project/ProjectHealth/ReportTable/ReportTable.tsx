@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import {
+import type {
     IEnvironments,
     IFeatureToggleListItem,
 } from 'interfaces/featureToggle';
@@ -23,7 +23,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Search } from 'component/common/Search/Search';
 import { ReportExpiredCell } from './ReportExpiredCell/ReportExpiredCell';
 import { ReportStatusCell } from './ReportStatusCell/ReportStatusCell';
-import { formatStatus, ReportingStatus } from './ReportStatusCell/formatStatus';
+import {
+    formatStatus,
+    type ReportingStatus,
+} from './ReportStatusCell/formatStatus';
 import { formatExpiredAt } from './ReportExpiredCell/formatExpiredAt';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

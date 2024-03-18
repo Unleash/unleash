@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { createDependentFeatureSchema } from './create-dependent-feature-schema';
 
 export const dependentFeatureSchema = {

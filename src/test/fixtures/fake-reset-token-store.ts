@@ -1,5 +1,5 @@
 import NotFoundError from '../../lib/error/notfound-error';
-import {
+import type {
     IResetQuery,
     IResetToken,
     IResetTokenCreate,

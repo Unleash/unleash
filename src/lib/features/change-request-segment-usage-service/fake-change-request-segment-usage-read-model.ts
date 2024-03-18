@@ -1,4 +1,4 @@
-import {
+import type {
     ChangeRequestStrategy,
     IChangeRequestSegmentUsageReadModel,
 } from './change-request-segment-usage-read-model';

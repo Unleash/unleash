@@ -1,9 +1,9 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { styled, Typography } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 

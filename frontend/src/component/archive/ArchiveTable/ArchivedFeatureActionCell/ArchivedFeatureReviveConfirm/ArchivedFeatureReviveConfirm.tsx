@@ -1,5 +1,5 @@
 import { Alert, styled } from '@mui/material';
-import React from 'react';
+import type React from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';

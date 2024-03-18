@@ -1,4 +1,4 @@
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { styled } from '@mui/material';
 

@@ -7,9 +7,9 @@ import {
     includesFilter,
     getColumnValues,
 } from './useSearch';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { render, screen } from '@testing-library/react';
-import { IFeatureToggleListItem } from '../interfaces/featureToggle';
+import type { IFeatureToggleListItem } from '../interfaces/featureToggle';
 
 const columns = [
     {

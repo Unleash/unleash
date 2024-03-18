@@ -1,11 +1,11 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import { ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { MetricsSummaryTooltip } from './MetricsChartTooltip/MetricsChartTooltip';
 import { useMetricsSummary } from '../../hooks/useMetricsSummary';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
-import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
+import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
 interface IMetricsSummaryChartProps {
     metricsSummaryTrends: GroupedDataByProject<

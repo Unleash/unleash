@@ -1,8 +1,8 @@
-import {
+import type {
     IStatTrafficUsageKey,
     IStatTrafficUsage,
 } from './traffic-data-usage-store-type';
-import { ITrafficDataUsageStore } from '../../types';
+import type { ITrafficDataUsageStore } from '../../types';
 
 export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
     get(key: IStatTrafficUsageKey): Promise<IStatTrafficUsage> {

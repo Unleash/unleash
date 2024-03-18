@@ -1,5 +1,5 @@
 import { collapseHourlyMetrics } from './collapseHourlyMetrics';
-import { IClientMetricsEnv } from './client-metrics-store-v2-type';
+import type { IClientMetricsEnv } from './client-metrics-store-v2-type';
 import { addMinutes, startOfHour } from 'date-fns';
 
 test('collapseHourlyMetrics', () => {

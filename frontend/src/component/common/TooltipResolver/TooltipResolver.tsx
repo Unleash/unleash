@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { Tooltip, TooltipProps } from '@mui/material';
+import type { ReactNode } from 'react';
+import { Tooltip, type TooltipProps } from '@mui/material';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 
 export interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {

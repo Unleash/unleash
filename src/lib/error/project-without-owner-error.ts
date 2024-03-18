@@ -1,4 +1,4 @@
-import { ApiErrorSchema, UnleashError } from './unleash-error';
+import { type ApiErrorSchema, UnleashError } from './unleash-error';
 
 export default class ProjectWithoutOwnerError extends UnleashError {
     statusCode = 409;

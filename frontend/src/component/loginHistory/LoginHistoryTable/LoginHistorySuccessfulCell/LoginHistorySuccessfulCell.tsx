@@ -1,8 +1,8 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ILoginEvent } from 'interfaces/loginEvent';
+import type { ILoginEvent } from 'interfaces/loginEvent';
 import { Badge } from 'component/common/Badge/Badge';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 

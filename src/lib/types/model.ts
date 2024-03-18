@@ -1,11 +1,11 @@
-import { ITagType } from '../features/tag-type/tag-type-store-type';
-import { LogProvider } from '../logger';
-import { IRole } from './stores/access-store';
-import { IUser } from './user';
-import { ALL_OPERATORS } from '../util';
-import { IProjectStats } from '../features/project/project-service';
-import { CreateFeatureStrategySchema } from '../openapi';
-import { ProjectEnvironment } from '../features/project/project-store-type';
+import type { ITagType } from '../features/tag-type/tag-type-store-type';
+import type { LogProvider } from '../logger';
+import type { IRole } from './stores/access-store';
+import type { IUser } from './user';
+import type { ALL_OPERATORS } from '../util';
+import type { IProjectStats } from '../features/project/project-service';
+import type { CreateFeatureStrategySchema } from '../openapi';
+import type { ProjectEnvironment } from '../features/project/project-store-type';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 

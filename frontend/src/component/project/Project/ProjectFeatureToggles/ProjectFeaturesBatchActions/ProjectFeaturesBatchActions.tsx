@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import type { FeatureSchema } from 'openapi';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';

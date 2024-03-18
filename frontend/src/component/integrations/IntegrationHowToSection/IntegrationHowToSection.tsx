@@ -1,5 +1,5 @@
-import { AddonTypeSchema } from 'openapi';
-import { VFC } from 'react';
+import type { AddonTypeSchema } from 'openapi';
+import type { VFC } from 'react';
 import { StyledRaisedSection } from '../IntegrationForm/IntegrationForm.styles';
 import { Typography, styled } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon';

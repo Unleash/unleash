@@ -1,5 +1,5 @@
 import {
-    ClientInitOptions,
+    type ClientInitOptions,
     mapFeaturesForClient,
     mapSegmentsForClient,
     offlineUnleashClient,

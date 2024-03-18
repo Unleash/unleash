@@ -1,6 +1,6 @@
 import { Box, Button } from '@mui/material';
-import { IEnvironment } from 'interfaces/environments';
-import { FormEvent, VFC } from 'react';
+import type { IEnvironment } from 'interfaces/environments';
+import type { FormEvent, VFC } from 'react';
 import { PlaygroundCodeFieldset } from './PlaygroundCodeFieldset/PlaygroundCodeFieldset';
 import { PlaygroundConnectionFieldset } from './PlaygroundConnectionFieldset/PlaygroundConnectionFieldset';
 

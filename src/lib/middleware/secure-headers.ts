@@ -1,6 +1,6 @@
 import helmet from 'helmet';
-import { RequestHandler } from 'express';
-import { IUnleashConfig } from '../types';
+import type { RequestHandler } from 'express';
+import type { IUnleashConfig } from '../types';
 import { hoursToSeconds } from 'date-fns';
 
 const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {

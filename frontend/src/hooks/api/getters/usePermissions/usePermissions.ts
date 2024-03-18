@@ -1,8 +1,8 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
-import { IPermissions } from 'interfaces/permissions';
+import type { IPermissions } from 'interfaces/permissions';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 interface IUsePermissions {

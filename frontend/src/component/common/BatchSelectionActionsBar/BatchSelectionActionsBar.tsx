@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Box, Paper, styled, Typography } from '@mui/material';
 import { BATCH_ACTIONS_BAR, BATCH_SELECTED_COUNT } from 'utils/testIds';
 

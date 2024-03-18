@@ -1,8 +1,8 @@
 import EnvironmentService from './environment-service';
 import { createTestConfig } from '../../../test/config/test-config';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import NotFoundError from '../../error/notfound-error';
-import { IUnleashStores, SYSTEM_USER } from '../../types';
+import { type IUnleashStores, SYSTEM_USER } from '../../types';
 import NameExistsError from '../../error/name-exists-error';
 import { EventService } from '../../services';
 

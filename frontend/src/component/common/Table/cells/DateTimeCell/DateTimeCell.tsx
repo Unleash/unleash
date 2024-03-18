@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { parseISO } from 'date-fns';

@@ -1,6 +1,6 @@
-import { Db } from '../../db/db';
-import { Logger, LogProvider } from '../../logger';
-import {
+import type { Db } from '../../db/db';
+import type { Logger, LogProvider } from '../../logger';
+import type {
     IStatTrafficUsage,
     IStatTrafficUsageKey,
     ITrafficDataUsageStore,

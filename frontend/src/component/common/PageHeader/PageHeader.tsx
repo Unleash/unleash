@@ -1,13 +1,13 @@
-import { ReactNode, FC, VFC } from 'react';
+import type { ReactNode, FC, VFC } from 'react';
 import classnames from 'classnames';
 
 import {
     Divider,
     styled,
-    SxProps,
-    Theme,
+    type SxProps,
+    type Theme,
     Typography,
-    TypographyProps,
+    type TypographyProps,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

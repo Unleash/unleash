@@ -1,26 +1,30 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import Controller from '../controller';
-import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
-import { Logger } from '../../logger';
+import type {
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+} from '../../types';
+import type { Logger } from '../../logger';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { IAuthRequest, RequestBody } from '../unleash-types';
+import type { IAuthRequest, RequestBody } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     validatedEdgeTokensSchema,
-    ValidatedEdgeTokensSchema,
+    type ValidatedEdgeTokensSchema,
 } from '../../openapi/spec/validated-edge-tokens-schema';
-import ClientInstanceService from '../../features/metrics/instance/instance-service';
-import EdgeService from '../../services/edge-service';
-import { OpenApiService } from '../../services/openapi-service';
+import type ClientInstanceService from '../../features/metrics/instance/instance-service';
+import type EdgeService from '../../services/edge-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
-import ClientMetricsServiceV2 from '../../features/metrics/client-metrics/metrics-service-v2';
+import type { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
+import type ClientMetricsServiceV2 from '../../features/metrics/client-metrics/metrics-service-v2';
 import { clientMetricsEnvBulkSchema } from '../../features/metrics/shared/schema';
-import { TokenStringListSchema } from '../../openapi';
+import type { TokenStringListSchema } from '../../openapi';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;

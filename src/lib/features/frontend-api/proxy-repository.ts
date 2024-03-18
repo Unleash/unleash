@@ -1,22 +1,25 @@
 import EventEmitter from 'events';
-import { RepositoryInterface } from 'unleash-client/lib/repository';
-import { Segment } from 'unleash-client/lib/strategy/strategy';
-import {
+import type { RepositoryInterface } from 'unleash-client/lib/repository';
+import type { Segment } from 'unleash-client/lib/strategy/strategy';
+import type {
     EnhancedFeatureInterface,
     FeatureInterface,
 } from 'unleash-client/lib/feature';
-import { IApiUser } from '../../types/api-user';
-import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../../types';
+import type { IApiUser } from '../../types/api-user';
+import type {
+    IUnleashConfig,
+    IUnleashServices,
+    IUnleashStores,
+} from '../../types';
 import {
     mapFeaturesForClient,
     mapSegmentsForClient,
 } from '../playground/offline-unleash-client';
 import { ALL_ENVS } from '../../util/constants';
 import { UnleashEvents } from 'unleash-client';
-import { Logger } from '../../logger';
-import ConfigurationRevisionService, {
-    UPDATE_REVISION,
-} from '../feature-toggle/configuration-revision-service';
+import type { Logger } from '../../logger';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
 import {
     FUNCTION_TIME,
     PROXY_FEATURES_FOR_TOKEN_TIME,

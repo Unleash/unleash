@@ -1,5 +1,5 @@
 import { Box, styled, Typography } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({

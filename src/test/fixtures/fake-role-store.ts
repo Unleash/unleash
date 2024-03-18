@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { RoleSchema } from '../../lib/openapi';
-import { ICustomRole } from '../../lib/types/model';
-import { IRole, IUserRole } from '../../lib/types/stores/access-store';
-import {
+import type { RoleSchema } from '../../lib/openapi';
+import type { ICustomRole } from '../../lib/types/model';
+import type { IRole, IUserRole } from '../../lib/types/stores/access-store';
+import type {
     ICustomRoleInsert,
     ICustomRoleUpdate,
     IRoleStore,

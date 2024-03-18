@@ -1,12 +1,12 @@
 import Addon from './addon';
 
 import teamsDefinition from './teams-definition';
-import { IAddonConfig } from '../types/model';
+import type { IAddonConfig } from '../types/model';
 import {
-    FeatureEventFormatter,
+    type FeatureEventFormatter,
     FeatureEventFormatterMd,
 } from './feature-event-formatter-md';
-import { IEvent } from '../types/events';
+import type { IEvent } from '../types/events';
 
 interface ITeamsParameters {
     url: string;

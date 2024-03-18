@@ -7,20 +7,20 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
-import {
+import type {
     IFeatureStrategy,
     IFeatureStrategyPayload,
     IStrategy,
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';

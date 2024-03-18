@@ -1,4 +1,5 @@
-import React, { KeyboardEvent } from 'react';
+import type React from 'react';
+import type { KeyboardEvent } from 'react';
 import {
     Button,
     Dialog,

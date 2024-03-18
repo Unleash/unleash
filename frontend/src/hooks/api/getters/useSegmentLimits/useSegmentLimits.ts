@@ -1,5 +1,5 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { IUiConfig } from 'interfaces/uiConfig';
+import type { IUiConfig } from 'interfaces/uiConfig';
 
 type IUseSegmentLimits = Pick<
     IUiConfig,

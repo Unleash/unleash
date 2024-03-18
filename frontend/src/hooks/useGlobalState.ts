@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { createGlobalState } from 'react-hooks-global-state';
 
 type UseGlobalState<T> = () => [

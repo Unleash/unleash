@@ -2,7 +2,7 @@ import { Autocomplete, Button, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SegmentFormStep } from './SegmentForm';
+import type { SegmentFormStep } from './SegmentForm';
 import {
     SEGMENT_NAME_ID,
     SEGMENT_DESC_ID,
@@ -13,13 +13,13 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { GO_BACK } from 'constants/navigate';
 import {
-    ChangeRequestNewStrategy,
-    ChangeRequestUpdatedStrategy,
+    type ChangeRequestNewStrategy,
+    type ChangeRequestUpdatedStrategy,
     useStrategiesBySegment,
 } from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
 import { SegmentProjectAlert } from './SegmentProjectAlert';
 import { sortStrategiesByFeature } from './SegmentDelete/SegmentDeleteUsedSegment/sort-strategies';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 
 interface ISegmentFormPartOneProps {
     name: string;

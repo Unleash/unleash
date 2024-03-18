@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Box, IconButton, styled } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';

@@ -1,6 +1,10 @@
 import { FeedbackComponentWrapper } from './FeedbackComponent';
-import { FeedbackContext, FeedbackData, FeedbackMode } from './FeedbackContext';
-import { FC, useState } from 'react';
+import {
+    FeedbackContext,
+    type FeedbackData,
+    type FeedbackMode,
+} from './FeedbackContext';
+import { type FC, useState } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const FeedbackProvider: FC = ({ children }) => {

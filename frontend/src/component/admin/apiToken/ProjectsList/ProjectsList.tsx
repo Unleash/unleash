@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Fragment, VFC } from 'react';
+import { Fragment, type VFC } from 'react';
 import { Link } from 'react-router-dom';
 
 const StyledLink = styled(Link)(({ theme }) => ({

@@ -1,6 +1,6 @@
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeRequest.types';
+import type { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeRequest.types';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 

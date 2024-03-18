@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { type FC, useContext } from 'react';
 
 import CheckBox from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';

@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import type { FC, ReactElement } from 'react';
 import { Alert, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 

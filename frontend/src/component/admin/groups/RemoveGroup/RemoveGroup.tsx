@@ -3,8 +3,8 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import useToast from 'hooks/useToast';
-import { IGroup } from 'interfaces/group';
-import { FC } from 'react';
+import type { IGroup } from 'interfaces/group';
+import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 

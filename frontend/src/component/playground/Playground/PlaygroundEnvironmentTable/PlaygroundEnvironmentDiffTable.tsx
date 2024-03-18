@@ -8,7 +8,7 @@ import {
 
 import { VirtualizedTable } from 'component/common/Table';
 import { sortTypes } from 'utils/sortTypes';
-import { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
+import type { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
 import { Box } from '@mui/material';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';

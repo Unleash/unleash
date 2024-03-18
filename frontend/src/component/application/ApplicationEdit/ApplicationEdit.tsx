@@ -1,5 +1,6 @@
 /* eslint react/no-multi-comp:off */
-import React, { useContext, useState } from 'react';
+import type React from 'react';
+import { useContext, useState } from 'react';
 import {
     Box,
     Avatar,
@@ -180,7 +181,6 @@ export const ApplicationEdit = () => {
                             {renderModal()}
                             {tabData.map((tab, index) => (
                                 <TabPanel
-                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                                     key={index}
                                     value={activeTab}
                                     index={index}

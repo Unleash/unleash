@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Markdown } from 'component/common/Markdown/Markdown';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 const StyledMarkdown = styled(Markdown)(({ theme }) => ({
     'h1, h2, h3': {

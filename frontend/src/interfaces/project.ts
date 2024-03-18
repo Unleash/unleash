@@ -1,7 +1,7 @@
-import { ProjectStatsSchema } from 'openapi';
-import { IFeatureToggleListItem } from './featureToggle';
-import { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
-import { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectStatsSchema } from 'openapi';
+import type { IFeatureToggleListItem } from './featureToggle';
+import type { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
+import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
 
 export interface IProjectCard {
     name: string;

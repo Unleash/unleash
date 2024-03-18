@@ -6,7 +6,7 @@ import CheckMarkBadge from 'component/common/CheckmarkBadge/CheckMarkBadge';
 import UIContext from 'contexts/UIContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Close from '@mui/icons-material/Close';
-import { IToast } from 'interfaces/toast';
+import type { IToast } from 'interfaces/toast';
 import { TOAST_TEXT } from 'utils/testIds';
 
 const Toast = ({ title, text, type, confetti }: IToast) => {
@@ -41,7 +41,6 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
 
             return (
                 <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
                     style={style}
                     className={classnames(styles.starting, styles.anim)}

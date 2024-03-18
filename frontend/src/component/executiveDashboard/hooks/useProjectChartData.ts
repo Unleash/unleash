@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { useProjectColor } from './useProjectColor';
 import { useTheme } from '@mui/material';
-import { GroupedDataByProject } from './useGroupedProjectTrends';
+import type { GroupedDataByProject } from './useGroupedProjectTrends';
 
 type ProjectFlagTrends = ExecutiveSummarySchema['projectFlagTrends'];
 

@@ -15,7 +15,7 @@ import {
     FEATURE_POTENTIALLY_STALE_ON,
     FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
 } from '../types/events';
-import { IAddonDefinition } from '../types/model';
+import type { IAddonDefinition } from '../types/model';
 
 const dataDogDefinition: IAddonDefinition = {
     name: 'datadog',

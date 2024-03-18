@@ -1,7 +1,7 @@
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import GeneralSelect, {
-    ISelectOption,
-    IGeneralSelectProps,
+    type ISelectOption,
+    type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 
 interface IFeatureTypeSelectProps

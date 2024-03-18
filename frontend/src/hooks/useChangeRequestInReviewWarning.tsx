@@ -1,6 +1,6 @@
 import { Alert } from '@mui/material';
 import { oneOf } from 'utils/oneOf';
-import { ChangeRequestType } from '../component/changeRequest/changeRequest.types';
+import type { ChangeRequestType } from '../component/changeRequest/changeRequest.types';
 
 export const useChangeRequestInReviewWarning = (
     draft: ChangeRequestType[] | undefined,

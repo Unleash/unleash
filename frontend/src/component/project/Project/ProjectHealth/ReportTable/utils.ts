@@ -1,5 +1,5 @@
 import differenceInDays from 'date-fns/differenceInDays';
-import { FeatureTypeSchema } from 'openapi';
+import type { FeatureTypeSchema } from 'openapi';
 
 export const getDiffInDays = (date: Date, now: Date) => {
     return Math.abs(differenceInDays(date, now));

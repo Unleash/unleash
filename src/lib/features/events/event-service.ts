@@ -1,11 +1,11 @@
-import { IUnleashConfig } from '../../types/option';
-import { IFeatureTagStore, IUnleashStores } from '../../types/stores';
-import { Logger } from '../../logger';
-import { IEventStore } from '../../types/stores/event-store';
-import { IBaseEvent, IEventList, IUserEvent } from '../../types/events';
-import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
-import EventEmitter from 'events';
-import { IApiUser, ITag, IUser } from '../../types';
+import type { IUnleashConfig } from '../../types/option';
+import type { IFeatureTagStore, IUnleashStores } from '../../types/stores';
+import type { Logger } from '../../logger';
+import type { IEventStore } from '../../types/stores/event-store';
+import type { IBaseEvent, IEventList, IUserEvent } from '../../types/events';
+import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type EventEmitter from 'events';
+import type { IApiUser, ITag, IUser } from '../../types';
 import { ApiTokenType } from '../../types/models/api-token';
 import {
     extractUserIdFromUser,

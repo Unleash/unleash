@@ -1,7 +1,7 @@
 import { Typography, styled, useTheme } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
-import { useMemo, VFC } from 'react';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import { useMemo, type VFC } from 'react';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { calculateVariantWeight } from 'component/common/util';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';

@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import {
     IconButton,
     ListItemIcon,

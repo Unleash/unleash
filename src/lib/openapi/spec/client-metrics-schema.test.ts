@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { ClientMetricsSchema } from './client-metrics-schema';
+import type { ClientMetricsSchema } from './client-metrics-schema';
 
 test('clientMetricsSchema full', () => {
     const data: ClientMetricsSchema = {

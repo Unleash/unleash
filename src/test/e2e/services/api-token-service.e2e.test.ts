@@ -1,14 +1,17 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { ApiTokenService } from '../../../lib/services/api-token-service';
 import { createTestConfig } from '../../config/test-config';
-import { ApiTokenType, IApiToken } from '../../../lib/types/models/api-token';
+import {
+    ApiTokenType,
+    type IApiToken,
+} from '../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { addDays, subDays } from 'date-fns';
-import ProjectService from '../../../lib/features/project/project-service';
+import type ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EventService } from '../../../lib/services';
-import { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types';
 
 let db: ITestDb;
 let stores: IUnleashStores;

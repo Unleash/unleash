@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ReactTimeAgo from 'react-timeago';
-import { IProjectHealthReport } from 'interfaces/project';
+import type { IProjectHealthReport } from 'interfaces/project';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 

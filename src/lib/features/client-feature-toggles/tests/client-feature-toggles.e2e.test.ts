@@ -1,12 +1,14 @@
 import { RoleName } from '../../../types/model';
-import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../../test/e2e/helpers/database-init';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../util/constants';
-import { IUserWithRootRole } from '../../../types';
+import type { IUserWithRootRole } from '../../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;

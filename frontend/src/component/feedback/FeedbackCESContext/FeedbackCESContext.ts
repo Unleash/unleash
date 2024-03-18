@@ -1,4 +1,5 @@
-import React, { createContext } from 'react';
+import type React from 'react';
+import { createContext } from 'react';
 
 export type ShowFeedbackCES = React.Dispatch<
     React.SetStateAction<IFeedbackCESState | undefined>

@@ -1,11 +1,11 @@
-import React from 'react';
+import type React from 'react';
 import { trim } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
-import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
 import Select from 'component/common/select';

@@ -1,5 +1,5 @@
 import { Link } from '@mui/material';
-import { AnchorHTMLAttributes, ComponentProps } from 'react';
+import type { AnchorHTMLAttributes, ComponentProps } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 

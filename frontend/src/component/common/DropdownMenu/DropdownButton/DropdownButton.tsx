@@ -1,5 +1,5 @@
-import { ReactNode, VFC } from 'react';
-import { Button, ButtonProps, Icon } from '@mui/material';
+import type { ReactNode, VFC } from 'react';
+import { Button, type ButtonProps, Icon } from '@mui/material';
 
 interface IDropdownButtonProps {
     label: string;

@@ -1,4 +1,4 @@
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 import { ConditionallyRender } from '../../../ConditionallyRender/ConditionallyRender';
 import { Tooltip, Box, styled } from '@mui/material';
 import { stringOperators } from 'constants/operators';

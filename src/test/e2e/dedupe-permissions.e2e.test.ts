@@ -3,7 +3,7 @@ import { createTestConfig } from '../config/test-config';
 import { getInstance } from 'db-migrate';
 import { log } from 'db-migrate-shared';
 import { Client } from 'pg';
-import { IDBOption } from '../../lib/types';
+import type { IDBOption } from '../../lib/types';
 
 log.setLogLevel('error');
 

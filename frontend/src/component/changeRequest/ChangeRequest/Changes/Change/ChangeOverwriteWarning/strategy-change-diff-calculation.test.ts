@@ -1,9 +1,9 @@
-import {
+import type {
     ChangeRequestEditStrategy,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import omit from 'lodash.omit';
 import {
     getSegmentChangesThatWouldBeOverwritten,

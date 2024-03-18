@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { SegmentItem } from '../../../../common/SegmentItem/SegmentItem';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 
 interface IFeatureOverviewSegmentProps {
     segments?: ISegment[];

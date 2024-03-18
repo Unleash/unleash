@@ -1,8 +1,8 @@
-import { SWRConfiguration } from 'swr';
+import type { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IRoleWithPermissions } from 'interfaces/role';
+import type { IRoleWithPermissions } from 'interfaces/role';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 

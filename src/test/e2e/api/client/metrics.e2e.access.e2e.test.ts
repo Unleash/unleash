@@ -1,6 +1,6 @@
-import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
+import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import metricsExample from '../../../examples/client-metrics.json';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 

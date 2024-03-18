@@ -8,7 +8,7 @@ import {
     TablePlaceholder,
     TableRow,
 } from 'component/common/Table';
-import { SortingRule, useSortBy, useTable } from 'react-table';
+import { type SortingRule, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';

@@ -1,11 +1,12 @@
-import { Request } from 'express';
-import EventEmitter from 'events';
-import * as https from 'https';
-import * as http from 'http';
-import User, { IUser } from './user';
-import { IUnleashConfig } from './option';
-import { IUnleashStores } from './stores';
-import { IUnleashServices } from './services';
+import type { Request } from 'express';
+import type EventEmitter from 'events';
+import type * as https from 'https';
+import type * as http from 'http';
+import type User from './user';
+import type { IUser } from './user';
+import type { IUnleashConfig } from './option';
+import type { IUnleashStores } from './stores';
+import type { IUnleashServices } from './services';
 
 export interface AuthedRequest extends Request {
     user: User;

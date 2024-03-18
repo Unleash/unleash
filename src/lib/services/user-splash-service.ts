@@ -1,8 +1,8 @@
-import { Logger } from '../logger';
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import { IUser } from '../types/user';
-import {
+import type { Logger } from '../logger';
+import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { IUser } from '../types/user';
+import type {
     IUserSplash,
     IUserSplashStore,
 } from '../types/stores/user-splash-store';

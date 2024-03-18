@@ -1,9 +1,9 @@
 import { Avatar, Box, Link, styled } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IActionSet } from 'interfaces/action';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { IActionSet } from 'interfaces/action';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import { Link as RouterLink } from 'react-router-dom';
-import { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 import { wrapperStyles } from 'component/common/Table/cells/LinkCell/LinkCell.styles';
 import signals from 'assets/icons/signals.svg';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';

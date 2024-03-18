@@ -1,7 +1,7 @@
 import { CircularProgress, styled } from '@mui/material';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { IActionSetEvent } from 'interfaces/action';
+import type { IActionSetEvent } from 'interfaces/action';
 
 export const StyledSuccessIcon = styled(CheckCircleOutline)(({ theme }) => ({
     color: theme.palette.success.main,

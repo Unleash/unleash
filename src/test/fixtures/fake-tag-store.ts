@@ -1,5 +1,5 @@
-import { ITagStore } from '../../lib/types/stores/tag-store';
-import { ITag } from '../../lib/types/model';
+import type { ITagStore } from '../../lib/types/stores/tag-store';
+import type { ITag } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 
 export default class FakeTagStore implements ITagStore {

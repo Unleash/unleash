@@ -1,32 +1,32 @@
-import { IUnleashConfig } from '../../types/option';
+import type { IUnleashConfig } from '../../types/option';
 import {
-    IFlagResolver,
-    IUnleashStores,
+    type IFlagResolver,
+    type IUnleashStores,
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER,
 } from '../../types';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import NameExistsError from '../../error/name-exists-error';
-import { ISegmentStore } from './segment-store-type';
-import { ISegment } from '../../types/model';
+import type { ISegmentStore } from './segment-store-type';
+import type { ISegment } from '../../types/model';
 import { segmentSchema } from '../../services/segment-schema';
 import {
     SEGMENT_CREATED,
     SEGMENT_DELETED,
     SEGMENT_UPDATED,
 } from '../../types/events';
-import User from '../../types/user';
-import { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type User from '../../types/user';
+import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import BadDataError from '../../error/bad-data-error';
-import {
+import type {
     ISegmentService,
     StrategiesUsingSegment,
 } from './segment-service-interface';
 import { PermissionError } from '../../error';
-import { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
-import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import EventService from '../events/event-service';
-import { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
+import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type EventService from '../events/event-service';
+import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;

@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { FeatureEnvironmentSchema } from './feature-environment-schema';
+import type { FeatureEnvironmentSchema } from './feature-environment-schema';
 
 test('featureEnvironmentSchema', () => {
     const data: FeatureEnvironmentSchema = {

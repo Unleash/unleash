@@ -6,9 +6,9 @@ import {
     getColumnValues,
     getFilterableColumns,
     getFilterValues,
-    IGetSearchContextOutput,
+    type IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription';
 import {
     SearchInstructions,

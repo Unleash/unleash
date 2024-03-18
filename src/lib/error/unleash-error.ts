@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 
 export const UnleashApiErrorTypes = [
     'ContentTypeError',

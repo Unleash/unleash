@@ -1,7 +1,7 @@
 import useAPI from '../useApi/useApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useCallback } from 'react';
-import { DependentFeatureSchema } from '../../../../openapi';
+import type { DependentFeatureSchema } from '../../../../openapi';
 
 export const useDependentFeaturesApi = (project: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

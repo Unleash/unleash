@@ -1,11 +1,11 @@
-import { EventEmitter } from 'events';
-import { LogProvider, Logger } from '../logger';
-import {
+import type { EventEmitter } from 'events';
+import type { LogProvider, Logger } from '../logger';
+import type {
     IUserFeedback,
     IUserFeedbackKey,
     IUserFeedbackStore,
 } from '../types/stores/user-feedback-store';
-import { Db } from './db';
+import type { Db } from './db';
 
 const COLUMNS = ['given', 'user_id', 'feedback_id', 'nevershow'];
 const TABLE = 'user_feedback';

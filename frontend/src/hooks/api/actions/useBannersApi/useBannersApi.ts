@@ -1,4 +1,4 @@
-import { IInternalBanner } from 'interfaces/banner';
+import type { IInternalBanner } from 'interfaces/banner';
 import useAPI from '../useApi/useApi';
 
 const ENDPOINT = 'api/admin/banners';

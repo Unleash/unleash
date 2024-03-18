@@ -1,5 +1,5 @@
-import { VFC } from 'react';
-import { ChangeRequestType } from '../changeRequest.types';
+import type { VFC } from 'react';
+import type { ChangeRequestType } from '../changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
 import AccessTime from '@mui/icons-material/AccessTime';
 import Check from '@mui/icons-material/Check';

@@ -5,7 +5,7 @@ import { Alert, styled } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { Typography } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({

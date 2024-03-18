@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { FormControlLabel, Grid, Switch, TextField } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

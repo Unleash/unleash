@@ -3,7 +3,7 @@ import Edit from '@mui/icons-material/Edit';
 import { Box, styled } from '@mui/material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 
 const StyledBox = styled(Box)(() => ({
     display: 'flex',

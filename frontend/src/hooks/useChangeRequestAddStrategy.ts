@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IFeatureStrategyPayload } from '../interfaces/strategy';
+import type { IFeatureStrategyPayload } from '../interfaces/strategy';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests/usePendingChangeRequests';
 

@@ -1,23 +1,27 @@
 import crypto from 'crypto';
-import { Logger } from '../logger';
-import { IUnleashConfig, IUnleashStores, SYSTEM_USER } from '../types';
-import { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
-import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
-import { IRoleStore } from '../types/stores/role-store';
-import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
-import { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
-import { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
+import type { Logger } from '../logger';
+import {
+    type IUnleashConfig,
+    type IUnleashStores,
+    SYSTEM_USER,
+} from '../types';
+import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
+import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
+import type { IRoleStore } from '../types/stores/role-store';
+import type { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
+import type { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
+import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
 import { RoleName } from '../types/model';
 import {
     PublicSignupTokenCreatedEvent,
     PublicSignupTokenUpdatedEvent,
     PublicSignupTokenUserAddedEvent,
 } from '../types/events';
-import UserService from './user-service';
-import { IUser } from '../types/user';
+import type UserService from './user-service';
+import type { IUser } from '../types/user';
 import { URL } from 'url';
 import { add } from 'date-fns';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;

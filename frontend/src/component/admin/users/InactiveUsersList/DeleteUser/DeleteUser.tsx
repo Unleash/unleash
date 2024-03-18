@@ -6,7 +6,7 @@ import useLoading from 'hooks/useLoading';
 import { Typography } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
+import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(5),

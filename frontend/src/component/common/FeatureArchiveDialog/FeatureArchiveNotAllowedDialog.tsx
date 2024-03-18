@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Dialogue } from '../Dialogue/Dialogue';
 import { styled } from '@mui/material';
 import { Link } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FeatureNamingType } from 'interfaces/project';
+import type { FeatureNamingType } from 'interfaces/project';
 
 const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

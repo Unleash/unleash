@@ -1,5 +1,5 @@
-import { knex, Knex } from 'knex';
-import { IUnleashConfig } from '../types/option';
+import { knex, type Knex } from 'knex';
+import type { IUnleashConfig } from '../types/option';
 
 export function createDb({
     db,

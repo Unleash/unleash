@@ -1,21 +1,23 @@
-import FeatureToggleService from '../feature-toggle-service';
+import type FeatureToggleService from '../feature-toggle-service';
 import { createTestConfig } from '../../../../test/config/test-config';
-import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../../test/e2e/helpers/database-init';
 import { DEFAULT_ENV } from '../../../util';
-import { FeatureStrategySchema } from '../../../openapi';
-import User from '../../../types/user';
+import type { FeatureStrategySchema } from '../../../openapi';
+import type User from '../../../types/user';
 import {
-    IConstraint,
-    IUnleashConfig,
-    IUnleashStores,
-    IVariant,
+    type IConstraint,
+    type IUnleashConfig,
+    type IUnleashStores,
+    type IVariant,
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../../../types';
 import EnvironmentService from '../../project-environments/environment-service';
 import { ForbiddenError, PatternError, PermissionError } from '../../../error';
-import { ISegmentService } from '../../segment/segment-service-interface';
+import type { ISegmentService } from '../../segment/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
 import {
     insertFeatureEnvironmentsLastSeen,

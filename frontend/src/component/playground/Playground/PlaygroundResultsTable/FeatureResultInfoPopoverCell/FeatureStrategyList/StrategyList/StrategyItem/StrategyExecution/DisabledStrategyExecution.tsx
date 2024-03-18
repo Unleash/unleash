@@ -1,8 +1,11 @@
-import { Fragment, VFC } from 'react';
+import { Fragment, type VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
-import { PlaygroundRequestSchema, PlaygroundStrategySchema } from 'openapi';
+import type {
+    PlaygroundRequestSchema,
+    PlaygroundStrategySchema,
+} from 'openapi';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
 import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
 import { formattedStrategyNames } from 'utils/strategyNames';
@@ -75,7 +78,6 @@ export const DisabledStrategyExecution: VFC<IDisabledStrategyExecutionProps> =
         return (
             <StyledStrategyExecutionWrapper>
                 {items.map((item, index) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     <Fragment key={index}>
                         <ConditionallyRender
                             condition={

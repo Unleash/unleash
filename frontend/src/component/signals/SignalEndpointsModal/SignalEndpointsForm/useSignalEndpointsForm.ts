@@ -1,6 +1,6 @@
 import { URL_SAFE_BASIC } from '@server/util/constants';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import { useEffect, useState } from 'react';
 
 enum ErrorField {

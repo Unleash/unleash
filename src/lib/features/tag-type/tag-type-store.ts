@@ -1,10 +1,10 @@
-import { EventEmitter } from 'events';
-import { LogProvider, Logger } from '../../logger';
+import type { EventEmitter } from 'events';
+import type { LogProvider, Logger } from '../../logger';
 import { DB_TIME } from '../../metric-events';
 import metricsHelper from '../../util/metrics-helper';
 import NotFoundError from '../../error/notfound-error';
-import { ITagType, ITagTypeStore } from './tag-type-store-type';
-import { Db } from '../../db/db';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type';
+import type { Db } from '../../db/db';
 
 const COLUMNS = ['name', 'description', 'icon'];
 const TABLE = 'tag_types';

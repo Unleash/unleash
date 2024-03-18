@@ -9,7 +9,7 @@ import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMat
 import { usePasswordApi } from 'hooks/api/actions/usePasswordApi/usePasswordApi';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useToast from 'hooks/useToast';
-import { SyntheticEvent, useState } from 'react';
+import { type SyntheticEvent, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { AuthenticationError } from 'utils/apiUtils';
 

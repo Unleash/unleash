@@ -6,7 +6,7 @@ import { IN } from 'constants/operators';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
-import { ActionsFilterState } from '../../useProjectActionsForm';
+import type { ActionsFilterState } from '../../useProjectActionsForm';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Add from '@mui/icons-material/Add';
@@ -108,7 +108,7 @@ export const ProjectActionsFormStepSource = ({
                 value={`${sourceId}`}
                 onChange={(v) => {
                     validateSourceId(Number(v));
-                    setSourceId(parseInt(v));
+                    setSourceId(Number.parseInt(v));
                 }}
             />
             <ConditionallyRender

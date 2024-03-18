@@ -1,4 +1,4 @@
-import supertest, { Test } from 'supertest';
+import supertest, { type Test } from 'supertest';
 import createStores from '../../../../test/fixtures/store';
 import getLogger from '../../../../test/fixtures/no-logger';
 import getApp from '../../../app';
@@ -7,9 +7,9 @@ import FeatureController from '../client-feature-toggle.controller';
 import { createTestConfig } from '../../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
 import { ClientSpecService } from '../../../services/client-spec-service';
-import { Application } from 'express';
-import { IFlagResolver } from '../../../types';
-import TestAgent from 'supertest/lib/agent';
+import type { Application } from 'express';
+import type { IFlagResolver } from '../../../types';
+import type TestAgent from 'supertest/lib/agent';
 
 let app: Application;
 

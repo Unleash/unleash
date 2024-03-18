@@ -1,6 +1,6 @@
 import { ApiTokenType } from '../../types/models/api-token';
 import { validateSchema } from '../validate';
-import { ApiTokenSchema } from './api-token-schema';
+import type { ApiTokenSchema } from './api-token-schema';
 
 const defaultData: ApiTokenSchema = {
     secret: '',

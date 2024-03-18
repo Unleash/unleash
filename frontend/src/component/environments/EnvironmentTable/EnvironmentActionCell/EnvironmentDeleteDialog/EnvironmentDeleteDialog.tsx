@@ -1,6 +1,7 @@
 import { styled, Alert } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { IEnvironment } from 'interfaces/environments';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import type { IEnvironment } from 'interfaces/environments';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { EnvironmentTableSingle } from 'component/environments/EnvironmentTable/EnvironmentTableSingle';

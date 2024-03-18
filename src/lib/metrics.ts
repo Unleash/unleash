@@ -1,7 +1,7 @@
 import { collectDefaultMetrics } from 'prom-client';
 import memoizee from 'memoizee';
-import EventEmitter from 'events';
-import { Knex } from 'knex';
+import type EventEmitter from 'events';
+import type { Knex } from 'knex';
 import * as events from './metric-events';
 import {
     DB_POOL_UPDATE,
@@ -19,19 +19,19 @@ import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
 } from './types/events';
-import { IUnleashConfig } from './types/option';
-import { IUnleashStores } from './types/stores';
+import type { IUnleashConfig } from './types/option';
+import type { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
-import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import { ValidatedClientMetrics } from './features/metrics/shared/schema';
-import { IEnvironment } from './types';
+import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
+import type { ValidatedClientMetrics } from './features/metrics/shared/schema';
+import type { IEnvironment } from './types';
 import {
     createCounter,
     createGauge,
     createSummary,
     createHistogram,
 } from './util/metrics';
-import { SchedulerService } from './services';
+import type { SchedulerService } from './services';
 
 export default class MetricsMonitor {
     constructor() {}

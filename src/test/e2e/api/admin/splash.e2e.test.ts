@@ -1,13 +1,13 @@
-import { Application, NextFunction, Request, Response } from 'express';
+import type { Application, NextFunction, Request, Response } from 'express';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomAuth,
 } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { IUnleashConfig } from '../../../../lib/types/option';
-import { IUnleashServices } from '../../../../lib/types/services';
-import { IUnleashStores } from '../../../../lib/types';
+import type { IUnleashConfig } from '../../../../lib/types/option';
+import type { IUnleashServices } from '../../../../lib/types/services';
+import type { IUnleashStores } from '../../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

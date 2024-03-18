@@ -1,7 +1,7 @@
 import { ListItemText, Menu, MenuItem, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { useState } from 'react';
 
 const StyledListItemText = styled(ListItemText)(({ theme }) => ({

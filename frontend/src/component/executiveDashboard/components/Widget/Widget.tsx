@@ -1,8 +1,8 @@
-import { FC, ReactNode } from 'react';
-import { Paper, Typography, styled, SxProps } from '@mui/material';
+import type { FC, ReactNode } from 'react';
+import { Paper, Typography, styled, type SxProps } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles/createTheme';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({

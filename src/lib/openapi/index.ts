@@ -1,6 +1,6 @@
-import { OpenAPIV3 } from 'openapi-types';
+import type { OpenAPIV3 } from 'openapi-types';
 
-import { IServerOption } from '../types';
+import type { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
 import { openApiTags } from './util';
 import { URL } from 'url';

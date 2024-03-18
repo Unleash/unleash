@@ -1,16 +1,16 @@
-import React from 'react';
+import type React from 'react';
 import {
     FormControl,
     InputLabel,
     MenuItem,
     Select,
-    SelectProps,
-    SelectChangeEvent,
+    type SelectProps,
+    type SelectChangeEvent,
 } from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
 
 export interface ISelectOption {
     key: string;

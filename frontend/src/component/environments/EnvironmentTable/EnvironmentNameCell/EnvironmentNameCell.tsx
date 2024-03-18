@@ -1,5 +1,5 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IEnvironment } from 'interfaces/environments';
+import type { IEnvironment } from 'interfaces/environments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';

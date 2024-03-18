@@ -1,4 +1,4 @@
-import { IEnvironment } from 'interfaces/environments';
+import type { IEnvironment } from 'interfaces/environments';
 
 export const defaultEnvironment: IEnvironment = {
     name: '',

@@ -1,17 +1,17 @@
-import { EventEmitter } from 'events';
+import type { EventEmitter } from 'events';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
-import { IApiTokenStore } from '../types/stores/api-token-store';
+import type { IApiTokenStore } from '../types/stores/api-token-store';
 import {
-    ApiTokenType,
-    IApiToken,
-    IApiTokenCreate,
+    type ApiTokenType,
+    type IApiToken,
+    type IApiTokenCreate,
     isAllProjects,
 } from '../types/models/api-token';
 import { ALL_PROJECTS } from '../util/constants';
-import { Db } from './db';
+import type { Db } from './db';
 import { inTransaction } from './transaction';
 
 const TABLE = 'api_tokens';

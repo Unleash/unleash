@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi, {
-    ISimpleAuthSettings,
+    type ISimpleAuthSettings,
 } from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';

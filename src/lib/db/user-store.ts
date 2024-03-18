@@ -1,16 +1,16 @@
 /* eslint camelcase: "off" */
 
-import { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
 import NotFoundError from '../error/notfound-error';
-import {
+import type {
     ICreateUser,
     IUserLookup,
     IUserStore,
     IUserUpdateFields,
 } from '../types/stores/user-store';
-import { Db } from './db';
+import type { Db } from './db';
 
 const TABLE = 'users';
 

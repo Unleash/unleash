@@ -1,4 +1,4 @@
-import { ReactNode, VFC } from 'react';
+import type { ReactNode, VFC } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';

@@ -22,7 +22,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { PAT_LIMIT } from '@server/util/constants';
 import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
 import { useSearch } from 'hooks/useSearch';
-import {
+import type {
     INewPersonalAPIToken,
     IPersonalAPIToken,
 } from 'interfaces/personalAPIToken';
@@ -30,10 +30,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
     useTable,
-    SortingRule,
+    type SortingRule,
     useSortBy,
     useFlexLayout,
-    Column,
+    type Column,
 } from 'react-table';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { sortTypes } from 'utils/sortTypes';

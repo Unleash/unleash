@@ -1,11 +1,11 @@
-import { MoveListItem, useDragItem } from 'hooks/useDragItem';
-import { Row } from 'react-table';
+import { type MoveListItem, useDragItem } from 'hooks/useDragItem';
+import type { Row } from 'react-table';
 import { styled, TableRow } from '@mui/material';
 import { TableCell } from 'component/common/Table';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UPDATE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
-import { ForwardedRef, useContext, useRef } from 'react';
+import { type ForwardedRef, useContext, useRef } from 'react';
 
 const StyledTableRow = styled(TableRow)(() => ({
     '&:hover': {

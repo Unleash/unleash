@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { ProjectSchema } from './project-schema';
+import type { ProjectSchema } from './project-schema';
 
 test('projectSchema', () => {
     const data: ProjectSchema = {

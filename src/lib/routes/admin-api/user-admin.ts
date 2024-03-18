@@ -1,62 +1,62 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../controller';
 import { ADMIN, NONE } from '../../types/permissions';
-import UserService from '../../services/user-service';
-import { AccountService } from '../../services/account-service';
-import { AccessService } from '../../services/access-service';
-import { Logger } from '../../logger';
-import { IUnleashConfig, IUnleashServices, RoleName } from '../../types';
-import { EmailService } from '../../services/email-service';
-import ResetTokenService from '../../services/reset-token-service';
-import { IAuthRequest } from '../unleash-types';
-import SettingService from '../../services/setting-service';
-import { IUser, SimpleAuthSettings } from '../../server-impl';
+import type UserService from '../../services/user-service';
+import type { AccountService } from '../../services/account-service';
+import type { AccessService } from '../../services/access-service';
+import type { Logger } from '../../logger';
+import type { IUnleashConfig, IUnleashServices, RoleName } from '../../types';
+import type { EmailService } from '../../services/email-service';
+import type ResetTokenService from '../../services/reset-token-service';
+import type { IAuthRequest } from '../unleash-types';
+import type SettingService from '../../services/setting-service';
+import type { IUser, SimpleAuthSettings } from '../../server-impl';
 import { simpleAuthSettingsKey } from '../../types/settings/simple-auth-settings';
 import { anonymise } from '../../util/anonymise';
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
-import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
+import { userSchema, type UserSchema } from '../../openapi/spec/user-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { usersSchema, UsersSchema } from '../../openapi/spec/users-schema';
+import { usersSchema, type UsersSchema } from '../../openapi/spec/users-schema';
 import {
     usersSearchSchema,
-    UsersSearchSchema,
+    type UsersSearchSchema,
 } from '../../openapi/spec/users-search-schema';
-import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
-import { UpdateUserSchema } from '../../openapi/spec/update-user-schema';
-import { PasswordSchema } from '../../openapi/spec/password-schema';
-import { IdSchema } from '../../openapi/spec/id-schema';
+import type { CreateUserSchema } from '../../openapi/spec/create-user-schema';
+import type { UpdateUserSchema } from '../../openapi/spec/update-user-schema';
+import type { PasswordSchema } from '../../openapi/spec/password-schema';
+import type { IdSchema } from '../../openapi/spec/id-schema';
 import {
     resetPasswordSchema,
-    ResetPasswordSchema,
+    type ResetPasswordSchema,
 } from '../../openapi/spec/reset-password-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { GroupService } from '../../services/group-service';
+import type { GroupService } from '../../services/group-service';
 import {
-    UsersGroupsBaseSchema,
+    type UsersGroupsBaseSchema,
     usersGroupsBaseSchema,
 } from '../../openapi/spec/users-groups-base-schema';
-import { IGroup } from '../../types/group';
-import { IFlagResolver } from '../../types/experimental';
+import type { IGroup } from '../../types/group';
+import type { IFlagResolver } from '../../types/experimental';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import {
-    AdminCountSchema,
+    type AdminCountSchema,
     adminCountSchema,
 } from '../../openapi/spec/admin-count-schema';
 import { BadDataError } from '../../error';
 import {
     createUserResponseSchema,
-    CreateUserResponseSchema,
+    type CreateUserResponseSchema,
 } from '../../openapi/spec/create-user-response-schema';
-import { IRoleWithPermissions } from '../../types/stores/access-store';
+import type { IRoleWithPermissions } from '../../types/stores/access-store';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;

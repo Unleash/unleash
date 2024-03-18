@@ -1,5 +1,5 @@
 import { Box, styled, Typography } from '@mui/material';
-import { ProjectStatsSchema } from 'openapi/models';
+import type { ProjectStatsSchema } from 'openapi/models';
 import { HelpPopper } from './HelpPopper';
 import { StatusBox } from './StatusBox';
 

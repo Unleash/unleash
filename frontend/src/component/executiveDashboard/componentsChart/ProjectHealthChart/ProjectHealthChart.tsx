@@ -1,6 +1,6 @@
 import 'chartjs-adapter-date-fns';
 import { useMemo, type VFC } from 'react';
-import { type ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
 import { useProjectChartData } from 'component/executiveDashboard/hooks/useProjectChartData';
 import {
@@ -8,7 +8,7 @@ import {
     NotEnoughData,
 } from 'component/executiveDashboard/components/LineChart/LineChart';
 import { useTheme } from '@mui/material';
-import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
+import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<

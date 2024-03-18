@@ -1,4 +1,4 @@
-import {
+import type {
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
     ISegmentReadModel,
@@ -6,9 +6,9 @@ import {
     IUnleashStores,
 } from '../../types';
 
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 
-import { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 
 export class ClientFeatureToggleService {
     private logger: Logger;

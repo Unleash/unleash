@@ -1,7 +1,7 @@
-import { IUnleashConfig } from '../types/option';
-import { Logger } from '../logger';
-import { Request } from 'express';
-import semver, { SemVer } from 'semver';
+import type { IUnleashConfig } from '../types/option';
+import type { Logger } from '../logger';
+import type { Request } from 'express';
+import semver, { type SemVer } from 'semver';
 import BadDataError from '../error/bad-data-error';
 import { mustParseStrictSemVer, parseStrictSemVer } from '../util/semver';
 

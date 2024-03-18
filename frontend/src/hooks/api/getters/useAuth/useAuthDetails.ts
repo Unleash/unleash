@@ -1,5 +1,5 @@
 import {
-    IAuthEndpointDetailsResponse,
+    type IAuthEndpointDetailsResponse,
     useAuthEndpoint,
 } from './useAuthEndpoint';
 

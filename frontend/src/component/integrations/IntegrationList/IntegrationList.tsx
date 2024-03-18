@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations';
 import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations';

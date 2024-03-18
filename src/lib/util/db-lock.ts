@@ -1,6 +1,6 @@
 import { Client } from 'pg';
-import { IDBOption } from '../types';
-import { Logger } from '../logger';
+import type { IDBOption } from '../types';
+import type { Logger } from '../logger';
 
 export const defaultLockKey = 479341;
 export const defaultTimeout = 30 * 60000;

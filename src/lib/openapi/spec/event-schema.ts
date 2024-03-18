@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { tagSchema } from './tag-schema';
 import { IEventTypes } from '../../types';
 import { variantSchema } from './variant-schema';

@@ -1,12 +1,12 @@
-import { ChangeEvent, VFC } from 'react';
+import type { ChangeEvent, VFC } from 'react';
 import { IconButton, styled, TextField, Tooltip } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { Autocomplete } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InputListField } from 'component/common/InputListField/InputListField';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { IOverride } from 'interfaces/featureToggle';
-import { OverridesDispatchType } from './useOverrides';
+import type { IOverride } from 'interfaces/featureToggle';
+import type { OverridesDispatchType } from './useOverrides';
 import SelectMenu from 'component/common/select';
 
 const StyledRow = styled('div')(({ theme }) => ({

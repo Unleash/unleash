@@ -1,8 +1,8 @@
-import { ISegmentStore } from './segment-store-type';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import type { ISegmentStore } from './segment-store-type';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import NotFoundError from '../../error/notfound-error';
-import { IUnleashStores, IUser } from '../../types';
+import type { IUnleashStores, IUser } from '../../types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { RoleDescription } from 'component/common/RoleDescription/RoleDescription';

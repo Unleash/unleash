@@ -1,8 +1,8 @@
-import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
+import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
 import {
     FeatureMetricsStats,
-    IFeatureMetricsStatsProps,
+    type IFeatureMetricsStatsProps,
 } from './FeatureMetricsStats';
 
 interface IFeatureMetricsStatsRawProps

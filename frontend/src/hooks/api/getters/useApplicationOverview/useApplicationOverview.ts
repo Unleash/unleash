@@ -1,7 +1,7 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { ApplicationOverviewSchema } from 'openapi';
+import type { ApplicationOverviewSchema } from 'openapi';
 
 const placeHolderApplication: ApplicationOverviewSchema = {
     environments: [],

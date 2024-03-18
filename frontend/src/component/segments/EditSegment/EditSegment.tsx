@@ -10,7 +10,7 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
-import React from 'react';
+import type React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm';

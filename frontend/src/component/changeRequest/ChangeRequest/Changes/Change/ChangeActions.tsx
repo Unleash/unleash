@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react';
-import {
+import type React from 'react';
+import { type FC, useState } from 'react';
+import type {
     ChangeRequestType,
     IChange,
     IChangeRequestAddStrategy,

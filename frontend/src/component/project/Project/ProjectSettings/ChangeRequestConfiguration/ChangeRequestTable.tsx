@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState, VFC } from 'react';
-import { HeaderGroup, useGlobalFilter, useTable } from 'react-table';
+import { useContext, useMemo, useState, type VFC } from 'react';
+import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
     SortableTableHeader,
@@ -18,7 +18,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
 import {
-    IChangeRequestConfig,
+    type IChangeRequestConfig,
     useChangeRequestApi,
 } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { UPDATE_PROJECT } from '@server/types/permissions';

@@ -1,10 +1,10 @@
-import { ILocationSettings } from 'hooks/useLocationSettings';
+import type { ILocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
-import { ChartOptions, defaults } from 'chart.js';
-import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
+import { type ChartOptions, defaults } from 'chart.js';
+import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { formatDateHM, formatDateYMD, formatDateYMDHM } from 'utils/formatDate';
-import { Theme } from '@mui/material/styles/createTheme';
-import { IPoint } from './createChartData';
+import type { Theme } from '@mui/material/styles/createTheme';
+import type { IPoint } from './createChartData';
 import { daysOrHours } from '../daysOrHours';
 
 const formatVariantEntry = (

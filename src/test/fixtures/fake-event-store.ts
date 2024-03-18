@@ -1,9 +1,9 @@
-import { IEventStore } from '../../lib/types/stores/event-store';
-import { IEvent } from '../../lib/types/events';
+import type { IEventStore } from '../../lib/types/stores/event-store';
+import type { IEvent } from '../../lib/types/events';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter';
-import { IQueryOperations } from '../../lib/features/events/event-store';
-import { SearchEventsSchema } from '../../lib/openapi';
-import EventEmitter from 'events';
+import type { IQueryOperations } from '../../lib/features/events/event-store';
+import type { SearchEventsSchema } from '../../lib/openapi';
+import type EventEmitter from 'events';
 
 class FakeEventStore implements IEventStore {
     events: IEvent[];

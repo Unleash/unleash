@@ -1,6 +1,6 @@
-import { IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
+import { type IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
 import SlackAppAddon from './slack-app';
-import { ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
+import { type ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 import { SYSTEM_USER_ID } from '../types';
 
 const slackApiCalls: ChatPostMessageArguments[] = [];

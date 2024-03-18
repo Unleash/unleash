@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { ANNOUNCER_ELEMENT_TEST_ID } from 'utils/testIds';
 import { styled } from '@mui/material';
 

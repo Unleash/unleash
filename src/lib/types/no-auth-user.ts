@@ -1,5 +1,5 @@
 import { ADMIN } from './permissions';
-import { IUser } from './user';
+import type { IUser } from './user';
 export default class NoAuthUser implements IUser {
     isAPI: boolean;
 

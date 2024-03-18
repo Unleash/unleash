@@ -1,16 +1,16 @@
-import { Response } from 'express';
-import { OpenApiService } from '../../services/openapi-service';
-import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../server-impl';
-import UserService from '../../services/user-service';
-import { IUnleashServices } from '../../types';
+import type { Response } from 'express';
+import type { OpenApiService } from '../../services/openapi-service';
+import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../server-impl';
+import type UserService from '../../services/user-service';
+import type { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';
 import Controller from '../controller';
-import { IAuthRequest } from '../unleash-types';
+import type { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
-import { LoginSchema } from '../../openapi/spec/login-schema';
+import { userSchema, type UserSchema } from '../../openapi/spec/user-schema';
+import type { LoginSchema } from '../../openapi/spec/login-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { getStandardResponses } from '../../openapi';
 

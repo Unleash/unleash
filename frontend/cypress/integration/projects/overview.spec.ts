@@ -76,7 +76,7 @@ describe('project overview', () => {
         cy.get(counter)
             .invoke('text')
             .then((text) => {
-                const number = parseFloat(text);
+                const number = Number.parseFloat(text);
                 expect(number).to.be.at.least(2);
             });
         cy.get(selectAll).click();
@@ -110,7 +110,7 @@ describe('project overview', () => {
         cy.get(counter)
             .invoke('text')
             .then((text) => {
-                const number = parseFloat(text);
+                const number = Number.parseFloat(text);
                 expect(number).to.be.at.least(2);
             });
         cy.get('table td')

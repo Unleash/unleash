@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Alert, Box, styled, Typography } from '@mui/material';
-import {
+import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
     PlaygroundFeatureSchema,

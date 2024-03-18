@@ -1,6 +1,8 @@
-import dbInit, { ITestDb } from '../../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../../test/e2e/helpers/database-init';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
@@ -17,16 +19,16 @@ import ApiUser from '../../../types/api-user';
 import { ApiTokenType } from '../../../types/models/api-token';
 import IncompatibleProjectError from '../../../error/incompatible-project-error';
 import {
-    IStrategyConfig,
-    IVariant,
+    type IStrategyConfig,
+    type IVariant,
     RoleName,
     WeightType,
 } from '../../../types/model';
 import { v4 as uuidv4 } from 'uuid';
-import supertest from 'supertest';
+import type supertest from 'supertest';
 import { randomId } from '../../../util/random-id';
 import { DEFAULT_PROJECT } from '../../../types';
-import {
+import type {
     FeatureStrategySchema,
     SetStrategySortOrderSchema,
 } from '../../../openapi';

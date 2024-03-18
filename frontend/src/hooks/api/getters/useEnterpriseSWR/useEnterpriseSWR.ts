@@ -1,4 +1,4 @@
-import { BareFetcher, Key, SWRConfiguration } from 'swr';
+import type { BareFetcher, Key, SWRConfiguration } from 'swr';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 

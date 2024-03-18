@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { createPatSchema } from './create-pat-schema';
 
 export const patSchema = {

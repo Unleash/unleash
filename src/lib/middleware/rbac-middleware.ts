@@ -5,10 +5,10 @@ import {
     UPDATE_FEATURE,
     UPDATE_PROJECT_SEGMENT,
 } from '../types/permissions';
-import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
-import User from '../types/user';
-import { Request } from 'express';
+import type { IUnleashConfig } from '../types/option';
+import type { IUnleashStores } from '../types/stores';
+import type User from '../types/user';
+import type { Request } from 'express';
 import { extractUserId } from '../util';
 
 interface PermissionChecker {

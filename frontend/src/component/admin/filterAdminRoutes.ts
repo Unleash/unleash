@@ -1,4 +1,4 @@
-import { INavigationMenuItem } from 'interfaces/route';
+import type { INavigationMenuItem } from 'interfaces/route';
 
 export const filterAdminRoutes = (
     menu: INavigationMenuItem['menu'],

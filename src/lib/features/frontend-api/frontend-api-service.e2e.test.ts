@@ -1,6 +1,6 @@
-import { IApiUser, IUnleashConfig, IUnleashStores } from '../../types';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
-import { FrontendApiService } from './frontend-api-service';
+import type { IApiUser, IUnleashConfig, IUnleashStores } from '../../types';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import type { FrontendApiService } from './frontend-api-service';
 import { createFrontendApiService } from './createFrontendApiService';
 import { createLastSeenService } from '../metrics/last-seen/createLastSeenService';
 import ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2';
@@ -8,7 +8,7 @@ import ConfigurationRevisionService from '../feature-toggle/configuration-revisi
 import getLogger from '../../../test/fixtures/no-logger';
 import { createTestConfig } from '../../../test/config/test-config';
 import { ApiTokenType } from '../../types/models/api-token';
-import FeatureToggleService from '../feature-toggle/feature-toggle-service';
+import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import { createFeatureToggleService } from '../feature-toggle/createFeatureToggleService';
 import {
     FRONTEND_API_REPOSITORY_CREATED,

@@ -1,13 +1,13 @@
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { IUser, SYSTEM_USER } from '../../../../lib/types';
+import { type IUser, SYSTEM_USER } from '../../../../lib/types';
 
 const importData = require('../../../examples/import.json');
 

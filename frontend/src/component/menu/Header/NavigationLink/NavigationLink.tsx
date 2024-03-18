@@ -2,7 +2,7 @@ import { ListItem, Link, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { INavigationMenuItem } from 'interfaces/route';
+import type { INavigationMenuItem } from 'interfaces/route';
 import { Link as RouterLink } from 'react-router-dom';
 interface INavigationLinkProps {
     path: string;

@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { MainLayout } from '../MainLayout/MainLayout';
 

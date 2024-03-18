@@ -1,4 +1,4 @@
-import { IAuthSplash, useAuthEndpoint } from './useAuthEndpoint';
+import { type IAuthSplash, useAuthEndpoint } from './useAuthEndpoint';
 
 interface IUseAuthSplashOutput {
     splash?: IAuthSplash;

@@ -1,7 +1,7 @@
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import { Logger } from '../logger';
-import { IFeatureTypeStore } from '../types/stores/feature-type-store';
+import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { Logger } from '../logger';
+import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
 
 class HealthService {
     private featureTypeStore: IFeatureTypeStore;

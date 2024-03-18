@@ -1,27 +1,27 @@
 import {
     DEFAULT_STRATEGY_UPDATED,
-    IEnvironment,
-    IEnvironmentStore,
-    IFeatureEnvironmentStore,
-    IFeatureStrategiesStore,
-    IProjectEnvironment,
-    ISortOrder,
-    IUnleashConfig,
-    IUnleashStores,
+    type IEnvironment,
+    type IEnvironmentStore,
+    type IFeatureEnvironmentStore,
+    type IFeatureStrategiesStore,
+    type IProjectEnvironment,
+    type ISortOrder,
+    type IUnleashConfig,
+    type IUnleashStores,
     PROJECT_ENVIRONMENT_ADDED,
     PROJECT_ENVIRONMENT_REMOVED,
     SYSTEM_USER,
 } from '../../types';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../../error';
 import NameExistsError from '../../error/name-exists-error';
 import { sortOrderSchema } from '../../services/state-schema';
 import NotFoundError from '../../error/notfound-error';
-import { IProjectStore } from '../../features/project/project-store-type';
+import type { IProjectStore } from '../../features/project/project-store-type';
 import MinimumOneEnvironmentError from '../../error/minimum-one-environment-error';
-import { IFlagResolver } from '../../types/experimental';
-import { CreateFeatureStrategySchema } from '../../openapi';
-import EventService from '../events/event-service';
+import type { IFlagResolver } from '../../types/experimental';
+import type { CreateFeatureStrategySchema } from '../../openapi';
+import type EventService from '../events/event-service';
 
 export default class EnvironmentService {
     private logger: Logger;

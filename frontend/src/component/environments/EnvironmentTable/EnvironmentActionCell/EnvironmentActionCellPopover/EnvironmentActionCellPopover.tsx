@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
-import { IEnvironment } from 'interfaces/environments';
+import type { IEnvironment } from 'interfaces/environments';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import {
     ADMIN,

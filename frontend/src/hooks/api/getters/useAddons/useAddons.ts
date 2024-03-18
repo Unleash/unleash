@@ -1,8 +1,8 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect, useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { AddonsSchema } from 'openapi';
+import type { AddonsSchema } from 'openapi';
 
 const useAddons = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {

@@ -1,10 +1,10 @@
-import { createTransport, Transporter } from 'nodemailer';
+import { createTransport, type Transporter } from 'nodemailer';
 import Mustache from 'mustache';
 import path from 'path';
 import { existsSync, readFileSync } from 'fs';
-import { Logger } from '../logger';
+import type { Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
-import { IUnleashConfig } from '../types/option';
+import type { IUnleashConfig } from '../types/option';
 
 export interface IAuthOptions {
     user: string;

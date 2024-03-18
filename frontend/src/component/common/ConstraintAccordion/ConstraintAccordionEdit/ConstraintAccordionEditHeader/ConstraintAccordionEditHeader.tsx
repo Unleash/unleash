@@ -1,4 +1,4 @@
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -13,8 +13,9 @@ import {
 } from 'constants/operators';
 import { resolveText } from './helpers';
 import { oneOf } from 'utils/oneOf';
-import React, { useEffect, useState } from 'react';
-import { Operator } from 'constants/operators';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import type { Operator } from 'constants/operators';
 import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
 import {
     operatorsForContext,

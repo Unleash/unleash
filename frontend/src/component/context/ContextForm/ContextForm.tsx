@@ -5,12 +5,13 @@ import {
     Switch,
     Typography,
     styled,
-    Theme,
+    type Theme,
     Link,
 } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import type React from 'react';
+import { useState, useEffect } from 'react';
 import Add from '@mui/icons-material/Add';
-import { ILegalValue } from 'interfaces/context';
+import type { ILegalValue } from 'interfaces/context';
 import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
 import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage';

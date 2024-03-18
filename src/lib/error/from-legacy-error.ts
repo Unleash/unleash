@@ -2,7 +2,7 @@ import { fromJoiError } from './bad-data-error';
 import { ValidationError as JoiValidationError } from 'joi';
 import {
     GenericUnleashError,
-    UnleashApiErrorName,
+    type UnleashApiErrorName,
     UnleashApiErrorTypes,
     UnleashError,
 } from './unleash-error';

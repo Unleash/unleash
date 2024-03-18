@@ -1,5 +1,5 @@
 import { Alert, Box, Typography } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 const Paragraph: FC = ({ children }) => (
     <Typography

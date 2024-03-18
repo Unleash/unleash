@@ -1,4 +1,4 @@
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IconButton, styled } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';

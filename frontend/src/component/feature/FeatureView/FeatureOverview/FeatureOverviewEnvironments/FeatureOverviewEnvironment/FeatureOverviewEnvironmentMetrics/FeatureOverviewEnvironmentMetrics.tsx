@@ -1,6 +1,6 @@
 import FiberManualRecord from '@mui/icons-material/FiberManualRecord';
 import { useTheme } from '@mui/system';
-import { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
+import type { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { calculatePercentage } from 'utils/calculatePercentage';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';

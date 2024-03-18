@@ -1,7 +1,7 @@
-import { type VFC } from 'react';
-import { ExecutiveSummarySchemaEnvironmentTypeTrendsItem } from 'openapi';
+import type { VFC } from 'react';
+import type { ExecutiveSummarySchemaEnvironmentTypeTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
-import { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
+import type { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -39,7 +39,7 @@ const InfoSummary = ({ data }: { data: { key: string; value: number }[] }) => (
     <Typography variant={'body1'} component={'p'}>
         <Box display={'flex'} flexDirection={'row'}>
             {data.map(({ key, value }) => (
-                <div style={{ flex: 1, flexDirection: 'column' }}>
+                <div style={{ flex: 1, flexDirection: 'column' }} key={key}>
                     <div
                         style={{
                             flex: 1,

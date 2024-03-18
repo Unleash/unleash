@@ -1,12 +1,13 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.6.1/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "correctness": {
         "noUnsafeOptionalChaining": "off",
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "off",
+        "noUnusedImports": "warn"
       },
       "complexity": {
         "noBannedTypes": "off",
@@ -20,21 +21,21 @@
         "noInferrableTypes": "off",
         "noUnusedTemplateLiteral": "off",
         "useSingleVarDeclarator": "off",
-        "noUselessElse": "off"
+        "noUselessElse": "off",
+        "useNodejsImportProtocol": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
         "noExtraNonNullAssertion": "off",
         "noRedeclare": "off",
         "noPrototypeBuiltins": "off",
-        "noConfusingVoidType": "off"
+        "noConfusingVoidType": "off",
+        "noArrayIndexKey": "off",
+        "noThenProperty": "off"
       },
       "performance": {
         "noAccumulatingSpread": "off",
         "noDelete": "off"
-      },
-      "nursery": {
-        "noUnusedImports": "warn"
       }
     },
     "ignore": [

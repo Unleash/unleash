@@ -132,7 +132,7 @@ exports[`should create default config 1`] = `
       "newStrategyConfigurationFeedback": false,
       "outdatedSdksBanner": false,
       "personalAccessTokensKillSwitch": false,
-      "proPlanAutoCharge": false,
+      "projectOverviewRefactor": false,
       "queryMissingTokens": false,
       "responseTimeMetricsFix": false,
       "responseTimeWithAppNameKillSwitch": false,

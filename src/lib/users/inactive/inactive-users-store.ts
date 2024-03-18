@@ -1,10 +1,10 @@
-import {
+import type {
     IInactiveUserRow,
     IInactiveUsersStore,
 } from './types/inactive-users-store-type';
-import { Db } from '../../db/db';
-import EventEmitter from 'events';
-import { Logger, LogProvider } from '../../logger';
+import type { Db } from '../../db/db';
+import type EventEmitter from 'events';
+import type { Logger, LogProvider } from '../../logger';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 

@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { FeatureSchema, FeaturesSchema } from 'openapi';
+import type { FeatureSchema, FeaturesSchema } from 'openapi';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { formatApiPath } from 'utils/formatPath';
 

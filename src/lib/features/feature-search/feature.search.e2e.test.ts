@@ -1,12 +1,12 @@
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     insertLastSeenAt,
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
-import { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
-import { DEFAULT_PROJECT, IUnleashStores } from '../../types';
+import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
+import { DEFAULT_PROJECT, type IUnleashStores } from '../../types';
 import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;

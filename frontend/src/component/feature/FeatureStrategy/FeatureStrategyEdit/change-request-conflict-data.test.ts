@@ -1,4 +1,4 @@
-import { IUiConfig } from 'interfaces/uiConfig';
+import type { IUiConfig } from 'interfaces/uiConfig';
 import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,

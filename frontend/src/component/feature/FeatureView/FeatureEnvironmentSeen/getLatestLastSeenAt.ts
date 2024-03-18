@@ -1,4 +1,4 @@
-import { ILastSeenEnvironments } from 'interfaces/featureToggle';
+import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 
 export const getLatestLastSeenAt = (
     environments: ILastSeenEnvironments[],

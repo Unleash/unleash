@@ -3,13 +3,13 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline';
-import { StageName } from './StageName';
+import type { StageName } from './StageName';
 import {
     Actions,
     ConfigurationStage,
     ConfigurationTabs,
     ImportArea,
-    ImportMode,
+    type ImportMode,
 } from './configure/ConfigurationStage';
 import { ValidationStage } from './validate/ValidationStage';
 import { ImportStage } from './import/ImportStage';

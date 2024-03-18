@@ -2,7 +2,7 @@ import { getDbConfig } from '../../test/e2e/helpers/database-config';
 import { createTestConfig } from '../../test/config/test-config';
 import { log } from 'db-migrate-shared';
 import { Client } from 'pg';
-import { IDBOption } from '../../lib/types';
+import type { IDBOption } from '../../lib/types';
 import { migrateDb } from '../../migrator';
 import { SYSTEM_USER } from './core';
 

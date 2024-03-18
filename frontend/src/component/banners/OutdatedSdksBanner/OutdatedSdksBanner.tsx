@@ -1,6 +1,6 @@
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import { Banner } from '../Banner/Banner';
-import { IBanner } from 'interfaces/banner';
+import type { IBanner } from 'interfaces/banner';
 import { useOutdatedSdks } from 'hooks/api/getters/useOutdatedSdks/useOutdatedSdks';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';

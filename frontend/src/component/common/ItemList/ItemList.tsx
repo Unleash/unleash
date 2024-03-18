@@ -64,7 +64,6 @@ export const ItemList = ({
             <Stack flexDirection='row' flexWrap={'wrap'} gap={1}>
                 {value?.map((item, index) => (
                     <Chip
-                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                         key={index}
                         label={item}
                         onDelete={() => removeItem(item)}

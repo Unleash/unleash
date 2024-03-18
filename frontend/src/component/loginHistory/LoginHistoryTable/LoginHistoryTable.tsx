@@ -5,7 +5,12 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    type SortingRule,
+    useFlexLayout,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -16,7 +21,7 @@ import { useSearch } from 'hooks/useSearch';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useLoginHistory } from 'hooks/api/getters/useLoginHistory/useLoginHistory';
 import { LoginHistorySuccessfulCell } from './LoginHistorySuccessfulCell/LoginHistorySuccessfulCell';
-import { ILoginEvent } from 'interfaces/loginEvent';
+import type { ILoginEvent } from 'interfaces/loginEvent';
 import { useLoginHistoryApi } from 'hooks/api/actions/useLoginHistoryApi/useLoginHistoryApi';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useSearchParams } from 'react-router-dom';

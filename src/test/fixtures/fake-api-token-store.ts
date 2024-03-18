@@ -1,5 +1,5 @@
-import { IApiTokenStore } from '../../lib/types/stores/api-token-store';
-import {
+import type { IApiTokenStore } from '../../lib/types/stores/api-token-store';
+import type {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,

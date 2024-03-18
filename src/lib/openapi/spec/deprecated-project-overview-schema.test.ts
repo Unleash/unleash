@@ -1,4 +1,4 @@
-import { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema';
+import type { DeprecatedProjectOverviewSchema } from './deprecated-project-overview-schema';
 import { validateSchema } from '../validate';
 
 test('deprecatedProjectOverviewSchema', () => {

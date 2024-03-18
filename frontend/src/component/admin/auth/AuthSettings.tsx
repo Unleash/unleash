@@ -113,7 +113,6 @@ export const AuthSettings = () => {
                             <div>
                                 {tabs.map((tab, index) => (
                                     <TabPanel
-                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                                         key={index}
                                         value={activeTab}
                                         index={index}

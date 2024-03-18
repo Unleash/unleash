@@ -1,15 +1,15 @@
-import { Strategy } from './strategy';
-import { FeatureInterface } from './feature';
-import { RepositoryInterface } from './repository';
+import type { Strategy } from './strategy';
+import type { FeatureInterface } from './feature';
+import type { RepositoryInterface } from './repository';
 import {
     getDefaultVariant,
     selectVariant,
-    Variant,
-    VariantDefinition,
+    type Variant,
+    type VariantDefinition,
 } from './variant';
-import { Context } from './context';
-import { SegmentForEvaluation } from './strategy/strategy';
-import { PlaygroundStrategySchema } from '../../../openapi/spec/playground-strategy-schema';
+import type { Context } from './context';
+import type { SegmentForEvaluation } from './strategy/strategy';
+import type { PlaygroundStrategySchema } from '../../../openapi/spec/playground-strategy-schema';
 import { playgroundStrategyEvaluation } from '../../../openapi/spec/playground-strategy-schema';
 import { randomId } from '../../../util';
 

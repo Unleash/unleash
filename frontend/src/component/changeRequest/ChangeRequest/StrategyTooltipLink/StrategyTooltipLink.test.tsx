@@ -1,8 +1,8 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { StrategyDiff } from './StrategyTooltipLink';
-import { IFeatureStrategy } from 'interfaces/strategy';
-import { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
+import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
 
 test('Should not render the `snapshot` property', async () => {
     const existingStrategy: IFeatureStrategy = {

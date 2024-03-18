@@ -1,6 +1,6 @@
 import { validateSchema } from '../validate';
 import {
-    FeatureEventsSchema,
+    type FeatureEventsSchema,
     featureEventsSchema,
 } from './feature-events-schema';
 

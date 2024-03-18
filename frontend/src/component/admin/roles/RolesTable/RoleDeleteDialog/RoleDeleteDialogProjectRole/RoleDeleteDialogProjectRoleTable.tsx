@@ -1,9 +1,9 @@
 import { VirtualizedTable } from 'component/common/Table';
 import { useMemo, useState } from 'react';
-import { useTable, useSortBy, useFlexLayout, Column } from 'react-table';
+import { useTable, useSortBy, useFlexLayout, type Column } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IProjectRoleUsageCount } from 'interfaces/project';
+import type { IProjectRoleUsageCount } from 'interfaces/project';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 
 interface IRoleDeleteDialogProjectRoleTableProps {

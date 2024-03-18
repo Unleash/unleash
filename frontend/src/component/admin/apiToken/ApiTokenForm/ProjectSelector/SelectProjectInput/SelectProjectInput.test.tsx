@@ -3,7 +3,7 @@ import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import {
-    ISelectProjectInputProps,
+    type ISelectProjectInputProps,
     SelectProjectInput,
 } from './SelectProjectInput';
 import { testServerRoute, testServerSetup } from 'utils/testServer';

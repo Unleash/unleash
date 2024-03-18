@@ -1,29 +1,19 @@
 import { useMemo } from 'react';
-import {
-    ExecutiveSummarySchema,
-    ExecutiveSummarySchemaProjectFlagTrendsItem,
-} from '../../../openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import { useProjectColor } from './useProjectColor';
 import { useTheme } from '@mui/material';
+import type { GroupedDataByProject } from './useGroupedProjectTrends';
 
 type ProjectFlagTrends = ExecutiveSummarySchema['projectFlagTrends'];
 
-export const useProjectChartData = (projectFlagTrends: ProjectFlagTrends) => {
+export const useProjectChartData = (
+    projectFlagTrends: GroupedDataByProject<ProjectFlagTrends>,
+) => {
     const theme = useTheme();
     const getProjectColor = useProjectColor();
 
     const data = useMemo(() => {
-        const groupedFlagTrends = projectFlagTrends.reduce<
-            Record<string, ExecutiveSummarySchemaProjectFlagTrendsItem[]>
-        >((groups, item) => {
-            if (!groups[item.project]) {
-                groups[item.project] = [];
-            }
-            groups[item.project].push(item);
-            return groups;
-        }, {});
-
-        const datasets = Object.entries(groupedFlagTrends).map(
+        const datasets = Object.entries(projectFlagTrends).map(
             ([project, trends]) => {
                 const color = getProjectColor(project);
                 return {

@@ -1,7 +1,7 @@
 import { Alert, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { ServiceAccountTokens } from '../ServiceAccountModal/ServiceAccountTokens/ServiceAccountTokens';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({

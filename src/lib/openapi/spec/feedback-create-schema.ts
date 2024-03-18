@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 
 export const feedbackCreateSchema = {
     $id: '#/components/schemas/feedbackCreateSchema',

@@ -1,5 +1,5 @@
 import { ReactComponent as NoItemsIcon } from 'assets/icons/addfiles.svg';
-import React from 'react';
+import type React from 'react';
 import { styled } from '@mui/material';
 
 const StyledContainer = styled('div')(({ theme }) => ({

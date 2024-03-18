@@ -1,8 +1,8 @@
-import { FC, ForwardedRef, forwardRef } from 'react';
+import { type FC, type ForwardedRef, forwardRef } from 'react';
 import {
     styled,
     TableCell as MUITableCell,
-    TableCellProps,
+    type TableCellProps,
 } from '@mui/material';
 
 const StyledTableCell = styled(MUITableCell)(({ theme }) => ({

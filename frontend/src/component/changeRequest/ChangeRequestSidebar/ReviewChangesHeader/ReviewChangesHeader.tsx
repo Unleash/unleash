@@ -1,6 +1,6 @@
 import { Box, styled, Tooltip } from '@mui/material';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
 
 const StyledHelpOutline = styled(HelpOutline)(({ theme }) => ({

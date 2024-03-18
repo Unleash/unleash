@@ -1,14 +1,14 @@
-import { FormEvent, useEffect } from 'react';
+import { type FormEvent, useEffect } from 'react';
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IActionSet } from 'interfaces/action';
+import type { IActionSet } from 'interfaces/action';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import {
-    ActionSetPayload,
+    type ActionSetPayload,
     useActionsApi,
 } from 'hooks/api/actions/useActionsApi/useActionsApi';
 import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm';

@@ -1,11 +1,11 @@
-import { ChangeEvent, useMemo, useState } from 'react';
+import { type ChangeEvent, useMemo, useState } from 'react';
 import { Grid, TextField, styled } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import icons from 'component/application/iconNames';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import useApplicationsApi from 'hooks/api/actions/useApplicationsApi/useApplicationsApi';
 import useToast from 'hooks/useToast';
-import { IApplication } from 'interfaces/application';
+import type { IApplication } from 'interfaces/application';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';

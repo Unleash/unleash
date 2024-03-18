@@ -1,4 +1,4 @@
-import { ILoginEvent } from 'interfaces/loginEvent';
+import type { ILoginEvent } from 'interfaces/loginEvent';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';

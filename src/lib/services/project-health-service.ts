@@ -1,11 +1,11 @@
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
-import { Logger } from '../logger';
+import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { Logger } from '../logger';
 import type { IProject, IProjectHealthReport } from '../types/model';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import type { IProjectStore } from '../features/project/project-store-type';
-import ProjectService from '../features/project/project-service';
+import type ProjectService from '../features/project/project-service';
 import {
     calculateHealthRating,
     calculateProjectHealth,

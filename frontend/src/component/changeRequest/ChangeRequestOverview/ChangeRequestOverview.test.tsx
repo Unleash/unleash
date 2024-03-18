@@ -1,6 +1,9 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ChangeRequestState, ChangeRequestType } from '../changeRequest.types';
+import type {
+    ChangeRequestState,
+    ChangeRequestType,
+} from '../changeRequest.types';
 import { render } from 'utils/testRenderer';
 import { ChangeRequestOverview } from './ChangeRequestOverview';
 import {

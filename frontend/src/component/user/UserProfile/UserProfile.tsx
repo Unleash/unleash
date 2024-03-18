@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ClickAwayListener, IconButton, Tooltip, styled } from '@mui/material';
 import { UserProfileContent } from './UserProfileContent/UserProfileContent';
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 import { HEADER_USER_AVATAR } from 'utils/testIds';
 import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';

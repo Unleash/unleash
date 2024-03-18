@@ -1,54 +1,57 @@
-import { Request, Response } from 'express';
-import { applyPatch, Operation } from 'fast-json-patch';
+import type { Request, Response } from 'express';
+import { applyPatch, type Operation } from 'fast-json-patch';
 import Controller from '../../routes/controller';
 import {
     CREATE_FEATURE,
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
     DELETE_FEATURE_STRATEGY,
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
+    type IFlagResolver,
+    type IUnleashConfig,
+    type IUnleashServices,
     NONE,
     serializeDates,
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
 } from '../../types';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import { extractUsername } from '../../util';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import {
-    AdminFeaturesQuerySchema,
-    BulkToggleFeaturesSchema,
-    CreateFeatureSchema,
-    CreateFeatureStrategySchema,
+    type AdminFeaturesQuerySchema,
+    type BulkToggleFeaturesSchema,
+    type CreateFeatureSchema,
+    type CreateFeatureStrategySchema,
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
     featureEnvironmentSchema,
-    FeatureEnvironmentSchema,
+    type FeatureEnvironmentSchema,
     featureSchema,
-    FeatureSchema,
+    type FeatureSchema,
     featuresSchema,
-    FeaturesSchema,
-    FeatureStrategySchema,
+    type FeaturesSchema,
+    type FeatureStrategySchema,
     getStandardResponses,
-    ParametersSchema,
-    SetStrategySortOrderSchema,
-    TagsBulkAddSchema,
-    TagSchema,
-    UpdateFeatureSchema,
-    UpdateFeatureStrategySchema,
+    type ParametersSchema,
+    type SetStrategySortOrderSchema,
+    type TagsBulkAddSchema,
+    type TagSchema,
+    type UpdateFeatureSchema,
+    type UpdateFeatureStrategySchema,
 } from '../../openapi';
-import {
+import type {
     FeatureTagService,
     FeatureToggleService,
     OpenApiService,
 } from '../../services';
 import { querySchema } from '../../schema/feature-schema';
-import { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema';
-import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
+import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema';
+import type {
+    TransactionCreator,
+    UnleashTransaction,
+} from '../../db/transaction';
 import { BadDataError } from '../../error';
 
 interface FeatureStrategyParams {

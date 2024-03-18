@@ -1,4 +1,4 @@
-import { IActionSet } from 'interfaces/action';
+import type { IActionSet } from 'interfaces/action';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useActionEvents } from 'hooks/api/getters/useActionEvents/useActionEvents';
 import { ProjectActionsEventsDetails } from '../ProjectActionsEventsModal/ProjectActionsEventsDetails/ProjectActionsEventsDetails';

@@ -2,11 +2,14 @@ import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { FormEvent, useEffect, useMemo, useState, memo } from 'react';
+import { type FormEvent, useEffect, useMemo, useState, memo } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
+import type {
+    IFeatureEnvironment,
+    IFeatureVariant,
+} from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { Operation } from 'fast-json-patch';
+import type { Operation } from 'fast-json-patch';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';

@@ -1,6 +1,6 @@
-import { ReactNode, VFC } from 'react';
+import type { ReactNode, VFC } from 'react';
 import { Box, styled, Typography } from '@mui/material';
-import {
+import type {
     IChangeRequestAddDependency,
     IChangeRequestDeleteDependency,
 } from 'component/changeRequest/changeRequest.types';

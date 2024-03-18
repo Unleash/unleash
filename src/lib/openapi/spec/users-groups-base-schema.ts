@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { groupSchema } from './group-schema';
 import { userSchema } from './user-schema';
 import { groupUserModelSchema } from './group-user-model-schema';

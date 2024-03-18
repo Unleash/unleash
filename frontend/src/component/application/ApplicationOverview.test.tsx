@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
-import { ApplicationOverviewSchema } from 'openapi';
+import type { ApplicationOverviewSchema } from 'openapi';
 import ApplicationOverview from './ApplicationOverview';
 
 const server = testServerSetup();
@@ -75,7 +75,6 @@ test('Display application overview without environments', async () => {
         },
     );
 
-    await screen.findByText('my-app');
     await screen.findByText('No data available.');
 });
 

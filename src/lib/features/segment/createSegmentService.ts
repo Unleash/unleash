@@ -1,7 +1,7 @@
-import { Db, IUnleashConfig } from '../../server-impl';
+import type { Db, IUnleashConfig } from '../../server-impl';
 import { EventService, SegmentService } from '../../services';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import { ISegmentService } from './segment-service-interface';
+import type { ISegmentService } from './segment-service-interface';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import SegmentStore from './segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';

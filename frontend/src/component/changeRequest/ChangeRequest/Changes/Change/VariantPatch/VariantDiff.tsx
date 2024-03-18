@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import EventDiff from 'component/events/EventDiff/EventDiff';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

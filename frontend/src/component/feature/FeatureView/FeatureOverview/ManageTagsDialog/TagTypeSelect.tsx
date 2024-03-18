@@ -1,12 +1,12 @@
 import {
     Autocomplete,
-    AutocompleteProps,
+    type AutocompleteProps,
     styled,
     TextField,
     Typography,
     useTheme,
 } from '@mui/material';
-import { ITagType } from 'interfaces/tags';
+import type { ITagType } from 'interfaces/tags';
 
 interface ITagSelect {
     options: ITagType[];

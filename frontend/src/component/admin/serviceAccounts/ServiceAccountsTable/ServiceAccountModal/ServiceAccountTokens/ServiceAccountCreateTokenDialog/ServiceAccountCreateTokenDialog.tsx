@@ -3,11 +3,11 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
     calculateExpirationDate,
     ExpirationOption,
-    IPersonalAPITokenFormErrors,
+    type IPersonalAPITokenFormErrors,
     PersonalAPITokenForm,
 } from 'component/user/Profile/PersonalAPITokensTab/CreatePersonalAPIToken/PersonalAPITokenForm/PersonalAPITokenForm';
-import { ICreateServiceAccountTokenPayload } from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
-import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { ICreateServiceAccountTokenPayload } from 'hooks/api/actions/useServiceAccountTokensApi/useServiceAccountTokensApi';
+import type { IPersonalAPIToken } from 'interfaces/personalAPIToken';
 
 const DEFAULT_EXPIRATION = ExpirationOption['30DAYS'];
 

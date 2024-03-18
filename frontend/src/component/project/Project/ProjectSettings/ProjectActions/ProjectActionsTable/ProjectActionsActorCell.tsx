@@ -1,7 +1,7 @@
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IActionSet } from 'interfaces/action';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IActionSet } from 'interfaces/action';
+import type { IServiceAccount } from 'interfaces/service-account';
 
 interface IProjectActionsActorCellProps {
     action: IActionSet;

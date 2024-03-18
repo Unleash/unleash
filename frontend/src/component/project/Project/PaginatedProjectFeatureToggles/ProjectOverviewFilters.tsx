@@ -1,9 +1,9 @@
-import { useEffect, useState, VFC } from 'react';
+import { useEffect, useState, type VFC } from 'react';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import {
-    FilterItemParamHolder,
+    type FilterItemParamHolder,
     Filters,
-    IFilterItem,
+    type IFilterItem,
 } from 'component/filter/Filters/Filters';
 
 interface IProjectOverviewFilters {

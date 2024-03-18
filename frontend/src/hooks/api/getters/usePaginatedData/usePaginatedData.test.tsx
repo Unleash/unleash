@@ -2,7 +2,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { createPaginatedHook } from './usePaginatedData';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { http, HttpResponse } from 'msw';
 
 const server = testServerSetup();

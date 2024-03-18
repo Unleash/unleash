@@ -1,4 +1,8 @@
-import { useState, FormEventHandler, ChangeEventHandler } from 'react';
+import {
+    useState,
+    type FormEventHandler,
+    type ChangeEventHandler,
+} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     Button,

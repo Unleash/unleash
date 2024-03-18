@@ -1,4 +1,4 @@
-import { IStrategyPayload } from 'interfaces/strategy';
+import type { IStrategyPayload } from 'interfaces/strategy';
 import { useCallback } from 'react';
 import useAPI from '../useApi/useApi';
 

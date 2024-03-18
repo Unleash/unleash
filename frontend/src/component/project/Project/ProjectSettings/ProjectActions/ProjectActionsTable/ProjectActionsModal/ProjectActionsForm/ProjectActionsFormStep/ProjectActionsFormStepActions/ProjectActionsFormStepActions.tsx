@@ -3,13 +3,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { ProjectActionsActionItem } from './ProjectActionsActionItem';
-import { ActionsActionState } from '../../useProjectActionsForm';
+import type { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Add from '@mui/icons-material/Add';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useActionDefinitions } from './useActionDefinitions';
+import { useActionConfigurations } from 'hooks/api/getters/useActionConfigurations/useActionConfigurations';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -45,7 +45,7 @@ export const ProjectActionsFormStepActions = ({
     validated,
 }: IProjectActionsFormStepActionsProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const actionDefinitions = useActionDefinitions(projectId);
+    const { actionConfigurations } = useActionConfigurations(projectId);
 
     const addAction = (projectId: string) => {
         const id = uuidv4();
@@ -98,7 +98,7 @@ export const ProjectActionsFormStepActions = ({
                 value={`${actorId}`}
                 onChange={(v) => {
                     validateActorId(Number(v));
-                    setActorId(parseInt(v));
+                    setActorId(Number.parseInt(v));
                 }}
             />
             <StyledDivider />
@@ -114,7 +114,7 @@ export const ProjectActionsFormStepActions = ({
                             actions.filter((a) => a.id !== action.id),
                         )
                     }
-                    actionDefinitions={actionDefinitions}
+                    actionConfigurations={actionConfigurations}
                     validated={validated}
                 />
             ))}

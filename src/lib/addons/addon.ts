@@ -1,9 +1,9 @@
 import fetch from 'make-fetch-happen';
 import { addonDefinitionSchema } from './addon-schema';
-import { IUnleashConfig } from '../types/option';
-import { Logger } from '../logger';
-import { IAddonDefinition } from '../types/model';
-import { IEvent } from '../types/events';
+import type { IUnleashConfig } from '../types/option';
+import type { Logger } from '../logger';
+import type { IAddonDefinition } from '../types/model';
+import type { IEvent } from '../types/events';
 
 export default abstract class Addon {
     logger: Logger;

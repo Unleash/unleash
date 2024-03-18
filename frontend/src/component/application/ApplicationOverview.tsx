@@ -1,6 +1,13 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Box, Button, Divider, styled } from '@mui/material';
+import {
+    Alert,
+    Box,
+    Button,
+    Divider,
+    LinearProgress,
+    styled,
+} from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 import { ApplicationIssues } from './ApplicationIssues/ApplicationIssues';
@@ -70,6 +77,15 @@ const ApplicationOverview = () => {
                 'What should be improved on the application overview page?',
         });
     };
+
+    if (loading) {
+        return (
+            <div>
+                <p>Loading...</p>
+                <LinearProgress />
+            </div>
+        );
+    }
 
     return (
         <ConditionallyRender

@@ -1,4 +1,4 @@
-import { ProjectAccess } from './privateProjectStore';
+import type { ProjectAccess } from './privateProjectStore';
 
 export interface IPrivateProjectChecker {
     getUserAccessibleProjects(userId: number): Promise<ProjectAccess>;

@@ -10,9 +10,9 @@ import {
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import {
-    SignalEndpointsFormErrors,
+    type SignalEndpointsFormErrors,
     TokenGeneration,
 } from './useSignalEndpointsForm';
 import { SignalEndpointsFormURL } from './SignalEndpointsFormURL';

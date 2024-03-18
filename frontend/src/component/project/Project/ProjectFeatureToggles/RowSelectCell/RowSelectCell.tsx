@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Checkbox, styled } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { BATCH_SELECT } from 'utils/testIds';
 
 interface IRowSelectCellProps {

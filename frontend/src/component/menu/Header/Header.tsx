@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ import {
     IconButton,
     Tooltip,
     styled,
-    Theme,
+    type Theme,
     Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -127,34 +127,19 @@ const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
     cursor: 'pointer',
 }));
 
-const StyledSpan = styled('span')({
-    height: '16px',
-    paddingBottom: 16,
-});
-
-const StyledBadge = styled(Badge)({
-    height: '16px',
-    maxHeight: '16px',
-    padding: 0.25,
-    marginBottom: 0,
-});
-
 const styledIconProps = (theme: Theme) => ({
     color: theme.palette.neutral.main,
 });
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
-const StyledLinkWithBetaBagde = ({
+const StyledLinkWithBetaBadge = ({
     title,
     to,
 }: { title: string; to: string }) => (
     <StyledLink to={to} sx={{ margin: 0 }}>
         <div>
-            <span>{title}</span>{' '}
-            <StyledSpan>
-                <StyledBadge color='success'>Beta</StyledBadge>
-            </StyledSpan>
+            <span>{title}</span> <Badge color='success'>Beta</Badge>
         </div>
     </StyledLink>
 );
@@ -279,7 +264,7 @@ const Header: VFC = () => {
                         <ConditionallyRender
                             condition={insightsDashboard}
                             show={
-                                <StyledLinkWithBetaBagde
+                                <StyledLinkWithBetaBadge
                                     to={'/insights'}
                                     title={'Insights'}
                                 />

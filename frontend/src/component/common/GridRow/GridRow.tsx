@@ -1,5 +1,5 @@
-import { Grid, styled, SxProps, Theme } from '@mui/material';
-import { FC } from 'react';
+import { Grid, styled, type SxProps, type Theme } from '@mui/material';
+import type { FC } from 'react';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
     flexWrap: 'nowrap',

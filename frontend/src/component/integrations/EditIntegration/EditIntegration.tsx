@@ -3,7 +3,7 @@ import { IntegrationForm } from '../IntegrationForm/IntegrationForm';
 import cloneDeep from 'lodash.clonedeep';
 import { DEFAULT_DATA } from '../CreateIntegration/CreateIntegration';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { AddonSchema } from 'openapi';
+import type { AddonSchema } from 'openapi';
 
 export const EditIntegration = () => {
     const addonId = useRequiredPathParam('addonId');

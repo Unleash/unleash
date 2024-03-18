@@ -1,6 +1,6 @@
 import { Alert } from '@mui/material';
-import React from 'react';
-import { IEnvironment } from 'interfaces/environments';
+import type React from 'react';
+import type { IEnvironment } from 'interfaces/environments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { EnvironmentTableSingle } from 'component/environments/EnvironmentTable/EnvironmentTableSingle';

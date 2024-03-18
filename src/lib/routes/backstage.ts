@@ -3,7 +3,7 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { register as prometheusRegister } from 'prom-client';
 import Controller from './controller';
-import { IUnleashConfig } from '../types/option';
+import type { IUnleashConfig } from '../types/option';
 
 class BackstageController extends Controller {
     logger: any;

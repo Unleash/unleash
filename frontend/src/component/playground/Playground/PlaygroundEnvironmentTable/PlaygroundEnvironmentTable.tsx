@@ -8,7 +8,7 @@ import {
 
 import { VirtualizedTable } from 'component/common/Table';
 import { sortTypes } from 'utils/sortTypes';
-import {
+import type {
     AdvancedPlaygroundEnvironmentFeatureSchema,
     PlaygroundFeatureSchema,
 } from 'openapi';

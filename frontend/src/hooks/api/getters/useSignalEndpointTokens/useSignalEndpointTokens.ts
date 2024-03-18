@@ -3,7 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { ISignalEndpointToken } from 'interfaces/signal';
+import type { ISignalEndpointToken } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/signal-endpoints';

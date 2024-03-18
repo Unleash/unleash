@@ -1,7 +1,7 @@
-import fc, { Arbitrary } from 'fast-check';
+import fc, { type Arbitrary } from 'fast-check';
 import {
     playgroundResponseSchema,
-    PlaygroundResponseSchema,
+    type PlaygroundResponseSchema,
 } from '../../../lib/openapi/spec/playground-response-schema';
 import { validateSchema } from '../validate';
 import { generate as generateInput } from './playground-request-schema.test';

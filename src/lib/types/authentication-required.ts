@@ -1,4 +1,4 @@
-import { ApiErrorSchema, UnleashError } from '../error/unleash-error';
+import { type ApiErrorSchema, UnleashError } from '../error/unleash-error';
 
 interface IBaseOptions {
     type: string;

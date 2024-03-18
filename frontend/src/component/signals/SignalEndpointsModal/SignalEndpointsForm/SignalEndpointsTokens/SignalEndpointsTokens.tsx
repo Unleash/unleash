@@ -18,7 +18,12 @@ import { PAT_LIMIT } from '@server/util/constants';
 import { useSignalEndpointTokens } from 'hooks/api/getters/useSignalEndpointTokens/useSignalEndpointTokens';
 import { useSearch } from 'hooks/useSearch';
 import { useMemo, useState } from 'react';
-import { useTable, SortingRule, useSortBy, useFlexLayout } from 'react-table';
+import {
+    useTable,
+    type SortingRule,
+    useSortBy,
+    useFlexLayout,
+} from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { SignalEndpointsTokensCreateDialog } from './SignalEndpointsTokensCreateDialog';
 import { SignalEndpointsTokensDialog } from './SignalEndpointsTokensDialog';
@@ -26,12 +31,12 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
-    SignalEndpointTokenPayload,
+    type SignalEndpointTokenPayload,
     useSignalEndpointTokensApi,
 } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ISignalEndpoint, ISignalEndpointToken } from 'interfaces/signal';
+import type { ISignalEndpoint, ISignalEndpointToken } from 'interfaces/signal';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 
 const StyledHeader = styled('div')(({ theme }) => ({

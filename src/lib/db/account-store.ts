@@ -1,11 +1,11 @@
-import { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger';
 import User from '../types/user';
 
 import NotFoundError from '../error/notfound-error';
-import { IUserLookup } from '../types/stores/user-store';
-import { IAdminCount } from '../types/stores/account-store';
-import { IAccountStore } from '../types';
-import { Db } from './db';
+import type { IUserLookup } from '../types/stores/user-store';
+import type { IAdminCount } from '../types/stores/account-store';
+import type { IAccountStore } from '../types';
+import type { Db } from './db';
 
 const TABLE = 'users';
 

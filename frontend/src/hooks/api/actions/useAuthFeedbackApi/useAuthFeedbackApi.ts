@@ -1,7 +1,7 @@
 import { formatApiPath } from 'utils/formatPath';
 import { useCallback } from 'react';
 import { useAuthFeedback } from 'hooks/api/getters/useAuth/useAuthFeedback';
-import { IAuthFeedback } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import type { IAuthFeedback } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 
 interface IUseAuthFeedbackApi {
     createFeedback: (feedback: IAuthFeedback) => Promise<void>;

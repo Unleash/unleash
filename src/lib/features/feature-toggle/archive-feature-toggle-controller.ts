@@ -1,26 +1,29 @@
-import { Request, Response } from 'express';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types';
+import type { Request, Response } from 'express';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types';
 import Controller from '../../routes/controller';
 import {
     extractUserIdFromUser,
     extractUsername,
 } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
-import FeatureToggleService from './feature-toggle-service';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type FeatureToggleService from './feature-toggle-service';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import {
     featuresSchema,
-    FeaturesSchema,
+    type FeaturesSchema,
 } from '../../openapi/spec/features-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
+import type {
+    TransactionCreator,
+    UnleashTransaction,
+} from '../../db/transaction';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;

@@ -1,18 +1,19 @@
 import {
-    AutocompleteChangeReason,
-    AutocompleteValue,
+    type AutocompleteChangeReason,
+    type AutocompleteValue,
     styled,
     Typography,
 } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import type React from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ITag, ITagType } from 'interfaces/tags';
-import { TagOption, TagsInput } from './TagsInput';
+import type { ITag, ITagType } from 'interfaces/tags';
+import { type TagOption, TagsInput } from './TagsInput';
 import { TagTypeSelect } from './TagTypeSelect';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useTags from 'hooks/api/getters/useTags/useTags';

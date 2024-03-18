@@ -1,6 +1,6 @@
-import { Theme } from '@mui/material';
-import { ILocationSettings } from 'hooks/useLocationSettings';
-import { TooltipState } from './ChartTooltip/ChartTooltip';
+import type { Theme } from '@mui/material';
+import type { ILocationSettings } from 'hooks/useLocationSettings';
+import type { TooltipState } from './ChartTooltip/ChartTooltip';
 import { createTooltip } from './createTooltip';
 import { legendOptions } from './legendOptions';
 
@@ -28,14 +28,18 @@ export const createOptions = (
             tooltip: {
                 enabled: false,
                 position: 'nearest',
+                interaction: {
+                    axis: 'xy',
+                    mode: 'nearest',
+                },
                 external: createTooltip(setTooltip),
             },
         },
         locale: locationSettings.locale,
         interaction: {
             intersect: false,
-            axis: 'x',
-            mode: 'index',
+            axis: 'xy',
+            mode: 'nearest',
         },
         elements: {
             point: {

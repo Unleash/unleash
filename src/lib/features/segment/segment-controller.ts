@@ -1,16 +1,16 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../../routes/controller';
 
-import {
+import type {
     IAuthRequest,
     IUnleashConfig,
     IUnleashServices,
     Logger,
 } from '../../server-impl';
 import {
-    AdminSegmentSchema,
-    UpdateFeatureStrategySegmentsSchema,
-    UpsertSegmentSchema,
+    type AdminSegmentSchema,
+    type UpdateFeatureStrategySegmentsSchema,
+    type UpsertSegmentSchema,
     adminSegmentSchema,
     createRequestSchema,
     createResponseSchema,
@@ -21,13 +21,13 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { ISegmentService } from './segment-service-interface';
-import { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema';
-import { AccessService, OpenApiService } from '../../services';
+import type { ISegmentService } from './segment-service-interface';
+import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema';
+import type { AccessService, OpenApiService } from '../../services';
 import {
     CREATE_SEGMENT,
     DELETE_SEGMENT,
-    IFlagResolver,
+    type IFlagResolver,
     NONE,
     UPDATE_FEATURE_STRATEGY,
     UPDATE_PROJECT_SEGMENT,
@@ -36,7 +36,7 @@ import {
 } from '../../types';
 import {
     segmentsSchema,
-    SegmentsSchema,
+    type SegmentsSchema,
 } from '../../openapi/spec/segments-schema';
 
 import { anonymiseKeys, extractUserIdFromUser } from '../../util';

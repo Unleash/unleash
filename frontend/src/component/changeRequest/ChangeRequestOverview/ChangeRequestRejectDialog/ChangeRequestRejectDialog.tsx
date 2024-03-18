@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { TextField, Box } from '@mui/material';
 import { Dialogue } from '../../../common/Dialogue/Dialogue';
 

@@ -2,7 +2,7 @@ import { IconButton, Modal, styled } from '@mui/material';
 import { useContext } from 'react';
 import {
     feedbackCESContext,
-    IFeedbackCESState,
+    type IFeedbackCESState,
 } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { FeedbackCESForm } from 'component/feedback/FeedbackCES/FeedbackCESForm';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';

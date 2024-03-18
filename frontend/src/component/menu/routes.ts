@@ -29,7 +29,7 @@ import { SplashPage } from 'component/splash/SplashPage/SplashPage';
 import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
-import { INavigationMenuItem, IRoute } from 'interfaces/route';
+import type { INavigationMenuItem, IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from '../segments/SegmentTable/SegmentTable';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';

@@ -5,9 +5,10 @@ import {
     semVerOperators,
     dateOperators,
 } from 'constants/operators';
-import { IUnleashContextDefinition } from 'interfaces/context';
-import { IConstraint } from 'interfaces/strategy';
-import React, { useCallback, useEffect, useState } from 'react';
+import type { IUnleashContextDefinition } from 'interfaces/context';
+import type { IConstraint } from 'interfaces/strategy';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { oneOf } from 'utils/oneOf';
 
 import {
@@ -15,7 +16,7 @@ import {
     stringValidatorGenerator,
     semVerValidatorGenerator,
     dateValidatorGenerator,
-    ConstraintValidatorOutput,
+    type ConstraintValidatorOutput,
 } from './constraintValidators';
 import { nonEmptyArray } from 'utils/nonEmptyArray';
 

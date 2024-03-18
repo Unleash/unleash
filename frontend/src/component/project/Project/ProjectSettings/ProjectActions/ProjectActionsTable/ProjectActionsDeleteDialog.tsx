@@ -1,5 +1,5 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IActionSet } from 'interfaces/action';
+import type { IActionSet } from 'interfaces/action';
 
 interface IProjectActionsDeleteDialogProps {
     action?: IActionSet;

@@ -61,7 +61,9 @@
     **separate** information to what the fig caption does.
 
 
-**/
+ **/
+
+// biome-ignore lint/style/useImportType: <explanation>
 import React from 'react';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 

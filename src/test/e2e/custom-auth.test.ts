@@ -1,6 +1,6 @@
-import dbInit, { ITestDb } from './helpers/database-init';
+import dbInit, { type ITestDb } from './helpers/database-init';
 import { setupAppWithCustomAuth } from './helpers/test-helper';
-import { IUnleashStores, RoleName } from '../../lib/types';
+import { type IUnleashStores, RoleName } from '../../lib/types';
 
 let db: ITestDb;
 let stores: IUnleashStores;

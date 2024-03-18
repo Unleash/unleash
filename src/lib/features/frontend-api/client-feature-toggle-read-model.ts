@@ -1,17 +1,17 @@
 import { Knex } from 'knex';
-import {
+import type {
     IFeatureToggleClient,
     IStrategyConfig,
     PartialDeep,
 } from '../../types';
 import { ensureStringValue, mapValues } from '../../util';
-import { Db } from '../../db/db';
+import type { Db } from '../../db/db';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import Raw = Knex.Raw;
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
-import EventEmitter from 'events';
-import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
+import type EventEmitter from 'events';
+import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 
 export default class ClientFeatureToggleReadModel
     implements IClientFeatureToggleReadModel

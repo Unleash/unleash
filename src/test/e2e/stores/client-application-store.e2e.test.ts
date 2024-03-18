@@ -1,8 +1,11 @@
 import faker from 'faker';
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { IClientApplicationsStore, IUnleashStores } from '../../../lib/types';
-import { IClientApplication } from '../../../lib/types/stores/client-applications-store';
+import type {
+    IClientApplicationsStore,
+    IUnleashStores,
+} from '../../../lib/types';
+import type { IClientApplication } from '../../../lib/types/stores/client-applications-store';
 
 let db: ITestDb;
 let stores: IUnleashStores;

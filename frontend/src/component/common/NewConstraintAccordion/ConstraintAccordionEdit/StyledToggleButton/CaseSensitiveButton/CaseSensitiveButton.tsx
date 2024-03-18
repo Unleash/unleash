@@ -6,7 +6,7 @@ import {
     StyledToggleButtonOn,
 } from '../StyledToggleButton';
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 interface CaseSensitiveButtonProps {
     localConstraint: Pick<IConstraint, 'caseInsensitive'>;

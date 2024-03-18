@@ -1,16 +1,16 @@
-import openapi, { IExpressOpenApi } from '@wesleytodd/openapi';
-import { Express, RequestHandler, Response } from 'express';
-import { IUnleashConfig } from '../types/option';
+import openapi, { type IExpressOpenApi } from '@wesleytodd/openapi';
+import type { Express, RequestHandler, Response } from 'express';
+import type { IUnleashConfig } from '../types/option';
 import {
     createOpenApiSchema,
-    JsonSchemaProps,
+    type JsonSchemaProps,
     removeJsonSchemaProps,
-    SchemaId,
+    type SchemaId,
 } from '../openapi';
-import { ApiOperation } from '../openapi/util/api-operation';
-import { Logger } from '../logger';
+import type { ApiOperation } from '../openapi/util/api-operation';
+import type { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
-import { IFlagResolver } from '../types';
+import type { IFlagResolver } from '../types';
 import { fromOpenApiValidationErrors } from '../error/bad-data-error';
 
 export class OpenApiService {

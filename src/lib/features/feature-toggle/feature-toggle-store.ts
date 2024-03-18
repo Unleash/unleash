@@ -1,30 +1,30 @@
-import { Knex } from 'knex';
-import EventEmitter from 'events';
+import type { Knex } from 'knex';
+import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import NotFoundError from '../../error/notfound-error';
-import { Logger, LogProvider } from '../../logger';
-import {
+import type { Logger, LogProvider } from '../../logger';
+import type {
     FeatureToggle,
     FeatureToggleDTO,
     IFeatureToggleQuery,
     IVariant,
 } from '../../types/model';
-import { IFeatureToggleStore } from './types/feature-toggle-store-type';
-import { Db } from '../../db/db';
-import { LastSeenInput } from '../metrics/last-seen/last-seen-service';
+import type { IFeatureToggleStore } from './types/feature-toggle-store-type';
+import type { Db } from '../../db/db';
+import type { LastSeenInput } from '../metrics/last-seen/last-seen-service';
 import { NameExistsError } from '../../error';
 import { DEFAULT_ENV } from '../../../lib/util';
 
 import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
-import { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
+import type { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
 import {
     ADMIN_TOKEN_USER,
-    IFeatureTypeCount,
-    IFlagResolver,
+    type IFeatureTypeCount,
+    type IFlagResolver,
 } from '../../../lib/types';
 import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
-import { IFeatureProjectUserParams } from './feature-toggle-controller';
+import type { IFeatureProjectUserParams } from './feature-toggle-controller';
 
 export type EnvironmentFeatureNames = {
     [key: string]: string[];
@@ -347,7 +347,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         }
 
         const queryResult = await query.first();
-        return parseInt(queryResult.count || 0);
+        return Number.parseInt(queryResult.count || 0);
     }
 
     /**

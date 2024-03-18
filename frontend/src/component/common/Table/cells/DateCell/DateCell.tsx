@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { getLocalizedDateString } from '../../../util';

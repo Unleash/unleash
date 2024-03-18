@@ -1,4 +1,4 @@
-import { type Db } from '../../server-impl';
+import type { Db } from '../../server-impl';
 
 export type GetActiveUsers = () => Promise<{
     last7: number;
@@ -36,10 +36,10 @@ export const createGetActiveUsers =
             .from('Combined');
 
         return {
-            last7: parseInt(result?.[0]?.last_week || '0', 10),
-            last30: parseInt(result?.[0]?.last_month || '0', 10),
-            last60: parseInt(result?.[0]?.last_two_months || '0', 10),
-            last90: parseInt(result?.[0]?.last_quarter || '0', 10),
+            last7: Number.parseInt(result?.[0]?.last_week || '0', 10),
+            last30: Number.parseInt(result?.[0]?.last_month || '0', 10),
+            last60: Number.parseInt(result?.[0]?.last_two_months || '0', 10),
+            last90: Number.parseInt(result?.[0]?.last_quarter || '0', 10),
         };
     };
 

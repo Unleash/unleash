@@ -1,7 +1,8 @@
-import React, { FC, useState } from 'react';
+import type React from 'react';
+import { type FC, useState } from 'react';
 import { Box, Button, IconButton, styled, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { ChangeRequestType } from '../../changeRequest.types';
+import type { ChangeRequestType } from '../../changeRequest.types';
 import Edit from '@mui/icons-material/Edit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';

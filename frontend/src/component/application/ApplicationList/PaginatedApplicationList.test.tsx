@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { PaginatedApplicationList } from './PaginatedApplicationList';
-import { ApplicationSchema } from 'openapi';
+import type { ApplicationSchema } from 'openapi';
 
 const server = testServerSetup();
 
@@ -28,9 +28,9 @@ test('Display applications list', async () => {
     );
 });
 
-test('Display no applications', async () => {
+test('Display no applications connected', async () => {
     setupApi([]);
     render(<PaginatedApplicationList />);
 
-    await screen.findByText('Warning');
+    await screen.findByText(/To connect your application to Unleash/);
 });

@@ -1,5 +1,5 @@
 import { Button, styled } from '@mui/material';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 const StyledItemRow = styled('div')(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,

@@ -1,4 +1,4 @@
-import { FormEventHandler, useEffect, useState, VFC } from 'react';
+import { type FormEventHandler, useEffect, useState, type VFC } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Box, Paper, useTheme, styled, Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -19,7 +19,7 @@ import { PlaygroundGuidance } from './PlaygroundGuidance/PlaygroundGuidance';
 import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundGuidancePopper';
 import Loader from 'component/common/Loader/Loader';
 import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
-import { AdvancedPlaygroundResponseSchema } from 'openapi';
+import type { AdvancedPlaygroundResponseSchema } from 'openapi';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { BadRequestError } from 'utils/apiUtils';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

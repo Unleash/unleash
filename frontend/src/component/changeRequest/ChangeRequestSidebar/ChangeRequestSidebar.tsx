@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';

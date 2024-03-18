@@ -1,5 +1,5 @@
 import { SWRConfig } from 'swr';
-import React from 'react';
+import type React from 'react';
 import { ResponseError } from 'utils/apiUtils';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 

@@ -1,14 +1,14 @@
-import { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import {
+import type {
     IEditableStrategy,
     IMinimalStrategyRow,
     IStrategy,
     IStrategyImport,
     IStrategyStore,
 } from '../types/stores/strategy-store';
-import { Db } from './db';
+import type { Db } from './db';
 
 const STRATEGY_COLUMNS = [
     'title',

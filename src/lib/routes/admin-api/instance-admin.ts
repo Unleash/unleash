@@ -1,16 +1,16 @@
 import { Parser } from 'json2csv';
-import { Response } from 'express';
-import { AuthedRequest } from '../../types/core';
-import { IUnleashServices } from '../../types/services';
-import { IUnleashConfig } from '../../types/option';
+import type { Response } from 'express';
+import type { AuthedRequest } from '../../types/core';
+import type { IUnleashServices } from '../../types/services';
+import type { IUnleashConfig } from '../../types/option';
 import Controller from '../controller';
 import { NONE } from '../../types/permissions';
-import { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
-import {
+import type { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
+import type {
     InstanceStatsService,
     InstanceStatsSigned,
 } from '../../features/instance-stats/instance-stats-service';
-import { OpenApiService } from '../../services/openapi-service';
+import type { OpenApiService } from '../../services/openapi-service';
 import {
     createCsvResponseSchema,
     createResponseSchema,

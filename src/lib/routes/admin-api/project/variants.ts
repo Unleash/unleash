@@ -1,25 +1,25 @@
-import FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
-import { Logger } from '../../../logger';
+import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
+import type { Logger } from '../../../logger';
 import Controller from '../../controller';
-import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types';
-import { Request, Response } from 'express';
-import { Operation } from 'fast-json-patch';
+import type { IUnleashConfig } from '../../../types/option';
+import type { IUnleashServices } from '../../../types';
+import type { Request, Response } from 'express';
+import type { Operation } from 'fast-json-patch';
 import {
     NONE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_VARIANTS,
 } from '../../../types/permissions';
-import { IVariant, WeightType } from '../../../types/model';
+import { type IVariant, WeightType } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
-import { IAuthRequest } from '../../unleash-types';
-import { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
+import type { IAuthRequest } from '../../unleash-types';
+import type { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import { AccessService } from '../../../services';
+import type { AccessService } from '../../../services';
 import { BadDataError, PermissionError } from '../../../../lib/error';
-import { IUser } from '../../../server-impl';
-import { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema';
+import type { IUser } from '../../../server-impl';
+import type { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema';
 import { getStandardResponses } from '../../../openapi';
 
 const PREFIX = '/:projectId/features/:featureName/variants';

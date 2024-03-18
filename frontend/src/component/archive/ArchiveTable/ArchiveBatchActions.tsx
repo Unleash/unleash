@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { Button } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Undo from '@mui/icons-material/Undo';

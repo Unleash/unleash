@@ -5,7 +5,10 @@ import {
     useLocation,
     useNavigate,
 } from 'react-router-dom';
-import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
+import {
+    type ITab,
+    VerticalTabs,
+} from 'component/common/VerticalTabs/VerticalTabs';
 import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
 import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
 import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration';
@@ -93,7 +96,8 @@ export const ProjectSettings = () => {
             tabs={tabs}
             value={
                 tabs.find(
-                    ({ id }) => id && location.pathname?.includes(`/${id}`),
+                    ({ id }) =>
+                        id && location.pathname?.includes(`/settings/${id}`),
                 )?.id || tabs[0].id
             }
             onChange={onChange}

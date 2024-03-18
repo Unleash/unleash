@@ -1,6 +1,6 @@
 import {
-    HTMLAttributes,
-    ReactNode,
+    type HTMLAttributes,
+    type ReactNode,
     useContext,
     useEffect,
     useRef,
@@ -49,7 +49,9 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
         // After that, the top will be calculated based on the height of the previous sticky items + this initial top offset
         if (ref.current && initialTopOffset === null) {
             setInitialTopOffset(
-                parseInt(getComputedStyle(ref.current).getPropertyValue('top')),
+                Number.parseInt(
+                    getComputedStyle(ref.current).getPropertyValue('top'),
+                ),
             );
         }
     }, []);

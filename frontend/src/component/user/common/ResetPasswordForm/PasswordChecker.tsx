@@ -1,5 +1,5 @@
 import { styled, Typography } from '@mui/material';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
 import { BAD_REQUEST, OK } from 'constants/statusCodes';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';

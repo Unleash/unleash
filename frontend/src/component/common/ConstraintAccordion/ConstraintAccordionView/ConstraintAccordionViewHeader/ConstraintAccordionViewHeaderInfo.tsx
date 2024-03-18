@@ -3,7 +3,7 @@ import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue';
 import { ConstraintAccordionViewHeaderMultipleValues } from './ConstraintAccordionViewHeaderMultipleValues';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',

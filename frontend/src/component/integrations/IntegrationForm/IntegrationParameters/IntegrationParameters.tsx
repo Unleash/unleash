@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     IntegrationParameter,
-    IIntegrationParameterProps,
+    type IIntegrationParameterProps,
 } from './IntegrationParameter/IntegrationParameter';
 import type { AddonTypeSchema } from 'openapi';
 

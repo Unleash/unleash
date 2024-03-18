@@ -1,0 +1,50 @@
+---
+title: Applications
+---
+
+import Figure from '@site/src/components/Figure/Figure.tsx'
+
+An **application** is defined as anything that sends requests to the [Unleash client API](/reference/api/unleash/client), the [Unleash front-end API](front-end-api.md),  the Unleash admin API, or any other API that Unleash exposes. This includes [Unleash SDKs](./sdks/index.md), [Unleash Edge](/docs/generated/unleash-edge.md), the [Unleash proxy](/docs/generated/unleash-proxy.md), and even the admin UI.
+
+
+
+Applications can be accessed in the UI by going to the /applications page or manually by clicking Configure -> Applications. After clicking on your application, you will see an application overview.
+
+:::info Availability
+
+The following three sections: "Application Overview," "Connected Instances," and "Project Applications" were released in Unleash 5.11.
+
+:::
+
+
+Under the application, you have two tabs:
+
+- [Overview](#application-overview)
+- [Connected Instances](#connected-instances)
+
+## Application overview
+
+The application overview displays a list of projects that the application is accessing (accessing those projects' flags) and highlights any potential issues detected in your applications.
+
+For detected issues, there are three different possible issues:
+
+1. The SDK is outdated, which means the application is using an old SDK that is recommended to be upgraded.
+2. The application is requesting a flag from Unleash, which does not exist in Unleash.
+3. The application is using a strategy type that does not exist in Unleash.
+
+
+The application is also illustrated as a diagram, showing the application node, where the environment count and feature flag count are displayed. Under the application, it is possible to see which environments the application is using. Under each environment, data about the application is shown, including how many instances are connected, which SDKs the application is using, and when the application was last seen in that environment.
+
+<Figure caption="The application overview currently shows that 1 SDK is outdated, and the application, auth-app, has 2 environments in use: development and production." img="/img/application-overview.png"/>
+
+## Connected instances
+
+Connected instances display a list of instances that the application has in a selected environment. It shows the instance name, SDK version, last seen, and the IP address from which the instance connected.
+
+<Figure caption="Connected instances currently show that in the development environment, there is one connected instance that was last seen 19 hours ago." img="/img/application-connected-instances.png"/>
+
+## Project applications
+
+In the project view, there is a tab named "Applications." In this view, it is possible to see all the applications that are consuming the project's features. The applications are displayed in a list, showing the application name, environments the application is consuming in the current project, instances, and SDKs.
+
+<Figure caption="Currently, there is one application connected named auth-app, with 2 environments and 28 instances." img="/img/project-applications.png"/>

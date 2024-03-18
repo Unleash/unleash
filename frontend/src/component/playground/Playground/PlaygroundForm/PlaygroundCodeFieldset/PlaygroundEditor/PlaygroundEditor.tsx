@@ -1,7 +1,12 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { useContext } from 'react';
 import { json } from '@codemirror/lang-json';
-import { Dispatch, SetStateAction, VFC, useCallback } from 'react';
+import {
+    type Dispatch,
+    type SetStateAction,
+    type VFC,
+    useCallback,
+} from 'react';
 import { styled, useTheme, Box } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { duotoneDark, duotoneLight } from '@uiw/codemirror-theme-duotone';

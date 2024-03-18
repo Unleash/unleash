@@ -19,7 +19,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     ChartTooltip,
     ChartTooltipContainer,
-    TooltipState,
+    type TooltipState,
 } from './ChartTooltip/ChartTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';

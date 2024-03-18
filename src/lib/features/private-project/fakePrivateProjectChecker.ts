@@ -1,5 +1,5 @@
-import { IPrivateProjectChecker } from './privateProjectCheckerType';
-import { ALL_PROJECT_ACCESS, ProjectAccess } from './privateProjectStore';
+import type { IPrivateProjectChecker } from './privateProjectCheckerType';
+import { ALL_PROJECT_ACCESS, type ProjectAccess } from './privateProjectStore';
 
 export class FakePrivateProjectChecker implements IPrivateProjectChecker {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

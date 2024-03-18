@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { apiTokenSchema } from './api-token-schema';
 
 export const apiTokensSchema = {

@@ -1,13 +1,13 @@
 import { Alert, IconButton, Tooltip, styled } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ActionsActionState } from '../../useProjectActionsForm';
+import type { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
 import { useEffect, useMemo } from 'react';
-import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameter/ProjectActionsActionParameterAutocomplete';
-import { ActionDefinitions } from './useActionDefinitions';
+import { ProjectActionsActionParameter } from './ProjectActionsActionParameter/ProjectActionsActionParameter';
+import type { ActionConfigurations } from 'interfaces/action';
 import { ProjectActionsActionSelect } from './ProjectActionsActionSelect';
 
 const StyledItemBody = styled('div')(({ theme }) => ({
@@ -36,7 +36,7 @@ interface IProjectActionsItemProps {
     stateChanged: (action: ActionsActionState) => void;
     actorId: number;
     onDelete: () => void;
-    actionDefinitions: ActionDefinitions;
+    actionConfigurations: ActionConfigurations;
     validated: boolean;
 }
 
@@ -46,7 +46,7 @@ export const ProjectActionsActionItem = ({
     stateChanged,
     actorId,
     onDelete,
-    actionDefinitions,
+    actionConfigurations,
     validated,
 }: IProjectActionsItemProps) => {
     const { action: actionName, executionParams, error } = action;
@@ -57,10 +57,10 @@ export const ProjectActionsActionItem = ({
         executionParams.environment as string,
     );
 
-    const actionDefinition = actionDefinitions.get(actionName);
+    const actionConfiguration = actionConfigurations.get(actionName);
 
     const hasPermission = useMemo(() => {
-        const requiredPermissions = actionDefinition?.permissions;
+        const requiredPermissions = actionConfiguration?.permissions;
 
         const { environment: actionEnvironment } = executionParams;
 
@@ -80,7 +80,7 @@ export const ProjectActionsActionItem = ({
                     environment === actionEnvironment,
             ),
         );
-    }, [actionDefinition, permissions]);
+    }, [actionConfiguration, permissions]);
 
     useEffect(() => {
         stateChanged({
@@ -89,7 +89,7 @@ export const ProjectActionsActionItem = ({
         });
 
         const requiredParameters =
-            actionDefinition?.parameters
+            actionConfiguration?.parameters
                 .filter(({ optional }) => !optional)
                 .map(({ name }) => name) || [];
 
@@ -99,7 +99,7 @@ export const ProjectActionsActionItem = ({
                 error: 'Please fill all required fields.',
             });
         }
-    }, [actionDefinition, executionParams]);
+    }, [actionConfiguration, executionParams]);
 
     const header = (
         <>
@@ -115,7 +115,9 @@ export const ProjectActionsActionItem = ({
     );
 
     const parameters =
-        actionDefinition?.parameters.filter(({ hidden }) => !hidden) || [];
+        actionConfiguration?.parameters.filter(
+            ({ type }) => type !== 'hidden',
+        ) || [];
 
     return (
         <ProjectActionsFormItem index={index} header={header} separator='THEN'>
@@ -130,7 +132,7 @@ export const ProjectActionsActionItem = ({
                                     action: value,
                                 })
                             }
-                            actionDefinitions={actionDefinitions}
+                            actionConfigurations={actionConfigurations}
                         />
                     </StyledFieldContainer>
                 </StyledItemRow>
@@ -138,21 +140,24 @@ export const ProjectActionsActionItem = ({
                     condition={parameters.length > 0}
                     show={
                         <StyledItemRow>
-                            {parameters.map(({ name, label, options }) => (
-                                <StyledFieldContainer key={name}>
-                                    <ProjectActionsActionParameterAutocomplete
-                                        label={label}
-                                        value={executionParams[name] as string}
+                            {parameters.map((parameter) => (
+                                <StyledFieldContainer key={parameter.name}>
+                                    <ProjectActionsActionParameter
+                                        parameter={parameter}
+                                        value={
+                                            executionParams[
+                                                parameter.name
+                                            ] as string
+                                        }
                                         onChange={(value) =>
                                             stateChanged({
                                                 ...action,
                                                 executionParams: {
                                                     ...executionParams,
-                                                    [name]: value,
+                                                    [parameter.name]: value,
                                                 },
                                             })
                                         }
-                                        options={options}
                                     />
                                 </StyledFieldContainer>
                             ))}

@@ -2,7 +2,7 @@ import getLogger from '../../test/fixtures/no-logger';
 import patMiddleware from './pat-middleware';
 import User from '../types/user';
 import NotFoundError from '../error/notfound-error';
-import { AccountService } from '../services/account-service';
+import type { AccountService } from '../services/account-service';
 
 let config: any;
 

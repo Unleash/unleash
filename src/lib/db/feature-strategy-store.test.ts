@@ -1,6 +1,6 @@
-import dbInit, { ITestDb } from '../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init';
 import getLogger from '../../test/fixtures/no-logger';
-import {
+import type {
     IFeatureStrategiesStore,
     IFeatureStrategy,
     IFeatureToggleStore,

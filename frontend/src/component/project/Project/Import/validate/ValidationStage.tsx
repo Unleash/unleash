@@ -1,8 +1,8 @@
 import { ImportLayoutContainer } from '../ImportLayoutContainer';
 import { Box, Button, styled, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import {
-    IValidationSchema,
+    type IValidationSchema,
     useValidateImportApi,
 } from 'hooks/api/actions/useValidateImportApi/useValidateImportApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

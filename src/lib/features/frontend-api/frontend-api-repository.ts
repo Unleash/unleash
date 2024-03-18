@@ -1,15 +1,15 @@
 import EventEmitter from 'events';
-import { RepositoryInterface } from 'unleash-client/lib/repository';
-import { Segment } from 'unleash-client/lib/strategy/strategy';
-import {
+import type { RepositoryInterface } from 'unleash-client/lib/repository';
+import type { Segment } from 'unleash-client/lib/strategy/strategy';
+import type {
     EnhancedFeatureInterface,
     FeatureInterface,
 } from 'unleash-client/lib/feature';
-import { IApiUser } from '../../types/api-user';
-import { IUnleashConfig } from '../../types';
+import type { IApiUser } from '../../types/api-user';
+import type { IUnleashConfig } from '../../types';
 import { UnleashEvents } from 'unleash-client';
-import { Logger } from '../../logger';
-import { GlobalFrontendApiCache } from './global-frontend-api-cache';
+import type { Logger } from '../../logger';
+import type { GlobalFrontendApiCache } from './global-frontend-api-cache';
 
 type Config = Pick<IUnleashConfig, 'getLogger'>;
 

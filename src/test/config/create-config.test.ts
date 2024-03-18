@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { createConfig, authTypeFromString } from '../../lib/create-config';
-import { IAuthType, IDBOption } from '../../lib/types/option';
+import { IAuthType, type IDBOption } from '../../lib/types/option';
 
 test('Should use DATABASE_URL from env', () => {
     const databaseUrl = 'postgres://u:p@localhost:5432/name';

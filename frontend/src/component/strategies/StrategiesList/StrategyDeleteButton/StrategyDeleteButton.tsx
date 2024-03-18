@@ -1,9 +1,9 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Delete from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
-import { IStrategy } from 'interfaces/strategy';
+import type { IStrategy } from 'interfaces/strategy';
 import { DELETE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useId } from 'hooks/useId';
 

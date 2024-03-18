@@ -1,4 +1,4 @@
-import { useRef, useEffect, RefObject } from 'react';
+import { useRef, useEffect, type RefObject } from 'react';
 
 export type MoveListItem = (
     dragIndex: number,

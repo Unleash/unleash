@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { screen } from '@testing-library/dom';
 import { Route, Routes } from 'react-router-dom';
-import {
+import type {
     ChangeRequestType,
     ChangeRequestAction,
 } from 'component/changeRequest/changeRequest.types';

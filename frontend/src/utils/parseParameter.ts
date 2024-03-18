@@ -1,4 +1,4 @@
-import { IFeatureStrategyParameters } from 'interfaces/strategy';
+import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 
 export const parseParameterNumber = (
     value: IFeatureStrategyParameters[string],

@@ -1,5 +1,5 @@
-import { Db } from '../../db/db';
-import { IUnleashConfig } from '../../types';
+import type { Db } from '../../db/db';
+import type { IUnleashConfig } from '../../types';
 import { EventService } from '../../services';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';

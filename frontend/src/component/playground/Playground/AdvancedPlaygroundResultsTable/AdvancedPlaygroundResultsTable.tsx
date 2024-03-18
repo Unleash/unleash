@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-    SortingRule,
+    type SortingRule,
     useFlexLayout,
     useGlobalFilter,
     useSortBy,
@@ -22,7 +22,7 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { AdvancedPlaygroundEnvironmentCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentCell';
-import {
+import type {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundFeatureSchema,
     AdvancedPlaygroundFeatureSchemaEnvironments,

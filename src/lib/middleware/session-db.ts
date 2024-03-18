@@ -1,8 +1,8 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import session from 'express-session';
 import knexSessionStore from 'connect-session-knex';
-import { RequestHandler } from 'express';
-import { IUnleashConfig } from '../types/option';
+import type { RequestHandler } from 'express';
+import type { IUnleashConfig } from '../types/option';
 import { hoursToMilliseconds } from 'date-fns';
 
 function sessionDb(

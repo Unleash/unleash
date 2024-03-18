@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import TimeAgo from 'react-timeago';
 import { Tooltip, Typography, useTheme } from '@mui/material';
 import { formatDateYMD } from 'utils/formatDate';

@@ -1,8 +1,8 @@
 import EventEmitter from 'events';
-import { Segment } from 'unleash-client/lib/strategy/strategy';
-import { FeatureInterface } from 'unleash-client/lib/feature';
-import { IApiUser } from '../../types/api-user';
-import {
+import type { Segment } from 'unleash-client/lib/strategy/strategy';
+import type { FeatureInterface } from 'unleash-client/lib/feature';
+import type { IApiUser } from '../../types/api-user';
+import type {
     IFeatureToggleClient,
     ISegmentReadModel,
     IUnleashConfig,
@@ -12,9 +12,9 @@ import {
     mapSegmentsForClient,
 } from '../playground/offline-unleash-client';
 import { ALL_ENVS } from '../../util/constants';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
-import { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
+import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
 import metricsHelper from '../../util/metrics-helper';
 import { FUNCTION_TIME } from '../../metric-events';
 

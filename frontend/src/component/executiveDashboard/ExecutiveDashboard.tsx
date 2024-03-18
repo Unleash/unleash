@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -26,6 +26,10 @@ import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/Project
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
 import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart';
+import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction';
+import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
+import { useGroupedProjectTrends } from './hooks/useGroupedProjectTrends';
+import { useAvgTimeToProduction } from './hooks/useAvgTimeToProduction';
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -45,16 +49,16 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
-const StickyWrapper = styled(Box)<{ scrolled?: boolean }>(
-    ({ theme, scrolled }) => ({
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
-        background: theme.palette.background.application,
-        transition: 'padding 0.3s ease',
-    }),
-);
+const StickyWrapper = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'scrolled',
+})<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
+}));
 
 export const ExecutiveDashboard: VFC = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -74,14 +78,21 @@ export const ExecutiveDashboard: VFC = () => {
         executiveDashboardData.projectFlagTrends,
         projects,
     );
+
+    const groupedProjectsData = useGroupedProjectTrends(projectsData);
+
     const metricsData = useFilteredTrends(
         executiveDashboardData.metricsSummaryTrends,
         projects,
     );
+    const groupedMetricsData = useGroupedProjectTrends(metricsData);
 
     const { users, environmentTypeTrends } = executiveDashboardData;
 
     const summary = useFilteredFlagsSummary(projectsData);
+
+    const avgDaysToProduction = useAvgTimeToProduction(groupedProjectsData);
+
     const isOneProjectSelected = projects.length === 1;
 
     const handleScroll = () => {
@@ -147,7 +158,7 @@ export const ExecutiveDashboard: VFC = () => {
                     elseShow={
                         <ChartWidget title='Users per project'>
                             <UsersPerProjectChart
-                                projectFlagTrends={projectsData}
+                                projectFlagTrends={groupedProjectsData}
                             />
                         </ChartWidget>
                     }
@@ -178,7 +189,7 @@ export const ExecutiveDashboard: VFC = () => {
                     elseShow={
                         <ChartWidget title='Flags per project'>
                             <FlagsProjectChart
-                                projectFlagTrends={projectsData}
+                                projectFlagTrends={groupedProjectsData}
                             />
                         </ChartWidget>
                     }
@@ -200,25 +211,32 @@ export const ExecutiveDashboard: VFC = () => {
                     }
                 >
                     <ProjectHealthChart
-                        projectFlagTrends={projectsData}
+                        projectFlagTrends={groupedProjectsData}
                         isAggregate={showAllProjects}
                     />
                 </ChartWidget>
-                {/* <Widget title='Average time to production'>
-                    <TimeToProduction
-                        //FIXME: data from API
-                        daysToProduction={5.2}
-                    />
+                <Widget
+                    title='Average time to production'
+                    tooltip='How long did it take on average from a feature toggle was created until it was enabled in an environment of type production. This is calculated only from feature toggles with the type of "release". '
+                >
+                    <TimeToProduction daysToProduction={avgDaysToProduction} />
                 </Widget>
-                <ChartWidget title='Time to production'>
-                    <TimeToProductionChart projectFlagTrends={projectsData} />
-                </ChartWidget> */}
+                <ChartWidget
+                    title='Time to production'
+                    tooltip='How the average time to production changes over time'
+                >
+                    <TimeToProductionChart
+                        projectFlagTrends={groupedProjectsData}
+                    />
+                </ChartWidget>
             </StyledGrid>
             <Widget
                 title='Metrics'
                 tooltip='Summary of all flag evaluations reported by SDKs.'
             >
-                <MetricsSummaryChart metricsSummaryTrends={metricsData} />
+                <MetricsSummaryChart
+                    metricsSummaryTrends={groupedMetricsData}
+                />
             </Widget>
             <Widget
                 title='Updates per environment type'

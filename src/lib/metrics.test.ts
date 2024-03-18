@@ -1,6 +1,6 @@
 import { register } from 'prom-client';
 import EventEmitter from 'events';
-import { IEventStore } from './types/stores/event-store';
+import type { IEventStore } from './types/stores/event-store';
 import { createTestConfig } from '../test/config/test-config';
 import { DB_TIME, FUNCTION_TIME, REQUEST_TIME } from './metric-events';
 import {
@@ -15,7 +15,7 @@ import { InstanceStatsService } from './features/instance-stats/instance-stats-s
 import VersionService from './services/version-service';
 import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
 import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
-import { IEnvironmentStore, IUnleashStores } from './types';
+import type { IEnvironmentStore, IUnleashStores } from './types';
 import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
 import { SchedulerService } from './services';
 import noLogger from '../test/fixtures/no-logger';

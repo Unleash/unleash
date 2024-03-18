@@ -1,9 +1,9 @@
-import { Logger, LogProvider } from '../logger';
-import {
+import type { Logger, LogProvider } from '../logger';
+import type {
     IFeatureType,
     IFeatureTypeStore,
 } from '../types/stores/feature-type-store';
-import { Db } from './db';
+import type { Db } from './db';
 
 const COLUMNS = ['id', 'name', 'description', 'lifetime_days'];
 const TABLE = 'feature_types';

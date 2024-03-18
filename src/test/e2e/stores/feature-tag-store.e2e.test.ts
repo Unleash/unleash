@@ -1,9 +1,9 @@
-import { IFeatureTagStore } from '../../../lib/types/stores/feature-tag-store';
-import { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type';
-import dbInit, { ITestDb } from '../helpers/database-init';
+import type { IFeatureTagStore } from '../../../lib/types/stores/feature-tag-store';
+import type { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import NotFoundError from '../../../lib/error/notfound-error';
-import { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

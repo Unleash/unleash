@@ -2,8 +2,8 @@ import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { Alert, CircularProgress, Divider, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IActionEvent } from 'interfaces/action';
-import { ReactNode } from 'react';
+import type { IActionEvent } from 'interfaces/action';
+import type { ReactNode } from 'react';
 
 const StyledAction = styled('div', {
     shouldForwardProp: (prop) => prop !== 'state',

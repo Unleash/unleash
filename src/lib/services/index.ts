@@ -1,4 +1,8 @@
-import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
+import type {
+    IUnleashConfig,
+    IUnleashServices,
+    IUnleashStores,
+} from '../types';
 import FeatureTypeService from './feature-type-service';
 import EventService from '../features/events/event-service';
 import HealthService from './health-service';
@@ -41,13 +45,13 @@ import { FavoritesService } from './favorites-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
 import { AccountService } from './account-service';
 import { SchedulerService } from '../features/scheduler/scheduler-service';
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import {
     createExportImportTogglesService,
     createFakeExportImportTogglesService,
     deferredExportImportTogglesService,
 } from '../features/export-import-toggles/createExportImportService';
-import { Db } from '../db/db';
+import type { Db } from '../db/db';
 import { withFakeTransactional, withTransactional } from '../db/transaction';
 import {
     createChangeRequestAccessReadModel,

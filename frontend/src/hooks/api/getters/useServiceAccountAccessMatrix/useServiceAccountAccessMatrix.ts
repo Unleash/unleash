@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IRole } from 'interfaces/role';
-import { IServiceAccount } from 'interfaces/service-account';
-import { IMatrixPermission } from 'interfaces/permissions';
-import { IPermission } from 'interfaces/user';
+import type { IRole } from 'interfaces/role';
+import type { IServiceAccount } from 'interfaces/service-account';
+import type { IMatrixPermission } from 'interfaces/permissions';
+import type { IPermission } from 'interfaces/user';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 interface IServiceAccountAccessMatrix {

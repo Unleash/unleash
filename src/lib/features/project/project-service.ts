@@ -1,7 +1,10 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
-import { IUser } from '../../types/user';
-import { AccessService, AccessWithRoles } from '../../services/access-service';
+import type { IUser } from '../../types/user';
+import type {
+    AccessService,
+    AccessWithRoles,
+} from '../../services/access-service';
 import NameExistsError from '../../error/name-exists-error';
 import InvalidOperationError from '../../error/invalid-operation-error';
 import { nameType } from '../../routes/util';
@@ -9,26 +12,26 @@ import { projectSchema } from '../../services/project-schema';
 import NotFoundError from '../../error/notfound-error';
 import {
     ADMIN_TOKEN_USER,
-    CreateProject,
+    type CreateProject,
     DEFAULT_PROJECT,
-    FeatureToggle,
-    IAccountStore,
-    IEnvironmentStore,
-    IEventStore,
-    IFeatureEnvironmentStore,
-    IFeatureNaming,
-    IFeatureToggleStore,
-    IFlagResolver,
-    IProject,
-    IProjectApplications,
-    IProjectHealth,
-    IProjectOverview,
-    IProjectRoleUsage,
-    IProjectStore,
-    IProjectUpdate,
-    IProjectWithCount,
-    IUnleashConfig,
-    IUnleashStores,
+    type FeatureToggle,
+    type IAccountStore,
+    type IEnvironmentStore,
+    type IEventStore,
+    type IFeatureEnvironmentStore,
+    type IFeatureNaming,
+    type IFeatureToggleStore,
+    type IFlagResolver,
+    type IProject,
+    type IProjectApplications,
+    type IProjectHealth,
+    type IProjectOverview,
+    type IProjectRoleUsage,
+    type IProjectStore,
+    type IProjectUpdate,
+    type IProjectWithCount,
+    type IUnleashConfig,
+    type IUnleashStores,
     MOVE_FEATURE_TOGGLE,
     PROJECT_CREATED,
     PROJECT_DELETED,
@@ -47,27 +50,27 @@ import {
     SYSTEM_USER,
     SYSTEM_USER_ID,
 } from '../../types';
-import {
+import type {
     IProjectAccessModel,
     IRoleDescriptor,
     IRoleWithProject,
 } from '../../types/stores/access-store';
-import FeatureToggleService from '../feature-toggle/feature-toggle-service';
+import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../../util';
-import { GroupService } from '../../services/group-service';
-import { IGroupRole } from '../../types/group';
-import { FavoritesService } from '../../services/favorites-service';
+import type { GroupService } from '../../services/group-service';
+import type { IGroupRole } from '../../types/group';
+import type { FavoritesService } from '../../services/favorites-service';
 import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
-import { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
+import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
 import { uniqueByKey } from '../../util/unique';
 import { BadDataError, PermissionError } from '../../error';
-import { ProjectDoraMetricsSchema } from '../../openapi';
+import type { ProjectDoraMetricsSchema } from '../../openapi';
 import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation';
-import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import EventService from '../events/event-service';
-import {
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type EventService from '../events/event-service';
+import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,

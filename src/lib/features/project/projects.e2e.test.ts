@@ -1,13 +1,13 @@
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
-    IUnleashTest,
+    type IUnleashTest,
     insertFeatureEnvironmentsLastSeen,
     insertLastSeenAt,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 
-import { IProjectStore } from '../../types';
+import type { IProjectStore } from '../../types';
 import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;

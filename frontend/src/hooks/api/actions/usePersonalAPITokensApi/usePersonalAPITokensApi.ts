@@ -1,4 +1,4 @@
-import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import useAPI from '../useApi/useApi';
 
 export interface ICreatePersonalApiTokenPayload {

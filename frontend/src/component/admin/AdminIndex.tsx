@@ -1,8 +1,8 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { adminGroups } from './adminRoutes';
-import { INavigationMenuItem } from 'interfaces/route';
+import type { INavigationMenuItem } from 'interfaces/route';
 import { Box, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAdminRoutes } from './useAdminRoutes';

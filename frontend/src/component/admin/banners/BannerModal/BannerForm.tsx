@@ -5,8 +5,13 @@ import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import Input from 'component/common/Input/Input';
-import { BannerVariant } from 'interfaces/banner';
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import type { BannerVariant } from 'interfaces/banner';
+import {
+    type ChangeEvent,
+    type Dispatch,
+    type SetStateAction,
+    useState,
+} from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import { BannerDialog } from 'component/banners/Banner/BannerDialog/BannerDialog';
 

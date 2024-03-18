@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { ClientFeaturesSchema } from './client-features-schema';
+import type { ClientFeaturesSchema } from './client-features-schema';
 
 test('clientFeaturesSchema no fields', () => {
     expect(

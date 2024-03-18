@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import CheckBox from '@mui/icons-material/Check';
 import Today from '@mui/icons-material/Today';

@@ -1,4 +1,4 @@
-import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
+import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 
 // multiple applications may have metrics for the same timestamp
 export const aggregateFeatureMetrics = (

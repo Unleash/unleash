@@ -1,4 +1,4 @@
-import {
+import type {
     IEnvironment,
     IProject,
     IProjectApplications,
@@ -6,13 +6,13 @@ import {
     IProjectWithCount,
 } from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
-import {
+import type {
     IEnvironmentProjectLink,
     IProjectMembersCount,
     ProjectModeCount,
 } from '../../lib/features/project/project-store';
-import { CreateFeatureStrategySchema } from '../../lib/openapi';
-import {
+import type { CreateFeatureStrategySchema } from '../../lib/openapi';
+import type {
     IProjectApplicationsSearchParams,
     IProjectHealthUpdate,
     IProjectInsert,

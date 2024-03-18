@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { FormControl, RadioGroup, Radio, Alert } from '@mui/material';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useThemeStyles } from 'themes/themeStyles';
-import { ILegalValue } from 'interfaces/context';
+import type { ILegalValue } from 'interfaces/context';
 import {
     LegalValueLabel,
     filterLegalValues,

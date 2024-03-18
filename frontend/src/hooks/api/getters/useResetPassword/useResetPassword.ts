@@ -1,4 +1,4 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import useQueryParams from 'hooks/useQueryParams';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';

@@ -10,7 +10,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 import { flexRow } from 'themes/themeStyles';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FeatureTypeCount } from 'interfaces/project';
+import type { FeatureTypeCount } from 'interfaces/project';
 
 interface IProjectInfoProps {
     id: string;

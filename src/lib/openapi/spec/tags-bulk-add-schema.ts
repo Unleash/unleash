@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { updateTagsSchema } from './update-tags-schema';
 import { tagSchema } from './tag-schema';
 

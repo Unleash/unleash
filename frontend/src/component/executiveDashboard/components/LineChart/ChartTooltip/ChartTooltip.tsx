@@ -1,6 +1,6 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
-import { TooltipItem } from 'chart.js';
-import { FC, VFC } from 'react';
+import type { TooltipItem } from 'chart.js';
+import type { FC, VFC } from 'react';
 import { objectId } from 'utils/objectId';
 
 export type TooltipState = {

@@ -5,7 +5,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { MouseEventHandler, VFC } from 'react';
+import type { MouseEventHandler, VFC } from 'react';
 
 interface IIntegrationStateSwitchProps {
     checked: boolean;

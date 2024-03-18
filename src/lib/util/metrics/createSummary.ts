@@ -1,4 +1,4 @@
-import { Summary as PromSummary, SummaryConfiguration } from 'prom-client';
+import { Summary as PromSummary, type SummaryConfiguration } from 'prom-client';
 
 /**
  * A wrapped instance of prom-client's Summary, overriding some of its methods for enhanced functionality and type-safety.

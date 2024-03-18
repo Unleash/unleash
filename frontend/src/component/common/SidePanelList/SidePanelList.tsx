@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { SidePanelListHeader } from './SidePanelListHeader';
 import { SidePanelListItem } from './SidePanelListItem';
 

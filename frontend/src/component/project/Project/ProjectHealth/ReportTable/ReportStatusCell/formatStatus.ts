@@ -1,8 +1,8 @@
-import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { expired, getDiffInDays } from '../utils';
 import { KILLSWITCH, PERMISSION } from 'constants/featureToggleTypes';
 import { parseISO } from 'date-fns';
-import { FeatureTypeSchema } from 'openapi';
+import type { FeatureTypeSchema } from 'openapi';
 
 export type ReportingStatus = 'potentially-stale' | 'healthy';
 

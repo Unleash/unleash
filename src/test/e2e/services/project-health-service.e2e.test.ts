@@ -1,11 +1,11 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import ProjectHealthService from '../../../lib/services/project-health-service';
 import { createTestConfig } from '../../config/test-config';
-import { IUnleashStores } from '../../../lib/types';
-import { IUser } from '../../../lib/server-impl';
+import type { IUnleashStores } from '../../../lib/types';
+import type { IUser } from '../../../lib/server-impl';
 import { createProjectService } from '../../../lib/features';
-import { ProjectService } from '../../../lib/services';
+import type { ProjectService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;

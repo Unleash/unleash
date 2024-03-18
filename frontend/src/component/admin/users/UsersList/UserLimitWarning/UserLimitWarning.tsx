@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Alert, Link } from '@mui/material';
 import { useUsersPlan } from 'hooks/useUsersPlan';

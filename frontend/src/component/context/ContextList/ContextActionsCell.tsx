@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';

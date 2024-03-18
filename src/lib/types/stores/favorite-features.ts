@@ -1,5 +1,5 @@
-import { IFavoriteFeature } from '../favorites';
-import { Store } from './store';
+import type { IFavoriteFeature } from '../favorites';
+import type { Store } from './store';
 
 export interface IFavoriteFeatureKey {
     userId: number;

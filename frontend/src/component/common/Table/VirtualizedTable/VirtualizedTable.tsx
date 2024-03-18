@@ -1,10 +1,10 @@
-import { RefObject, useMemo } from 'react';
+import { type RefObject, useMemo } from 'react';
 import { useTheme, TableBody, TableRow } from '@mui/material';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TableCell } from 'component/common/Table/TableCell/TableCell';
 import { Table } from 'component/common/Table/Table/Table';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
-import { HeaderGroup, Row } from 'react-table';
+import type { HeaderGroup, Row } from 'react-table';
 
 /**
  * READ BEFORE USE

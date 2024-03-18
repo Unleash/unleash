@@ -1,19 +1,19 @@
-import fc, { Arbitrary } from 'fast-check';
+import fc, { type Arbitrary } from 'fast-check';
 import {
     strategyConstraint,
     urlFriendlyString,
     variants,
 } from '../../../test/arbitraries.test';
 import { validateSchema } from '../validate';
-import { PlaygroundConstraintSchema } from './playground-constraint-schema';
+import type { PlaygroundConstraintSchema } from './playground-constraint-schema';
 import {
     playgroundFeatureSchema,
-    PlaygroundFeatureSchema,
+    type PlaygroundFeatureSchema,
 } from './playground-feature-schema';
-import { PlaygroundSegmentSchema } from './playground-segment-schema';
+import type { PlaygroundSegmentSchema } from './playground-segment-schema';
 import {
     playgroundStrategyEvaluation,
-    PlaygroundStrategySchema,
+    type PlaygroundStrategySchema,
 } from './playground-strategy-schema';
 
 const playgroundStrategyConstraint =

@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IGroup } from 'interfaces/group';
+import type { IGroup } from 'interfaces/group';
 import { mapGroupUsers } from 'hooks/api/getters/useGroup/useGroup';
 
 export interface IUseGroupsOutput {

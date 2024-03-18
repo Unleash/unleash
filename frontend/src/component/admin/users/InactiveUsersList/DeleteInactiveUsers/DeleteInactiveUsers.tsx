@@ -3,7 +3,7 @@ import useLoading from '../../../../../hooks/useLoading';
 import { Alert, Typography } from '@mui/material';
 import { DEL_INACTIVE_USERS_ERROR } from '../../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
-import { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
+import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
 import { flexRow } from '../../../../../themes/themeStyles';
 
 interface IDeleteInactiveUsersProps {

@@ -1,4 +1,4 @@
-import { ITagType, ITagTypeStore } from './tag-type-store-type';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type';
 
 const NotFoundError = require('../../error/notfound-error');
 

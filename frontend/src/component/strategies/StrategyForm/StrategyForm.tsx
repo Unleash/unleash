@@ -3,8 +3,8 @@ import { Button, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { trim } from 'component/common/util';
 import { StrategyParameters } from './StrategyParameters/StrategyParameters';
-import { IStrategyParameter } from 'interfaces/strategy';
-import React from 'react';
+import type { IStrategyParameter } from 'interfaces/strategy';
+import type React from 'react';
 
 interface IStrategyFormProps {
     strategyName: string;

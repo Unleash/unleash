@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';

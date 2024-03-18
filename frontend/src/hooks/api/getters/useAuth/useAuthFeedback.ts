@@ -1,4 +1,4 @@
-import { IAuthFeedback, useAuthEndpoint } from './useAuthEndpoint';
+import { type IAuthFeedback, useAuthEndpoint } from './useAuthEndpoint';
 
 interface IUseAuthFeedbackOutput {
     feedback?: IAuthFeedback[];

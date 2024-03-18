@@ -1,7 +1,7 @@
-import { RoleSchema } from '../../openapi';
-import { ICustomRole } from '../model';
-import { IRole, IUserRole } from './access-store';
-import { Store } from './store';
+import type { RoleSchema } from '../../openapi';
+import type { ICustomRole } from '../model';
+import type { IRole, IUserRole } from './access-store';
+import type { Store } from './store';
 
 export interface ICustomRoleInsert {
     name: string;

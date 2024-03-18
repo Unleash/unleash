@@ -1,10 +1,10 @@
 import Joyride, {
     ACTIONS,
-    CallBackProps,
-    TooltipRenderProps,
+    type CallBackProps,
+    type TooltipRenderProps,
 } from 'react-joyride';
 import { useTheme } from '@mui/material';
-import { ITutorialTopic, ITutorialTopicStep } from '../demo-topics';
+import type { ITutorialTopic, ITutorialTopicStep } from '../demo-topics';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DemoStepTooltip } from './DemoStepTooltip/DemoStepTooltip';

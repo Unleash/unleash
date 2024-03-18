@@ -1,11 +1,11 @@
-import { useEffect, useState, VFC } from 'react';
+import { useEffect, useState, type VFC } from 'react';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import {
-    FilterItemParamHolder,
+    type FilterItemParamHolder,
     Filters,
-    IFilterItem,
+    type IFilterItem,
 } from 'component/filter/Filters/Filters';
 
 interface IFeatureToggleFiltersProps {

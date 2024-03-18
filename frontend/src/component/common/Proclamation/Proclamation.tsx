@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Alert, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Typography } from '@mui/material';
-import { IProclamationToast } from 'interfaces/uiConfig';
+import type { IProclamationToast } from 'interfaces/uiConfig';
 
 interface IProclamationProps {
     toast?: IProclamationToast;

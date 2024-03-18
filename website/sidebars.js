@@ -181,6 +181,7 @@ module.exports = {
                     },
                     label: 'Unleash Concepts',
                     items: [
+                        'reference/applications',
                         'reference/activation-strategies',
                         'reference/api-tokens-and-client-keys',
                         'reference/archived-toggles',

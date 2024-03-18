@@ -14,15 +14,15 @@ const config: SDKConfig = {
     'unleash-client-php': '2.3.0',
 };
 
-export const isOutdatedSdk = (sdkVersion: string | null) => {
-    if (sdkVersion == null) return false;
-    const result = sdkVersion.split(':');
-    if (result.length !== 2) return false;
-    const [sdkName, version] = result;
+export const isOutdatedSdk = (sdkVersion: string | null): boolean => {
+    if (!sdkVersion) return false;
+
+    const [sdkName, version] = sdkVersion.split(':');
     const minVersion = config[sdkName];
-    if (!minVersion) return false;
-    if (semver.lt(version, minVersion)) return true;
-    return false;
+
+    return Boolean(
+        minVersion && semver.valid(version) && semver.lt(version, minVersion),
+    );
 };
 
 export function findOutdatedSDKs(sdkVersions: (string | null)[]): string[] {

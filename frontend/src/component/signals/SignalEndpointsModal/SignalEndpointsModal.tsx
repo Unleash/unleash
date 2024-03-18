@@ -1,14 +1,14 @@
-import { FormEvent, useEffect } from 'react';
+import { type FormEvent, useEffect } from 'react';
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import {
-    SignalEndpointPayload,
+    type SignalEndpointPayload,
     useSignalEndpointsApi,
 } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
 import { useSignalEndpointTokensApi } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';

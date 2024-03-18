@@ -2,7 +2,7 @@ import { Divider, Tooltip } from '@mui/material';
 import { Menu, MenuItem, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { INavigationMenuItem } from 'interfaces/route';
+import type { INavigationMenuItem } from 'interfaces/route';
 import { Link } from 'react-router-dom';
 import { EnterpriseBadge } from '../../../common/EnterpriseBadge/EnterpriseBadge';
 import { useCallback } from 'react';

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import {
     Box,
     Button,
@@ -7,7 +7,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { ChangeRequestType } from '../../changeRequest.types';
+import type { ChangeRequestType } from '../../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

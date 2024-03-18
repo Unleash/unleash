@@ -1,5 +1,5 @@
 import { styled, Tooltip } from '@mui/material';
-import { IGroup } from 'interfaces/group';
+import type { IGroup } from 'interfaces/group';
 import { Link, useNavigate } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { GroupCardAvatars } from './GroupCardAvatars/GroupCardAvatars';

@@ -1,5 +1,5 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import React from 'react';
+import type React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';

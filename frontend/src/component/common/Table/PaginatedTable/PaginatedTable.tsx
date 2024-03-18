@@ -1,7 +1,7 @@
 import { TableBody, TableRow, TableHead } from '@mui/material';
 import { Table } from 'component/common/Table/Table/Table';
 import {
-    Header,
+    type Header,
     type Table as TableType,
     flexRender,
 } from '@tanstack/react-table';

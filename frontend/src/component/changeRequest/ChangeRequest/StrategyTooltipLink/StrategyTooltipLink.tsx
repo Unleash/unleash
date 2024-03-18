@@ -1,9 +1,9 @@
-import {
+import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import { FC } from 'react';
+import type { FC } from 'react';
 import {
     formatStrategyName,
     GetFeatureStrategyIcon,
@@ -12,7 +12,7 @@ import EventDiff from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import { textTruncated } from 'themes/themeStyles';
 import { NameWithChangeInfo } from '../NameWithChangeInfo/NameWithChangeInfo';
 

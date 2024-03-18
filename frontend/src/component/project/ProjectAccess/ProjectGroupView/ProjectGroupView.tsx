@@ -16,9 +16,14 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useSearch } from 'hooks/useSearch';
-import { IGroup, IGroupUser } from 'interfaces/group';
-import { VFC, useState } from 'react';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import type { IGroup, IGroupUser } from 'interfaces/group';
+import { type VFC, useState } from 'react';
+import {
+    type SortingRule,
+    useFlexLayout,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 

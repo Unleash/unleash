@@ -5,7 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import { FeatureToggleSwitch } from '../../ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
 import type { UseFeatureToggleSwitchType } from '../../ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch.types';
-import { type FeatureEnvironmentSchema } from 'openapi';
+import type { FeatureEnvironmentSchema } from 'openapi';
 
 const StyledSwitchContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasWarning',

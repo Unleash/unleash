@@ -1,6 +1,6 @@
 import { StrategyParameter } from './StrategyParameter/StrategyParameter';
-import React from 'react';
-import { IStrategyParameter } from 'interfaces/strategy';
+import type React from 'react';
+import type { IStrategyParameter } from 'interfaces/strategy';
 
 interface IStrategyParametersProps {
     input: IStrategyParameter[];
@@ -19,7 +19,6 @@ export const StrategyParameters = ({
         {input.map((item, index) => (
             <StrategyParameter
                 params={input}
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
                 set={(value) => updateParameter(index, value)}
                 index={index}

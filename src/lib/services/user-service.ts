@@ -2,36 +2,36 @@ import bcrypt from 'bcryptjs';
 import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 
-import { URL } from 'url';
-import { Logger } from '../logger';
-import User, { IUser, IUserWithRootRole } from '../types/user';
+import type { URL } from 'url';
+import type { Logger } from '../logger';
+import User, { type IUser, type IUserWithRootRole } from '../types/user';
 import isEmail from '../util/is-email';
-import { AccessService } from './access-service';
-import ResetTokenService from './reset-token-service';
+import type { AccessService } from './access-service';
+import type ResetTokenService from './reset-token-service';
 import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
-import { EmailService } from './email-service';
-import { IAuthOption, IUnleashConfig } from '../types/option';
-import SessionService from './session-service';
-import { IUnleashStores } from '../types/stores';
+import type { EmailService } from './email-service';
+import type { IAuthOption, IUnleashConfig } from '../types/option';
+import type SessionService from './session-service';
+import type { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import {
     UserCreatedEvent,
     UserUpdatedEvent,
     UserDeletedEvent,
 } from '../types/events';
-import { IUserStore } from '../types/stores/user-store';
+import type { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
-import SettingService from './setting-service';
-import { SimpleAuthSettings } from '../server-impl';
+import type SettingService from './setting-service';
+import type { SimpleAuthSettings } from '../server-impl';
 import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
-import { TokenUserSchema } from '../openapi/spec/token-user-schema';
+import type { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 
 import { SYSTEM_USER } from '../types';
 

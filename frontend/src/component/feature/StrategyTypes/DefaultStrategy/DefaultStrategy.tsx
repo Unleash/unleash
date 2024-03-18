@@ -1,4 +1,4 @@
-import { IStrategy } from 'interfaces/strategy';
+import type { IStrategy } from 'interfaces/strategy';
 
 interface IDefaultStrategyProps {
     strategyDefinition: IStrategy;

@@ -197,7 +197,7 @@ export const LeadTimeForChanges = () => {
         setHiddenColumns,
     } = useTable(
         {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            columns: columns as any[],
             data,
             initialState,
             autoResetGlobalFilter: false,

@@ -53,6 +53,7 @@ process.nextTick(async () => {
                         outdatedSdksBanner: true,
                         globalFrontendApiCache: true,
                         returnGlobalFrontendApiCache: false,
+                        projectOverviewRefactor: true,
                     },
                 },
                 authentication: {

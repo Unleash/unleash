@@ -79,6 +79,7 @@ export type UiFlags = {
     userAccessUIEnabled?: boolean;
     sdkReporting?: boolean;
     outdatedSdksBanner?: boolean;
+    projectOverviewRefactor?: string;
 };
 
 export interface IVersionInfo {

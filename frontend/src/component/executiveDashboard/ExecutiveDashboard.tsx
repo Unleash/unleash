@@ -109,7 +109,7 @@ export const ExecutiveDashboard: VFC = () => {
 
     return (
         <>
-            <StickyWrapper scrolled={scrolled}>
+            <StickyWrapper scrolled={scrolled.toString()}>
                 <DashboardHeader
                     actions={
                         <ProjectSelect

@@ -1,6 +1,6 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import { ExecutiveSummarySchema } from 'openapi';
+import type { ExecutiveSummarySchema } from 'openapi';
 import {
     fillGradientPrimary,
     LineChart,

@@ -3,8 +3,8 @@ import { styled, type SvgIconTypeMap, Typography } from '@mui/material';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
-import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
-import useProjectOverview from '../../../../../hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     margin: '0',

@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { INVALID_TOKEN_BUTTON } from 'utils/testIds';

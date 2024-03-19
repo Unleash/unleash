@@ -1,7 +1,7 @@
 import { withDbLock } from './db-lock';
 import { getDbConfig } from '../../test/e2e/helpers/database-config';
-import { IDBOption } from '../types';
-import { Logger } from '../logger';
+import type { IDBOption } from '../types';
+import type { Logger } from '../logger';
 
 test('should lock access to any action', async () => {
     const lock = withDbLock(getDbConfig() as IDBOption);

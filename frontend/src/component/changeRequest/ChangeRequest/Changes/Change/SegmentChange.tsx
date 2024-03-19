@@ -1,7 +1,7 @@
-import { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Typography, Link } from '@mui/material';
-import {
+import type {
     ChangeRequestState,
     ISegmentChange,
 } from '../../../changeRequest.types';

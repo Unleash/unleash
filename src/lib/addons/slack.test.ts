@@ -2,9 +2,9 @@ import {
     FEATURE_CREATED,
     FEATURE_ARCHIVED,
     FEATURE_ENVIRONMENT_DISABLED,
-    IEvent,
+    type IEvent,
 } from '../types/events';
-import { Logger } from '../logger';
+import type { Logger } from '../logger';
 
 import SlackAddon from './slack';
 

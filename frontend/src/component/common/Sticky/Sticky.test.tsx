@@ -1,6 +1,6 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { Sticky } from './Sticky';
-import { IStickyContext, StickyContext } from './StickyContext';
+import { type IStickyContext, StickyContext } from './StickyContext';
 import { vi, expect } from 'vitest';
 
 describe('Sticky component', () => {

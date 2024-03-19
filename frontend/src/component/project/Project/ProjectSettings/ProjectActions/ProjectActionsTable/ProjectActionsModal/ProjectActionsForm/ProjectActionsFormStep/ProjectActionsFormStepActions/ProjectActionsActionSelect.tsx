@@ -1,5 +1,5 @@
 import { Autocomplete, TextField, styled } from '@mui/material';
-import { ActionDefinitions } from './useActionDefinitions';
+import type { ActionConfigurations } from 'interfaces/action';
 
 const StyledActionOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -13,13 +13,13 @@ const StyledActionOption = styled('div')(({ theme }) => ({
 interface IProjectActionsActionSelectProps {
     value: string;
     onChange: (value: string) => void;
-    actionDefinitions: ActionDefinitions;
+    actionConfigurations: ActionConfigurations;
 }
 
 export const ProjectActionsActionSelect = ({
     value,
     onChange,
-    actionDefinitions,
+    actionConfigurations,
 }: IProjectActionsActionSelectProps) => {
     const renderActionOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
@@ -33,7 +33,7 @@ export const ProjectActionsActionSelect = ({
         </li>
     );
 
-    const actionOptions = [...actionDefinitions].map(
+    const actionOptions = [...actionConfigurations].map(
         ([key, actionDefinition]) => ({
             key,
             ...actionDefinition,
@@ -45,7 +45,7 @@ export const ProjectActionsActionSelect = ({
             options={actionOptions}
             autoHighlight
             autoSelect
-            value={actionOptions.find(({ key }) => key === value)}
+            value={actionOptions.find(({ key }) => key === value) || null}
             onChange={(_, value) => onChange(value ? value.key : '')}
             renderOption={renderActionOption}
             getOptionLabel={({ label }) => label}

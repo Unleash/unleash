@@ -1,6 +1,6 @@
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
 import { Suspense, lazy } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';

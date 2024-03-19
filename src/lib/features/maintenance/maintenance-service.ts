@@ -1,9 +1,9 @@
 import memoizee from 'memoizee';
-import { IUnleashConfig } from '../../types';
-import { Logger } from '../../logger';
-import SettingService from '../../services/setting-service';
+import type { IUnleashConfig } from '../../types';
+import type { Logger } from '../../logger';
+import type SettingService from '../../services/setting-service';
 import { maintenanceSettingsKey } from '../../types/settings/maintenance-settings';
-import { MaintenanceSchema } from '../../openapi/spec/maintenance-schema';
+import type { MaintenanceSchema } from '../../openapi/spec/maintenance-schema';
 import { minutesToMilliseconds } from 'date-fns';
 
 export interface IMaintenanceStatus {

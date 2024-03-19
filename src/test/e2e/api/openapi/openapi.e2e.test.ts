@@ -1,9 +1,9 @@
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupApp,
     setupAppWithBaseUrl,
 } from '../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';

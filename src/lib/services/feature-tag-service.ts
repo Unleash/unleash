@@ -1,18 +1,18 @@
 import NotFoundError from '../error/notfound-error';
-import { Logger } from '../logger';
+import type { Logger } from '../logger';
 import { FEATURE_TAGGED, FEATURE_UNTAGGED, TAG_CREATED } from '../types/events';
-import { IUnleashConfig } from '../types/option';
-import { IFeatureToggleStore, IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option';
+import type { IFeatureToggleStore, IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
-import {
+import type {
     IFeatureTag,
     IFeatureTagInsert,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
-import { ITagStore } from '../types/stores/tag-store';
-import { ITag } from '../types/model';
+import type { ITagStore } from '../types/stores/tag-store';
+import type { ITag } from '../types/model';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 
 class FeatureTagService {
     private tagStore: ITagStore;

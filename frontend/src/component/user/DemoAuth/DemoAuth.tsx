@@ -1,4 +1,9 @@
-import { ChangeEventHandler, FormEventHandler, useState, VFC } from 'react';
+import {
+    type ChangeEventHandler,
+    type FormEventHandler,
+    useState,
+    type VFC,
+} from 'react';
 import { Button, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
@@ -8,7 +13,7 @@ import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 
 interface IDemoAuthProps {
     authDetails: IAuthEndpointDetailsResponse;

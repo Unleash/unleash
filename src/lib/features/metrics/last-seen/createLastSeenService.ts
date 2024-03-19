@@ -1,6 +1,6 @@
 import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';
 import FeatureToggleStore from '../../feature-toggle/feature-toggle-store';
-import { Db, IUnleashConfig } from '../../../server-impl';
+import type { Db, IUnleashConfig } from '../../../server-impl';
 import { FakeLastSeenStore } from './fake-last-seen-store';
 import { LastSeenService } from './last-seen-service';
 import LastSeenStore from './last-seen-store';

@@ -1,4 +1,4 @@
-import { Fragment, VFC } from 'react';
+import { Fragment, type VFC } from 'react';
 import {
     parseParameterNumber,
     parseParameterString,
@@ -102,7 +102,6 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
     return (
         <>
             {items.map((item, index) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <Fragment key={index}>
                     <ConditionallyRender
                         condition={index > 0}

@@ -1,5 +1,11 @@
-import { Box, BoxProps, FormControlLabel, Switch, styled } from '@mui/material';
-import { Dispatch, ReactNode, SetStateAction } from 'react';
+import {
+    Box,
+    type BoxProps,
+    FormControlLabel,
+    Switch,
+    styled,
+} from '@mui/material';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

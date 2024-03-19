@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../../routes/controller';
 
 import { NONE } from '../../types/permissions';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type { Logger } from '../../logger';
 
 import {
     emptyResponse,

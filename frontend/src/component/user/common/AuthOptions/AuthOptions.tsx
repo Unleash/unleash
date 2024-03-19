@@ -4,7 +4,7 @@ import { useThemeStyles } from 'themes/themeStyles';
 import { ReactComponent as GoogleSvg } from 'assets/icons/google.svg';
 import LockRounded from '@mui/icons-material/LockRounded';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 
 interface IAuthOptionProps {

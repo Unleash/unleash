@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+import type React from 'react';
+import { type FC, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     IconButton,

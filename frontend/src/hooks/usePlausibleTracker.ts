@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { PlausibleContext } from 'contexts/PlausibleContext';
-import { EventOptions, PlausibleOptions } from 'plausible-tracker';
+import type { EventOptions, PlausibleOptions } from 'plausible-tracker';
 
 /**
  * Allowed event names. Makes it easy to remove, since TS will complain.
@@ -58,7 +58,8 @@ export type CustomEvents =
     | 'feature-metrics'
     | 'search-bar'
     | 'sdk-reporting'
-    | 'insights-share';
+    | 'insights-share'
+    | 'sdk-banner';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -1,9 +1,9 @@
-import { PlaygroundConstraintSchema } from '../../../../openapi/spec/playground-constraint-schema';
-import { PlaygroundSegmentSchema } from '../../../../openapi/spec/playground-segment-schema';
-import { StrategyEvaluationResult } from '../client';
-import { Constraint, operators } from '../constraint';
-import { Context } from '../context';
-import { selectVariantDefinition, VariantDefinition } from '../variant';
+import type { PlaygroundConstraintSchema } from '../../../../openapi/spec/playground-constraint-schema';
+import type { PlaygroundSegmentSchema } from '../../../../openapi/spec/playground-segment-schema';
+import type { StrategyEvaluationResult } from '../client';
+import { type Constraint, operators } from '../constraint';
+import type { Context } from '../context';
+import { selectVariantDefinition, type VariantDefinition } from '../variant';
 
 export type SegmentForEvaluation = {
     name: string;

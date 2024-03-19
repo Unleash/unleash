@@ -1,9 +1,9 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import {
     Box,
     IconButton,
     styled,
-    Theme,
+    type Theme,
     Typography,
     useTheme,
 } from '@mui/material';
@@ -25,7 +25,7 @@ import {
     StyledScheduleFailedIcon,
     StyledScheduleSuspendedIcon,
 } from './ChangeRequestReviewStatus.styles';
-import {
+import type {
     ChangeRequestState,
     ChangeRequestType,
     ChangeRequestSchedule,

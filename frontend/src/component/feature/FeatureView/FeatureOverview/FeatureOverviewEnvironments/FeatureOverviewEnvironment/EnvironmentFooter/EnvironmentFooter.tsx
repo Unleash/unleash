@@ -1,4 +1,4 @@
-import { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
+import type { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { FeatureMetricsStats } from 'component/feature/FeatureView/FeatureMetrics/FeatureMetricsStats/FeatureMetricsStats';
 import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
 

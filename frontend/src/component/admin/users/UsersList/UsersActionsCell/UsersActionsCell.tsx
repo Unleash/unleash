@@ -7,7 +7,7 @@ import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 
 const StyledBox = styled(Box)(() => ({
     display: 'flex',

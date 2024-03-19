@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useState, type VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
@@ -54,6 +54,17 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
         gridColumnStart: 'span 2',
         order: 2,
     },
+}));
+
+const StickyWrapper = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'scrolled',
+})<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
 }));
 
 export const ExecutiveDashboard: VFC = () => {

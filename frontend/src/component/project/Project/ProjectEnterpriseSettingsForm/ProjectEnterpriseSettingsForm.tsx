@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Select from 'component/common/select';
-import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { Box, InputAdornment, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';

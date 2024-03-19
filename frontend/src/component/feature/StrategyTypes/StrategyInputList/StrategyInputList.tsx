@@ -1,17 +1,17 @@
-import { ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useState } from 'react';
 import {
     Button,
     Chip,
     TextField,
     Typography,
     styled,
-    TextFieldProps,
+    type TextFieldProps,
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADD_TO_STRATEGY_INPUT_LIST, STRATEGY_INPUT_LIST } from 'utils/testIds';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { IFormErrors } from 'hooks/useFormErrors';
+import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IStrategyInputList {
     name: string;

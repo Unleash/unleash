@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../../routes/controller';
 
 import {
@@ -8,29 +8,29 @@ import {
     UPDATE_TAG_TYPE,
 } from '../../types/permissions';
 import { extractUsername } from '../../util/extract-user';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import TagTypeService from './tag-type-service';
-import { Logger } from '../../logger';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type TagTypeService from './tag-type-service';
+import type { Logger } from '../../logger';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
-import { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
+import type { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
 import {
     validateTagTypeSchema,
-    ValidateTagTypeSchema,
+    type ValidateTagTypeSchema,
 } from '../../openapi/spec/validate-tag-type-schema';
-import { TagTypeSchema } from '../../openapi/spec/tag-type-schema';
-import { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
-import { OpenApiService } from '../../services/openapi-service';
+import type { TagTypeSchema } from '../../openapi/spec/tag-type-schema';
+import type { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
+import type { OpenApiService } from '../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { WithTransactional } from '../../db/transaction';
+import type { WithTransactional } from '../../db/transaction';
 
 const version = 1;
 

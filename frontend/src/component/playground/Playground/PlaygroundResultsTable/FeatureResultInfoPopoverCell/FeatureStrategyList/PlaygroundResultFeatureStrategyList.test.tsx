@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
+import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultFeatureStrategyList';
 import { vi } from 'vitest';
 

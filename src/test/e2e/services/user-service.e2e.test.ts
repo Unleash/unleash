@@ -1,4 +1,4 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import UserService from '../../../lib/services/user-service';
 import { AccessService } from '../../../lib/services/access-service';
@@ -7,7 +7,7 @@ import { EmailService } from '../../../lib/services/email-service';
 import { createTestConfig } from '../../config/test-config';
 import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
-import { IRole } from '../../../lib/types/stores/access-store';
+import type { IRole } from '../../../lib/types/stores/access-store';
 import { RoleName } from '../../../lib/types/model';
 import SettingService from '../../../lib/services/setting-service';
 import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings';
@@ -19,8 +19,8 @@ import PasswordMismatch from '../../../lib/error/password-mismatch';
 import { EventService } from '../../../lib/services';
 import {
     CREATE_ADDON,
-    IUnleashStores,
-    IUserStore,
+    type IUnleashStores,
+    type IUserStore,
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,

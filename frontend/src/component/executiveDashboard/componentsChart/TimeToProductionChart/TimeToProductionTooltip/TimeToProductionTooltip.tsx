@@ -1,8 +1,8 @@
-import { type VFC } from 'react';
-import { type ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
+import type { VFC } from 'react';
+import type { ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
-import { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
+import type { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),

@@ -134,7 +134,11 @@ MenuItemWithIcon.propTypes = {
     disabled: PropTypes.bool,
 };
 
-const badNumbers = [NaN, Infinity, -Infinity];
+const badNumbers = [
+    Number.NaN,
+    Number.POSITIVE_INFINITY,
+    Number.NEGATIVE_INFINITY,
+];
 export function calc(value, total, decimal) {
     if (
         typeof value !== 'number' ||

@@ -1,11 +1,11 @@
-import { EventEmitter } from 'events';
+import type { EventEmitter } from 'events';
 import { DB_TIME } from '../metric-events';
 import metricsHelper from '../util/metrics-helper';
-import { LogProvider, Logger } from '../logger';
+import type { LogProvider, Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
-import { ITag } from '../types/model';
-import { ITagStore } from '../types/stores/tag-store';
-import { Db } from './db';
+import type { ITag } from '../types/model';
+import type { ITagStore } from '../types/stores/tag-store';
+import type { Db } from './db';
 
 const COLUMNS = ['type', 'value'];
 const TABLE = 'tags';

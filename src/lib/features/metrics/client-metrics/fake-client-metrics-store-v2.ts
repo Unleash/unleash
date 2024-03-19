@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import EventEmitter from 'events';
-import {
+import type {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
     IClientMetricsStoreV2,

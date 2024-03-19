@@ -1,37 +1,37 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Controller from '../controller';
 import { NONE, UPDATE_APPLICATION } from '../../types/permissions';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
-import { Logger } from '../../logger';
-import ClientInstanceService from '../../features/metrics/instance/instance-service';
+import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashServices } from '../../types/services';
+import type { Logger } from '../../logger';
+import type ClientInstanceService from '../../features/metrics/instance/instance-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { ApplicationSchema } from '../../openapi/spec/application-schema';
-import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
+import type { ApplicationSchema } from '../../openapi/spec/application-schema';
+import type { ApplicationsSchema } from '../../openapi/spec/applications-schema';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
-import { IAuthRequest } from '../unleash-types';
+import type { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
+import type { IAuthRequest } from '../unleash-types';
 import { extractUserIdFromUser } from '../../util';
-import { IFlagResolver, serializeDates } from '../../types';
+import { type IFlagResolver, serializeDates } from '../../types';
 import { NotFoundError } from '../../error';
 import {
-    ApplicationOverviewSchema,
+    type ApplicationOverviewSchema,
     applicationOverviewSchema,
 } from '../../openapi/spec/application-overview-schema';
-import { OpenApiService } from '../../services';
+import type { OpenApiService } from '../../services';
 import { applicationsQueryParameters } from '../../openapi/spec/applications-query-parameters';
 import { normalizeQueryParams } from '../../features/feature-search/search-utils';
 import {
     applicationEnvironmentInstancesSchema,
-    ApplicationEnvironmentInstancesSchema,
+    type ApplicationEnvironmentInstancesSchema,
 } from '../../openapi/spec/application-environment-instances-schema';
 import {
     outdatedSdksSchema,
-    OutdatedSdksSchema,
+    type OutdatedSdksSchema,
 } from '../../openapi/spec/outdated-sdks-schema';
 
 class MetricsController extends Controller {

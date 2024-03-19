@@ -5,7 +5,7 @@ import GradualRolloutSessionIdStrategy from './gradual-rollout-session-id';
 import UserWithIdStrategy from './user-with-id-strategy';
 import RemoteAddressStrategy from './remote-address-strategy';
 import FlexibleRolloutStrategy from './flexible-rollout-strategy';
-import { Strategy } from './strategy';
+import type { Strategy } from './strategy';
 import UnknownStrategy from './unknown-strategy';
 import ApplicationHostnameStrategy from './application-hostname-strategy';
 

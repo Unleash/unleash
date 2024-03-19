@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment } from 'react';
+import { type ChangeEvent, Fragment } from 'react';
 import {
     FormControl,
     FormControlLabel,
@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 
 interface IAutoCreateFormProps {
     data?: {

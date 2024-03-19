@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Box, Typography } from '@mui/material';
 import type { ChangeRequestType } from '../changeRequest.types';
 import { FeatureToggleChanges } from './Changes/FeatureToggleChanges';
@@ -63,7 +63,6 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                 >
                     {feature.changes.map((change, index) => (
                         <FeatureChange
-                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                             key={index}
                             actions={
                                 <ChangeActions

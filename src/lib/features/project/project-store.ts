@@ -1,8 +1,8 @@
 import { Knex } from 'knex';
-import { Logger, LogProvider } from '../../logger';
+import type { Logger, LogProvider } from '../../logger';
 
 import NotFoundError from '../../error/notfound-error';
-import {
+import type {
     IEnvironment,
     IFlagResolver,
     IProject,
@@ -12,7 +12,7 @@ import {
     IProjectWithCount,
     ProjectMode,
 } from '../../types';
-import {
+import type {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
@@ -25,10 +25,10 @@ import {
 import { DEFAULT_ENV } from '../../util';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
-import EventEmitter from 'events';
-import { Db } from '../../db/db';
+import type EventEmitter from 'events';
+import type { Db } from '../../db/db';
 import Raw = Knex.Raw;
-import { CreateFeatureStrategySchema } from '../../openapi';
+import type { CreateFeatureStrategySchema } from '../../openapi';
 import { applySearchFilters } from '../feature-search/search-utils';
 
 const COLUMNS = [

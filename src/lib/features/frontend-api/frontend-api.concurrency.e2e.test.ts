@@ -1,8 +1,8 @@
 import {
-    IUnleashTest,
+    type IUnleashTest,
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
-import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { randomId } from '../../util';
 import { ApiTokenType } from '../../types/models/api-token';

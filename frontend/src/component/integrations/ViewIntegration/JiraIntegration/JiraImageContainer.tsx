@@ -1,7 +1,7 @@
 import { styled, Typography } from '@mui/material';
 
 import { formatAssetPath } from 'utils/formatPath';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 export const StyledFigure = styled('figure')(({ theme }) => ({
     display: 'flex',

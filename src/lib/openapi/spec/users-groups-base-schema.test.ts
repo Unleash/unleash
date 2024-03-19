@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { UsersGroupsBaseSchema } from './users-groups-base-schema';
+import type { UsersGroupsBaseSchema } from './users-groups-base-schema';
 
 test('usersGroupsBaseSchema', () => {
     const data: UsersGroupsBaseSchema = {

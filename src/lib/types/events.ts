@@ -1,8 +1,8 @@
 import { extractUsernameFromUser } from '../util';
-import { IApiUser } from './api-user';
-import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
-import { IApiToken } from './models/api-token';
-import { IUser, IUserWithRootRole } from './user';
+import type { IApiUser } from './api-user';
+import type { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
+import type { IApiToken } from './models/api-token';
+import type { IUser, IUserWithRootRole } from './user';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 

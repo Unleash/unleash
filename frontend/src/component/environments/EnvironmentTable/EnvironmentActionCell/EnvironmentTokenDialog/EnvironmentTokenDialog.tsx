@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { UserToken } from 'component/admin/apiToken/ConfirmToken/UserToken/UserToken';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { Link } from 'react-router-dom';
 
 interface IEnvironmentTokenDialogProps {

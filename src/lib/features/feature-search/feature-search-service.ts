@@ -1,10 +1,10 @@
-import { Logger } from '../../logger';
-import {
+import type { Logger } from '../../logger';
+import type {
     IFeatureSearchStore,
     IUnleashConfig,
     IUnleashStores,
 } from '../../types';
-import {
+import type {
     IFeatureSearchParams,
     IQueryOperator,
     IQueryParam,

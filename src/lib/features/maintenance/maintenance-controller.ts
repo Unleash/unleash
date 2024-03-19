@@ -1,22 +1,22 @@
-import { ADMIN, IUnleashConfig, IUnleashServices } from '../../types';
-import { Request, Response } from 'express';
+import { ADMIN, type IUnleashConfig, type IUnleashServices } from '../../types';
+import type { Request, Response } from 'express';
 import Controller from '../../routes/controller';
-import { Logger } from '../../logger';
+import type { Logger } from '../../logger';
 import {
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
 } from '../../openapi';
-import { OpenApiService } from '../../services';
-import { IAuthRequest } from '../../routes/unleash-types';
+import type { OpenApiService } from '../../services';
+import type { IAuthRequest } from '../../routes/unleash-types';
 import { extractUsername } from '../../util';
 import {
-    MaintenanceSchema,
+    type MaintenanceSchema,
     maintenanceSchema,
 } from '../../openapi/spec/maintenance-schema';
-import MaintenanceService from '../../features/maintenance/maintenance-service';
-import { ToggleMaintenanceSchema } from '../../openapi/spec/toggle-maintenance-schema';
+import type MaintenanceService from '../../features/maintenance/maintenance-service';
+import type { ToggleMaintenanceSchema } from '../../openapi/spec/toggle-maintenance-schema';
 
 export default class MaintenanceController extends Controller {
     private maintenanceService: MaintenanceService;

@@ -1,4 +1,4 @@
-import { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeRequest.types';
+import type { IChangeRequestEnvironmentConfig } from 'component/changeRequest/changeRequest.types';
 import React from 'react';
 import { useChangeRequestConfig } from './api/getters/useChangeRequestConfig/useChangeRequestConfig';
 

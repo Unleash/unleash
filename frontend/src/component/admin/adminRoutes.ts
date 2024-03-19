@@ -1,4 +1,4 @@
-import { INavigationMenuItem } from 'interfaces/route';
+import type { INavigationMenuItem } from 'interfaces/route';
 
 export const adminGroups: Record<string, string> = {
     users: 'User administration',

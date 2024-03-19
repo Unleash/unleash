@@ -2,11 +2,11 @@ import createStores from '../../../test/fixtures/store';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createServices } from '../../services';
 import getApp from '../../app';
-import supertest, { Test } from 'supertest';
+import supertest, { type Test } from 'supertest';
 import permissions from '../../../test/fixtures/permissions';
 import { RoleName, RoleType } from '../../types/model';
-import { IUnleashStores } from '../../types';
-import TestAgent from 'supertest/lib/agent';
+import type { IUnleashStores } from '../../types';
+import type TestAgent from 'supertest/lib/agent';
 
 describe('Public Signup API', () => {
     async function getSetup() {

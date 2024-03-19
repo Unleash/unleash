@@ -1,4 +1,5 @@
-import React, { FormEvent, useState } from 'react';
+import type React from 'react';
+import { type FormEvent, useState } from 'react';
 import {
     Autocomplete,
     Button,
@@ -14,16 +15,16 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import useProjectAccess, {
     ENTITY_TYPE,
-    IProjectAccess,
+    type IProjectAccess,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
-import { IRole } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { IUser } from 'interfaces/user';
-import { IGroup } from 'interfaces/group';
+import type { IUser } from 'interfaces/user';
+import type { IGroup } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router-dom';
 import { GO_BACK } from 'constants/navigate';
@@ -34,9 +35,9 @@ import {
     PA_USERS_GROUPS_TITLE_ID,
 } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
-import { IServiceAccount } from 'interfaces/service-account';
+import type { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
-import { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
+import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

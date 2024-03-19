@@ -1,4 +1,4 @@
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
 import { Button, Chip, Divider, styled } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
@@ -8,7 +8,7 @@ import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ITag } from 'interfaces/tags';
+import type { ITag } from 'interfaces/tags';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';

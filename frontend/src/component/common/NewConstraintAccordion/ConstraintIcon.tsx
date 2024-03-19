@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { Box } from '@mui/material';
 import TrackChanges from '@mui/icons-material/TrackChanges';
 

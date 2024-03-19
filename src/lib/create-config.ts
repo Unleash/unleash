@@ -2,24 +2,24 @@ import { parse } from 'pg-connection-string';
 import merge from 'deepmerge';
 import * as fs from 'fs';
 import {
-    IUnleashOptions,
-    IUnleashConfig,
-    IDBOption,
-    ISessionOption,
-    IServerOption,
-    IVersionOption,
-    IAuthOption,
+    type IUnleashOptions,
+    type IUnleashConfig,
+    type IDBOption,
+    type ISessionOption,
+    type IServerOption,
+    type IVersionOption,
+    type IAuthOption,
     IAuthType,
-    IImportOption,
-    IEmailOption,
-    IListeningPipe,
-    IListeningHost,
-    IUIConfig,
-    ICspDomainConfig,
-    ICspDomainOptions,
-    IClientCachingOption,
-    IMetricsRateLimiting,
-    IRateLimiting,
+    type IImportOption,
+    type IEmailOption,
+    type IListeningPipe,
+    type IListeningHost,
+    type IUIConfig,
+    type ICspDomainConfig,
+    type ICspDomainOptions,
+    type IClientCachingOption,
+    type IMetricsRateLimiting,
+    type IRateLimiting,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -42,7 +42,7 @@ import {
 } from './util/parseEnvVar';
 import {
     defaultExperimentalOptions,
-    IExperimentalOptions,
+    type IExperimentalOptions,
 } from './types/experimental';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
@@ -50,7 +50,7 @@ import {
 } from './util/segments';
 import FlagResolver from './util/flag-resolver';
 import { validateOrigins } from './util/validateOrigin';
-import { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema';
+import type { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 

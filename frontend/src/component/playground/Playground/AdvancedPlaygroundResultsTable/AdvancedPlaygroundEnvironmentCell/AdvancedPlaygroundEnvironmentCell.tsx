@@ -10,8 +10,9 @@ import {
 import { flexRow } from '../../../../../themes/themeStyles';
 import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
-import React, { useState } from 'react';
-import { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
+import type React from 'react';
+import { useState } from 'react';
+import type { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentTable';
 
 const StyledContainer = styled(

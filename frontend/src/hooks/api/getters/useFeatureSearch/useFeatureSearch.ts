@@ -1,8 +1,8 @@
-import useSWR, { SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
+import type { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
 type UseFeatureSearchOutput = {

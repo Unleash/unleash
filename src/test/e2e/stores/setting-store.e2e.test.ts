@@ -1,6 +1,6 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

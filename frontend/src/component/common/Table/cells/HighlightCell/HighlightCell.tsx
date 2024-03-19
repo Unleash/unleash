@@ -1,4 +1,5 @@
-import React, { VFC } from 'react';
+import type React from 'react';
+import type { VFC } from 'react';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled } from '@mui/material';

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { SWRConfiguration } from 'swr';
+import type { SWRConfiguration } from 'swr';
 import { dequal } from 'dequal';
 import { StaleDataNotification } from 'component/common/StaleDataNotification/StaleDataNotification';
 

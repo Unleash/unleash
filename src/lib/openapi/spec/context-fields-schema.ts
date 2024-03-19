@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { contextFieldSchema } from './context-field-schema';
 import { legalValueSchema } from './legal-value-schema';
 

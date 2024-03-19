@@ -1,9 +1,9 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Modal, Backdrop, styled, IconButton, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
-import * as React from 'react';
+import type * as React from 'react';
 
 interface ISidebarModalProps {
     open: boolean;

@@ -1,7 +1,7 @@
-import { useMemo, useState, VFC } from 'react';
+import { useMemo, useState, type VFC } from 'react';
 import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { IGroupUser } from 'interfaces/group';
+import type { IGroupUser } from 'interfaces/group';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import Delete from '@mui/icons-material/Delete';

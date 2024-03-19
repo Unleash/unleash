@@ -1,5 +1,5 @@
-import { Variant, PayloadType } from 'unleash-client';
-import {
+import { type Variant, PayloadType } from 'unleash-client';
+import type {
     IExperimentalOptions,
     IExternalFlagResolver,
     IFlagContext,

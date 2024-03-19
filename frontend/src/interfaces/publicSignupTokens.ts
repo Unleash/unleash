@@ -1,5 +1,5 @@
-import { IRole } from './role';
-import { IUser } from './user';
+import type { IRole } from './role';
+import type { IUser } from './user';
 
 export interface ICreateInvitedUser {
     username?: string;

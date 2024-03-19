@@ -1,12 +1,12 @@
 import Addon from '../addons/addon';
 import getLogger from '../../test/fixtures/no-logger';
-import { IAddonDefinition } from '../types/model';
+import type { IAddonDefinition } from '../types/model';
 import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
     FEATURE_UPDATED,
-    IEvent,
+    type IEvent,
 } from '../types/events';
 
 const definition: IAddonDefinition = {

@@ -1,5 +1,5 @@
-import { IFeatureEnvironment, IVariant } from '../model';
-import { Store } from './store';
+import type { IFeatureEnvironment, IVariant } from '../model';
+import type { Store } from './store';
 
 export interface FeatureEnvironmentKey {
     featureName: string;

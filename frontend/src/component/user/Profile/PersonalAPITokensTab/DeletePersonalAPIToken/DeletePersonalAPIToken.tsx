@@ -3,8 +3,8 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { usePersonalAPITokensApi } from 'hooks/api/actions/usePersonalAPITokensApi/usePersonalAPITokensApi';
 import { usePersonalAPITokens } from 'hooks/api/getters/usePersonalAPITokens/usePersonalAPITokens';
 import useToast from 'hooks/useToast';
-import { IPersonalAPIToken } from 'interfaces/personalAPIToken';
-import { FC } from 'react';
+import type { IPersonalAPIToken } from 'interfaces/personalAPIToken';
+import type { FC } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IDeletePersonalAPITokenProps {

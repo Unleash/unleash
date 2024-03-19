@@ -1,7 +1,10 @@
 import { PayloadType } from 'unleash-client';
-import { defaultExperimentalOptions, IFlagKey } from '../types/experimental';
+import {
+    defaultExperimentalOptions,
+    type IFlagKey,
+} from '../types/experimental';
 import FlagResolver, { getVariantValue } from './flag-resolver';
-import { IExperimentalOptions } from '../types/experimental';
+import type { IExperimentalOptions } from '../types/experimental';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
 
 test('should produce empty exposed flags', () => {

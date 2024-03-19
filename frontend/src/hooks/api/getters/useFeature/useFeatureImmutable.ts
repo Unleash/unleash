@@ -2,8 +2,8 @@ import useSWRImmutable from 'swr/immutable';
 import { useCallback } from 'react';
 import { emptyFeature } from './emptyFeature';
 import {
-    IUseFeatureOutput,
-    IFeatureResponse,
+    type IUseFeatureOutput,
+    type IFeatureResponse,
     featureFetcher,
     formatFeatureApiPath,
     useFeature,

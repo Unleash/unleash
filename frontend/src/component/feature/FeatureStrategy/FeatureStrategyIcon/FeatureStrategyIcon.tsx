@@ -3,7 +3,7 @@ import {
     formatStrategyName,
 } from 'utils/strategyNames';
 import { styled, Tooltip } from '@mui/material';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 
 interface IFeatureStrategyIconProps {
     strategy: IFeatureStrategy;

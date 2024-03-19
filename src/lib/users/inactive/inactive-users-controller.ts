@@ -1,25 +1,25 @@
 import Controller from '../../routes/controller';
 import {
     ADMIN,
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
+    type IFlagResolver,
+    type IUnleashConfig,
+    type IUnleashServices,
 } from '../../types';
-import { Logger } from '../../logger';
-import { InactiveUsersService } from './inactive-users-service';
+import type { Logger } from '../../logger';
+import type { InactiveUsersService } from './inactive-users-service';
 import {
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
-    IdsSchema,
-    InactiveUserSchema,
+    type IdsSchema,
+    type InactiveUserSchema,
     inactiveUsersSchema,
-    InactiveUsersSchema,
+    type InactiveUsersSchema,
 } from '../../openapi';
-import { IAuthRequest } from '../../routes/unleash-types';
-import { Response } from 'express';
-import { OpenApiService } from '../../services';
+import type { IAuthRequest } from '../../routes/unleash-types';
+import type { Response } from 'express';
+import type { OpenApiService } from '../../services';
 import { DAYS_TO_BE_COUNTED_AS_INACTIVE } from './createInactiveUsersService';
 import { anonymise } from '../../util';
 export class InactiveUsersController extends Controller {

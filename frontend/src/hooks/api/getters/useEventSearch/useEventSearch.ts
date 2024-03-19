@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IEvent } from 'interfaces/event';
+import type { IEvent } from 'interfaces/event';
 
 const PATH = formatApiPath('api/admin/events/search');
 

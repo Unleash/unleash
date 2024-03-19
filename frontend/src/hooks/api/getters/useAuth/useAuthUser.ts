@@ -1,4 +1,4 @@
-import { IUser } from 'interfaces/user';
+import type { IUser } from 'interfaces/user';
 import { useAuthEndpoint } from './useAuthEndpoint';
 
 interface IUseAuthUserOutput {

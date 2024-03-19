@@ -9,7 +9,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { GO_BACK } from 'constants/navigate';
 import Input from 'component/common/Input/Input';
-import { FeatureTypeSchema } from 'openapi';
+import type { FeatureTypeSchema } from 'openapi';
 import { trim } from 'component/common/util';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import useToast from 'hooks/useToast';
@@ -55,7 +55,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
     const tracker = usePlausibleTracker();
 
     const onChangeLifetime = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(trim(e.target.value), 10);
+        const value = Number.parseInt(trim(e.target.value), 10);
         setLifetime(value);
         if (value === 0) {
             setDoesntExpire(true);

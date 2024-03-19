@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 import { useMediaQuery } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver';
+import type { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;

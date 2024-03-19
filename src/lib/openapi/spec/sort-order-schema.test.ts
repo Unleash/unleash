@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { SortOrderSchema } from './sort-order-schema';
+import type { SortOrderSchema } from './sort-order-schema';
 
 test('sortOrderSchema', () => {
     const data: SortOrderSchema = {

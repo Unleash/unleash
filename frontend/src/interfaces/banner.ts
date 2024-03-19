@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export type BannerVariant = 'info' | 'warning' | 'error' | 'success';
 
@@ -8,6 +8,7 @@ export interface IBanner {
     sticky?: boolean;
     icon?: string;
     link?: string;
+    linkClicked?: () => void;
     linkText?: string;
     plausibleEvent?: string;
     dialogTitle?: string;

@@ -1,4 +1,4 @@
-import { FormEventHandler, useState, VFC } from 'react';
+import { type FormEventHandler, useState, type VFC } from 'react';
 import { Button, Grid, styled, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
@@ -9,7 +9,7 @@ import PasswordField from 'component/common/PasswordField/PasswordField';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
-import { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { BadRequestError, NotFoundError } from 'utils/apiUtils';
 import { contentSpacingY } from 'themes/themeStyles';
 

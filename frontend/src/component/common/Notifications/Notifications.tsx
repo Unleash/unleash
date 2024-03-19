@@ -1,4 +1,4 @@
-import { KeyboardEvent, useState } from 'react';
+import { type KeyboardEvent, useState } from 'react';
 import {
     Paper,
     Typography,
@@ -17,7 +17,7 @@ import { NotificationsHeader } from './NotificationsHeader';
 import { NotificationsList } from './NotificationsList';
 import { Notification } from './Notification';
 import { EmptyNotifications } from './EmptyNotifications';
-import { NotificationsSchemaItem } from 'openapi';
+import type { NotificationsSchemaItem } from 'openapi';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsApi } from 'hooks/api/actions/useNotificationsApi/useNotificationsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

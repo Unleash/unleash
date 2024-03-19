@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { UiConfigSchema } from './ui-config-schema';
+import type { UiConfigSchema } from './ui-config-schema';
 
 test('uiConfigSchema', () => {
     const data: UiConfigSchema = {

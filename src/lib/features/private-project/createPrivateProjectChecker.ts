@@ -1,4 +1,4 @@
-import { Db, IUnleashConfig } from '../../server-impl';
+import type { Db, IUnleashConfig } from '../../server-impl';
 import PrivateProjectStore from './privateProjectStore';
 import { PrivateProjectChecker } from './privateProjectChecker';
 import { FakePrivateProjectChecker } from './fakePrivateProjectChecker';

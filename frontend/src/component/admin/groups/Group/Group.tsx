@@ -1,7 +1,12 @@
-import { useEffect, useMemo, useState, VFC } from 'react';
+import { useEffect, useMemo, useState, type VFC } from 'react';
 import { IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { useSearchParams, Link } from 'react-router-dom';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    type SortingRule,
+    useFlexLayout,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -11,7 +16,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { IGroupUser } from 'interfaces/group';
+import type { IGroupUser } from 'interfaces/group';
 import { useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';

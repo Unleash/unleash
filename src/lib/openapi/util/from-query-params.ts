@@ -1,9 +1,9 @@
 // module to create typescript types from query param lists. Based on
 // input in this GitHub issue:
 // https://github.com/ThomasAribart/json-schema-to-ts/issues/82
-import { FromSchema, JSONSchema } from 'json-schema-to-ts';
+import type { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
-import { O, L, A } from 'ts-toolbelt';
+import type { O, L, A } from 'ts-toolbelt';
 
 type OpenApiParam = {
     readonly name: string;

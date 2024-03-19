@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { BannerDialog } from './BannerDialog/BannerDialog';
 import { useState } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
-import { BannerVariant, IBanner } from 'interfaces/banner';
+import type { BannerVariant, IBanner } from 'interfaces/banner';
 import { Sticky } from 'component/common/Sticky/Sticky';
 
 const DEFAULT_VARIANT = 'info';
@@ -72,10 +72,16 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
         icon,
         link,
         linkText = 'More info',
+        linkClicked,
         plausibleEvent,
         dialogTitle,
         dialog,
     } = banner;
+
+    const openDialog = () => {
+        setOpen(true);
+        linkClicked?.();
+    };
 
     const bannerBar = (
         <StyledBar variant={variant} inline={inline} maxHeight={maxHeight}>
@@ -86,7 +92,7 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
             <BannerButton
                 link={link}
                 plausibleEvent={plausibleEvent}
-                openDialog={() => setOpen(true)}
+                openDialog={openDialog}
             >
                 {linkText}
             </BannerButton>

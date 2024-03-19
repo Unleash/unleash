@@ -1,6 +1,6 @@
 import { render, cleanup } from '@testing-library/react';
 import { StickyProvider } from './StickyProvider';
-import { IStickyContext, StickyContext } from './StickyContext';
+import { type IStickyContext, StickyContext } from './StickyContext';
 import { expect } from 'vitest';
 
 const defaultGetBoundingClientRect = {

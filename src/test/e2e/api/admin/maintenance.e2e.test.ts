@@ -1,4 +1,4 @@
-import dbInit, { ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init';
 import { setupApp, setupAppWithCustomConfig } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 

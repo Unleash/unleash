@@ -1,11 +1,15 @@
-import { Express } from 'express';
-import EventEmitter from 'events';
-import { LogLevel, LogProvider } from '../logger';
-import { ILegacyApiTokenCreate } from './models/api-token';
-import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { IUnleashServices } from './services';
-import { ResourceLimitsSchema } from '../openapi/spec/resource-limits-schema';
+import type { Express } from 'express';
+import type EventEmitter from 'events';
+import type { LogLevel, LogProvider } from '../logger';
+import type { ILegacyApiTokenCreate } from './models/api-token';
+import type {
+    IExperimentalOptions,
+    IFlagResolver,
+    IFlags,
+} from './experimental';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
+import type { IUnleashServices } from './services';
+import type { ResourceLimitsSchema } from '../openapi/spec/resource-limits-schema';
 
 export interface ISSLOption {
     rejectUnauthorized: boolean;
@@ -231,6 +235,7 @@ export interface IUnleashConfig {
     enableOAS: boolean;
     preHook?: Function;
     preRouterHook?: Function;
+    shutdownHook?: Function;
     enterpriseVersion?: string;
     eventBus: EventEmitter;
     environmentEnableOverrides?: string[];

@@ -1,4 +1,4 @@
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { exportResultSchema } from './export-result-schema';
 import { featureSchema } from './feature-schema';
 import { featureStrategySchema } from './feature-strategy-schema';

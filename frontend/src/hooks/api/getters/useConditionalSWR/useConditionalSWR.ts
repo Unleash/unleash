@@ -1,4 +1,9 @@
-import useSWR, { BareFetcher, Key, SWRConfiguration, SWRResponse } from 'swr';
+import useSWR, {
+    type BareFetcher,
+    type Key,
+    type SWRConfiguration,
+    type SWRResponse,
+} from 'swr';
 
 export const useConditionalSWR = <Data = any, Error = any, T = boolean>(
     condition: T,

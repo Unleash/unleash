@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { Variant } from 'utils/variants';
+import type { ReactNode } from 'react';
+import type { Variant } from 'utils/variants';
 
 export interface IUiConfig {
     authenticationType?: string;
@@ -79,6 +79,7 @@ export type UiFlags = {
     userAccessUIEnabled?: boolean;
     sdkReporting?: boolean;
     outdatedSdksBanner?: boolean;
+    projectOverviewRefactor?: string;
 };
 
 export interface IVersionInfo {

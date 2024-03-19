@@ -4,13 +4,13 @@ import { Route, Routes } from 'react-router-dom';
 
 import { render } from 'utils/testRenderer';
 import { ChangeRequest } from './ChangeRequest';
-import {
+import type {
     ChangeRequestType,
     IChangeRequestAddStrategy,
     IChangeRequestEnabled,
 } from '../changeRequest.types';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { StrategyVariantSchema } from 'openapi';
+import type { StrategyVariantSchema } from 'openapi';
 
 const server = testServerSetup();
 const uiConfigForEnterprise = () =>

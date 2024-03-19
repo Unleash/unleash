@@ -19,7 +19,7 @@ import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { ProjectApplicationSchema } from 'openapi';
+import type { ProjectApplicationSchema } from 'openapi';
 import mapValues from 'lodash.mapvalues';
 import {
     DEFAULT_PAGE_LIMIT,

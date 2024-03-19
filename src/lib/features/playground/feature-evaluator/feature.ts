@@ -1,7 +1,7 @@
-import { StrategyTransportInterface } from './strategy';
-import { Segment } from './strategy/strategy';
+import type { StrategyTransportInterface } from './strategy';
+import type { Segment } from './strategy/strategy';
 // eslint-disable-next-line import/no-cycle
-import { VariantDefinition } from './variant';
+import type { VariantDefinition } from './variant';
 
 export interface Dependency {
     feature: string;

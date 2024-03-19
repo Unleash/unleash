@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails';

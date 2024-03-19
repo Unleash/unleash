@@ -1,7 +1,10 @@
-import { IUnleashTest, setupAppWithAuth } from '../../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../../helpers/database-init';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../../helpers/test-helper';
+import dbInit, { type ITestDb } from '../../../helpers/database-init';
 import getLogger from '../../../../fixtures/no-logger';
-import { IPatStore } from '../../../../../lib/types/stores/pat-store';
+import type { IPatStore } from '../../../../../lib/types/stores/pat-store';
 import { PAT_LIMIT } from '../../../../../lib/util/constants';
 
 let app: IUnleashTest;

@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import type { FC } from 'react';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -83,7 +83,7 @@ export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
             <StyledUserContainer>
                 <StyledUserBox>
                     <StyledUserCount variant='h2'>
-                        {parseInt(`${count}`, 10) === count
+                        {Number.parseInt(`${count}`, 10) === count
                             ? count
                             : count.toFixed(2)}
                     </StyledUserCount>

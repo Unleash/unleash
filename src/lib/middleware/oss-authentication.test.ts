@@ -7,8 +7,8 @@ import ossAuth from './oss-authentication';
 import getApp from '../app';
 import User from '../types/user';
 import sessionDb from './session-db';
-import { Knex } from 'knex';
-import { LogProvider } from '../logger';
+import type { Knex } from 'knex';
+import type { LogProvider } from '../logger';
 
 const getLogger = (() => ({ debug() {} })) as unknown as LogProvider;
 

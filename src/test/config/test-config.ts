@@ -1,8 +1,8 @@
 import merge from 'deepmerge';
 import {
     IAuthType,
-    IUnleashConfig,
-    IUnleashOptions,
+    type IUnleashConfig,
+    type IUnleashOptions,
 } from '../../lib/types/option';
 import getLogger from '../fixtures/no-logger';
 import { createConfig } from '../../lib/create-config';

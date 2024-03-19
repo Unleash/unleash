@@ -17,7 +17,7 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { useSearch } from 'hooks/useSearch';
 import { useBanners } from 'hooks/api/getters/useBanners/useBanners';
 import { useBannersApi } from 'hooks/api/actions/useBannersApi/useBannersApi';
-import { IInternalBanner } from 'interfaces/banner';
+import type { IInternalBanner } from 'interfaces/banner';
 import { Banner } from 'component/banners/Banner/Banner';
 import { BannersActionsCell } from './BannersActionsCell';
 import { BannerDeleteDialog } from './BannerDeleteDialog';

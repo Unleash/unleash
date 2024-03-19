@@ -1,9 +1,9 @@
 import TimeAgo from 'react-timeago';
 import { LastSeenTooltip } from 'component/common/Table/cells/FeatureSeenCell/LastSeenTooltip';
-import { FC, ReactElement } from 'react';
-import { ILastSeenEnvironments } from 'interfaces/featureToggle';
+import type { FC, ReactElement } from 'react';
+import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { Box, styled, SxProps } from '@mui/material';
+import { Box, styled, type SxProps } from '@mui/material';
 import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { useLastSeenColors } from './useLastSeenColors';

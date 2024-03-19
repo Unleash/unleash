@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { type VisibilityState } from '@tanstack/react-table';
+import type { VisibilityState } from '@tanstack/react-table';
 
 const staticColumns = ['select', 'actions', 'name', 'favorite'];
 

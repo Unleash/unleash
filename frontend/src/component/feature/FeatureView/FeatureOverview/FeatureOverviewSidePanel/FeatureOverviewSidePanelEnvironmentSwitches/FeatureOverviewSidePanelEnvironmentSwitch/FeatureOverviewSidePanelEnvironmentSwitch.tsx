@@ -1,5 +1,5 @@
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';

@@ -1,4 +1,4 @@
-import { RefObject, createContext } from 'react';
+import { type RefObject, createContext } from 'react';
 
 export interface IStickyContext {
     stickyItems: RefObject<HTMLDivElement>[];

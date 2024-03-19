@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import { ISegment } from 'interfaces/segment';
+import type { ISegment } from 'interfaces/segment';
 import { SEGMENT_DIALOG_NAME_ID } from 'utils/testIds';
 import { Alert, styled } from '@mui/material';
 

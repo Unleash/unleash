@@ -1,7 +1,7 @@
-import { useContext, FC, ReactElement } from 'react';
+import { useContext, type FC, type ReactElement } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import {
-    ITooltipResolverProps,
+    type ITooltipResolverProps,
     TooltipResolver,
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';

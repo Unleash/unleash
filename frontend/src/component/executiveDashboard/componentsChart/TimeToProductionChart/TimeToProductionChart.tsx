@@ -7,7 +7,7 @@ import {
     NotEnoughData,
 } from '../../components/LineChart/LineChart';
 import { useProjectChartData } from '../../hooks/useProjectChartData';
-import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
+import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
 import { TimeToProductionTooltip } from './TimeToProductionTooltip/TimeToProductionTooltip';
 import { useTheme } from '@mui/material';

@@ -5,7 +5,7 @@ import {
     FEATURE_METRIC_HOURS_BACK_DEFAULT,
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours';
-import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
+import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { Grid } from '@mui/material';
 import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';

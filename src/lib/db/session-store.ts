@@ -1,9 +1,9 @@
-import EventEmitter from 'events';
-import { Logger, LogProvider } from '../logger';
+import type EventEmitter from 'events';
+import type { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
-import { ISession, ISessionStore } from '../types/stores/session-store';
+import type { ISession, ISessionStore } from '../types/stores/session-store';
 import { addDays } from 'date-fns';
-import { Db } from './db';
+import type { Db } from './db';
 
 const TABLE = 'unleash_session';
 

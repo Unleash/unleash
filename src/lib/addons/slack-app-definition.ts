@@ -57,7 +57,7 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
 } from '../types/events';
-import { IAddonDefinition } from '../types/model';
+import type { IAddonDefinition } from '../types/model';
 
 const slackAppDefinition: IAddonDefinition = {
     name: 'slack-app',

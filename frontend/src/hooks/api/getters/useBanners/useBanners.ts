@@ -3,7 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { IInternalBanner } from 'interfaces/banner';
+import type { IInternalBanner } from 'interfaces/banner';
 
 const ENDPOINT = 'api/admin/banners';
 

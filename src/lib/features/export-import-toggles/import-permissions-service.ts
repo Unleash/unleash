@@ -1,8 +1,12 @@
-import { IImportTogglesStore } from './import-toggles-store-type';
-import { AccessService, ContextService, TagTypeService } from '../../services';
-import { ContextFieldSchema, ImportTogglesSchema } from '../../openapi';
-import { ITagType } from '../tag-type/tag-type-store-type';
-import { IUser } from '../../types/user';
+import type { IImportTogglesStore } from './import-toggles-store-type';
+import type {
+    AccessService,
+    ContextService,
+    TagTypeService,
+} from '../../services';
+import type { ContextFieldSchema, ImportTogglesSchema } from '../../openapi';
+import type { ITagType } from '../tag-type/tag-type-store-type';
+import type { IUser } from '../../types/user';
 import {
     CREATE_CONTEXT_FIELD,
     CREATE_FEATURE,

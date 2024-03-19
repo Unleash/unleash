@@ -1,9 +1,9 @@
-import UIContext, { themeMode } from 'contexts/UIContext';
+import UIContext, { type themeMode } from 'contexts/UIContext';
 import { useContext } from 'react';
 import { setLocalStorageItem } from 'utils/storage';
 import mainTheme from 'themes/theme';
 import darkTheme from 'themes/dark-theme';
-import { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles/createTheme';
 
 interface IUseThemeModeOutput {
     resolveTheme: () => Theme;

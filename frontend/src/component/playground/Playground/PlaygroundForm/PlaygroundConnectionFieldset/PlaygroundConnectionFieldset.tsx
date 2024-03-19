@@ -1,4 +1,10 @@
-import { ComponentProps, Dispatch, SetStateAction, useState, VFC } from 'react';
+import {
+    type ComponentProps,
+    type Dispatch,
+    type SetStateAction,
+    useState,
+    type VFC,
+} from 'react';
 import {
     Autocomplete,
     Box,
@@ -13,7 +19,7 @@ import {
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { renderOption } from '../renderOption';
 import {
-    IApiToken,
+    type IApiToken,
     useApiTokens,
 } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import Input from 'component/common/Input/Input';

@@ -3,11 +3,11 @@ import {
     MenuItem,
     FormControl,
     InputLabel,
-    SelectChangeEvent,
+    type SelectChangeEvent,
     styled,
 } from '@mui/material';
 import {
-    Operator,
+    type Operator,
     stringOperators,
     semVerOperators,
     dateOperators,

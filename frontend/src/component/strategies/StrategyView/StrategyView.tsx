@@ -11,7 +11,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import Edit from '@mui/icons-material/Edit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureSchema } from 'openapi/models';
+import type { FeatureSchema } from 'openapi/models';
 
 export const StrategyView = () => {
     const name = useRequiredPathParam('name');

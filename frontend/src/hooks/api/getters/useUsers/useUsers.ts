@@ -2,8 +2,8 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IUser } from 'interfaces/user';
-import { IRole } from 'interfaces/role';
+import type { IUser } from 'interfaces/user';
+import type { IRole } from 'interfaces/role';
 
 interface IUseUsersOutput {
     users: IUser[];

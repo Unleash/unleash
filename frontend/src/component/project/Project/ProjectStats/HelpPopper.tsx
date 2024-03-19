@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import Close from '@mui/icons-material/Close';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import {

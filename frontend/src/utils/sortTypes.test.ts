@@ -1,4 +1,4 @@
-import { Row } from 'react-table';
+import type { Row } from 'react-table';
 import { sortTypes } from './sortTypes';
 
 const data = [

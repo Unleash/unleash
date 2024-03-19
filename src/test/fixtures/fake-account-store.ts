@@ -1,5 +1,5 @@
-import { IUser } from '../../lib/types/user';
-import {
+import type { IUser } from '../../lib/types/user';
+import type {
     // ICreateUser,
     IUserLookup,
     IAccountStore,

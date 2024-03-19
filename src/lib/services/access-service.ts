@@ -1,6 +1,6 @@
 import * as permissions from '../types/permissions';
-import { IUser } from '../types/user';
-import {
+import type { IUser } from '../types/user';
+import type {
     IAccessInfo,
     IAccessStore,
     IGroupWithProjectRoles,
@@ -13,19 +13,19 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { Logger } from '../logger';
-import { IAccountStore, IUnleashStores } from '../types/stores';
+import type { Logger } from '../logger';
+import type { IAccountStore, IUnleashStores } from '../types/stores';
 import {
-    IAvailablePermissions,
-    ICustomRole,
-    IPermission,
-    IRoleData,
-    IUserWithRole,
+    type IAvailablePermissions,
+    type ICustomRole,
+    type IPermission,
+    type IRoleData,
+    type IUserWithRole,
     RoleName,
 } from '../types/model';
-import { IRoleStore } from '../types/stores/role-store';
+import type { IRoleStore } from '../types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
-import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
 import {
@@ -38,17 +38,17 @@ import {
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
-import { IGroup } from '../types/group';
-import { GroupService } from './group-service';
+import type { IGroup } from '../types/group';
+import type { GroupService } from './group-service';
 import {
-    IUnleashConfig,
-    IUserAccessOverview,
+    type IUnleashConfig,
+    type IUserAccessOverview,
     ROLE_CREATED,
     ROLE_DELETED,
     ROLE_UPDATED,
     SYSTEM_USER,
 } from '../types';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 
 const { ADMIN } = permissions;
 

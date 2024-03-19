@@ -3,7 +3,7 @@ import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import { IPayload } from 'interfaces/featureToggle';
+import type { IPayload } from 'interfaces/featureToggle';
 
 const StyledItem = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,

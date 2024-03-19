@@ -1,4 +1,4 @@
-import { PayloadType, Variant } from 'unleash-client';
+import { PayloadType, type Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
 
@@ -55,7 +55,8 @@ export type IFlagKey =
     | 'scimApi'
     | 'displayEdgeBanner'
     | 'globalFrontendApiCache'
-    | 'returnGlobalFrontendApiCache';
+    | 'returnGlobalFrontendApiCache'
+    | 'projectOverviewRefactor';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -270,6 +271,10 @@ const flags: IFlags = {
     ),
     returnGlobalFrontendApiCache: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RETURN_GLOBAL_FRONTEND_API_CACHE,
+        false,
+    ),
+    projectOverviewRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
         false,
     ),
 };

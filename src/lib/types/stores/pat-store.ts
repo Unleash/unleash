@@ -1,5 +1,5 @@
-import { Store } from './store';
-import { CreatePatSchema, PatSchema } from '../../openapi';
+import type { Store } from './store';
+import type { CreatePatSchema, PatSchema } from '../../openapi';
 
 export interface IPatStore extends Store<PatSchema, number> {
     create(

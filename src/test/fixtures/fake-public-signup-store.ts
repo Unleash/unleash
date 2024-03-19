@@ -1,6 +1,6 @@
-import { IPublicSignupTokenStore } from '../../lib/types/stores/public-signup-token-store';
-import { PublicSignupTokenSchema } from '../../lib/openapi/spec/public-signup-token-schema';
-import { IPublicSignupTokenCreate } from '../../lib/types/models/public-signup-token';
+import type { IPublicSignupTokenStore } from '../../lib/types/stores/public-signup-token-store';
+import type { PublicSignupTokenSchema } from '../../lib/openapi/spec/public-signup-token-schema';
+import type { IPublicSignupTokenCreate } from '../../lib/types/models/public-signup-token';
 
 export default class FakePublicSignupStore implements IPublicSignupTokenStore {
     tokens: PublicSignupTokenSchema[] = [];

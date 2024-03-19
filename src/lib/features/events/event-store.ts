@@ -1,20 +1,24 @@
 import {
-    IEvent,
-    IBaseEvent,
+    type IEvent,
+    type IBaseEvent,
     SEGMENT_UPDATED,
     FEATURE_IMPORT,
     FEATURES_IMPORTED,
-    IEventType,
+    type IEventType,
 } from '../../types/events';
-import { LogProvider, Logger } from '../../logger';
-import { IEventStore } from '../../types/stores/event-store';
-import { ITag } from '../../types/model';
-import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type { LogProvider, Logger } from '../../logger';
+import type { IEventStore } from '../../types/stores/event-store';
+import type { ITag } from '../../types/model';
+import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import { sharedEventEmitter } from '../../util/anyEventEmitter';
-import { Db } from '../../db/db';
-import { Knex } from 'knex';
-import EventEmitter from 'events';
-import { ADMIN_TOKEN_USER, IFlagResolver, SYSTEM_USER_ID } from '../../types';
+import type { Db } from '../../db/db';
+import type { Knex } from 'knex';
+import type EventEmitter from 'events';
+import {
+    ADMIN_TOKEN_USER,
+    type IFlagResolver,
+    SYSTEM_USER_ID,
+} from '../../types';
 
 const EVENT_COLUMNS = [
     'id',
@@ -122,7 +126,7 @@ class EventStore implements IEventStore {
             return 0;
         }
         if (typeof count.count === 'string') {
-            return parseInt(count.count, 10);
+            return Number.parseInt(count.count, 10);
         } else {
             return count.count;
         }
@@ -144,7 +148,7 @@ class EventStore implements IEventStore {
             return 0;
         }
         if (typeof count.count === 'string') {
-            return parseInt(count.count, 10);
+            return Number.parseInt(count.count, 10);
         } else {
             return count.count;
         }
@@ -154,7 +158,10 @@ class EventStore implements IEventStore {
         try {
             await this.db(TABLE).insert(events.map(this.eventToDbRow));
         } catch (error: unknown) {
-            this.logger.warn(`Failed to store events: ${error}`);
+            this.logger.warn(
+                `Failed to store events: ${JSON.stringify(events)}`,
+                error,
+            );
         }
     }
 
@@ -246,7 +253,7 @@ class EventStore implements IEventStore {
             });
 
             const queryResult = await query.first();
-            return parseInt(queryResult.count || 0);
+            return Number.parseInt(queryResult.count || 0);
         } catch (e) {
             return 0;
         }

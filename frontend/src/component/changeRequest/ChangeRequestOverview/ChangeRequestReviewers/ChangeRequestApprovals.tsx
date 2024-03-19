@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestApprover } from './ChangeRequestReviewer';
-import { IChangeRequestApproval } from '../../changeRequest.types';
+import type { IChangeRequestApproval } from '../../changeRequest.types';
 
 interface ChangeRequestApprovalProps {
     approvals: IChangeRequestApproval[];

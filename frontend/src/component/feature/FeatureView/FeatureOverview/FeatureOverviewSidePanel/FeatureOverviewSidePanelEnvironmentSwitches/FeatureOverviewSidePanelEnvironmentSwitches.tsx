@@ -1,4 +1,4 @@
-import { type IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureOverviewSidePanelEnvironmentSwitch } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentSwitch';
 import { Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';

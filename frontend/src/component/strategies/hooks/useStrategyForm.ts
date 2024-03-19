@@ -1,4 +1,4 @@
-import { IStrategyParameter } from 'interfaces/strategy';
+import type { IStrategyParameter } from 'interfaces/strategy';
 import { useEffect, useState } from 'react';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 

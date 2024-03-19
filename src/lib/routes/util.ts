@@ -1,6 +1,6 @@
 import joi from 'joi';
-import { Response } from 'express';
-import { Logger } from '../logger';
+import type { Response } from 'express';
+import type { Logger } from '../logger';
 import { UnleashError } from '../error/unleash-error';
 import { fromLegacyError } from '../error/from-legacy-error';
 import createError from 'http-errors';

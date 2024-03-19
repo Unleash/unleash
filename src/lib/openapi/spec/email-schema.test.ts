@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { EmailSchema } from './email-schema';
+import type { EmailSchema } from './email-schema';
 
 test('emailSchema', () => {
     const data: EmailSchema = {

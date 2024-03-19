@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material';
 
 import createCache from '@emotion/cache';

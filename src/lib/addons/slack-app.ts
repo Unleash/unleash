@@ -2,24 +2,24 @@ import {
     WebClient,
     ErrorCode,
     WebClientEvent,
-    CodedError,
-    WebAPIPlatformError,
-    WebAPIRequestError,
-    WebAPIRateLimitedError,
-    WebAPIHTTPError,
-    KnownBlock,
-    Block,
+    type CodedError,
+    type WebAPIPlatformError,
+    type WebAPIRequestError,
+    type WebAPIRateLimitedError,
+    type WebAPIHTTPError,
+    type KnownBlock,
+    type Block,
 } from '@slack/web-api';
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
-import { IAddonConfig } from '../types/model';
+import type { IAddonConfig } from '../types/model';
 import {
-    FeatureEventFormatter,
+    type FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md';
-import { IEvent } from '../types/events';
+import type { IEvent } from '../types/events';
 
 interface ISlackAppAddonParameters {
     accessToken: string;

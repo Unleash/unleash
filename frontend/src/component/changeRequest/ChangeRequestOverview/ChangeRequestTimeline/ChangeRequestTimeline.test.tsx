@@ -5,7 +5,7 @@ import {
     determineColor,
     getScheduleProps,
 } from './ChangeRequestTimeline';
-import { ChangeRequestState } from '../../changeRequest.types';
+import type { ChangeRequestState } from '../../changeRequest.types';
 
 test('cancelled timeline shows all states', () => {
     render(<ChangeRequestTimeline state={'Cancelled'} />);

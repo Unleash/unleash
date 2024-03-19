@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Logger } from '../../lib/logger';
+import type { Logger } from '../../lib/logger';
 
 let muteError = false;
 let verbose = false;

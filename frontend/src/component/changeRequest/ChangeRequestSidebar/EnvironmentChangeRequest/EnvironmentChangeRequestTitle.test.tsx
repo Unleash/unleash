@@ -1,7 +1,7 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { screen } from '@testing-library/react';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
-import { UnscheduledChangeRequest } from 'component/changeRequest/changeRequest.types';
+import type { UnscheduledChangeRequest } from 'component/changeRequest/changeRequest.types';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';

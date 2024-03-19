@@ -1,6 +1,6 @@
 import { Tooltip, Typography } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { formatDateYMD } from 'utils/formatDate';
 import { TextCell } from '../TextCell/TextCell';
 import TimeAgo from 'react-timeago';

@@ -1,4 +1,4 @@
-import { type VFC } from 'react';
+import type { VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';

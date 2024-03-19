@@ -22,7 +22,7 @@ test('number validator should reject value that cannot be parsed to number', () 
 });
 
 test('number validator should reject NaN', () => {
-    const numValidator = numberValidatorGenerator(NaN);
+    const numValidator = numberValidatorGenerator(Number.NaN);
     const [result, err] = numValidator();
 
     expect(result).toBe(false);
@@ -102,7 +102,7 @@ test('string validator should reject values that are not arrays', () => {
 });
 
 test('string validator should reject arrays that are not arrays of strings', () => {
-    const stringValidator = stringValidatorGenerator(['test', NaN, 5]);
+    const stringValidator = stringValidatorGenerator(['test', Number.NaN, 5]);
     const [result, err] = stringValidator();
 
     expect(result).toBe(false);

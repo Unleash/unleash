@@ -1,4 +1,4 @@
-import {
+import type {
     IStrategyParameter,
     IFeatureStrategyParameters,
 } from 'interfaces/strategy';

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
+import type {
     IAccessInfo,
     IAccessStore,
     IProjectRoleUsage,
@@ -9,15 +9,15 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../../lib/types/stores/access-store';
-import { IPermission } from '../../lib/types/model';
+import type { IPermission } from '../../lib/types/model';
 import {
-    IRoleStore,
-    IUserAccessOverview,
+    type IRoleStore,
+    type IUserAccessOverview,
     RoleName,
     RoleType,
 } from '../../lib/types';
 import FakeRoleStore from './fake-role-store';
-import { PermissionRef } from '../../lib/services/access-service';
+import type { PermissionRef } from '../../lib/services/access-service';
 
 class AccessStoreMock implements IAccessStore {
     fakeRolesStore: IRoleStore;

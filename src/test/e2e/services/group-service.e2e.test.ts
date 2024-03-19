@@ -1,9 +1,9 @@
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import { GroupService } from '../../../lib/services/group-service';
 import { EventService } from '../../../lib/services';
-import { IGroupStore, IUnleashStores, IUser } from '../../../lib/types';
+import type { IGroupStore, IUnleashStores, IUser } from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

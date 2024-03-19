@@ -1,9 +1,9 @@
 import noLoggerProvider from '../../fixtures/no-logger';
-import dbInit, { ITestDb } from '../helpers/database-init';
+import dbInit, { type ITestDb } from '../helpers/database-init';
 import SessionService from '../../../lib/services/session-service';
 import NotFoundError from '../../../lib/error/notfound-error';
 import { addDays, minutesToMilliseconds } from 'date-fns';
-import { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;

@@ -1,5 +1,5 @@
 import { SYSTEM_USER } from '../../lib/types';
-import { IUser } from '../server-impl';
+import type { IUser } from '../server-impl';
 import { extractUserIdFromUser, extractUsernameFromUser } from './extract-user';
 
 describe('extractUsernameFromUser', () => {

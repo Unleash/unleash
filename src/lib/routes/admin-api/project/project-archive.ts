@@ -1,28 +1,28 @@
-import { Response } from 'express';
-import { IUnleashConfig } from '../../../types/option';
+import type { Response } from 'express';
+import type { IUnleashConfig } from '../../../types/option';
 import {
-    IFlagResolver,
-    IProjectParam,
-    IUnleashServices,
+    type IFlagResolver,
+    type IProjectParam,
+    type IUnleashServices,
     UPDATE_FEATURE,
 } from '../../../types';
-import { Logger } from '../../../logger';
+import type { Logger } from '../../../logger';
 import { extractUsername } from '../../../util/extract-user';
 import { DELETE_FEATURE } from '../../../types/permissions';
-import FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
-import { IAuthRequest } from '../../unleash-types';
-import { OpenApiService } from '../../../services/openapi-service';
+import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
+import type { IAuthRequest } from '../../unleash-types';
+import type { OpenApiService } from '../../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../../openapi/util/standard-responses';
 import {
-    BatchFeaturesSchema,
+    type BatchFeaturesSchema,
     createRequestSchema,
     createResponseSchema,
 } from '../../../openapi';
 import Controller from '../../controller';
-import {
+import type {
     TransactionCreator,
     UnleashTransaction,
 } from '../../../db/transaction';

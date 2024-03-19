@@ -1,8 +1,8 @@
-import { IBaseEvent, IEvent } from '../events';
-import { Store } from './store';
-import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
-import EventEmitter from 'events';
-import { IQueryOperations } from '../../features/events/event-store';
+import type { IBaseEvent, IEvent } from '../events';
+import type { Store } from './store';
+import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type EventEmitter from 'events';
+import type { IQueryOperations } from '../../features/events/event-store';
 
 export interface IEventStore
     extends Store<IEvent, number>,

@@ -1,11 +1,11 @@
 import {
-    Dispatch,
-    FormEvent,
-    SetStateAction,
+    type Dispatch,
+    type FormEvent,
+    type SetStateAction,
     useEffect,
     useMemo,
     useState,
-    VFC,
+    type VFC,
 } from 'react';
 import {
     Box,
@@ -18,7 +18,7 @@ import {
     Typography,
     useTheme,
     Autocomplete,
-    SelectChangeEvent,
+    type SelectChangeEvent,
 } from '@mui/material';
 
 import debounce from 'debounce';

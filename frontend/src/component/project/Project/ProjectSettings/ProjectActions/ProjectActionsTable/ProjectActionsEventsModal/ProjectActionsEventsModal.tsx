@@ -1,6 +1,6 @@
 import { Button, Link, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { IActionSet } from 'interfaces/action';
+import type { IActionSet } from 'interfaces/action';
 import { useActionEvents } from 'hooks/api/getters/useActionEvents/useActionEvents';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';

@@ -1,7 +1,7 @@
 import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
-import { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
-import { ApiTokenType, IApiTokenCreate } from '../types/models/api-token';
+import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
+import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
 import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
 import FakeEventStore from '../../test/fixtures/fake-event-store';

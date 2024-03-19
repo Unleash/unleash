@@ -1,14 +1,14 @@
-import { EventEmitter } from 'stream';
+import type { EventEmitter } from 'stream';
 import { createFeatureToggleService } from '../../lib/features';
 import { FEATURES_CREATED_BY_PROCESSED } from '../../lib/metric-events';
-import { EventService, FeatureToggleService } from '../../lib/services';
+import { EventService, type FeatureToggleService } from '../../lib/services';
 import {
     ADMIN_TOKEN_USER,
-    IUnleashConfig,
-    IUnleashStores,
+    type IUnleashConfig,
+    type IUnleashStores,
 } from '../../lib/types';
 import { createTestConfig } from '../config/test-config';
-import dbInit, { ITestDb } from './helpers/database-init';
+import dbInit, { type ITestDb } from './helpers/database-init';
 
 let stores: IUnleashStores;
 let db: ITestDb;

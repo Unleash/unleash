@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { StrategyVariants } from './StrategyVariants';
 import { Route, Routes } from 'react-router-dom';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
-import { IFeatureStrategy } from '../../../interfaces/strategy';
+import type { IFeatureStrategy } from '../../../interfaces/strategy';
 import { useState } from 'react';
 
 test('should render variants', async () => {

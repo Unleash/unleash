@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, VFC } from 'react';
+import { useCallback, useEffect, useMemo, useState, type VFC } from 'react';
 import {
     Box,
     Button,
@@ -18,7 +18,7 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
+import type { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';

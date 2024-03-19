@@ -1,4 +1,4 @@
-import { Switch, SwitchProps } from '@mui/material';
+import { Switch, type SwitchProps } from '@mui/material';
 import React from 'react';
 import { formatAccessText } from 'utils/formatAccessText';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';

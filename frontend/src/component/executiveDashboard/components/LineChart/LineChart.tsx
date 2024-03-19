@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { type ScriptableContext } from 'chart.js';
+import type { ScriptableContext } from 'chart.js';
 import { Typography } from '@mui/material';
 
 export const LineChart = lazy(() => import('./LineChartComponent'));

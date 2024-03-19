@@ -1,6 +1,6 @@
-import { ILegalValue } from 'interfaces/context';
+import type { ILegalValue } from 'interfaces/context';
 import { useStyles } from './LegalValueLabel.styles';
-import React from 'react';
+import type React from 'react';
 import { FormControlLabel } from '@mui/material';
 
 interface ILegalValueTextProps {

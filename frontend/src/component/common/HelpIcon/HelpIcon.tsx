@@ -1,4 +1,4 @@
-import { styled, Tooltip, TooltipProps } from '@mui/material';
+import { styled, Tooltip, type TooltipProps } from '@mui/material';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 

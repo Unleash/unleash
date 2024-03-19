@@ -1,6 +1,6 @@
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useEffect, useState } from 'react';
-import { IConstraint } from 'interfaces/strategy';
+import type { IConstraint } from 'interfaces/strategy';
 
 const isValid = (constraint: IConstraint) => {
     const hasValues =

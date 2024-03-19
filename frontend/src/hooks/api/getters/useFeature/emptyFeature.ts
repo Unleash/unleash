@@ -1,4 +1,4 @@
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 
 export const emptyFeature: IFeatureToggle = {
     environments: [],

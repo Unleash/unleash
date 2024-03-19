@@ -1,9 +1,9 @@
-import { LogProvider } from '../logger';
+import type { LogProvider } from '../logger';
 import { SchedulerService } from '../features/scheduler/scheduler-service';
 import { createTestConfig } from '../../test/config/test-config';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 import SettingService from './setting-service';
-import EventService from '../features/events/event-service';
+import type EventService from '../features/events/event-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
 
 function ms(timeMs: number) {

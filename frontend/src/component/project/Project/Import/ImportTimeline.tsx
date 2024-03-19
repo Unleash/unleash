@@ -1,12 +1,12 @@
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { alpha, Box, styled } from '@mui/material';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineContent from '@mui/lab/TimelineContent';
 import Timeline from '@mui/lab/Timeline';
-import { StageName } from './StageName';
+import type { StageName } from './StageName';
 
 const StyledTimeline = styled(Timeline)(() => ({
     padding: 0,

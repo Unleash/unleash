@@ -1,25 +1,25 @@
-import { Request, Response } from 'express';
-import { IUnleashServices } from '../../types/services';
-import FeatureTypeService from '../../services/feature-type-service';
-import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../types/option';
-import { OpenApiService } from '../../services/openapi-service';
+import type { Request, Response } from 'express';
+import type { IUnleashServices } from '../../types/services';
+import type FeatureTypeService from '../../services/feature-type-service';
+import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option';
+import type { OpenApiService } from '../../services/openapi-service';
 import { ADMIN, NONE } from '../../types/permissions';
 import {
     featureTypesSchema,
-    FeatureTypesSchema,
+    type FeatureTypesSchema,
 } from '../../openapi/spec/feature-types-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import Controller from '../controller';
 import {
     createRequestSchema,
     featureTypeSchema,
-    FeatureTypeSchema,
+    type FeatureTypeSchema,
     getStandardResponses,
-    UpdateFeatureTypeLifetimeSchema,
+    type UpdateFeatureTypeLifetimeSchema,
 } from '../../openapi';
-import { IAuthRequest } from '../unleash-types';
-import { IFlagResolver } from '../../types';
+import type { IAuthRequest } from '../unleash-types';
+import type { IFlagResolver } from '../../types';
 
 const version = 1;
 

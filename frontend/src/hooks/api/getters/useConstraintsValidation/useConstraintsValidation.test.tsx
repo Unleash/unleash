@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { IConstraint } from 'interfaces/strategy'; // Assuming you have your component in this path
-import { FC } from 'react';
+import type { IConstraint } from 'interfaces/strategy'; // Assuming you have your component in this path
+import type { FC } from 'react';
 import { useConstraintsValidation } from './useConstraintsValidation';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 

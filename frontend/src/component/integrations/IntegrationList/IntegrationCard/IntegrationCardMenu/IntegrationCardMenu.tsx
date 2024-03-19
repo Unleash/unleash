@@ -1,4 +1,4 @@
-import { useCallback, useState, VFC } from 'react';
+import { useCallback, useState, type VFC } from 'react';
 import {
     Alert,
     IconButton,

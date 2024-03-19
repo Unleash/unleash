@@ -1,6 +1,6 @@
 import { Button, Divider, Menu, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
+import type { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
 import { useState } from 'react';
 import { PermissionCheckboxMenuItem } from './PermissionCheckboxMenuItem';
 

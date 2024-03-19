@@ -1,8 +1,8 @@
-import { VFC } from 'react';
+import type { VFC } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
 import { Box } from '@mui/material';
-import { IUnleashContextDefinition } from 'interfaces/context';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 
 interface IUsedInCellProps {
     original: IUnleashContextDefinition;

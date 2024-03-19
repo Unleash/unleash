@@ -1,6 +1,9 @@
 import { useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
-import { PlaygroundStrategySchema, PlaygroundRequestSchema } from 'openapi';
+import type {
+    PlaygroundStrategySchema,
+    PlaygroundRequestSchema,
+} from 'openapi';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';

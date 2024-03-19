@@ -12,7 +12,7 @@ import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useSignalEndpointsApi } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
-import { ISignalEndpoint } from 'interfaces/signal';
+import type { ISignalEndpoint } from 'interfaces/signal';
 import { SignalEndpointsActionsCell } from './SignalEndpointsActionsCell';
 import { SignalEndpointsDeleteDialog } from './SignalEndpointsDeleteDialog';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';

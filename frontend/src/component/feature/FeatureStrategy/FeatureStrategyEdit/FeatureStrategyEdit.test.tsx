@@ -1,5 +1,5 @@
 import { formatUpdateStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';

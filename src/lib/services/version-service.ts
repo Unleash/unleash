@@ -1,5 +1,5 @@
 import fetch from 'make-fetch-happen';
-import {
+import type {
     IContextFieldStore,
     IEnvironmentStore,
     IEventStore,
@@ -12,15 +12,15 @@ import {
     IUnleashStores,
     IUserStore,
 } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
+import type { IUnleashConfig } from '../types/option';
 import version from '../util/version';
-import { Logger } from '../logger';
-import { ISettingStore } from '../types/stores/settings-store';
-import { IStrategyStore } from '../types';
+import type { Logger } from '../logger';
+import type { ISettingStore } from '../types/stores/settings-store';
+import type { IStrategyStore } from '../types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
-import { GetActiveUsers } from '../features/instance-stats/getActiveUsers';
-import { GetProductionChanges } from '../features/instance-stats/getProductionChanges';
+import type { GetActiveUsers } from '../features/instance-stats/getActiveUsers';
+import type { GetProductionChanges } from '../features/instance-stats/getProductionChanges';
 
 export interface IVersionInfo {
     oss: string;

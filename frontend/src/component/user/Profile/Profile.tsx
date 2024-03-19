@@ -1,5 +1,8 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ITab, VerticalTabs } from 'component/common/VerticalTabs/VerticalTabs';
+import {
+    type ITab,
+    VerticalTabs,
+} from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { useEffect, useState } from 'react';

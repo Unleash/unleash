@@ -39,10 +39,12 @@ import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
-import { UiFlags } from 'interfaces/uiConfig';
+import type { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -75,6 +77,8 @@ export const Project = () => {
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
+
+    const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -128,6 +132,14 @@ export const Project = () => {
             name: 'settings',
         },
     ];
+
+    if (projectOverviewRefactor) {
+        tabs.splice(1, 0, {
+            title: 'Insights',
+            path: `${basePath}/insights`,
+            name: 'insights',
+        });
+    }
 
     const filteredTabs = tabs
         .filter((tab) => {
@@ -299,6 +311,9 @@ export const Project = () => {
                 />
                 <Route path='environments' element={<ProjectEnvironment />} />
                 <Route path='archive' element={<ProjectFeaturesArchive />} />
+                {Boolean(projectOverviewRefactor) && (
+                    <Route path='insights' element={<ProjectInsights />} />
+                )}
                 <Route path='logs' element={<ProjectLog />} />
                 <Route
                     path='change-requests'

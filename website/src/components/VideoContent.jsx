@@ -1,4 +1,4 @@
-// biome-ignore lint: Docusaurus doesn't work without the React import
+// biome-ignore lint/correctness/noUnusedImports: Needs this for React to work
 import React from 'react';
 import Admonition from '@theme/Admonition';
 

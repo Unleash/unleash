@@ -1,4 +1,4 @@
-import { Gauge as PromGauge, GaugeConfiguration } from 'prom-client';
+import { Gauge as PromGauge, type GaugeConfiguration } from 'prom-client';
 
 /**
  * A wrapped instance of prom-client's Gauge, overriding some of its methods for enhanced functionality and type-safety.

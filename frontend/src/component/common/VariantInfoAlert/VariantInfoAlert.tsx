@@ -1,5 +1,5 @@
 import { Alert, styled } from '@mui/material';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),

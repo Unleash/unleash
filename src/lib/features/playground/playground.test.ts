@@ -9,7 +9,7 @@ import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
 import {
     playgroundRequestSchema,
-    PlaygroundRequestSchema,
+    type PlaygroundRequestSchema,
 } from '../../openapi/spec/playground-request-schema';
 
 import { generate as generateRequest } from '../../openapi/spec/playground-request-schema.test';

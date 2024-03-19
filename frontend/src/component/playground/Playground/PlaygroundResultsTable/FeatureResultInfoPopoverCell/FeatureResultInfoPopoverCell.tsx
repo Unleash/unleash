@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
+import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { IconButton, Popover, styled } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { FeatureDetails } from './FeatureDetails/FeatureDetails';

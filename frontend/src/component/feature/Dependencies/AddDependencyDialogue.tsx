@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';

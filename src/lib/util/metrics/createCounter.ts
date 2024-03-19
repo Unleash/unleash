@@ -1,4 +1,4 @@
-import { Counter as PromCounter, CounterConfiguration } from 'prom-client';
+import { Counter as PromCounter, type CounterConfiguration } from 'prom-client';
 
 /**
  * A wrapped instance of prom-client's Counter, overriding some of its methods for enhanced functionality and type-safety.

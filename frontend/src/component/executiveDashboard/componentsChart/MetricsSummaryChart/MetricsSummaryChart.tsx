@@ -1,5 +1,6 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
+
 import { ExecutiveSummarySchema } from 'openapi';
 import {
     fillGradientPrimary,
@@ -11,6 +12,7 @@ import { useMetricsSummary } from '../../hooks/useMetricsSummary';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
 import { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { useTheme } from '@mui/material';
+
 
 interface IMetricsSummaryChartProps {
     metricsSummaryTrends: GroupedDataByProject<

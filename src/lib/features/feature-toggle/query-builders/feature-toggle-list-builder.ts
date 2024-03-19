@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import FeatureToggleStore from '../feature-toggle-store';
 
 export class FeatureToggleListBuilder {

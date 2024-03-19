@@ -1,4 +1,4 @@
-import { IFeatureStrategy } from 'interfaces/strategy';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 import { FeatureStrategyIcon } from 'component/feature/FeatureStrategy/FeatureStrategyIcon/FeatureStrategyIcon';
 import { styled } from '@mui/material';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';

@@ -1,8 +1,9 @@
-import { IconButton, IconButtonProps } from '@mui/material';
-import React, { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { IconButton, type IconButtonProps } from '@mui/material';
+import type React from 'react';
+import type { ReactNode } from 'react';
+import type { Link } from 'react-router-dom';
 import {
-    ITooltipResolverProps,
+    type ITooltipResolverProps,
     TooltipResolver,
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';

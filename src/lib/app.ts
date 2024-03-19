@@ -1,4 +1,4 @@
-import express, { Application, RequestHandler } from 'express';
+import express, { type Application, type RequestHandler } from 'express';
 import compression from 'compression';
 import favicon from 'serve-favicon';
 import cookieParser from 'cookie-parser';
@@ -8,9 +8,9 @@ import { responseTimeMetrics } from './middleware/response-time-metrics';
 import { corsOriginMiddleware } from './middleware/cors-origin-middleware';
 import rbacMiddleware from './middleware/rbac-middleware';
 import apiTokenMiddleware from './middleware/api-token-middleware';
-import { IUnleashServices } from './types/services';
-import { IAuthType, IUnleashConfig } from './types/option';
-import { IUnleashStores } from './types';
+import type { IUnleashServices } from './types/services';
+import { IAuthType, type IUnleashConfig } from './types/option';
+import type { IUnleashStores } from './types';
 
 import IndexRouter from './routes';
 
@@ -23,7 +23,7 @@ import secureHeaders from './middleware/secure-headers';
 import { loadIndexHTML } from './util/load-index-html';
 import { findPublicFolder } from './util/findPublicFolder';
 import patMiddleware from './middleware/pat-middleware';
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import maintenanceMiddleware from './features/maintenance/maintenance-middleware';
 import { unless } from './middleware/unless-middleware';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler';

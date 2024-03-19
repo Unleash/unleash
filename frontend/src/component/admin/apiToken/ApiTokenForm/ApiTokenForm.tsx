@@ -1,5 +1,6 @@
 import { Alert, Link } from '@mui/material';
-import React, { ReactNode } from 'react';
+import type React from 'react';
+import type { ReactNode } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CancelButton, StyledBox, StyledForm } from './ApiTokenForm.styles';

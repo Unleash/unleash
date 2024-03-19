@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IInstanceStatus, InstanceState } from 'interfaces/instance';
+import { type IInstanceStatus, InstanceState } from 'interfaces/instance';
 
 const StyledInfoBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(4),

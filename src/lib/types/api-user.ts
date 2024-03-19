@@ -1,4 +1,4 @@
-import { ApiTokenType } from './models/api-token';
+import type { ApiTokenType } from './models/api-token';
 import { ValidationError } from 'joi';
 
 import { CLIENT } from './permissions';

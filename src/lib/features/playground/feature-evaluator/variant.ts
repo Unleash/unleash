@@ -1,6 +1,6 @@
-import { Context } from './context';
+import type { Context } from './context';
 // eslint-disable-next-line import/no-cycle
-import { FeatureInterface } from './feature';
+import type { FeatureInterface } from './feature';
 import { normalizedVariantValue } from './strategy/util';
 import { resolveContextValue } from './helpers';
 

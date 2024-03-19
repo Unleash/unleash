@@ -3,6 +3,7 @@ import { ChangeRequests } from './ChangeRequests/ChangeRequests';
 import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 import { ProjectHealth } from './ProjectHealth/ProjectHealth';
 import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
+import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats';
 
 const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -32,12 +33,24 @@ const NarrowContainer = styled(Container)(() => ({
     gridColumn: 'span 2',
 }));
 
+const statsData = {
+    stats: {
+        archivedCurrentWindow: 5,
+        archivedPastWindow: 3,
+        avgTimeToProdCurrentWindow: 2.5,
+        createdCurrentWindow: 7,
+        createdPastWindow: 4,
+        projectActivityCurrentWindow: 10,
+        projectActivityPastWindow: 8,
+        projectMembersAddedCurrentWindow: 2,
+    },
+};
+
 export const ProjectInsights = () => {
     return (
         <Grid>
             <FullWidthContainer>
-                Total changes / avg time to production / feature flags /stale
-                flags
+                <ProjectInsightsStats {...statsData} />
             </FullWidthContainer>
             <MediumWideContainer>
                 <ProjectHealth />

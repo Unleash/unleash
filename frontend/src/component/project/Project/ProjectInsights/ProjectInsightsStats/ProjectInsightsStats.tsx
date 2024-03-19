@@ -8,7 +8,7 @@ import { ConditionallyRender } from "component/common/ConditionallyRender/Condit
 const StyledBox = styled(Box)(({ theme }) => ({
 	display: "grid",
 	gap: theme.spacing(2),
-	gridTemplateColumns: "repeat(4, 1fr)",
+	gridTemplateColumns: "repeat(5, 1fr)",
 	flexWrap: "wrap",
 	[theme.breakpoints.down("lg")]: {
 		gridTemplateColumns: "repeat(2, 1fr)",
@@ -43,12 +43,10 @@ interface IProjectStatsProps {
 	stats: ProjectStatsSchema;
 }
 
-export const ProjectStats = ({ stats }: IProjectStatsProps) => {
+export const ProjectInsightsStats = ({ stats }: IProjectStatsProps) => {
 	if (Object.keys(stats).length === 0) {
 		return null;
 	}
-
-	const projectOverviewRefactor = useUiFlag("projectOverviewRefactor");
 
 	const {
 		avgTimeToProdCurrentWindow,
@@ -109,6 +107,19 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
 					change={createdCurrentWindow - createdPastWindow}
 				/>
 			</StyledWidget>
+
+			<StyledWidget>
+				<StatusBox
+					title="Stale toggles"
+					boxText={String(projectActivityCurrentWindow)}
+					change={projectActivityCurrentWindow - projectActivityPastWindow}
+				>
+					<HelpPopper id="stale-toggles">
+						Sum of all stale toggles in the project
+					</HelpPopper>
+				</StatusBox>
+			</StyledWidget>
+
 			<StyledWidget>
 				<StatusBox
 					title="Features archived"

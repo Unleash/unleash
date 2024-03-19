@@ -50,7 +50,6 @@ export const ProjectInsights = () => {
             </Span2>
             <Span2>Project members</Span2>
             <Span6>
-                {' '}
                 <ChangeRequests />
             </Span6>
         </Grid>

@@ -89,7 +89,6 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
     const placeholderData = usePlaceholderData();
     return (
         <LineChart
-            key={isAggregate ? 'aggregate-ttp' : 'ttp'}
             data={notEnoughData ? placeholderData : data}
             isLocalTooltip
             TooltipComponent={TimeToProductionTooltip}

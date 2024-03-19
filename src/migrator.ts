@@ -3,7 +3,7 @@ import { getInstance } from 'db-migrate';
 import type { IUnleashConfig } from './lib/types/option';
 import { secondsToMilliseconds } from 'date-fns';
 
-log.setLogLevel('info');
+log.setLogLevel('error');
 
 export async function migrateDb({ db }: IUnleashConfig): Promise<void> {
     const custom = {

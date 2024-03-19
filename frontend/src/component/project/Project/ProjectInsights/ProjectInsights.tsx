@@ -17,7 +17,11 @@ const Grid = styled(Box)(({ theme }) => ({
     gridTemplateColumns: 'repeat(10, 1fr)',
 }));
 
-const FullWidthContainer = styled(Container)(() => ({
+const NoBackgroundFullWidthContainer = styled(Box)(() => ({
+    gridColumn: '1 / -1',
+}));
+
+const FullWidthContainer = styled(Box)(() => ({
     gridColumn: '1 / -1',
 }));
 
@@ -49,9 +53,9 @@ const statsData = {
 export const ProjectInsights = () => {
     return (
         <Grid>
-            <FullWidthContainer>
+            <NoBackgroundFullWidthContainer>
                 <ProjectInsightsStats {...statsData} />
-            </FullWidthContainer>
+            </NoBackgroundFullWidthContainer>
             <MediumWideContainer>
                 <ProjectHealth />
             </MediumWideContainer>

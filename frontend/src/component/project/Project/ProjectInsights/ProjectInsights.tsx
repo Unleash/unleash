@@ -16,42 +16,42 @@ const Grid = styled(Box)(({ theme }) => ({
     gridTemplateColumns: 'repeat(10, 1fr)',
 }));
 
-const SpanFull = styled(Container)(() => ({
+const FullWidthContainer = styled(Container)(() => ({
     gridColumn: '1 / -1',
 }));
 
-const Span2 = styled(Container)(() => ({
-    gridColumn: 'span 2',
+const WideContainer = styled(Container)(() => ({
+    gridColumn: 'span 6',
 }));
 
-const Span4 = styled(Container)(() => ({
+const MediumWideContainer = styled(Container)(() => ({
     gridColumn: 'span 4',
 }));
 
-const Span6 = styled(Container)(() => ({
-    gridColumn: 'span 6',
+const NarrowContainer = styled(Container)(() => ({
+    gridColumn: 'span 2',
 }));
 
 export const ProjectInsights = () => {
     return (
         <Grid>
-            <SpanFull>
+            <FullWidthContainer>
                 Total changes / avg time to production / feature flags /stale
                 flags
-            </SpanFull>
-            <Span4>
+            </FullWidthContainer>
+            <MediumWideContainer>
                 <ProjectHealth />
-            </Span4>
-            <Span6>
+            </MediumWideContainer>
+            <WideContainer>
                 <LeadTimeForChanges />
-            </Span6>
-            <Span2>
+            </WideContainer>
+            <NarrowContainer>
                 <FlagTypesUsed />
-            </Span2>
-            <Span2>Project members</Span2>
-            <Span6>
+            </NarrowContainer>
+            <NarrowContainer>Project members</NarrowContainer>
+            <WideContainer>
                 <ChangeRequests />
-            </Span6>
+            </WideContainer>
         </Grid>
     );
 };

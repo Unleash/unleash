@@ -284,6 +284,7 @@ export const SignalEndpointsTokens = ({
                 open={tokenOpen}
                 setOpen={setTokenOpen}
                 token={newToken}
+                signalEndpoint={signalEndpoint}
             />
             <Dialogue
                 open={deleteOpen}

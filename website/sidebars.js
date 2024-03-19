@@ -147,14 +147,15 @@ module.exports = {
                     id: 'feature-flag-tutorials/flutter/a-b-testing',
                 },
                 {
+
                     type: 'doc',
                     label: 'Next.js',
                     id: 'feature-flag-tutorials/nextjs/implementing-feature-flags',
                 },
                 {
                     type: 'doc',
-                    label: 'Sveltekit',
-                    id: 'feature-flag-tutorials/sveltekit/feature-flags-sveltekit',
+                    label: 'SvelteKit',
+                    id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags',
                 },
             ],
         },

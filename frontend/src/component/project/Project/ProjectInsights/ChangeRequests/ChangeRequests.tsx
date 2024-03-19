@@ -91,11 +91,11 @@ export const ChangeRequests = () => {
     const applied = 28;
     const rejected = 4;
 
-    if (isOss() && isPro()) {
+    if (isOss() || isPro()) {
         return (
             <Container>
                 <Typography variant='h3'>Change requests</Typography>
-                <PremiumFeature feature={'change-requests'} />
+                <PremiumFeature feature='change-requests' />
             </Container>
         );
     }

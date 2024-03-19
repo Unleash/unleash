@@ -1,4 +1,5 @@
 import { Box, styled } from '@mui/material';
+import { ChangeRequests } from './ChangeRequests/ChangeRequests';
 import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 import { ProjectHealth } from './ProjectHealth/ProjectHealth';
 import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
@@ -48,7 +49,10 @@ export const ProjectInsights = () => {
                 <FlagTypesUsed />
             </Span2>
             <Span2>Project members</Span2>
-            <Span6>Change Requests</Span6>
+            <Span6>
+                {' '}
+                <ChangeRequests />
+            </Span6>
         </Grid>
     );
 };

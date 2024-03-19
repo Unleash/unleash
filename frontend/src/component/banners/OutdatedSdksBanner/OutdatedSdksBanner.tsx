@@ -5,6 +5,7 @@ import { useOutdatedSdks } from 'hooks/api/getters/useOutdatedSdks/useOutdatedSd
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const StyledList = styled('ul')({ margin: 0 });
 
@@ -13,12 +14,30 @@ export const OutdatedSdksBanner = () => {
         data: { sdks },
     } = useOutdatedSdks();
     const flagEnabled = useUiFlag('outdatedSdksBanner');
+    const { trackEvent } = usePlausibleTracker();
+
+    const bannerClicked = () => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'banner application clicked',
+            },
+        });
+    };
+
+    const linkClicked = () => {
+        trackEvent('sdk-reporting', {
+            props: {
+                eventType: 'banner clicked',
+            },
+        });
+    };
 
     const outdatedSdksBanner: IBanner = {
         message: `We noticed that you're using outdated SDKs. `,
         variant: 'warning',
         link: 'dialog',
         linkText: 'Please update those versions',
+        linkClicked,
         dialogTitle: 'Outdated SDKs',
         dialog: (
             <>
@@ -27,7 +46,11 @@ export const OutdatedSdksBanner = () => {
                         <span>{item.sdkVersion}</span>
                         <StyledList>
                             {item.applications.map((application) => (
-                                <li key={application}>
+                                <li
+                                    key={application}
+                                    onClick={bannerClicked}
+                                    onKeyDown={bannerClicked}
+                                >
                                     <Link to={`/applications/${application}`}>
                                         {application}
                                     </Link>
@@ -42,7 +65,7 @@ export const OutdatedSdksBanner = () => {
     return (
         <>
             <ConditionallyRender
-                condition={flagEnabled && sdks.length > 0}
+                condition={flagEnabled && sdks.length > -1}
                 show={<Banner banner={outdatedSdksBanner} />}
             />
         </>

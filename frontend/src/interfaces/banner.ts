@@ -8,6 +8,7 @@ export interface IBanner {
     sticky?: boolean;
     icon?: string;
     link?: string;
+    linkClicked?: () => void;
     linkText?: string;
     plausibleEvent?: string;
     dialogTitle?: string;

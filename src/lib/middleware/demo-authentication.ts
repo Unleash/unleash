@@ -4,7 +4,7 @@ import type { IUnleashServices } from '../types/services';
 import type { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import { ApiTokenType } from '../types/models/api-token';
-import type { IAuthRequest } from '../server-impl';
+import type { IAuthRequest, IUser } from '../server-impl';
 import type { IApiRequest } from '../routes/unleash-types';
 import { encrypt } from '../util';
 
@@ -19,14 +19,19 @@ function demoAuthentication(
 ): void {
     app.post(`${basePath}/auth/demo/login`, async (req: IAuthRequest, res) => {
         let { email } = req.body;
-        email = flagResolver.isEnabled('encryptEmails', { email })
-            ? encrypt(email)
-            : email;
+        let user: IUser;
+
         try {
-            const user = await userService.loginUserWithoutPassword(
-                email,
-                true,
-            );
+            if (authentication.authDemoAllowAdminLogin && email === 'admin') {
+                user = await userService.loginDemoAuthDefaultAdmin();
+            } else {
+                email = flagResolver.isEnabled('encryptEmails', { email })
+                    ? encrypt(email)
+                    : email;
+
+                user = await userService.loginUserWithoutPassword(email, true);
+            }
+
             req.session.user = user;
             return res.status(200).json(user);
         } catch (e) {
@@ -37,7 +42,7 @@ function demoAuthentication(
     });
 
     app.use(`${basePath}/api/admin/`, (req: IAuthRequest, res, next) => {
-        if (req.session.user?.email) {
+        if (req.session.user?.email || req.session.user?.username === 'admin') {
             req.user = req.session.user;
         }
         next();

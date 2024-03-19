@@ -379,6 +379,12 @@ class UserService {
         return user;
     }
 
+    async loginDemoAuthDefaultAdmin(): Promise<IUser> {
+        const user = await this.store.getByQuery({ id: 1 });
+        await this.store.successfullyLogin(user);
+        return user;
+    }
+
     async changePassword(userId: number, password: string): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);

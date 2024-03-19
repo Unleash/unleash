@@ -63,7 +63,7 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         id='email'
                         data-testid={LOGIN_EMAIL_ID}
                         required
-                        type='email'
+                        type={email === 'admin' ? 'text' : 'email'}
                     />
 
                     <Button

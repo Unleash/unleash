@@ -1,6 +1,8 @@
 ---
 title: A/B Testing in Flutter using Unleash and Mixpanel
+slug: '/feature-flag-tutorials/flutter/a-b-testing'
 ---
+
 :::note
 
 This article is a contribution by **[Ayush Bherwani](https://www.linkedin.com/in/ayushbherwani/)** as a part of the **[Community Content Program](https://github.com/unleash/community-content)**. You can also suggest a topic by [opening an issue](https://github.com/Unleash/community-content/issues), or [Write for Unleash](https://www.getunleash.io/blog/get-published-through-unleashs-community-content-program) as a part of the Community Content Program.

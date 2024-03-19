@@ -35,6 +35,9 @@ const resolveDoraMetrics = (input: number) => {
     }
 };
 
+/**
+ * @Deprecated in favor of LeadTimeForChanges.tsx
+ */
 export const ProjectDoraMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
 

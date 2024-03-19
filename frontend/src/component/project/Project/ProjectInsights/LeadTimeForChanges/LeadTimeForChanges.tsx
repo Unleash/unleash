@@ -17,15 +17,11 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import theme from 'themes/theme';
 
 const Container = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 6',
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(3),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
-    borderRadius: theme.shape.borderRadiusLarge,
     overflowY: 'auto',
-    maxHeight: theme.spacing(100),
+    maxHeight: theme.spacing(45),
 }));
 
 const resolveDoraMetrics = (input: number) => {
@@ -96,7 +92,7 @@ export const LeadTimeForChanges = () => {
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <Tooltip
-                        title='The time from the feature toggle of type release was created until it was turned on in a production environment'
+                        title='The time from the feature flag of type release was created until it was turned on in a production environment'
                         arrow
                     >
                         <Box
@@ -110,7 +106,7 @@ export const LeadTimeForChanges = () => {
                         </Box>
                     </Tooltip>
                 ),
-                width: 200,
+                width: 220,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
@@ -222,7 +218,7 @@ export const LeadTimeForChanges = () => {
     return (
         <Container>
             <Typography variant='h3'>
-                Lead time for changes (per release toggle)
+                Lead time for changes (per release flag)
             </Typography>
             <Table {...getTableProps()}>
                 <SortableTableHeader headerGroups={headerGroups} />

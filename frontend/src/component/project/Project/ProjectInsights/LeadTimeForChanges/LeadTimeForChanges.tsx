@@ -17,7 +17,7 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import theme from 'themes/theme';
 
 const Container = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 5',
+    gridColumn: 'span 6',
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(3),
     display: 'flex',

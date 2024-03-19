@@ -1,4 +1,5 @@
 import { Box, styled } from '@mui/material';
+import { ChangeRequests } from './ChangeRequests/ChangeRequests';
 import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 import { ProjectHealth } from './ProjectHealth/ProjectHealth';
 
@@ -18,20 +19,20 @@ const Overview = styled(Box)(({ theme }) => ({
     gridColumn: '1 / -1',
 }));
 
-const Health = styled(Container)(({ theme }) => ({
-    gridColumn: 'span 5',
+const HealthCard = styled(Container)(({ theme }) => ({
+    gridColumn: 'span 4',
 }));
 
-const ToggleTypesUsed = styled(Box)(({ theme }) => ({
+const ToggleTypesUsedCard = styled(Container)(({ theme }) => ({
     gridColumn: 'span 2',
 }));
 
-const ProjectMembers = styled(Box)(({ theme }) => ({
+const ProjectMembersCard = styled(Container)(({ theme }) => ({
     gridColumn: 'span 2',
 }));
 
-const ChangeRequests = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 5',
+const ChangeRequestsCard = styled(Container)(({ theme }) => ({
+    gridColumn: 'span 6',
 }));
 
 export const ProjectInsights = () => {
@@ -41,13 +42,15 @@ export const ProjectInsights = () => {
                 Total changes / avg time to production / feature flags /stale
                 flags
             </Overview>
-            <Health>
+            <HealthCard>
                 <ProjectHealth />
-            </Health>
+            </HealthCard>
             <LeadTimeForChanges />
-            <ToggleTypesUsed>Toggle types used</ToggleTypesUsed>
-            <ProjectMembers>Project members</ProjectMembers>
-            <ChangeRequests>Change Requests</ChangeRequests>
+            <ToggleTypesUsedCard>Toggle types used</ToggleTypesUsedCard>
+            <ProjectMembersCard>Project members</ProjectMembersCard>
+            <ChangeRequestsCard>
+                <ChangeRequests />
+            </ChangeRequestsCard>
         </Grid>
     );
 };

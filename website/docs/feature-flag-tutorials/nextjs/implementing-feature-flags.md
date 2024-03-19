@@ -1,6 +1,6 @@
 ---
 title: How to Implement Feature Flags in Next.js using Unleash
-slug: /feature-flag-tutorials/nextjs/implementing-feature-flags
+slug: /feature-flag-tutorials/nextjs
 ---
 
 :::note

@@ -1,5 +1,12 @@
 import { Box, styled } from '@mui/material';
 import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
+import { ProjectHealth } from './ProjectHealth/ProjectHealth';
+
+const Container = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(3),
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
 
 const Grid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -11,7 +18,7 @@ const Overview = styled(Box)(({ theme }) => ({
     gridColumn: '1 / -1',
 }));
 
-const Health = styled(Box)(({ theme }) => ({
+const Health = styled(Container)(({ theme }) => ({
     gridColumn: 'span 5',
 }));
 
@@ -34,7 +41,9 @@ export const ProjectInsights = () => {
                 Total changes / avg time to production / feature flags /stale
                 flags
             </Overview>
-            <Health>Project Health</Health>
+            <Health>
+                <ProjectHealth />
+            </Health>
             <LeadTimeForChanges />
             <ToggleTypesUsed>Toggle types used</ToggleTypesUsed>
             <ProjectMembers>Project members</ProjectMembers>

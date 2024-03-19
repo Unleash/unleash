@@ -16,10 +16,11 @@ export const OutdatedSdksBanner = () => {
     const flagEnabled = useUiFlag('outdatedSdksBanner');
     const { trackEvent } = usePlausibleTracker();
 
-    const applicationClicked = () => {
+    const applicationClickedWithVersion = (sdkVersion: string) => {
         trackEvent('sdk-reporting', {
             props: {
-                eventType: 'banner application clicked',
+                eventType: `banner application clicked`,
+                sdkVersion: sdkVersion,
             },
         });
     };
@@ -48,8 +49,16 @@ export const OutdatedSdksBanner = () => {
                             {item.applications.map((application) => (
                                 <li
                                     key={application}
-                                    onClick={applicationClicked}
-                                    onKeyDown={applicationClicked}
+                                    onClick={() => {
+                                        applicationClickedWithVersion(
+                                            item.sdkVersion,
+                                        );
+                                    }}
+                                    onKeyDown={() => {
+                                        applicationClickedWithVersion(
+                                            item.sdkVersion,
+                                        );
+                                    }}
                                 >
                                     <Link to={`/applications/${application}`}>
                                         {application}

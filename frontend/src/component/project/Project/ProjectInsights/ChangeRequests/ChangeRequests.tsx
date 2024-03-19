@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
-import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -46,15 +46,15 @@ const ColorBox = styled(Box)(({ theme }) => ({
     whiteSpace: 'nowrap',
 }));
 
-const AppliedColorBox = styled(ColorBox)(({ theme }) => ({
+const ApplyBox = styled(ColorBox)(({ theme }) => ({
     background: theme.palette.success.light,
 }));
 
-const ReviewedColorBox = styled(ColorBox)(({ theme }) => ({
+const ReviewBox = styled(ColorBox)(({ theme }) => ({
     background: theme.palette.secondary.light,
 }));
 
-const OpenBoxHeader = styled(Link)(({ theme }) => ({
+const ChangeRequestNavigation = styled(Link)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     marginBottom: theme.spacing(2.5),
@@ -89,27 +89,29 @@ export const ChangeRequests = () => {
 
     return (
         <Container>
-            <OpenBoxHeader to={`/projects/${projectId}/change-requests`}>
+            <ChangeRequestNavigation
+                to={`/projects/${projectId}/change-requests`}
+            >
                 <Typography variant='h3'>Change requests</Typography>
                 <KeyboardArrowRight />
-            </OpenBoxHeader>
+            </ChangeRequestNavigation>
 
             <BoxesContainer>
                 <OpenBox>
-                    <OpenBoxHeader
+                    <ChangeRequestNavigation
                         to={`/projects/${projectId}/change-requests`}
                     >
                         <span>Open</span>
                         <KeyboardArrowRight />
-                    </OpenBoxHeader>
-                    <AppliedColorBox>
+                    </ChangeRequestNavigation>
+                    <ApplyBox>
                         <span>To be applied</span>
                         <MediumNumber>{toBeApplied}</MediumNumber>
-                    </AppliedColorBox>
-                    <ReviewedColorBox>
+                    </ApplyBox>
+                    <ReviewBox>
                         <span>To be reviewed</span>
                         <MediumNumber>{toBeReviewed}</MediumNumber>
-                    </ReviewedColorBox>
+                    </ReviewBox>
                 </OpenBox>
                 <NumberBox>
                     <Title>Total</Title>

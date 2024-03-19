@@ -2209,10 +2209,10 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/node@18.19.22":
-  version "18.19.22"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.22.tgz#f622f92514b897e6b09903e97c16a0db8e94689f"
-  integrity sha512-p3pDIfuMg/aXBmhkyanPshdfJuX5c5+bQjYLIikPLXAUycEogij/c50n/C+8XOA5L93cU4ZRXtn+dNQGi0IZqQ==
+"@types/node@18.19.23":
+  version "18.19.23"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.23.tgz#e02c759218bc9957423a3f7d585d511b17be2351"
+  integrity sha512-wtE3d0OUfNKtZYAqZb8HAWGxxXsImJcPUAgZNw+dWFxO6s5tIwIjyKnY76tsTatsNCLJPkVYwUpq15D38ng9Aw==
   dependencies:
     undici-types "~5.26.4"
 
@@ -3305,9 +3305,9 @@ data-urls@^5.0.0:
     whatwg-url "^14.0.0"
 
 date-fns-tz@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-2.0.0.tgz#1b14c386cb8bc16fc56fe333d4fc34ae1d1099d5"
-  integrity sha512-OAtcLdB9vxSXTWHdT8b398ARImVwQMyjfYGkKD2zaGpHseG2UPHbHjXELReErZFxWdSLph3c2zOaaTyHfOhERQ==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-2.0.1.tgz#0a9b2099031c0d74120b45de9fd23192e48ea495"
+  integrity sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==
 
 date-fns@2.30.0:
   version "2.30.0"
@@ -7367,10 +7367,10 @@ vite-tsconfig-paths@4.3.1:
     globrex "^0.1.2"
     tsconfck "^3.0.1"
 
-vite@5.1.5, vite@^5.0.0:
-  version "5.1.5"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-5.1.5.tgz#bdbc2b15e8000d9cc5172f059201178f9c9de5fb"
-  integrity sha512-BdN1xh0Of/oQafhU+FvopafUp6WaYenLU/NFoL5WyJL++GxkNfieKzBhM24H3HVsPQrlAqB7iJYTHabzaRed5Q==
+vite@5.1.6, vite@^5.0.0:
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-5.1.6.tgz#706dae5fab9e97f57578469eef1405fc483943e4"
+  integrity sha512-yYIAZs9nVfRJ/AiOLCA91zzhjsHUgMjB+EigzFb6W2XTLO8JixBCKCjvhKZaye+NKYHCrkv3Oh50dH9EdLU2RA==
   dependencies:
     esbuild "^0.19.3"
     postcss "^8.4.35"

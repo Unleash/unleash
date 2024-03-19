@@ -2,7 +2,6 @@ import { Box, styled, Typography } from '@mui/material';
 import type { ProjectStatsSchema } from 'openapi/models';
 import { HelpPopper } from './HelpPopper';
 import { StatusBox } from './StatusBox';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -46,8 +45,6 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
     if (Object.keys(stats).length === 0) {
         return null;
     }
-
-    const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
 
     const {
         avgTimeToProdCurrentWindow,

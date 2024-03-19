@@ -17,7 +17,7 @@ export const OutdatedSdksBanner = () => {
     const { trackEvent } = usePlausibleTracker();
 
     const applicationClickedWithVersion = (sdkVersion: string) => {
-        trackEvent('sdk-reporting', {
+        trackEvent('sdk-banner', {
             props: {
                 eventType: `banner application clicked`,
                 sdkVersion: sdkVersion,
@@ -26,7 +26,7 @@ export const OutdatedSdksBanner = () => {
     };
 
     const bannerClicked = () => {
-        trackEvent('sdk-reporting', {
+        trackEvent('sdk-banner', {
             props: {
                 eventType: 'banner clicked',
             },

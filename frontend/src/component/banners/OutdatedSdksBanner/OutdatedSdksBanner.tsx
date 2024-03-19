@@ -16,7 +16,7 @@ export const OutdatedSdksBanner = () => {
     const flagEnabled = useUiFlag('outdatedSdksBanner');
     const { trackEvent } = usePlausibleTracker();
 
-    const bannerClicked = () => {
+    const applicationClicked = () => {
         trackEvent('sdk-reporting', {
             props: {
                 eventType: 'banner application clicked',
@@ -24,7 +24,7 @@ export const OutdatedSdksBanner = () => {
         });
     };
 
-    const linkClicked = () => {
+    const bannerClicked = () => {
         trackEvent('sdk-reporting', {
             props: {
                 eventType: 'banner clicked',
@@ -37,7 +37,7 @@ export const OutdatedSdksBanner = () => {
         variant: 'warning',
         link: 'dialog',
         linkText: 'Please update those versions',
-        linkClicked,
+        linkClicked: bannerClicked,
         dialogTitle: 'Outdated SDKs',
         dialog: (
             <>
@@ -48,8 +48,8 @@ export const OutdatedSdksBanner = () => {
                             {item.applications.map((application) => (
                                 <li
                                     key={application}
-                                    onClick={bannerClicked}
-                                    onKeyDown={bannerClicked}
+                                    onClick={applicationClicked}
+                                    onKeyDown={applicationClicked}
                                 >
                                     <Link to={`/applications/${application}`}>
                                         {application}
@@ -65,7 +65,7 @@ export const OutdatedSdksBanner = () => {
     return (
         <>
             <ConditionallyRender
-                condition={flagEnabled && sdks.length > -1}
+                condition={flagEnabled && sdks.length > 0}
                 show={<Banner banner={outdatedSdksBanner} />}
             />
         </>

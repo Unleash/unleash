@@ -45,7 +45,7 @@ const resolveBadge = (input?: number) => {
         return <Badge color='error'>Low</Badge>;
     }
 
-    if (input <= ONE_MONTH && Math.round(input) >= ONE_WEEK + 1) {
+    if (input <= ONE_MONTH && input >= ONE_WEEK + 1) {
         return <Badge>Medium</Badge>;
     }
 

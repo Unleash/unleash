@@ -35,24 +35,28 @@ const InfoLine = ({
     </Typography>
 );
 
-const InfoSummary = ({ data }: { data: { key: string; value: number }[] }) => (
+const InfoSummary = ({
+    data,
+}: { data: { key: string; value: string | number }[] }) => (
     <Box display={'flex'} flexDirection={'row'}>
-        {data.map(({ key, value }) => (
-            <div style={{ flex: 1, flexDirection: 'column' }} key={key}>
-                <div
-                    style={{
-                        flex: 1,
-                        textAlign: 'center',
-                        marginBottom: '4px',
-                    }}
-                >
-                    <Typography variant={'body1'} component={'p'}>
-                        {key}
-                    </Typography>
+        {data
+            .filter(({ value }) => value !== 'N/A')
+            .map(({ key, value }) => (
+                <div style={{ flex: 1, flexDirection: 'column' }} key={key}>
+                    <div
+                        style={{
+                            flex: 1,
+                            textAlign: 'center',
+                            marginBottom: '4px',
+                        }}
+                    >
+                        <Typography variant={'body1'} component={'p'}>
+                            {key}
+                        </Typography>
+                    </div>
+                    <div style={{ flex: 1, textAlign: 'center' }}>{value}</div>
                 </div>
-                <div style={{ flex: 1, textAlign: 'center' }}>{value}</div>
-            </div>
-        ))}
+            ))}
     </Box>
 );
 
@@ -131,15 +135,15 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                         data={[
                             {
                                 key: 'Flags',
-                                value: point.value.totalFlags ?? 0,
+                                value: point.value.totalFlags ?? 'N/A',
                             },
                             {
                                 key: 'Environments',
-                                value: point.value.totalEnvironments ?? 0,
+                                value: point.value.totalEnvironments ?? 'N/A',
                             },
                             {
                                 key: 'Apps',
-                                value: point.value.totalApps ?? 0,
+                                value: point.value.totalApps ?? 'N/A',
                             },
                         ]}
                     />

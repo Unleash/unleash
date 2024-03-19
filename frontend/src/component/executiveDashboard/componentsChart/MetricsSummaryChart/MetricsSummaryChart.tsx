@@ -12,50 +12,13 @@ import { useMetricsSummary } from '../../hooks/useMetricsSummary';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
 import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { useTheme } from '@mui/material';
+import { aggregateDataPerDate } from './MetricsChartTooltip/aggregate-metrics-by-day';
 
 interface IMetricsSummaryChartProps {
     metricsSummaryTrends: GroupedDataByProject<
         ExecutiveSummarySchema['metricsSummaryTrends']
     >;
     isAggregate?: boolean;
-}
-
-function aggregateDataPerDate(
-    items: ExecutiveSummarySchema['metricsSummaryTrends'],
-) {
-    return items.reduce(
-        (acc, item) => {
-            if (!acc[item.date]) {
-                acc[item.date] = {
-                    totalApps: 0,
-                    totalEnvironments: 0,
-                    totalFlags: 0,
-                    totalNo: 0,
-                    totalRequests: 0,
-                    totalYes: 0,
-                };
-            }
-
-            acc[item.date].totalApps += item.totalApps;
-            acc[item.date].totalEnvironments += item.totalEnvironments;
-            acc[item.date].totalFlags += item.totalFlags;
-            acc[item.date].totalNo += item.totalNo;
-            acc[item.date].totalRequests += item.totalRequests;
-            acc[item.date].totalYes += item.totalYes;
-
-            return acc;
-        },
-        {} as {
-            [date: string]: {
-                totalApps: number;
-                totalEnvironments: number;
-                totalFlags: number;
-                totalNo: number;
-                totalRequests: number;
-                totalYes: number;
-            };
-        },
-    );
 }
 
 export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
@@ -99,7 +62,6 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
 
     return (
         <LineChart
-            key={isAggregate ? 'aggregate-metrics' : 'project-metrics'}
             data={notEnoughData ? placeholderData : data}
             isLocalTooltip
             TooltipComponent={MetricsSummaryTooltip}

@@ -8,7 +8,6 @@ import {
 } from 'component/common/ProjectSelect/ProjectSelect';
 import { useExecutiveDashboard } from 'hooks/api/getters/useExecutiveSummary/useExecutiveSummary';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
-import { useDashboardData } from './hooks/useDashboardData';
 import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
 import { Widget } from './components/Widget/Widget';
 import { UserStats } from './componentsStat/UserStats/UserStats';
@@ -23,6 +22,10 @@ import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduc
 import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart';
+import { useAvgTimeToProduction } from './hooks/useAvgTimeToProduction';
+import { useFilteredTrends } from './hooks/useFilteredTrends';
+import { useGroupedProjectTrends } from './hooks/useGroupedProjectTrends';
+import { useFilteredFlagsSummary } from './hooks/useFilteredFlagsSummary';
 
 const StickyWrapper = styled(Box)<{ scrolled?: boolean }>(
     ({ theme, scrolled }) => ({
@@ -70,7 +73,25 @@ export const ExecutiveDashboard: VFC = () => {
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
 
-    const dashboardData = useDashboardData(executiveDashboardData, projects);
+    const projectsData = useFilteredTrends(
+        executiveDashboardData.projectFlagTrends,
+        projects,
+    );
+
+    const groupedProjectsData = useGroupedProjectTrends(projectsData);
+
+    const metricsData = useFilteredTrends(
+        executiveDashboardData.metricsSummaryTrends,
+        projects,
+    );
+    const groupedMetricsData = useGroupedProjectTrends(metricsData);
+
+    const { users, environmentTypeTrends, flagTrends, userTrends } =
+        executiveDashboardData;
+
+    const summary = useFilteredFlagsSummary(projectsData);
+
+    const avgDaysToProduction = useAvgTimeToProduction(groupedProjectsData);
 
     const handleScroll = () => {
         if (!scrolled && window.scrollY > 0) {
@@ -105,9 +126,9 @@ export const ExecutiveDashboard: VFC = () => {
                         show={
                             <Widget title='Total users'>
                                 <UserStats
-                                    count={dashboardData.users.total}
-                                    active={dashboardData.users.active}
-                                    inactive={dashboardData.users.inactive}
+                                    count={users.total}
+                                    active={users.active}
+                                    inactive={users.inactive}
                                 />
                             </Widget>
                         }
@@ -119,9 +140,7 @@ export const ExecutiveDashboard: VFC = () => {
                                         : 'Users per project on average'
                                 }
                             >
-                                <UserStats
-                                    count={dashboardData.summary.averageUsers}
-                                />
+                                <UserStats count={summary.averageUsers} />
                             </Widget>
                         }
                     />
@@ -130,7 +149,7 @@ export const ExecutiveDashboard: VFC = () => {
                         show={
                             <ChartWidget title='Users'>
                                 <UsersChart
-                                    userTrends={dashboardData.userTrends}
+                                    userTrends={userTrends}
                                     isLoading={loading}
                                 />
                             </ChartWidget>
@@ -138,9 +157,7 @@ export const ExecutiveDashboard: VFC = () => {
                         elseShow={
                             <ChartWidget title='Users per project'>
                                 <UsersPerProjectChart
-                                    projectFlagTrends={
-                                        dashboardData.groupedProjectsData
-                                    }
+                                    projectFlagTrends={groupedProjectsData}
                                 />
                             </ChartWidget>
                         }
@@ -150,13 +167,10 @@ export const ExecutiveDashboard: VFC = () => {
                         tooltip='Active flags (not archived) that currently exist across selected projects.'
                     >
                         <FlagStats
-                            count={dashboardData.summary.total}
+                            count={summary.total}
                             flagsPerUser={
                                 showAllProjects
-                                    ? (
-                                          dashboardData.summary.total /
-                                          dashboardData.users.total
-                                      ).toFixed(2)
+                                    ? (summary.total / users.total).toFixed(2)
                                     : ''
                             }
                         />
@@ -166,7 +180,7 @@ export const ExecutiveDashboard: VFC = () => {
                         show={
                             <ChartWidget title='Number of flags'>
                                 <FlagsChart
-                                    flagTrends={dashboardData.flagTrends}
+                                    flagTrends={flagTrends}
                                     isLoading={loading}
                                 />
                             </ChartWidget>
@@ -174,9 +188,7 @@ export const ExecutiveDashboard: VFC = () => {
                         elseShow={
                             <ChartWidget title='Flags per project'>
                                 <FlagsProjectChart
-                                    projectFlagTrends={
-                                        dashboardData.groupedProjectsData
-                                    }
+                                    projectFlagTrends={groupedProjectsData}
                                 />
                             </ChartWidget>
                         }
@@ -186,12 +198,10 @@ export const ExecutiveDashboard: VFC = () => {
                         tooltip='Average health is a percentage of flags that are not stale nor potencially stale.'
                     >
                         <HealthStats
-                            value={dashboardData.summary.averageHealth}
-                            healthy={dashboardData.summary.active}
-                            stale={dashboardData.summary.stale}
-                            potentiallyStale={
-                                dashboardData.summary.potentiallyStale
-                            }
+                            value={summary.averageHealth}
+                            healthy={summary.active}
+                            stale={summary.stale}
+                            potentiallyStale={summary.potentiallyStale}
                         />
                     </Widget>
                     <ChartWidget
@@ -203,9 +213,7 @@ export const ExecutiveDashboard: VFC = () => {
                         tooltip='How the health changes over time'
                     >
                         <ProjectHealthChart
-                            projectFlagTrends={
-                                dashboardData.groupedProjectsData
-                            }
+                            projectFlagTrends={groupedProjectsData}
                             isAggregate={showAllProjects}
                         />
                     </ChartWidget>
@@ -214,7 +222,7 @@ export const ExecutiveDashboard: VFC = () => {
                         tooltip='How long did it take on average from a feature toggle was created until it was enabled in an environment of type production. This is calculated only from feature toggles with the type of "release" and averaged across selected projects.  '
                     >
                         <TimeToProduction
-                            daysToProduction={dashboardData.avgDaysToProduction}
+                            daysToProduction={avgDaysToProduction}
                         />
                     </Widget>
                     <ChartWidget
@@ -226,9 +234,7 @@ export const ExecutiveDashboard: VFC = () => {
                         tooltip='How the time to production changes over time'
                     >
                         <TimeToProductionChart
-                            projectFlagTrends={
-                                dashboardData.groupedProjectsData
-                            }
+                            projectFlagTrends={groupedProjectsData}
                             isAggregate={showAllProjects}
                         />
                     </ChartWidget>
@@ -238,7 +244,7 @@ export const ExecutiveDashboard: VFC = () => {
                     tooltip='Summary of all flag evaluations reported by SDKs.'
                 >
                     <MetricsSummaryChart
-                        metricsSummaryTrends={dashboardData.groupedMetricsData}
+                        metricsSummaryTrends={groupedMetricsData}
                         isAggregate={showAllProjects}
                     />
                 </Widget>
@@ -248,9 +254,7 @@ export const ExecutiveDashboard: VFC = () => {
                     sx={{ mt: (theme) => theme.spacing(2) }}
                 >
                     <UpdatesPerEnvironmentTypeChart
-                        environmentTypeTrends={
-                            dashboardData.environmentTypeTrends
-                        }
+                        environmentTypeTrends={environmentTypeTrends}
                         isLoading={loading}
                     />
                 </Widget>

@@ -1,3 +1,5 @@
+import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
+
 declare module '@mui/material/styles' {
     interface CustomTheme {
         /**

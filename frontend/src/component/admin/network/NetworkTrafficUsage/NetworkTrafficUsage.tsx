@@ -2,8 +2,8 @@ import { useMemo, VFC, useState, useEffect } from 'react';
 import useTheme from '@mui/material/styles/useTheme';
 import styled from '@mui/material/styles/styled';
 import { usePageTitle } from 'hooks/usePageTitle';
-import Box from '@mui/system/Box';
 import Select from 'component/common/select';
+import Box from '@mui/system/Box';
 import {
     Chart as ChartJS,
     ChartOptions,
@@ -14,6 +14,8 @@ import {
     Title,
     Tooltip,
     Legend,
+    Chart,
+    Tick,
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
@@ -22,6 +24,20 @@ import { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 
 type ChartDatasetType = ChartDataset<'bar'>;
+
+type SelectablePeriod = {
+    key: string;
+    dayCount: number;
+    label: string;
+    year: number;
+    month: number;
+};
+
+type EndpointInfo = {
+    label: string;
+    color: string;
+    order: number;
+};
 
 const StyledHeader = styled('h3')(({ theme }) => ({
     display: 'flex',
@@ -37,17 +53,21 @@ const padMonth = (month: number): string => {
     return month < 10 ? `0${month}` : `${month}`;
 }
 
-const toSelectablePeriod = (date: Date, label?: string): { key:string, dayCount: number, label: string } => {
-    const period = `${date.getFullYear()}-${padMonth(date.getMonth() + 1)}`;
-    const dayCount = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+const toSelectablePeriod = (date: Date, label?: string): SelectablePeriod => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const period = `${year}-${padMonth(month + 1)}`;
+    const dayCount = new Date(year, month + 1, 0).getDate();
     return {
         key: period,
+        year,
+        month,
         dayCount,
         label: label || date.toLocaleString('en-US', { month: 'long', year: 'numeric' }),
     };
 };
 
-const getSelectablePeriods = (): { key: string, dayCount: number, label: string }[] => {
+const getSelectablePeriods = (): SelectablePeriod[] => {
     const current = new Date(Date.now());
     const selectablePeriods = [toSelectablePeriod(current, 'Current month')];
     for (let monthAdd = 1; monthAdd < 13; monthAdd++) {
@@ -58,11 +78,11 @@ const getSelectablePeriods = (): { key: string, dayCount: number, label: string 
     return selectablePeriods;
 }
 
-const toPeriodsRecord = (periods: { key: string, dayCount: number, label: string }[]): Record<string, { key: string, dayCount: number, label: string }> => {
+const toPeriodsRecord = (periods: SelectablePeriod[]): Record<string, SelectablePeriod> => {
     return periods.reduce((acc, period) => {
         acc[period.key] = period;
         return acc;
-    }, {} as Record<string, { key: string, dayCount: number, label: string }>);
+    }, {} as Record<string, SelectablePeriod>);
 }
 
 const getDayLabels = (dayCount: number): number[] => {
@@ -72,7 +92,7 @@ const getDayLabels = (dayCount: number): number[] => {
 const toChartData = (
     days: number[],
     traffic: any,
-    endpointsInfo: Record<string, { label: string, color: string, order: number, }>,
+    endpointsInfo: Record<string, EndpointInfo>,
 ): ChartDatasetType[] => {
     if (!traffic || !traffic.usage || !traffic.usage.apiData) {
         return [];
@@ -105,7 +125,32 @@ const toChartData = (
     return data;
 };
 
-const createBarChartOptions = (theme: Theme): ChartOptions<'bar'> => ({
+const customHighlightPlugin = {
+    id: 'customLine',
+    beforeDraw: (chart: Chart) => {
+        const width = 36;
+        if (chart.tooltip?.opacity && chart.tooltip.x) {
+            const x = chart.tooltip.caretX;
+            const yAxis = chart.scales.y;
+            const ctx = chart.ctx;
+            ctx.save();
+            const gradient = ctx.createLinearGradient(
+                x,
+                yAxis.top,
+                x,
+                yAxis.bottom + 34,
+            );
+            gradient.addColorStop(0, 'rgba(129, 122, 254, 0)');
+            gradient.addColorStop(1, 'rgba(129, 122, 254, 0.12)');
+            ctx.fillStyle = gradient;
+            ctx.roundRect(x - width / 2, yAxis.top, width, yAxis.bottom - yAxis.top + 34, 5);
+            ctx.fill();
+            ctx.restore();
+        }
+    },
+};
+
+const createBarChartOptions = (theme: Theme, tooltipTitleCallback: (tooltipItems: any) => string): ChartOptions<'bar'> => ({
     plugins: {
         legend: {
           position: 'bottom',
@@ -118,14 +163,34 @@ const createBarChartOptions = (theme: Theme): ChartOptions<'bar'> => ({
             boxPadding: 5,
           },
         },
+        tooltip: {
+            backgroundColor: '#fff',
+            titleColor: theme.palette.text.primary,
+            bodyColor: theme.palette.text.primary,
+            bodySpacing: 6,
+            padding: {
+                top: 20,
+                bottom: 20,
+                left: 30,
+                right: 30,
+            },
+            borderColor: 'rgba(0, 0, 0, 0.05)',
+            borderWidth: 3,
+            usePointStyle: true,
+            caretSize: 0,
+            boxPadding: 10,
+            callbacks: {
+                title: tooltipTitleCallback,
+            },
+        }
       },
       responsive: true,
       scales: {
         x: {
           stacked: true,
           ticks: {
-            color: theme.palette.text.secondary,
-          },
+            color: theme.palette.text.secondary,            
+          },          
           grid: {
             display: false,
           }
@@ -135,10 +200,20 @@ const createBarChartOptions = (theme: Theme): ChartOptions<'bar'> => ({
           ticks: {
             color: theme.palette.text.secondary,
             maxTicksLimit: 5,
+            callback: (tickValue: string | number, index: number, ticks: Tick[]) => {
+                if (typeof tickValue === 'string') {
+                    return tickValue;
+                }
+                const value = parseInt(tickValue.toString());
+                if (value > 999999) {
+                    return `${value / 1000000}M`;
+                }
+                return value > 999 ? `${value / 1000}k` : value;
+            },
           },
           grid: {
             drawBorder: false,
-          }
+          },
         },
       },
     elements: {
@@ -156,7 +231,7 @@ export const NetworkTrafficUsage: VFC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
 
-    const endpointsInfo = {
+    const endpointsInfo: Record<string, EndpointInfo> = {
         '/api/admin': {
             label: 'Admin',
             color: '#6D66D9',
@@ -174,13 +249,18 @@ export const NetworkTrafficUsage: VFC = () => {
         },
     }
 
-    const options = useMemo(() => {
-        return createBarChartOptions(theme);
-    }, [theme]);
-
     const selectablePeriods = getSelectablePeriods();
     const record = toPeriodsRecord(selectablePeriods);
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
+
+    const options = useMemo(() => {
+        return createBarChartOptions(theme, (tooltipItems: any) => {
+            const periodItem = record[period];
+            const tooltipDate = new Date(periodItem.year, periodItem.month, parseInt(tooltipItems[0].label));
+            return tooltipDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        });
+    }, [theme, period]);
+
 
     const traffic = useInstanceTrafficMetrics(period);
 
@@ -229,6 +309,7 @@ export const NetworkTrafficUsage: VFC = () => {
                 <div>
                     <Bar
                         data={data}
+                        plugins={[customHighlightPlugin]}
                         options={options}
                         aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
                     />

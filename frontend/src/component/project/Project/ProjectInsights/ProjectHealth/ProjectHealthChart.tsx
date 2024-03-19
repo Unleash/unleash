@@ -105,7 +105,7 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
             <text
                 x='50%'
                 y='50%'
-                fill='black'
+                fill={theme.palette.text.primary}
                 fontSize={theme.spacing(2.25)}
                 textAnchor='middle'
                 fontWeight='bold'

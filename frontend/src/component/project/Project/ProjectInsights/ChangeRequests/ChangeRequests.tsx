@@ -2,10 +2,13 @@ import { Box, styled, Typography } from '@mui/material';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    gap: theme.spacing(2.5),
 }));
 
 const BoxesContainer = styled(Box)(({ theme }) => ({
@@ -48,6 +51,7 @@ const ColorBox = styled(Box)(({ theme }) => ({
 
 const ApplyBox = styled(ColorBox)(({ theme }) => ({
     background: theme.palette.success.light,
+    marginTop: theme.spacing(2.5),
 }));
 
 const ReviewBox = styled(ColorBox)(({ theme }) => ({
@@ -57,7 +61,6 @@ const ReviewBox = styled(ColorBox)(({ theme }) => ({
 const ChangeRequestNavigation = styled(Link)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(2.5),
     textDecoration: 'none',
     color: theme.palette.text.primary,
 }));
@@ -80,12 +83,22 @@ const BigNumber = styled(Typography)(({ theme }) => ({
 
 export const ChangeRequests = () => {
     const projectId = useRequiredPathParam('projectId');
+    const { isOss, isPro } = useUiConfig();
 
     const toBeApplied = 12;
     const toBeReviewed = 3;
     const total = 32;
     const applied = 28;
     const rejected = 4;
+
+    if (isOss() && isPro()) {
+        return (
+            <Container>
+                <Typography variant='h3'>Change requests</Typography>
+                <PremiumFeature feature={'change-requests'} />
+            </Container>
+        );
+    }
 
     return (
         <Container>

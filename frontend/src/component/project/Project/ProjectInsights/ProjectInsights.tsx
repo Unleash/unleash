@@ -1,4 +1,5 @@
 import { Box, styled } from '@mui/material';
+<<<<<<< HEAD
 import { ChangeRequests } from './ChangeRequests/ChangeRequests';
 import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 import { ProjectHealth } from './ProjectHealth/ProjectHealth';
@@ -10,6 +11,10 @@ const Container = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusLarge,
 }));
+=======
+import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
+import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats';
+>>>>>>> f9c1fd454 (fix: lint)
 
 const Grid = styled(Box)(({ theme }) => ({
     display: 'grid',

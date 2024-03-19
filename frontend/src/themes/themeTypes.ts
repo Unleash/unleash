@@ -1,3 +1,4 @@
+// biome-ignore lint: we need this to correctly extend the MUI theme
 import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
 
 declare module '@mui/material/styles' {

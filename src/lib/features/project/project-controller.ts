@@ -20,16 +20,14 @@ import {
     deprecatedProjectOverviewSchema,
     type ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
+    projectInsightsSchema,
+    type ProjectInsightsSchema,
     projectOverviewSchema,
     type ProjectsSchema,
     projectsSchema,
 } from '../../openapi';
 import { getStandardResponses } from '../../openapi/util/standard-responses';
-import type {
-    AccessService,
-    OpenApiService,
-    SettingService,
-} from '../../services';
+import type { OpenApiService } from '../../services';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import { ProjectApiTokenController } from '../../routes/admin-api/project/api-token';
 import ProjectArchiveController from '../../routes/admin-api/project/project-archive';
@@ -48,10 +46,6 @@ import { normalizeQueryParams } from '../feature-search/search-utils';
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
 
-    private settingService: SettingService;
-
-    private accessService: AccessService;
-
     private openApiService: OpenApiService;
 
     private flagResolver: IFlagResolver;
@@ -60,8 +54,6 @@ export default class ProjectController extends Controller {
         super(config);
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
-        this.settingService = services.settingService;
-        this.accessService = services.accessService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -121,6 +113,26 @@ export default class ProjectController extends Controller {
                         'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features types in the project.',
                     responses: {
                         200: createResponseSchema('projectOverviewSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/insights',
+            handler: this.getProjectInsights,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getProjectInsights',
+                    summary: 'Get an overview of a project insights.',
+                    description:
+                        'This endpoint returns insights into the specified projects stats, health, lead time for changes, feature types used, members and change requests.',
+                    responses: {
+                        200: createResponseSchema('projectInsightsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -229,6 +241,74 @@ export default class ProjectController extends Controller {
             res,
             deprecatedProjectOverviewSchema.$id,
             serializeDates(overview),
+        );
+    }
+
+    async getProjectInsights(
+        req: IAuthRequest<IProjectParam, unknown, unknown, unknown>,
+        res: Response<ProjectInsightsSchema>,
+    ): Promise<void> {
+        const result = {
+            stats: {
+                avgTimeToProdCurrentWindow: 17.1,
+                createdCurrentWindow: 3,
+                createdPastWindow: 6,
+                archivedCurrentWindow: 0,
+                archivedPastWindow: 1,
+                projectActivityCurrentWindow: 458,
+                projectActivityPastWindow: 578,
+                projectMembersAddedCurrentWindow: 0,
+            },
+            featureTypeCounts: [
+                {
+                    type: 'experiment',
+                    count: 4,
+                },
+                {
+                    type: 'permission',
+                    count: 1,
+                },
+                {
+                    type: 'release',
+                    count: 24,
+                },
+            ],
+            leadTime: {
+                projectAverage: 17.1,
+                features: [
+                    { name: 'feature1', timeToProduction: 120 },
+                    { name: 'feature2', timeToProduction: 0 },
+                    { name: 'feature3', timeToProduction: 33 },
+                    { name: 'feature4', timeToProduction: 131 },
+                    { name: 'feature5', timeToProduction: 2 },
+                ],
+            },
+            health: {
+                rating: 80,
+                activeCount: 23,
+                potentiallyStaleCount: 3,
+                staleCount: 5,
+            },
+            members: {
+                active: 20,
+                inactive: 3,
+                totalPreviousMonth: 15,
+            },
+            changeRequests: {
+                total: 24,
+                approved: 5,
+                applied: 2,
+                rejected: 4,
+                reviewRequired: 10,
+                scheduled: 3,
+            },
+        };
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            projectInsightsSchema.$id,
+            serializeDates(result),
         );
     }
 

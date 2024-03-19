@@ -4,7 +4,7 @@ export type IStatTrafficUsage = {
     day: Date;
     trafficGroup: string;
     statusCodeSeries: number;
-    count: number | string;
+    count: number;
 };
 
 export interface IStatTrafficUsageKey {

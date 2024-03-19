@@ -23,7 +23,7 @@ const mapRow = (row: any): IStatTrafficUsage => {
         day: row.day,
         trafficGroup: row.traffic_group,
         statusCodeSeries: row.status_code_series,
-        count: row.count,
+        count: parseInt(row.count),
     };
 };
 

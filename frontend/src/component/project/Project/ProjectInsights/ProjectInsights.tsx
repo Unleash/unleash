@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 import { ProjectHealth } from './ProjectHealth/ProjectHealth';
+import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
 
 const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -14,40 +15,40 @@ const Grid = styled(Box)(({ theme }) => ({
     gridTemplateColumns: 'repeat(10, 1fr)',
 }));
 
-const Overview = styled(Box)(({ theme }) => ({
+const SpanFull = styled(Container)(() => ({
     gridColumn: '1 / -1',
 }));
 
-const Health = styled(Container)(({ theme }) => ({
-    gridColumn: 'span 5',
-}));
-
-const ToggleTypesUsed = styled(Box)(({ theme }) => ({
+const Span2 = styled(Container)(() => ({
     gridColumn: 'span 2',
 }));
 
-const ProjectMembers = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 2',
+const Span4 = styled(Container)(() => ({
+    gridColumn: 'span 4',
 }));
 
-const ChangeRequests = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 5',
+const Span6 = styled(Container)(() => ({
+    gridColumn: 'span 6',
 }));
 
 export const ProjectInsights = () => {
     return (
         <Grid>
-            <Overview>
+            <SpanFull>
                 Total changes / avg time to production / feature flags /stale
                 flags
-            </Overview>
-            <Health>
+            </SpanFull>
+            <Span4>
                 <ProjectHealth />
-            </Health>
-            <LeadTimeForChanges />
-            <ToggleTypesUsed>Toggle types used</ToggleTypesUsed>
-            <ProjectMembers>Project members</ProjectMembers>
-            <ChangeRequests>Change Requests</ChangeRequests>
+            </Span4>
+            <Span6>
+                <LeadTimeForChanges />
+            </Span6>
+            <Span2>
+                <FlagTypesUsed />
+            </Span2>
+            <Span2>Project members</Span2>
+            <Span6>Change Requests</Span6>
         </Grid>
     );
 };

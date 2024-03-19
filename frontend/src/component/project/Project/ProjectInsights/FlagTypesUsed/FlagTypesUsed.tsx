@@ -1,17 +1,29 @@
 import { useMemo } from 'react';
-import { styled, type SvgIconTypeMap } from '@mui/material';
+import { styled, type SvgIconTypeMap, Typography } from '@mui/material';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import {
-    StyledCount,
-    StyledProjectInfoWidgetContainer,
-    StyledWidgetTitle,
-} from './ProjectInfo.styles';
-import type { OverridableComponent } from '@mui/material/OverridableComponent';
-import type { FeatureTypeCount } from 'interfaces/project';
 
-export interface IFlagTypesWidgetProps {
-    featureTypeCounts: FeatureTypeCount[];
-}
+import type { OverridableComponent } from '@mui/material/OverridableComponent';
+import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
+import useProjectOverview from '../../../../../hooks/api/getters/useProjectOverview/useProjectOverview';
+
+export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
+    margin: '0',
+    [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+    },
+}));
+
+export const StyledWidgetTitle = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(2.5),
+}));
+
+export const StyledCount = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: 'bold',
+    color: theme.palette.text.primary,
+}));
 
 const StyledTypeCount = styled(StyledCount)(({ theme }) => ({
     marginLeft: 'auto',
@@ -19,7 +31,7 @@ const StyledTypeCount = styled(StyledCount)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-interface IToggleTypeRowProps {
+interface IFlagTypeRowProps {
     type: string;
     Icon: OverridableComponent<SvgIconTypeMap>;
     count: number;
@@ -29,7 +41,6 @@ const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1.5),
     width: '100%',
-    gridTemplateColumns: `${theme.spacing(2.5)} auto auto`, //20px auto auto
     margin: theme.spacing(1, 0),
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
@@ -39,7 +50,7 @@ const StyledParagraphGridRow = styled('div')(({ theme }) => ({
     },
 }));
 
-const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
+const FlagTypesRow = ({ type, Icon, count }: IFlagTypeRowProps) => {
     const getTitleText = (str: string) => {
         return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
     };
@@ -52,12 +63,13 @@ const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
         </StyledParagraphGridRow>
     );
 };
-/**
- * @Deprecated in favor of FlagTypesUsed.tsx
- */
-export const FlagTypesWidget = ({
-    featureTypeCounts,
-}: IFlagTypesWidgetProps) => {
+
+export const FlagTypesUsed = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const { project } = useProjectOverview(projectId);
+
+    const { featureTypeCounts } = project;
+
     const featureTypeStats = useMemo(() => {
         const release =
             featureTypeCounts.find(
@@ -94,14 +106,12 @@ export const FlagTypesWidget = ({
     }, [featureTypeCounts]);
 
     return (
-        <StyledProjectInfoWidgetContainer
-            sx={{ padding: (theme) => theme.spacing(3) }}
-        >
-            <StyledWidgetTitle data-loading>
-                Toggle types used
+        <StyledProjectInfoWidgetContainer>
+            <StyledWidgetTitle variant='h3' data-loading>
+                Flag types used
             </StyledWidgetTitle>
             {Object.keys(featureTypeStats).map((type) => (
-                <ToggleTypesRow
+                <FlagTypesRow
                     type={type}
                     key={type}
                     Icon={getFeatureTypeIcons(type)}

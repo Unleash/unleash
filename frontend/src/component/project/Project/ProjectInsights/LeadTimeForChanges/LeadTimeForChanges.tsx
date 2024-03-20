@@ -20,6 +20,9 @@ const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+}));
+
+const TableContainer = styled(Box)(({ theme }) => ({
     overflowY: 'auto',
     maxHeight: theme.spacing(45),
 }));
@@ -220,23 +223,25 @@ export const LeadTimeForChanges = () => {
             <Typography variant='h3'>
                 Lead time for changes (per release flag)
             </Typography>
-            <Table {...getTableProps()}>
-                <SortableTableHeader headerGroups={headerGroups} />
-                <TableBody {...getTableBodyProps()}>
-                    {rows.map((row) => {
-                        prepareRow(row);
-                        return (
-                            <TableRow hover {...row.getRowProps()}>
-                                {row.cells.map((cell) => (
-                                    <TableCell {...cell.getCellProps()}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
+            <TableContainer>
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map((cell) => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={

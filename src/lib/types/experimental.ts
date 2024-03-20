@@ -39,6 +39,7 @@ export type IFlagKey =
     | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
     | 'executiveDashboard'
+    | 'executiveDashboardUI'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
     | 'showInactiveUsers'
@@ -194,6 +195,10 @@ const flags: IFlags = {
     ),
     executiveDashboard: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
+        false,
+    ),
+    executiveDashboardUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD_UI,
         false,
     ),
     sdkReporting: parseEnvVarBoolean(

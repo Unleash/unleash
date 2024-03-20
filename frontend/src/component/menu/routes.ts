@@ -67,7 +67,7 @@ export const routes: IRoute[] = [
         component: ExecutiveDashboard,
         type: 'protected',
         menu: { mobile: true },
-        flag: 'executiveDashboard',
+        flag: 'executiveDashboardUI',
         enterprise: false,
     },
 

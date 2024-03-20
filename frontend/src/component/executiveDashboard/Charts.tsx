@@ -17,6 +17,7 @@ import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
 import { Box, styled } from '@mui/material';
 import { allOption } from '../common/ProjectSelect/ProjectSelect';
 import type { VFC } from 'react';
+import { chartInfo } from './chart-info';
 
 interface IChartsProps {
     flagTrends: ExecutiveSummarySchema['flagTrends'];
@@ -83,7 +84,7 @@ export const Charts: VFC<IChartsProps> = ({
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <Widget title='Total users'>
+                        <Widget {...chartInfo.totalUsers}>
                             <UserStats
                                 count={users.total}
                                 active={users.active}
@@ -93,11 +94,9 @@ export const Charts: VFC<IChartsProps> = ({
                     }
                     elseShow={
                         <Widget
-                            title={
-                                isOneProjectSelected
-                                    ? 'Users in project'
-                                    : 'Users per project on average'
-                            }
+                            {...(isOneProjectSelected
+                                ? chartInfo.usersInProject
+                                : chartInfo.avgUsersPerProject)}
                         >
                             <UserStats count={summary.averageUsers} />
                         </Widget>
@@ -106,7 +105,7 @@ export const Charts: VFC<IChartsProps> = ({
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <ChartWidget title='Users'>
+                        <ChartWidget {...chartInfo.users}>
                             <UsersChart
                                 userTrends={userTrends}
                                 isLoading={loading}
@@ -114,17 +113,14 @@ export const Charts: VFC<IChartsProps> = ({
                         </ChartWidget>
                     }
                     elseShow={
-                        <ChartWidget title='Users per project'>
+                        <ChartWidget {...chartInfo.usersPerProject}>
                             <UsersPerProjectChart
                                 projectFlagTrends={groupedProjectsData}
                             />
                         </ChartWidget>
                     }
                 />
-                <Widget
-                    title='Total flags'
-                    tooltip='Active flags (not archived) that currently exist across selected projects.'
-                >
+                <Widget {...chartInfo.totalFlags}>
                     <FlagStats
                         count={summary.total}
                         flagsPerUser={
@@ -137,7 +133,7 @@ export const Charts: VFC<IChartsProps> = ({
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <ChartWidget title='Number of flags'>
+                        <ChartWidget {...chartInfo.flags}>
                             <FlagsChart
                                 flagTrends={flagTrends}
                                 isLoading={loading}
@@ -145,17 +141,14 @@ export const Charts: VFC<IChartsProps> = ({
                         </ChartWidget>
                     }
                     elseShow={
-                        <ChartWidget title='Flags per project'>
+                        <ChartWidget {...chartInfo.flagsPerProject}>
                             <FlagsProjectChart
                                 projectFlagTrends={groupedProjectsData}
                             />
                         </ChartWidget>
                     }
                 />
-                <Widget
-                    title='Average health'
-                    tooltip='Average health is a percentage of flags that are not stale nor potencially stale.'
-                >
+                <Widget {...chartInfo.averageHealth}>
                     <HealthStats
                         value={summary.averageHealth}
                         healthy={summary.active}
@@ -164,29 +157,22 @@ export const Charts: VFC<IChartsProps> = ({
                     />
                 </Widget>
                 <ChartWidget
-                    title={
-                        showAllProjects ? 'Healthy flags' : 'Health per project'
-                    }
-                    tooltip='How the health changes over time'
+                    {...(showAllProjects
+                        ? chartInfo.overallHealth
+                        : chartInfo.healthPerProject)}
                 >
                     <ProjectHealthChart
                         projectFlagTrends={groupedProjectsData}
                         isAggregate={showAllProjects}
                     />
                 </ChartWidget>
-                <Widget
-                    title='Average time to production'
-                    tooltip='How long did it take on average from a feature toggle was created until it was enabled in an environment of type production. This is calculated only from feature toggles with the type of "release" and averaged across selected projects.  '
-                >
+                <Widget {...chartInfo.averageTimeToProduction}>
                     <TimeToProduction daysToProduction={avgDaysToProduction} />
                 </Widget>
                 <ChartWidget
-                    title={
-                        showAllProjects
-                            ? 'Time to production'
-                            : 'Time to production per project'
-                    }
-                    tooltip='How the time to production changes over time'
+                    {...(showAllProjects
+                        ? chartInfo.timeToProduction
+                        : chartInfo.timeToProductionPerProject)}
                 >
                     <TimeToProductionChart
                         projectFlagTrends={groupedProjectsData}
@@ -195,8 +181,9 @@ export const Charts: VFC<IChartsProps> = ({
                 </ChartWidget>
             </StyledGrid>
             <Widget
-                title={showAllProjects ? 'Metrics' : 'Metrics per project'}
-                tooltip='Summary of all flag evaluations reported by SDKs.'
+                {...(showAllProjects
+                    ? chartInfo.metrics
+                    : chartInfo.metricsPerProject)}
             >
                 <MetricsSummaryChart
                     metricsSummaryTrends={groupedMetricsData}
@@ -204,8 +191,7 @@ export const Charts: VFC<IChartsProps> = ({
                 />
             </Widget>
             <Widget
-                title='Updates per environment type'
-                tooltip='Summary of all configuration updates per environment type'
+                {...chartInfo.updates}
                 sx={{ mt: (theme) => theme.spacing(2) }}
             >
                 <UpdatesPerEnvironmentTypeChart

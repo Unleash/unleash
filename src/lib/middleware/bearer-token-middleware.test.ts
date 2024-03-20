@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { bearerTokenMiddleware } from './bearer-token-middleware';
 
-const exampleSignalToken =
-    'signal_977f4473aa89da1f2823ec19bed9f5c3f0b9ab788b0bfc05a5985c994239b715';
+const exampleSignalToken = 'signal_tokensecret';
 
 describe('bearerTokenMiddleware', () => {
     let req: Request;

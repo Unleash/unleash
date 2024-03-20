@@ -4,6 +4,7 @@ import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 import { ProjectHealth } from './ProjectHealth/ProjectHealth';
 import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
 import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats';
+import { ProjectMembers } from './ProjectMembers/ProjectMembers';
 
 const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -61,7 +62,13 @@ export const ProjectInsights = () => {
             <NarrowContainer>
                 <FlagTypesUsed />
             </NarrowContainer>
-            <NarrowContainer>Project members</NarrowContainer>
+            <NarrowContainer>
+                <ProjectMembers
+                    projectId={'default'}
+                    memberCount={5}
+                    change={3}
+                />
+            </NarrowContainer>
             <WideContainer>
                 <ChangeRequests />
             </WideContainer>

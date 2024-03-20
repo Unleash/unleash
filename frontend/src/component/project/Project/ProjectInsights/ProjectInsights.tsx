@@ -6,7 +6,7 @@ import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
 import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectInsights } from 'hooks/api/getters/useProjectInsights/useProjectInsights';
-import useLoading from '../../../../hooks/useLoading';
+import useLoading from 'hooks/useLoading';
 
 const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,

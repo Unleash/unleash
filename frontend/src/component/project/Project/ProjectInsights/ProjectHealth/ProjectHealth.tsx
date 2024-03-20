@@ -2,6 +2,8 @@ import { ProjectHealthChart } from './ProjectHealthChart';
 import { Alert, Box, styled, Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import type { ProjectInsightsSchemaHealth } from '../../../../../openapi';
+import type { FC } from 'react';
 
 const Dot = styled('span', {
     shouldForwardProp: (prop) => prop !== 'color',
@@ -36,13 +38,12 @@ const StatusWithDot = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const ProjectHealth = () => {
+export const ProjectHealth: FC<{ health: ProjectInsightsSchemaHealth }> = ({
+    health,
+}) => {
     const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
-    const active = 15;
-    const stale = 10;
-    const potentiallyStale = 3;
-    const health = 93;
+    const { staleCount, potentiallyStaleCount, activeCount, rating } = health;
 
     return (
         <Container>
@@ -52,6 +53,7 @@ export const ProjectHealth = () => {
                 flags
             </Alert>
             <Box
+                data-loading
                 sx={(theme) => ({
                     display: 'flex',
                     gap: theme.spacing(4),
@@ -59,10 +61,10 @@ export const ProjectHealth = () => {
                 })}
             >
                 <ProjectHealthChart
-                    active={active}
-                    stale={stale}
-                    potentiallyStale={potentiallyStale}
-                    health={health}
+                    active={activeCount}
+                    stale={staleCount}
+                    potentiallyStale={potentiallyStaleCount}
+                    health={rating}
                 />
                 <FlagCounts>
                     <Box>
@@ -70,7 +72,7 @@ export const ProjectHealth = () => {
                             <Dot color={theme.palette.success.border} />
                             <Box sx={{ fontWeight: 'bold' }}>Active</Box>
                         </StatusWithDot>
-                        <FlagsCount>{active} feature flags</FlagsCount>
+                        <FlagsCount>{activeCount} feature flags</FlagsCount>
                     </Box>
                     <Box>
                         <StatusWithDot>
@@ -81,7 +83,7 @@ export const ProjectHealth = () => {
                             <Link to='/feature-toggle-type'>(configure)</Link>
                         </StatusWithDot>
                         <FlagsCount>
-                            {potentiallyStale} feature flags
+                            {potentiallyStaleCount} feature flags
                         </FlagsCount>
                     </Box>
                     <Box>
@@ -92,7 +94,7 @@ export const ProjectHealth = () => {
                                 (view flags)
                             </Link>
                         </StatusWithDot>
-                        <FlagsCount>{stale} feature flags</FlagsCount>
+                        <FlagsCount>{staleCount} feature flags</FlagsCount>
                     </Box>
                 </FlagCounts>
             </Box>

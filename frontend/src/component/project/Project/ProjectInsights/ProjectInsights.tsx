@@ -4,6 +4,9 @@ import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
 import { ProjectHealth } from './ProjectHealth/ProjectHealth';
 import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
 import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useProjectInsights } from 'hooks/api/getters/useProjectInsights/useProjectInsights';
+import useLoading from '../../../../hooks/useLoading';
 
 const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -33,37 +36,31 @@ const NarrowContainer = styled(Container)(() => ({
     gridColumn: 'span 2',
 }));
 
-const statsData = {
-    stats: {
-        archivedCurrentWindow: 5,
-        archivedPastWindow: 3,
-        avgTimeToProdCurrentWindow: 2.5,
-        createdCurrentWindow: 7,
-        createdPastWindow: 4,
-        projectActivityCurrentWindow: 10,
-        projectActivityPastWindow: 8,
-        projectMembersAddedCurrentWindow: 2,
-    },
-};
-
 export const ProjectInsights = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const { data, loading } = useProjectInsights(projectId);
+
+    const ref = useLoading(loading);
+
     return (
-        <Grid>
+        <Grid ref={ref}>
             <FullWidthContainer>
-                <ProjectInsightsStats {...statsData} />
+                <ProjectInsightsStats stats={data.stats} />
             </FullWidthContainer>
             <MediumWideContainer>
-                <ProjectHealth />
+                <ProjectHealth health={data.health} />
             </MediumWideContainer>
             <WideContainer>
                 <LeadTimeForChanges />
             </WideContainer>
             <NarrowContainer>
-                <FlagTypesUsed />
+                <FlagTypesUsed featureTypeCounts={data.featureTypeCounts} />
             </NarrowContainer>
             <NarrowContainer>Project members</NarrowContainer>
             <WideContainer>
-                <ChangeRequests />
+                {data.changeRequests && (
+                    <ChangeRequests changeRequests={data.changeRequests} />
+                )}
             </WideContainer>
         </Grid>
     );

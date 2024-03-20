@@ -1,10 +1,9 @@
-import { useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import { styled, type SvgIconTypeMap, Typography } from '@mui/material';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import type { FeatureTypeCountSchema } from '../../../../../openapi';
 
 export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
     margin: '0',
@@ -64,12 +63,9 @@ const FlagTypesRow = ({ type, Icon, count }: IFlagTypeRowProps) => {
     );
 };
 
-export const FlagTypesUsed = () => {
-    const projectId = useRequiredPathParam('projectId');
-    const { project } = useProjectOverview(projectId);
-
-    const { featureTypeCounts } = project;
-
+export const FlagTypesUsed: FC<{
+    featureTypeCounts: FeatureTypeCountSchema[];
+}> = ({ featureTypeCounts }) => {
     const featureTypeStats = useMemo(() => {
         const release =
             featureTypeCounts.find(

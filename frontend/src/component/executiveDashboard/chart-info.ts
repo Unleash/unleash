@@ -53,7 +53,7 @@ export const chartInfo = {
     averageTimeToProduction: {
         title: 'Average time to production',
         tooltip:
-            'How long does it currently take on average from a feature toggle was created until it was enabled in an environment of type production. This is calculated only from feature toggles with the type of "release" and averaged across selected projects.',
+            'How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is averaged across the selected projects.',
     },
     timeToProduction: {
         title: 'Time to production',

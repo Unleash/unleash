@@ -4,6 +4,7 @@ import type { ExecutiveSummarySchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
 import { useProjectChartData } from 'component/executiveDashboard/hooks/useProjectChartData';
 import {
+    fillGradientPrimary,
     LineChart,
     NotEnoughData,
 } from 'component/executiveDashboard/components/LineChart/LineChart';
@@ -73,7 +74,8 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
                         date: item.date,
                     })),
                     borderColor: theme.palette.primary.light,
-                    fill: false,
+                    backgroundColor: fillGradientPrimary,
+                    fill: true,
                     order: 3,
                 },
             ],

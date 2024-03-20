@@ -23,7 +23,7 @@ export const chartInfo = {
     totalFlags: {
         title: 'Total flags',
         tooltip:
-            'Active flags (not archived) that currently exist across selected projects.',
+            'Active flags (not archived) that currently exist across the selected projects.',
     },
     flags: {
         title: 'Number of flags',

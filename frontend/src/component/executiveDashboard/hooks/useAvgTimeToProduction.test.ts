@@ -14,11 +14,11 @@ describe('useAvgTimeToProduction', () => {
         const projectsData = {
             project1: [
                 { timeToProduction: 10, date: '2023-01-01' },
-                { timeToProduction: 20, date: '2023-02-01' }, // Latest for project1
+                { timeToProduction: 20, date: '2023-02-01' },
             ],
             project2: [
                 { timeToProduction: 15, date: '2023-01-15' },
-                { timeToProduction: 25, date: '2023-02-15' }, // Latest for project2
+                { timeToProduction: 25, date: '2023-02-15' },
             ],
         } as any;
         const { result } = renderHook(() =>
@@ -32,10 +32,10 @@ describe('useAvgTimeToProduction', () => {
         const projectsData = {
             project1: [
                 { timeToProduction: 10, date: '2023-01-01' },
-                { timeToProduction: 20, date: '2023-02-01' }, // Latest and valid for project1
+                { timeToProduction: 20, date: '2023-02-01' },
             ],
             project2: [
-                { date: '2023-01-15' }, // Latest but no timeToProduction
+                { date: '2023-01-15' },
                 { timeToProduction: 25, date: '2023-01-10' },
             ],
         } as any;

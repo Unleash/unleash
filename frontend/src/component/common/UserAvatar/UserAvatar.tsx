@@ -5,7 +5,7 @@ import {
     type SxProps,
     type Theme,
 } from '@mui/material';
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 

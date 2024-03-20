@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 import type { IRole } from 'interfaces/role';
 
 interface IUseUsersOutput {

@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type { IGroup } from 'interfaces/group';
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 import type { IServiceAccount } from 'interfaces/service-account';
 
 export interface IUseAccessOutput {

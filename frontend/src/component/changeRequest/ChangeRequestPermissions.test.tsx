@@ -7,7 +7,7 @@ import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/Announc
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
 import type { FC } from 'react';
-import type { IPermission } from '@server/types';
+import type { IPermission } from '../../interfaces/user';
 import { SWRConfig } from 'swr';
 import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';

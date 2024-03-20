@@ -1,4 +1,4 @@
-import type { IPermission } from '@server/types';
+import type { IPermission } from 'interfaces/user';
 import {
     type IUseAuthEndpointOutput,
     useAuthEndpoint,

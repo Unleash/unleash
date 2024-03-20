@@ -15,7 +15,7 @@ import { type FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 import {
     type IServiceAccountPayload,
     useServiceAccountsApi,

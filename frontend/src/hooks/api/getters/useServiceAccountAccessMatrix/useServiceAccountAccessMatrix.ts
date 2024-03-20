@@ -4,7 +4,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import type { IRole } from 'interfaces/role';
 import type { IServiceAccount } from 'interfaces/service-account';
 import type { IMatrixPermission } from 'interfaces/permissions';
-import type { IPermission } from '@server/types';
+import type { IPermission } from 'interfaces/user';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 interface IServiceAccountAccessMatrix {

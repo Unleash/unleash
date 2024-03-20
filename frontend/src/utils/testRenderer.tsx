@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { ThemeProvider } from 'themes/ThemeProvider';
-import type { IPermission } from '@server/types';
+import type { IPermission } from 'interfaces/user';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer';

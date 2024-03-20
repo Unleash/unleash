@@ -45,7 +45,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectGroupView } from '../ProjectGroupView/ProjectGroupView';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 import type { IGroup } from 'interfaces/group';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';

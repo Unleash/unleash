@@ -1,7 +1,7 @@
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy';
-import type { IUser } from '@server/types';
+import type { IUser } from '../../interfaces/user';
 import type { SetStrategySortOrderSchema } from '../../openapi';
 
 type BaseChangeRequest = {

@@ -1,4 +1,4 @@
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 import { useMemo } from 'react';
 import { useInstanceStatus } from './api/getters/useInstanceStatus/useInstanceStatus';
 import { InstancePlan } from 'interfaces/instance';

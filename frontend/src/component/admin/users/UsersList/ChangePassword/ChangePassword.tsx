@@ -10,7 +10,7 @@ import PasswordChecker, {
 } from 'component/user/common/ResetPasswordForm/PasswordChecker';
 import { useThemeStyles } from 'themes/themeStyles';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher';
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 

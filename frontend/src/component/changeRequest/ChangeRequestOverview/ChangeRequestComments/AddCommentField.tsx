@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Box, styled, TextField, Tooltip } from '@mui/material';
 import { StyledAvatar } from './StyledAvatar';
-import type { IUser } from '@server/types';
+import type { IUser } from 'interfaces/user';
 
 const AddCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',

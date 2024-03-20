@@ -29,16 +29,22 @@ export const BarContainer = styled('div')(({ theme }) => ({
     display: 'flex',
 }));
 
-export const ActiveBar = styled('div')(({ theme }) => ({
-    width: '59%',
-    height: '100%',
+const ActiveBar = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'percentage',
+})<{
+    percentage: number;
+}>(({ theme, percentage }) => ({
+    width: `${percentage - 1}%`,
     backgroundColor: theme.palette.success.border,
     borderRadius: theme.shape.borderRadius,
 }));
 
-export const InactiveBar = styled('div')(({ theme }) => ({
-    width: '39%',
-    height: '20px',
+const InactiveBar = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'percentage',
+})<{
+    percentage: number;
+}>(({ theme, percentage }) => ({
+    width: `${percentage - 1}%`,
     backgroundColor: theme.palette.warning.border,
     marginLeft: 'auto',
     borderRadius: theme.shape.borderRadius,
@@ -101,6 +107,9 @@ export const ProjectMembers = ({
     const currentMembers = active + inactive;
     const change = currentMembers - (totalPreviousMonth || 0);
 
+    const activePercentage = (active / currentMembers) * 100;
+    const inactivePercentage = (inactive / currentMembers) * 100;
+
     return (
         <StyledProjectInfoWidgetContainer>
             <NavigationBar to={link}>
@@ -115,8 +124,8 @@ export const ProjectMembers = ({
                 <StatusBox boxText={`${currentMembers}`} change={change} />
             </Box>
             <BarContainer>
-                <ActiveBar />
-                <InactiveBar />
+                <ActiveBar percentage={activePercentage} />
+                <InactiveBar percentage={inactivePercentage} />
             </BarContainer>
             <CountContainer>
                 <CountRow to={link}>

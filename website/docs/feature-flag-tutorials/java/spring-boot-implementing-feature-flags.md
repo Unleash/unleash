@@ -34,6 +34,8 @@ This architecture diagram breaks down how the Java Spring Boot app works with Un
 
 The Unleash Server is a Feature Flag Control Service for managing and storing your feature flags. It enables the retrieval of flag data and, particularly when not utilizing a user interface, supports sending data to and from the service. The Unleash Server has a UI for creating and managing projects and feature flags. API commands are also [available](/reference/api/unleash) to perform the same actions from your CLI or server-side app.
 
+The Spring Boot SDK is an extension of the Java SDK, configured for Spring Boot-specific architecture and conventions.
+
 
 ## 1. Feature flag best practices for server-side apps
 

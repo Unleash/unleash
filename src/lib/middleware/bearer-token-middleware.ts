@@ -1,15 +1,24 @@
 import type { Request, Response, NextFunction } from 'express';
+import type { IUnleashConfig } from '../types';
 
-export const bearerTokenMiddleware = (
-    req: Request,
-    _: Response,
-    next: NextFunction,
-) => {
-    const authHeader = req.headers.authorization;
+export const bearerTokenMiddleware = ({
+    getLogger,
+    flagResolver,
+}: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>) => {
+    const logger = getLogger('/middleware/bearer-token-middleware.ts');
+    logger.debug('Enabling bearer token middleware');
 
-    if (authHeader) {
-        req.headers.authorization = authHeader.replace(/^Bearer\s+/i, '');
-    }
+    return (req: Request, _: Response, next: NextFunction) => {
+        if (flagResolver.isEnabled('bearerTokenMiddleware')) {
+            const authHeader = req.headers.authorization;
 
-    next();
+            if (authHeader) {
+                req.headers.authorization = authHeader.replace(
+                    /^Bearer\s+/i,
+                    '',
+                );
+            }
+        }
+        next();
+    };
 };

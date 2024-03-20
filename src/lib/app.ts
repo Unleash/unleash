@@ -29,7 +29,6 @@ import { unless } from './middleware/unless-middleware';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
 import NotFoundError from './error/notfound-error';
 import { bearerTokenMiddleware } from './middleware/bearer-token-middleware';
-import { conditionalMiddleware } from './middleware/conditional-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -61,12 +60,7 @@ export default async function getApp(
 
     app.use(requestLogger(config));
 
-    app.use(
-        conditionalMiddleware(
-            () => config.flagResolver.isEnabled('bearerTokenMiddleware'),
-            bearerTokenMiddleware,
-        ),
-    );
+    app.use(bearerTokenMiddleware(config));
 
     if (typeof config.preHook === 'function') {
         config.preHook(app, config, services, db);

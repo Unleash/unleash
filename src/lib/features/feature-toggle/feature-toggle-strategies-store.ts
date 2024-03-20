@@ -120,10 +120,6 @@ const sortEnvironments = (overview: IFeatureOverview) => {
     }));
 };
 
-function mergeAll<T>(objects: Partial<T>[]): T {
-    return merge.all<T>(objects.filter((i) => i));
-}
-
 interface StrategyUpdate {
     strategy_name: string;
     parameters: object;
@@ -166,7 +162,9 @@ const defaultParameters = (featureName: string, strategyType: string) => {
         return {};
     }
 };
-
+function mergeAll<T>(objects: Partial<T>[]): T {
+    return merge.all<T>(objects.filter((i) => i));
+}
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Db;
 

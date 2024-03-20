@@ -132,9 +132,19 @@ module.exports = {
                     ],
                 },
                 {
-                    type: 'doc',
+                    type: 'category',
                     label: 'Java',
-                    id: 'feature-flag-tutorials/java/implementing-feature-flags',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/java/implementing-feature-flags',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Spring Boot',
+                            id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
+                        },
+                    ],
                 },
                 {
                     type: 'doc',

@@ -150,21 +150,30 @@ function mapStrategyUpdate(
     return update;
 }
 
-const defaultParameters = (featureName: string, strategyType: string) => {
-    if (strategyType === 'gradualRollout') {
+function mergeAll<T>(objects: Partial<T>[]): T {
+    return merge.all<T>(objects.filter((i) => i));
+}
+
+const defaultParameters = (
+    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
+) => {
+    if (params.strategyName === 'gradualRollout') {
         return {
             rollout: '100',
             stickiness: 'default',
-            groupId: featureName,
+            groupId: params.featureName,
         };
     } else {
         /// We don't really have good defaults for the other kinds of known strategies, so return an empty map.
         return {};
     }
 };
-function mergeAll<T>(objects: Partial<T>[]): T {
-    return merge.all<T>(objects.filter((i) => i));
-}
+
+const parametersWithDefaults = (
+    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
+) => {
+    return mergeAll([defaultParameters(params), params.parameters]);
+};
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Db;
 
@@ -240,13 +249,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.featureName,
                 strategyConfig.environment,
             ));
-        const parameters = mergeAll([
-            defaultParameters(
-                strategyConfig.featureName,
-                strategyConfig.strategyName,
-            ),
-            strategyConfig.parameters,
-        ]);
+        const parameters = parametersWithDefaults(strategyConfig);
         strategyConfig.parameters = parameters;
         const strategyRow = mapInput({
             id: uuidv4(),

@@ -18,16 +18,16 @@ export interface UserData {
 
 export interface IUser {
     id: number;
-    name: string;
-    username: string;
-    email: string;
+    name?: string;
+    username?: string;
+    email?: string;
     inviteLink?: string;
     seenAt?: Date;
     createdAt?: Date;
     permissions: string[];
     loginAttempts?: number;
     isAPI: boolean;
-    imageUrl: string;
+    imageUrl?: string;
     accountType?: AccountType;
 }
 

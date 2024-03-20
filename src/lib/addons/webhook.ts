@@ -22,6 +22,7 @@ export default class Webhook extends Addon {
             parameters;
         const context = {
             event,
+            eventJson: JSON.stringify(event),
         };
 
         let body: string | undefined;

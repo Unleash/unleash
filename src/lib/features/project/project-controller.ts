@@ -20,8 +20,6 @@ import {
     deprecatedProjectOverviewSchema,
     type ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
-    projectInsightsSchema,
-    type ProjectInsightsSchema,
     projectOverviewSchema,
     type ProjectsSchema,
     projectsSchema,
@@ -42,6 +40,7 @@ import {
 import { NotFoundError } from '../../error';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
 import { normalizeQueryParams } from '../feature-search/search-utils';
+import ProjectInsightsController from '../project-insights/project-insights-controller';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -121,26 +120,6 @@ export default class ProjectController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:projectId/insights',
-            handler: this.getProjectInsights,
-            permission: NONE,
-            middleware: [
-                this.openApiService.validPath({
-                    tags: ['Unstable'],
-                    operationId: 'getProjectInsights',
-                    summary: 'Get an overview of a project insights.',
-                    description:
-                        'This endpoint returns insights into the specified projects stats, health, lead time for changes, feature types used, members and change requests.',
-                    responses: {
-                        200: createResponseSchema('projectInsightsSchema'),
-                        ...getStandardResponses(401, 403, 404),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
             path: '/:projectId/dora',
             handler: this.getProjectDora,
             permission: NONE,
@@ -201,6 +180,7 @@ export default class ProjectController extends Controller {
                 createKnexTransactionStarter(db),
             ).router,
         );
+        this.use('/', new ProjectInsightsController(config, services).router);
     }
 
     async getProjects(
@@ -241,22 +221,6 @@ export default class ProjectController extends Controller {
             res,
             deprecatedProjectOverviewSchema.$id,
             serializeDates(overview),
-        );
-    }
-
-    async getProjectInsights(
-        req: IAuthRequest<IProjectParam, unknown, unknown, unknown>,
-        res: Response<ProjectInsightsSchema>,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        const insights =
-            await this.projectService.getProjectInsights(projectId);
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            projectInsightsSchema.$id,
-            serializeDates(insights),
         );
     }
 

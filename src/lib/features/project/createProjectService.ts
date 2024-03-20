@@ -39,6 +39,8 @@ import {
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import FeatureTypeStore from '../../db/feature-type-store';
+import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 
 export const createProjectService = (
     db: Db,
@@ -66,6 +68,7 @@ export const createProjectService = (
         eventBus,
         getLogger,
     );
+    const featureTypeStore = new FeatureTypeStore(db, getLogger);
     const projectStatsStore = new ProjectStatsStore(db, eventBus, getLogger);
     const accessService: AccessService = createAccessService(db, config);
     const featureToggleService = createFeatureToggleService(db, config);
@@ -109,6 +112,7 @@ export const createProjectService = (
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
+            featureTypeStore,
             accountStore,
             projectStatsStore,
         },
@@ -133,6 +137,7 @@ export const createFakeProjectService = (
     const accountStore = new FakeAccountStore();
     const environmentStore = new FakeEnvironmentStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
+    const featureTypeStore = new FakeFeatureTypeStore();
     const projectStatsStore = new FakeProjectStatsStore();
     const { accessService } = createFakeAccessService(config);
     const featureToggleService = createFakeFeatureToggleService(config);
@@ -168,6 +173,7 @@ export const createFakeProjectService = (
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
+            featureTypeStore,
             accountStore,
             projectStatsStore,
         },

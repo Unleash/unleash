@@ -144,3 +144,69 @@ test('Can query for features with namePrefix and tags', async () => {
     });
     expect(features).toHaveLength(1);
 });
+
+describe('strategy parameters default to sane defaults', () => {
+    test('Creating a gradualRollout strategy with no parameters uses the default for all necessary fields', async () => {
+        const toggle = await featureToggleStore.create('default', {
+            name: 'testing-strategy-parameters',
+            createdByUserId: 9999,
+        });
+        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
+            strategyName: 'gradualRollout',
+            projectId: 'default',
+            environment: 'default',
+            featureName: toggle.name,
+            constraints: [],
+            sortOrder: 15,
+            parameters: {},
+        });
+        expect(strategy.parameters).toEqual({
+            rollout: '100',
+            groupId: toggle.name,
+            stickiness: 'default',
+        });
+    });
+    test('Creating a gradualRollout strategy with some parameters, only uses defaults for those not set', async () => {
+        const toggle = await featureToggleStore.create('default', {
+            name: 'testing-strategy-parameters-with-some-parameters',
+            createdByUserId: 9999,
+        });
+        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
+            strategyName: 'gradualRollout',
+            projectId: 'default',
+            environment: 'default',
+            featureName: toggle.name,
+            constraints: [],
+            sortOrder: 15,
+            parameters: {
+                rollout: '60',
+                stickiness: 'userId',
+            },
+        });
+        expect(strategy.parameters).toEqual({
+            rollout: '60',
+            groupId: toggle.name,
+            stickiness: 'userId',
+        });
+    });
+    test('Creating an applicationHostname strategy does not get unnecessary parameters set', async () => {
+        const toggle = await featureToggleStore.create('default', {
+            name: 'testing-strategy-parameters-for-applicationHostname',
+            createdByUserId: 9999,
+        });
+        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
+            strategyName: 'applicationHostname',
+            projectId: 'default',
+            environment: 'default',
+            featureName: toggle.name,
+            constraints: [],
+            sortOrder: 15,
+            parameters: {
+                hostnames: 'myfantastichost',
+            },
+        });
+        expect(strategy.parameters).toEqual({
+            hostnames: 'myfantastichost',
+        });
+    });
+});

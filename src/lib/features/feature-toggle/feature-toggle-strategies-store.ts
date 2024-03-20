@@ -24,8 +24,9 @@ import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue, mapValues } from '../../util';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller';
 import type { Db } from '../../db/db';
-import Raw = Knex.Raw;
 import { isAfter } from 'date-fns';
+import merge from 'deepmerge';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -119,6 +120,10 @@ const sortEnvironments = (overview: IFeatureOverview) => {
     }));
 };
 
+function mergeAll<T>(objects: Partial<T>[]): T {
+    return merge.all<T>(objects.filter((i) => i));
+}
+
 interface StrategyUpdate {
     strategy_name: string;
     parameters: object;
@@ -148,6 +153,19 @@ function mapStrategyUpdate(
     update.variants = JSON.stringify(input.variants || []);
     return update;
 }
+
+const defaultParameters = (featureName: string, strategyType: string) => {
+    if (strategyType === 'gradualRollout') {
+        return {
+            rollout: '100',
+            stickiness: 'default',
+            groupId: featureName,
+        };
+    } else {
+        /// We don't really have good defaults for the other kinds of known strategies, so return an empty map.
+        return {};
+    }
+};
 
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Db;
@@ -224,6 +242,14 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.featureName,
                 strategyConfig.environment,
             ));
+        const parameters = mergeAll([
+            defaultParameters(
+                strategyConfig.featureName,
+                strategyConfig.strategyName,
+            ),
+            strategyConfig.parameters,
+        ]);
+        strategyConfig.parameters = parameters;
         const strategyRow = mapInput({
             id: uuidv4(),
             ...strategyConfig,

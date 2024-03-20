@@ -95,7 +95,7 @@ Your new feature flag has been created and is ready to be used. Enable the flag 
 
 Next, generate an API token to use in your app. This API token will eventually be pulled into a configuration object within your Spring Boot app to toggle features.
 
-Note: We require an API token as part of your flag configuration to ensure only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access, and this controls how and by whom they can be distributed to applications that need them.
+> **Note:** We require an API token as part of your flag configuration to ensure only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access, and this controls how and by whom they can be distributed to applications that need them.
 
 From your project view on the platform, go to Project Settings and then API Access.
 
@@ -115,7 +115,9 @@ We will use the API token in Step 4.
 ## 4. Add Unleash to a Spring Boot app
 
 
-In this section, you will clone an open-source Spring Boot application called [Spring Pet Clinic](https://github.com/spring-projects/spring-petclinic). We will connect it to your local Unleash instance to use the feature flag we just created. 
+In this section, we will clone an open-source Spring Boot application called [Spring Pet Clinic](https://github.com/spring-projects/spring-petclinic). This is a sample pet clinic web app, featuring built-in customer data, their pets' data, and veternarian information.
+
+We will connect it to your local Unleash instance to use the feature flag we just created.
 
 Use this command to clone the repository via your Terminal:
 
@@ -148,7 +150,7 @@ If you want to use [Gradle](https://gradle.org/) as opposed to Maven to build th
 ./gradlew build
 ```
 
-For further details on building and running Spring Pet Clinic locally, refer to the [README on GitHub](https://github.com/spring-projects/spring-petclinic?tab=readme-ov-file).
+For further details on building and running Spring Pet Clinic locally, refer to the project's [README on GitHub](https://github.com/spring-projects/spring-petclinic?tab=readme-ov-file).
 
 The Pet Clinic application is now accessible at [http://localhost:8080](http://localhost:8080).
 
@@ -171,7 +173,7 @@ Next, we can add an Unleash configuration to the `application.properties` file s
 
 At the bottom of the `application.properties` file, add the following code snippet:
 
-```
+```yml
 # Unleash
 io.getunleash.app-name=spring-petclinic
 io.getunleash.instance-id=spring-petclinic
@@ -309,8 +311,8 @@ class PetProductsController {
 
 In the `PetProductsController` class, we have set up a few things:
 - A `/products` endpoint
-- In the endpoint method, we added the pet product service to the model that is injected into an HTML page
-- A method that invokes the pet product service
+- We added the pet product service to the model that is injected into an HTML page we will create (`products.html`)
+- A method `getPetProducts` that invokes the pet product service
 
 Next, we will create the `products.html` page returned from the `/products` endpoint.
 
@@ -319,14 +321,11 @@ In `resources/templates/`, create `products.html` and use this small code snippe
 
 ```html
 <!DOCTYPE html>
-
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'products')}">
-
 <body>
    <h2>Clinic Products</h2>
    <div th:text="${petProductsPage}"></div>
 </body>
-
 </html>
 ```
 
@@ -335,10 +334,9 @@ Now that we have our services, controller, and an endpoint that maps to a page, 
 In `layout.html`, insert a new list item on line 62.
 
 ```html
-<li
-th:replace="~{::menuItem ('/products', 'products', 'view clinic products', 'th-list', 'Clinic products')}">
-<span class="fa fa-th-list" aria-hidden="true"></span>
-<span>Clinic products</span>
+<li th:replace="~{::menuItem ('/products', 'products', 'view clinic products', 'th-list', 'Clinic products')}">
+    <span class="fa fa-th-list" aria-hidden="true"></span>
+    <span>Clinic products</span>
 </li>
 ```
 

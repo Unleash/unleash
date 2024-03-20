@@ -96,11 +96,10 @@ export const ProjectMembers = ({
 }: IProjectMembersProps) => {
     const { uiConfig } = useUiConfig();
     const theme = useTheme();
-    let link = `/admin/users`;
 
-    if (uiConfig?.versionInfo?.current?.enterprise) {
-        link = `/projects/${projectId}/settings/access`;
-    }
+    const link = uiConfig?.versionInfo?.current?.enterprise
+        ? `/projects/${projectId}/settings/access`
+        : `/admin/users`;
 
     const { active, totalPreviousMonth, inactive } = members;
 

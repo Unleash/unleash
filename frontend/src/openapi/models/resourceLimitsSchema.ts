@@ -9,19 +9,19 @@
  */
 export interface ResourceLimitsSchema {
     /** The maximum number of actions per action set allowed. */
-    actionSetActions?: number;
+    actionSetActions: number;
     /** The maximum number of filters per action set allowed. */
-    actionSetFilters?: number;
+    actionSetFilters: number;
     /** The maximum number of filter values inside an action set allowed. */
-    actionSetFilterValues?: number;
+    actionSetFilterValues: number;
     /** The maximum number of action set definitions per project allowed. */
-    actionSetsPerProject?: number;
+    actionSetsPerProject: number;
     /** The maximum number of values per segment allowed. */
-    segmentValues?: number;
+    segmentValues: number;
     /** The maximum number of signal endpoints allowed. */
-    signalEndpoints?: number;
+    signalEndpoints: number;
     /** The maximum number of signal tokens per endpoint allowed. */
-    signalTokensPerEndpoint?: number;
+    signalTokensPerEndpoint: number;
     /** The maximum number of strategy segments allowed. */
-    strategySegments?: number;
+    strategySegments: number;
 }

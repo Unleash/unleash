@@ -38,7 +38,7 @@ export const chartInfo = {
     averageHealth: {
         title: 'Average health',
         tooltip:
-            'Average health is a percentage of flags that are not stale nor potentially stale as it stands currently for selected projects.',
+            'Average health is the current percentage of flags in the selected projects that are not stale or potentially stale.',
     },
     overallHealth: {
         title: 'Overall Health',

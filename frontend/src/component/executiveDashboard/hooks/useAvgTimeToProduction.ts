@@ -16,16 +16,28 @@ export const useAvgTimeToProduction = (
 
         const totalAvgTimeToProduction = Object.entries(projectsData).reduce(
             (acc, [_, trends]) => {
-                const validTrends = trends.filter(
-                    (trend) => trend.timeToProduction !== undefined,
-                );
-                const avgTimeToProduction =
-                    validTrends.reduce(
-                        (sum, item) => sum + (item.timeToProduction || 0),
-                        0,
-                    ) / (validTrends.length || 1);
+                // Assuming trends are not sorted and there's a `date` property to determine the latest
+                const latestTrend = trends
+                    .filter(
+                        (trend) =>
+                            trend.timeToProduction !== undefined &&
+                            trend.date !== undefined,
+                    )
+                    .reduce(
+                        (latest, current) =>
+                            new Date(latest.date) < new Date(current.date)
+                                ? current
+                                : latest,
+                        trends[0],
+                    );
 
-                return acc + (validTrends.length > 0 ? avgTimeToProduction : 0);
+                // If there's no valid latest trend, this project won't contribute to the average
+                if (!latestTrend) {
+                    return acc;
+                }
+
+                const timeToProduction = latestTrend.timeToProduction || 0;
+                return acc + timeToProduction;
             },
             0,
         );

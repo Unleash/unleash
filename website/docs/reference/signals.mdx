@@ -1,0 +1,78 @@
+---
+title: Signals
+---
+
+:::info Availability
+
+Unleash signals is an **enterprise-only** feature released as beta in Unleash v5.11.
+
+:::
+
+## Overview
+
+Signals enable external systems to communicate events to Unleash via a simple HTTP API.
+
+Unleash can then configure automated actions to react to those events.
+
+![Signals from external systems.](/img/signals/signals-input.png)
+
+You can create different endpoints to be used by different systems, or you can create a single endpoint and use different API tokens for different systems.
+
+## Creating signal endpoints
+
+:::info Permissions
+
+Creating signal endpoints require admin permissions.
+
+:::
+
+To create a new signal endpoint, navigate to the **Admin UI** and select **Integrations** from the configure menu.
+
+![Integrations menu.](/img/signals/integrations.png)
+
+In the integrations page, find the Signals integration:
+![Integrations menu.](/img/signals/signals-option.png)
+
+Clicking on the "New Signal" button will open a form where you can configure the signal endpoint.
+
+![New signal form.](/img/signals/new-signal-form.png)
+
+## Using a signal endpoint
+
+Using a signal endpoitn is as easy as sending a POST request to the signal endpoint URL with the correct API token. The body payload should be formatted as JSON.
+
+```shell
+curl -X POST https://unleash.example.com/api/signals/my-signal-endpoint \
+  -H "Authorization: Bearer your_token_secret" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "my-event",
+    "data": {
+      "key": "value"
+    }
+  }'
+```
+
+Configuring an external system to use this API should be straightforward as there's no requirement on the payload structure.
+
+## View signals as they arrive
+
+To view the signals as they arrive, navigate to the **Signals** page in the **Admin UI** and select **View signals** option. 
+
+![View signals option.](/img/signals/view-signals-option.png)
+
+This will help you test that the integration is working before you send in the real signals.
+
+
+## Limits that apply
+There are some constraints on the signal endpoints as a meassure to protect our infrastructure. These values can be overriden for self-hosted installations.
+
+- **Rate limit**: 10 requests per second.
+- **Max endpoints**: 5.
+- **Max tokens per endpoint**: 5.
+- **Payload size**: 100kb (express default).
+
+Ref: [Unleash Config](https://github.com/Unleash/unleash/blob/859fe098fedc261d646833012d9d408039491075/src/lib/create-config.ts#L577-L604)
+
+## Reacting to signals
+See [Actions](./actions.mdx)

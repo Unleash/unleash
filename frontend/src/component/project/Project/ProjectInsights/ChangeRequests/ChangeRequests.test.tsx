@@ -22,11 +22,23 @@ const setupOssApi = () => {
     });
 };
 
+const changeRequests = {
+    applied: 0,
+    total: 0,
+    approved: 0,
+    scheduled: 0,
+    reviewRequired: 0,
+    rejected: 0,
+};
+
 test('Show enterprise hints', async () => {
     setupOssApi();
     render(
         <Routes>
-            <Route path={'/projects/:projectId'} element={<ChangeRequests />} />
+            <Route
+                path={'/projects/:projectId'}
+                element={<ChangeRequests changeRequests={changeRequests} />}
+            />
         </Routes>,
         {
             route: '/projects/default',
@@ -40,7 +52,10 @@ test('Show change requests info', async () => {
     setupEnterpriseApi();
     render(
         <Routes>
-            <Route path={'/projects/:projectId'} element={<ChangeRequests />} />
+            <Route
+                path={'/projects/:projectId'}
+                element={<ChangeRequests changeRequests={changeRequests} />}
+            />
         </Routes>,
         {
             route: '/projects/default',

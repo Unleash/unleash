@@ -1,5 +1,5 @@
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import type { IPermission } from 'interfaces/user';
+import type { IPermission } from '@server/types';
 
 type objectIdx = {
     [key: string]: string;

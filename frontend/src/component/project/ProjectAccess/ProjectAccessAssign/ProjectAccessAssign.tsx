@@ -23,7 +23,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import type { IUser } from 'interfaces/user';
+import type { IUser } from '@server/types';
 import type { IGroup } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import { type ReactElement, type ReactNode, useMemo } from 'react';
 import AccessContext, { type IAccessContext } from 'contexts/AccessContext';
-import type { IPermission } from 'interfaces/user';
+import type { IPermission } from '@server/types';
 import {
     checkAdmin,
     hasAccess,

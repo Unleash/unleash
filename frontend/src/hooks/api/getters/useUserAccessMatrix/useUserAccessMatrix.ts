@@ -3,7 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import useSWR from 'swr';
 import type { IRole } from 'interfaces/role';
-import type { IUser } from 'interfaces/user';
+import type { IUser } from '@server/types';
 import type { IMatrixPermission } from 'interfaces/permissions';
 
 interface IUserAccessMatrix {

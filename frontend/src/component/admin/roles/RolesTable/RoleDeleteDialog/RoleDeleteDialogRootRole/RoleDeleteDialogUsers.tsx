@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { useTable, useSortBy, useFlexLayout, type Column } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import type { IUser } from 'interfaces/user';
+import type { IUser } from '@server/types';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>

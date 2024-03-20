@@ -13,7 +13,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { IUser } from 'interfaces/user';
+import type { IUser } from '@server/types';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';

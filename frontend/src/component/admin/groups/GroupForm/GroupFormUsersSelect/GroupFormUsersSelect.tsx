@@ -1,7 +1,7 @@
 import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import type { IUser } from 'interfaces/user';
+import type { IUser } from '@server/types';
 import type { VFC } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { IGroupUser } from 'interfaces/group';

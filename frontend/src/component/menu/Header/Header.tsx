@@ -166,7 +166,7 @@ const Header: VFC = () => {
 
     const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const insightsDashboard = useUiFlag('executiveDashboard');
+    const insightsDashboard = useUiFlag('executiveDashboardUI');
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();

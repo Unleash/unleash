@@ -72,7 +72,7 @@ export type UiFlags = {
     newStrategyConfigurationFeedback?: boolean;
     extendedUsageMetricsUI?: boolean;
     adminTokenKillSwitch?: boolean;
-    executiveDashboard?: boolean;
+    executiveDashboardUI?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;

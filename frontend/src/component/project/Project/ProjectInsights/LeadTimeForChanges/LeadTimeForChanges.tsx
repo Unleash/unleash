@@ -1,6 +1,4 @@
 import { Box, styled, Tooltip, Typography, useMediaQuery } from '@mui/material';
-import { useProjectDoraMetrics } from 'hooks/api/getters/useProjectDoraMetrics/useProjectDoraMetrics';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useMemo } from 'react';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import {
@@ -15,6 +13,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Badge } from 'component/common/Badge/Badge';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import theme from 'themes/theme';
+import type { ProjectDoraMetricsSchema } from '../../../../../openapi';
 
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -41,22 +40,11 @@ const resolveDoraMetrics = (input: number) => {
     }
 };
 
-export const LeadTimeForChanges = () => {
-    const projectId = useRequiredPathParam('projectId');
+interface ILeadTimeForChangesProps {
+    leadTime: ProjectDoraMetricsSchema;
+}
 
-    const { dora, loading } = useProjectDoraMetrics(projectId);
-
-    const data = useMemo(() => {
-        if (loading) {
-            return Array(5).fill({
-                name: 'Featurename',
-                timeToProduction: 'Data for production',
-            });
-        }
-
-        return dora.features;
-    }, [dora, loading]);
-
+export const LeadTimeForChanges = ({ leadTime }: ILeadTimeForChangesProps) => {
     const columns = useMemo(
         () => [
             {
@@ -117,7 +105,7 @@ export const LeadTimeForChanges = () => {
                 Cell: ({ row: { original } }: any) => (
                     <Tooltip
                         title={`Deviation from project average. Average for this project is: ${
-                            dora.projectAverage || 0
+                            leadTime.projectAverage || 0
                         } days`}
                         arrow
                     >
@@ -129,8 +117,8 @@ export const LeadTimeForChanges = () => {
                             data-loading
                         >
                             {Math.round(
-                                (dora.projectAverage
-                                    ? dora.projectAverage
+                                (leadTime.projectAverage
+                                    ? leadTime.projectAverage
                                     : 0) - original.timeToProduction,
                             )}{' '}
                             days
@@ -166,7 +154,7 @@ export const LeadTimeForChanges = () => {
                 disableSortBy: true,
             },
         ],
-        [JSON.stringify(dora.features), loading],
+        [JSON.stringify(leadTime.features)],
     );
 
     const initialState = useMemo(
@@ -194,7 +182,7 @@ export const LeadTimeForChanges = () => {
     } = useTable(
         {
             columns: columns as any[],
-            data,
+            data: leadTime.features,
             initialState,
             autoResetGlobalFilter: false,
             autoResetSortBy: false,

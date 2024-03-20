@@ -52,7 +52,7 @@ export const ProjectInsights = () => {
                 <ProjectHealth health={data.health} />
             </MediumWideContainer>
             <WideContainer>
-                <LeadTimeForChanges />
+                <LeadTimeForChanges leadTime={data.leadTime} />
             </WideContainer>
             <NarrowContainer>
                 <FlagTypesUsed featureTypeCounts={data.featureTypeCounts} />

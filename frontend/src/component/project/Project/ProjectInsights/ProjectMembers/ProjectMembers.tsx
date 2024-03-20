@@ -3,11 +3,11 @@ import { Box, styled, Typography, useTheme } from '@mui/material';
 import { StatusBox } from '../ProjectInsightsStats/StatusBox';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
+import type { ProjectInsightsSchemaMembers } from '../../../../../openapi';
 
-interface IProjectMembersWidgetProps {
+interface IProjectMembersProps {
+    members: ProjectInsightsSchemaMembers;
     projectId: string;
-    memberCount: number;
-    change?: number;
 }
 
 const NavigationBar = styled(Link)(({ theme }) => ({
@@ -68,7 +68,9 @@ const StatusWithDot = styled(Box)(({ theme }) => ({
 
 const Dot = styled('span', {
     shouldForwardProp: (prop) => prop !== 'color',
-})<{ color?: string }>(({ theme, color }) => ({
+})<{
+    color?: string;
+}>(({ theme, color }) => ({
     height: '15px',
     width: '15px',
     borderRadius: '50%',
@@ -83,10 +85,9 @@ export const StyledCount = styled('span')(({ theme }) => ({
 }));
 
 export const ProjectMembers = ({
+    members,
     projectId,
-    memberCount,
-    change = 0,
-}: IProjectMembersWidgetProps) => {
+}: IProjectMembersProps) => {
     const { uiConfig } = useUiConfig();
     const theme = useTheme();
     let link = `/admin/users`;
@@ -94,6 +95,11 @@ export const ProjectMembers = ({
     if (uiConfig?.versionInfo?.current?.enterprise) {
         link = `/projects/${projectId}/settings/access`;
     }
+
+    const { active, totalPreviousMonth, inactive } = members;
+
+    const currentMembers = active + inactive;
+    const change = currentMembers - (totalPreviousMonth || 0);
 
     return (
         <StyledProjectInfoWidgetContainer>
@@ -107,7 +113,7 @@ export const ProjectMembers = ({
                     display: 'flex',
                 }}
             >
-                <StatusBox boxText={`${memberCount}`} change={change} />
+                <StatusBox boxText={`${currentMembers}`} change={change} />
             </Box>
             <BarContainer>
                 <ActiveBar />
@@ -115,23 +121,19 @@ export const ProjectMembers = ({
             </BarContainer>
             <CountContainer>
                 <CountRow to={link}>
-                    <div>
-                        <StatusWithDot>
-                            <Dot color={theme.palette.success.border} />
-                            <Box>Active</Box>
-                            <StyledCount>{memberCount - 1}</StyledCount>
-                        </StatusWithDot>
-                    </div>
+                    <StatusWithDot>
+                        <Dot color={theme.palette.success.border} />
+                        <Box>Active</Box>
+                        <StyledCount>{active}</StyledCount>
+                    </StatusWithDot>
                     <KeyboardArrowRight />
                 </CountRow>
                 <CountRow to={link}>
-                    <div>
-                        <StatusWithDot>
-                            <Dot color={theme.palette.warning.border} />
-                            <Box>Inactive</Box>
-                            <StyledCount>1</StyledCount>
-                        </StatusWithDot>
-                    </div>
+                    <StatusWithDot>
+                        <Dot color={theme.palette.warning.border} />
+                        <Box>Inactive</Box>
+                        <StyledCount>{inactive}</StyledCount>
+                    </StatusWithDot>
                     <KeyboardArrowRight />
                 </CountRow>
             </CountContainer>

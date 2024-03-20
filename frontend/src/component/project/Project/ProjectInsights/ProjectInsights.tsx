@@ -58,11 +58,7 @@ export const ProjectInsights = () => {
                 <FlagTypesUsed featureTypeCounts={data.featureTypeCounts} />
             </NarrowContainer>
             <NarrowContainer>
-                <ProjectMembers
-                    projectId={'default'}
-                    memberCount={5}
-                    change={3}
-                />
+                <ProjectMembers projectId={projectId} members={data.members} />
             </NarrowContainer>
             <WideContainer>
                 {data.changeRequests && (

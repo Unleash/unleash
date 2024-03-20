@@ -248,67 +248,15 @@ export default class ProjectController extends Controller {
         req: IAuthRequest<IProjectParam, unknown, unknown, unknown>,
         res: Response<ProjectInsightsSchema>,
     ): Promise<void> {
-        const result = {
-            stats: {
-                avgTimeToProdCurrentWindow: 17.1,
-                createdCurrentWindow: 3,
-                createdPastWindow: 6,
-                archivedCurrentWindow: 0,
-                archivedPastWindow: 1,
-                projectActivityCurrentWindow: 458,
-                projectActivityPastWindow: 578,
-                projectMembersAddedCurrentWindow: 0,
-            },
-            featureTypeCounts: [
-                {
-                    type: 'experiment',
-                    count: 4,
-                },
-                {
-                    type: 'permission',
-                    count: 1,
-                },
-                {
-                    type: 'release',
-                    count: 24,
-                },
-            ],
-            leadTime: {
-                projectAverage: 17.1,
-                features: [
-                    { name: 'feature1', timeToProduction: 120 },
-                    { name: 'feature2', timeToProduction: 0 },
-                    { name: 'feature3', timeToProduction: 33 },
-                    { name: 'feature4', timeToProduction: 131 },
-                    { name: 'feature5', timeToProduction: 2 },
-                ],
-            },
-            health: {
-                rating: 80,
-                activeCount: 23,
-                potentiallyStaleCount: 3,
-                staleCount: 5,
-            },
-            members: {
-                active: 20,
-                inactive: 3,
-                totalPreviousMonth: 15,
-            },
-            changeRequests: {
-                total: 24,
-                approved: 5,
-                applied: 2,
-                rejected: 4,
-                reviewRequired: 10,
-                scheduled: 3,
-            },
-        };
+        const { projectId } = req.params;
+        const insights =
+            await this.projectService.getProjectInsights(projectId);
 
         this.openApiService.respondWithValidation(
             200,
             res,
             projectInsightsSchema.$id,
-            serializeDates(result),
+            serializeDates(insights),
         );
     }
 

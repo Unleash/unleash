@@ -294,8 +294,23 @@ test('project insights happy path', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body.leadTime.features[0]).toEqual({
-        name: 'feature1',
-        timeToProduction: 120,
+    expect(body).toMatchObject({
+        stats: {
+            avgTimeToProdCurrentWindow: 0,
+            createdCurrentWindow: 0,
+            createdPastWindow: 0,
+            archivedCurrentWindow: 0,
+            archivedPastWindow: 0,
+            projectActivityCurrentWindow: 0,
+            projectActivityPastWindow: 0,
+            projectMembersAddedCurrentWindow: 0,
+        },
+        featureTypeCounts: [],
+        health: {
+            activeCount: 0,
+            potentiallyStaleCount: 0,
+            staleCount: 0,
+            rating: 100,
+        },
     });
 });

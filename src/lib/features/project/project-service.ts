@@ -21,6 +21,7 @@ import {
     type IFeatureEnvironmentStore,
     type IFeatureNaming,
     type IFeatureToggleStore,
+    type IFeatureTypeStore,
     type IFlagResolver,
     type IProject,
     type IProjectApplications,
@@ -75,6 +76,7 @@ import type {
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
 } from './project-store-type';
+import { calculateProjectHealth } from '../../domain/project-health/project-health';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -119,6 +121,8 @@ export default class ProjectService {
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
+    private featureTypeStore: IFeatureTypeStore;
+
     private environmentStore: IEnvironmentStore;
 
     private groupService: GroupService;
@@ -148,6 +152,7 @@ export default class ProjectService {
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
+            featureTypeStore,
             accountStore,
             projectStatsStore,
         }: Pick<
@@ -159,6 +164,7 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'accountStore'
             | 'projectStatsStore'
+            | 'featureTypeStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -174,6 +180,7 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
+        this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
         this.privateProjectChecker = privateProjectChecker;
@@ -722,6 +729,7 @@ export default class ProjectService {
             (r) => r.project === project && r.name === RoleName.OWNER,
         );
     }
+
     private async isAllowedToAddAccess(
         userAddingAccess: number,
         projectId: string,
@@ -741,6 +749,7 @@ export default class ProjectService {
             userRoles.some((userRole) => userRole.id === roleId),
         );
     }
+
     async addAccess(
         projectId: string,
         roles: number[],
@@ -1229,6 +1238,62 @@ export default class ProjectService {
                 projectMembersAddedCurrentWindow,
             },
         };
+    }
+
+    private async getHealthInsights(projectId: string) {
+        const [overview, featureTypes] = await Promise.all([
+            this.getProjectHealth(projectId, false, undefined),
+            this.featureTypeStore.getAll(),
+        ]);
+
+        const { activeCount, potentiallyStaleCount, staleCount } =
+            calculateProjectHealth(overview.features, featureTypes);
+
+        return {
+            activeCount,
+            potentiallyStaleCount,
+            staleCount,
+            rating: overview.health,
+        };
+    }
+
+    async getProjectInsights(projectId: string) {
+        const result = {
+            leadTime: {
+                projectAverage: 17.1,
+                features: [
+                    { name: 'feature1', timeToProduction: 120 },
+                    { name: 'feature2', timeToProduction: 0 },
+                    { name: 'feature3', timeToProduction: 33 },
+                    { name: 'feature4', timeToProduction: 131 },
+                    { name: 'feature5', timeToProduction: 2 },
+                ],
+            },
+            members: {
+                active: 20,
+                inactive: 3,
+                totalPreviousMonth: 15,
+            },
+            changeRequests: {
+                total: 24,
+                approved: 5,
+                applied: 2,
+                rejected: 4,
+                reviewRequired: 10,
+                scheduled: 3,
+            },
+        };
+
+        const [stats, featureTypeCounts, health] = await Promise.all([
+            this.projectStatsStore.getProjectStats(projectId),
+            this.featureToggleService.getFeatureTypeCounts({
+                projectId,
+                archived: false,
+            }),
+            this.getHealthInsights(projectId),
+        ]);
+
+        return { ...result, stats, featureTypeCounts, health };
     }
 
     async getProjectHealth(

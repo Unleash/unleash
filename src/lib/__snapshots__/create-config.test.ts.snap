@@ -94,6 +94,7 @@ exports[`should create default config 1`] = `
       "enableLicenseChecker": false,
       "encryptEmails": false,
       "executiveDashboard": false,
+      "executiveDashboardUI": false,
       "extendedUsageMetrics": false,
       "extendedUsageMetricsUI": false,
       "featureSearchFeedback": {

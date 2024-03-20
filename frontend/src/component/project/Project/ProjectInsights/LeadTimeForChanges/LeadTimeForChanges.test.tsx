@@ -33,7 +33,7 @@ test('Show outdated SDKs and apps using them', async () => {
         },
     );
 
-    await screen.findByText('Lead time for changes (per release toggle)');
+    await screen.findByText('Lead time for changes (per release flag)');
     await screen.findByText('ABCD');
     await screen.findByText('57 days');
     await screen.findByText('Low');

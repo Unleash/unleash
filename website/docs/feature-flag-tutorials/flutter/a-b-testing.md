@@ -1,5 +1,6 @@
 ---
 title: A/B Testing in Flutter using Unleash and Mixpanel
+slug: '/feature-flag-tutorials/flutter/a-b-testing'
 ---
 
 :::note

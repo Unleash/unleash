@@ -259,8 +259,9 @@ export const SignalEndpointsTable = () => {
                 signalEndpoint={selectedSignalEndpoint}
                 open={modalOpen}
                 setOpen={setModalOpen}
-                newToken={(token: string) => {
+                newToken={(token: string, signalEndpoint: ISignalEndpoint) => {
                     setNewToken(token);
+                    setSelectedSignalEndpoint(signalEndpoint);
                     setTokenDialog(true);
                 }}
                 onOpenSignals={() => {
@@ -281,6 +282,7 @@ export const SignalEndpointsTable = () => {
                 open={tokenDialog}
                 setOpen={setTokenDialog}
                 token={newToken}
+                signalEndpoint={selectedSignalEndpoint}
             />
             <SignalEndpointsDeleteDialog
                 signalEndpoint={selectedSignalEndpoint}

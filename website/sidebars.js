@@ -153,8 +153,8 @@ module.exports = {
                 },
                 {
                     type: 'doc',
-                    label: 'Sveltekit',
-                    id: 'feature-flag-tutorials/sveltekit/feature-flags-sveltekit',
+                    label: 'SvelteKit',
+                    id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags',
                 },
             ],
         },

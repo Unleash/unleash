@@ -7,6 +7,7 @@ import type {
 } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { usePlaceholderData } from 'component/executiveDashboard/hooks/usePlaceholderData';
+import { UpdatesPerEnvironmentTypeChartTooltip } from './UpdatesPerEnvironmentTypeChartTooltip/UpdatesPerEnvironmentTypeChartTooltip';
 
 interface IUpdatesPerEnvironmnetTypeChart {
     environmentTypeTrends: ExecutiveSummarySchema['environmentTypeTrends'];
@@ -67,25 +68,35 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
 
     const data = useMemo(() => {
         const grouped = groupByDate(environmentTypeTrends);
-        const labels = environmentTypeTrends?.map((item) => item.date);
         const datasets = Object.entries(grouped).map(
             ([environmentType, trends]) => {
                 const color = getEnvironmentTypeColor(environmentType);
                 return {
                     label: environmentType,
-                    data: trends.map((item) => item.totalUpdates),
+                    data: trends,
                     borderColor: color,
                     backgroundColor: color,
                     fill: false,
                 };
             },
         );
-        return { labels, datasets };
+        return { datasets };
     }, [theme, environmentTypeTrends]);
 
     return (
         <LineChart
             data={notEnoughData || isLoading ? placeholderData : data}
+            overrideOptions={
+                notEnoughData
+                    ? {}
+                    : {
+                          parsing: {
+                              yAxisKey: 'totalUpdates',
+                              xAxisKey: 'date',
+                          },
+                      }
+            }
+            TooltipComponent={UpdatesPerEnvironmentTypeChartTooltip}
             cover={notEnoughData ? <NotEnoughData /> : isLoading}
         />
     );

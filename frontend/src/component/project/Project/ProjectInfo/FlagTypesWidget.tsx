@@ -52,7 +52,9 @@ const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
         </StyledParagraphGridRow>
     );
 };
-
+/**
+ * @Deprecated in favor of FlagTypesUsed.tsx
+ */
 export const FlagTypesWidget = ({
     featureTypeCounts,
 }: IFlagTypesWidgetProps) => {

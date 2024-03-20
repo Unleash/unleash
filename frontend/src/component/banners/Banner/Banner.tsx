@@ -72,10 +72,16 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
         icon,
         link,
         linkText = 'More info',
+        linkClicked,
         plausibleEvent,
         dialogTitle,
         dialog,
     } = banner;
+
+    const openDialog = () => {
+        setOpen(true);
+        linkClicked?.();
+    };
 
     const bannerBar = (
         <StyledBar variant={variant} inline={inline} maxHeight={maxHeight}>
@@ -86,7 +92,7 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
             <BannerButton
                 link={link}
                 plausibleEvent={plausibleEvent}
-                openDialog={() => setOpen(true)}
+                openDialog={openDialog}
             >
                 {linkText}
             </BannerButton>

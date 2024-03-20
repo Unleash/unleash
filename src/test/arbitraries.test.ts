@@ -193,7 +193,7 @@ export const clientFeature = (name?: string): Arbitrary<ClientFeatureSchema> =>
             createdAt: commonISOTimestamp(),
             lastSeenAt: commonISOTimestamp(),
             stale: fc.boolean(),
-            impressionData: fc.option(fc.boolean()),
+            impressionData: fc.option(fc.boolean(), { nil: undefined }),
             strategies: strategies(),
             variants: variants(),
         },

@@ -1,5 +1,18 @@
 import { Box, styled } from '@mui/material';
+import { ChangeRequests } from './ChangeRequests/ChangeRequests';
 import { LeadTimeForChanges } from './LeadTimeForChanges/LeadTimeForChanges';
+import { ProjectHealth } from './ProjectHealth/ProjectHealth';
+import { FlagTypesUsed } from './FlagTypesUsed/FlagTypesUsed';
+import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStats';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useProjectInsights } from 'hooks/api/getters/useProjectInsights/useProjectInsights';
+import useLoading from 'hooks/useLoading';
+
+const Container = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(3),
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
 
 const Grid = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -7,38 +20,48 @@ const Grid = styled(Box)(({ theme }) => ({
     gridTemplateColumns: 'repeat(10, 1fr)',
 }));
 
-const Overview = styled(Box)(({ theme }) => ({
+const FullWidthContainer = styled(Box)(() => ({
     gridColumn: '1 / -1',
 }));
 
-const Health = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 5',
+const WideContainer = styled(Container)(() => ({
+    gridColumn: 'span 6',
 }));
 
-const ToggleTypesUsed = styled(Box)(({ theme }) => ({
+const MediumWideContainer = styled(Container)(() => ({
+    gridColumn: 'span 4',
+}));
+
+const NarrowContainer = styled(Container)(() => ({
     gridColumn: 'span 2',
-}));
-
-const ProjectMembers = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 2',
-}));
-
-const ChangeRequests = styled(Box)(({ theme }) => ({
-    gridColumn: 'span 5',
 }));
 
 export const ProjectInsights = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const { data, loading } = useProjectInsights(projectId);
+
+    const ref = useLoading(loading);
+
     return (
-        <Grid>
-            <Overview>
-                Total changes / avg time to production / feature flags /stale
-                flags
-            </Overview>
-            <Health>Project Health</Health>
-            <LeadTimeForChanges />
-            <ToggleTypesUsed>Toggle types used</ToggleTypesUsed>
-            <ProjectMembers>Project members</ProjectMembers>
-            <ChangeRequests>Change Requests</ChangeRequests>
+        <Grid ref={ref}>
+            <FullWidthContainer>
+                <ProjectInsightsStats stats={data.stats} />
+            </FullWidthContainer>
+            <MediumWideContainer>
+                <ProjectHealth health={data.health} />
+            </MediumWideContainer>
+            <WideContainer>
+                <LeadTimeForChanges />
+            </WideContainer>
+            <NarrowContainer>
+                <FlagTypesUsed featureTypeCounts={data.featureTypeCounts} />
+            </NarrowContainer>
+            <NarrowContainer>Project members</NarrowContainer>
+            <WideContainer>
+                {data.changeRequests && (
+                    <ChangeRequests changeRequests={data.changeRequests} />
+                )}
+            </WideContainer>
         </Grid>
     );
 };

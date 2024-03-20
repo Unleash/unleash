@@ -83,7 +83,11 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
             </StyledRingContainer>
 
             <ConditionallyRender
-                condition={flagsPerUser !== undefined && flagsPerUser !== ''}
+                condition={
+                    flagsPerUser !== undefined &&
+                    flagsPerUser !== '' &&
+                    flagsPerUser !== 'NaN'
+                }
                 show={
                     <StyledInsightsContainer>
                         <StyledTextContainer>
@@ -102,7 +106,7 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                             </Typography>
                         </StyledTextContainer>
                         <StyledFlagCountPerUser>
-                            {flagsPerUser}
+                            {flagsPerUser ?? 'N/A'}
                         </StyledFlagCountPerUser>
                     </StyledInsightsContainer>
                 }

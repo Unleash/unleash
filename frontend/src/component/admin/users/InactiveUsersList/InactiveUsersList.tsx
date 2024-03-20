@@ -7,7 +7,7 @@ import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/use
 import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
 import useToast from '../../../../hooks/useToast';
 import { formatUnknownError } from '../../../../utils/formatUnknownError';
-import type { IUser } from '../../../../interfaces/user';
+import type { IUser } from '@server/types';
 import type React from 'react';
 import { useMemo, useState } from 'react';
 import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';

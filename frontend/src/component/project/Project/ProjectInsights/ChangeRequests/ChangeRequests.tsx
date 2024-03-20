@@ -93,7 +93,7 @@ export const ChangeRequests: FC<{
         changeRequests;
     const toBeApplied = scheduled + approved;
 
-    if (isOss() && isPro()) {
+    if (isOss() || isPro()) {
         return (
             <Container>
                 <Typography variant='h3'>Change requests</Typography>

@@ -108,7 +108,6 @@ export const ProjectMembers = ({
                 <KeyboardArrowRight />
             </NavigationBar>
             <Box
-                data-loading
                 sx={{
                     display: 'flex',
                 }}

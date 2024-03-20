@@ -216,7 +216,7 @@ What's happening here? A few things:
   autoplay
   loop
   title="A maximum number of habits on the free tier"
-  src="/media/habits.mp4"
+  src="/video/habits.mp4"
   controls> </video>
 
 ## 4. Show a different component based on the feature flag

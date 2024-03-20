@@ -9,7 +9,7 @@ export const chartInfo = {
     },
     avgUsersPerProject: {
         title: 'Users per project on average',
-        tooltip: 'Number of users in selected project.',
+        tooltip: 'Number of users in selected projects.',
     },
     users: {
         title: 'Users',

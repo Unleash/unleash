@@ -11,20 +11,19 @@ import { DashboardHeader } from './components/DashboardHeader/DashboardHeader';
 import { useDashboardData } from './hooks/useDashboardData';
 import { Charts } from './Charts';
 
-const StickyWrapper = styled(Box)<{ scrolled?: string }>(
-    ({ theme, scrolled }) => ({
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        padding:
-            scrolled === 'true' ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
-        background: theme.palette.background.application,
-        transition: 'padding 0.3s ease',
-    }),
-);
+const StickyWrapper = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'scrolled',
+})<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
+}));
 
 export const ExecutiveDashboard: VFC = () => {
-    const [scrolled, setScrolled] = useState('false');
+    const [scrolled, setScrolled] = useState(false);
     const { executiveDashboardData, loading, error } = useExecutiveDashboard();
     const stateConfig = {
         projects: withDefault(ArrayParam, [allOption.id]),
@@ -41,9 +40,9 @@ export const ExecutiveDashboard: VFC = () => {
 
     const handleScroll = () => {
         if (!scrolled && window.scrollY > 0) {
-            setScrolled('true');
+            setScrolled(true);
         } else if (scrolled && window.scrollY === 0) {
-            setScrolled('false');
+            setScrolled(false);
         }
     };
 

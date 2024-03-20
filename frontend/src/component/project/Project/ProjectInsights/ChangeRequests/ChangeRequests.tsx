@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import type { ProjectInsightsSchemaChangeRequests } from '../../../../../openapi';
+import type { FC } from 'react';
 
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -81,15 +83,15 @@ const BigNumber = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-export const ChangeRequests = () => {
+export const ChangeRequests: FC<{
+    changeRequests: ProjectInsightsSchemaChangeRequests;
+}> = ({ changeRequests }) => {
     const projectId = useRequiredPathParam('projectId');
     const { isOss, isPro } = useUiConfig();
 
-    const toBeApplied = 12;
-    const toBeReviewed = 3;
-    const total = 32;
-    const applied = 28;
-    const rejected = 4;
+    const { total, applied, rejected, reviewRequired, scheduled, approved } =
+        changeRequests;
+    const toBeApplied = scheduled + approved;
 
     if (isOss() && isPro()) {
         return (
@@ -109,7 +111,7 @@ export const ChangeRequests = () => {
                 <KeyboardArrowRight />
             </ChangeRequestNavigation>
 
-            <BoxesContainer>
+            <BoxesContainer data-loading>
                 <OpenBox>
                     <ChangeRequestNavigation
                         to={`/projects/${projectId}/change-requests`}
@@ -123,7 +125,7 @@ export const ChangeRequests = () => {
                     </ApplyBox>
                     <ReviewBox>
                         <span>To be reviewed</span>
-                        <MediumNumber>{toBeReviewed}</MediumNumber>
+                        <MediumNumber>{reviewRequired}</MediumNumber>
                     </ReviewBox>
                 </OpenBox>
                 <NumberBox>

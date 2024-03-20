@@ -616,18 +616,6 @@ module.exports = {
                         to: '/feature-flag-tutorials',
                     },
                     {
-                        from: '/topics/feature-flags/tutorials/react/implementing-feature-flags',
-                        to: '/feature-flag-tutorials/react',
-                    },
-                    {
-                        from: '/topics/feature-flags/tutorials/flutter/a-b-testing',
-                        to: '/feature-flag-tutorials/flutter/a-b-testing',
-                    },
-                    {
-                        from: '/topics/feature-flags/tutorials/nextjs/implementing-feature-flags',
-                        to: '/feature-flag-tutorials/nextjs/implementing-feature-flags',
-                    },
-                    {
                         from: ['/tutorials/academy', '/unleash-academy'],
                         to: '/unleash-academy/introduction',
                     },

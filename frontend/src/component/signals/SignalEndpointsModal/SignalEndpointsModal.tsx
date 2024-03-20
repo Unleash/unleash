@@ -52,7 +52,7 @@ interface ISignalEndpointsModalProps {
     signalEndpoint?: ISignalEndpoint;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    newToken: (token: string) => void;
+    newToken: (token: string, signalEndpoint: ISignalEndpoint) => void;
     onOpenSignals: () => void;
 }
 
@@ -120,12 +120,15 @@ export const SignalEndpointsModal = ({
             if (editing) {
                 await updateSignalEndpoint(signalEndpoint.id, payload);
             } else {
-                const { id } = await addSignalEndpoint(payload);
+                const signalEndpoint = await addSignalEndpoint(payload);
                 if (tokenGeneration === TokenGeneration.NOW) {
-                    const { token } = await addSignalEndpointToken(id, {
-                        name: tokenName,
-                    });
-                    newToken(token);
+                    const { token } = await addSignalEndpointToken(
+                        signalEndpoint.id,
+                        {
+                            name: tokenName,
+                        },
+                    );
+                    newToken(token, signalEndpoint);
                 }
             }
             setToastData({

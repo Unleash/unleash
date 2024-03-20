@@ -79,7 +79,7 @@ export default class RegisterController extends Controller {
     private static extractProjectFromRequest(
         req: IAuthRequest<unknown, void, ClientApplicationSchema>,
     ) {
-        const token = req.get('Authorisation');
+        const token = req.get('Authorisation') || req.headers.authorization;
         if (token) {
             return token.split(':')[0];
         }

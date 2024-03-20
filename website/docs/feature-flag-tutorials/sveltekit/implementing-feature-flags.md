@@ -1,6 +1,7 @@
 ---
 title: How to Implement Feature Flags in SvelteKit
 description: "How to use Unleash feature flags with SvelteKit."
+slug: /feature-flag-tutorials/sveltekit
 ---
 
 Hello and welcome to another tutorial. This is about adding feature flags to an app made with [SvelteKit](https://kit.svelte.dev/), [Unleash](https://www.getunleash.io/) and the official [Unleash Svelte SDK](https://docs.getunleash.io/reference/sdks/svelte).
@@ -9,13 +10,13 @@ We'll make a paired-down habits app to keep track of your new year's resolutions
 
 While this is not meant to be a complete product, we can leverage feature flags using a full stack framework like Next.js or SvelteKit. The completed code for this implementation is available in [a Github repository](https://github.com/alvinometric/unleash-sveltekit).
 
-- [Setup](#setup)
-- [Create a basic habits app](#create-a-basic-habits-app)
-- [Adding habits and premium features](#adding-habits-and-premium-features)
-- [Showing a different component based on the feature flag](#showing-a-different-component-based-on-the-feature-flag)
-- [Conclusion](#conclusion)
+1. [Setup](#1-setup)
+2. [Create a basic habits app](#2-create-a-basic-habits-app)
+3. [Adding habits and premium features](#3-add-habits-and-premium-features)
+4. [Showing a different component based on the feature flag](#4-show-a-different-component-based-on-the-feature-flag)
+5. [Conclusion](#conclusion)
 
-## Setup
+## 1. Setup
 
 Create a skeleton SvelteKit project named "habits".
 
@@ -29,7 +30,7 @@ We'll need a few more dependencies. You can install these in one command below:
 npm i date-fns @unleash/proxy-client-svelte
 ```
 
-## Create a basic habits app
+## 2. Create a basic habits app
 
 We'll use Svelte stores to keep track of a global array of habits. For the sake of simplicity, we won't store these habits anywhere yet (feel free to add localStorage or a database). Our basic habit app will only consist of 3 files.
 
@@ -148,9 +149,9 @@ To complete the basic setup of the app, add a component for each habit that be c
 
 Now we have a fully functioning Svelte app in all its glory! Essentially, it's a table with checkboxes.
 
-![Our habits app, a table with each habit as a row](./20240202174256.png)
+![Our habits app, a table with each habit as a row](/img/sveltekit-tutorial-browser.png)
 
-## Adding habits and premium features
+## 3. Add habits and premium features
 
 We have the basics of the app set up, but we could make it more user-friendly. Let's add some more functionality:
 
@@ -218,16 +219,16 @@ What's happening here? A few things:
   src="/media/habits.mp4"
   controls> </video>
 
-## Showing a different component based on the feature flag
+## 4. Show a different component based on the feature flag
 
 On to the main topic, adding feature flags.
 
 Go to your Unleash dashboard, and create new project (you're welcome to use the default project here).
-![Create a new project in Unleash](./proj.png)
+![Create a new project in Unleash](/img/sveltekit-create-project.png)
 
 Next, create a feature flag called `maxHabitsIncreased`.
 
-![create a feature flag called "maxHabitsIncreased"](./feat.png)
+![create a feature flag called "maxHabitsIncreased"](/img/sveltekit-create-flag.png)
 
 Based on whether this flag is enabled or not, we'll set the `maxHabits` value to either 6 or 2. You could set this directly in a flag value if you wanted as well.
 

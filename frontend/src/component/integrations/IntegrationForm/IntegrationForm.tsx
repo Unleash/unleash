@@ -142,7 +142,11 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                     : event.target.value;
             setFormValues(
                 produce((draft) => {
-                    draft.parameters[param] = value;
+                    if (value === undefined) {
+                        delete draft.parameters[param];
+                    } else {
+                        draft.parameters[param] = value;
+                    }
                 }),
             );
         };

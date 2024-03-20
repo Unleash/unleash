@@ -1,6 +1,8 @@
 ---
 title: How to Implement Feature Flags in Next.js using Unleash
+slug: /feature-flag-tutorials/nextjs
 ---
+
 :::note
 
 This article is a contribution by **[Kafilat Adeleke](https://www.linkedin.com/in/kafilat-adeleke-650332222/)** as a part of the **[Community Content Program](https://github.com/unleash/community-content)**. You can also suggest a topic by [opening an issue](https://github.com/Unleash/community-content/issues), or [Write for Unleash](https://www.getunleash.io/blog/get-published-through-unleashs-community-content-program) as a part of the Community Content Program.

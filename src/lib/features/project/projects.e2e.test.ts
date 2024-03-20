@@ -287,3 +287,15 @@ test('response should include last seen at per environment for multiple environm
 
     expect(body.features[1].lastSeenAt).toBe('2023-10-01T12:34:56.000Z');
 });
+
+test('project insights happy path', async () => {
+    const { body } = await app.request
+        .get('/api/admin/projects/default/insights')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.leadTime.features[0]).toEqual({
+        name: 'feature1',
+        timeToProduction: 120,
+    });
+});

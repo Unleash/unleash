@@ -12,6 +12,8 @@ import FeatureTypeStore from '../../db/feature-type-store';
 import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 import { ProjectInsightsService } from './project-insights-service';
 import ProjectStore from '../project/project-store';
+import { ProjectInsightsReadModel } from './project-insights-read-model';
+import { FakeProjectInsightsReadModel } from './fake-project-insights-read-model';
 
 export const createProjectInsightsService = (
     db: Db,
@@ -34,6 +36,7 @@ export const createProjectInsightsService = (
     const featureTypeStore = new FeatureTypeStore(db, getLogger);
     const projectStatsStore = new ProjectStatsStore(db, eventBus, getLogger);
     const featureToggleService = createFeatureToggleService(db, config);
+    const projectInsightsReadModel = new ProjectInsightsReadModel(db);
 
     return new ProjectInsightsService(
         {
@@ -43,6 +46,7 @@ export const createProjectInsightsService = (
             projectStatsStore,
         },
         featureToggleService,
+        projectInsightsReadModel,
     );
 };
 
@@ -54,6 +58,7 @@ export const createFakeProjectInsightsService = (
     const featureTypeStore = new FakeFeatureTypeStore();
     const projectStatsStore = new FakeProjectStatsStore();
     const featureToggleService = createFakeFeatureToggleService(config);
+    const projectInsightsReadModel = new FakeProjectInsightsReadModel();
 
     return new ProjectInsightsService(
         {
@@ -63,5 +68,6 @@ export const createFakeProjectInsightsService = (
             projectStatsStore,
         },
         featureToggleService,
+        projectInsightsReadModel,
     );
 };

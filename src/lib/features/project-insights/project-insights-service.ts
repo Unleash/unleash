@@ -8,9 +8,13 @@ import type {
 } from '../../types';
 import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
 import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
-import type { ProjectDoraMetricsSchema } from '../../openapi';
+import type {
+    ProjectDoraMetricsSchema,
+    ProjectInsightsSchema,
+} from '../../openapi';
 import { calculateProjectHealth } from '../../domain/project-health/project-health';
 import type { IProjectInsightsReadModel } from './project-insights-read-model-type';
+import { subDays } from 'date-fns';
 
 export class ProjectInsightsService {
     private projectStore: IProjectStore;
@@ -122,33 +126,51 @@ export class ProjectInsightsService {
         };
     }
 
-    async getProjectInsights(projectId: string) {
-        const result = {
-            members: {
-                currentMembers: 20,
-                change: 3,
-            },
-        };
-
-        const [stats, featureTypeCounts, health, leadTime, changeRequests] =
-            await Promise.all([
-                this.projectStatsStore.getProjectStats(projectId),
-                this.featureToggleStore.getFeatureTypeCounts({
-                    projectId,
-                    archived: false,
-                }),
-                this.getHealthInsights(projectId),
-                this.getDoraMetrics(projectId),
-                this.projectInsightsReadModel.getChangeRequests(projectId),
-            ]);
+    private async getProjectMembers(
+        projectId: string,
+    ): Promise<ProjectInsightsSchema['members']> {
+        const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
+        const [currentMembers, change] = await Promise.all([
+            this.projectStore.getMembersCountByProject(projectId),
+            this.projectStore.getMembersCountByProjectAfterDate(
+                projectId,
+                dateMinusThirtyDays,
+            ),
+        ]);
 
         return {
-            ...result,
+            currentMembers,
+            change,
+        };
+    }
+
+    async getProjectInsights(projectId: string) {
+        const [
             stats,
             featureTypeCounts,
             health,
             leadTime,
             changeRequests,
+            members,
+        ] = await Promise.all([
+            this.projectStatsStore.getProjectStats(projectId),
+            this.featureToggleStore.getFeatureTypeCounts({
+                projectId,
+                archived: false,
+            }),
+            this.getHealthInsights(projectId),
+            this.getDoraMetrics(projectId),
+            this.projectInsightsReadModel.getChangeRequests(projectId),
+            this.getProjectMembers(projectId),
+        ]);
+
+        return {
+            stats,
+            featureTypeCounts,
+            health,
+            leadTime,
+            changeRequests,
+            members,
         };
     }
 }

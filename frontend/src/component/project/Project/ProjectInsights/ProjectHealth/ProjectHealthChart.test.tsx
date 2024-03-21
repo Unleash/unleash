@@ -109,4 +109,35 @@ describe('ProjectHealthChart', () => {
         expect(screen.queryByText('3 flags')).toBeInTheDocument();
         expect(screen.queryByText('50%')).toBeInTheDocument();
     });
+
+    test('renders small values without negative stroke dasharray', () => {
+        const { container } = render(
+            <ProjectHealthChart
+                active={1000}
+                stale={1}
+                potentiallyStale={1}
+                health={50}
+            />,
+        );
+
+        const activeCircle = container.querySelector(
+            'circle[data-testid="active-circle"]',
+        );
+        const staleCircle = container.querySelector(
+            'circle[data-testid="stale-circle"]',
+        );
+        const potentiallyStaleCircle = container.querySelector(
+            'circle[data-testid="potentially-stale-circle"]',
+        );
+
+        expect(
+            activeCircle?.getAttribute('stroke-dasharray')?.charAt(0),
+        ).not.toBe('-');
+        expect(
+            staleCircle?.getAttribute('stroke-dasharray')?.charAt(0),
+        ).not.toBe('-');
+        expect(
+            potentiallyStaleCircle?.getAttribute('stroke-dasharray')?.charAt(0),
+        ).not.toBe('-');
+    });
 });

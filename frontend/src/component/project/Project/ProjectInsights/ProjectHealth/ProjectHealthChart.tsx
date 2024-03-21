@@ -29,8 +29,14 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
     const potentiallyStalePercentage =
         active === 0 ? 0 : (potentiallyStale / active) * 100;
 
-    const activeLength = (activePercentage / 100) * circumference - gap;
-    const staleLength = (stalePercentage / 100) * circumference - gap;
+    const activeLength = Math.max(
+        (activePercentage / 100) * circumference - gap,
+        1,
+    );
+    const staleLength = Math.max(
+        (stalePercentage / 100) * circumference - gap,
+        1,
+    );
     const potentiallyStaleLength =
         (potentiallyStalePercentage / 100) * activeLength;
 

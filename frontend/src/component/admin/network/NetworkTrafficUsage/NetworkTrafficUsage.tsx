@@ -195,7 +195,7 @@ const createBarChartOptions = (
             },
         },
         tooltip: {
-            backgroundColor: '#fff',
+            backgroundColor: theme.palette.background.paper,
             titleColor: theme.palette.text.primary,
             bodyColor: theme.palette.text.primary,
             bodySpacing: 6,

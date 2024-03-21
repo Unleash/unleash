@@ -48,8 +48,6 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
         1,
     );
 
-    console.log(activeLength, staleLength, potentiallyStaleLength);
-
     const activeRotation = -90 + gapAngle / 2;
     const potentiallyStaleRotation =
         activeRotation +

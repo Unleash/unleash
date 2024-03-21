@@ -76,7 +76,6 @@ import type {
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
 } from './project-store-type';
-import { calculateProjectHealth } from '../../domain/project-health/project-health';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -1238,62 +1237,6 @@ export default class ProjectService {
                 projectMembersAddedCurrentWindow,
             },
         };
-    }
-
-    private async getHealthInsights(projectId: string) {
-        const [overview, featureTypes] = await Promise.all([
-            this.getProjectHealth(projectId, false, undefined),
-            this.featureTypeStore.getAll(),
-        ]);
-
-        const { activeCount, potentiallyStaleCount, staleCount } =
-            calculateProjectHealth(overview.features, featureTypes);
-
-        return {
-            activeCount,
-            potentiallyStaleCount,
-            staleCount,
-            rating: overview.health,
-        };
-    }
-
-    async getProjectInsights(projectId: string) {
-        const result = {
-            leadTime: {
-                projectAverage: 17.1,
-                features: [
-                    { name: 'feature1', timeToProduction: 120 },
-                    { name: 'feature2', timeToProduction: 0 },
-                    { name: 'feature3', timeToProduction: 33 },
-                    { name: 'feature4', timeToProduction: 131 },
-                    { name: 'feature5', timeToProduction: 2 },
-                ],
-            },
-            members: {
-                active: 20,
-                inactive: 3,
-                totalPreviousMonth: 15,
-            },
-            changeRequests: {
-                total: 24,
-                approved: 5,
-                applied: 2,
-                rejected: 4,
-                reviewRequired: 10,
-                scheduled: 3,
-            },
-        };
-
-        const [stats, featureTypeCounts, health] = await Promise.all([
-            this.projectStatsStore.getProjectStats(projectId),
-            this.featureToggleService.getFeatureTypeCounts({
-                projectId,
-                archived: false,
-            }),
-            this.getHealthInsights(projectId),
-        ]);
-
-        return { ...result, stats, featureTypeCounts, health };
     }
 
     async getProjectHealth(

@@ -315,7 +315,7 @@ export const NetworkTrafficUsage: VFC = () => {
         datasets,
     };
 
-    const { isOss, uiConfig } = useUiConfig();
+    const { isOss } = useUiConfig();
     const flagEnabled = useUiFlag('collectTrafficDataUsage');
 
     useEffect(() => {

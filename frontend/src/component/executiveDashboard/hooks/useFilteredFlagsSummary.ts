@@ -42,7 +42,8 @@ export const useFilteredFlagsSummary = (
             },
         );
 
-        const flagsPerUser = sum.total / users.total;
+        const flagsPerUser =
+            sum.total && users?.total ? sum.total / users.total : 0;
 
         return {
             ...sum,

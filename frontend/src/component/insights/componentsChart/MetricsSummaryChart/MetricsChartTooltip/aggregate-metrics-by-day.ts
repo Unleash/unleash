@@ -1,7 +1,7 @@
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 
 export function aggregateDataPerDate(
-    items: ExecutiveSummarySchema['metricsSummaryTrends'],
+    items: InstanceInsightsSchema['metricsSummaryTrends'],
 ) {
     return items.reduce(
         (acc, item) => {

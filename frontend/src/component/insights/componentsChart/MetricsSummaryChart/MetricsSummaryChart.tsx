@@ -1,7 +1,7 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 import {
     fillGradientPrimary,
     LineChart,
@@ -16,7 +16,7 @@ import { aggregateDataPerDate } from './MetricsChartTooltip/aggregate-metrics-by
 
 interface IMetricsSummaryChartProps {
     metricsSummaryTrends: GroupedDataByProject<
-        ExecutiveSummarySchema['metricsSummaryTrends']
+        InstanceInsightsSchema['metricsSummaryTrends']
     >;
     isAggregate?: boolean;
 }

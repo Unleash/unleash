@@ -1,11 +1,11 @@
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 
 type GroupedDataByDate<T> = Record<string, T[]>;
 
 type DateResult<T> = Record<string, T>;
 
 export function medianTimeToProduction(
-    projectsData: ExecutiveSummarySchema['projectFlagTrends'],
+    projectsData: InstanceInsightsSchema['projectFlagTrends'],
 ): DateResult<number> {
     const groupedData: GroupedDataByDate<number> = {};
     projectsData.forEach((item) => {

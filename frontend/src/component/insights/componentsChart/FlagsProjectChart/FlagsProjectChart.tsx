@@ -1,6 +1,6 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { useProjectChartData } from '../../hooks/useProjectChartData';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
@@ -8,7 +8,7 @@ import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
 interface IFlagsProjectChartProps {
     projectFlagTrends: GroupedDataByProject<
-        ExecutiveSummarySchema['projectFlagTrends']
+        InstanceInsightsSchema['projectFlagTrends']
     >;
 }
 

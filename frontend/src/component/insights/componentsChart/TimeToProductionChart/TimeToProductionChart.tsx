@@ -1,6 +1,6 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 import {
     fillGradientPrimary,
     LineChart,
@@ -15,7 +15,7 @@ import { medianTimeToProduction } from './median-time-to-production';
 
 interface ITimeToProductionChartProps {
     projectFlagTrends: GroupedDataByProject<
-        ExecutiveSummarySchema['projectFlagTrends']
+        InstanceInsightsSchema['projectFlagTrends']
     >;
     isAggregate?: boolean;
 }

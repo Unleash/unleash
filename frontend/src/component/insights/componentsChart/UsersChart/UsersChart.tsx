@@ -1,7 +1,7 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { useTheme } from '@mui/material';
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 import {
     fillGradientPrimary,
     LineChart,
@@ -11,7 +11,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
 
 interface IUsersChartProps {
-    userTrends: ExecutiveSummarySchema['userTrends'];
+    userTrends: InstanceInsightsSchema['userTrends'];
     isLoading?: boolean;
 }
 

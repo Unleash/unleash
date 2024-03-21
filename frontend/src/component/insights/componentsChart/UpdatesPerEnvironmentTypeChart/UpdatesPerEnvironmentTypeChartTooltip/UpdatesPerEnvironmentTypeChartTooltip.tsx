@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import type { ExecutiveSummarySchemaEnvironmentTypeTrendsItem } from 'openapi';
+import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
 import type { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
 
@@ -64,7 +64,7 @@ export const UpdatesPerEnvironmentTypeChartTooltip: VFC<{
             label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as ExecutiveSummarySchemaEnvironmentTypeTrendsItem,
+            value: point.raw as InstanceInsightsSchemaEnvironmentTypeTrendsItem,
         };
     });
 

@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import type { ExecutiveSummarySchemaMetricsSummaryTrendsItem } from 'openapi';
+import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
 import type { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
 
@@ -66,7 +66,7 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
             label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as ExecutiveSummarySchemaMetricsSummaryTrendsItem & {
+            value: point.raw as InstanceInsightsSchemaMetricsSummaryTrendsItem & {
                 total: number;
             },
         };

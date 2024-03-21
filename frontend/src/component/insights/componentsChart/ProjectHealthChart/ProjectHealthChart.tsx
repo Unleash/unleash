@@ -1,6 +1,6 @@
 import 'chartjs-adapter-date-fns';
 import { useMemo, type VFC } from 'react';
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
 import { useProjectChartData } from '../../hooks/useProjectChartData';
 import {
@@ -13,7 +13,7 @@ import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<
-        ExecutiveSummarySchema['projectFlagTrends']
+        InstanceInsightsSchema['projectFlagTrends']
     >;
     isAggregate?: boolean;
 }

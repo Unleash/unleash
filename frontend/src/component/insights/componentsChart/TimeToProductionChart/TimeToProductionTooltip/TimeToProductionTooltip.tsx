@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import type { ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
+import type { InstanceInsightsSchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import type { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
@@ -62,7 +62,7 @@ export const TimeToProductionTooltip: VFC<{ tooltip: TooltipState | null }> = ({
             label: point.label,
             title: point.dataset.label,
             color: point.dataset.borderColor,
-            value: point.raw as ExecutiveSummarySchemaProjectFlagTrendsItem,
+            value: point.raw as InstanceInsightsSchemaProjectFlagTrendsItem,
         };
     });
 

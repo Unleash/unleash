@@ -1,12 +1,12 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { useTheme } from '@mui/material';
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
 
 interface IFlagsChartProps {
-    flagTrends: ExecutiveSummarySchema['flagTrends'];
+    flagTrends: InstanceInsightsSchema['flagTrends'];
     isLoading?: boolean;
 }
 

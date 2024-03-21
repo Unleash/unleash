@@ -2,21 +2,21 @@ import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { useTheme } from '@mui/material';
 import type {
-    ExecutiveSummarySchema,
-    ExecutiveSummarySchemaEnvironmentTypeTrendsItem,
+    InstanceInsightsSchema,
+    InstanceInsightsSchemaEnvironmentTypeTrendsItem,
 } from 'openapi';
 import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
 import { UpdatesPerEnvironmentTypeChartTooltip } from './UpdatesPerEnvironmentTypeChartTooltip/UpdatesPerEnvironmentTypeChartTooltip';
 
 interface IUpdatesPerEnvironmnetTypeChart {
-    environmentTypeTrends: ExecutiveSummarySchema['environmentTypeTrends'];
+    environmentTypeTrends: InstanceInsightsSchema['environmentTypeTrends'];
     isLoading?: boolean;
 }
 
 const groupByDate = (
-    items: ExecutiveSummarySchemaEnvironmentTypeTrendsItem[],
-): Record<string, ExecutiveSummarySchemaEnvironmentTypeTrendsItem[]> => {
+    items: InstanceInsightsSchemaEnvironmentTypeTrendsItem[],
+): Record<string, InstanceInsightsSchemaEnvironmentTypeTrendsItem[]> => {
     if (!items) {
         return {};
     }
@@ -33,7 +33,7 @@ const groupByDate = (
 
             return acc;
         },
-        {} as Record<string, ExecutiveSummarySchemaEnvironmentTypeTrendsItem[]>,
+        {} as Record<string, InstanceInsightsSchemaEnvironmentTypeTrendsItem[]>,
     );
 
     return grouped;

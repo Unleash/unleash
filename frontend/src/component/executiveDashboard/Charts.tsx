@@ -165,7 +165,7 @@ export const Charts: VFC<IChartsProps> = ({
                         isAggregate={showAllProjects}
                     />
                 </ChartWidget>
-                <Widget {...chartInfo.averageTimeToProduction}>
+                <Widget {...chartInfo.medianTimeToProduction}>
                     <TimeToProduction daysToProduction={avgDaysToProduction} />
                 </Widget>
                 <ChartWidget

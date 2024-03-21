@@ -3,7 +3,7 @@ import type { ExecutiveSummarySchema } from 'openapi';
 import { useFilteredTrends } from './useFilteredTrends';
 import { useGroupedProjectTrends } from './useGroupedProjectTrends';
 import { useFilteredFlagsSummary } from './useFilteredFlagsSummary';
-import { useAvgTimeToProduction } from './useAvgTimeToProduction';
+import { useMedianTimeToProduction } from './useMedianTimeToProduction';
 
 export const useDashboardData = (
     executiveDashboardData: ExecutiveSummarySchema,
@@ -27,7 +27,8 @@ export const useDashboardData = (
         executiveDashboardData.users,
     );
 
-    const avgDaysToProduction = useAvgTimeToProduction(groupedProjectsData);
+    const medianTimeToProduction =
+        useMedianTimeToProduction(groupedProjectsData);
 
     return useMemo(
         () => ({
@@ -39,7 +40,7 @@ export const useDashboardData = (
             users: executiveDashboardData.users,
             environmentTypeTrends: executiveDashboardData.environmentTypeTrends,
             summary,
-            avgDaysToProduction,
+            medianTimeToProduction,
         }),
         [
             executiveDashboardData,
@@ -49,7 +50,7 @@ export const useDashboardData = (
             metricsData,
             groupedMetricsData,
             summary,
-            avgDaysToProduction,
+            medianTimeToProduction,
         ],
     );
 };

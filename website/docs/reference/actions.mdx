@@ -4,12 +4,12 @@ title: Actions
 
 :::info Availability
 
-Unleash actions is an **enterprise-only** feature released as beta in Unleash v5.11.
+Actions were introduced as a beta feature in **Unleash 5.11** and are only available in Unleash Enterprise. We plan to make this feature generally available to all Enterprise users in **Unleash 5.12**.
 
 :::
 ## Overview
 
-Actions enable our users to execute automated actions based on signals received from an external system.
+Actions allow you to configure automated actions to be executed based on signals received from an external system.
 
 ![Actions executed by Unleash.](/img/signals/action-execution.png)
 
@@ -32,19 +32,21 @@ When creating a new action you first need to specify a name and a description. T
 
 Then you need to select a source. If you haven't created a signal endpoint yet, you can do so by using the **Create new signal endpoint** link (more information on this in the [Signals](./signals.mdx) section).
 
-Once selected the source, you'll be able to see a preview of the latest signal which will help you to define different filters that need to match before executing the action.
+If the source you selected already received at least one signal, you'll be able to see a preview of the latest signal received. This can help you define the different filters that need to match for the action to be executed.
 
-Filters work similar as [feature flag strategy constraints](./strategy-constraints.md) where the signal payload acts as the context for the constraint evaluation.
+Filters work similarly to [feature flag strategy constraints](./strategy-constraints.md), where the signal payload acts as the context for the constraint evaluation.
+
+Filters are completely optional, so if you don't configure any filter your action will always be executed whenever you receive a new signal on the selected source.
 
 ### Actions
 
 When these actions are triggered, they will execute under the identity of a [service account](./service-accounts.md). This means that when you later check the [event log](./event-log) you will see this service account as the actor for those events. In order to execute the configured actions successfully, this service account needs to have the necessary permissions. This service account doesn't need an API token, so when creating it you can skip the token generation step and simply make sure it has the necessary permissions.
 
-The actions are executed in the order they are defined. You can add multiple actions to an action set. Depending on the action you want to execute you will have to provide different parameters.
+The actions are executed in the same order that they are defined. If a previous action fails, the following actions will not be started. You can add multiple actions to an action set and you can add multiple action sets to a project. Depending on the action you want to execute you will have to provide different parameters.
 
 ## Viewing action executions
 
-Once the action is functional and signals start to match the filters, you can see the action executions in the **Actions** tab.
+Once the action is configured and you start receiving signals that match the filters you configured, you can see the action executions in the **Actions** tab.
 
 ![Action executions option.](/img/signals/view-events.png)
 
@@ -57,7 +59,7 @@ To view the action events as they are executed, select the **View events** optio
 ## Limits that apply
 There are some constraints on the actions feature as a measure to protect the stability of Unleash. These values can be overridden for self-hosted installations.
 
-Unprocessed signals are processed in a first in first out manner every 1 minute. If the number of signals to process exceeds the limit, the newest signals will be processed with some lag. 
+Unprocessed signals are processed in a "first in, first out" fashion, once every minute. If the number of pending signals to process exceeds the limit, it may take longer for the latest signals to be processed.
 
 The limits are as follows:
 
@@ -65,10 +67,9 @@ The limits are as follows:
 - **Max filters per action set**: 5.
 - **Max distinct values in a filter**: 25.
 - **Max actions per action set**: 10.
-- **Max signals to retrieve per cycle**: 10.
+- **Max signals to process per cycle**: 10.
 
 Ref: [Unleash Config](https://github.com/Unleash/unleash/blob/859fe098fedc261d646833012d9d408039491075/src/lib/create-config.ts#L577-L604)
 
 ## Sending signals to Unleash
 See [Signals](./signals.mdx)
-import { info } from "console"

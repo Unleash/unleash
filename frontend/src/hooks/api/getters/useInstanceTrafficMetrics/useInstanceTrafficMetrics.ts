@@ -2,9 +2,10 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import type { TrafficUsageDataSegmentedSchema } from 'openapi';
 
 export interface IInstanceTrafficMetricsResponse {
-    usage: any;
+    usage: TrafficUsageDataSegmentedSchema;
 
     refetch: () => void;
 

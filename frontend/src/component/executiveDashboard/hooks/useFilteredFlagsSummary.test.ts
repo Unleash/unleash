@@ -159,7 +159,7 @@ describe('useFilteredFlagTrends', () => {
             potentiallyStale: 0,
             averageUsers: 0,
             averageHealth: undefined,
-            flagsPerUser: 'N/A',
+            flagsPerUser: '0.0',
         });
     });
 });

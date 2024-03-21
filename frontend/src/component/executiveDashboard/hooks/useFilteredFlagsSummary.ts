@@ -42,14 +42,14 @@ export const useFilteredFlagsSummary = (
             },
         );
 
-        const flagsPerUser = users?.total ? sum.total / users.total : 0;
+        const flagsPerUserCalculation = sum.total / users.total;
+        const flagsPerUser = Number.isNaN(flagsPerUserCalculation)
+            ? 'N/A'
+            : flagsPerUserCalculation.toFixed(1);
 
         return {
             ...sum,
-            flagsPerUser:
-                Number.isNaN(flagsPerUser) || flagsPerUser === 0
-                    ? 'N/A'
-                    : flagsPerUser.toFixed(1),
+            flagsPerUser,
             averageUsers,
             averageHealth: sum.total
                 ? ((sum.active / (sum.total || 1)) * 100).toFixed(0)

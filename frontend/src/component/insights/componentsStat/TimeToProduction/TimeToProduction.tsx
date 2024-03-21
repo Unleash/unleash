@@ -1,6 +1,6 @@
 import type { VFC } from 'react';
 import { Typography, styled } from '@mui/material';
-import { Gauge } from '../../components/Gauge/Gauge';
+import { Gauge } from 'component/insights/components/Gauge/Gauge';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',

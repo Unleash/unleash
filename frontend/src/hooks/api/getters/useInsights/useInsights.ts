@@ -2,10 +2,10 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { ExecutiveSummarySchema } from 'openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 
-interface IUseExecutiveDashboardDataOutput {
-    executiveDashboardData: ExecutiveSummarySchema;
+interface IUseInsightsDataOutput {
+    executiveDashboardData: InstanceInsightsSchema;
     refetchExecutiveDashboard: () => void;
     loading: boolean;
     error?: Error;
@@ -13,10 +13,10 @@ interface IUseExecutiveDashboardDataOutput {
 
 export const useInsights = (
     options?: SWRConfiguration,
-): IUseExecutiveDashboardDataOutput => {
+): IUseInsightsDataOutput => {
     const path = formatApiPath('api/admin/dashboard/executive');
 
-    const { data, error } = useSWR<ExecutiveSummarySchema>(
+    const { data, error } = useSWR<InstanceInsightsSchema>(
         path,
         fetchExecutiveDashboard,
         options,
@@ -44,7 +44,7 @@ export const useInsights = (
 
 const fetchExecutiveDashboard = (
     path: string,
-): Promise<ExecutiveSummarySchema> => {
+): Promise<InstanceInsightsSchema> => {
     return fetch(path)
         .then(handleErrorResponses('Executive Dashboard Data'))
         .then((res) => res.json());

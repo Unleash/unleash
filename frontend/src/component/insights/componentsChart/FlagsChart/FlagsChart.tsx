@@ -2,8 +2,11 @@ import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { useTheme } from '@mui/material';
 import type { InstanceInsightsSchema } from 'openapi';
-import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
-import { usePlaceholderData } from '../../hooks/usePlaceholderData';
+import {
+    LineChart,
+    NotEnoughData,
+} from 'component/insights/components/LineChart/LineChart';
+import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
 
 interface IFlagsChartProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];

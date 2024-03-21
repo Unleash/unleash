@@ -6,9 +6,9 @@ import {
     fillGradientPrimary,
     LineChart,
     NotEnoughData,
-} from '../../components/LineChart/LineChart';
+} from 'component/insights/components/LineChart/LineChart';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { usePlaceholderData } from '../../hooks/usePlaceholderData';
+import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
 
 interface IUsersChartProps {
     userTrends: InstanceInsightsSchema['userTrends'];

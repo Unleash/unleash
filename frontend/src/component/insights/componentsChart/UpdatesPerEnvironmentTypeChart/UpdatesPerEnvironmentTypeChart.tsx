@@ -5,8 +5,11 @@ import type {
     InstanceInsightsSchema,
     InstanceInsightsSchemaEnvironmentTypeTrendsItem,
 } from 'openapi';
-import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
-import { usePlaceholderData } from '../../hooks/usePlaceholderData';
+import {
+    LineChart,
+    NotEnoughData,
+} from 'component/insights/components/LineChart/LineChart';
+import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
 import { UpdatesPerEnvironmentTypeChartTooltip } from './UpdatesPerEnvironmentTypeChartTooltip/UpdatesPerEnvironmentTypeChartTooltip';
 
 interface IUpdatesPerEnvironmnetTypeChart {

@@ -6,11 +6,11 @@ import {
     fillGradientPrimary,
     LineChart,
     NotEnoughData,
-} from '../../components/LineChart/LineChart';
+} from 'component/insights/components/LineChart/LineChart';
 import { MetricsSummaryTooltip } from './MetricsChartTooltip/MetricsChartTooltip';
-import { useMetricsSummary } from '../../hooks/useMetricsSummary';
-import { usePlaceholderData } from '../../hooks/usePlaceholderData';
-import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
+import { useMetricsSummary } from 'component/insights/hooks/useMetricsSummary';
+import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
+import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { useTheme } from '@mui/material';
 import { aggregateDataPerDate } from './MetricsChartTooltip/aggregate-metrics-by-day';
 

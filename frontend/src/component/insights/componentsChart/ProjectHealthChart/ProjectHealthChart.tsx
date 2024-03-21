@@ -2,14 +2,14 @@ import 'chartjs-adapter-date-fns';
 import { useMemo, type VFC } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
-import { useProjectChartData } from '../../hooks/useProjectChartData';
+import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
 import {
     fillGradientPrimary,
     LineChart,
     NotEnoughData,
-} from '../../components/LineChart/LineChart';
+} from 'component/insights/components/LineChart/LineChart';
 import { useTheme } from '@mui/material';
-import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
+import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<

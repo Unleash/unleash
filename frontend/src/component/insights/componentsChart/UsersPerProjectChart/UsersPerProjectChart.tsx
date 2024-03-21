@@ -1,10 +1,13 @@
 import { useMemo, type VFC } from 'react';
 import 'chartjs-adapter-date-fns';
 import type { InstanceInsightsSchema } from 'openapi';
-import { LineChart, NotEnoughData } from '../../components/LineChart/LineChart';
-import { useProjectChartData } from '../../hooks/useProjectChartData';
-import { usePlaceholderData } from '../../hooks/usePlaceholderData';
-import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
+import {
+    LineChart,
+    NotEnoughData,
+} from 'component/insights/components/LineChart/LineChart';
+import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
+import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
+import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 
 interface IUsersPerProjectChartProps {
     projectFlagTrends: GroupedDataByProject<

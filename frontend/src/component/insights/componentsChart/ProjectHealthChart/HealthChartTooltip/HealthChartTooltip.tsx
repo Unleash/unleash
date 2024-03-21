@@ -2,8 +2,8 @@ import type { VFC } from 'react';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Divider, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
-import type { TooltipState } from '../../../components/LineChart/ChartTooltip/ChartTooltip';
-import { HorizontalDistributionChart } from '../../../components/HorizontalDistributionChart/HorizontalDistributionChart';
+import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({

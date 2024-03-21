@@ -55,7 +55,7 @@ To view the action events as they are executed, select the **View events** optio
 ![Event details.](/img/signals/action-execution-log.png)
 
 ## Limits that apply
-There are some constraints that apply to the execution of actions which are meant to protect the system from being overloaded. 
+There are some constraints on the actions feature as a measure to protect the stability of Unleash. These values can be overridden for self-hosted installations.
 
 Unprocessed signals are processed in a first in first out manner every 1 minute. If the number of signals to process exceeds the limit, the newest signals will be processed with some lag. 
 

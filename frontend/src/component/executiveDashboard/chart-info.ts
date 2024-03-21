@@ -51,19 +51,19 @@ export const chartInfo = {
             'How the overall health changes over time for the selected projects.',
     },
     averageTimeToProduction: {
-        title: 'Average time to production',
+        title: 'Median time to production',
         tooltip:
-            'How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is averaged across the selected projects.',
+            'How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.',
     },
     timeToProduction: {
         title: 'Time to production',
         tooltip:
-            'How the average time to production changes over time across all projects.',
+            'How the median time to production changes over time across all projects.',
     },
     timeToProductionPerProject: {
         title: 'Time to production per project',
         tooltip:
-            'How the average time to production changes over time for the selected projects.',
+            'How the median time to production changes over time for the selected projects.',
     },
     metrics: {
         title: 'Flag evaluation metrics',

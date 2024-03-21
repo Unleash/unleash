@@ -46,9 +46,8 @@ const placeholderData: ProjectInsightsSchema = {
         staleCount: 0,
     },
     members: {
-        active: 0,
-        inactive: 0,
-        totalPreviousMonth: 0,
+        currentMembers: 0,
+        change: 0,
     },
     changeRequests: {
         total: 0,

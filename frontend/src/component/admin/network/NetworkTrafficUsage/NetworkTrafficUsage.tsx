@@ -22,7 +22,10 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import {
+    type IInstanceTrafficMetricsResponse,
+    useInstanceTrafficMetrics,
+} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -53,9 +56,8 @@ const StyledHeader = styled('h3')(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-const padMonth = (month: number): string => {
-    return month < 10 ? `0${month}` : `${month}`;
-};
+const padMonth = (month: number): string =>
+    month < 10 ? `0${month}` : `${month}`;
 
 const toSelectablePeriod = (date: Date, label?: string): SelectablePeriod => {
     const year = date.getFullYear();
@@ -76,11 +78,15 @@ const toSelectablePeriod = (date: Date, label?: string): SelectablePeriod => {
 const getSelectablePeriods = (): SelectablePeriod[] => {
     const current = new Date(Date.now());
     const selectablePeriods = [toSelectablePeriod(current, 'Current month')];
-    for (let monthAdd = 1; monthAdd < 13; monthAdd++) {
+    for (
+        let subtractMonthCount = 1;
+        subtractMonthCount < 13;
+        subtractMonthCount++
+    ) {
         // JavaScript wraps around the year, so we don't need to handle that.
         const date = new Date(
             current.getFullYear(),
-            current.getMonth() - monthAdd,
+            current.getMonth() - subtractMonthCount,
             1,
         );
         selectablePeriods.push(toSelectablePeriod(date));
@@ -106,7 +112,7 @@ const getDayLabels = (dayCount: number): number[] => {
 
 const toChartData = (
     days: number[],
-    traffic: any,
+    traffic: IInstanceTrafficMetricsResponse,
     endpointsInfo: Record<string, EndpointInfo>,
 ): ChartDatasetType[] => {
     if (!traffic || !traffic.usage || !traffic.usage.apiData) {
@@ -114,7 +120,7 @@ const toChartData = (
     }
 
     const data = traffic.usage.apiData
-        .filter((item: { apiPath: string }) => !!endpointsInfo[item.apiPath])
+        .filter((item) => !!endpointsInfo[item.apiPath])
         .sort(
             (item1: any, item2: any) =>
                 endpointsInfo[item1.apiPath].order -

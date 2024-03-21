@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.10.2] - 2024-03-21
+
+### Miscellaneous Tasks
+
+- Create new flag to hide insights ui ([#6638](https://github.com/Unleash/unleash/issues/6638)) ([#6653](https://github.com/Unleash/unleash/issues/6653))
+
+
 ## [5.10.1] - 2024-03-12
 
 ### Bug Fixes

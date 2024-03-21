@@ -99,9 +99,8 @@ export class ProjectInsightsService {
     async getProjectInsights(projectId: string) {
         const result = {
             members: {
-                active: 20,
-                inactive: 3,
-                totalPreviousMonth: 15,
+                currentMembers: 20,
+                change: 3,
             },
             changeRequests: {
                 total: 24,

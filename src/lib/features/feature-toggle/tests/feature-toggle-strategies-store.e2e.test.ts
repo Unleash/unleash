@@ -4,12 +4,13 @@ import dbInit, {
     type ITestDb,
 } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
-import type { IUnleashStores } from '../../../types';
+import type { IProjectStore, IUnleashStores } from '../../../types';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let featureStrategiesStore: IFeatureStrategiesStore;
 let featureToggleStore: IFeatureToggleStore;
+let projectStore: IProjectStore;
 
 const featureName = 'test-strategies-move-project';
 
@@ -18,6 +19,7 @@ beforeAll(async () => {
     stores = db.stores;
     featureStrategiesStore = stores.featureStrategiesStore;
     featureToggleStore = stores.featureToggleStore;
+    projectStore = stores.projectStore;
     await featureToggleStore.create('default', {
         name: featureName,
         createdByUserId: 9999,
@@ -208,5 +210,30 @@ describe('strategy parameters default to sane defaults', () => {
         expect(strategy.parameters).toEqual({
             hostnames: 'myfantastichost',
         });
+    });
+    test('Strategy picks the default stickiness set for the project', async () => {
+        const project = await projectStore.create({
+            name: 'customDefaultStickiness',
+            id: 'custom_default_stickiness',
+        });
+        const defaultStickiness = 'userId';
+        await db.rawDatabase.raw(
+            `UPDATE project_settings SET default_stickiness = ? WHERE project = ?`,
+            [defaultStickiness, project.id],
+        );
+        const toggle = await featureToggleStore.create(project.id, {
+            name: 'testing-default-strategy-on-project',
+            createdByUserId: 9999,
+        });
+        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
+            strategyName: 'gradualRollout',
+            projectId: project.id,
+            environment: 'default',
+            featureName: toggle.name,
+            constraints: [],
+            sortOrder: 15,
+            parameters: {},
+        });
+        expect(strategy.parameters.stickiness).toBe(defaultStickiness);
     });
 });

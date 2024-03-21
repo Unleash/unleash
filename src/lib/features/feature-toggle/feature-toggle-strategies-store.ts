@@ -48,6 +48,7 @@ const T = {
     featureStrategySegment: 'feature_strategy_segment',
     featureEnvs: 'feature_environments',
     strategies: 'strategies',
+    projectSettings: 'project_settings',
 };
 
 interface IFeatureStrategiesTable {
@@ -156,11 +157,12 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 
 const defaultParameters = (
     params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
+    stickiness: string,
 ) => {
     if (params.strategyName === 'gradualRollout') {
         return {
             rollout: '100',
-            stickiness: 'default',
+            stickiness,
             groupId: params.featureName,
         };
     } else {
@@ -171,8 +173,9 @@ const defaultParameters = (
 
 const parametersWithDefaults = (
     params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
+    stickiness: string,
 ) => {
-    return mergeAll([defaultParameters(params), params.parameters]);
+    return mergeAll([defaultParameters(params, stickiness), params.parameters]);
 };
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Db;
@@ -239,7 +242,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
         return Number.isInteger(max) ? max + 1 : 0;
     }
-
+    private async getDefaultStickiness(projectName: string): Promise<string> {
+        const defaultFromDb = await this.db(T.projectSettings)
+            .select('default_stickiness')
+            .where('project', projectName)
+            .first();
+        return defaultFromDb?.default_stickiness || 'default';
+    }
     async createStrategyFeatureEnv(
         strategyConfig: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
@@ -249,8 +258,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.featureName,
                 strategyConfig.environment,
             ));
-        const parameters = parametersWithDefaults(strategyConfig);
-        strategyConfig.parameters = parameters;
+        const stickiness = await this.getDefaultStickiness(
+            strategyConfig.projectId,
+        );
+        strategyConfig.parameters = parametersWithDefaults(
+            strategyConfig,
+            stickiness,
+        );
         const strategyRow = mapInput({
             id: uuidv4(),
             ...strategyConfig,

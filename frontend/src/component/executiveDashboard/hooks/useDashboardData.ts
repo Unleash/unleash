@@ -22,7 +22,10 @@ export const useDashboardData = (
     );
     const groupedMetricsData = useGroupedProjectTrends(metricsData);
 
-    const summary = useFilteredFlagsSummary(projectsData);
+    const summary = useFilteredFlagsSummary(
+        projectsData,
+        executiveDashboardData.users,
+    );
 
     const avgDaysToProduction = useAvgTimeToProduction(groupedProjectsData);
 

@@ -39,6 +39,7 @@ interface IChartsProps {
         potentiallyStale: number;
         averageUsers: number;
         averageHealth?: string;
+        flagsPerUser?: string;
     };
     avgDaysToProduction: number;
     loading: boolean;
@@ -124,9 +125,7 @@ export const Charts: VFC<IChartsProps> = ({
                     <FlagStats
                         count={summary.total}
                         flagsPerUser={
-                            showAllProjects
-                                ? (summary.total / users.total).toFixed(2)
-                                : ''
+                            showAllProjects ? summary.flagsPerUser : ''
                         }
                     />
                 </Widget>

@@ -1,9 +1,13 @@
 import { useMemo } from 'react';
-import type { ExecutiveSummarySchemaProjectFlagTrendsItem } from 'openapi';
+import type {
+    ExecutiveSummarySchemaProjectFlagTrendsItem,
+    ExecutiveSummarySchemaUsers,
+} from 'openapi';
 
 // NOTE: should we move project filtering to the backend?
 export const useFilteredFlagsSummary = (
     filteredProjectFlagTrends: ExecutiveSummarySchemaProjectFlagTrendsItem[],
+    users: ExecutiveSummarySchemaUsers,
 ) =>
     useMemo(() => {
         const lastWeekId = filteredProjectFlagTrends.reduce((prev, current) => {
@@ -38,8 +42,14 @@ export const useFilteredFlagsSummary = (
             },
         );
 
+        const flagsPerUserCalculation = sum.total / users.total;
+        const flagsPerUser = Number.isNaN(flagsPerUserCalculation)
+            ? 'N/A'
+            : flagsPerUserCalculation.toFixed(2);
+
         return {
             ...sum,
+            flagsPerUser,
             averageUsers,
             averageHealth: sum.total
                 ? ((sum.active / (sum.total || 1)) * 100).toFixed(0)

@@ -41,7 +41,7 @@ interface IChartsProps {
         averageHealth?: string;
         flagsPerUser?: string;
     };
-    avgDaysToProduction: number;
+    medianTimeToProduction: number;
     loading: boolean;
     projects: string[];
 }
@@ -71,7 +71,7 @@ export const Charts: VFC<IChartsProps> = ({
     userTrends,
     groupedProjectsData,
     flagTrends,
-    avgDaysToProduction,
+    medianTimeToProduction,
     groupedMetricsData,
     environmentTypeTrends,
     loading,
@@ -165,8 +165,10 @@ export const Charts: VFC<IChartsProps> = ({
                         isAggregate={showAllProjects}
                     />
                 </ChartWidget>
-                <Widget {...chartInfo.averageTimeToProduction}>
-                    <TimeToProduction daysToProduction={avgDaysToProduction} />
+                <Widget {...chartInfo.medianTimeToProduction}>
+                    <TimeToProduction
+                        daysToProduction={medianTimeToProduction}
+                    />
                 </Widget>
                 <ChartWidget
                     {...(showAllProjects

@@ -45,7 +45,7 @@ export const useFilteredFlagsSummary = (
         const flagsPerUserCalculation = sum.total / users.total;
         const flagsPerUser = Number.isNaN(flagsPerUserCalculation)
             ? 'N/A'
-            : flagsPerUserCalculation.toFixed(1);
+            : flagsPerUserCalculation.toFixed(2);
 
         return {
             ...sum,

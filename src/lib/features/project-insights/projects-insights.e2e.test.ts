@@ -34,8 +34,6 @@ test('project insights happy path', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    console.log(body);
-
     expect(body).toMatchObject({
         stats: {
             avgTimeToProdCurrentWindow: 0,

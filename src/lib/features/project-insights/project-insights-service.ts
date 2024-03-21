@@ -1,11 +1,11 @@
 import type {
+    IFeatureOverview,
+    IFeatureStrategiesStore,
     IFeatureToggleStore,
     IFeatureTypeStore,
-    IProjectHealth,
     IProjectStore,
     IUnleashStores,
 } from '../../types';
-import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
 import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
 import type { ProjectDoraMetricsSchema } from '../../openapi';
@@ -19,7 +19,7 @@ export class ProjectInsightsService {
 
     private featureTypeStore: IFeatureTypeStore;
 
-    private featureToggleService: FeatureToggleService;
+    private featureStrategiesStore: IFeatureStrategiesStore;
 
     private projectStatsStore: IProjectStatsStore;
 
@@ -31,20 +31,21 @@ export class ProjectInsightsService {
             featureToggleStore,
             featureTypeStore,
             projectStatsStore,
+            featureStrategiesStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
             | 'featureToggleStore'
             | 'projectStatsStore'
             | 'featureTypeStore'
+            | 'featureStrategiesStore'
         >,
-        featureToggleService: FeatureToggleService,
         projectInsightsReadModel: IProjectInsightsReadModel,
     ) {
         this.projectStore = projectStore;
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
-        this.featureToggleService = featureToggleService;
+        this.featureStrategiesStore = featureStrategiesStore;
         this.projectStatsStore = projectStatsStore;
         this.projectInsightsReadModel = projectInsightsReadModel;
     }
@@ -101,6 +102,26 @@ export class ProjectInsightsService {
         };
     }
 
+    private async getProjectHealth(
+        projectId: string,
+        archived: boolean = false,
+        userId?: number,
+    ): Promise<{ health: number; features: IFeatureOverview[] }> {
+        const [project, features] = await Promise.all([
+            this.projectStore.get(projectId),
+            this.featureStrategiesStore.getFeatureOverview({
+                projectId,
+                archived,
+                userId,
+            }),
+        ]);
+
+        return {
+            health: project.health || 0,
+            features: features,
+        };
+    }
+
     async getProjectInsights(projectId: string) {
         const result = {
             members: {
@@ -112,7 +133,7 @@ export class ProjectInsightsService {
         const [stats, featureTypeCounts, health, leadTime, changeRequests] =
             await Promise.all([
                 this.projectStatsStore.getProjectStats(projectId),
-                this.featureToggleService.getFeatureTypeCounts({
+                this.featureToggleStore.getFeatureTypeCounts({
                     projectId,
                     archived: false,
                 }),
@@ -128,42 +149,6 @@ export class ProjectInsightsService {
             health,
             leadTime,
             changeRequests,
-        };
-    }
-
-    private async getProjectHealth(
-        projectId: string,
-        archived: boolean = false,
-        userId?: number,
-    ): Promise<IProjectHealth> {
-        const [project, environments, features, members, projectStats] =
-            await Promise.all([
-                this.projectStore.get(projectId),
-                this.projectStore.getEnvironmentsForProject(projectId),
-                this.featureToggleService.getFeatureOverview({
-                    projectId,
-                    archived,
-                    userId,
-                }),
-                this.projectStore.getMembersCountByProject(projectId),
-                this.projectStatsStore.getProjectStats(projectId),
-            ]);
-
-        return {
-            stats: projectStats,
-            name: project.name,
-            description: project.description!,
-            mode: project.mode,
-            featureLimit: project.featureLimit,
-            featureNaming: project.featureNaming,
-            defaultStickiness: project.defaultStickiness,
-            health: project.health || 0,
-            updatedAt: project.updatedAt,
-            createdAt: project.createdAt,
-            environments,
-            features: features,
-            members,
-            version: 1,
         };
     }
 }

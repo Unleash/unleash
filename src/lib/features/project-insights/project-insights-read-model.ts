@@ -5,6 +5,8 @@ import type {
 import type { Db } from '../../db/db';
 
 export type ChangeRequestDBState =
+    | 'Draft'
+    | 'Cancelled'
     | 'Approved'
     | 'In review'
     | 'Applied'

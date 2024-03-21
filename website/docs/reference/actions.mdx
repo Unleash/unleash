@@ -38,7 +38,7 @@ Filters work similar as [feature flag strategy constraints](./strategy-constrain
 
 ### Actions
 
-When Unleash executes actions as reaction to an external signal, it will use a [service account](./service-accounts.md) to execute them. This service account needs to have the necessary permissions to execute the actions. This service account doesn't need an API token, so when creating it, don't generate an API token and give it the necessary permissions only.
+When these actions are triggered, they will execute under the identity of a [service account](./service-accounts.md). This means that when you later check the [event log](./event-log) you will see this service account as the actor for those events. In order to execute the configured actions successfully, this service account needs to have the necessary permissions. This service account doesn't need an API token, so when creating it you can skip the token generation step and simply make sure it has the necessary permissions.
 
 The actions are executed in the order they are defined. You can add multiple actions to an action set. Depending on the action you want to execute you will have to provide different parameters.
 

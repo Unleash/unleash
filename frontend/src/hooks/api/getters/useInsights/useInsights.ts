@@ -5,8 +5,8 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import type { InstanceInsightsSchema } from 'openapi';
 
 interface IUseInsightsDataOutput {
-    executiveDashboardData: InstanceInsightsSchema;
-    refetchExecutiveDashboard: () => void;
+    insights: InstanceInsightsSchema;
+    refetchInsights: () => void;
     loading: boolean;
     error?: Error;
 }
@@ -22,12 +22,12 @@ export const useInsights = (
         options,
     );
 
-    const refetchExecutiveDashboard = useCallback(() => {
+    const refetchInsights = useCallback(() => {
         mutate(path).catch(console.warn);
     }, [path]);
 
     return {
-        executiveDashboardData: data || {
+        insights: data || {
             users: { total: 0, inactive: 0, active: 0 },
             flags: { total: 0 },
             userTrends: [],
@@ -36,7 +36,7 @@ export const useInsights = (
             metricsSummaryTrends: [],
             environmentTypeTrends: [],
         },
-        refetchExecutiveDashboard,
+        refetchInsights,
         loading: !error && !data,
         error,
     };

@@ -24,7 +24,7 @@ const StickyWrapper = styled(Box, {
 
 export const Insights: VFC = () => {
     const [scrolled, setScrolled] = useState(false);
-    const { executiveDashboardData, loading, error } = useInsights();
+    const { insights, loading, error } = useInsights();
     const stateConfig = {
         projects: withDefault(ArrayParam, [allOption.id]),
     };
@@ -36,7 +36,7 @@ export const Insights: VFC = () => {
         ? (state.projects.filter(Boolean) as string[])
         : [];
 
-    const insightsData = useInsightsData(executiveDashboardData, projects);
+    const insightsData = useInsightsData(insights, projects);
 
     const handleScroll = () => {
         if (!scrolled && window.scrollY > 0) {

@@ -28,15 +28,14 @@ beforeEach(async () => {
     await db.rawDatabase.table('change_requests').delete();
 });
 
-const createChangeRequest = async (id: number, state: string) => {
-    await db.rawDatabase.table('change_requests').insert({
+const createChangeRequest = (id: number, state: string) =>
+    db.rawDatabase.table('change_requests').insert({
         id,
         state,
         environment: 'default',
         project: projectId,
         created_by: user.id,
     });
-};
 
 test('can read change request status counts', async () => {
     const states: ChangeRequestDBState[] = [

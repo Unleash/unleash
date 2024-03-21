@@ -11,40 +11,13 @@ import type { GroupedDataByProject } from '../../hooks/useGroupedProjectTrends';
 import { usePlaceholderData } from '../../hooks/usePlaceholderData';
 import { TimeToProductionTooltip } from './TimeToProductionTooltip/TimeToProductionTooltip';
 import { useTheme } from '@mui/material';
+import { medianTimeToProduction } from './median-time-to-production';
 
 interface ITimeToProductionChartProps {
     projectFlagTrends: GroupedDataByProject<
         ExecutiveSummarySchema['projectFlagTrends']
     >;
     isAggregate?: boolean;
-}
-
-type GroupedDataByDate<T> = Record<string, T[]>;
-
-type DateResult<T> = Record<string, T>;
-
-function averageTimeToProduction(
-    projectsData: ExecutiveSummarySchema['projectFlagTrends'],
-): DateResult<number> {
-    // Group the data by date
-    const groupedData: GroupedDataByDate<number> = {};
-    projectsData.forEach((item) => {
-        const { date, timeToProduction } = item;
-        if (!groupedData[date]) {
-            groupedData[date] = [];
-        }
-        if (timeToProduction !== undefined) {
-            groupedData[date].push(timeToProduction);
-        }
-    });
-    // Calculate the average time to production for each date
-    const averageByDate: DateResult<number> = {};
-    Object.entries(groupedData).forEach(([date, times]) => {
-        const sum = times.reduce((acc, curr) => acc + curr, 0);
-        const average = sum / times.length;
-        averageByDate[date] = average;
-    });
-    return averageByDate;
 }
 
 export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
@@ -59,7 +32,7 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
     );
 
     const aggregatedPerDay = useMemo(() => {
-        const result = averageTimeToProduction(
+        const result = medianTimeToProduction(
             Object.values(projectsDatasets.datasets).flatMap(
                 (item) => item.data,
             ),
@@ -74,7 +47,7 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'Time to production',
+                    label: 'Median time to production',
                     data,
                     borderColor: theme.palette.primary.light,
                     backgroundColor: fillGradientPrimary,

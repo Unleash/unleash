@@ -10,6 +10,7 @@ import {
 let projectInsightsReadModel: IProjectInsightsReadModel;
 let user: IUser;
 let db: ITestDb;
+const projectId = 'default';
 
 beforeAll(async () => {
     db = await dbInit('project_insights_read_model', getLogger);
@@ -32,7 +33,7 @@ const createChangeRequest = async (id: number, state: string) => {
         id,
         state,
         environment: 'default',
-        project: 'default',
+        project: projectId,
         created_by: user.id,
     });
 };
@@ -53,7 +54,7 @@ test('can read change request status counts', async () => {
     );
 
     const changeRequests =
-        await projectInsightsReadModel.getChangeRequests('default');
+        await projectInsightsReadModel.getChangeRequests(projectId);
 
     expect(changeRequests).toEqual({
         total: 6,

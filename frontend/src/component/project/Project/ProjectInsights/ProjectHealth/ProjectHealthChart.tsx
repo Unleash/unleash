@@ -16,7 +16,13 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
     health,
 }) => {
     const theme = useTheme();
-    const gap = active === 0 || stale === 0 ? 0 : 10;
+    const gap =
+        active === 0 ||
+        stale === 0 ||
+        active / stale > 30 ||
+        stale / active > 30
+            ? 0
+            : 10;
     const strokeWidth = 6;
     const radius = 50 - strokeWidth / 2;
     const circumference = 2 * Math.PI * radius;
@@ -27,7 +33,7 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
         totalCount === 0 ? 100 : (active / totalCount) * 100;
     const stalePercentage = totalCount === 0 ? 0 : (stale / totalCount) * 100;
     const potentiallyStalePercentage =
-        active === 0 ? 0 : (potentiallyStale / active) * 100;
+        active === 0 ? 0 : (potentiallyStale / totalCount) * 100;
 
     const activeLength = Math.max(
         (activePercentage / 100) * circumference - gap,
@@ -37,8 +43,12 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
         (stalePercentage / 100) * circumference - gap,
         1,
     );
-    const potentiallyStaleLength =
-        (potentiallyStalePercentage / 100) * activeLength;
+    const potentiallyStaleLength = Math.max(
+        (potentiallyStalePercentage / 100) * circumference - gap,
+        1,
+    );
+
+    console.log(activeLength, staleLength, potentiallyStaleLength);
 
     const activeRotation = -90 + gapAngle / 2;
     const potentiallyStaleRotation =

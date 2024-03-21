@@ -102,7 +102,7 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                             </Typography>
                         </StyledTextContainer>
                         <StyledFlagCountPerUser>
-                            {flagsPerUser ?? 'N/A'}
+                            {flagsPerUser}
                         </StyledFlagCountPerUser>
                     </StyledInsightsContainer>
                 }

@@ -270,7 +270,7 @@ export const createServices = (
         : createFakeProjectService(config);
     const projectInsightsService = db
         ? createProjectInsightsService(db, config)
-        : createFakeProjectInsightsService(config);
+        : createFakeProjectInsightsService().projectInsightsService;
 
     const projectHealthService = new ProjectHealthService(
         stores,

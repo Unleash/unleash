@@ -118,6 +118,7 @@ export default class ProjectController extends Controller {
             ],
         });
 
+        /** @deprecated use project insights instead */
         this.route({
             method: 'get',
             path: '/:projectId/dora',
@@ -245,6 +246,7 @@ export default class ProjectController extends Controller {
         );
     }
 
+    /** @deprecated use projectInsights instead */
     async getProjectDora(
         req: IAuthRequest,
         res: Response<ProjectDoraMetricsSchema>,

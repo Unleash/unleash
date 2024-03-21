@@ -54,9 +54,7 @@ export class ProjectInsightsService {
         this.projectInsightsReadModel = projectInsightsReadModel;
     }
 
-    private async getDoraMetrics(
-        projectId: string,
-    ): Promise<ProjectDoraMetricsSchema> {
+    async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
         const activeFeatureToggles = (
             await this.featureToggleStore.getAll({ project: projectId })
         ).map((feature) => feature.name);

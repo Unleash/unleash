@@ -4,7 +4,7 @@ import { HelpPopper } from './HelpPopper';
 import { StatusBox } from './StatusBox';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
-import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',

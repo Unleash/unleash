@@ -32,7 +32,6 @@ const RowContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledWidget = styled(Box)(({ theme }) => ({
-    // position: 'relative',
     padding: theme.spacing(3),
     backgroundColor: theme.palette.background.paper,
     flex: 1,

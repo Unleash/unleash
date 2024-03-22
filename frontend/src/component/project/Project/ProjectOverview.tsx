@@ -9,6 +9,8 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const refreshInterval = 15 * 1000;
 
@@ -36,6 +38,7 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
 const ProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
+    const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
     const { project } = useProjectOverview(projectId, {
@@ -58,16 +61,26 @@ const ProjectOverview: FC<{
 
     return (
         <StyledContainer key={projectId}>
-            <ProjectInfo
-                id={projectId}
-                description={description}
-                memberCount={members}
-                health={health}
-                featureTypeCounts={featureTypeCounts}
-                stats={stats}
+            <ConditionallyRender
+                condition={!projectOverviewRefactor}
+                show={
+                    <ProjectInfo
+                        id={projectId}
+                        description={description}
+                        memberCount={members}
+                        health={health}
+                        featureTypeCounts={featureTypeCounts}
+                        stats={stats}
+                    />
+                }
             />
+
             <StyledContentContainer>
-                <ProjectStats stats={project.stats} />
+                <ConditionallyRender
+                    condition={!projectOverviewRefactor}
+                    show={<ProjectStats stats={project.stats} />}
+                />
+
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
                         environments={environments}

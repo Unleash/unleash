@@ -1,31 +1,31 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
-import type ProjectService from '../../../lib/features/project/project-service';
-import type { AccessService } from '../../../lib/services/access-service';
-import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
-import { createTestConfig } from '../../config/test-config';
-import { RoleName } from '../../../lib/types/model';
-import { randomId } from '../../../lib/util/random-id';
-import EnvironmentService from '../../../lib/features/project-environments/environment-service';
-import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
-import { EventService } from '../../../lib/services';
-import { FeatureEnvironmentEvent } from '../../../lib/types/events';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
+import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
+import type ProjectService from './project-service';
+import type { AccessService } from '../../services/access-service';
+import { MOVE_FEATURE_TOGGLE } from '../../types/permissions';
+import { createTestConfig } from '../../../test/config/test-config';
+import { RoleName } from '../../types/model';
+import { randomId } from '../../util/random-id';
+import EnvironmentService from '../project-environments/environment-service';
+import IncompatibleProjectError from '../../error/incompatible-project-error';
+import { EventService } from '../../services';
+import { FeatureEnvironmentEvent } from '../../types/events';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
     createFeatureToggleService,
     createProjectService,
-} from '../../../lib/features';
+} from '../index';
 import {
     type IGroup,
     type IUnleashStores,
     type IUser,
     SYSTEM_USER,
     SYSTEM_USER_ID,
-} from '../../../lib/types';
-import type { User } from '../../../lib/server-impl';
-import { InvalidOperationError } from '../../../lib/error';
+} from '../../types';
+import type { User } from '../../server-impl';
+import { InvalidOperationError } from '../../error';
 
 let stores: IUnleashStores;
 let db: ITestDb;

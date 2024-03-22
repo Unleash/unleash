@@ -166,13 +166,13 @@ export default class FakeProjectStore implements IProjectStore {
         throw new Error('Method not implemented.');
     }
 
-    getMembersCountByProjectAfterDate(
+    async getMembersCountByProjectAfterDate(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         date: string,
     ): Promise<number> {
-        throw new Error('Method not implemented');
+        return 0;
     }
 
     updateDefaultStrategy(

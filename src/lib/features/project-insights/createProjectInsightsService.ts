@@ -53,17 +53,14 @@ export const createProjectInsightsService = (
     );
 };
 
-export const createFakeProjectInsightsService = (
-    config: IUnleashConfig,
-): ProjectInsightsService => {
+export const createFakeProjectInsightsService = () => {
     const projectStore = new FakeProjectStore();
     const featureToggleStore = new FakeFeatureToggleStore();
     const featureTypeStore = new FakeFeatureTypeStore();
     const projectStatsStore = new FakeProjectStatsStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const projectInsightsReadModel = new FakeProjectInsightsReadModel();
-
-    return new ProjectInsightsService(
+    const projectInsightsService = new ProjectInsightsService(
         {
             projectStore,
             featureToggleStore,
@@ -73,4 +70,12 @@ export const createFakeProjectInsightsService = (
         },
         projectInsightsReadModel,
     );
+
+    return {
+        projectInsightsService,
+        projectStatsStore,
+        featureToggleStore,
+        projectStore,
+        projectInsightsReadModel,
+    };
 };

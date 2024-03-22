@@ -945,6 +945,7 @@ export default class ProjectService {
         }
     }
 
+    /** @deprecated use projectInsightsService instead */
     async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
         const activeFeatureToggles = (
             await this.featureToggleStore.getAll({ project: projectId })

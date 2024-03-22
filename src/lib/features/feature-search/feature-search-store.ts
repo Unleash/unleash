@@ -51,8 +51,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
     }
 
     private static getEnvironment(r: any): FeatureSearchEnvironmentSchema {
-        const yes = r.yes || 0;
-
         return {
             name: r.environment,
             enabled: r.enabled,

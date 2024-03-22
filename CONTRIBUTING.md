@@ -148,7 +148,7 @@ If you can't connect to the docker container, check its status by running `docke
 
 To fix this, start a new container and make sure you give it the `-p 5432:5432` option.
 
-### Running e2e tests
+### Running end-to-end (e2e) tests
 
 To run the e2e tests, you'll need a running Postgres instance that you can connect to. The easiest way to set this up is to use Docker. This command starts a Postgres instance with the required configuration running on port 5432:
 

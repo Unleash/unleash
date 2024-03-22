@@ -79,7 +79,6 @@ exports[`should create default config 1`] = `
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
       "collectTrafficDataUsage": false,
-      "createdByUserIdDataMigration": false,
       "demo": false,
       "disableBulkToggle": false,
       "disableMetrics": false,

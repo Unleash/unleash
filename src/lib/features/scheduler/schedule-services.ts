@@ -4,6 +4,7 @@ import {
     secondsToMilliseconds,
 } from 'date-fns';
 import type { IUnleashServices } from '../../server-impl';
+import { parseEnvVarBoolean } from '../../util';
 
 /**
  * Schedules service methods.
@@ -154,16 +155,20 @@ export const scheduleServices = async (
         'updateAccountLastSeen',
     );
 
-    schedulerService.schedule(
-        eventService.setEventCreatedByUserId.bind(eventService),
-        minutesToMilliseconds(2),
-        'setEventCreatedByUserId',
-    );
-    schedulerService.schedule(
-        featureToggleService.setFeatureCreatedByUserIdFromEvents.bind(
-            featureToggleService,
-        ),
-        minutesToMilliseconds(15),
-        'setFeatureCreatedByUserIdFromEvents',
-    );
+    if (
+        parseEnvVarBoolean(process.env.CREATED_BY_USERID_DATA_MIGRATION, false)
+    ) {
+        schedulerService.schedule(
+            eventService.setEventCreatedByUserId.bind(eventService),
+            minutesToMilliseconds(2),
+            'setEventCreatedByUserId',
+        );
+        schedulerService.schedule(
+            featureToggleService.setFeatureCreatedByUserIdFromEvents.bind(
+                featureToggleService,
+            ),
+            minutesToMilliseconds(15),
+            'setFeatureCreatedByUserIdFromEvents',
+        );
+    }
 };

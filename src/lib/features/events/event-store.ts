@@ -443,10 +443,6 @@ class EventStore implements IEventStore {
     async setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         const API_TOKEN_TABLE = 'api_tokens';
 
-        if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
-            return undefined;
-        }
-
         const toUpdate = await this.db(`${TABLE} as e`)
             .joinRaw(
                 'LEFT OUTER JOIN users AS u ON e.created_by = u.username OR e.created_by = u.email',

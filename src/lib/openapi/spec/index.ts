@@ -177,7 +177,6 @@ export * from './telemetry-settings-schema';
 export * from './toggle-maintenance-schema';
 export * from './token-string-list-schema';
 export * from './token-user-schema';
-export * from './traffic-usage-data-segmented-schema';
 export * from './ui-config-schema';
 export * from './update-api-token-schema';
 export * from './update-context-field-schema';

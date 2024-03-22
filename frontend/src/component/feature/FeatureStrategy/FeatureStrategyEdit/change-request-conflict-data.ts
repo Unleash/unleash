@@ -1,8 +1,6 @@
 import type {
     ChangeRequestState,
     ChangeRequestType,
-    IChangeRequestFeature,
-    IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
 import type { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import type { IUiConfig } from 'interfaces/uiConfig';
@@ -14,18 +12,7 @@ type ChangeRequestConflictCreatedData = {
 };
 
 export const getChangeRequestConflictCreatedData = (
-    changeRequests:
-        | {
-              state: ChangeRequestType['state'];
-              id: ChangeRequestType['id'];
-              features: {
-                  name: IChangeRequestFeature['name'];
-                  changes: (Pick<IFeatureChange, 'action'> & {
-                      payload: { id?: number | string };
-                  })[];
-              }[];
-          }[]
-        | undefined,
+    changeRequests: ChangeRequestType[] | undefined,
     featureId: string,
     strategyId: string,
     uiConfig: Pick<IUiConfig, 'baseUriPath' | 'versionInfo'>,

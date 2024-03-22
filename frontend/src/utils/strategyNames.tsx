@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, SVGProps } from 'react';
 import { SvgIcon, useTheme } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
@@ -14,7 +14,7 @@ export const formatStrategyName = (strategyName: string): string => {
 const RolloutSvgIcon: FC = (props) => (
     <SvgIcon
         {...props}
-        component={(rest) => <RolloutIcon {...rest} />}
+        component={(rest: SVGProps<SVGSVGElement>) => <RolloutIcon {...rest} />}
         inheritViewBox
     />
 );

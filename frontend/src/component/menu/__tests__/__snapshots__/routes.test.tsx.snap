@@ -13,7 +13,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "enterprise": false,
-    "flag": "executiveDashboard",
+    "flag": "executiveDashboardUI",
     "menu": {
       "mobile": true,
     },

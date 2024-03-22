@@ -34,13 +34,7 @@ export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
     const open = Boolean(anchor);
 
     return (
-        <Box
-            sx={{
-                position: 'absolute',
-                top: (theme) => theme.spacing(0.5),
-                right: (theme) => theme.spacing(0.5),
-            }}
-        >
+        <Box>
             <IconButton onClick={onOpen} aria-describedby={id} size='small'>
                 <HelpOutline
                     sx={{

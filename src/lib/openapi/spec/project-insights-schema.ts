@@ -64,25 +64,18 @@ export const projectInsightsSchema = {
         },
         members: {
             type: 'object',
-            required: ['active', 'inactive'],
+            required: ['currentMembers', 'change'],
             properties: {
-                active: {
+                currentMembers: {
                     type: 'number',
-                    description:
-                        'The number of active project members who have used Unleash in the past 60 days',
+                    description: 'The number of total project members',
                     example: 10,
                 },
-                inactive: {
+                change: {
                     type: 'number',
                     description:
-                        'The number of inactive project members who have not used Unleash in the past 60 days',
+                        'The change in the number of project members compared to the previous month',
                     example: 10,
-                },
-                totalPreviousMonth: {
-                    type: 'number',
-                    description:
-                        'The number of total project members in the previous month',
-                    example: 8,
                 },
             },
             description: 'Active/inactive users summary',

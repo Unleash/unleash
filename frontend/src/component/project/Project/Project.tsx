@@ -93,6 +93,15 @@ export const Project = () => {
             path: basePath,
             name: 'overview',
         },
+        ...(projectOverviewRefactor
+            ? [
+                  {
+                      title: 'Insights',
+                      path: `${basePath}/insights`,
+                      name: 'insights',
+                  },
+              ]
+            : []),
         {
             title: 'Health',
             path: `${basePath}/health`,
@@ -109,12 +118,16 @@ export const Project = () => {
             name: 'change-request',
             isEnterprise: true,
         },
-        {
-            title: 'Metrics',
-            path: `${basePath}/metrics`,
-            name: 'dora',
-            isEnterprise: true,
-        },
+        ...(!projectOverviewRefactor
+            ? [
+                  {
+                      title: 'Metrics',
+                      path: `${basePath}/metrics`,
+                      name: 'dora',
+                      isEnterprise: true,
+                  },
+              ]
+            : []),
         {
             title: 'Applications',
             path: `${basePath}/applications`,
@@ -132,14 +145,6 @@ export const Project = () => {
             name: 'settings',
         },
     ];
-
-    if (projectOverviewRefactor) {
-        tabs.splice(1, 0, {
-            title: 'Insights',
-            path: `${basePath}/insights`,
-            name: 'insights',
-        });
-    }
 
     const filteredTabs = tabs
         .filter((tab) => {
@@ -335,7 +340,9 @@ export const Project = () => {
                     }
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
-                <Route path='metrics' element={<ProjectDoraMetrics />} />
+                {Boolean(!projectOverviewRefactor) && (
+                    <Route path='metrics' element={<ProjectDoraMetrics />} />
+                )}
                 <Route path='applications' element={<ProjectApplications />} />
                 <Route path='*' element={<ProjectOverview />} />
             </Routes>

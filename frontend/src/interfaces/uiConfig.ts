@@ -71,7 +71,7 @@ export type UiFlags = {
     newStrategyConfigurationFeedback?: boolean;
     extendedUsageMetricsUI?: boolean;
     adminTokenKillSwitch?: boolean;
-    executiveDashboard?: boolean;
+    executiveDashboardUI?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;
@@ -80,6 +80,7 @@ export type UiFlags = {
     sdkReporting?: boolean;
     outdatedSdksBanner?: boolean;
     projectOverviewRefactor?: string;
+    collectTrafficDataUsage?: boolean;
 };
 
 export interface IVersionInfo {

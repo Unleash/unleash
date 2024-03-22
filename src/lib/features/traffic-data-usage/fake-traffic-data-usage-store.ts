@@ -26,4 +26,7 @@ export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
     upsert(trafficDataUsage: IStatTrafficUsage): Promise<void> {
         throw new Error('Method not implemented.');
     }
+    getTrafficDataUsageForPeriod(period: string): Promise<IStatTrafficUsage[]> {
+        throw new Error('Method not implemented.');
+    }
 }

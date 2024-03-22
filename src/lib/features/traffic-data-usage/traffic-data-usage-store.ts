@@ -23,7 +23,7 @@ const mapRow = (row: any): IStatTrafficUsage => {
         day: row.day,
         trafficGroup: row.traffic_group,
         statusCodeSeries: row.status_code_series,
-        count: row.count,
+        count: Number.parseInt(row.count),
     };
 };
 
@@ -86,5 +86,15 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
             .merge({
                 count: this.db.raw('stat_traffic_usage.count + EXCLUDED.count'),
             });
+    }
+
+    async getTrafficDataUsageForPeriod(
+        period: string,
+    ): Promise<IStatTrafficUsage[]> {
+        const rows = await this.db<IStatTrafficUsage>(TABLE).whereRaw(
+            `to_char(day, 'YYYY-MM') = ?`,
+            [period],
+        );
+        return rows.map(mapRow);
     }
 }

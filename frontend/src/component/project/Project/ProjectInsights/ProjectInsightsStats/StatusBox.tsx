@@ -5,10 +5,6 @@ import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
 
-const StyledTypographyHeader = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(2.5),
-}));
-
 const StyledTypographyCount = styled(Box)(({ theme }) => ({
     fontSize: theme.fontSizes.largeHeader,
 }));
@@ -31,8 +27,25 @@ const StyledTypographyChange = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
+const RowContainer = styled(Box)(({ theme }) => ({
+    ...flexRow,
+}));
+
+const StyledWidget = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(3),
+    backgroundColor: theme.palette.background.paper,
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2.5),
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(2),
+    },
+}));
+
 interface IStatusBoxProps {
-    title?: string;
+    title: string;
     boxText: ReactNode;
     change?: number;
     percentage?: boolean;
@@ -42,10 +55,24 @@ interface IStatusBoxProps {
 const resolveIcon = (change: number) => {
     if (change > 0) {
         return (
-            <CallMade sx={{ color: 'success.dark', height: 20, width: 20 }} />
+            <CallMade
+                sx={{
+                    color: 'success.dark',
+                    height: 20,
+                    width: 20,
+                }}
+            />
         );
     }
-    return <SouthEast sx={{ color: 'warning.dark', height: 20, width: 20 }} />;
+    return (
+        <SouthEast
+            sx={{
+                color: 'warning.dark',
+                height: 20,
+                width: 20,
+            }}
+        />
+    );
 };
 
 const resolveColor = (change: number) => {
@@ -63,23 +90,14 @@ export const StatusBox: FC<IStatusBoxProps> = ({
     children,
     customChangeElement,
 }) => (
-    <>
-        <ConditionallyRender
-            condition={Boolean(title)}
-            show={
-                <StyledTypographyHeader data-loading>
-                    {title}
-                </StyledTypographyHeader>
-            }
-        />
-        {children}
-        <Box
-            sx={{
-                ...flexRow,
-                justifyContent: 'center',
-                width: 'auto',
-            }}
-        >
+    <StyledWidget>
+        <RowContainer>
+            <Typography variant='h3' data-loading>
+                {title}
+            </Typography>
+            {children}
+        </RowContainer>
+        <RowContainer>
             <StyledTypographyCount data-loading>
                 {boxText}
             </StyledTypographyCount>
@@ -124,6 +142,6 @@ export const StatusBox: FC<IStatusBoxProps> = ({
                     />
                 }
             />
-        </Box>
-    </>
+        </RowContainer>
+    </StyledWidget>
 );

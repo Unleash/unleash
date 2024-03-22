@@ -9,8 +9,8 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { useUiFlag } from '../../../hooks/useUiFlag';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const refreshInterval = 15 * 1000;
 

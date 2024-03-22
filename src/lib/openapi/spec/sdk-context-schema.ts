@@ -5,7 +5,9 @@ export const sdkContextSchema = {
     description: 'The Unleash context as modeled in client SDKs',
     type: 'object',
     required: ['appName'],
-    additionalProperties: true,
+    additionalProperties: {
+        type: 'string',
+    },
     properties: {
         appName: {
             type: 'string',

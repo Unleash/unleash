@@ -1,5 +1,5 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Box, styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import { StatusBox } from '../ProjectInsightsStats/StatusBox';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom';
@@ -11,16 +11,11 @@ interface IProjectMembersProps {
 }
 
 const NavigationBar = styled(Link)(({ theme }) => ({
+    marginLeft: 'auto',
     display: 'flex',
     justifyContent: 'space-between',
     textDecoration: 'none',
     color: theme.palette.text.primary,
-}));
-
-export const StyledProjectInfoWidgetContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2.5),
 }));
 
 export const ProjectMembers = ({
@@ -35,18 +30,14 @@ export const ProjectMembers = ({
 
     const { currentMembers, change } = members;
     return (
-        <StyledProjectInfoWidgetContainer>
+        <StatusBox
+            title={'Project members'}
+            boxText={`${currentMembers}`}
+            change={change}
+        >
             <NavigationBar to={link}>
-                <Typography variant='h3'>Project members</Typography>
                 <KeyboardArrowRight />
             </NavigationBar>
-            <Box
-                sx={{
-                    display: 'flex',
-                }}
-            >
-                <StatusBox boxText={`${currentMembers}`} change={change} />
-            </Box>
-        </StyledProjectInfoWidgetContainer>
+        </StatusBox>
     );
 };

@@ -80,6 +80,7 @@ export type UiFlags = {
     sdkReporting?: boolean;
     outdatedSdksBanner?: boolean;
     projectOverviewRefactor?: string;
+    collectTrafficDataUsage?: boolean;
 };
 
 export interface IVersionInfo {

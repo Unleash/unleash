@@ -5,8 +5,8 @@ import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { tagSchema } from './tag-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
+import { featureSearchEnvironmentSchema } from './feature-search-environment-schema';
 
 export const featureSearchResponseSchema = {
     $id: '#/components/schemas/featureSearchResponseSchema',
@@ -92,7 +92,7 @@ export const featureSearchResponseSchema = {
         environments: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureEnvironmentSchema',
+                $ref: '#/components/schemas/featureSearchEnvironmentSchema',
             },
             description:
                 'The list of environments where the feature can be used',
@@ -174,7 +174,7 @@ export const featureSearchResponseSchema = {
     components: {
         schemas: {
             constraintSchema,
-            featureEnvironmentSchema,
+            featureSearchEnvironmentSchema,
             featureStrategySchema,
             strategyVariantSchema,
             overrideSchema,

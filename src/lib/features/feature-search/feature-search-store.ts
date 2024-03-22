@@ -4,8 +4,8 @@ import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import type { Logger, LogProvider } from '../../logger';
 import type {
-    IEnvironmentOverview,
     IFeatureOverview,
+    IFeatureSearchOverview,
     IFeatureSearchStore,
     ITag,
 } from '../../types';
@@ -17,6 +17,7 @@ import type {
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams, applySearchFilters } from './search-utils';
+import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
 
 const sortEnvironments = (overview: IFeatureOverview[]) => {
     return overview.map((data: IFeatureOverview) => ({
@@ -49,7 +50,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
             });
     }
 
-    private static getEnvironment(r: any): IEnvironmentOverview {
+    private static getEnvironment(r: any): FeatureSearchEnvironmentSchema {
+        const yes = r.yes || 0;
+
         return {
             name: r.environment,
             enabled: r.enabled,
@@ -59,6 +62,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
             lastSeenAt: r.env_last_seen_at,
             hasStrategies: r.has_strategies,
             hasEnabledStrategies: r.has_enabled_strategies,
+            yes: Number(r.yes) || 0,
+            no: Number(r.no) || 0,
         };
     }
 
@@ -144,7 +149,24 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'segments',
                         'feature_strategy_segment.segment_id',
                         'segments.id',
-                    );
+                    )
+                    .leftJoin('client_metrics_env', (qb) => {
+                        qb.on(
+                            'client_metrics_env.environment',
+                            '=',
+                            'environments.name',
+                        )
+                            .andOn(
+                                'client_metrics_env.feature_name',
+                                '=',
+                                'features.name',
+                            )
+                            .andOn(
+                                'client_metrics_env.timestamp',
+                                '>=',
+                                this.db.raw("NOW() - INTERVAL '1 hour'"),
+                            );
+                    });
 
                 query.leftJoin('last_seen_at_metrics', function () {
                     this.on(
@@ -175,6 +197,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
                     'segments.name as segment_name',
+                    'client_metrics_env.yes as yes',
+                    'client_metrics_env.no as no',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -265,6 +289,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             )
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit]);
+        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {
@@ -282,9 +307,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
-    getAggregatedSearchData(rows): IFeatureOverview[] {
-        const entriesMap: Map<string, IFeatureOverview> = new Map();
-        const orderedEntries: IFeatureOverview[] = [];
+    getAggregatedSearchData(rows): IFeatureSearchOverview[] {
+        const entriesMap: Map<string, IFeatureSearchOverview> = new Map();
+        const orderedEntries: IFeatureSearchOverview[] = [];
 
         rows.forEach((row) => {
             let entry = entriesMap.get(row.feature_name);

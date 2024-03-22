@@ -14,7 +14,7 @@ interface IUseInsightsDataOutput {
 export const useInsights = (
     options?: SWRConfiguration,
 ): IUseInsightsDataOutput => {
-    const path = formatApiPath('api/admin/dashboard/executive');
+    const path = formatApiPath('api/admin/insights');
 
     const { data, error } = useSWR<InstanceInsightsSchema>(
         path,

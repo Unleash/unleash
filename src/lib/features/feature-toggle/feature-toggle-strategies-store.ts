@@ -24,8 +24,9 @@ import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue, mapValues } from '../../util';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller';
 import type { Db } from '../../db/db';
-import Raw = Knex.Raw;
 import { isAfter } from 'date-fns';
+import merge from 'deepmerge';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -47,6 +48,7 @@ const T = {
     featureStrategySegment: 'feature_strategy_segment',
     featureEnvs: 'feature_environments',
     strategies: 'strategies',
+    projectSettings: 'project_settings',
 };
 
 interface IFeatureStrategiesTable {
@@ -149,6 +151,32 @@ function mapStrategyUpdate(
     return update;
 }
 
+function mergeAll<T>(objects: Partial<T>[]): T {
+    return merge.all<T>(objects.filter((i) => i));
+}
+
+const defaultParameters = (
+    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
+    stickiness: string,
+) => {
+    if (params.strategyName === 'gradualRollout') {
+        return {
+            rollout: '100',
+            stickiness,
+            groupId: params.featureName,
+        };
+    } else {
+        /// We don't really have good defaults for the other kinds of known strategies, so return an empty map.
+        return {};
+    }
+};
+
+const parametersWithDefaults = (
+    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
+    stickiness: string,
+) => {
+    return mergeAll([defaultParameters(params, stickiness), params.parameters]);
+};
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Db;
 
@@ -214,7 +242,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
         return Number.isInteger(max) ? max + 1 : 0;
     }
-
+    private async getDefaultStickiness(projectName: string): Promise<string> {
+        const defaultFromDb = await this.db(T.projectSettings)
+            .select('default_stickiness')
+            .where('project', projectName)
+            .first();
+        return defaultFromDb?.default_stickiness || 'default';
+    }
     async createStrategyFeatureEnv(
         strategyConfig: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
@@ -224,6 +258,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.featureName,
                 strategyConfig.environment,
             ));
+        const stickiness = await this.getDefaultStickiness(
+            strategyConfig.projectId,
+        );
+        strategyConfig.parameters = parametersWithDefaults(
+            strategyConfig,
+            stickiness,
+        );
         const strategyRow = mapInput({
             id: uuidv4(),
             ...strategyConfig,

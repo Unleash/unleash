@@ -2655,7 +2655,7 @@
     utility-types "^3.10.0"
     webpack "^5.73.0"
 
-"@docusaurus/plugin-content-docs@>=2.3.0 <2.5.0":
+"@docusaurus/plugin-content-docs@>=2.4.1 <=2.4.3":
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@docusaurus/plugin-content-docs/-/plugin-content-docs-2.4.3.tgz#aa224c0512351e81807adf778ca59fd9cd136973"
   integrity sha512-N7Po2LSH6UejQhzTCsvuX5NOzlC+HiXOVvofnEPj0WhMu1etpLEXE6a4aTxrtg95lQ5kf0xUIdjX9sh3d3G76A==
@@ -2933,7 +2933,7 @@
     js-yaml "^4.1.0"
     tslib "^2.4.0"
 
-"@docusaurus/utils-validation@2.4.3", "@docusaurus/utils-validation@>=2.3.0 <2.5.0":
+"@docusaurus/utils-validation@2.4.3", "@docusaurus/utils-validation@>=2.4.1 <=2.4.3":
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@docusaurus/utils-validation/-/utils-validation-2.4.3.tgz#8122c394feef3e96c73f6433987837ec206a63fb"
   integrity sha512-G2+Vt3WR5E/9drAobP+hhZQMaswRwDlp6qOMi7o7ZypB+VO7N//DZWhZEwhcRGepMDJGQEwtPv7UxtYwPL9PBw==
@@ -2966,7 +2966,7 @@
     url-loader "^4.1.1"
     webpack "^5.73.0"
 
-"@docusaurus/utils@2.4.3", "@docusaurus/utils@>=2.3.0 <2.5.0":
+"@docusaurus/utils@2.4.3", "@docusaurus/utils@>=2.4.1 <=2.4.3":
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@docusaurus/utils/-/utils-2.4.3.tgz#52b000d989380a2125831b84e3a7327bef471e89"
   integrity sha512-fKcXsjrD86Smxv8Pt0TBFqYieZZCPh4cbf9oszUq/AMhZn3ujwpKaVYZACPX8mmjtYx0JOgNx52CREBfiGQB4A==
@@ -5861,15 +5861,15 @@ dns-packet@^5.2.2:
   dependencies:
     "@leichtgewicht/ip-codec" "^2.0.1"
 
-docusaurus-plugin-openapi-docs@2.0.0-beta.3:
-  version "2.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-2.0.0-beta.3.tgz#bc76df78be5c46682b0c099b94b8f5e4e29950ae"
-  integrity sha512-6IQANCzbFL2WY6Vw+dCU9nqUxcyzlDs7lI5OsjR4KSO/CgRpCO20zVxKYrmd5oUGMZu+hTfjvf0VdvEordTaoQ==
+docusaurus-plugin-openapi-docs@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-2.1.0.tgz#bbc811b7819dc8cff6ecb7d8a86385d59fd26d9b"
+  integrity sha512-DP1CGxn+hxBi9RuhwYTsyCCMCZ4HNjuoqibPTgIe3kPgD36VxnctsyftGZzEwAxdrRAn2cWuugiTlEVR4csNtw==
   dependencies:
     "@apidevtools/json-schema-ref-parser" "^10.1.0"
-    "@docusaurus/plugin-content-docs" ">=2.3.0 <2.5.0"
-    "@docusaurus/utils" ">=2.3.0 <2.5.0"
-    "@docusaurus/utils-validation" ">=2.3.0 <2.5.0"
+    "@docusaurus/plugin-content-docs" ">=2.4.1 <=2.4.3"
+    "@docusaurus/utils" ">=2.4.1 <=2.4.3"
+    "@docusaurus/utils-validation" ">=2.4.1 <=2.4.3"
     "@paloaltonetworks/openapi-to-postmanv2" "3.1.0-hotfix.1"
     "@paloaltonetworks/postman-collection" "^4.1.0"
     "@redocly/openapi-core" "^1.0.0-beta.125"

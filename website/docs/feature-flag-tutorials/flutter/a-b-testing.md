@@ -9,7 +9,6 @@ This article is a contribution by **[Ayush Bherwani](https://www.linkedin.com/in
 
 :::
 
-
 After successfully integrating the first feature flag in the Unsplash sample app, let’s talk about how you can use Unleash to perform experimentation, also known as A/B testing, in Flutter to ship features more confidently.
 
 For this article, we’ll integrate feature flags for A/B testing to experiment with “like image” feature user experience. As an overview, the app is quite simple, with two screens displaying images and image details respectively. The behavior of the “image details” feature is controlled through an Unleash instance. You can check out the previous article, “[How to set up feature flags in Flutter](https://www.getunleash.io/blog/from-the-community-how-to-set-up-feature-flags-in-flutter)” for an overview of the code structure and implementation. For those who want to skip straight to the code, you can find it on [GitHub](https://github.com/AyushBherwani1998/unsplash_sample/).
@@ -17,24 +16,19 @@ For this article, we’ll integrate feature flags for A/B testing to experiment 
 Here’s a screenshot of the application:
 ![Unsplash App built on Flutter](/img/unsplash-demo-flutter.png)
 
-
 ## Setup variants in Unleash
-
 
 In your Unleash instance, create a new feature flag called `likeOptionExperiment`. Choose the toggle type called `Experiment` and enable the [impression data](https://docs.getunleash.io/reference/impression-data). By default, the flag will be set to false.
 
 ![Set Up Variant in Unleash](/img/variant-setup-1.png)
 
-
-Now that you have created your feature toggle, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) “gridTile'' and “imageDetails” respectively. These variants will help you position your “like image” button. 
+Now that you have created your feature toggle, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) “gridTile'' and “imageDetails” respectively. These variants will help you position your “like image” button.
 
 ![Succesfully setting up variant in Unleash](/img/setup-variant-2.png)
 
-
-Below is a screenshot of experimentation in action based on the `likeOptionExperiment` flag and corresponding variants. 
+Below is a screenshot of experimentation in action based on the `likeOptionExperiment` flag and corresponding variants.
 
 ![Unsplash App built on Flutter](/img/unsplash-flutter-demo-screenshot-2.png)
-
 
 ## Setup Mixpanel
 
@@ -42,10 +36,9 @@ For analytics and metrics, we’ll use [Mixpanel](https://mixpanel.com/) to trac
 
 Whenever a user opens the app, we track `like-variant` if `likeOptionExperiment` is enabled to tag them with their assigned variant (gridTile or imageDetails). The stored variant in Mixpanel can be used later to analyze how each variant impacts user behavior to like an image.
 
-Whenever a user interacts with the `LikeButton`, we track `trackLikeEventForExperimentation`, along with their assigned variants. By correlating the `trackLikeEventForExperimentation` with the `like-variant`, you can effectively measure the impact of a variant on user behavior and make data-driven decisions. To learn how to correlate and generate reports, see the [Mixpanel docs](https://docs.mixpanel.com/docs/analysis/reports). 
+Whenever a user interacts with the `LikeButton`, we track `trackLikeEventForExperimentation`, along with their assigned variants. By correlating the `trackLikeEventForExperimentation` with the `like-variant`, you can effectively measure the impact of a variant on user behavior and make data-driven decisions. To learn how to correlate and generate reports, see the [Mixpanel docs](https://docs.mixpanel.com/docs/analysis/reports).
 
-
-```
+```dart
 abstract class MixpanelConfig {
  /// ...
 
@@ -96,17 +89,15 @@ class MixpanelConfigImpl implements MixpanelConfig {
 }
 ```
 
-
 Once you have your configuration in place, the next step is to create `MixPanel` and `MixpanelConfig` and add it to your service locator class. Make sure that you have a Mixpanel[ API key](https://docs.mixpanel.com/docs/tracking/how-tos/api-credentials).
 
-
-```
+```dart
 class ServiceLocator {
  ServiceLocator._();
 
  static GetIt get getIt => GetIt.instance;
 
- static Future<void> initialize() async { 
+ static Future<void> initialize() async {
    /// ...
 
    final unleash = UnleashClient(
@@ -152,15 +143,13 @@ class ServiceLocator {
 }
 ```
 
-
 ## Integration in Flutter
 
-Let’s dive into how you can use these variants in your Flutter application. 
+Let’s dive into how you can use these variants in your Flutter application.
 
 You’ll have to modify `UnleashConfig` which helps you test the Unleash functionalities in isolation from the rest of the app.
 
-
-```
+```dart
 const String isImageDetailsEnabledToggleKey = "isImageDetailsEnabled";
 const String likeOptionExperimentKey = "likeOptionExperiment";
 
@@ -196,11 +185,9 @@ class UnleashConfigImpl extends UnleashConfig {
 }
 ```
 
+After updating `UnleashConfig` you may want to create a `_trackLikeExperimentationVariant` method which you can call in `initState` of “HomePage” to get the variant details.
 
-After updating `UnleashConfig` you may want to create a `_trackLikeExperimentationVariant` method which you can call in `initState` of “HomePage” to get the variant details. 
-
-
-```
+```dart
 void _trackLikeExperimentationVariant() {
    final unleashConfig = ServiceLocator.getIt<UnleashConfig>();
    final mixpanelConfig = ServiceLocator.getIt<MixpanelConfig>();
@@ -210,11 +197,9 @@ void _trackLikeExperimentationVariant() {
  }
 ```
 
+You’ll create a new widget “LikeButton'' which can be utilized for both variants. Make sure to use `MixpanelConfig` to track user engagement for analytics purposes.
 
-You’ll create a new widget “LikeButton'' which can be utilized for both variants. Make sure to use `MixpanelConfig` to track user engagement for analytics purposes. 
-
-
-```
+```dart
 class LikeButton extends StatelessWidget {
  final ValueNotifier<bool> isLikedNotifier;
  /// Used to track the variant option for the mixpanel event.
@@ -265,13 +250,11 @@ class LikeButton extends StatelessWidget {
 }
 ```
 
-
-Once you have created `LikeButton`, the next step is to use the `LikeButtonPosition` to add the button in the `ImageTile` widget, and `ImageDetails` page. 
+Once you have created `LikeButton`, the next step is to use the `LikeButtonPosition` to add the button in the `ImageTile` widget, and `ImageDetails` page.
 
 For `ImageTile` make sure the button is only visible if `isLikeOptionExperiment` is enabled and `LikeButtonPosition` is `gridTile`.
 
-
-```
+```dart
 class ImageTile extends StatelessWidget {
  final UnsplashImage image;
  final UnleashConfig unleashConfig;
@@ -309,11 +292,9 @@ class ImageTile extends StatelessWidget {
 }
 ```
 
-
 For `ImageDetailsPage` make sure the button is only visible if `isLikeOptionExperiment` is enabled and `LikeButtonPosition` is `imageDetails`.
 
-
-```
+```dart
 @RoutePage()
 class ImageDetailsPage extends StatefulWidget {
  final String id;
@@ -382,33 +363,27 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
 }
 ```
 
-
-Now that you have your pieces clubbed, you can toggle the `likeOptionExperiment` flag to enable the experimentation of the “like image” feature in the application. 
+Now that you have your pieces clubbed, you can toggle the `likeOptionExperiment` flag to enable the experimentation of the “like image” feature in the application.
 
 Voila! Your experimentation is enabled for your feature. You’ve also ensured that users can access the “like image” feature depending on the state of the flag and variant.
 
 ## Analytics
 
-
-Once your experimentation is up and running, you can visit the Mixpanel dashboard to create a [funnel](https://docs.mixpanel.com/docs/analysis/reports/funnels) and get insights on the user engagement and conversion rate for different variants. 
+Once your experimentation is up and running, you can visit the Mixpanel dashboard to create a [funnel](https://docs.mixpanel.com/docs/analysis/reports/funnels) and get insights on the user engagement and conversion rate for different variants.
 
 Below is a funnel screenshot for “like image” experimentation:
 
 ![Mixpanel Analytics for A/B Testing in Unleash for the Flutter Demo](/img/mixpanel-flutter-screenshot-1.png)
 
-
 ## Conclusion
 
-
-A/B testing is a low-risk, high-returns approach that can help you make data-driven decisions for your feature releases to increase user engagement, minimize the risk, and increase conversion rates. As a developer, it helps you be confident in your releases by addressing the issues users face and reducing the bounce rates during experimentation with the help of data.  
+A/B testing is a low-risk, high-returns approach that can help you make data-driven decisions for your feature releases to increase user engagement, minimize the risk, and increase conversion rates. As a developer, it helps you be confident in your releases by addressing the issues users face and reducing the bounce rates during experimentation with the help of data.
 
 Some of the best practices for experimentation include:
 
-
-
-* You should be open to the results and avoid any hypotheses. 
-* You should define the metrics for the success of the experimentation before you run the tests. Keep your success metrics simple and narrowed for better results. 
-* Select a group of adequate size for the test to yield definitive results.
-* You should avoid running multiple tests simultaneously, as it may not give reasonable outcomes.
+- You should be open to the results and avoid any hypotheses.
+- You should define the metrics for the success of the experimentation before you run the tests. Keep your success metrics simple and narrowed for better results.
+- Select a group of adequate size for the test to yield definitive results.
+- You should avoid running multiple tests simultaneously, as it may not give reasonable outcomes.
 
 That’s it for today. I hope you found this helpful. Want to dive deep into the code used for this article? It’s all on [GitHub](https://github.com/AyushBherwani1998/unsplash_sample/).

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { useChangeRequestsCount } from '../../../../../hooks/api/getters/useChangeRequestsCount/useChangeRequestsCount';
+import { useChangeRequestsCount } from 'hooks/api/getters/useChangeRequestsCount/useChangeRequestsCount';
 
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',

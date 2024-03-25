@@ -48,7 +48,7 @@ export const ProjectOverviewChangeRequests: FC<{ project: string }> = ({
         useChangeRequestsEnabled(project);
     const { data } = useChangeRequestsCount(project);
 
-    if (!isChangeRequestConfiguredInAnyEnv) {
+    if (!isChangeRequestConfiguredInAnyEnv()) {
         return null;
     }
 

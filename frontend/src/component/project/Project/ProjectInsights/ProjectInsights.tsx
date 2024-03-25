@@ -61,9 +61,7 @@ export const ProjectInsights = () => {
                 <ProjectMembers projectId={projectId} members={data.members} />
             </NarrowContainer>
             <WideContainer>
-                {data.changeRequests && (
-                    <ChangeRequests changeRequests={data.changeRequests} />
-                )}
+                <ChangeRequests />
             </WideContainer>
         </Grid>
     );

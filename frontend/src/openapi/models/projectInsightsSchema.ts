@@ -3,7 +3,6 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectInsightsSchemaChangeRequests } from './projectInsightsSchemaChangeRequests';
 import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
 import type { ProjectInsightsSchemaHealth } from './projectInsightsSchemaHealth';
 import type { ProjectDoraMetricsSchema } from './projectDoraMetricsSchema';
@@ -14,8 +13,6 @@ import type { ProjectStatsSchema } from './projectStatsSchema';
  * A high-level overview of a project insights. It contains information such as project statistics, overall health, types of flags, members overview, change requests overview.
  */
 export interface ProjectInsightsSchema {
-    /** Count of change requests in different stages of the [process](https://docs.getunleash.io/reference/change-requests#change-request-flow). Only for enterprise users. */
-    changeRequests?: ProjectInsightsSchemaChangeRequests;
     /** The number of features of each type */
     featureTypeCounts: FeatureTypeCountSchema[];
     /** Health summary of the project */

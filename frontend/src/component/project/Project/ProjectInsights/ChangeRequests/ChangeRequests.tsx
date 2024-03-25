@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import type { ProjectInsightsSchemaChangeRequests } from '../../../../../openapi';
-import type { FC } from 'react';
+import { useChangeRequestsCount } from 'hooks/api/getters/useChangeRequestsCount/useChangeRequestsCount';
 
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -83,14 +82,13 @@ const BigNumber = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-export const ChangeRequests: FC<{
-    changeRequests: ProjectInsightsSchemaChangeRequests;
-}> = ({ changeRequests }) => {
+export const ChangeRequests = () => {
     const projectId = useRequiredPathParam('projectId');
     const { isOss, isPro } = useUiConfig();
+    const { data } = useChangeRequestsCount(projectId);
 
     const { total, applied, rejected, reviewRequired, scheduled, approved } =
-        changeRequests;
+        data;
     const toBeApplied = scheduled + approved;
 
     if (isOss() || isPro()) {

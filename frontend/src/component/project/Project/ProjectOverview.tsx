@@ -10,7 +10,7 @@ import useProjectOverview, {
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
 
 const refreshInterval = 15 * 1000;
 
@@ -39,6 +39,17 @@ const ProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
     const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
+
+    if (projectOverviewRefactor) {
+        return <NewProjectOverview storageKey={storageKey} />;
+    } else {
+        return <OldProjectOverview storageKey={storageKey} />;
+    }
+};
+
+const OldProjectOverview: FC<{
+    storageKey?: string;
+}> = ({ storageKey = 'project-overview-v2' }) => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
     const { project } = useProjectOverview(projectId, {
@@ -61,29 +72,58 @@ const ProjectOverview: FC<{
 
     return (
         <StyledContainer key={projectId}>
-            <ConditionallyRender
-                condition={!projectOverviewRefactor}
-                show={
-                    <ProjectInfo
-                        id={projectId}
-                        description={description}
-                        memberCount={members}
-                        health={health}
-                        featureTypeCounts={featureTypeCounts}
-                        stats={stats}
-                    />
-                }
+            <ProjectInfo
+                id={projectId}
+                description={description}
+                memberCount={members}
+                health={health}
+                featureTypeCounts={featureTypeCounts}
+                stats={stats}
             />
 
             <StyledContentContainer>
-                <ConditionallyRender
-                    condition={!projectOverviewRefactor}
-                    show={<ProjectStats stats={project.stats} />}
-                />
+                <ProjectStats stats={project.stats} />
 
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        environments={environments}
+                        environments={environments.map(
+                            (environment) => environment.environment,
+                        )}
+                        refreshInterval={refreshInterval}
+                        storageKey={storageKey}
+                    />
+                </StyledProjectToggles>
+            </StyledContentContainer>
+        </StyledContainer>
+    );
+};
+
+const NewProjectOverview: FC<{
+    storageKey?: string;
+}> = ({ storageKey = 'project-overview-v2' }) => {
+    const projectId = useRequiredPathParam('projectId');
+    const projectName = useProjectOverviewNameOrId(projectId);
+
+    const { project } = useProjectOverview(projectId, {
+        refreshInterval,
+    });
+
+    usePageTitle(`Project overview – ${projectName}`);
+    const { setLastViewed } = useLastViewedProject();
+    useEffect(() => {
+        setLastViewed(projectId);
+    }, [projectId, setLastViewed]);
+
+    return (
+        <StyledContainer key={projectId}>
+            <StyledContentContainer>
+                <ProjectOverviewChangeRequests project={projectId} />
+
+                <StyledProjectToggles>
+                    <ProjectFeatureToggles
+                        environments={project.environments.map(
+                            (environment) => environment.environment,
+                        )}
                         refreshInterval={refreshInterval}
                         storageKey={storageKey}
                     />

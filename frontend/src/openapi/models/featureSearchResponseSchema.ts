@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { FeatureSearchResponseSchemaDependenciesItem } from './featureSearchResponseSchemaDependenciesItem';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
+import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
 import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
 import type { VariantSchema } from './variantSchema';
@@ -28,7 +28,7 @@ export interface FeatureSearchResponseSchema {
     /** `true` if the feature is enabled, otherwise `false`. */
     enabled?: boolean;
     /** The list of environments where the feature can be used */
-    environments?: FeatureEnvironmentSchema[];
+    environments?: FeatureSearchEnvironmentSchema[];
     /** `true` if the feature was favorited, otherwise `false`. */
     favorite?: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */

@@ -1,6 +1,8 @@
 import { Box, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { FC } from 'react';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useProjectInsights } from 'hooks/api/getters/useProjectInsights/useProjectInsights';
 
 export const ChangeRequestContainer = styled(Box)(({ theme }) => ({
     margin: '0',
@@ -42,16 +44,32 @@ const ChangeRequestCount = styled(Typography)(({ theme }) => ({
 export const ProjectOverviewChangeRequests: FC<{ project: string }> = ({
     project,
 }) => {
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(project);
+    const { data: projectInsights } = useProjectInsights(project);
+
+    if (
+        !isChangeRequestConfiguredInAnyEnv ||
+        projectInsights.changeRequests == null
+    ) {
+        return null;
+    }
+
+    const toBeApplied =
+        projectInsights.changeRequests.scheduled +
+        projectInsights.changeRequests.approved;
+    const toBeReviewed = projectInsights.changeRequests.reviewRequired;
+
     return (
         <ChangeRequestContainer>
             <Box>Open change requests</Box>
             <ApplyBox>
                 <span>To be applied</span>
-                <ChangeRequestCount>10</ChangeRequestCount>
+                <ChangeRequestCount>{toBeApplied}</ChangeRequestCount>
             </ApplyBox>
             <ReviewBox>
                 <span>To be reviewed</span>
-                <ChangeRequestCount>20</ChangeRequestCount>
+                <ChangeRequestCount>{toBeReviewed}</ChangeRequestCount>
             </ReviewBox>
             <Link to={`/projects/${project}/change-requests`}>
                 View change requests

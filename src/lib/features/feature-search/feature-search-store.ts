@@ -137,6 +137,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     this.db.raw(
                         'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
                     ),
+                    this.db.raw(`CASE
+                            WHEN dependent_features.parent = features.name THEN 'parent'
+                            WHEN dependent_features.child = features.name THEN 'child'
+                            ELSE null
+                            END AS dependency`),
                 ];
 
                 applyQueryParams(query, queryParams);
@@ -197,6 +202,17 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'feature_strategy_segment.segment_id',
                         'segments.id',
                     )
+                    .leftJoin('dependent_features', (qb) => {
+                        qb.on(
+                            'dependent_features.parent',
+                            '=',
+                            'features.name',
+                        ).orOn(
+                            'dependent_features.child',
+                            '=',
+                            'features.name',
+                        );
+                    })
                     .leftJoin('client_metrics_env', (qb) => {
                         qb.on(
                             'client_metrics_env.environment',
@@ -335,6 +351,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     stale: row.stale,
                     impressionData: row.impression_data,
                     lastSeenAt: row.last_seen_at,
+                    dependencyType: row.dependency,
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
                 };

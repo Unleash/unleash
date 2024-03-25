@@ -99,6 +99,7 @@ export const Project = () => {
                       title: 'Insights',
                       path: `${basePath}/insights`,
                       name: 'insights',
+                      new: true,
                   },
               ]
             : []),
@@ -272,12 +273,12 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        <>
+                                        <span>
                                             <ConditionallyRender
                                                 condition={Boolean(tab.new)}
                                                 show={
                                                     <StyledBadge color='success'>
-                                                        New
+                                                        Beta
                                                     </StyledBadge>
                                                 }
                                             />
@@ -285,7 +286,7 @@ export const Project = () => {
                                                 isPro() &&
                                                 enterpriseIcon) ||
                                                 undefined}
-                                        </>
+                                        </span>
                                     }
                                 />
                             );

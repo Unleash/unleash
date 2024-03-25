@@ -223,6 +223,7 @@ export type IFeatureSearchOverview = Exclude<
     IFeatureOverview,
     'environments'
 > & {
+    dependencyType: 'parent' | 'child' | null;
     environments: FeatureSearchEnvironmentSchema[];
 };
 

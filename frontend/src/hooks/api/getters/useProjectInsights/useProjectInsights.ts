@@ -49,14 +49,6 @@ const placeholderData: ProjectInsightsSchema = {
         currentMembers: 0,
         change: 0,
     },
-    changeRequests: {
-        total: 0,
-        applied: 0,
-        approved: 0,
-        rejected: 0,
-        reviewRequired: 0,
-        scheduled: 0,
-    },
 };
 
 export const useProjectInsights = (projectId: string) => {

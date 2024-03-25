@@ -879,7 +879,6 @@ export * from './projectCreatedSchemaMode';
 export * from './projectDoraMetricsSchema';
 export * from './projectEnvironmentSchema';
 export * from './projectInsightsSchema';
-export * from './projectInsightsSchemaChangeRequests';
 export * from './projectInsightsSchemaHealth';
 export * from './projectInsightsSchemaMembers';
 export * from './projectOverviewSchema';

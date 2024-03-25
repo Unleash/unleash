@@ -53,13 +53,5 @@ test('project insights happy path', async () => {
             staleCount: 0,
             rating: 100,
         },
-        changeRequests: {
-            total: 0,
-            approved: 0,
-            applied: 0,
-            rejected: 0,
-            reviewRequired: 0,
-            scheduled: 0,
-        },
     });
 });

@@ -6,20 +6,11 @@ test('Return basic insights', async () => {
         projectStatsStore,
         featureToggleStore,
         projectStore,
-        projectInsightsReadModel,
     } = createFakeProjectInsightsService();
     await featureToggleStore.create('default', {
         name: 'irrelevant',
         createdByUserId: 1,
         type: 'release',
-    });
-    await projectInsightsReadModel.setChangeRequests('default', {
-        total: 5,
-        approved: 1,
-        applied: 1,
-        rejected: 1,
-        reviewRequired: 1,
-        scheduled: 1,
     });
     await projectStore.create({
         id: 'default',
@@ -57,14 +48,6 @@ test('Return basic insights', async () => {
             rating: 100,
         },
         leadTime: { features: [], projectAverage: 0 },
-        changeRequests: {
-            total: 5,
-            approved: 1,
-            applied: 1,
-            rejected: 1,
-            reviewRequired: 1,
-            scheduled: 1,
-        },
         members: { currentMembers: 0, change: 0 },
     });
 });

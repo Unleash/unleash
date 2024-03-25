@@ -77,6 +77,7 @@ export * from './feature-environment-schema';
 export * from './feature-events-schema';
 export * from './feature-metrics-schema';
 export * from './feature-schema';
+export * from './feature-search-environment-schema';
 export * from './feature-search-response-schema';
 export * from './feature-strategy-schema';
 export * from './feature-strategy-segment-schema';

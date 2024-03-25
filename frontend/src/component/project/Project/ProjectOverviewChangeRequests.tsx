@@ -2,7 +2,7 @@ import { Box, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { FC } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useChangeRequestsCount } from '../../../hooks/api/getters/useChangeRequestsCount/useChangeRequestsCount';
+import { useChangeRequestsCount } from 'hooks/api/getters/useChangeRequestsCount/useChangeRequestsCount';
 
 export const ChangeRequestContainer = styled(Box)(({ theme }) => ({
     margin: '0',

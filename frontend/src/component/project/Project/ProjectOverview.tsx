@@ -86,7 +86,9 @@ const OldProjectOverview: FC<{
 
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        environments={environments}
+                        environments={environments.map(
+                            (environment) => environment.environment,
+                        )}
                         refreshInterval={refreshInterval}
                         storageKey={storageKey}
                     />
@@ -102,10 +104,10 @@ const NewProjectOverview: FC<{
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
 
-    // TODO: remove this dependency. We only need environment names
     const { project } = useProjectOverview(projectId, {
         refreshInterval,
     });
+
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
     useEffect(() => {
@@ -119,7 +121,9 @@ const NewProjectOverview: FC<{
 
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        environments={project.environments}
+                        environments={project.environments.map(
+                            (environment) => environment.environment,
+                        )}
                         refreshInterval={refreshInterval}
                         storageKey={storageKey}
                     />

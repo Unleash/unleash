@@ -76,7 +76,7 @@ const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px',
+    gap: theme.spacing(0.5),
     margin: theme.spacing(1, 0, 1, 0),
 }));
 

@@ -9,7 +9,7 @@ import {
     UPDATE_FEATURE_STRATEGY,
 } from '../component/providers/AccessProvider/permissions';
 import { useAuthPermissions } from './api/getters/useAuth/useAuthPermissions';
-import useProject from './api/getters/useProject/useProject';
+import useProjectOverview from './api/getters/useProjectOverview/useProjectOverview';
 
 /**
  * This is for features not integrated with change request.
@@ -90,7 +90,7 @@ const useIsProjectMember = (projectId: string) => {
 
 const useIsAllowedUser = (projectId: string) => {
     const isProjectMember = useIsProjectMember(projectId);
-    const { project } = useProject(projectId);
+    const { project } = useProjectOverview(projectId);
     const isProtectedProject = project.mode === 'protected';
     return isProtectedProject ? isProjectMember : true;
 };

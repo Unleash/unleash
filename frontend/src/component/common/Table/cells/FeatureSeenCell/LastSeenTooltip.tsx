@@ -88,56 +88,52 @@ export const LastSeenTooltip = ({
                 }
                 show={
                     <StyledListContainer>
-                        {environments?.map(({ name, lastSeenAt, yes, no }) => {
-                            return (
-                                <StyledDescriptionBlock key={name}>
-                                    <StyledDescriptionBlockHeader>
-                                        {name}
-                                    </StyledDescriptionBlockHeader>
-                                    <StyledValueContainer>
-                                        <ConditionallyRender
-                                            condition={Boolean(lastSeenAt)}
-                                            show={
-                                                <TimeAgo
-                                                    date={lastSeenAt!}
-                                                    title=''
-                                                    live={false}
-                                                    formatter={(
-                                                        value: number,
-                                                        unit: string,
-                                                        suffix: string,
-                                                    ) => {
-                                                        const [, textColor] =
-                                                            getColor(unit);
-                                                        return (
-                                                            <StyledValue
-                                                                color={
-                                                                    textColor
-                                                                }
-                                                            >
-                                                                {`${value} ${unit}${
-                                                                    value !== 1
-                                                                        ? 's'
-                                                                        : ''
-                                                                } ${suffix}`}
-                                                            </StyledValue>
-                                                        );
-                                                    }}
-                                                />
-                                            }
-                                            elseShow={
-                                                <StyledValue
-                                                    color={defaultTextColor}
-                                                >
-                                                    no usage
-                                                </StyledValue>
-                                            }
-                                        />
-                                    </StyledValueContainer>
-                                    <LastSeenProgress yes={yes} no={no} />
-                                </StyledDescriptionBlock>
-                            );
-                        })}
+                        {environments?.map(({ name, lastSeenAt, yes, no }) => (
+                            <StyledDescriptionBlock key={name}>
+                                <StyledDescriptionBlockHeader>
+                                    {name}
+                                </StyledDescriptionBlockHeader>
+                                <StyledValueContainer>
+                                    <ConditionallyRender
+                                        condition={Boolean(lastSeenAt)}
+                                        show={
+                                            <TimeAgo
+                                                date={lastSeenAt!}
+                                                title=''
+                                                live={false}
+                                                formatter={(
+                                                    value: number,
+                                                    unit: string,
+                                                    suffix: string,
+                                                ) => {
+                                                    const [, textColor] =
+                                                        getColor(unit);
+                                                    return (
+                                                        <StyledValue
+                                                            color={textColor}
+                                                        >
+                                                            {`${value} ${unit}${
+                                                                value !== 1
+                                                                    ? 's'
+                                                                    : ''
+                                                            } ${suffix}`}
+                                                        </StyledValue>
+                                                    );
+                                                }}
+                                            />
+                                        }
+                                        elseShow={
+                                            <StyledValue
+                                                color={defaultTextColor}
+                                            >
+                                                no usage
+                                            </StyledValue>
+                                        }
+                                    />
+                                </StyledValueContainer>
+                                <LastSeenProgress yes={yes} no={no} />
+                            </StyledDescriptionBlock>
+                        ))}
                     </StyledListContainer>
                 }
                 elseShow={

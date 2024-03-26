@@ -83,7 +83,7 @@ const Container = styled(Box)(({ theme }) => ({
 const FeatureNameAndType = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(1),
     color: theme.palette.primary.dark,
 }));
 
@@ -123,7 +123,7 @@ const FeatureName: FC<{
 
 const RestTags: FC<{ tags: string[] }> = ({ tags }) => {
     return (
-        <HtmlTooltip title={tags.map((tag) => <div>{tag}</div>)}>
+        <HtmlTooltip title={tags.map((tag) => <div key={tag}>{tag}</div>)}>
             <Tag>{tags.length} more...</Tag>
         </HtmlTooltip>
     );

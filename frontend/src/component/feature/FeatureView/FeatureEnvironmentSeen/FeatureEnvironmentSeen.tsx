@@ -46,6 +46,10 @@ const StyledIconWrapper = styled('div')(({ theme }) => ({
     margin: '0 auto',
 }));
 
+const StyledTooltipResolver = styled(TooltipResolver)(({ theme }) => ({
+    maxWidth: theme.spacing(47.5),
+}));
+
 const TooltipContainer: FC<{
     color?: string;
     tooltip: ReactElement | string;
@@ -53,7 +57,7 @@ const TooltipContainer: FC<{
 }> = ({ sx, tooltip, color, children }) => {
     return (
         <StyledContainer sx={sx}>
-            <TooltipResolver
+            <StyledTooltipResolver
                 variant='custom'
                 titleComponent={tooltip}
                 arrow
@@ -64,7 +68,7 @@ const TooltipContainer: FC<{
                         {children}
                     </StyledIconWrapper>
                 </StyledBox>
-            </TooltipResolver>
+            </StyledTooltipResolver>
         </StyledContainer>
     );
 };

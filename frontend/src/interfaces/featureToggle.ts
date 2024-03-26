@@ -23,11 +23,13 @@ export interface IEnvironments {
     type?: string;
     hasStrategies?: boolean;
     hasEnabledStrategies?: boolean;
+    yes?: number;
+    no?: number;
 }
 
 export type ILastSeenEnvironments = Pick<
     IEnvironments,
-    'name' | 'enabled' | 'lastSeenAt'
+    'name' | 'enabled' | 'lastSeenAt' | 'yes' | 'no'
 >;
 
 export interface IFeatureToggle {

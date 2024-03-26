@@ -76,6 +76,7 @@ exports[`should create default config 1`] = `
       "adminTokenKillSwitch": false,
       "anonymiseEventLog": false,
       "automatedActions": false,
+      "bearerTokenMiddleware": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
       "collectTrafficDataUsage": false,

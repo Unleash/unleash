@@ -89,13 +89,22 @@ export const createOpenApiSchema = ({
             title: 'Unleash API',
             version: apiVersion,
         },
-        security: [{ apiKey: [] }],
+        security: [{ apiKey: [] }, { bearerToken: [] }],
         components: {
             securitySchemes: {
+                // https://swagger.io/docs/specification/authentication/api-keys/
                 apiKey: {
                     type: 'apiKey',
                     in: 'header',
                     name: 'Authorization',
+                    description: 'API key needed to access this API',
+                },
+                // https://swagger.io/docs/specification/authentication/bearer-authentication/
+                bearerToken: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    description:
+                        'API key needed to access this API, in Bearer token format',
                 },
             },
             schemas: mapValues(schemas, removeJsonSchemaProps),

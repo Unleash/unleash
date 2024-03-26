@@ -56,7 +56,8 @@ export type IFlagKey =
     | 'displayEdgeBanner'
     | 'globalFrontendApiCache'
     | 'returnGlobalFrontendApiCache'
-    | 'projectOverviewRefactor';
+    | 'projectOverviewRefactor'
+    | 'bearerTokenMiddleware';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -275,6 +276,10 @@ const flags: IFlags = {
     ),
     projectOverviewRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
+        false,
+    ),
+    bearerTokenMiddleware: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_BEARER_TOKEN_MIDDLEWARE,
         false,
     ),
 };

@@ -4,7 +4,7 @@ import GeneralSelect, {
 } from 'component/common/GeneralSelect/GeneralSelect';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: 0,

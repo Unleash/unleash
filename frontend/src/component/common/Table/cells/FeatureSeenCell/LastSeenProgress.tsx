@@ -4,6 +4,8 @@ const ProgressContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     gap: theme.spacing(1),
+    width: '20%',
+    justifyContent: 'flex-end',
 }));
 
 const BackgroundCircularProgress = styled(CircularProgress)(({ theme }) => ({

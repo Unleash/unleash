@@ -20,7 +20,7 @@ const StyledDescription = styled(
 
 const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'row',
+    flexWrap: 'wrap',
 }));
 
 const StyledDescriptionHeader = styled('p')(({ theme }) => ({
@@ -34,16 +34,17 @@ const StyledDescriptionBlockHeader = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     fontWeight: theme.fontWeight.bold,
     marginBottom: theme.spacing(1),
-    width: '50%',
+    width: '40%',
+    justifyContent: 'flex-start',
 }));
+const StyledValueContainer = styled('div')({
+    width: '40%',
+    justifyContent: 'center',
+});
 
 const StyledDescriptionSubHeader = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
-
-const StyledValueContainer = styled('div')({
-    width: '50%',
-});
 
 const StyledValue = styled('div', {
     shouldForwardProp: (prop) => prop !== 'color',

@@ -541,7 +541,7 @@ export * from './featureSchemaDependenciesItem';
 export * from './featureSchemaStrategiesItem';
 export * from './featureSearchEnvironmentSchema';
 export * from './featureSearchResponseSchema';
-export * from './featureSearchResponseSchemaDependenciesItem';
+export * from './featureSearchResponseSchemaDependencyType';
 export * from './featureSearchResponseSchemaStrategiesItem';
 export * from './featureStrategySchema';
 export * from './featureStrategySegmentSchema';

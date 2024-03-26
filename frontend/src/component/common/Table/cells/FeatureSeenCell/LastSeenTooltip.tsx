@@ -4,6 +4,7 @@ import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
 import { LastSeenProgress } from './LastSeenProgress/LastSeenProgress';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledDescription = styled(
     'div',
@@ -73,6 +74,7 @@ export const LastSeenTooltip = ({
     ...rest
 }: ILastSeenTooltipProps) => {
     const getColor = useLastSeenColors();
+    const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
     const [, defaultTextColor] = getColor();
     const environmentsHaveLastSeen = environments?.some((environment) =>
         Boolean(environment.lastSeenAt),
@@ -131,7 +133,12 @@ export const LastSeenTooltip = ({
                                         }
                                     />
                                 </StyledValueContainer>
-                                <LastSeenProgress yes={yes} no={no} />
+                                <ConditionallyRender
+                                    condition={Boolean(projectOverviewRefactor)}
+                                    show={
+                                        <LastSeenProgress yes={yes} no={no} />
+                                    }
+                                />
                             </StyledDescriptionBlock>
                         ))}
                     </StyledListContainer>

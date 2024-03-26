@@ -308,6 +308,12 @@ export const ProjectFeatureToggles = ({
                     type: '-',
                     name: `Feature name ${index}`,
                     createdAt: new Date().toISOString(),
+                    dependencyType: null,
+                    favorite: false,
+                    impressionData: false,
+                    project: 'project',
+                    segments: [],
+                    stale: false,
                     environments: [
                         {
                             name: 'production',

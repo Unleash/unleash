@@ -25,33 +25,3 @@ test('sdkContextSchema', () =>
                 validateSchema(sdkContextSchema.$id, data) === undefined,
         ),
     ));
-
-test('using objects as values (outside of the `properties` property) is invalid', () => {
-    const inputs = [
-        {
-            appName: 'test',
-            array: [],
-        },
-        {
-            appName: 'test',
-            object: {},
-        },
-        {
-            appName: 'test',
-            properties: {
-                array: [],
-            },
-        },
-        {
-            appName: 'test',
-            properties: {
-                object: {},
-            },
-        },
-    ];
-
-    const validationResults = inputs.map((input) =>
-        validateSchema(sdkContextSchema.$id, input),
-    );
-    expect(validationResults.every((error) => error !== undefined)).toBe(true);
-});

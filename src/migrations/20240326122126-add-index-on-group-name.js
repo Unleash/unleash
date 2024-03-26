@@ -1,6 +1,6 @@
 exports.up = function (db, cb) {
     db.runSql(
-        `CREATE INDEX IF NOT EXISTS groups_group_name_idx ON groups.name`,
+        `CREATE INDEX IF NOT EXISTS groups_group_name_idx ON groups(name)`,
         cb,
     );
 };

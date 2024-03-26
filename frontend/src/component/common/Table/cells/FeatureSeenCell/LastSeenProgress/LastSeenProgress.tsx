@@ -41,7 +41,6 @@ export const LastSeenProgress = ({ yes, no }: ILastSeenProgressProps) => {
                 />
                 <MainCircularProgress
                     variant='determinate'
-                    disableShrink
                     size={18}
                     thickness={11}
                     value={progress}

@@ -3,7 +3,6 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchemaDependenciesItem } from './featureSearchResponseSchemaDependenciesItem';
 import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
 import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
@@ -22,7 +21,7 @@ export interface FeatureSearchResponseSchema {
     /** The date the feature was created */
     createdAt?: string | null;
     /** The list of parent dependencies. This is an experimental field and may change. */
-    dependencies?: FeatureSearchResponseSchemaDependenciesItem[];
+    dependencyType?: string;
     /** Detailed description of the feature */
     description?: string | null;
     /** `true` if the feature is enabled, otherwise `false`. */

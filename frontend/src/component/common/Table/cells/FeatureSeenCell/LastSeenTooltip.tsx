@@ -3,6 +3,7 @@ import TimeAgo from 'react-timeago';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
+import { LastSeenProgress } from './LastSeenProgress';
 
 const StyledDescription = styled(
     'div',
@@ -17,15 +18,14 @@ const StyledDescription = styled(
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 
-const StyledDescriptionBlock = styled('div')({
+const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-});
+}));
 
 const StyledDescriptionHeader = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.bold,
     marginBottom: theme.spacing(1),
 }));
 
@@ -39,7 +39,6 @@ const StyledDescriptionBlockHeader = styled('p')(({ theme }) => ({
 
 const StyledDescriptionSubHeader = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    margin: theme.spacing(2, 0),
 }));
 
 const StyledValueContainer = styled('div')({
@@ -52,6 +51,12 @@ const StyledValue = styled('div', {
     textAlign: 'left',
     width: '100%',
     color: color,
+}));
+
+const StyledListContainer = styled('div')(({ theme }) => ({
+    maxHeight: theme.spacing(24.5),
+    overflowY: 'auto',
+    paddingRight: theme.spacing(2),
 }));
 
 interface ILastSeenTooltipProps {
@@ -73,64 +78,66 @@ export const LastSeenTooltip = ({
     );
     return (
         <StyledDescription {...rest} data-loading>
-            <StyledDescriptionHeader sx={{ mb: 0 }}>
+            <StyledDescriptionHeader>
                 Last usage reported
             </StyledDescriptionHeader>
-            <StyledDescriptionSubHeader>
-                Usage is reported from connected applications through metrics
-            </StyledDescriptionSubHeader>
             <ConditionallyRender
                 condition={
                     Boolean(environments) && Boolean(environmentsHaveLastSeen)
                 }
                 show={
-                    <>
-                        {environments?.map(({ name, lastSeenAt }) => (
-                            <StyledDescriptionBlock key={name}>
-                                <StyledDescriptionBlockHeader>
-                                    {name}
-                                </StyledDescriptionBlockHeader>
-                                <StyledValueContainer>
-                                    <ConditionallyRender
-                                        condition={Boolean(lastSeenAt)}
-                                        show={
-                                            <TimeAgo
-                                                date={lastSeenAt!}
-                                                title=''
-                                                live={false}
-                                                formatter={(
-                                                    value: number,
-                                                    unit: string,
-                                                    suffix: string,
-                                                ) => {
-                                                    const [, textColor] =
-                                                        getColor(unit);
-                                                    return (
-                                                        <StyledValue
-                                                            color={textColor}
-                                                        >
-                                                            {`${value} ${unit}${
-                                                                value !== 1
-                                                                    ? 's'
-                                                                    : ''
-                                                            } ${suffix}`}
-                                                        </StyledValue>
-                                                    );
-                                                }}
-                                            />
-                                        }
-                                        elseShow={
-                                            <StyledValue
-                                                color={defaultTextColor}
-                                            >
-                                                no usage
-                                            </StyledValue>
-                                        }
-                                    />
-                                </StyledValueContainer>
-                            </StyledDescriptionBlock>
-                        ))}
-                    </>
+                    <StyledListContainer>
+                        {environments?.map(({ name, lastSeenAt, yes, no }) => {
+                            return (
+                                <StyledDescriptionBlock key={name}>
+                                    <StyledDescriptionBlockHeader>
+                                        {name}
+                                    </StyledDescriptionBlockHeader>
+                                    <StyledValueContainer>
+                                        <ConditionallyRender
+                                            condition={Boolean(lastSeenAt)}
+                                            show={
+                                                <TimeAgo
+                                                    date={lastSeenAt!}
+                                                    title=''
+                                                    live={false}
+                                                    formatter={(
+                                                        value: number,
+                                                        unit: string,
+                                                        suffix: string,
+                                                    ) => {
+                                                        const [, textColor] =
+                                                            getColor(unit);
+                                                        return (
+                                                            <StyledValue
+                                                                color={
+                                                                    textColor
+                                                                }
+                                                            >
+                                                                {`${value} ${unit}${
+                                                                    value !== 1
+                                                                        ? 's'
+                                                                        : ''
+                                                                } ${suffix}`}
+                                                            </StyledValue>
+                                                        );
+                                                    }}
+                                                />
+                                            }
+                                            elseShow={
+                                                <StyledValue
+                                                    color={defaultTextColor}
+                                                >
+                                                    no usage
+                                                </StyledValue>
+                                            }
+                                        />
+                                    </StyledValueContainer>
+                                    <LastSeenProgress yes={yes} no={no} />
+                                </StyledDescriptionBlock>
+                            );
+                        })}
+                    </StyledListContainer>
                 }
                 elseShow={
                     <TimeAgo
@@ -156,6 +163,9 @@ export const LastSeenTooltip = ({
                     />
                 }
             />
+            <StyledDescriptionSubHeader>
+                Usage is reported from connected applications through metrics
+            </StyledDescriptionSubHeader>
         </StyledDescription>
     );
 };

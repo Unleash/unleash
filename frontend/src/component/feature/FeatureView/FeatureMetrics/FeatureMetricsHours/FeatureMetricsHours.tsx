@@ -3,8 +3,8 @@ import GeneralSelect, {
     type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useExtendedFeatureMetrics } from '../useExtendedFeatureMetrics';
 import { useEffect } from 'react';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
     margin: 0,
@@ -36,8 +36,8 @@ export const FeatureMetricsHours = ({
             },
         });
     };
-    const extendedOptions = useExtendedFeatureMetrics();
-    const options = extendedOptions
+    const { isEnterprise } = useUiConfig();
+    const options = isEnterprise()
         ? [...hourOptions, ...daysOptions]
         : hourOptions;
 

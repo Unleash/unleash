@@ -4,7 +4,7 @@ import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
 import { LastSeenProgress } from './LastSeenProgress/LastSeenProgress';
-import { useUiFlag } from '../../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledDescription = styled(
     'div',

@@ -103,11 +103,6 @@ export default class MetricsMonitor {
             help: 'Number of times a feature toggle has been used',
             labelNames: ['toggle', 'active', 'appName'],
         });
-        const oldEmbeddedProxyForwardCounter = createCounter({
-            name: 'old_embedded_proxy_forward_total',
-            help: 'Number of times we forwarded old embedded proxy requests',
-            labelNames: ['path', 'method'],
-        });
         const featureTogglesTotal = createGauge({
             name: 'feature_toggles_total',
             help: 'Number of feature toggles',
@@ -603,11 +598,6 @@ export default class MetricsMonitor {
                     sdk_version: sdkVersion,
                 });
             }
-        });
-
-        // On purpose a hard-coded string. Will we removed when we are done migrating.
-        eventBus.on('OLD_EMBEDDED_PROXY_REQUEST', ({ path, method }) => {
-            oldEmbeddedProxyForwardCounter.labels({ path, method }).inc();
         });
 
         await this.configureDbMetrics(db, eventBus, schedulerService);

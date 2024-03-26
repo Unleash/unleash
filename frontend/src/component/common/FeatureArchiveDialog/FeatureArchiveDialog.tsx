@@ -341,7 +341,6 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         projectId,
         featureIds,
         onSuccess() {
-            console.log('con success');
             onConfirm();
             onClose();
         },

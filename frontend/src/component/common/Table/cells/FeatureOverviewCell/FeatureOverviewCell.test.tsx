@@ -46,6 +46,7 @@ test('Display minimal overview information', () => {
                     tags: [],
                     description: '',
                     type: '',
+                    dependencyType: null,
                     project: 'my_project',
                 },
             }}

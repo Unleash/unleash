@@ -217,8 +217,8 @@
     "tough-cookie": "4.1.3"
   },
   "lint-staged": {
-    "*.{js,ts}": ["biome check --apply"],
-    "*.{jsx,tsx}": ["biome check --apply"],
+    "*.{js,ts}": ["biome check --apply --no-errors-on-unmatched"],
+    "*.{jsx,tsx}": ["biome check --apply --no-errors-on-unmatched"],
     "*.json": ["biome format --write --no-errors-on-unmatched"]
   }
 }

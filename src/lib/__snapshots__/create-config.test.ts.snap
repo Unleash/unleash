@@ -96,7 +96,6 @@ exports[`should create default config 1`] = `
       "executiveDashboard": false,
       "executiveDashboardUI": false,
       "extendedUsageMetrics": false,
-      "extendedUsageMetricsUI": false,
       "featureSearchFeedback": {
         "enabled": false,
         "name": "withText",

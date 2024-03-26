@@ -11,7 +11,6 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useProjectOverview from '../../../hooks/api/getters/useProjectOverview/useProjectOverview';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -43,7 +42,6 @@ export const BulkEnableDialog = ({
     const [selected, setSelected] = useState(environments[0]);
     const { bulkToggleFeaturesEnvironmentOn } = useFeatureApi();
     const { addChange } = useChangeRequestApi();
-    const { refetch: refetchProject } = useProjectOverview(projectId);
     const { setToastApiError, setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
@@ -85,8 +83,6 @@ export const BulkEnableDialog = ({
                     data.map((feature) => feature.name),
                     selected,
                 );
-                console.log('refetching project');
-                refetchProject();
                 setToastData({
                     text: 'Your feature toggles have been enabled',
                     type: 'success',

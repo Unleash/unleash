@@ -9,7 +9,7 @@ import { InactiveUsersList } from './InactiveUsersList/InactiveUsersList';
 import { AccessMatrix } from './AccessMatrix/AccessMatrix';
 import { PremiumFeature } from '../../common/PremiumFeature/PremiumFeature';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const UsersAdmin = () => {
     const { isEnterprise } = useUiConfig();

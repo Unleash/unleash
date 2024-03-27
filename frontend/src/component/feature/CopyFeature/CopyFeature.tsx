@@ -22,8 +22,8 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -81,7 +81,7 @@ export const CopyFeatureToggle = () => {
 
     const {
         project: { featureNaming },
-    } = useProject(projectId);
+    } = useProjectOverview(projectId);
 
     const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = trim(event.target.value);

@@ -24,7 +24,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    sdkReporting: true,
                 },
             },
         },

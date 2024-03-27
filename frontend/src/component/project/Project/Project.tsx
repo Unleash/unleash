@@ -133,7 +133,6 @@ export const Project = () => {
             title: 'Applications',
             path: `${basePath}/applications`,
             name: 'applications',
-            flag: 'sdkReporting',
         },
         {
             title: 'Event log',

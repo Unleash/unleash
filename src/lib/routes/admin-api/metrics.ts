@@ -4,6 +4,7 @@ import { NONE, UPDATE_APPLICATION } from '../../types/permissions';
 import type { IUnleashConfig } from '../../types/option';
 import type { IUnleashServices } from '../../types/services';
 import type { Logger } from '../../logger';
+import type ClientInstanceService from '../../features/metrics/instance/instance-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import type { ApplicationSchema } from '../../openapi/spec/application-schema';

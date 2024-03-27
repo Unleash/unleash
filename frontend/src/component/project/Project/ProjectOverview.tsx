@@ -100,16 +100,7 @@ const OldProjectOverview: FC<{
     );
 };
 
-const NewProjectOverview: FC<{
-    storageKey?: string;
-}> = ({ storageKey = 'project-overview-v2' }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectOverviewNameOrId(projectId);
-
-    const { project } = useProjectOverview(projectId, {
-        refreshInterval,
-    });
-
+const useDelayedFeedbackPrompt = () => {
     const { openFeedback, hasSubmittedFeedback } = useFeedback(
         'newProjectOverview',
         'manual',
@@ -132,6 +123,18 @@ const NewProjectOverview: FC<{
 
         return () => clearTimeout(timer);
     }, [hasSubmittedFeedback, openFeedback, seenFeedback]);
+};
+
+const NewProjectOverview: FC<{
+    storageKey?: string;
+}> = ({ storageKey = 'project-overview-v2' }) => {
+    const projectId = useRequiredPathParam('projectId');
+    const projectName = useProjectOverviewNameOrId(projectId);
+
+    const { project } = useProjectOverview(projectId, {
+        refreshInterval,
+    });
+    useDelayedFeedbackPrompt();
 
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();

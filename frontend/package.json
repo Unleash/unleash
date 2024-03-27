@@ -60,7 +60,7 @@
     "@types/react-dom": "17.0.25",
     "@types/react-linkify": "1.0.4",
     "@types/react-router-dom": "5.3.3",
-    "@types/react-table": "7.7.19",
+    "@types/react-table": "7.7.20",
     "@types/react-test-renderer": "17.0.9",
     "@types/react-timeago": "4.1.7",
     "@types/semver": "7.5.8",

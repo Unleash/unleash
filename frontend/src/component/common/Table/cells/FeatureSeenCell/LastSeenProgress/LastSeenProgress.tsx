@@ -29,7 +29,7 @@ export const LastSeenProgress = ({ yes, no }: ILastSeenProgressProps) => {
         return <Box />;
     }
 
-    const progress = (yes / (yes + no)) * 100;
+    const progress = Math.round((yes / (yes + no)) * 100);
     return (
         <ProgressContainer>
             <Box sx={{ position: 'relative' }}>

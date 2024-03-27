@@ -38,10 +38,11 @@ const StyledDescriptionBlockHeader = styled('p')(({ theme }) => ({
     width: '40%',
     justifyContent: 'flex-start',
 }));
-const StyledValueContainer = styled('div')({
+const StyledValueContainer = styled('div')(({ theme }) => ({
     width: '40%',
     justifyContent: 'center',
-});
+    padding: theme.spacing(0, 1, 0, 1),
+}));
 
 const StyledDescriptionSubHeader = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

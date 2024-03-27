@@ -136,6 +136,7 @@ class UserService {
     ): Promise<void> {
         let username: string;
         let password: string;
+        let email: string;
 
         if (
             initialAdminUserConfig.createAdminUser !== false &&
@@ -143,21 +144,24 @@ class UserService {
         ) {
             username = initialAdminUserConfig.initialAdminUser.username;
             password = initialAdminUserConfig.initialAdminUser.password;
+            email = initialAdminUserConfig.initialAdminUser.email;
         } else {
             username = 'admin';
             password = 'unleash4all';
+            email = 'admin@unleash.com';
         }
 
         const userCount = await this.store.count();
 
-        if (userCount === 0 && username && password) {
+        if (userCount === 0 && username && password && email) {
             // create default admin user
             try {
                 this.logger.info(
-                    `Creating default user '${username}' with password '${password}'`,
+                    `Creating default user '${username}', password '${password}', and email '${email}'`,
                 );
                 const user = await this.store.insert({
                     username,
+                    email,
                 });
                 const passwordHash = await bcrypt.hash(password, saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);

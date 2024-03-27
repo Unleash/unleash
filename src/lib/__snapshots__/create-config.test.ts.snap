@@ -22,6 +22,7 @@ exports[`should create default config 1`] = `
     "initialAdminUser": {
       "password": "unleash4all",
       "username": "admin",
+      "email": "admin@unleash.com",
     },
     "type": "open-source",
   },

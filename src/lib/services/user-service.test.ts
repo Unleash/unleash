@@ -145,6 +145,7 @@ test('Should create default user - with provided username and password', async (
         initialAdminUser: {
             username: 'admin',
             password: 'unleash4all!',
+            email: 'admin@unleash.com',
         },
     });
 
@@ -190,6 +191,7 @@ test('Should not create default user - with `createAdminUser` === false', async 
         initialAdminUser: {
             username: 'admin',
             password: 'unleash4all!',
+            email: 'admin@unleash.com',
         },
     });
 

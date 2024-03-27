@@ -74,6 +74,7 @@ export interface IAuthOption {
     initialAdminUser?: {
         username: string;
         password: string;
+        email: string;
     };
     initApiTokens: ILegacyApiTokenCreate[];
 }

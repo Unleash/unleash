@@ -3,6 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
+import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
@@ -29,24 +30,25 @@ import {
     FilterItemParam,
 } from 'utils/serializeQueryParams';
 import {
-    ArrayParam,
-    encodeQueryParams,
     NumberParam,
     StringParam,
+    ArrayParam,
     withDefault,
+    encodeQueryParams,
 } from 'use-query-params';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import type { FeatureSearchResponseSchema } from 'openapi';
+import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useSelectedData } from './hooks/useSelectedData';
-import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -60,7 +62,7 @@ const formatEnvironmentColumnId = (environment: string) =>
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 const getRowId = (row: { name: string }) => row.name;
 
-export const ProjectFeatureToggles = ({
+export const OldProjectFeatureToggles = ({
     environments,
     refreshInterval = 15 * 1000,
     storageKey = 'project-feature-toggles-v2',
@@ -173,23 +175,6 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
-            columnHelper.accessor('name', {
-                id: 'name',
-                header: 'Name',
-                cell: FeatureOverviewCell,
-                enableHiding: false,
-                meta: {
-                    width: '50%',
-                },
-            }),
-            columnHelper.accessor('createdAt', {
-                id: 'createdAt',
-                header: 'Created',
-                cell: DateCell,
-                meta: {
-                    width: '1%',
-                },
-            }),
             columnHelper.accessor('lastSeenAt', {
                 id: 'lastSeenAt',
                 header: 'Last seen',
@@ -204,6 +189,38 @@ export const ProjectFeatureToggles = ({
                     align: 'center',
                     width: '1%',
                 },
+            }),
+            columnHelper.accessor('type', {
+                id: 'type',
+                header: 'Type',
+                cell: FeatureTypeCell,
+                meta: {
+                    align: 'center',
+                    width: '1%',
+                },
+            }),
+            columnHelper.accessor('name', {
+                id: 'name',
+                header: 'Name',
+                cell: FeatureNameCell,
+                enableHiding: false,
+                meta: {
+                    width: '50%',
+                },
+            }),
+            columnHelper.accessor('tags', {
+                id: 'tags',
+                header: 'Tags',
+                enableSorting: false,
+                cell: FeatureTagCell,
+                meta: {
+                    width: '1%',
+                },
+            }),
+            columnHelper.accessor('createdAt', {
+                id: 'createdAt',
+                header: 'Created',
+                cell: DateCell,
             }),
             ...environments.map((name: string) => {
                 const isChangeRequestEnabled = isChangeRequestConfigured(name);
@@ -377,20 +394,30 @@ export const ProjectFeatureToggles = ({
                             <ColumnsMenu
                                 columns={[
                                     {
+                                        header: 'Last seen',
+                                        id: 'lastSeenAt',
+                                        isVisible: columnVisibility.lastSeenAt,
+                                    },
+                                    {
+                                        header: 'Type',
+                                        id: 'type',
+                                        isVisible: columnVisibility.type,
+                                    },
+                                    {
                                         header: 'Name',
                                         id: 'name',
                                         isVisible: columnVisibility.name,
                                         isStatic: true,
                                     },
                                     {
+                                        header: 'Tags',
+                                        id: 'tags',
+                                        isVisible: columnVisibility.tags,
+                                    },
+                                    {
                                         header: 'Created',
                                         id: 'createdAt',
                                         isVisible: columnVisibility.createdAt,
-                                    },
-                                    {
-                                        header: 'Last seen',
-                                        id: 'lastSeenAt',
-                                        isVisible: columnVisibility.lastSeenAt,
                                     },
                                     {
                                         id: 'divider',

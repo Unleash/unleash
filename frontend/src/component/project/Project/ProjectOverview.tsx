@@ -12,6 +12,7 @@ import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
 import { useFeedback } from '../../feedbackNew/useFeedback';
+import { OldProjectFeatureToggles } from './PaginatedProjectFeatureToggles/OldProjectFeatureToggles';
 
 const refreshInterval = 15 * 1000;
 
@@ -86,8 +87,8 @@ const OldProjectOverview: FC<{
                 <ProjectStats stats={project.stats} />
 
                 <StyledProjectToggles>
-                    <ProjectFeatureToggles
-                        environments={environments.map(
+                    <OldProjectFeatureToggles
+                        environments={project.environments.map(
                             (environment) => environment.environment,
                         )}
                         refreshInterval={refreshInterval}

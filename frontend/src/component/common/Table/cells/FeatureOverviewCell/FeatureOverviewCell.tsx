@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { FeatureSearchResponseSchema } from '../../../../../openapi';
-import { Box, styled, Tooltip } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext';
@@ -59,16 +59,30 @@ const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
                     placement='bottom-start'
                     arrow
                 >
-                    <StyledDescription data-loading>
+                    <StyledDescription>
                         <Highlighter search={searchQuery}>{text}</Highlighter>
                     </StyledDescription>
                 </HtmlTooltip>
             }
             elseShow={
-                <StyledDescription data-loading>
+                <StyledDescription>
                     <Highlighter search={searchQuery}>{text}</Highlighter>
                 </StyledDescription>
             }
+        />
+    );
+};
+
+const CappedTag: FC<{ tag: string }> = ({ tag }) => {
+    return (
+        <ConditionallyRender
+            condition={tag.length > 30}
+            show={
+                <HtmlTooltip title={tag}>
+                    <Tag>{tag}</Tag>
+                </HtmlTooltip>
+            }
+            elseShow={<Tag>{tag}</Tag>}
         />
     );
 };
@@ -77,7 +91,8 @@ const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
-    margin: theme.spacing(1, 0, 1, 0),
+    margin: theme.spacing(1.25, 0, 1, 0),
+    paddingLeft: theme.spacing(2),
 }));
 
 const FeatureNameAndType = styled(Box)(({ theme }) => ({
@@ -108,7 +123,6 @@ const FeatureName: FC<{
         <Box sx={(theme) => ({ fontWeight: theme.typography.fontWeightBold })}>
             <StyledFeatureLink to={`/projects/${project}/features/${feature}`}>
                 <StyledTitle
-                    data-loading
                     style={{
                         WebkitLineClamp: 1,
                         lineClamp: 1,
@@ -136,9 +150,9 @@ const Tags: FC<{ tags: FeatureSearchResponseSchema['tags'] }> = ({ tags }) => {
 
     return (
         <TagsContainer>
-            {tag1 && <Tag>{tag1}</Tag>}
-            {tag2 && <Tag>{tag2}</Tag>}
-            {tag3 && <Tag>{tag3}</Tag>}
+            {tag1 && <CappedTag tag={tag1} />}
+            {tag2 && <CappedTag tag={tag2} />}
+            {tag3 && <CappedTag tag={tag3} />}
             <ConditionallyRender
                 condition={restTags.length > 0}
                 show={<RestTags tags={restTags} />}
@@ -152,47 +166,32 @@ const PrimaryFeatureInfo: FC<{
     feature: string;
     searchQuery: string;
     type: string;
-}> = ({ project, feature, type, searchQuery }) => {
+    dependencyType: string;
+}> = ({ project, feature, type, searchQuery, dependencyType }) => {
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
     const typeName = featureTypes.find(
         (featureType) => featureType.id === type,
     )?.name;
-    const title = `This is a "${typeName || type}" flag`;
+    const title = `${typeName || type} flag`;
 
     const TypeIcon = () => (
-        <Tooltip arrow title={title} describeChild>
-            <IconComponent
-                sx={(theme) => ({ fontSize: theme.spacing(2) })}
-                data-loading
-            />
-        </Tooltip>
+        <HtmlTooltip arrow title={title} describeChild>
+            <IconComponent sx={(theme) => ({ fontSize: theme.spacing(2) })} />
+        </HtmlTooltip>
     );
 
     return (
-        <FeatureNameAndType>
+        <FeatureNameAndType data-loading>
             <TypeIcon />
             <FeatureName
                 project={project}
                 feature={feature}
                 searchQuery={searchQuery}
             />
-        </FeatureNameAndType>
-    );
-};
-
-const SecondaryFeatureInfo: FC<{
-    dependencyType: string;
-    description: string;
-    searchQuery: string;
-}> = ({ dependencyType, description, searchQuery }) => {
-    return (
-        <ConditionallyRender
-            condition={Boolean(dependencyType) || Boolean(description)}
-            show={
-                <Box
-                    sx={(theme) => ({ display: 'flex', gap: theme.spacing(1) })}
-                >
+            <ConditionallyRender
+                condition={Boolean(dependencyType)}
+                show={
                     <DependencyBadge
                         color={
                             dependencyType === 'parent'
@@ -202,6 +201,23 @@ const SecondaryFeatureInfo: FC<{
                     >
                         {dependencyType}
                     </DependencyBadge>
+                }
+            />
+        </FeatureNameAndType>
+    );
+};
+
+const SecondaryFeatureInfo: FC<{
+    description: string;
+    searchQuery: string;
+}> = ({ description, searchQuery }) => {
+    return (
+        <ConditionallyRender
+            condition={Boolean(description)}
+            show={
+                <Box
+                    sx={(theme) => ({ display: 'flex', gap: theme.spacing(1) })}
+                >
                     <CappedDescription
                         text={description}
                         searchQuery={searchQuery}
@@ -222,10 +238,10 @@ export const FeatureOverviewCell: FC<IFeatureNameCellProps> = ({ row }) => {
                 feature={row.original.name}
                 searchQuery={searchQuery}
                 type={row.original.type || ''}
+                dependencyType={row.original.dependencyType || ''}
             />
             <SecondaryFeatureInfo
                 description={row.original.description || ''}
-                dependencyType={row.original.dependencyType || ''}
                 searchQuery={searchQuery}
             />
             <Tags tags={row.original.tags} />

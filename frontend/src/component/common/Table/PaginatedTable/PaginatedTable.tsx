@@ -28,8 +28,7 @@ const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
             onClick={() => column.toggleSorting()}
             styles={{
                 borderRadius: '0px',
-                paddingTop: 0,
-                paddingBottom: 0,
+                padding: 0,
                 width,
                 maxWidth: fixedWidth,
                 minWidth: fixedWidth,

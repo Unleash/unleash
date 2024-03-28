@@ -2,7 +2,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Banner } from '../Banner/Banner';
 import type { IBanner } from 'interfaces/banner';
 import { useOutdatedSdks } from 'hooks/api/getters/useOutdatedSdks/useOutdatedSdks';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -13,7 +12,6 @@ export const OutdatedSdksBanner = () => {
     const {
         data: { sdks },
     } = useOutdatedSdks();
-    const flagEnabled = useUiFlag('outdatedSdksBanner');
     const { trackEvent } = usePlausibleTracker();
 
     const applicationClickedWithVersion = (sdkVersion: string) => {
@@ -74,7 +72,7 @@ export const OutdatedSdksBanner = () => {
     return (
         <>
             <ConditionallyRender
-                condition={flagEnabled && sdks.length > 0}
+                condition={sdks.length > 0}
                 show={<Banner banner={outdatedSdksBanner} />}
             />
         </>

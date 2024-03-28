@@ -9,6 +9,7 @@ import {
     filterLegalValues,
     LegalValueLabel,
 } from '../LegalValueLabel/LegalValueLabel';
+import { useUiFlag } from '../../../../../../hooks/useUiFlag';
 
 interface IRestrictiveLegalValuesProps {
     data: {
@@ -84,6 +85,8 @@ export const RestrictiveLegalValues = ({
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
     const { classes: styles } = useThemeStyles();
 
+    const newContextFieldsUI = useUiFlag('newContextFieldsUI');
+
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
         const deletedValuesSet = getLegalValueSet(deletedLegalValues);
         return (
@@ -156,9 +159,14 @@ export const RestrictiveLegalValues = ({
                 <ConstraintFormHeader>
                     Select values from a predefined set
                 </ConstraintFormHeader>
-                <Button variant={'text'} onClick={onSelectAll}>
-                    {isAllSelected ? 'Unselect all' : 'Select all'}
-                </Button>
+                <ConditionallyRender
+                    condition={newContextFieldsUI}
+                    show={
+                        <Button variant={'text'} onClick={onSelectAll}>
+                            {isAllSelected ? 'Unselect all' : 'Select all'}
+                        </Button>
+                    }
+                />
             </StyledStack>
             <ConditionallyRender
                 condition={Boolean(values)}

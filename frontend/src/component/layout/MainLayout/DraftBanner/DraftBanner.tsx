@@ -6,7 +6,6 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IDraftBannerProps {
     project: string;
@@ -81,15 +80,9 @@ const DraftBannerContent: FC<{
           }[changeRequests[0].state as 'Draft' | 'In review' | 'Approved']
         : '';
 
-    const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
+    const StyledDraftBanner = StyledSpaciousDraftBanner;
 
-    const StyledDraftBanner = increaseUnleashWidth
-        ? StyledSpaciousDraftBanner
-        : StyledNormalDraftBanner;
-
-    const StyledDraftBannerContentWrapper = increaseUnleashWidth
-        ? StyledSpaciousDraftBannerContentWrapper
-        : StyledNormalDraftBannerContentWrapper;
+    const StyledDraftBannerContentWrapper = StyledSpaciousDraftBannerContentWrapper;
 
     return (
         <StyledDraftBanner>

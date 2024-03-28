@@ -9,7 +9,7 @@ export const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 
     '&:hover': {
-        border: `2px solid ${theme.palette.primary.main}`,
+        border: `1px solid ${theme.palette.primary.main}`,
     },
 }));
 

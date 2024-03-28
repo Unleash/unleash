@@ -80,25 +80,28 @@ export const SingleLegalValue = ({
             <ConditionallyRender
                 condition={Boolean(legalValues.length)}
                 show={
-                    <FormControl component='fieldset'>
-                        <RadioGroup
-                            aria-label='selected-value'
-                            name='selected'
-                            value={value}
-                            onChange={(e) => {
-                                setError('');
-                                setValue(e.target.value);
-                            }}
-                        >
-                            {filteredValues.map((match) => (
-                                <LegalValueLabel
-                                    key={match.value}
-                                    legal={match}
-                                    control={<Radio />}
-                                />
-                            ))}
-                        </RadioGroup>
-                    </FormControl>
+                    <div style={{ display: 'flex' }}>
+                        <FormControl component='fieldset'>
+                            <RadioGroup
+                                aria-label='selected-value'
+                                name='selected'
+                                value={value}
+                                sx={{ gap: (theme) => theme.spacing(0.5) }}
+                                onChange={(e) => {
+                                    setError('');
+                                    setValue(e.target.value);
+                                }}
+                            >
+                                {filteredValues.map((match) => (
+                                    <LegalValueLabel
+                                        key={match.value}
+                                        legal={match}
+                                        control={<Radio />}
+                                    />
+                                ))}
+                            </RadioGroup>
+                        </FormControl>
+                    </div>
                 }
                 elseShow={
                     <p>No valid legal values available for this operator.</p>

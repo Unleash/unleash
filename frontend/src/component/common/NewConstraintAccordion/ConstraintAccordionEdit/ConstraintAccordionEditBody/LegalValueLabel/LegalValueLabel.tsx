@@ -18,6 +18,7 @@ export const LegalValueLabel = ({ legal, control }: ILegalValueTextProps) => {
             <FormControlLabel
                 value={legal.value}
                 control={control}
+                sx={{ width: '100%' }}
                 label={
                     <>
                         <StyledValue>{legal.value}</StyledValue>

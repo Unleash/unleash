@@ -11,6 +11,9 @@ const setupApi = () => {
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },
+        flags: {
+            variantDependencies: true,
+        },
     });
 
     testServerRoute(
@@ -103,12 +106,16 @@ test('Edit dependency', async () => {
     });
 
     // Open the dropdown by selecting the role.
-    const dropdown = screen.queryAllByRole('combobox')[0];
-    expect(dropdown.innerHTML).toBe('parentB');
-    userEvent.click(dropdown);
+    const [featureDropdown, featureStatusDropdown] =
+        screen.queryAllByRole('combobox');
+    expect(featureDropdown.innerHTML).toBe('parentB');
+    userEvent.click(featureDropdown);
 
     const parentAOption = await screen.findByText('parentA');
     userEvent.click(parentAOption);
+
+    await screen.findByText('feature status');
+    expect(featureStatusDropdown.innerHTML).toBe('enabled');
 
     const addButton = await screen.findByText('Add');
     userEvent.click(addButton);

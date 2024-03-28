@@ -143,6 +143,7 @@ exports[`should create default config 1`] = `
       "stripClientHeadersOn304": false,
       "useMemoizedActiveTokens": false,
       "userAccessUIEnabled": false,
+      "variantDependencies": false,
     },
     "externalResolver": {
       "getVariant": [Function],

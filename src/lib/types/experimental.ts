@@ -54,7 +54,8 @@ export type IFlagKey =
     | 'displayEdgeBanner'
     | 'globalFrontendApiCache'
     | 'returnGlobalFrontendApiCache'
-    | 'projectOverviewRefactor';
+    | 'projectOverviewRefactor'
+    | 'variantDependencies';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -265,6 +266,10 @@ const flags: IFlags = {
     ),
     projectOverviewRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
+        false,
+    ),
+    variantDependencies: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_VARIANT_DEPENDENCIES,
         false,
     ),
 };

@@ -117,6 +117,7 @@ export * from './outdated-sdks-schema';
 export * from './override-schema';
 export * from './parameters-schema';
 export * from './parent-feature-options-schema';
+export * from './parent-variant-options-schema';
 export * from './password-schema';
 export * from './pat-schema';
 export * from './patch-schema';

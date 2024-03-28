@@ -227,8 +227,16 @@ export class DependentFeaturesService {
         );
     }
 
-    async getParentOptions(feature: string): Promise<string[]> {
-        return this.dependentFeaturesReadModel.getParentOptions(feature);
+    async getPossibleParentFeatures(feature: string): Promise<string[]> {
+        return this.dependentFeaturesReadModel.getPossibleParentFeatures(
+            feature,
+        );
+    }
+
+    async getPossibleParentVariants(parentFeature: string): Promise<string[]> {
+        return this.dependentFeaturesReadModel.getPossibleParentVariants(
+            parentFeature,
+        );
     }
 
     async checkDependenciesExist(): Promise<boolean> {

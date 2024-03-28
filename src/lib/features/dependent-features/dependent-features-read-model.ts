@@ -59,7 +59,7 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
         }));
     }
 
-    async getParentOptions(child: string): Promise<string[]> {
+    async getPossibleParentFeatures(child: string): Promise<string[]> {
         const result = await this.db('features')
             .where('features.name', child)
             .select('features.project');
@@ -80,6 +80,35 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             .orderBy('features.name');
 
         return rows.map((item) => item.name);
+    }
+
+    async getPossibleParentVariants(parent: string): Promise<string[]> {
+        const queryStrategies = this.db('feature_strategies')
+            .select(
+                this.db.raw(
+                    "jsonb_array_elements(variants)->>'name' as variant_name",
+                ),
+            )
+            .where('feature_name', parent);
+
+        const queryEnvironments = this.db('feature_environments')
+            .select(
+                this.db.raw(
+                    "jsonb_array_elements(variants)->>'name' as variant_name",
+                ),
+            )
+            .where('feature_name', parent);
+
+        const [strategyVariants, featureEnvironmentVariants] =
+            await Promise.all([queryStrategies, queryEnvironments]);
+
+        return [
+            ...new Set(
+                [...strategyVariants, ...featureEnvironmentVariants]
+                    .map((item) => item.variant_name)
+                    .sort(),
+            ),
+        ];
     }
 
     async haveDependencies(features: string[]): Promise<boolean> {

@@ -39,6 +39,7 @@ export interface InstanceStats {
     serviceAccounts: number;
     apiTokens: Map<string, number>;
     featureToggles: number;
+    archivedFeatureToggles: number;
     projects: ProjectModeCount[];
     contextFields: number;
     roles: number;
@@ -192,6 +193,12 @@ export class InstanceStatsService {
         });
     }
 
+    getArchivedToggleCount(): Promise<number> {
+        return this.featureToggleStore.count({
+            archived: true,
+        });
+    }
+
     async hasOIDC(): Promise<boolean> {
         const settings = await this.settingStore.get<{ enabled: boolean }>(
             'unleash.enterprise.auth.oidc',
@@ -215,6 +222,7 @@ export class InstanceStatsService {
         const versionInfo = await this.versionService.getVersionInfo();
         const [
             featureToggles,
+            archivedFeatureToggles,
             users,
             serviceAccounts,
             apiTokens,
@@ -237,6 +245,7 @@ export class InstanceStatsService {
             previousDayMetricsBucketsCount,
         ] = await Promise.all([
             this.getToggleCount(),
+            this.getArchivedToggleCount(),
             this.userStore.count(),
             this.userStore.countServiceAccounts(),
             this.apiTokenStore.countByType(),
@@ -269,6 +278,7 @@ export class InstanceStatsService {
             apiTokens,
             activeUsers,
             featureToggles,
+            archivedFeatureToggles,
             projects,
             contextFields,
             roles,

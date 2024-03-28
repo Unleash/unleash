@@ -94,6 +94,7 @@ class InstanceAdminController extends Controller {
             featureExports: 0,
             featureImports: 0,
             featureToggles: 29,
+            archivedFeatureToggles: 10,
             groups: 3,
             instanceId: 'ed3861ae-78f9-4e8c-8e57-b57efc15f82b',
             projects: 4,

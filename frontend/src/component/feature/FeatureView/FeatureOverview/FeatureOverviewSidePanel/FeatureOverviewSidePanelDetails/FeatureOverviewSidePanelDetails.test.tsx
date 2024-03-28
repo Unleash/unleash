@@ -18,7 +18,7 @@ const setupApi = () => {
     testServerRoute(
         server,
         '/api/admin/projects/default/features/feature/parents',
-        [],
+        ['some_parent'],
     );
     testServerRoute(
         server,
@@ -243,6 +243,7 @@ test('delete dependency with change request', async () => {
 });
 
 test('edit dependency', async () => {
+    setupChangeRequestApi();
     render(
         <FeatureOverviewSidePanelDetails
             feature={

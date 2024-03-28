@@ -81,13 +81,14 @@ test('Delete dependency', async () => {
     });
 });
 
-test('Add dependency', async () => {
+test('Edit dependency', async () => {
     let closed = false;
     setupApi();
     render(
         <AddDependencyDialogue
             project='default'
             featureId='child'
+            parentFeatureId='parentB'
             showDependencyDialogue={true}
             onClose={() => {
                 closed = true;
@@ -95,7 +96,7 @@ test('Add dependency', async () => {
         />,
     );
 
-    const removeDependency = await screen.findByText('Remove');
+    const removeDependency = await screen.findByText('Add');
 
     await waitFor(() => {
         expect(removeDependency).not.toBeDisabled();
@@ -103,6 +104,7 @@ test('Add dependency', async () => {
 
     // Open the dropdown by selecting the role.
     const dropdown = screen.queryAllByRole('combobox')[0];
+    expect(dropdown.innerHTML).toBe('parentB');
     userEvent.click(dropdown);
 
     const parentAOption = await screen.findByText('parentA');

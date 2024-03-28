@@ -18,6 +18,7 @@ import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
 interface IAddDependencyDialogueProps {
     project: string;
     featureId: string;
+    parentFeatureId?: string;
     showDependencyDialogue: boolean;
     onClose: () => void;
 }
@@ -161,10 +162,13 @@ const useManageDependency = (
 export const AddDependencyDialogue = ({
     project,
     featureId,
+    parentFeatureId,
     showDependencyDialogue,
     onClose,
 }: IAddDependencyDialogueProps) => {
-    const [parent, setParent] = useState(REMOVE_DEPENDENCY_OPTION.key);
+    const [parent, setParent] = useState(
+        parentFeatureId || REMOVE_DEPENDENCY_OPTION.key,
+    );
     const handleClick = useManageDependency(
         project,
         featureId,

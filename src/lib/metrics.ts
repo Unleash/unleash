@@ -108,6 +108,11 @@ export default class MetricsMonitor {
             help: 'Number of feature toggles',
             labelNames: ['version'],
         });
+
+        const featureTogglesArchivedTotal = createGauge({
+            name: 'feature_toggles_archived_total',
+            help: 'Number of archived feature toggles',
+        });
         const usersTotal = createGauge({
             name: 'users_total',
             help: 'Number of users',
@@ -261,6 +266,9 @@ export default class MetricsMonitor {
                 featureTogglesTotal
                     .labels({ version })
                     .set(stats.featureToggles);
+
+                featureTogglesArchivedTotal.reset();
+                featureTogglesArchivedTotal.set(stats.archivedFeatureToggles);
 
                 usersTotal.reset();
                 usersTotal.set(stats.users);

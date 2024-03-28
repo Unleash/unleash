@@ -2,6 +2,10 @@ import type { Db } from '../../db/db';
 import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
 import type { IDependency, IFeatureDependency } from '../../types';
 
+interface IVariantName {
+    variant_name: string;
+}
+
 export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
     private db: Db;
 
@@ -83,7 +87,7 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
     }
 
     async getPossibleParentVariants(parent: string): Promise<string[]> {
-        const queryStrategies = this.db('feature_strategies')
+        const strategyVariantsQuery = this.db('feature_strategies')
             .select(
                 this.db.raw(
                     "jsonb_array_elements(variants)->>'name' as variant_name",
@@ -91,7 +95,7 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             )
             .where('feature_name', parent);
 
-        const queryEnvironments = this.db('feature_environments')
+        const featureEnvironmentVariantsQuery = this.db('feature_environments')
             .select(
                 this.db.raw(
                     "jsonb_array_elements(variants)->>'name' as variant_name",
@@ -99,16 +103,16 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             )
             .where('feature_name', parent);
 
-        const [strategyVariants, featureEnvironmentVariants] =
-            await Promise.all([queryStrategies, queryEnvironments]);
+        const results = await Promise.all([
+            strategyVariantsQuery,
+            featureEnvironmentVariantsQuery,
+        ]);
+        const flatResults = results
+            .flat()
+            .map((item) => (item as unknown as IVariantName).variant_name);
+        const uniqueResults = [...new Set(flatResults)];
 
-        return [
-            ...new Set(
-                [...strategyVariants, ...featureEnvironmentVariants]
-                    .map((item) => item.variant_name)
-                    .sort(),
-            ),
-        ];
+        return uniqueResults.sort();
     }
 
     async haveDependencies(features: string[]): Promise<boolean> {

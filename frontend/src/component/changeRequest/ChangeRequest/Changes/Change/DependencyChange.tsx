@@ -42,6 +42,9 @@ export const DependencyChange: VFC<{
                             >
                                 {change.payload.feature}
                             </StyledLink>
+                            {change.payload.enabled === false
+                                ? ' (disabled)'
+                                : null}
                         </AddDependencyWrapper>
                         {actions}
                     </ChangeItemWrapper>

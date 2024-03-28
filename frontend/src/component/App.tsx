@@ -75,7 +75,6 @@ export const App = () => {
                                     condition={outdatedSdksBannerEnabled}
                                     show={<OutdatedSdksBanner />}
                                 />
-                                <OutdatedSdksBanner />
                                 <StyledContainer>
                                     <ToastRenderer />
                                     <Routes>

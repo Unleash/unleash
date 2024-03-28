@@ -173,7 +173,9 @@ export const RestrictiveLegalValues = ({
                 show={
                     <>
                         <ConditionallyRender
-                            condition={Boolean(values)}
+                            condition={
+                                Boolean(newContextFieldsUI) && Boolean(values)
+                            }
                             show={
                                 <StyledValuesContainer sx={{ border: 0 }}>
                                     {values.map((value) => {

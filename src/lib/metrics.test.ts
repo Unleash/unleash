@@ -190,6 +190,11 @@ test('should collect metrics for feature toggle size', async () => {
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
 
+test('should collect metrics for archived feature toggle size', async () => {
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).toMatch(/feature_toggles_archived_total 0/);
+});
+
 test('should collect metrics for total client apps', async () => {
     await statsService.refreshAppCountSnapshot();
     const metrics = await prometheusRegister.metrics();

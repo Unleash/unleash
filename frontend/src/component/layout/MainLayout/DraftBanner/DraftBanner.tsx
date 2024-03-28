@@ -82,7 +82,8 @@ const DraftBannerContent: FC<{
 
     const StyledDraftBanner = StyledSpaciousDraftBanner;
 
-    const StyledDraftBannerContentWrapper = StyledSpaciousDraftBannerContentWrapper;
+    const StyledDraftBannerContentWrapper =
+        StyledSpaciousDraftBannerContentWrapper;
 
     return (
         <StyledDraftBanner>

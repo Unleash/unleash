@@ -1,5 +1,9 @@
 import type { ILegalValue } from 'interfaces/context';
-import { useStyles } from './LegalValueLabel.styles';
+import {
+    StyledContainer,
+    StyledValue,
+    StyledDescription,
+} from './LegalValueLabel.styles';
 import type React from 'react';
 import { FormControlLabel } from '@mui/material';
 
@@ -9,23 +13,21 @@ interface ILegalValueTextProps {
 }
 
 export const LegalValueLabel = ({ legal, control }: ILegalValueTextProps) => {
-    const { classes: styles } = useStyles();
-
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <FormControlLabel
                 value={legal.value}
                 control={control}
                 label={
                     <>
-                        <div className={styles.value}>{legal.value}</div>
-                        <div className={styles.description}>
+                        <StyledValue>{legal.value}</StyledValue>
+                        <StyledDescription>
                             {legal.description}
-                        </div>
+                        </StyledDescription>
                     </>
                 }
             />
-        </div>
+        </StyledContainer>
     );
 };
 

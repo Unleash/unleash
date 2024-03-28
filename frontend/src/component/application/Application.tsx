@@ -28,8 +28,6 @@ import useToast from 'hooks/useToast';
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ApplicationEdit } from './ApplicationEdit/ApplicationEdit';
 import ApplicationOverview from './ApplicationOverview';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 
@@ -70,7 +68,6 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }));
 
 export const Application = () => {
-    const useOldApplicationScreen = !useUiFlag('sdkReporting');
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { application, loading } = useApplication(name);
@@ -88,10 +85,6 @@ export const Application = () => {
     const toggleModal = () => {
         setShowDialog(!showDialog);
     };
-
-    if (useOldApplicationScreen) {
-        return <ApplicationEdit />;
-    }
 
     const formatDate = (v: string) => formatDateYMD(v, locationSettings.locale);
 

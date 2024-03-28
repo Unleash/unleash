@@ -37,7 +37,6 @@ import {
     projectApplicationsSchema,
     type ProjectApplicationsSchema,
 } from '../../openapi/spec/project-applications-schema';
-import { NotFoundError } from '../../error';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
 import { normalizeQueryParams } from '../feature-search/search-utils';
 import ProjectInsightsController from '../project-insights/project-insights-controller';
@@ -267,10 +266,6 @@ export default class ProjectController extends Controller {
         req: IAuthRequest,
         res: Response<ProjectApplicationsSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('sdkReporting')) {
-            throw new NotFoundError();
-        }
-
         const { projectId } = req.params;
 
         const {

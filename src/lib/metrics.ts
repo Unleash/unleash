@@ -268,9 +268,7 @@ export default class MetricsMonitor {
                     .set(stats.featureToggles);
 
                 featureTogglesArchivedTotal.reset();
-                featureTogglesArchivedTotal
-                    .labels({ version })
-                    .set(stats.archivedFeatureToggles);
+                featureTogglesArchivedTotal.set(stats.archivedFeatureToggles);
 
                 usersTotal.reset();
                 usersTotal.set(stats.users);

@@ -169,28 +169,30 @@ export const RestrictiveLegalValues = ({
                 />
             </StyledStack>
             <ConditionallyRender
-                condition={Boolean(values)}
-                show={
-                    <StyledValuesContainer sx={{ border: 0 }}>
-                        {values.map((value) => {
-                            return (
-                                <Chip
-                                    key={value}
-                                    label={value}
-                                    onDelete={() => onChange(value)}
-                                />
-                            );
-                        })}
-                    </StyledValuesContainer>
-                }
-            />
-            <ConditionallyRender
                 condition={legalValues.length > 100}
                 show={
-                    <ConstraintValueSearch
-                        filter={filter}
-                        setFilter={setFilter}
-                    />
+                    <>
+                        <ConditionallyRender
+                            condition={Boolean(values)}
+                            show={
+                                <StyledValuesContainer sx={{ border: 0 }}>
+                                    {values.map((value) => {
+                                        return (
+                                            <Chip
+                                                key={value}
+                                                label={value}
+                                                onDelete={() => onChange(value)}
+                                            />
+                                        );
+                                    })}
+                                </StyledValuesContainer>
+                            }
+                        />
+                        <ConstraintValueSearch
+                            filter={filter}
+                            setFilter={setFilter}
+                        />
+                    </>
                 }
             />
             <StyledValuesContainer>

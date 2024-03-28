@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Checkbox, styled } from '@mui/material';
+import { Alert, Button, Checkbox, Chip, Stack, styled } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
@@ -9,6 +9,7 @@ import {
     filterLegalValues,
     LegalValueLabel,
 } from '../LegalValueLabel/LegalValueLabel';
+import { useUiFlag } from '../../../../../../hooks/useUiFlag';
 
 interface IRestrictiveLegalValuesProps {
     data: {
@@ -60,6 +61,11 @@ const StyledValuesContainer = styled('div')(({ theme }) => ({
     maxHeight: '378px',
     overflow: 'auto',
 }));
+const StyledStack = styled(Stack)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(0.5),
+    justifyContent: 'space-between',
+}));
 
 export const RestrictiveLegalValues = ({
     data,
@@ -78,6 +84,8 @@ export const RestrictiveLegalValues = ({
     // Lazily initialise the values because there might be a lot of them.
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
     const { classes: styles } = useThemeStyles();
+
+    const newContextFieldsUI = useUiFlag('newContextFieldsUI');
 
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
         const deletedValuesSet = getLegalValueSet(deletedLegalValues);
@@ -116,6 +124,19 @@ export const RestrictiveLegalValues = ({
         setValuesWithRecord([...cleanDeletedLegalValues(values), legalValue]);
     };
 
+    const isAllSelected = legalValues.every((value) =>
+        values.includes(value.value),
+    );
+
+    const onSelectAll = () => {
+        if (isAllSelected) {
+            return setValuesWithRecord([]);
+        }
+        setValuesWithRecord([
+            ...legalValues.map((legalValue) => legalValue.value),
+        ]);
+    };
+
     return (
         <>
             <ConditionallyRender
@@ -134,10 +155,35 @@ export const RestrictiveLegalValues = ({
                     </Alert>
                 }
             />
-
-            <ConstraintFormHeader>
-                Select values from a predefined set
-            </ConstraintFormHeader>
+            <StyledStack direction={'row'}>
+                <ConstraintFormHeader>
+                    Select values from a predefined set
+                </ConstraintFormHeader>
+                <ConditionallyRender
+                    condition={newContextFieldsUI}
+                    show={
+                        <Button variant={'text'} onClick={onSelectAll}>
+                            {isAllSelected ? 'Unselect all' : 'Select all'}
+                        </Button>
+                    }
+                />
+            </StyledStack>
+            <ConditionallyRender
+                condition={Boolean(values)}
+                show={
+                    <StyledValuesContainer sx={{ border: 0 }}>
+                        {values.map((value) => {
+                            return (
+                                <Chip
+                                    key={value}
+                                    label={value}
+                                    onDelete={() => onChange(value)}
+                                />
+                            );
+                        })}
+                    </StyledValuesContainer>
+                }
+            />
             <ConditionallyRender
                 condition={legalValues.length > 100}
                 show={
@@ -152,6 +198,7 @@ export const RestrictiveLegalValues = ({
                     <LegalValueLabel
                         key={match.value}
                         legal={match}
+                        filter={filter}
                         control={
                             <Checkbox
                                 checked={Boolean(valuesMap[match.value])}

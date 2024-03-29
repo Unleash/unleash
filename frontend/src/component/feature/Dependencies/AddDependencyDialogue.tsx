@@ -1,9 +1,19 @@
-import { type FC, useState } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { type FC, useEffect, useState } from 'react';
+import {
+    Autocomplete,
+    Box,
+    Checkbox,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
-import { useParentOptions } from 'hooks/api/getters/useParentOptions/useParentOptions';
+import {
+    useParentOptions,
+    useParentVariantOptions,
+} from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
@@ -15,17 +25,25 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
 import { useUiFlag } from 'hooks/useUiFlag';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import type { IDependency } from '../../../interfaces/featureToggle';
 
 interface IAddDependencyDialogueProps {
     project: string;
     featureId: string;
     parentFeatureId?: string;
-    parentFeatureValue?: ParentValue;
+    parentFeatureValue?: IDependency;
     showDependencyDialogue: boolean;
     onClose: () => void;
 }
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1.5),
+}));
+
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1.5),
 }));
@@ -53,6 +71,7 @@ const LazyOptions: FC<{
               })),
           ]
         : [REMOVE_DEPENDENCY_OPTION];
+
     return (
         <StyledSelect
             fullWidth
@@ -63,7 +82,7 @@ const LazyOptions: FC<{
     );
 };
 
-const FeatureValueOptions: FC<{
+const FeatureStatusOptions: FC<{
     parentValue: ParentValue;
     onSelect: (parent: string) => void;
 }> = ({ onSelect, parentValue }) => {
@@ -72,6 +91,10 @@ const FeatureValueOptions: FC<{
             fullWidth
             options={[
                 { key: 'enabled', label: 'enabled' },
+                {
+                    key: 'enabled_with_variants',
+                    label: 'enabled with variants',
+                },
                 { key: 'disabled', label: 'disabled' },
             ]}
             value={parentValue.status}
@@ -80,7 +103,51 @@ const FeatureValueOptions: FC<{
     );
 };
 
-type ParentValue = { status: 'enabled' } | { status: 'disabled' };
+const ParentVariantOptions: FC<{
+    project: string;
+    parent: string;
+    selectedValues: string[];
+    onSelect: (values: string[]) => void;
+}> = ({ project, parent, onSelect, selectedValues }) => {
+    const { parentVariantOptions } = useParentVariantOptions(project, parent);
+    const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
+    const checkedIcon = <CheckBoxIcon fontSize='small' />;
+    return (
+        <StyledAutocomplete
+            multiple
+            id='parent-variant-options'
+            options={parentVariantOptions}
+            disableCloseOnSelect
+            renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                    <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                    />
+                    {option}
+                </li>
+            )}
+            renderInput={(params) => (
+                <TextField {...params} placeholder='Select values' />
+            )}
+            fullWidth
+            value={selectedValues}
+            onChange={(_, selectedValues) => {
+                onSelect(selectedValues as string[]);
+            }}
+        />
+    );
+};
+
+type ParentValue =
+    | { status: 'enabled' }
+    | { status: 'disabled' }
+    | {
+          status: 'enabled_with_variants';
+          variants: string[];
+      };
 
 const useManageDependency = (
     project: string,
@@ -116,6 +183,10 @@ const useManageDependency = (
                     payload: {
                         feature: parent,
                         enabled: parentValue.status !== 'disabled',
+                        variants:
+                            parentValue.status === 'enabled_with_variants'
+                                ? parentValue.variants
+                                : [],
                     },
                 },
             ]);
@@ -169,6 +240,10 @@ const useManageDependency = (
                 await addDependency(featureId, {
                     feature: parent,
                     enabled: parentValue.status !== 'disabled',
+                    variants:
+                        parentValue.status === 'enabled_with_variants'
+                            ? parentValue.variants
+                            : [],
                 });
                 trackEvent('dependent_features', {
                     props: {
@@ -196,9 +271,30 @@ export const AddDependencyDialogue = ({
     const [parent, setParent] = useState(
         parentFeatureId || REMOVE_DEPENDENCY_OPTION.key,
     );
+
+    const getInitialParentValue = (): ParentValue => {
+        if (!parentFeatureValue) return { status: 'enabled' };
+        if (parentFeatureValue.variants.length > 0)
+            return {
+                status: 'enabled_with_variants',
+                variants: parentFeatureValue.variants,
+            };
+        if (!parentFeatureValue.enabled) return { status: 'disabled' };
+        return { status: 'enabled' };
+    };
     const [parentValue, setParentValue] = useState<ParentValue>(
-        parentFeatureValue || { status: 'enabled' },
+        getInitialParentValue,
     );
+
+    const resetState = () => {
+        setParent(parentFeatureId || REMOVE_DEPENDENCY_OPTION.key);
+        setParentValue(getInitialParentValue());
+    };
+
+    useEffect(() => {
+        resetState();
+    }, [parentFeatureId, JSON.stringify(parentFeatureValue)]);
+
     const handleClick = useManageDependency(
         project,
         featureId,
@@ -268,18 +364,53 @@ export const AddDependencyDialogue = ({
                                 What <b>feature status</b> do you want to depend
                                 on?
                             </Typography>
-                            <FeatureValueOptions
+                            <FeatureStatusOptions
                                 parentValue={parentValue}
-                                onSelect={(value) =>
-                                    setParentValue({
-                                        status:
-                                            value === 'disabled'
-                                                ? 'disabled'
-                                                : 'enabled',
-                                    })
-                                }
+                                onSelect={(value: string) => {
+                                    if (
+                                        value === 'enabled' ||
+                                        value === 'disabled'
+                                    ) {
+                                        setParentValue({ status: value });
+                                    }
+                                    if (value === 'enabled_with_variants') {
+                                        setParentValue({
+                                            status: value,
+                                            variants: [],
+                                        });
+                                    }
+                                }}
                             />
                         </Box>
+                    }
+                />
+
+                <ConditionallyRender
+                    condition={
+                        parent !== REMOVE_DEPENDENCY_OPTION.key &&
+                        variantDependenciesEnabled &&
+                        parentValue.status === 'enabled_with_variants'
+                    }
+                    show={
+                        parentValue.status === 'enabled_with_variants' && (
+                            <Box sx={{ mt: 2 }}>
+                                <Typography>
+                                    What <b>variant</b> do you want to depend
+                                    on?
+                                </Typography>
+                                <ParentVariantOptions
+                                    parent={parent}
+                                    project={project}
+                                    selectedValues={parentValue.variants}
+                                    onSelect={(variants) => {
+                                        setParentValue({
+                                            status: 'enabled_with_variants',
+                                            variants,
+                                        });
+                                    }}
+                                />
+                            </Box>
+                        )
                     }
                 />
             </Box>

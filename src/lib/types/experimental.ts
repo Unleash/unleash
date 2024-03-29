@@ -55,7 +55,8 @@ export type IFlagKey =
     | 'globalFrontendApiCache'
     | 'returnGlobalFrontendApiCache'
     | 'projectOverviewRefactor'
-    | 'variantDependencies';
+    | 'variantDependencies'
+    | 'newContextFieldsUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -266,6 +267,10 @@ const flags: IFlags = {
     ),
     projectOverviewRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
+        false,
+    ),
+    newContextFieldsUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_CONTEXT_FIELDS_UI,
         false,
     ),
     variantDependencies: parseEnvVarBoolean(

@@ -6,7 +6,7 @@ import {
 } from './LegalValueLabel.styles';
 import type React from 'react';
 import { FormControlLabel } from '@mui/material';
-import { Highlighter } from '../../../../Highlighter/Highlighter';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
 
 interface ILegalValueTextProps {
     legal: ILegalValue;

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Button, Checkbox, Chip, Stack, styled } from '@mui/material';
-import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import type { ILegalValue } from 'interfaces/context';
@@ -9,7 +8,7 @@ import {
     filterLegalValues,
     LegalValueLabel,
 } from '../LegalValueLabel/LegalValueLabel';
-import { useUiFlag } from '../../../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IRestrictiveLegalValuesProps {
     data: {
@@ -67,6 +66,11 @@ const StyledStack = styled(Stack)(({ theme }) => ({
     justifyContent: 'space-between',
 }));
 
+const ErrorText = styled('p')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.error.main,
+}));
+
 export const RestrictiveLegalValues = ({
     data,
     values,
@@ -83,7 +87,6 @@ export const RestrictiveLegalValues = ({
 
     // Lazily initialise the values because there might be a lot of them.
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
-    const { classes: styles } = useThemeStyles();
 
     const newContextFieldsUI = useUiFlag('newContextFieldsUI');
 
@@ -219,7 +222,7 @@ export const RestrictiveLegalValues = ({
             </StyledValuesContainer>
             <ConditionallyRender
                 condition={Boolean(error)}
-                show={<p className={styles.error}>{error}</p>}
+                show={<ErrorText>{error}</ErrorText>}
             />
         </>
     );

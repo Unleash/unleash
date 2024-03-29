@@ -54,7 +54,7 @@ export interface IFeatureToggle {
 
 export interface IDependency {
     feature: string;
-    enabled: boolean;
+    enabled?: boolean;
     variants?: string[];
 }
 

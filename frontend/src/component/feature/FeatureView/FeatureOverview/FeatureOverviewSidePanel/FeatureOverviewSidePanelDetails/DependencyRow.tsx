@@ -197,8 +197,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                     <AddDependencyDialogue
                         project={feature.project}
                         featureId={feature.name}
-                        parentFeatureId={feature.dependencies[0]?.feature}
-                        parentFeatureValue={feature.dependencies[0]}
+                        parentDependency={feature.dependencies[0]}
                         onClose={() => setShowDependencyDialogue(false)}
                         showDependencyDialogue={showDependencyDialogue}
                     />

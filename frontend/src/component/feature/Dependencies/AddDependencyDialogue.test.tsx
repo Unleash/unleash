@@ -91,7 +91,7 @@ test('Edit dependency', async () => {
         <AddDependencyDialogue
             project='default'
             featureId='child'
-            parentFeatureId='parentB'
+            parentDependency={{ feature: 'parentB' }}
             showDependencyDialogue={true}
             onClose={() => {
                 closed = true;

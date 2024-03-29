@@ -17,6 +17,7 @@ import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPe
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { VariantsTooltip } from './VariantsTooltip';
 
 const useDeleteDependency = (project: string, featureId: string) => {
     const { trackEvent } = usePlausibleTracker();
@@ -152,11 +153,25 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                     <FlexRow>
                         <StyledDetail>
                             <StyledLabel>Dependency value:</StyledLabel>
-                            <span>
-                                {feature.dependencies[0]?.enabled
-                                    ? 'enabled'
-                                    : 'disabled'}
-                            </span>
+                            <span>disabled</span>
+                        </StyledDetail>
+                    </FlexRow>
+                }
+            />
+            <ConditionallyRender
+                condition={
+                    hasParentDependency &&
+                    Boolean(feature.dependencies[0]?.variants?.length)
+                }
+                show={
+                    <FlexRow>
+                        <StyledDetail>
+                            <StyledLabel>Dependency value:</StyledLabel>
+                            <VariantsTooltip
+                                variants={
+                                    feature.dependencies[0]?.variants || []
+                                }
+                            />
                         </StyledDetail>
                     </FlexRow>
                 }
@@ -182,13 +197,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                     <AddDependencyDialogue
                         project={feature.project}
                         featureId={feature.name}
-                        parentFeatureId={feature.dependencies[0]?.feature}
-                        parentFeatureValue={{
-                            status:
-                                feature.dependencies[0]?.enabled === false
-                                    ? 'disabled'
-                                    : 'enabled',
-                        }}
+                        parentDependency={feature.dependencies[0]}
                         onClose={() => setShowDependencyDialogue(false)}
                         showDependencyDialogue={showDependencyDialogue}
                     />

@@ -274,7 +274,7 @@ export const AddDependencyDialogue = ({
 
     const getInitialParentValue = (): ParentValue => {
         if (!parentFeatureValue) return { status: 'enabled' };
-        if (parentFeatureValue.variants.length > 0)
+        if (parentFeatureValue.variants?.length > 0)
             return {
                 status: 'enabled_with_variants',
                 variants: parentFeatureValue.variants,

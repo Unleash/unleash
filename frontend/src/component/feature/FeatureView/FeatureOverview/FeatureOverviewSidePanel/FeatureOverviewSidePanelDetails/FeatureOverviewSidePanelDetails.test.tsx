@@ -246,7 +246,6 @@ test('delete dependency with change request', async () => {
 });
 
 test('edit dependency', async () => {
-    setupChangeRequestApi();
     render(
         <FeatureOverviewSidePanelDetails
             feature={
@@ -280,4 +279,28 @@ test('edit dependency', async () => {
     userEvent.click(editButton);
 
     await screen.findByText('Add parent feature dependency');
+});
+
+test('show variant dependencies', async () => {
+    render(
+        <FeatureOverviewSidePanelDetails
+            feature={
+                {
+                    name: 'feature',
+                    project: 'default',
+                    dependencies: [
+                        {
+                            feature: 'some_parent',
+                            enabled: true,
+                            variants: ['a', 'b'],
+                        },
+                    ],
+                    children: [] as string[],
+                } as IFeatureToggle
+            }
+            header={''}
+        />,
+    );
+
+    await screen.findByText('2 variants');
 });

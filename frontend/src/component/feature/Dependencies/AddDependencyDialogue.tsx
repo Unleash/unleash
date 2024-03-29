@@ -14,11 +14,13 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IAddDependencyDialogueProps {
     project: string;
     featureId: string;
     parentFeatureId?: string;
+    parentFeatureValue?: ParentValue;
     showDependencyDialogue: boolean;
     onClose: () => void;
 }
@@ -40,7 +42,7 @@ const LazyOptions: FC<{
     parent: string;
     onSelect: (parent: string) => void;
 }> = ({ project, featureId, parent, onSelect }) => {
-    const { parentOptions, loading } = useParentOptions(project, featureId);
+    const { parentOptions } = useParentOptions(project, featureId);
 
     const options = parentOptions
         ? [
@@ -61,10 +63,30 @@ const LazyOptions: FC<{
     );
 };
 
+const FeatureValueOptions: FC<{
+    parentValue: ParentValue;
+    onSelect: (parent: string) => void;
+}> = ({ onSelect, parentValue }) => {
+    return (
+        <StyledSelect
+            fullWidth
+            options={[
+                { key: 'enabled', label: 'enabled' },
+                { key: 'disabled', label: 'disabled' },
+            ]}
+            value={parentValue.status}
+            onChange={onSelect}
+        />
+    );
+};
+
+type ParentValue = { status: 'enabled' } | { status: 'disabled' };
+
 const useManageDependency = (
     project: string,
     featureId: string,
     parent: string,
+    parentValue: ParentValue,
     onClose: () => void,
 ) => {
     const { trackEvent } = usePlausibleTracker();
@@ -91,7 +113,10 @@ const useManageDependency = (
                 {
                     action: actionType,
                     feature: featureId,
-                    payload: { feature: parent },
+                    payload: {
+                        feature: parent,
+                        enabled: parentValue.status !== 'disabled',
+                    },
                 },
             ]);
             trackEvent('dependent_features', {
@@ -105,7 +130,7 @@ const useManageDependency = (
                 { action: actionType, feature: featureId, payload: undefined },
             ]);
         }
-        refetchChangeRequests();
+        void refetchChangeRequests();
         setToastData({
             text:
                 actionType === 'addDependency'
@@ -116,7 +141,7 @@ const useManageDependency = (
         });
     };
 
-    const manageDependency = async () => {
+    return async () => {
         try {
             if (isChangeRequestConfiguredInAnyEnv()) {
                 const actionType =
@@ -141,7 +166,10 @@ const useManageDependency = (
                 });
                 setToastData({ title: 'Dependency removed', type: 'success' });
             } else {
-                await addDependency(featureId, { feature: parent });
+                await addDependency(featureId, {
+                    feature: parent,
+                    enabled: parentValue.status !== 'disabled',
+                });
                 trackEvent('dependent_features', {
                     props: {
                         eventType: 'dependency added',
@@ -152,31 +180,36 @@ const useManageDependency = (
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
-        await refetchFeature();
+        void refetchFeature();
         onClose();
     };
-
-    return manageDependency;
 };
 
 export const AddDependencyDialogue = ({
     project,
     featureId,
     parentFeatureId,
+    parentFeatureValue,
     showDependencyDialogue,
     onClose,
 }: IAddDependencyDialogueProps) => {
     const [parent, setParent] = useState(
         parentFeatureId || REMOVE_DEPENDENCY_OPTION.key,
     );
+    const [parentValue, setParentValue] = useState<ParentValue>(
+        parentFeatureValue || { status: 'enabled' },
+    );
     const handleClick = useManageDependency(
         project,
         featureId,
         parent,
+        parentValue,
         onClose,
     );
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(project);
+
+    const variantDependenciesEnabled = useUiFlag('variantDependencies');
 
     return (
         <Dialogue
@@ -197,10 +230,18 @@ export const AddDependencyDialogue = ({
                 <DependenciesUpgradeAlert />
                 <Box sx={{ mt: 2, mb: 4 }}>
                     Your feature will be evaluated only when the selected parent
-                    feature is enabled in the same environment.
+                    feature is{' '}
+                    <b>
+                        {parentValue.status === 'disabled'
+                            ? 'disabled'
+                            : 'enabled'}
+                    </b>{' '}
+                    in the same environment.
                 </Box>
 
-                <Typography>What feature do you want to depend on?</Typography>
+                <Typography>
+                    What <b>feature</b> do you want to depend on?
+                </Typography>
                 <ConditionallyRender
                     condition={showDependencyDialogue}
                     show={
@@ -208,8 +249,37 @@ export const AddDependencyDialogue = ({
                             project={project}
                             featureId={featureId}
                             parent={parent}
-                            onSelect={setParent}
+                            onSelect={(status) => {
+                                setParentValue({ status: 'enabled' });
+                                setParent(status);
+                            }}
                         />
+                    }
+                />
+
+                <ConditionallyRender
+                    condition={
+                        parent !== REMOVE_DEPENDENCY_OPTION.key &&
+                        variantDependenciesEnabled
+                    }
+                    show={
+                        <Box sx={{ mt: 2 }}>
+                            <Typography>
+                                What <b>feature status</b> do you want to depend
+                                on?
+                            </Typography>
+                            <FeatureValueOptions
+                                parentValue={parentValue}
+                                onSelect={(value) =>
+                                    setParentValue({
+                                        status:
+                                            value === 'disabled'
+                                                ? 'disabled'
+                                                : 'enabled',
+                                    })
+                                }
+                            />
+                        </Box>
                     }
                 />
             </Box>

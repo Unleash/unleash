@@ -12,6 +12,7 @@ import {
     FEATURE_DEPENDENCY_REMOVED,
     type IEventStore,
 } from '../../types';
+import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -55,6 +56,7 @@ afterAll(async () => {
 beforeEach(async () => {
     await db.stores.dependentFeaturesStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
+    await db.stores.featureEnvironmentStore.deleteAll();
 });
 
 const addFeatureDependency = async (
@@ -93,10 +95,67 @@ const deleteFeatureDependencies = async (
         .expect(expectedCode);
 };
 
-const getParentOptions = async (childFeature: string, expectedCode = 200) => {
+const getPossibleParentFeatures = async (
+    childFeature: string,
+    expectedCode = 200,
+) => {
     return app.request
         .get(`/api/admin/projects/default/features/${childFeature}/parents`)
         .expect(expectedCode);
+};
+
+const getPossibleParentVariants = async (
+    parentFeature: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(
+            `/api/admin/projects/default/features/${parentFeature}/parent-variants`,
+        )
+        .expect(expectedCode);
+};
+
+const addStrategyVariants = async (parent: string, variants: string[]) => {
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: { rollout: '100', stickiness: 'default' },
+            variants: variants.map((name) => ({
+                name,
+                weight: 1000,
+                weightType: 'variable',
+                stickiness: 'default',
+            })),
+        },
+        DEFAULT_ENV,
+        parent,
+    );
+};
+
+const addFeatureEnvironmentVariant = async (
+    parent: string,
+    variant: string,
+) => {
+    await app.request
+        .patch(
+            `/api/admin/projects/default/features/${parent}/environments/${DEFAULT_ENV}/variants`,
+        )
+        .set('Content-Type', 'application/json')
+        .send([
+            {
+                op: 'add',
+                path: '/0',
+                value: {
+                    name: variant,
+                    weightType: 'variable',
+                    weight: 1000,
+                    overrides: [],
+                    stickiness: 'default',
+                },
+            },
+        ])
+        .expect(200);
 };
 
 const checkDependenciesExist = async (expectedCode = 200) => {
@@ -111,8 +170,8 @@ test('should add and delete feature dependencies', async () => {
     await app.createFeature(parent);
     await app.createFeature(child);
 
-    const { body: parentOptions } = await getParentOptions(child);
-    expect(parentOptions).toStrictEqual([parent]);
+    const { body: options } = await getPossibleParentFeatures(child);
+    expect(options).toStrictEqual([parent]);
 
     // save explicit enabled and variants
     await addFeatureDependency(child, {
@@ -136,7 +195,7 @@ test('should add and delete feature dependencies', async () => {
     ]);
 });
 
-test('should sort parent options alphabetically', async () => {
+test('should sort potential parent features alphabetically', async () => {
     const parent1 = `a${uuidv4()}`;
     const parent2 = `c${uuidv4()}`;
     const parent3 = `b${uuidv4()}`;
@@ -146,8 +205,20 @@ test('should sort parent options alphabetically', async () => {
     await app.createFeature(parent3);
     await app.createFeature(child);
 
-    const { body: parentOptions } = await getParentOptions(child);
-    expect(parentOptions).toStrictEqual([parent1, parent3, parent2]);
+    const { body: options } = await getPossibleParentFeatures(child);
+    expect(options).toStrictEqual([parent1, parent3, parent2]);
+});
+
+test('should sort potential parent variants', async () => {
+    const parent = uuidv4();
+    await app.createFeature(parent);
+    await addFeatureEnvironmentVariant(parent, 'e');
+    await addStrategyVariants(parent, ['c', 'a', 'd']);
+    await addStrategyVariants(parent, ['b', 'd']);
+
+    const { body: variants } = await getPossibleParentVariants(parent);
+
+    expect(variants).toStrictEqual(['a', 'b', 'c', 'd', 'e']);
 });
 
 test('should not allow to add grandparent', async () => {

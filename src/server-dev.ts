@@ -53,6 +53,7 @@ process.nextTick(async () => {
                         returnGlobalFrontendApiCache: false,
                         projectOverviewRefactor: true,
                         newContextFieldsUI: true,
+                        variantDependencies: true,
                     },
                 },
                 authentication: {

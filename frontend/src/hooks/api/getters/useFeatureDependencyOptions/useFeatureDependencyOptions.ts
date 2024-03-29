@@ -5,12 +5,9 @@ const parentOptionsPath = (projectId: string, childFeatureId: string) =>
     `/api/admin/projects/${projectId}/features/${childFeatureId}/parents`;
 
 export const useParentOptions = (projectId: string, childFeatureId: string) => {
-    const projectPath = formatApiPath(
-        parentOptionsPath(projectId, childFeatureId),
-    );
-    const { data, refetch, loading, error } = useApiGetter<string[]>(
-        projectPath,
-        () => fetcher(projectPath, 'Parent Options'),
+    const path = formatApiPath(parentOptionsPath(projectId, childFeatureId));
+    const { data, refetch, loading, error } = useApiGetter<string[]>(path, () =>
+        fetcher(path, 'Parent Options'),
     );
 
     return { parentOptions: data, loading, error };
@@ -23,12 +20,9 @@ export const useParentVariantOptions = (
     projectId: string,
     parentFeatureId: string,
 ) => {
-    const projectPath = formatApiPath(
-        parentVariantsPath(projectId, parentFeatureId),
-    );
-    const { data, refetch, loading, error } = useApiGetter<string[]>(
-        projectPath,
-        () => fetcher(projectPath, 'Parent Variant Options'),
+    const path = formatApiPath(parentVariantsPath(projectId, parentFeatureId));
+    const { data, refetch, loading, error } = useApiGetter<string[]>(path, () =>
+        fetcher(path, 'Parent Variant Options'),
     );
 
     return { parentVariantOptions: data || [], loading, error };

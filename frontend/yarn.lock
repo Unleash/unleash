@@ -1994,16 +1994,16 @@
     svg-parser "^2.0.4"
 
 "@tanstack/react-table@^8.10.7":
-  version "8.13.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.13.2.tgz#a3aa737ae464abc651f68daa7e82dca17813606c"
-  integrity sha512-b6mR3mYkjRtJ443QZh9sc7CvGTce81J35F/XMr0OoWbx0KIM7TTTdyNP2XKObvkLpYnLpCrYDwI3CZnLezWvpg==
+  version "8.15.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.15.3.tgz#9933222642d5d5bdaea5a78cf6c5d42aa86a1c22"
+  integrity sha512-aocQ4WpWiAh7R+yxNp+DGQYXeVACh5lv2kk96DjYgFiHDCB0cOFoYMT/pM6eDOzeMXR9AvPoLeumTgq8/0qX+w==
   dependencies:
-    "@tanstack/table-core" "8.13.2"
+    "@tanstack/table-core" "8.15.3"
 
-"@tanstack/table-core@8.13.2":
-  version "8.13.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.13.2.tgz#2512574dd3d20dc94b7db1f9f48090f0c18b5c85"
-  integrity sha512-/2saD1lWBUV6/uNAwrsg2tw58uvMJ07bO2F1IWMxjFRkJiXKQRuc3Oq2aufeobD3873+4oIM/DRySIw7+QsPPw==
+"@tanstack/table-core@8.15.3":
+  version "8.15.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.15.3.tgz#1a11cef82a458e90694bedfb40dcff610e69460e"
+  integrity sha512-wOgV0HfEvuMOv8RlqdR9MdNNqq0uyvQtP39QOvGlggHvIObOE4exS+D5LGO8LZ3LUXxId2IlUKcHDHaGujWhUg==
 
 "@testing-library/dom@8.20.1":
   version "8.20.1"

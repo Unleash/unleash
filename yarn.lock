@@ -3229,12 +3229,12 @@ faker@5.5.3:
   resolved "https://registry.yarnpkg.com/faker/-/faker-5.5.3.tgz#c57974ee484431b25205c2c8dc09fda861e51e0e"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@3.16.0:
-  version "3.16.0"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.16.0.tgz#798fa85212dbfb9e4fdc65b12d872225a8f1c907"
-  integrity sha512-k8GtQHi4pJoRQ1gVDFQno+/FVkowo/ehiz/aCj9O/D7HRWb1sSFzNrw+iPVU8QlWtH+jNwbuN+dDVg3QkS56DQ==
+fast-check@3.17.0:
+  version "3.17.0"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.17.0.tgz#7c0ff6a0e0a0bdc99c8b93d42fa066429c7bd437"
+  integrity sha512-9A7UiBENXxMBb40qY+xOcIcGdxF5CYbXJOU4b+omh773RIFcIQRejHEjjrzIHQFLIQXWgWQu3dl6FrWR9VpYRQ==
   dependencies:
-    pure-rand "^6.0.0"
+    pure-rand "^6.1.0"
 
 fast-deep-equal@^3.1.1:
   version "3.1.3"
@@ -5971,6 +5971,11 @@ pure-rand@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-6.0.0.tgz#701996ceefa253507923a0e864c17ab421c04a7c"
   integrity sha512-rLSBxJjP+4DQOgcJAx6RZHT2he2pkhQdSnofG5VWyVl6GRq/K02ISOuOLcsMOrtKDIJb8JN2zm3FFzWNbezdPw==
+
+pure-rand@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-6.1.0.tgz#d173cf23258231976ccbdb05247c9787957604f2"
+  integrity sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==
 
 qs@6.11.0, qs@^6.11.0:
   version "6.11.0"

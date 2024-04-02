@@ -1,9 +1,7 @@
 // Copy of https://github.com/Unleash/unleash-proxy/blob/main/src/create-context.ts.
-
-/* eslint-disable prefer-object-spread */
+import crypto from 'crypto';
 import type { Context } from 'unleash-client';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function createContext(value: any): Context {
     const {
         appName,
@@ -33,9 +31,8 @@ export function createContext(value: any): Context {
     return cleanContext;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const enrichContextWithIp = (query: any, ip: string): Context => {
     query.remoteAddress = query.remoteAddress || ip;
-    query.sessionId = query.sessionId || String(Math.random());
+    query.sessionId = query.sessionId || crypto.randomBytes(18).toString('hex');
     return createContext(query);
 };

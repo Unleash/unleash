@@ -7,7 +7,7 @@ import type { Request, Response } from 'express';
 const exampleSignalToken = 'signal_tokensecret';
 
 describe('bearerTokenMiddleware', () => {
-    const req = { headers: {} } as Request;
+    const req = { headers: {}, path: '' } as Request;
     const res = {} as Response;
     const next = jest.fn();
 

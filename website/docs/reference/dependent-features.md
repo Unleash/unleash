@@ -32,7 +32,7 @@ Parent value criteria can be set to one of the 3 options:
 For the **variant dependencies**, if the parent feature variant is evaluated to the expected value, the dependency is satisfied.
 You can specify variant values from all [strategy variants](./strategy-variants.md) and all [feature environment variants](./feature-toggle-variants.md). The parent dependency variant 
 is compared to the actual value that the parent dependency is evaluated to in a given environment.
-Consult [strategy variants order](./strategy-variants.md#strategy-variants-and-strategies-order) and [variants comparison](./strategy-variants#strategy-variants-vs-feature-toggle-variants) sections for more details.
+Consult [strategy variants order](./strategy-variants.md#strategy-variants-and-strategies-order) and [variants comparison](./strategy-variants#strategy-variants-vs-feature-toggle-variants) sections for more details on the variant evaluation order.
 
 ## Managing dependencies
 

@@ -4,8 +4,8 @@ import { render } from 'utils/testRenderer';
 import { AddDependencyDialogue } from './AddDependencyDialogue';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { http, HttpResponse } from 'msw';
-import type { IDependency } from '../../../interfaces/featureToggle';
-import type { IChangeSchema } from '../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import type { IDependency } from 'interfaces/featureToggle';
+import type { IChangeSchema } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 const server = testServerSetup();
 

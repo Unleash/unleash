@@ -4,7 +4,9 @@ import { RestrictiveLegalValues } from './RestrictiveLegalValues';
 import { vi } from 'vitest';
 
 vi.mock('../../../../../../hooks/useUiFlag', () => ({
-    useUiFlag: vi.fn(() => true),
+    useUiFlag: vi.fn(
+        (flag: string) => flag !== 'disableShowContextFieldSelectionValues',
+    ),
 }));
 
 test('should show alert when you have illegal legal values', async () => {

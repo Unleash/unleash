@@ -52,7 +52,7 @@ process.nextTick(async () => {
                         globalFrontendApiCache: true,
                         returnGlobalFrontendApiCache: false,
                         projectOverviewRefactor: true,
-                        newContextFieldsUI: true,
+                        disableShowContextFieldSelectionValues: false,
                         variantDependencies: true,
                     },
                 },

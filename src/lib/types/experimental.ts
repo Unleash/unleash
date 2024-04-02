@@ -56,7 +56,7 @@ export type IFlagKey =
     | 'returnGlobalFrontendApiCache'
     | 'projectOverviewRefactor'
     | 'variantDependencies'
-    | 'newContextFieldsUI';
+    | 'disableShowContextFieldSelectionValues';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -269,8 +269,9 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
         false,
     ),
-    newContextFieldsUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_CONTEXT_FIELDS_UI,
+    disableShowContextFieldSelectionValues: parseEnvVarBoolean(
+        process.env
+            .UNLEASH_EXPERIMENTAL_DISABLE_SHOW_CONTEXT_FIELD_SELECTION_VALUES,
         false,
     ),
     variantDependencies: parseEnvVarBoolean(

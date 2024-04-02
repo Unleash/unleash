@@ -130,7 +130,6 @@ exports[`should create default config 1`] = `
       "migrationLock": true,
       "newContextFieldsUI": false,
       "newStrategyConfigurationFeedback": false,
-      "outdatedSdksBanner": false,
       "personalAccessTokensKillSwitch": false,
       "projectOverviewRefactor": false,
       "queryMissingTokens": false,

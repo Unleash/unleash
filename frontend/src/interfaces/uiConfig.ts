@@ -75,7 +75,6 @@ export type UiFlags = {
     showInactiveUsers?: boolean;
     featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
-    outdatedSdksBanner?: boolean;
     projectOverviewRefactor?: string;
     collectTrafficDataUsage?: boolean;
     newContextFieldsUI?: boolean;

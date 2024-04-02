@@ -9,7 +9,10 @@ export const bearerTokenMiddleware = ({
     logger.debug('Enabling bearer token middleware');
 
     return (req: Request, _: Response, next: NextFunction) => {
-        if (flagResolver.isEnabled('bearerTokenMiddleware')) {
+        if (
+            req.path.startsWith('/api/signal-endpoint/') ||
+            flagResolver.isEnabled('bearerTokenMiddleware')
+        ) {
             const authHeader = req.headers.authorization;
 
             if (authHeader) {

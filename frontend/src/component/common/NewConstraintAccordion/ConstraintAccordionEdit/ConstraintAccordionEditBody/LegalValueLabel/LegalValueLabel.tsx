@@ -24,6 +24,7 @@ export const LegalValueLabel = ({
             <FormControlLabel
                 value={legal.value}
                 control={control}
+                sx={{ width: '100%' }}
                 label={
                     <>
                         <StyledValue>

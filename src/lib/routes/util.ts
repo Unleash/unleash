@@ -29,12 +29,7 @@ export const handleErrors: (
     error: Error,
 ) => void = (res, logger, error) => {
     if (createError.isHttpError(error)) {
-        return res
-            .status(
-                // @ts-expect-error - The error object here is not guaranteed to contain status
-                error.status ?? 400,
-            )
-            .json({ message: error.message });
+        return res.status(error.status ?? 400).json({ message: error.message });
     }
 
     const finalError =

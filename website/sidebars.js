@@ -166,6 +166,15 @@ module.exports = {
                     label: 'SvelteKit',
                     id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
                 },
+                {
+                    type: 'category',
+                    label: 'Ruby',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
+                    },
+                    items: [],
+                },
             ],
         },
         {

@@ -3,6 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { AddDependencyDialogue } from './AddDependencyDialogue';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { http, HttpResponse } from 'msw';
+import type { IDependency } from '../../../interfaces/featureToggle';
+import type { IChangeSchema } from '../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 const server = testServerSetup();
 
@@ -32,9 +35,19 @@ const setupApi = () => {
 
     testServerRoute(
         server,
+        '/api/admin/projects/default/features/parentA/parent-variants',
+        ['variantA', 'variantB'],
+    );
+
+    testServerRoute(
+        server,
         '/api/admin/projects/default/features/child/parents',
         ['parentA', 'parentB'],
     );
+
+    testServerRoute(server, '/api/admin/projects/default/features/child', {
+        dependencies: [{ feature: 'parentB', enabled: true, variants: [] }],
+    });
 };
 
 const setupChangeRequestApi = () => {
@@ -86,7 +99,18 @@ test('Delete dependency', async () => {
 
 test('Edit dependency', async () => {
     let closed = false;
+    let dependency: IDependency;
     setupApi();
+    server.use(
+        http.post(
+            '/api/admin/projects/default/features/child/dependencies',
+            async ({ request }) => {
+                dependency = (await request.json()) as IDependency;
+                return new HttpResponse(null, { status: 200 });
+            },
+        ),
+    );
+
     render(
         <AddDependencyDialogue
             project='default'
@@ -99,10 +123,10 @@ test('Edit dependency', async () => {
         />,
     );
 
-    const removeDependency = await screen.findByText('Add');
+    const addDependency = await screen.findByText('Add');
 
     await waitFor(() => {
-        expect(removeDependency).not.toBeDisabled();
+        expect(addDependency).not.toBeDisabled();
     });
 
     // Open the dropdown by selecting the role.
@@ -111,12 +135,27 @@ test('Edit dependency', async () => {
     expect(featureDropdown.innerHTML).toBe('parentB');
     userEvent.click(featureDropdown);
 
+    // select parent
     const parentAOption = await screen.findByText('parentA');
     userEvent.click(parentAOption);
 
+    // select parent status
     await screen.findByText('feature status');
     expect(featureStatusDropdown.innerHTML).toBe('enabled');
+    userEvent.click(featureStatusDropdown);
+    const enabledWithVariants = await screen.findByText(
+        'enabled with variants',
+    );
+    userEvent.click(enabledWithVariants);
 
+    // select variant
+    await screen.findByText('variant');
+    const variantDropdown = await screen.findByPlaceholderText('Select values');
+    userEvent.click(variantDropdown);
+    const variantA = await screen.findByText('variantA');
+    userEvent.click(variantA);
+
+    // add dependency
     const addButton = await screen.findByText('Add');
     userEvent.click(addButton);
 
@@ -124,17 +163,33 @@ test('Edit dependency', async () => {
 
     await waitFor(() => {
         expect(closed).toBe(true);
+        expect(dependency).toEqual({
+            feature: 'parentA',
+            enabled: true,
+            variants: ['variantA'],
+        });
     });
 });
 
 test('Add change to draft', async () => {
     let closed = false;
+    let change: IChangeSchema[];
     setupApi();
     setupChangeRequestApi();
+    server.use(
+        http.post(
+            '/api/admin/projects/default/environments/development/change-requests',
+            async ({ request }) => {
+                change = (await request.json()) as IChangeSchema[];
+                return new HttpResponse(null, { status: 201 });
+            },
+        ),
+    );
     render(
         <AddDependencyDialogue
             project='default'
             featureId='child'
+            parentDependency={{ feature: 'parentB' }}
             showDependencyDialogue={true}
             onClose={() => {
                 closed = true;
@@ -148,5 +203,12 @@ test('Add change to draft', async () => {
 
     await waitFor(() => {
         expect(closed).toBe(true);
+        expect(change).toEqual([
+            {
+                action: 'addDependency',
+                feature: 'child',
+                payload: { feature: 'parentB', enabled: true, variants: [] },
+            },
+        ]);
     });
 });

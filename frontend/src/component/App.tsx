@@ -23,6 +23,7 @@ import { EdgeUpgradeBanner } from './banners/EdgeUpgradeBanner/EdgeUpgradeBanner
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
 import { OutdatedSdksBanner } from './banners/OutdatedSdksBanner/OutdatedSdksBanner';
+import { useUiFlag } from '../hooks/useUiFlag';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -49,6 +50,8 @@ export const App = () => {
         }
     }, [authDetails, user]);
 
+    const outdatedSdksBannerEnabled = useUiFlag('outdatedSdksBanner');
+
     return (
         <SWRProvider>
             <Suspense fallback={<Loader />}>
@@ -68,7 +71,10 @@ export const App = () => {
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <EdgeUpgradeBanner />
-                                <OutdatedSdksBanner />
+                                <ConditionallyRender
+                                    condition={outdatedSdksBannerEnabled}
+                                    show={<OutdatedSdksBanner />}
+                                />
                                 <StyledContainer>
                                     <ToastRenderer />
                                     <Routes>

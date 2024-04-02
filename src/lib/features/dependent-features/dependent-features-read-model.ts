@@ -2,6 +2,10 @@ import type { Db } from '../../db/db';
 import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
 import type { IDependency, IFeatureDependency } from '../../types';
 
+interface IVariantName {
+    variant_name: string;
+}
+
 export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
     private db: Db;
 
@@ -59,7 +63,7 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
         }));
     }
 
-    async getParentOptions(child: string): Promise<string[]> {
+    async getPossibleParentFeatures(child: string): Promise<string[]> {
         const result = await this.db('features')
             .where('features.name', child)
             .select('features.project');
@@ -80,6 +84,35 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             .orderBy('features.name');
 
         return rows.map((item) => item.name);
+    }
+
+    async getPossibleParentVariants(parent: string): Promise<string[]> {
+        const strategyVariantsQuery = this.db('feature_strategies')
+            .select(
+                this.db.raw(
+                    "jsonb_array_elements(variants)->>'name' as variant_name",
+                ),
+            )
+            .where('feature_name', parent);
+
+        const featureEnvironmentVariantsQuery = this.db('feature_environments')
+            .select(
+                this.db.raw(
+                    "jsonb_array_elements(variants)->>'name' as variant_name",
+                ),
+            )
+            .where('feature_name', parent);
+
+        const results = await Promise.all([
+            strategyVariantsQuery,
+            featureEnvironmentVariantsQuery,
+        ]);
+        const flatResults = results
+            .flat()
+            .map((item) => (item as unknown as IVariantName).variant_name);
+        const uniqueResults = [...new Set(flatResults)];
+
+        return uniqueResults.sort();
     }
 
     async haveDependencies(features: string[]): Promise<boolean> {

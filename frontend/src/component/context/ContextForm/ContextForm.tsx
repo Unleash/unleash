@@ -42,10 +42,6 @@ const StyledForm = styled('form')({
     height: '100%',
 });
 
-const StyledContainer = styled('div')({
-    maxWidth: '470px',
-});
-
 const StyledInputDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
@@ -159,7 +155,7 @@ export const ContextForm: React.FC<IContextForm> = ({
 
     return (
         <StyledForm onSubmit={onSubmit}>
-            <StyledContainer>
+            <div>
                 <StyledInputDescription>
                     What is your context name?
                 </StyledInputDescription>
@@ -266,7 +262,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     <Typography>{stickiness ? 'On' : 'Off'}</Typography>
                 </StyledSwitchContainer>
                 <ContextFieldUsage contextName={contextName} />
-            </StyledContainer>
+            </div>
             <StyledButtonContainer>
                 {children}
                 <StyledCancelButton onClick={onCancel}>

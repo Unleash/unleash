@@ -15,7 +15,10 @@ import {
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
+    parentFeatureOptionsSchema,
     type ParentFeatureOptionsSchema,
+    type ParentVariantOptionsSchema,
+    parentVariantOptionsSchema,
 } from '../../openapi';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import type { DependentFeaturesService } from './dependent-features-service';
@@ -29,6 +32,10 @@ interface FeatureParams extends ProjectParams {
     child: string;
 }
 
+interface ParentVariantsParams extends ProjectParams {
+    parent: string;
+}
+
 interface DeleteDependencyParams extends ProjectParams {
     child: string;
     parent: string;
@@ -39,6 +46,7 @@ const PATH_FEATURE = `${PATH}/:child`;
 const PATH_DEPENDENCIES = `${PATH_FEATURE}/dependencies`;
 const PATH_DEPENDENCIES_CHECK = `/:projectId/dependencies`;
 const PATH_PARENTS = `${PATH_FEATURE}/parents`;
+const PATH_PARENT_VARIANTS = `${PATH}/:parent/parent-variants`;
 const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
 type DependentFeaturesServices = Pick<
@@ -136,7 +144,7 @@ export default class DependentFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH_PARENTS,
-            handler: this.getParentOptions,
+            handler: this.getPossibleParentFeatures,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
@@ -147,6 +155,26 @@ export default class DependentFeaturesController extends Controller {
                     operationId: 'listParentOptions',
                     responses: {
                         200: createResponseSchema('parentFeatureOptionsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: PATH_PARENT_VARIANTS,
+            handler: this.getPossibleParentVariants,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Dependencies'],
+                    summary: 'List parent feature variants.',
+                    description:
+                        'List available parent variants across all strategy variants and feature environment variants.',
+                    operationId: 'listParentVariantOptions',
+                    responses: {
+                        200: createResponseSchema('parentVariantOptionsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -227,15 +255,42 @@ export default class DependentFeaturesController extends Controller {
         res.status(200).end();
     }
 
-    async getParentOptions(
+    async getPossibleParentFeatures(
         req: IAuthRequest<FeatureParams, any, any>,
         res: Response<ParentFeatureOptionsSchema>,
     ): Promise<void> {
         const { child } = req.params;
 
-        const parentOptions =
-            await this.dependentFeaturesService.getParentOptions(child);
-        res.send(parentOptions);
+        const options =
+            await this.dependentFeaturesService.getPossibleParentFeatures(
+                child,
+            );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            parentFeatureOptionsSchema.$id,
+            options,
+        );
+    }
+
+    async getPossibleParentVariants(
+        req: IAuthRequest<ParentVariantsParams, any, any>,
+        res: Response<ParentVariantOptionsSchema>,
+    ): Promise<void> {
+        const { parent } = req.params;
+
+        const options =
+            await this.dependentFeaturesService.getPossibleParentVariants(
+                parent,
+            );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            parentVariantOptionsSchema.$id,
+            options,
+        );
     }
 
     async checkDependenciesExist(

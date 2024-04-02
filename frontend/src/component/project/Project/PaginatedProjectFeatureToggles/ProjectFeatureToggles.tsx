@@ -3,13 +3,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import type { IProject } from 'interfaces/project';
 import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
-import type { ProjectEnvironmentType } from '../ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell';
 import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
@@ -32,28 +29,27 @@ import {
     FilterItemParam,
 } from 'utils/serializeQueryParams';
 import {
+    ArrayParam,
+    encodeQueryParams,
     NumberParam,
     StringParam,
-    ArrayParam,
     withDefault,
-    encodeQueryParams,
 } from 'use-query-params';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import type { FeatureSearchResponseSchema } from 'openapi';
-import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { useSelectedData } from './hooks/useSelectedData';
+import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 
 interface IPaginatedProjectFeatureTogglesProps {
-    environments: IProject['environments'];
+    environments: string[];
     refreshInterval?: number;
     storageKey?: string;
 }
@@ -135,7 +131,6 @@ export const ProjectFeatureToggles = ({
                 id: 'select',
                 header: ({ table }) => (
                     <MemoizedRowSelectCell
-                        noPadding
                         title='Select all rows'
                         checked={table?.getIsAllRowsSelected()}
                         onChange={table?.getToggleAllRowsSelectedHandler()}
@@ -143,7 +138,6 @@ export const ProjectFeatureToggles = ({
                 ),
                 cell: ({ row }) => (
                     <MemoizedRowSelectCell
-                        noPadding
                         title='Select row'
                         checked={row?.getIsSelected()}
                         onChange={row?.getToggleSelectedHandler()}
@@ -179,6 +173,23 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
+            columnHelper.accessor('name', {
+                id: 'name',
+                header: 'Name',
+                cell: FeatureOverviewCell,
+                enableHiding: false,
+                meta: {
+                    width: '50%',
+                },
+            }),
+            columnHelper.accessor('createdAt', {
+                id: 'createdAt',
+                header: 'Created',
+                cell: DateCell,
+                meta: {
+                    width: '1%',
+                },
+            }),
             columnHelper.accessor('lastSeenAt', {
                 id: 'lastSeenAt',
                 header: 'Last seen',
@@ -194,95 +205,59 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
-            columnHelper.accessor('type', {
-                id: 'type',
-                header: 'Type',
-                cell: FeatureTypeCell,
-                meta: {
-                    align: 'center',
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('name', {
-                id: 'name',
-                header: 'Name',
-                cell: FeatureNameCell,
-                enableHiding: false,
-                meta: {
-                    width: '50%',
-                },
-            }),
-            columnHelper.accessor('tags', {
-                id: 'tags',
-                header: 'Tags',
-                enableSorting: false,
-                cell: FeatureTagCell,
-                meta: {
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('createdAt', {
-                id: 'createdAt',
-                header: 'Created',
-                cell: DateCell,
-            }),
-            ...environments.map(
-                (projectEnvironment: ProjectEnvironmentType) => {
-                    const name = projectEnvironment.environment;
-                    const isChangeRequestEnabled =
-                        isChangeRequestConfigured(name);
+            ...environments.map((name: string) => {
+                const isChangeRequestEnabled = isChangeRequestConfigured(name);
 
-                    return columnHelper.accessor(
-                        (row) => ({
-                            featureId: row.name,
-                            environment: row.environments?.find(
+                return columnHelper.accessor(
+                    (row) => ({
+                        featureId: row.name,
+                        environment: row.environments?.find(
+                            (featureEnvironment) =>
+                                featureEnvironment.name === name,
+                        ),
+                        someEnabledEnvironmentHasVariants:
+                            row.environments?.some(
                                 (featureEnvironment) =>
-                                    featureEnvironment.name === name,
-                            ),
-                            someEnabledEnvironmentHasVariants:
-                                row.environments?.some(
-                                    (featureEnvironment) =>
-                                        featureEnvironment.variantCount &&
-                                        featureEnvironment.variantCount > 0 &&
-                                        featureEnvironment.enabled,
-                                ) || false,
-                        }),
-                        {
-                            id: formatEnvironmentColumnId(name),
-                            header: name,
-                            meta: {
-                                align: 'center',
-                                width: 90,
-                            },
-                            cell: ({ getValue }) => {
-                                const {
-                                    featureId,
-                                    environment,
-                                    someEnabledEnvironmentHasVariants,
-                                } = getValue();
-
-                                return (
-                                    <FeatureToggleCell
-                                        value={environment?.enabled || false}
-                                        featureId={featureId}
-                                        someEnabledEnvironmentHasVariants={
-                                            someEnabledEnvironmentHasVariants
-                                        }
-                                        environment={environment}
-                                        projectId={projectId}
-                                        environmentName={name}
-                                        isChangeRequestEnabled={
-                                            isChangeRequestEnabled
-                                        }
-                                        refetch={refetch}
-                                        onFeatureToggleSwitch={onFeatureToggle}
-                                    />
-                                );
-                            },
+                                    featureEnvironment.variantCount &&
+                                    featureEnvironment.variantCount > 0 &&
+                                    featureEnvironment.enabled,
+                            ) || false,
+                    }),
+                    {
+                        id: formatEnvironmentColumnId(name),
+                        header: name,
+                        meta: {
+                            align: 'center',
+                            width: 90,
                         },
-                    );
-                },
-            ),
+                        cell: ({ getValue }) => {
+                            const {
+                                featureId,
+                                environment,
+                                someEnabledEnvironmentHasVariants,
+                            } = getValue();
+
+                            return (
+                                <FeatureToggleCell
+                                    value={environment?.enabled || false}
+                                    featureId={featureId}
+                                    someEnabledEnvironmentHasVariants={
+                                        someEnabledEnvironmentHasVariants
+                                    }
+                                    environment={environment}
+                                    projectId={projectId}
+                                    environmentName={name}
+                                    isChangeRequestEnabled={
+                                        isChangeRequestEnabled
+                                    }
+                                    refetch={refetch}
+                                    onFeatureToggleSwitch={onFeatureToggle}
+                                />
+                            );
+                        },
+                    },
+                );
+            }),
             columnHelper.display({
                 id: 'actions',
                 header: '',
@@ -314,6 +289,12 @@ export const ProjectFeatureToggles = ({
                     type: '-',
                     name: `Feature name ${index}`,
                     createdAt: new Date().toISOString(),
+                    dependencyType: null,
+                    favorite: false,
+                    impressionData: false,
+                    project: 'project',
+                    segments: [],
+                    stale: false,
                     environments: [
                         {
                             name: 'production',
@@ -391,22 +372,10 @@ export const ProjectFeatureToggles = ({
                             setTableState({ query });
                         }}
                         dataToExport={data}
-                        environmentsToExport={environments.map(
-                            ({ environment }) => environment,
-                        )}
+                        environmentsToExport={environments}
                         actions={
                             <ColumnsMenu
                                 columns={[
-                                    {
-                                        header: 'Last seen',
-                                        id: 'lastSeenAt',
-                                        isVisible: columnVisibility.lastSeenAt,
-                                    },
-                                    {
-                                        header: 'Type',
-                                        id: 'type',
-                                        isVisible: columnVisibility.type,
-                                    },
                                     {
                                         header: 'Name',
                                         id: 'name',
@@ -414,19 +383,19 @@ export const ProjectFeatureToggles = ({
                                         isStatic: true,
                                     },
                                     {
-                                        header: 'Tags',
-                                        id: 'tags',
-                                        isVisible: columnVisibility.tags,
-                                    },
-                                    {
                                         header: 'Created',
                                         id: 'createdAt',
                                         isVisible: columnVisibility.createdAt,
                                     },
                                     {
+                                        header: 'Last seen',
+                                        id: 'lastSeenAt',
+                                        isVisible: columnVisibility.lastSeenAt,
+                                    },
+                                    {
                                         id: 'divider',
                                     },
-                                    ...environments.map(({ environment }) => ({
+                                    ...environments.map((environment) => ({
                                         header: environment,
                                         id: formatEnvironmentColumnId(
                                             environment,
@@ -478,9 +447,7 @@ export const ProjectFeatureToggles = ({
                                 showExportDialog={showExportDialog}
                                 data={data}
                                 onClose={() => setShowExportDialog(false)}
-                                environments={environments.map(
-                                    ({ environment }) => environment,
-                                )}
+                                environments={environments}
                             />
                         }
                     />

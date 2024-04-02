@@ -52,6 +52,7 @@ import type { WithTransactional } from '../db/transaction';
 import type { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service';
 import type { FeatureSearchService } from '../features/feature-search/feature-search-service';
 import type { InactiveUsersService } from '../users/inactive/inactive-users-service';
+import type { ProjectInsightsService } from '../features/project-insights/project-insights-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -113,4 +114,5 @@ export interface IUnleashServices {
     clientFeatureToggleService: ClientFeatureToggleService;
     featureSearchService: FeatureSearchService;
     inactiveUsersService: InactiveUsersService;
+    projectInsightsService: ProjectInsightsService;
 }

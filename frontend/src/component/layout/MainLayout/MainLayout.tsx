@@ -14,7 +14,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -101,11 +100,8 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-        const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
 
-        const StyledMainLayoutContent = increaseUnleashWidth
-            ? SpaciousMainLayoutContent
-            : MainLayoutContent;
+        const StyledMainLayoutContent = SpaciousMainLayoutContent;
 
         return (
             <>

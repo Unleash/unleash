@@ -2,6 +2,9 @@ import { Box, styled, Typography } from '@mui/material';
 import type { ProjectStatsSchema } from 'openapi/models';
 import { HelpPopper } from './HelpPopper';
 import { StatusBox } from './StatusBox';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { Link } from 'react-router-dom';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -16,25 +19,18 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledWidget = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    padding: theme.spacing(3),
-    backgroundColor: theme.palette.background.paper,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(2),
-    },
-}));
-
 const StyledTimeToProductionDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
     lineHeight: theme.typography.body2.lineHeight,
+}));
+
+const NavigationBar = styled(Link)(({ theme }) => ({
+    marginLeft: 'auto',
+    display: 'flex',
+    justifyContent: 'space-between',
+    textDecoration: 'none',
+    color: theme.palette.text.primary,
 }));
 
 interface IProjectStatsProps {
@@ -45,6 +41,7 @@ export const ProjectInsightsStats = ({ stats }: IProjectStatsProps) => {
     if (Object.keys(stats).length === 0) {
         return null;
     }
+    const projectId = useRequiredPathParam('projectId');
 
     const {
         avgTimeToProdCurrentWindow,
@@ -58,79 +55,77 @@ export const ProjectInsightsStats = ({ stats }: IProjectStatsProps) => {
 
     return (
         <StyledBox>
-            <StyledWidget>
-                <StatusBox
-                    title='Total changes'
-                    boxText={String(projectActivityCurrentWindow)}
-                    change={
-                        projectActivityCurrentWindow - projectActivityPastWindow
-                    }
-                >
-                    <HelpPopper id='total-changes'>
-                        Sum of all configuration and state modifications in the
-                        project.
-                    </HelpPopper>
-                </StatusBox>
-            </StyledWidget>
-            <StyledWidget>
-                <StatusBox
-                    title='Avg. time to production'
-                    boxText={
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: (theme) => theme.spacing(1),
-                            }}
-                        >
-                            {avgTimeToProdCurrentWindow}{' '}
-                            <Typography component='span'>days</Typography>
-                        </Box>
-                    }
-                    customChangeElement={
-                        <StyledTimeToProductionDescription>
-                            In project life
-                        </StyledTimeToProductionDescription>
-                    }
-                    percentage
-                >
-                    <HelpPopper id='avg-time-to-prod'>
-                        How long did it take on average from a feature toggle
-                        was created until it was enabled in an environment of
-                        type production. This is calculated only from feature
-                        toggles with the type of "release".
-                    </HelpPopper>
-                </StatusBox>
-            </StyledWidget>
-            <StyledWidget>
-                <StatusBox
-                    title='Features created'
-                    boxText={String(createdCurrentWindow)}
-                    change={createdCurrentWindow - createdPastWindow}
-                />
-            </StyledWidget>
+            <StatusBox
+                title='Total changes'
+                boxText={String(projectActivityCurrentWindow)}
+                change={
+                    projectActivityCurrentWindow - projectActivityPastWindow
+                }
+            >
+                <HelpPopper id='total-changes'>
+                    Sum of all configuration and state modifications in the
+                    project.
+                </HelpPopper>
+            </StatusBox>
+            <StatusBox
+                title='Avg. time to production'
+                boxText={
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: (theme) => theme.spacing(1),
+                        }}
+                    >
+                        {avgTimeToProdCurrentWindow}{' '}
+                        <Typography component='span'>days</Typography>
+                    </Box>
+                }
+                customChangeElement={
+                    <StyledTimeToProductionDescription>
+                        In project life
+                    </StyledTimeToProductionDescription>
+                }
+                percentage
+            >
+                <HelpPopper id='avg-time-to-prod'>
+                    How long did it take on average from a feature toggle was
+                    created until it was enabled in an environment of type
+                    production. This is calculated only from feature toggles
+                    with the type of "release".
+                </HelpPopper>
+            </StatusBox>
+            <StatusBox
+                title='Features created'
+                boxText={String(createdCurrentWindow)}
+                change={createdCurrentWindow - createdPastWindow}
+            >
+                <NavigationBar to={`/projects/${projectId}`}>
+                    <KeyboardArrowRight />
+                </NavigationBar>
+            </StatusBox>
 
-            <StyledWidget>
-                <StatusBox
-                    title='Stale toggles'
-                    boxText={String(projectActivityCurrentWindow)}
-                    change={
-                        projectActivityCurrentWindow - projectActivityPastWindow
-                    }
-                >
-                    <HelpPopper id='stale-toggles'>
-                        Sum of all stale toggles in the project
-                    </HelpPopper>
-                </StatusBox>
-            </StyledWidget>
+            <StatusBox
+                title='Stale flags'
+                boxText={String(projectActivityCurrentWindow)}
+                change={
+                    projectActivityCurrentWindow - projectActivityPastWindow
+                }
+            >
+                <NavigationBar to={`/projects/${projectId}/health`}>
+                    <KeyboardArrowRight />
+                </NavigationBar>
+            </StatusBox>
 
-            <StyledWidget>
-                <StatusBox
-                    title='Features archived'
-                    boxText={String(archivedCurrentWindow)}
-                    change={archivedCurrentWindow - archivedPastWindow}
-                />
-            </StyledWidget>
+            <StatusBox
+                title='Features archived'
+                boxText={String(archivedCurrentWindow)}
+                change={archivedCurrentWindow - archivedPastWindow}
+            >
+                <NavigationBar to={`/projects/${projectId}/archive`}>
+                    <KeyboardArrowRight />
+                </NavigationBar>
+            </StatusBox>
         </StyledBox>
     );
 };

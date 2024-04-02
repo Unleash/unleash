@@ -12,6 +12,18 @@ const setupEnterpriseApi = () => {
             current: { enterprise: 'present' },
         },
     });
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/count',
+        {
+            total: 14,
+            approved: 2,
+            applied: 0,
+            rejected: 0,
+            reviewRequired: 10,
+            scheduled: 2,
+        },
+    );
 };
 
 const setupOssApi = () => {
@@ -22,23 +34,11 @@ const setupOssApi = () => {
     });
 };
 
-const changeRequests = {
-    applied: 0,
-    total: 0,
-    approved: 0,
-    scheduled: 0,
-    reviewRequired: 0,
-    rejected: 0,
-};
-
 test('Show enterprise hints', async () => {
     setupOssApi();
     render(
         <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ChangeRequests changeRequests={changeRequests} />}
-            />
+            <Route path={'/projects/:projectId'} element={<ChangeRequests />} />
         </Routes>,
         {
             route: '/projects/default',
@@ -52,10 +52,7 @@ test('Show change requests info', async () => {
     setupEnterpriseApi();
     render(
         <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ChangeRequests changeRequests={changeRequests} />}
-            />
+            <Route path={'/projects/:projectId'} element={<ChangeRequests />} />
         </Routes>,
         {
             route: '/projects/default',
@@ -63,4 +60,7 @@ test('Show change requests info', async () => {
     );
 
     await screen.findByText('To be applied');
+    await screen.findByText('10');
+    await screen.findByText('4');
+    await screen.findByText('14');
 });

@@ -19,6 +19,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProject from 'hooks/api/getters/useProject/useProject';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -46,6 +47,7 @@ export const useDefaultStrategy = (
 const EditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
+    const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
 
     const {
         defaultStrategyFallback,
@@ -102,7 +104,8 @@ const EditDefaultStrategy = () => {
             },
         });
 
-        await refetchSavedStrategySegments();
+        refetchSavedStrategySegments();
+        refetchProjectOverview();
         setToastData({
             title: 'Default Strategy updated',
             type: 'success',

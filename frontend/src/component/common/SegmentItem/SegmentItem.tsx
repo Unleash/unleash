@@ -72,7 +72,11 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
     const [isOpen, setIsOpen] = useState(isExpanded || false);
 
     return (
-        <StyledAccordion className='segment-accordion' isDisabled={disabled}>
+        <StyledAccordion
+            className='segment-accordion'
+            isDisabled={disabled}
+            expanded={isOpen}
+        >
             <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
                 <DonutLarge
                     sx={(theme) => ({

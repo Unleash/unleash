@@ -1,8 +1,8 @@
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
-    type IUnleashTest,
     insertFeatureEnvironmentsLastSeen,
     insertLastSeenAt,
+    type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
@@ -24,7 +24,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    sdkReporting: true,
                 },
             },
         },
@@ -286,16 +285,4 @@ test('response should include last seen at per environment for multiple environm
     expect(production.lastSeenAt).toEqual('2023-10-01T12:33:56.000Z');
 
     expect(body.features[1].lastSeenAt).toBe('2023-10-01T12:34:56.000Z');
-});
-
-test('project insights happy path', async () => {
-    const { body } = await app.request
-        .get('/api/admin/projects/default/insights')
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-    expect(body.leadTime.features[0]).toEqual({
-        name: 'feature1',
-        timeToProduction: 120,
-    });
 });

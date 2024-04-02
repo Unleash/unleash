@@ -25,7 +25,7 @@ test('upsert stores new entries', async () => {
         day: new Date(),
         trafficGroup: 'default',
         statusCodeSeries: 200,
-        count: '1',
+        count: 1,
     };
     await trafficDataUsageStore.upsert(data);
     const data2 = await trafficDataUsageStore.get({
@@ -34,7 +34,7 @@ test('upsert stores new entries', async () => {
         statusCodeSeries: data.statusCodeSeries,
     });
     expect(data2).toBeDefined();
-    expect(data2.count).toBe('1');
+    expect(data2.count).toBe(1);
 });
 
 test('upsert upserts', async () => {
@@ -42,13 +42,13 @@ test('upsert upserts', async () => {
         day: new Date(),
         trafficGroup: 'default2',
         statusCodeSeries: 200,
-        count: '1',
+        count: 1,
     };
     const dataSecondTime = {
         day: new Date(),
         trafficGroup: 'default2',
         statusCodeSeries: 200,
-        count: '3',
+        count: 3,
     };
     await trafficDataUsageStore.upsert(data);
     await trafficDataUsageStore.upsert(dataSecondTime);
@@ -58,7 +58,7 @@ test('upsert upserts', async () => {
         statusCodeSeries: data.statusCodeSeries,
     });
     expect(data2).toBeDefined();
-    expect(data2.count).toBe('4');
+    expect(data2.count).toBe(4);
 });
 
 test('getAll returns all', async () => {
@@ -67,13 +67,13 @@ test('getAll returns all', async () => {
         day: new Date(),
         trafficGroup: 'default3',
         statusCodeSeries: 200,
-        count: '1',
+        count: 1,
     };
     const data2 = {
         day: new Date(),
         trafficGroup: 'default4',
         statusCodeSeries: 200,
-        count: '3',
+        count: 3,
     };
     await trafficDataUsageStore.upsert(data1);
     await trafficDataUsageStore.upsert(data2);
@@ -88,13 +88,13 @@ test('delete deletes the specified item', async () => {
         day: new Date(),
         trafficGroup: 'default3',
         statusCodeSeries: 200,
-        count: '1',
+        count: 1,
     };
     const data2 = {
         day: new Date(),
         trafficGroup: 'default4',
         statusCodeSeries: 200,
-        count: '3',
+        count: 3,
     };
     await trafficDataUsageStore.upsert(data1);
     await trafficDataUsageStore.upsert(data2);
@@ -115,19 +115,19 @@ test('can query for specific items', async () => {
         day: new Date(),
         trafficGroup: 'default3',
         statusCodeSeries: 200,
-        count: '1',
+        count: 1,
     };
     const data2 = {
         day: new Date(),
         trafficGroup: 'default4',
         statusCodeSeries: 200,
-        count: '3',
+        count: 3,
     };
     const data3 = {
         day: new Date(),
         trafficGroup: 'default5',
         statusCodeSeries: 200,
-        count: '2',
+        count: 2,
     };
     await trafficDataUsageStore.upsert(data1);
     await trafficDataUsageStore.upsert(data2);
@@ -151,4 +151,47 @@ test('can query for specific items', async () => {
     });
     expect(results_status_code).toBeDefined();
     expect(results_status_code.length).toBe(3);
+});
+
+test('can query for data from specific periods', async () => {
+    await trafficDataUsageStore.deleteAll();
+    const data1 = {
+        day: new Date(2024, 2, 12),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 1,
+    };
+    const data2 = {
+        day: new Date(2024, 2, 13),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 3,
+    };
+    const data3 = {
+        day: new Date(2024, 1, 12),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 2,
+    };
+    const data4 = {
+        day: new Date(2023, 9, 6),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 12,
+    };
+    await trafficDataUsageStore.upsert(data1);
+    await trafficDataUsageStore.upsert(data2);
+    await trafficDataUsageStore.upsert(data3);
+    await trafficDataUsageStore.upsert(data4);
+
+    const traffic_period_usage =
+        await trafficDataUsageStore.getTrafficDataUsageForPeriod('2024-03');
+    expect(traffic_period_usage).toBeDefined();
+    expect(traffic_period_usage.length).toBe(2);
+
+    const traffic_period_usage_older =
+        await trafficDataUsageStore.getTrafficDataUsageForPeriod('2023-10');
+    expect(traffic_period_usage_older).toBeDefined();
+    expect(traffic_period_usage_older.length).toBe(1);
+    expect(traffic_period_usage_older[0].count).toBe(12);
 });

@@ -223,7 +223,11 @@ type ChangeRequestVariantPatch = {
 
 type ChangeRequestEnabled = { enabled: boolean };
 
-type ChangeRequestAddDependency = { feature: string };
+type ChangeRequestAddDependency = {
+    feature: string;
+    enabled: boolean;
+    variants?: string[];
+};
 
 export type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,

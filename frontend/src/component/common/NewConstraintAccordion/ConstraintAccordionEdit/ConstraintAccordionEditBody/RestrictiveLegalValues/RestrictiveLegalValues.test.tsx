@@ -1,6 +1,11 @@
 import { render } from 'utils/testRenderer';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { RestrictiveLegalValues } from './RestrictiveLegalValues';
+import { vi } from 'vitest';
+
+vi.mock('../../../../../../hooks/useUiFlag', () => ({
+    useUiFlag: vi.fn(() => true),
+}));
 
 test('should show alert when you have illegal legal values', async () => {
     const contextDefinitionValues = [{ value: 'value1' }, { value: 'value2' }];
@@ -51,4 +56,66 @@ test('Should remove illegal legal values from internal value state when mounting
     );
 
     expect(localValues).toEqual(['value2']);
+});
+
+test('Should select all', async () => {
+    const contextDefinitionValues = [{ value: 'value1' }, { value: 'value2' }];
+    let localValues: string[] = [];
+
+    const setValuesWithRecord = (values: string[]) => {
+        localValues = values;
+    };
+
+    render(
+        <RestrictiveLegalValues
+            data={{
+                legalValues: contextDefinitionValues,
+                deletedLegalValues: [{ value: 'value3' }],
+            }}
+            constraintValues={[]}
+            values={localValues}
+            setValues={() => {}}
+            setValuesWithRecord={setValuesWithRecord}
+            error={''}
+            setError={() => {}}
+        />,
+    );
+
+    const selectedAllButton = await screen.findByText(/Select all/i);
+
+    console.log(selectedAllButton);
+
+    fireEvent.click(selectedAllButton);
+    expect(localValues).toEqual(['value1', 'value2']);
+});
+
+test('Should unselect all', async () => {
+    const contextDefinitionValues = [{ value: 'value1' }, { value: 'value2' }];
+    let localValues: string[] = ['value1', 'value2'];
+
+    const setValuesWithRecord = (values: string[]) => {
+        localValues = values;
+    };
+
+    render(
+        <RestrictiveLegalValues
+            data={{
+                legalValues: contextDefinitionValues,
+                deletedLegalValues: [{ value: 'value3' }],
+            }}
+            constraintValues={[]}
+            values={localValues}
+            setValues={() => {}}
+            setValuesWithRecord={setValuesWithRecord}
+            error={''}
+            setError={() => {}}
+        />,
+    );
+
+    const selectedAllButton = await screen.findByText(/Unselect all/i);
+
+    console.log(selectedAllButton);
+
+    fireEvent.click(selectedAllButton);
+    expect(localValues).toEqual([]);
 });

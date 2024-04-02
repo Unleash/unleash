@@ -11,6 +11,9 @@ const setupApi = () => {
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },
+        flags: {
+            variantDependencies: true,
+        },
     });
 
     testServerRoute(
@@ -81,13 +84,14 @@ test('Delete dependency', async () => {
     });
 });
 
-test('Add dependency', async () => {
+test('Edit dependency', async () => {
     let closed = false;
     setupApi();
     render(
         <AddDependencyDialogue
             project='default'
             featureId='child'
+            parentDependency={{ feature: 'parentB' }}
             showDependencyDialogue={true}
             onClose={() => {
                 closed = true;
@@ -95,18 +99,23 @@ test('Add dependency', async () => {
         />,
     );
 
-    const removeDependency = await screen.findByText('Remove');
+    const removeDependency = await screen.findByText('Add');
 
     await waitFor(() => {
         expect(removeDependency).not.toBeDisabled();
     });
 
     // Open the dropdown by selecting the role.
-    const dropdown = screen.queryAllByRole('combobox')[0];
-    userEvent.click(dropdown);
+    const [featureDropdown, featureStatusDropdown] =
+        screen.queryAllByRole('combobox');
+    expect(featureDropdown.innerHTML).toBe('parentB');
+    userEvent.click(featureDropdown);
 
     const parentAOption = await screen.findByText('parentA');
     userEvent.click(parentAOption);
+
+    await screen.findByText('feature status');
+    expect(featureStatusDropdown.innerHTML).toBe('enabled');
 
     const addButton = await screen.findByText('Add');
     userEvent.click(addButton);

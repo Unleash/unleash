@@ -3,6 +3,8 @@ import TimeAgo from 'react-timeago';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
+import { LastSeenProgress } from './LastSeenProgress/LastSeenProgress';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledDescription = styled(
     'div',
@@ -17,15 +19,14 @@ const StyledDescription = styled(
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 
-const StyledDescriptionBlock = styled('div')({
+const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'row',
-});
+    flexWrap: 'wrap',
+}));
 
 const StyledDescriptionHeader = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.bold,
     marginBottom: theme.spacing(1),
 }));
 
@@ -34,17 +35,18 @@ const StyledDescriptionBlockHeader = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     fontWeight: theme.fontWeight.bold,
     marginBottom: theme.spacing(1),
-    width: '50%',
+    width: '40%',
+    justifyContent: 'flex-start',
+}));
+const StyledValueContainer = styled('div')(({ theme }) => ({
+    width: '40%',
+    justifyContent: 'center',
+    padding: theme.spacing(0, 1, 0, 1),
 }));
 
 const StyledDescriptionSubHeader = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    margin: theme.spacing(2, 0),
 }));
-
-const StyledValueContainer = styled('div')({
-    width: '50%',
-});
 
 const StyledValue = styled('div', {
     shouldForwardProp: (prop) => prop !== 'color',
@@ -52,6 +54,12 @@ const StyledValue = styled('div', {
     textAlign: 'left',
     width: '100%',
     color: color,
+}));
+
+const StyledListContainer = styled('div')(({ theme }) => ({
+    maxHeight: theme.spacing(24.5),
+    overflowY: 'auto',
+    paddingRight: theme.spacing(2),
 }));
 
 interface ILastSeenTooltipProps {
@@ -67,25 +75,23 @@ export const LastSeenTooltip = ({
     ...rest
 }: ILastSeenTooltipProps) => {
     const getColor = useLastSeenColors();
+    const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
     const [, defaultTextColor] = getColor();
     const environmentsHaveLastSeen = environments?.some((environment) =>
         Boolean(environment.lastSeenAt),
     );
     return (
         <StyledDescription {...rest} data-loading>
-            <StyledDescriptionHeader sx={{ mb: 0 }}>
+            <StyledDescriptionHeader>
                 Last usage reported
             </StyledDescriptionHeader>
-            <StyledDescriptionSubHeader>
-                Usage is reported from connected applications through metrics
-            </StyledDescriptionSubHeader>
             <ConditionallyRender
                 condition={
                     Boolean(environments) && Boolean(environmentsHaveLastSeen)
                 }
                 show={
-                    <>
-                        {environments?.map(({ name, lastSeenAt }) => (
+                    <StyledListContainer>
+                        {environments?.map(({ name, lastSeenAt, yes, no }) => (
                             <StyledDescriptionBlock key={name}>
                                 <StyledDescriptionBlockHeader>
                                     {name}
@@ -128,9 +134,15 @@ export const LastSeenTooltip = ({
                                         }
                                     />
                                 </StyledValueContainer>
+                                <ConditionallyRender
+                                    condition={Boolean(projectOverviewRefactor)}
+                                    show={
+                                        <LastSeenProgress yes={yes} no={no} />
+                                    }
+                                />
                             </StyledDescriptionBlock>
                         ))}
-                    </>
+                    </StyledListContainer>
                 }
                 elseShow={
                     <TimeAgo
@@ -156,6 +168,9 @@ export const LastSeenTooltip = ({
                     />
                 }
             />
+            <StyledDescriptionSubHeader>
+                Usage is reported from connected applications through metrics
+            </StyledDescriptionSubHeader>
         </StyledDescription>
     );
 };

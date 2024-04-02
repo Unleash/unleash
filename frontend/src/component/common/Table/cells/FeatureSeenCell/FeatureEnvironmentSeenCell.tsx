@@ -1,10 +1,10 @@
 import React, { type VFC } from 'react';
 import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import type { FeatureEnvironmentSchema } from 'openapi';
+import type { FeatureSearchEnvironmentSchema } from 'openapi';
 
 interface IFeatureSeenCellProps {
     feature: {
-        environments?: FeatureEnvironmentSchema[];
+        environments?: FeatureSearchEnvironmentSchema[];
         lastSeenAt?: string | null;
     };
 }

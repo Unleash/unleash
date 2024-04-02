@@ -13,12 +13,15 @@ const setupApi = () => {
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },
+        flags: {
+            variantDependencies: true,
+        },
     });
     testServerRoute(server, '/api/admin/projects/default/features/feature', {});
     testServerRoute(
         server,
         '/api/admin/projects/default/features/feature/parents',
-        [],
+        ['some_parent'],
     );
     testServerRoute(
         server,
@@ -249,7 +252,7 @@ test('edit dependency', async () => {
                 {
                     name: 'feature',
                     project: 'default',
-                    dependencies: [{ feature: 'some_parent' }],
+                    dependencies: [{ feature: 'some_parent', enabled: false }],
                     children: [] as string[],
                 } as IFeatureToggle
             }
@@ -264,6 +267,8 @@ test('edit dependency', async () => {
 
     await screen.findByText('Dependency:');
     await screen.findByText('some_parent');
+    await screen.findByText('Dependency value:');
+    await screen.findByText('disabled');
 
     const actionsButton = await screen.findByRole('button', {
         name: /Dependency actions/i,
@@ -274,4 +279,28 @@ test('edit dependency', async () => {
     userEvent.click(editButton);
 
     await screen.findByText('Add parent feature dependency');
+});
+
+test('show variant dependencies', async () => {
+    render(
+        <FeatureOverviewSidePanelDetails
+            feature={
+                {
+                    name: 'feature',
+                    project: 'default',
+                    dependencies: [
+                        {
+                            feature: 'some_parent',
+                            enabled: true,
+                            variants: ['a', 'b'],
+                        },
+                    ],
+                    children: [] as string[],
+                } as IFeatureToggle
+            }
+            header={''}
+        />,
+    );
+
+    await screen.findByText('2 variants');
 });

@@ -20,8 +20,6 @@ import {
     deprecatedProjectOverviewSchema,
     type ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
-    projectInsightsSchema,
-    type ProjectInsightsSchema,
     projectOverviewSchema,
     type ProjectsSchema,
     projectsSchema,
@@ -39,9 +37,9 @@ import {
     projectApplicationsSchema,
     type ProjectApplicationsSchema,
 } from '../../openapi/spec/project-applications-schema';
-import { NotFoundError } from '../../error';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
 import { normalizeQueryParams } from '../feature-search/search-utils';
+import ProjectInsightsController from '../project-insights/project-insights-controller';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -119,26 +117,7 @@ export default class ProjectController extends Controller {
             ],
         });
 
-        this.route({
-            method: 'get',
-            path: '/:projectId/insights',
-            handler: this.getProjectInsights,
-            permission: NONE,
-            middleware: [
-                this.openApiService.validPath({
-                    tags: ['Unstable'],
-                    operationId: 'getProjectInsights',
-                    summary: 'Get an overview of a project insights.',
-                    description:
-                        'This endpoint returns insights into the specified projects stats, health, lead time for changes, feature types used, members and change requests.',
-                    responses: {
-                        200: createResponseSchema('projectInsightsSchema'),
-                        ...getStandardResponses(401, 403, 404),
-                    },
-                }),
-            ],
-        });
-
+        /** @deprecated use project insights instead */
         this.route({
             method: 'get',
             path: '/:projectId/dora',
@@ -201,6 +180,7 @@ export default class ProjectController extends Controller {
                 createKnexTransactionStarter(db),
             ).router,
         );
+        this.use('/', new ProjectInsightsController(config, services).router);
     }
 
     async getProjects(
@@ -244,74 +224,6 @@ export default class ProjectController extends Controller {
         );
     }
 
-    async getProjectInsights(
-        req: IAuthRequest<IProjectParam, unknown, unknown, unknown>,
-        res: Response<ProjectInsightsSchema>,
-    ): Promise<void> {
-        const result = {
-            stats: {
-                avgTimeToProdCurrentWindow: 17.1,
-                createdCurrentWindow: 3,
-                createdPastWindow: 6,
-                archivedCurrentWindow: 0,
-                archivedPastWindow: 1,
-                projectActivityCurrentWindow: 458,
-                projectActivityPastWindow: 578,
-                projectMembersAddedCurrentWindow: 0,
-            },
-            featureTypeCounts: [
-                {
-                    type: 'experiment',
-                    count: 4,
-                },
-                {
-                    type: 'permission',
-                    count: 1,
-                },
-                {
-                    type: 'release',
-                    count: 24,
-                },
-            ],
-            leadTime: {
-                projectAverage: 17.1,
-                features: [
-                    { name: 'feature1', timeToProduction: 120 },
-                    { name: 'feature2', timeToProduction: 0 },
-                    { name: 'feature3', timeToProduction: 33 },
-                    { name: 'feature4', timeToProduction: 131 },
-                    { name: 'feature5', timeToProduction: 2 },
-                ],
-            },
-            health: {
-                rating: 80,
-                activeCount: 23,
-                potentiallyStaleCount: 3,
-                staleCount: 5,
-            },
-            members: {
-                active: 20,
-                inactive: 3,
-                totalPreviousMonth: 15,
-            },
-            changeRequests: {
-                total: 24,
-                approved: 5,
-                applied: 2,
-                rejected: 4,
-                reviewRequired: 10,
-                scheduled: 3,
-            },
-        };
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            projectInsightsSchema.$id,
-            serializeDates(result),
-        );
-    }
-
     async getProjectOverview(
         req: IAuthRequest<IProjectParam, unknown, unknown, IArchivedQuery>,
         res: Response<ProjectOverviewSchema>,
@@ -333,6 +245,7 @@ export default class ProjectController extends Controller {
         );
     }
 
+    /** @deprecated use projectInsights instead */
     async getProjectDora(
         req: IAuthRequest,
         res: Response<ProjectDoraMetricsSchema>,
@@ -353,10 +266,6 @@ export default class ProjectController extends Controller {
         req: IAuthRequest,
         res: Response<ProjectApplicationsSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('sdkReporting')) {
-            throw new NotFoundError();
-        }
-
         const { projectId } = req.params;
 
         const {

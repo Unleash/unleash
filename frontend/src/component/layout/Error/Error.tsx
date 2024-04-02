@@ -4,7 +4,7 @@ import { Box, Button } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IErrorProps {
     error: Error;

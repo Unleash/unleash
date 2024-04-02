@@ -21,6 +21,7 @@ import {
     type IFeatureEnvironmentStore,
     type IFeatureNaming,
     type IFeatureToggleStore,
+    type IFeatureTypeStore,
     type IFlagResolver,
     type IProject,
     type IProjectApplications,
@@ -119,6 +120,8 @@ export default class ProjectService {
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
+    private featureTypeStore: IFeatureTypeStore;
+
     private environmentStore: IEnvironmentStore;
 
     private groupService: GroupService;
@@ -148,6 +151,7 @@ export default class ProjectService {
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
+            featureTypeStore,
             accountStore,
             projectStatsStore,
         }: Pick<
@@ -159,6 +163,7 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'accountStore'
             | 'projectStatsStore'
+            | 'featureTypeStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -174,6 +179,7 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
+        this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
         this.privateProjectChecker = privateProjectChecker;
@@ -722,6 +728,7 @@ export default class ProjectService {
             (r) => r.project === project && r.name === RoleName.OWNER,
         );
     }
+
     private async isAllowedToAddAccess(
         userAddingAccess: number,
         projectId: string,
@@ -741,6 +748,7 @@ export default class ProjectService {
             userRoles.some((userRole) => userRole.id === roleId),
         );
     }
+
     async addAccess(
         projectId: string,
         roles: number[],
@@ -937,6 +945,7 @@ export default class ProjectService {
         }
     }
 
+    /** @deprecated use projectInsightsService instead */
     async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
         const activeFeatureToggles = (
             await this.featureToggleStore.getAll({ project: projectId })

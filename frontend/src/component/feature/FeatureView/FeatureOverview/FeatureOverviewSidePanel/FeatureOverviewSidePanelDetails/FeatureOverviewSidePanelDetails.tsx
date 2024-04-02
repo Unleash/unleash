@@ -7,7 +7,6 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
 import { FeatureEnvironmentSeen } from '../../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DependencyRow } from './DependencyRow';
 import { FlexRow, StyledDetail, StyledLabel } from './StyledRow';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -30,7 +29,6 @@ export const FeatureOverviewSidePanelDetails = ({
     header,
 }: IFeatureOverviewSidePanelDetailsProps) => {
     const { locationSettings } = useLocationSettings();
-    const { uiConfig } = useUiConfig();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
 
     const lastSeenEnvironments: ILastSeenEnvironments[] =

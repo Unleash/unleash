@@ -3,6 +3,7 @@ import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
 } from './change-request-conflict-data';
+import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 
 const uiConfig: Pick<IUiConfig, 'baseUriPath' | 'versionInfo'> = {
     baseUriPath: '/some-base-uri',
@@ -58,7 +59,7 @@ const changeRequestWithoutStrategy = {
 
 test('it finds crs that update a strategy', () => {
     const results = getChangeRequestConflictCreatedData(
-        [changeRequestWithStrategy],
+        [changeRequestWithStrategy] as ChangeRequestType[],
         featureId,
         strategyId,
         uiConfig,
@@ -74,7 +75,7 @@ test('it finds crs that update a strategy', () => {
 
 test('it does not return crs that do not update a strategy', () => {
     const results = getChangeRequestConflictCreatedData(
-        [changeRequestWithoutStrategy],
+        [changeRequestWithoutStrategy] as ChangeRequestType[],
         featureId,
         strategyId,
         uiConfig,

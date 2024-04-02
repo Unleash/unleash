@@ -15,7 +15,11 @@ export class FakeDependentFeaturesReadModel
         return Promise.resolve([]);
     }
 
-    getParentOptions(): Promise<string[]> {
+    getPossibleParentFeatures(): Promise<string[]> {
+        return Promise.resolve([]);
+    }
+
+    getPossibleParentVariants(): Promise<string[]> {
         return Promise.resolve([]);
     }
 

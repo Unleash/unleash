@@ -17,7 +17,6 @@ import type { CreateApplicationSchema } from '../../openapi/spec/create-applicat
 import type { IAuthRequest } from '../unleash-types';
 import { extractUserIdFromUser } from '../../util';
 import { type IFlagResolver, serializeDates } from '../../types';
-import { NotFoundError } from '../../error';
 import {
     type ApplicationOverviewSchema,
     applicationOverviewSchema,
@@ -285,9 +284,6 @@ class MetricsController extends Controller {
         req: Request<{ appName: string }>,
         res: Response<ApplicationOverviewSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('sdkReporting')) {
-            throw new NotFoundError();
-        }
         const { appName } = req.params;
         const overview =
             await this.clientInstanceService.getApplicationOverview(appName);
@@ -301,9 +297,6 @@ class MetricsController extends Controller {
     }
 
     async getOutdatedSdks(req: Request, res: Response<OutdatedSdksSchema>) {
-        if (!this.flagResolver.isEnabled('sdkReporting')) {
-            throw new NotFoundError();
-        }
         const outdatedSdks = await this.clientInstanceService.getOutdatedSdks();
 
         this.openApiService.respondWithValidation(
@@ -318,9 +311,6 @@ class MetricsController extends Controller {
         req: Request<{ appName: string; environment: string }>,
         res: Response<ApplicationEnvironmentInstancesSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('sdkReporting')) {
-            throw new NotFoundError();
-        }
         const { appName, environment } = req.params;
         const instances =
             await this.clientInstanceService.getApplicationEnvironmentInstances(

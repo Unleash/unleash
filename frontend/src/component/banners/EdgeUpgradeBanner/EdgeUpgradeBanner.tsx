@@ -1,4 +1,4 @@
-import { useUiFlag } from '../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import { Banner } from '../Banner/Banner';
 import type { IBanner } from '../../../interfaces/banner';

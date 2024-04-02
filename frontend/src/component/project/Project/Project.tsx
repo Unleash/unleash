@@ -93,6 +93,16 @@ export const Project = () => {
             path: basePath,
             name: 'overview',
         },
+        ...(projectOverviewRefactor
+            ? [
+                  {
+                      title: 'Insights',
+                      path: `${basePath}/insights`,
+                      name: 'insights',
+                      new: true,
+                  },
+              ]
+            : []),
         {
             title: 'Health',
             path: `${basePath}/health`,
@@ -109,17 +119,20 @@ export const Project = () => {
             name: 'change-request',
             isEnterprise: true,
         },
-        {
-            title: 'Metrics',
-            path: `${basePath}/metrics`,
-            name: 'dora',
-            isEnterprise: true,
-        },
+        ...(!projectOverviewRefactor
+            ? [
+                  {
+                      title: 'Metrics',
+                      path: `${basePath}/metrics`,
+                      name: 'dora',
+                      isEnterprise: true,
+                  },
+              ]
+            : []),
         {
             title: 'Applications',
             path: `${basePath}/applications`,
             name: 'applications',
-            flag: 'sdkReporting',
         },
         {
             title: 'Event log',
@@ -132,14 +145,6 @@ export const Project = () => {
             name: 'settings',
         },
     ];
-
-    if (projectOverviewRefactor) {
-        tabs.splice(1, 0, {
-            title: 'Insights',
-            path: `${basePath}/insights`,
-            name: 'insights',
-        });
-    }
 
     const filteredTabs = tabs
         .filter((tab) => {
@@ -267,12 +272,12 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        <>
+                                        <span>
                                             <ConditionallyRender
                                                 condition={Boolean(tab.new)}
                                                 show={
                                                     <StyledBadge color='success'>
-                                                        New
+                                                        Beta
                                                     </StyledBadge>
                                                 }
                                             />
@@ -280,7 +285,7 @@ export const Project = () => {
                                                 isPro() &&
                                                 enterpriseIcon) ||
                                                 undefined}
-                                        </>
+                                        </span>
                                     }
                                 />
                             );
@@ -335,7 +340,9 @@ export const Project = () => {
                     }
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
-                <Route path='metrics' element={<ProjectDoraMetrics />} />
+                {Boolean(!projectOverviewRefactor) && (
+                    <Route path='metrics' element={<ProjectDoraMetrics />} />
+                )}
                 <Route path='applications' element={<ProjectApplications />} />
                 <Route path='*' element={<ProjectOverview />} />
             </Routes>

@@ -4,10 +4,10 @@ import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { constraintSchema } from './constraint-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { tagSchema } from './tag-schema';
 import { featureSearchResponseSchema } from './feature-search-response-schema';
+import { featureSearchEnvironmentSchema } from './feature-search-environment-schema';
 
 export const searchFeaturesSchema = {
     $id: '#/components/schemas/searchFeaturesSchema',
@@ -33,9 +33,9 @@ export const searchFeaturesSchema = {
     },
     components: {
         schemas: {
+            featureSearchEnvironmentSchema,
             featureSearchResponseSchema,
             constraintSchema,
-            featureEnvironmentSchema,
             featureStrategySchema,
             strategyVariantSchema,
             overrideSchema,

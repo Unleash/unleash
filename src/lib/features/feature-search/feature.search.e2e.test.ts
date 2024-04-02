@@ -923,3 +923,111 @@ test('should filter features by combined operators', async () => {
         features: [{ name: 'my_feature_a' }],
     });
 });
+
+test('should return environment usage metrics', async () => {
+    await app.createFeature({
+        name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+
+    await stores.clientMetricsStoreV2.batchInsertMetrics([
+        {
+            featureName: `my_feature_b`,
+            appName: `web`,
+            environment: 'development',
+            timestamp: new Date(),
+            yes: 5,
+            no: 2,
+        },
+        {
+            featureName: `my_feature_b`,
+            appName: `web`,
+            environment: 'production',
+            timestamp: new Date(),
+            yes: 2,
+            no: 2,
+        },
+    ]);
+
+    const { body } = await searchFeatures({
+        query: 'my_feature_b',
+    });
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_b',
+                environments: [
+                    {
+                        name: 'default',
+                        yes: 0,
+                        no: 0,
+                    },
+                    {
+                        name: 'development',
+                        yes: 5,
+                        no: 2,
+                    },
+                    {
+                        name: 'production',
+                        yes: 2,
+                        no: 2,
+                    },
+                ],
+            },
+        ],
+    });
+});
+
+test('should return dependencyType', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_c',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_d',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+
+    await stores.dependentFeaturesStore.upsert({
+        child: 'my_feature_b',
+        parent: 'my_feature_a',
+        enabled: true,
+    });
+    await stores.dependentFeaturesStore.upsert({
+        child: 'my_feature_c',
+        parent: 'my_feature_a',
+        enabled: true,
+    });
+
+    const { body } = await searchFeatures({
+        query: 'my_feature',
+    });
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                dependencyType: 'parent',
+            },
+            {
+                name: 'my_feature_b',
+                dependencyType: 'child',
+            },
+            {
+                name: 'my_feature_c',
+                dependencyType: 'child',
+            },
+            {
+                name: 'my_feature_d',
+                dependencyType: null,
+            },
+        ],
+    });
+});

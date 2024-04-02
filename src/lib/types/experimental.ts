@@ -30,15 +30,14 @@ export type IFlagKey =
     | 'signals'
     | 'automatedActions'
     | 'celebrateUnleash'
-    | 'increaseUnleashWidth'
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
     | 'newStrategyConfigurationFeedback'
     | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
-    | 'extendedUsageMetricsUI'
     | 'adminTokenKillSwitch'
     | 'executiveDashboard'
+    | 'executiveDashboardUI'
     | 'feedbackComments'
     | 'createdByUserIdDataMigration'
     | 'showInactiveUsers'
@@ -49,14 +48,15 @@ export type IFlagKey =
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
-    | 'sdkReporting'
     | 'outdatedSdksBanner'
     | 'responseTimeMetricsFix'
     | 'scimApi'
     | 'displayEdgeBanner'
     | 'globalFrontendApiCache'
     | 'returnGlobalFrontendApiCache'
-    | 'projectOverviewRefactor';
+    | 'projectOverviewRefactor'
+    | 'variantDependencies'
+    | 'newContextFieldsUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -147,10 +147,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
         false,
     ),
-    increaseUnleashWidth: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INCREASE_UNLEASH_WIDTH,
-        false,
-    ),
     featureSearchFeedback: {
         name: 'withText',
         enabled: parseEnvVarBoolean(
@@ -184,10 +180,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS,
         false,
     ),
-    extendedUsageMetricsUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS_UI,
-        false,
-    ),
     adminTokenKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
         false,
@@ -196,8 +188,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
         false,
     ),
-    sdkReporting: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SDK_REPORTING,
+    executiveDashboardUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD_UI,
         false,
     ),
     outdatedSdksBanner: parseEnvVarBoolean(
@@ -275,6 +267,14 @@ const flags: IFlags = {
     ),
     projectOverviewRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
+        false,
+    ),
+    newContextFieldsUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_CONTEXT_FIELDS_UI,
+        false,
+    ),
+    variantDependencies: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_VARIANT_DEPENDENCIES,
         false,
     ),
 };

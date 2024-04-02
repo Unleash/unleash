@@ -64,75 +64,21 @@ export const projectInsightsSchema = {
         },
         members: {
             type: 'object',
-            required: ['active', 'inactive'],
+            required: ['currentMembers', 'change'],
             properties: {
-                active: {
+                currentMembers: {
                     type: 'number',
-                    description:
-                        'The number of active project members who have used Unleash in the past 60 days',
+                    description: 'The number of total project members',
                     example: 10,
                 },
-                inactive: {
+                change: {
                     type: 'number',
                     description:
-                        'The number of inactive project members who have not used Unleash in the past 60 days',
+                        'The change in the number of project members compared to the previous month',
                     example: 10,
-                },
-                totalPreviousMonth: {
-                    type: 'number',
-                    description:
-                        'The number of total project members in the previous month',
-                    example: 8,
                 },
             },
             description: 'Active/inactive users summary',
-        },
-        changeRequests: {
-            type: 'object',
-            required: [
-                'total',
-                'applied',
-                'rejected',
-                'reviewRequired',
-                'approved',
-                'scheduled',
-            ],
-            properties: {
-                total: {
-                    type: 'number',
-                    description:
-                        'The number of total change requests in this project',
-                    example: 10,
-                },
-                applied: {
-                    type: 'number',
-                    description: 'The number of applied change requests',
-                    example: 5,
-                },
-                rejected: {
-                    type: 'number',
-                    description: 'The number of rejected change requests',
-                    example: 2,
-                },
-                reviewRequired: {
-                    type: 'number',
-                    description:
-                        'The number of change requests awaiting the review',
-                    example: 2,
-                },
-                approved: {
-                    type: 'number',
-                    description: 'The number of approved change requests',
-                    example: 1,
-                },
-                scheduled: {
-                    type: 'number',
-                    description: 'The number of scheduled change requests',
-                    example: 1,
-                },
-            },
-            description:
-                'Count of change requests in different stages of the [process](https://docs.getunleash.io/reference/change-requests#change-request-flow). Only for enterprise users.',
         },
     },
     components: {

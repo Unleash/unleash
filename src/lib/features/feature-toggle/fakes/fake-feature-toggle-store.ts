@@ -323,10 +323,26 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new Error('Method not implemented.');
     }
 
-    getFeatureTypeCounts(
+    async getFeatureTypeCounts(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureTypeCount[]> {
-        throw new Error('Method not implemented.');
+        const typeCounts = this.features.reduce(
+            (acc, feature) => {
+                if (!feature.type) {
+                    return acc;
+                }
+
+                if (!acc[feature.type]) {
+                    acc[feature.type] = { type: feature.type, count: 0 };
+                }
+                acc[feature.type].count += 1;
+
+                return acc;
+            },
+            {} as Record<string, IFeatureTypeCount>,
+        );
+
+        return Object.values(typeCounts);
     }
 
     setCreatedByUserId(batchSize: number): Promise<number | undefined> {

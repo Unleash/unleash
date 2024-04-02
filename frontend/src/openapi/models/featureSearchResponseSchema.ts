@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchemaDependenciesItem } from './featureSearchResponseSchemaDependenciesItem';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
+import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
+import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
 import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
 import type { VariantSchema } from './variantSchema';
@@ -17,22 +17,18 @@ export interface FeatureSearchResponseSchema {
     archived?: boolean;
     /** The date the feature was archived */
     archivedAt?: string | null;
-    /** The list of child feature names. This is an experimental field and may change. */
-    children?: string[];
     /** The date the feature was created */
-    createdAt?: string | null;
-    /** The list of parent dependencies. This is an experimental field and may change. */
-    dependencies?: FeatureSearchResponseSchemaDependenciesItem[];
+    createdAt: string | null;
+    /** The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature. */
+    dependencyType: FeatureSearchResponseSchemaDependencyType;
     /** Detailed description of the feature */
     description?: string | null;
-    /** `true` if the feature is enabled, otherwise `false`. */
-    enabled?: boolean;
     /** The list of environments where the feature can be used */
-    environments?: FeatureEnvironmentSchema[];
+    environments: FeatureSearchEnvironmentSchema[];
     /** `true` if the feature was favorited, otherwise `false`. */
-    favorite?: boolean;
+    favorite: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
-    impressionData?: boolean;
+    impressionData: boolean;
     /**
      * The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema
      * @deprecated
@@ -41,11 +37,11 @@ export interface FeatureSearchResponseSchema {
     /** Unique feature name */
     name: string;
     /** Name of the project the feature belongs to */
-    project?: string;
+    project: string;
     /** The list of segments the feature is enabled for. */
-    segments?: string[];
+    segments: string[];
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
-    stale?: boolean;
+    stale: boolean;
     /**
      * This is a legacy field that will be deprecated
      * @deprecated
@@ -54,7 +50,7 @@ export interface FeatureSearchResponseSchema {
     /** The list of feature tags */
     tags?: TagSchema[] | null;
     /** Type of the toggle e.g. experiment, kill-switch, release, operational, permission */
-    type?: string;
+    type: string;
     /**
      * The list of feature variants
      * @deprecated

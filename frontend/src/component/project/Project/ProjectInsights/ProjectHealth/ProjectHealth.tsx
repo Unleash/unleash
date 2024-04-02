@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { ProjectInsightsSchemaHealth } from '../../../../../openapi';
 import type { FC } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const Dot = styled('span', {
     shouldForwardProp: (prop) => prop !== 'color',
@@ -48,10 +49,16 @@ export const ProjectHealth: FC<{ health: ProjectInsightsSchemaHealth }> = ({
     return (
         <Container>
             <Typography variant='h3'>Project Health</Typography>
-            <Alert severity='warning'>
-                <b>Health alert!</b> Review your flags and delete the stale
-                flags
-            </Alert>
+            <ConditionallyRender
+                condition={staleCount > 0}
+                show={
+                    <Alert severity='warning'>
+                        <b>Health alert!</b> Review your flags and delete the
+                        stale flags
+                    </Alert>
+                }
+            />
+
             <Box
                 data-loading
                 sx={(theme) => ({

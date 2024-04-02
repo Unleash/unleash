@@ -4,7 +4,6 @@ import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import {
     AppBar,
-    Container,
     IconButton,
     Tooltip,
     styled,
@@ -39,15 +38,7 @@ import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Badge } from '../../common/Badge/Badge';
 
-const StyledHeader = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(1),
-    boxShadow: 'none',
-    position: 'relative',
-    zIndex: 300,
-}));
-
-const StyledSpaciousHeader = styled(AppBar)(({ theme }) => ({
+const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1),
     boxShadow: 'none',
@@ -69,17 +60,10 @@ const StyledSpaciousHeader = styled(AppBar)(({ theme }) => ({
     margin: '0 auto',
 }));
 
-const SpaciousStyledContainer = styled(Box)(() => ({
+const ContainerComponent = styled(Box)(() => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    '&&&': { padding: 0 },
-}));
-
-const StyledContainer = styled(Container)(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    maxWidth: 1280,
     '&&&': { padding: 0 },
 }));
 
@@ -173,10 +157,8 @@ const Header: VFC = () => {
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
-
-    const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const insightsDashboard = useUiFlag('executiveDashboard');
+    const insightsDashboard = useUiFlag('executiveDashboardUI');
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -190,14 +172,6 @@ const Header: VFC = () => {
             .map(mapRouteLink),
         adminRoutes,
     };
-
-    const HeaderComponent = increaseUnleashWidth
-        ? StyledSpaciousHeader
-        : StyledHeader;
-
-    const ContainerComponent = increaseUnleashWidth
-        ? SpaciousStyledContainer
-        : StyledContainer;
 
     if (smallScreen) {
         return (

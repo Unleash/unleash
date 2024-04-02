@@ -4,8 +4,8 @@ import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import type { Logger, LogProvider } from '../../logger';
 import type {
-    IEnvironmentOverview,
     IFeatureOverview,
+    IFeatureSearchOverview,
     IFeatureSearchStore,
     ITag,
 } from '../../types';
@@ -17,6 +17,7 @@ import type {
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams, applySearchFilters } from './search-utils';
+import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
 
 const sortEnvironments = (overview: IFeatureOverview[]) => {
     return overview.map((data: IFeatureOverview) => ({
@@ -49,7 +50,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             });
     }
 
-    private static getEnvironment(r: any): IEnvironmentOverview {
+    private static getEnvironment(r: any): FeatureSearchEnvironmentSchema {
         return {
             name: r.environment,
             enabled: r.enabled,
@@ -59,6 +60,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
             lastSeenAt: r.env_last_seen_at,
             hasStrategies: r.has_strategies,
             hasEnabledStrategies: r.has_enabled_strategies,
+            yes: Number(r.yes) || 0,
+            no: Number(r.no) || 0,
         };
     }
 
@@ -86,6 +89,60 @@ class FeatureSearchStore implements IFeatureSearchStore {
         const finalQuery = this.db
             .with('ranked_features', (query) => {
                 query.from('features');
+
+                let selectColumns = [
+                    'features.name as feature_name',
+                    'features.description as description',
+                    'features.type as type',
+                    'features.project as project',
+                    'features.created_at as created_at',
+                    'features.stale as stale',
+                    'features.last_seen_at as last_seen_at',
+                    'features.impression_data as impression_data',
+                    'feature_environments.enabled as enabled',
+                    'feature_environments.environment as environment',
+                    'feature_environments.variants as variants',
+                    'environments.type as environment_type',
+                    'environments.sort_order as environment_sort_order',
+                    'ft.tag_value as tag_value',
+                    'ft.tag_type as tag_type',
+                    'segments.name as segment_name',
+                    'client_metrics_env.yes as yes',
+                    'client_metrics_env.no as no',
+                ] as (string | Raw<any> | Knex.QueryBuilder)[];
+
+                const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
+                selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
+
+                if (userId) {
+                    query.leftJoin(`favorite_features`, function () {
+                        this.on(
+                            'favorite_features.feature',
+                            'features.name',
+                        ).andOnVal('favorite_features.user_id', '=', userId);
+                    });
+                    selectColumns = [
+                        ...selectColumns,
+                        this.db.raw(
+                            'favorite_features.feature is not null as favorite',
+                        ),
+                    ];
+                }
+
+                selectColumns = [
+                    ...selectColumns,
+                    this.db.raw(
+                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+                    ),
+                    this.db.raw(
+                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+                    ),
+                    this.db.raw(`CASE
+                            WHEN dependent_features.parent = features.name THEN 'parent'
+                            WHEN dependent_features.child = features.name THEN 'child'
+                            ELSE null
+                            END AS dependency`),
+                ];
 
                 applyQueryParams(query, queryParams);
                 applySearchFilters(query, searchParams, [
@@ -144,7 +201,35 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'segments',
                         'feature_strategy_segment.segment_id',
                         'segments.id',
-                    );
+                    )
+                    .leftJoin('dependent_features', (qb) => {
+                        qb.on(
+                            'dependent_features.parent',
+                            '=',
+                            'features.name',
+                        ).orOn(
+                            'dependent_features.child',
+                            '=',
+                            'features.name',
+                        );
+                    })
+                    .leftJoin('client_metrics_env', (qb) => {
+                        qb.on(
+                            'client_metrics_env.environment',
+                            '=',
+                            'environments.name',
+                        )
+                            .andOn(
+                                'client_metrics_env.feature_name',
+                                '=',
+                                'features.name',
+                            )
+                            .andOn(
+                                'client_metrics_env.timestamp',
+                                '>=',
+                                this.db.raw("NOW() - INTERVAL '1 hour'"),
+                            );
+                    });
 
                 query.leftJoin('last_seen_at_metrics', function () {
                     this.on(
@@ -158,89 +243,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     );
                 });
 
-                let selectColumns = [
-                    'features.name as feature_name',
-                    'features.description as description',
-                    'features.type as type',
-                    'features.project as project',
-                    'features.created_at as created_at',
-                    'features.stale as stale',
-                    'features.last_seen_at as last_seen_at',
-                    'features.impression_data as impression_data',
-                    'feature_environments.enabled as enabled',
-                    'feature_environments.environment as environment',
-                    'feature_environments.variants as variants',
-                    'environments.type as environment_type',
-                    'environments.sort_order as environment_sort_order',
-                    'ft.tag_value as tag_value',
-                    'ft.tag_type as tag_type',
-                    'segments.name as segment_name',
-                ] as (string | Raw<any> | Knex.QueryBuilder)[];
-
-                const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
-                selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
-
-                if (userId) {
-                    query.leftJoin(`favorite_features`, function () {
-                        this.on(
-                            'favorite_features.feature',
-                            'features.name',
-                        ).andOnVal('favorite_features.user_id', '=', userId);
-                    });
-                    selectColumns = [
-                        ...selectColumns,
-                        this.db.raw(
-                            'favorite_features.feature is not null as favorite',
-                        ),
-                    ];
-                }
-
-                selectColumns = [
-                    ...selectColumns,
-                    this.db.raw(
-                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
-                    ),
-                    this.db.raw(
-                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
-                    ),
-                ];
-
-                const sortByMapping = {
-                    name: 'features.name',
-                    type: 'features.type',
-                    stale: 'features.stale',
-                    project: 'features.project',
-                };
-
-                let rankingSql = 'order by ';
-                if (favoritesFirst) {
-                    rankingSql +=
-                        'favorite_features.feature is not null desc, ';
-                }
-
-                if (sortBy.startsWith('environment:')) {
-                    const [, envName] = sortBy.split(':');
-                    rankingSql += this.db
-                        .raw(
-                            `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder} NULLS LAST, features.created_at asc, features.name asc`,
-                            [envName],
-                        )
-                        .toString();
-                } else if (sortBy === 'lastSeenAt') {
-                    rankingSql += `${this.db
-                        .raw(
-                            `coalesce(${lastSeenQuery}, features.last_seen_at) ${validatedSortOrder} nulls last`,
-                        )
-                        .toString()}, features.created_at asc, features.name asc`;
-                } else if (sortByMapping[sortBy]) {
-                    rankingSql += `${this.db
-                        .raw(`?? ${validatedSortOrder}`, [
-                            sortByMapping[sortBy],
-                        ])
-                        .toString()}, features.created_at asc, features.name asc`;
-                } else {
-                    rankingSql += `features.created_at ${validatedSortOrder}, features.name asc`;
-                }
+                const rankingSql = this.buildRankingSql(
+                    favoritesFirst,
+                    sortBy,
+                    validatedSortOrder,
+                    lastSeenQuery,
+                );
 
                 query
                     .select(selectColumns)
@@ -282,9 +290,51 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
-    getAggregatedSearchData(rows): IFeatureOverview[] {
-        const entriesMap: Map<string, IFeatureOverview> = new Map();
-        const orderedEntries: IFeatureOverview[] = [];
+    private buildRankingSql(
+        favoritesFirst: undefined | boolean,
+        sortBy: string,
+        validatedSortOrder: 'asc' | 'desc',
+        lastSeenQuery: string,
+    ) {
+        const sortByMapping = {
+            name: 'features.name',
+            type: 'features.type',
+            stale: 'features.stale',
+            project: 'features.project',
+        };
+
+        let rankingSql = 'order by ';
+        if (favoritesFirst) {
+            rankingSql += 'favorite_features.feature is not null desc, ';
+        }
+
+        if (sortBy.startsWith('environment:')) {
+            const [, envName] = sortBy.split(':');
+            rankingSql += this.db
+                .raw(
+                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder} NULLS LAST, features.created_at asc, features.name asc`,
+                    [envName],
+                )
+                .toString();
+        } else if (sortBy === 'lastSeenAt') {
+            rankingSql += `${this.db
+                .raw(
+                    `coalesce(${lastSeenQuery}, features.last_seen_at) ${validatedSortOrder} nulls last`,
+                )
+                .toString()}, features.created_at asc, features.name asc`;
+        } else if (sortByMapping[sortBy]) {
+            rankingSql += `${this.db
+                .raw(`?? ${validatedSortOrder}`, [sortByMapping[sortBy]])
+                .toString()}, features.created_at asc, features.name asc`;
+        } else {
+            rankingSql += `features.created_at ${validatedSortOrder}, features.name asc`;
+        }
+        return rankingSql;
+    }
+
+    getAggregatedSearchData(rows): IFeatureSearchOverview[] {
+        const entriesMap: Map<string, IFeatureSearchOverview> = new Map();
+        const orderedEntries: IFeatureSearchOverview[] = [];
 
         rows.forEach((row) => {
             let entry = entriesMap.get(row.feature_name);
@@ -301,6 +351,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     stale: row.stale,
                     impressionData: row.impression_data,
                     lastSeenAt: row.last_seen_at,
+                    dependencyType: row.dependency,
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
                 };

@@ -1,17 +1,24 @@
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material';
 
-export const useStyles = makeStyles()((theme) => ({
-    container: {
-        display: 'inline-block',
-        wordBreak: 'break-word',
+export const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'inline-block',
+    wordBreak: 'break-word',
+    padding: theme.spacing(0.5, 1),
+    background: theme.palette.common.white,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+
+    '&:hover': {
+        border: `1px solid ${theme.palette.primary.main}`,
     },
-    value: {
-        lineHeight: 1.33,
-        fontSize: theme.fontSizes.smallBody,
-    },
-    description: {
-        lineHeight: 1.33,
-        fontSize: theme.fontSizes.smallerBody,
-        color: theme.palette.action.active,
-    },
+}));
+
+export const StyledValue = styled('div')(({ theme }) => ({
+    lineHeight: 1.33,
+    fontSize: theme.fontSizes.smallBody,
+}));
+export const StyledDescription = styled('div')(({ theme }) => ({
+    lineHeight: 1.33,
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.action.active,
 }));

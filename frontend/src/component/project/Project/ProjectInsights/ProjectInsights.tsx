@@ -7,6 +7,7 @@ import { ProjectInsightsStats } from './ProjectInsightsStats/ProjectInsightsStat
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectInsights } from 'hooks/api/getters/useProjectInsights/useProjectInsights';
 import useLoading from 'hooks/useLoading';
+import { ProjectMembers } from './ProjectMembers/ProjectMembers';
 
 const Container = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -51,16 +52,16 @@ export const ProjectInsights = () => {
                 <ProjectHealth health={data.health} />
             </MediumWideContainer>
             <WideContainer>
-                <LeadTimeForChanges />
+                <LeadTimeForChanges leadTime={data.leadTime} />
             </WideContainer>
             <NarrowContainer>
                 <FlagTypesUsed featureTypeCounts={data.featureTypeCounts} />
             </NarrowContainer>
-            <NarrowContainer>Project members</NarrowContainer>
+            <NarrowContainer sx={{ padding: 0 }}>
+                <ProjectMembers projectId={projectId} members={data.members} />
+            </NarrowContainer>
             <WideContainer>
-                {data.changeRequests && (
-                    <ChangeRequests changeRequests={data.changeRequests} />
-                )}
+                <ChangeRequests />
             </WideContainer>
         </Grid>
     );

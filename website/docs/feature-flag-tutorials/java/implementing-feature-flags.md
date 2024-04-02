@@ -111,7 +111,7 @@ Name the API token and select the “Server-side SDK” token type, since we’l
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
-![](/img/java-tutorial-api-token-form.png)
+![Name your API token and make sure it is a server-side SDK token.](/img/java-tutorial-api-token-form.png)
 
 The API token you generated can be managed in the API Access view in your project settings. It will be handy in Step 4.
 

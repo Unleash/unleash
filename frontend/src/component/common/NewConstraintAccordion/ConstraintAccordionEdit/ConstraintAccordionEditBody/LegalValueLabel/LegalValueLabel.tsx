@@ -1,31 +1,46 @@
 import type { ILegalValue } from 'interfaces/context';
-import { useStyles } from './LegalValueLabel.styles';
+import {
+    StyledContainer,
+    StyledValue,
+    StyledDescription,
+} from './LegalValueLabel.styles';
 import type React from 'react';
 import { FormControlLabel } from '@mui/material';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
 
 interface ILegalValueTextProps {
     legal: ILegalValue;
     control: React.ReactElement;
+    filter?: string;
 }
 
-export const LegalValueLabel = ({ legal, control }: ILegalValueTextProps) => {
-    const { classes: styles } = useStyles();
-
+export const LegalValueLabel = ({
+    legal,
+    control,
+    filter,
+}: ILegalValueTextProps) => {
     return (
-        <div className={styles.container}>
+        <StyledContainer>
             <FormControlLabel
                 value={legal.value}
                 control={control}
+                sx={{ width: '100%' }}
                 label={
                     <>
-                        <div className={styles.value}>{legal.value}</div>
-                        <div className={styles.description}>
-                            {legal.description}
-                        </div>
+                        <StyledValue>
+                            <Highlighter search={filter}>
+                                {legal.value}
+                            </Highlighter>
+                        </StyledValue>
+                        <StyledDescription>
+                            <Highlighter search={filter}>
+                                {legal.description}
+                            </Highlighter>
+                        </StyledDescription>
                     </>
                 }
             />
-        </div>
+        </StyledContainer>
     );
 };
 
@@ -34,6 +49,9 @@ export const filterLegalValues = (
     filter: string,
 ): ILegalValue[] => {
     return legalValues.filter((legalValue) => {
-        return legalValue.value.includes(filter);
+        return (
+            legalValue.value.toLowerCase().includes(filter.toLowerCase()) ||
+            legalValue.description?.toLowerCase().includes(filter.toLowerCase())
+        );
     });
 };

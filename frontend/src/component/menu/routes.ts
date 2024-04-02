@@ -44,7 +44,7 @@ import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
 import { PaginatedApplicationList } from '../application/ApplicationList/PaginatedApplicationList';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
-import { ExecutiveDashboard } from 'component/executiveDashboard/ExecutiveDashboard';
+import { Insights } from '../insights/Insights';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
@@ -64,10 +64,10 @@ export const routes: IRoute[] = [
     {
         path: '/insights',
         title: 'Insights',
-        component: ExecutiveDashboard,
+        component: Insights,
         type: 'protected',
         menu: { mobile: true },
-        flag: 'executiveDashboard',
+        flag: 'executiveDashboardUI',
         enterprise: false,
     },
 

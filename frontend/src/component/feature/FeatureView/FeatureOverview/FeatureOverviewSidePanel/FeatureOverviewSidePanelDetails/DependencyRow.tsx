@@ -17,6 +17,7 @@ import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPe
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { VariantsTooltip } from './VariantsTooltip';
 
 const useDeleteDependency = (project: string, featureId: string) => {
     const { trackEvent } = usePlausibleTracker();
@@ -145,6 +146,37 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                 }
             />
             <ConditionallyRender
+                condition={
+                    hasParentDependency && !feature.dependencies[0]?.enabled
+                }
+                show={
+                    <FlexRow>
+                        <StyledDetail>
+                            <StyledLabel>Dependency value:</StyledLabel>
+                            <span>disabled</span>
+                        </StyledDetail>
+                    </FlexRow>
+                }
+            />
+            <ConditionallyRender
+                condition={
+                    hasParentDependency &&
+                    Boolean(feature.dependencies[0]?.variants?.length)
+                }
+                show={
+                    <FlexRow>
+                        <StyledDetail>
+                            <StyledLabel>Dependency value:</StyledLabel>
+                            <VariantsTooltip
+                                variants={
+                                    feature.dependencies[0]?.variants || []
+                                }
+                            />
+                        </StyledDetail>
+                    </FlexRow>
+                }
+            />
+            <ConditionallyRender
                 condition={hasChildren}
                 show={
                     <FlexRow>
@@ -158,12 +190,14 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                     </FlexRow>
                 }
             />
+
             <ConditionallyRender
                 condition={Boolean(feature.project)}
                 show={
                     <AddDependencyDialogue
                         project={feature.project}
                         featureId={feature.name}
+                        parentDependency={feature.dependencies[0]}
                         onClose={() => setShowDependencyDialogue(false)}
                         showDependencyDialogue={showDependencyDialogue}
                     />

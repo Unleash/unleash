@@ -86,10 +86,11 @@ const webhookDefinition: IAddonDefinition = {
   "event": "{{event.type}}",
   "createdBy": "{{event.createdBy}}",
   "featureToggle": "{{event.data.name}}",
-  "timestamp": "{{event.data.createdAt}}"
+  "timestamp": "{{event.data.createdAt}}",
+  "json": {{{eventJson}}}
 }`,
             description:
-                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events)",
+                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events). You can use {{{eventJson}}} to include entire serialized event.",
             type: 'textfield',
             required: false,
             sensitive: false,

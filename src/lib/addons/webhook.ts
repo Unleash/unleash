@@ -22,6 +22,8 @@ export default class Webhook extends Addon {
             parameters;
         const context = {
             event,
+            // Stringify twice to avoid escaping in Mustache
+            eventJson: JSON.stringify(JSON.stringify(event)),
         };
 
         let body: string | undefined;

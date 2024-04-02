@@ -15,7 +15,7 @@ import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 const server = testServerSetup();
 
 const projectWithCollaborationMode = (mode: ProjectMode) =>
-    testServerRoute(server, '/api/admin/projects/default', { mode });
+    testServerRoute(server, '/api/admin/projects/default/overview', { mode });
 
 const changeRequestsEnabledIn = (
     env: 'development' | 'production' | 'custom',

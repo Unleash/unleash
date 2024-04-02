@@ -6,6 +6,7 @@ import type { ALL_OPERATORS } from '../util';
 import type { IProjectStats } from '../features/project/project-service';
 import type { CreateFeatureStrategySchema } from '../openapi';
 import type { ProjectEnvironment } from '../features/project/project-store-type';
+import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -217,6 +218,14 @@ export interface IFeatureOverview {
     lastSeenAt: Date;
     environments: IEnvironmentOverview[];
 }
+
+export type IFeatureSearchOverview = Exclude<
+    IFeatureOverview,
+    'environments'
+> & {
+    dependencyType: 'parent' | 'child' | null;
+    environments: FeatureSearchEnvironmentSchema[];
+};
 
 export interface IFeatureTypeCount {
     type: string;

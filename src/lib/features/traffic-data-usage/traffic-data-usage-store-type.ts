@@ -4,7 +4,7 @@ export type IStatTrafficUsage = {
     day: Date;
     trafficGroup: string;
     statusCodeSeries: number;
-    count: number | string;
+    count: number;
 };
 
 export interface IStatTrafficUsageKey {
@@ -16,4 +16,5 @@ export interface IStatTrafficUsageKey {
 export interface ITrafficDataUsageStore
     extends Store<IStatTrafficUsage, IStatTrafficUsageKey> {
     upsert(trafficDataUsage: IStatTrafficUsage): Promise<void>;
+    getTrafficDataUsageForPeriod(period: string): Promise<IStatTrafficUsage[]>;
 }

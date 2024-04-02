@@ -13,6 +13,9 @@ interface IProjectMembersWidgetProps {
     change?: number;
 }
 
+/**
+ * @deprecated in favor of ProjectMembers.tsx
+ */
 export const ProjectMembersWidget = ({
     projectId,
     memberCount,

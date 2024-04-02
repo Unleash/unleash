@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { Box, styled } from '@mui/material';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -9,6 +9,10 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
+import { useFeedback } from '../../feedbackNew/useFeedback';
+import { OldProjectFeatureToggles } from './PaginatedProjectFeatureToggles/OldProjectFeatureToggles';
 
 const refreshInterval = 15 * 1000;
 
@@ -34,6 +38,18 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ProjectOverview: FC<{
+    storageKey?: string;
+}> = ({ storageKey = 'project-overview-v2' }) => {
+    const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
+
+    if (projectOverviewRefactor) {
+        return <NewProjectOverview storageKey={storageKey} />;
+    } else {
+        return <OldProjectOverview storageKey={storageKey} />;
+    }
+};
+
+const OldProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
     const projectId = useRequiredPathParam('projectId');
@@ -66,11 +82,76 @@ const ProjectOverview: FC<{
                 featureTypeCounts={featureTypeCounts}
                 stats={stats}
             />
+
             <StyledContentContainer>
                 <ProjectStats stats={project.stats} />
+
+                <StyledProjectToggles>
+                    <OldProjectFeatureToggles
+                        environments={project.environments.map(
+                            (environment) => environment.environment,
+                        )}
+                        refreshInterval={refreshInterval}
+                        storageKey={storageKey}
+                    />
+                </StyledProjectToggles>
+            </StyledContentContainer>
+        </StyledContainer>
+    );
+};
+
+const useDelayedFeedbackPrompt = () => {
+    const { openFeedback, hasSubmittedFeedback } = useFeedback(
+        'newProjectOverview',
+        'manual',
+    );
+
+    const [seenFeedback, setSeenFeedback] = useState(false);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!seenFeedback && !hasSubmittedFeedback) {
+                openFeedback({
+                    title: 'How easy was it to work with the project overview in Unleash?',
+                    positiveLabel:
+                        'What do you like most about the updated project overview?',
+                    areasForImprovementsLabel:
+                        'What improvements are needed in the project overview?',
+                });
+                setSeenFeedback(true);
+            }
+        }, 30000);
+
+        return () => clearTimeout(timer);
+    }, [hasSubmittedFeedback, openFeedback, seenFeedback]);
+};
+
+const NewProjectOverview: FC<{
+    storageKey?: string;
+}> = ({ storageKey = 'project-overview-v2' }) => {
+    const projectId = useRequiredPathParam('projectId');
+    const projectName = useProjectOverviewNameOrId(projectId);
+
+    const { project } = useProjectOverview(projectId, {
+        refreshInterval,
+    });
+    useDelayedFeedbackPrompt();
+
+    usePageTitle(`Project overview – ${projectName}`);
+    const { setLastViewed } = useLastViewedProject();
+    useEffect(() => {
+        setLastViewed(projectId);
+    }, [projectId, setLastViewed]);
+
+    return (
+        <StyledContainer key={projectId}>
+            <StyledContentContainer>
+                <ProjectOverviewChangeRequests project={projectId} />
+
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        environments={environments}
+                        environments={project.environments.map(
+                            (environment) => environment.environment,
+                        )}
                         refreshInterval={refreshInterval}
                         storageKey={storageKey}
                     />

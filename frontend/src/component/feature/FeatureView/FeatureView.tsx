@@ -21,7 +21,6 @@ import {
     useNavigate,
 } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
@@ -137,7 +136,6 @@ export const StyledLink = styled(Link)(({ theme }) => ({
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
@@ -379,7 +377,6 @@ export const FeatureView = () => {
                     <FeatureArchiveDialog
                         isOpen={showDelDialog}
                         onConfirm={() => {
-                            projectRefetch();
                             navigate(`/projects/${projectId}`);
                         }}
                         onClose={() => setShowDelDialog(false)}

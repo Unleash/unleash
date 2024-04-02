@@ -22,12 +22,11 @@
     --ifm-navbar-background-color: var(--unleash-color-green);
     /* this is the font color set on the content in dark mode */
     --unleash-navbar-font-color: #e3e3e3;
-    --unleash-navbar-active-background-color: #122D33;
+    --unleash-navbar-active-background-color: #122d33;
     --ifm-navbar-link-color: var(--unleash-navbar-font-color);
     --unleash-navbar-highlight-color: #bab8ff;
     --ifm-navbar-link-active-color: var(--unleash-navbar-highlight-color);
     --ifm-navbar-link-hover-color: var(--unleash-navbar-highlight-color);
-
 }
 
 .navbar {
@@ -38,8 +37,7 @@
     display: none;
 }
 
-.navbar button[class*='toggleButton_']:hover
-{
+.navbar button[class*="toggleButton_"]:hover {
     background: var(--unleash-navbar-active-background-color);
 }
 
@@ -47,9 +45,13 @@
     background-color: var(--ifm-navbar-background-color);
     --ifm-menu-color: var(--ifm-navbar-link-color);
     --ifm-menu-color-active: var(--ifm-navbar-link-active-color);
-    --ifm-menu-color-background-active: var(--unleash-navbar-active-background-color);
+    --ifm-menu-color-background-active: var(
+        --unleash-navbar-active-background-color
+    );
     --ifm-menu-color-active: var(--ifm-navbar-link-active-color);
-    --ifm-menu-color-background-hover: var(--unleash-navbar-active-background-color);
+    --ifm-menu-color-background-hover: var(
+        --unleash-navbar-active-background-color
+    );
 }
 
 .navbar__logo {
@@ -72,7 +74,13 @@ footer {
     --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
 }
 
-html[data-theme='light'] {
+article video {
+    display: block;
+    margin-block: var(--ifm-spacing-vertical);
+    margin-inline: auto;
+}
+
+html[data-theme="light"] {
     --ifm-color-primary-lightest: #8783d2;
     --ifm-color-primary-lighter: #7b76ce;
     --ifm-color-primary-light: #6f6ac9;
@@ -91,7 +99,7 @@ html[data-theme='light'] {
     --ifm-background-color: #fff;
 }
 
-html[data-theme='dark'] {
+html[data-theme="dark"] {
     --ifm-color-primary-lightest: #d1d1ff;
     --ifm-color-primary-lighter: #c9c9ff;
     --ifm-color-primary-light: #c2c0ff;
@@ -114,8 +122,8 @@ html[data-theme='dark'] {
     --docsearch-primary-color: var(--ifm-color-primary-darkest);
 }
 
-div[class^='announcementBar_'],
-div[class^='announcementBar_'] svg {
+div[class^="announcementBar_"],
+div[class^="announcementBar_"] svg {
     background-color: var(--ifm-color-primary);
     color: var(--ifm-color-primary-contrast-background);
     font-size: larger;
@@ -138,13 +146,13 @@ main img {
     box-shadow: var(--ifm-global-shadow-lw);
 }
 
-main p > img:not([src^="https://img.shields.io/" i], [src*="badge.svg?branch=" i])
+main p>img:not([src^="https://img.shields.io/" i], [src*="badge.svg?branch=" i])
 {
     /* give inline images a border */
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
 }
 
-main :is(p, figure) > img:not([src^="https://img.shields.io/" i], [src*="badge.svg?branch=" i])
+main :is(p, figure)>img:not([src^="https://img.shields.io/" i], [src*="badge.svg?branch=" i])
 {
     /* round corners to match the rest of the page */
     border-radius: var(--ifm-global-radius);
@@ -161,7 +169,7 @@ main :is(p, figure) > img:not([src^="https://img.shields.io/" i], [src*="badge.s
     margin-block: calc(1.5 * var(--ifm-spacing-vertical));
 }
 
-[class^='docTitle'] {
+[class^="docTitle"] {
     font-size: 2.5rem !important;
 }
 
@@ -171,17 +179,17 @@ main :is(p, figure) > img:not([src^="https://img.shields.io/" i], [src*="badge.s
 }
 
 .navbar__item:has(.navbar-separator) {
-	width: 1px;
-	height: 100%;
-	background: rgba(255, 255, 255, 0.3);
-	padding: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 0;
     margin-inline: var(--ifm-spacing-horizontal);
 }
 
 li.theme-doc-sidebar-item-category-level-1 > div::before {
     width: 0.3em;
     height: 100%;
-    content: ' ';
+    content: " ";
     background-color: var(--unleash-color-purple);
     border-radius: 2px;
     position: absolute;
@@ -199,7 +207,7 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 }
 
 .header-github-link:before {
-    content: '';
+    content: "";
     width: 24px;
     height: 24px;
     display: flex;
@@ -236,28 +244,27 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 .unleash-academy-level-badge {
     border: 2px solid;
     border-radius: 60px;
-    padding-inline: .5em;
+    padding-inline: 0.5em;
     text-transform: capitalize;
 }
 
-html[data-theme='light'] .unleash-academy-level-badge {
+html[data-theme="light"] .unleash-academy-level-badge {
     border-color: var(--unleash-logo-purple);
     color: var(--unleash-logo-purple);
 }
 
-html[data-theme='dark'] .unleash-academy-level-badge {
+html[data-theme="dark"] .unleash-academy-level-badge {
     border-color: var(--ifm-link-color);
     color: var(--ifm-link-color);
 }
 
 .unleash-academy-level-container.advanced {
-    background-image: url('/img/unleash-academy/advanced-pixels.svg');
+    background-image: url("/img/unleash-academy/advanced-pixels.svg");
 }
 
 .unleash-academy-level-container.beginners {
-    background-image: url('/img/unleash-academy/beginner-pixels.svg');
+    background-image: url("/img/unleash-academy/beginner-pixels.svg");
 }
-
 
 .unleash-academy-banner {
     --banner-padding: calc(var(--ifm-spacing-vertical) * 3);
@@ -272,15 +279,15 @@ html[data-theme='dark'] .unleash-academy-level-badge {
     border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-200);
     padding: var(--banner-padding);
     border-radius: var(--ifm-global-radius);
-    background-color: #F1F0FC;
-    background-image: url('/img/unleash-academy/banner-bg-pixels.svg');
+    background-color: #f1f0fc;
+    background-image: url("/img/unleash-academy/banner-bg-pixels.svg");
     background-position: top right;
     background-repeat: no-repeat;
     overflow: hidden;
     color: var(--banner-font-color);
 }
 
-html[data-theme='dark'] .course-banner-container {
+html[data-theme="dark"] .course-banner-container {
     background-color: inherit;
     color: inherit;
 }
@@ -294,19 +301,18 @@ html[data-theme='dark'] .course-banner-container {
     grid-area: bullets;
     display: flex;
     flex-flow: column;
-    gap: calc( var(--ifm-spacing-horizontal) * 2);
+    gap: calc(var(--ifm-spacing-horizontal) * 2);
     padding-inline-start: 0;
 }
 
 .unleash-academy-banner-list > li {
     font-weight: bold;
     list-style-type: none;
-    background-image: url('/img/unleash-academy/bullet-check.svg');
+    background-image: url("/img/unleash-academy/bullet-check.svg");
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 30px;
 }
-
 
 .unleash-academy-banner-list > li::marker {
     height: 100%;
@@ -323,15 +329,15 @@ html[data-theme='dark'] .course-banner-container {
 }
 
 .unleash-action-button {
-    --button-color: #6C65E5;
-    --button-hover-color: #615BC2;
+    --button-color: #6c65e5;
+    --button-hover-color: #615bc2;
     display: block;
     border-radius: var(--ifm-global-radius);
     width: 100%;
     background: var(--button-color);
     color: white;
     text-align: center;
-    padding: calc(var(--ifm-spacing-horizontal) * .5);
+    padding: calc(var(--ifm-spacing-horizontal) * 0.5);
 }
 
 .unleash-action-button:hover {
@@ -375,7 +381,7 @@ html[data-theme='dark'] .course-banner-container {
 }
 
 .unleash-academy-links-container article .header > * + * {
-    margin-block-start: calc(var(--ifm-spacing-vertical) * .5);
+    margin-block-start: calc(var(--ifm-spacing-vertical) * 0.5);
 }
 
 .unleash-academy-links-container article p {
@@ -413,7 +419,7 @@ html[data-theme='dark'] .course-banner-container {
 
 .academy-general-banner .small-logo {
     grid-area: logo;
-    background-image: url('/img/unleash-academy/academy-logo.svg');
+    background-image: url("/img/unleash-academy/academy-logo.svg");
     background-repeat: no-repeat;
     background-position: center;
     width: 100%;
@@ -437,7 +443,7 @@ html[data-theme='dark'] .course-banner-container {
 
     .academy-general-banner .big-logo {
         position: absolute;
-        background-image: url('/img/unleash-academy/academy-logo.svg');
+        background-image: url("/img/unleash-academy/academy-logo.svg");
         bottom: 0;
         right: 40px;
         width: 200px;
@@ -447,6 +453,7 @@ html[data-theme='dark'] .course-banner-container {
         background-position-y: 190%;
     }
 }
+
 /* end banner */
 
 /* course banner-specific styling */
@@ -466,16 +473,16 @@ html[data-theme='dark'] .course-banner-container {
 .unleash-academy-level-badge {
     border: 2px solid;
     border-radius: 60px;
-    padding-inline: .5em;
+    padding-inline: 0.5em;
     text-transform: capitalize;
 }
 
-html[data-theme='light'] .unleash-academy-level-badge {
+html[data-theme="light"] .unleash-academy-level-badge {
     border-color: var(--unleash-logo-purple);
     color: var(--unleash-logo-purple);
 }
 
-html[data-theme='dark'] .unleash-academy-level-badge {
+html[data-theme="dark"] .unleash-academy-level-badge {
     border-color: var(--ifm-link-color);
     color: var(--ifm-link-color);
 }
@@ -512,42 +519,42 @@ https://github.com/PaloAltoNetworks/docusaurus-openapi-docs/issues/177
 }
 
 .get > .menu__link::before {
-    content: 'get';
+    content: "get";
     background-color: var(--ifm-color-info-contrast-background);
     color: var(--ifm-color-info-contrast-foreground);
     border-color: var(--ifm-color-info-dark);
 }
 
 .post > .menu__link::before {
-    content: 'post';
+    content: "post";
     background-color: var(--ifm-color-success-contrast-background);
     color: var(--ifm-color-success-contrast-foreground);
     border-color: var(--ifm-color-success-dark);
 }
 
 .delete > .menu__link::before {
-    content: 'del';
+    content: "del";
     background-color: var(--ifm-color-danger-contrast-background);
     color: var(--ifm-color-danger-contrast-foreground);
     border-color: var(--ifm-color-danger-dark);
 }
 
 .put > .menu__link::before {
-    content: 'put';
+    content: "put";
     background-color: var(--ifm-color-warning-contrast-background);
     color: var(--ifm-color-warning-contrast-foreground);
     border-color: var(--ifm-color-warning-dark);
 }
 
 .patch > .menu__link::before {
-    content: 'patch';
+    content: "patch";
     background-color: var(--ifm-color-success-contrast-background);
     color: var(--ifm-color-success-contrast-foreground);
     border-color: var(--ifm-color-success-dark);
 }
 
 .head > .menu__link::before {
-    content: 'head';
+    content: "head";
     background-color: var(--ifm-color-secondary-contrast-background);
     color: var(--ifm-color-secondary-contrast-foreground);
     border-color: var(--ifm-color-secondary-dark);

@@ -65,21 +65,21 @@ export type UiFlags = {
     signals?: boolean;
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
-    increaseUnleashWidth?: boolean;
     featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     newStrategyConfigurationFeedback?: boolean;
-    extendedUsageMetricsUI?: boolean;
     adminTokenKillSwitch?: boolean;
-    executiveDashboard?: boolean;
+    executiveDashboardUI?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;
     featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
-    sdkReporting?: boolean;
     outdatedSdksBanner?: boolean;
     projectOverviewRefactor?: string;
+    collectTrafficDataUsage?: boolean;
+    newContextFieldsUI?: boolean;
+    variantDependencies?: boolean;
 };
 
 export interface IVersionInfo {

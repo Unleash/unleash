@@ -5,14 +5,25 @@ import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { tagSchema } from './tag-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
+import { featureSearchEnvironmentSchema } from './feature-search-environment-schema';
 
 export const featureSearchResponseSchema = {
     $id: '#/components/schemas/featureSearchResponseSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name'],
+    required: [
+        'name',
+        'dependencyType',
+        'type',
+        'project',
+        'stale',
+        'favorite',
+        'impressionData',
+        'createdAt',
+        'environments',
+        'segments',
+    ],
     description: 'A feature toggle definition',
     properties: {
         name: {
@@ -33,6 +44,14 @@ export const featureSearchResponseSchema = {
                 'Controls disabling of the comments section in case of an incident',
             description: 'Detailed description of the feature',
         },
+        dependencyType: {
+            type: 'string',
+            enum: ['parent', 'child', null],
+            nullable: true,
+            example: 'parent',
+            description:
+                "The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.",
+        },
         archived: {
             type: 'boolean',
             example: true,
@@ -42,11 +61,6 @@ export const featureSearchResponseSchema = {
             type: 'string',
             example: 'dx-squad',
             description: 'Name of the project the feature belongs to',
-        },
-        enabled: {
-            type: 'boolean',
-            example: true,
-            description: '`true` if the feature is enabled, otherwise `false`.',
         },
         stale: {
             type: 'boolean',
@@ -92,7 +106,7 @@ export const featureSearchResponseSchema = {
         environments: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureEnvironmentSchema',
+                $ref: '#/components/schemas/featureSearchEnvironmentSchema',
             },
             description:
                 'The list of environments where the feature can be used',
@@ -129,52 +143,11 @@ export const featureSearchResponseSchema = {
             nullable: true,
             description: 'The list of feature tags',
         },
-        children: {
-            type: 'array',
-            description:
-                'The list of child feature names. This is an experimental field and may change.',
-            items: {
-                type: 'string',
-                example: 'some-feature',
-            },
-        },
-        dependencies: {
-            type: 'array',
-            items: {
-                type: 'object',
-                additionalProperties: false,
-                required: ['feature'],
-                properties: {
-                    feature: {
-                        description: 'The name of the parent feature',
-                        type: 'string',
-                        example: 'some-feature',
-                    },
-                    enabled: {
-                        description:
-                            'Whether the parent feature is enabled or not',
-                        type: 'boolean',
-                        example: true,
-                    },
-                    variants: {
-                        description:
-                            'The list of variants the parent feature should resolve to. Only valid when feature is enabled.',
-                        type: 'array',
-                        items: {
-                            example: 'some-feature-blue-variant',
-                            type: 'string',
-                        },
-                    },
-                },
-            },
-            description:
-                'The list of parent dependencies. This is an experimental field and may change.',
-        },
     },
     components: {
         schemas: {
             constraintSchema,
-            featureEnvironmentSchema,
+            featureSearchEnvironmentSchema,
             featureStrategySchema,
             strategyVariantSchema,
             overrideSchema,

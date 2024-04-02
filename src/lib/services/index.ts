@@ -45,6 +45,7 @@ import { FavoritesService } from './favorites-service';
 import MaintenanceService from '../features/maintenance/maintenance-service';
 import { AccountService } from './account-service';
 import { SchedulerService } from '../features/scheduler/scheduler-service';
+import { ProjectInsightsService } from '../features/project-insights/project-insights-service';
 import type { Knex } from 'knex';
 import {
     createExportImportTogglesService,
@@ -119,6 +120,10 @@ import {
     createFakeFrontendApiService,
     createFrontendApiService,
 } from '../features/frontend-api/createFrontendApiService';
+import {
+    createFakeProjectInsightsService,
+    createProjectInsightsService,
+} from '../features/project-insights/createProjectInsightsService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -263,6 +268,9 @@ export const createServices = (
     const projectService = db
         ? createProjectService(db, config)
         : createFakeProjectService(config);
+    const projectInsightsService = db
+        ? createProjectInsightsService(db, config)
+        : createFakeProjectInsightsService().projectInsightsService;
 
     const projectHealthService = new ProjectHealthService(
         stores,
@@ -397,6 +405,7 @@ export const createServices = (
         clientFeatureToggleService,
         featureSearchService,
         inactiveUsersService,
+        projectInsightsService,
     };
 };
 
@@ -443,4 +452,5 @@ export {
     DependentFeaturesService,
     ClientFeatureToggleService,
     FeatureSearchService,
+    ProjectInsightsService,
 };

@@ -6,45 +6,18 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IDraftBannerProps {
     project: string;
 }
 
-const StyledNormalDraftBannerContentWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(1, 0),
-    [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(1, 2),
-    },
-}));
-
-const StyledSpaciousDraftBannerContentWrapper = styled(Box)(({ theme }) => ({
+const StyledDraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(1, 0),
 }));
 
-const StyledNormalDraftBanner = styled(Box)(({ theme }) => ({
-    width: '1250px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    [theme.breakpoints.down('lg')]: {
-        width: '1024px',
-    },
-    [theme.breakpoints.down(1024)]: {
-        width: '100%',
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
-}));
-
-const StyledSpaciousDraftBanner = styled(Box)(({ theme }) => ({
+const StyledDraftBanner = styled(Box)(({ theme }) => ({
     maxWidth: '1512px',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
@@ -80,16 +53,6 @@ const DraftBannerContent: FC<{
                   ' that are approved. Adding more changes will clear the approvals and require a new review',
           }[changeRequests[0].state as 'Draft' | 'In review' | 'Approved']
         : '';
-
-    const increaseUnleashWidth = useUiFlag('increaseUnleashWidth');
-
-    const StyledDraftBanner = increaseUnleashWidth
-        ? StyledSpaciousDraftBanner
-        : StyledNormalDraftBanner;
-
-    const StyledDraftBannerContentWrapper = increaseUnleashWidth
-        ? StyledSpaciousDraftBannerContentWrapper
-        : StyledNormalDraftBannerContentWrapper;
 
     return (
         <StyledDraftBanner>

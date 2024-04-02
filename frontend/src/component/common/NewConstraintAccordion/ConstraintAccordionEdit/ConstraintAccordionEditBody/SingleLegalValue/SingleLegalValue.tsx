@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
-import { FormControl, RadioGroup, Radio, Alert } from '@mui/material';
+import { FormControl, RadioGroup, Radio, Alert, styled } from '@mui/material';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useThemeStyles } from 'themes/themeStyles';
@@ -25,6 +25,17 @@ interface ISingleLegalValueProps {
     };
     constraintValue: string;
 }
+
+const StyledFieldsetContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1),
+    padding: theme.spacing(2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    maxHeight: '378px',
+    overflow: 'auto',
+}));
 
 export const SingleLegalValue = ({
     setValue,
@@ -80,7 +91,7 @@ export const SingleLegalValue = ({
             <ConditionallyRender
                 condition={Boolean(legalValues.length)}
                 show={
-                    <div style={{ display: 'flex' }}>
+                    <StyledFieldsetContainer>
                         <FormControl component='fieldset'>
                             <RadioGroup
                                 aria-label='selected-value'
@@ -101,7 +112,7 @@ export const SingleLegalValue = ({
                                 ))}
                             </RadioGroup>
                         </FormControl>
-                    </div>
+                    </StyledFieldsetContainer>
                 }
                 elseShow={
                     <p>No valid legal values available for this operator.</p>

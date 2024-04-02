@@ -104,15 +104,13 @@ class StateController extends Controller {
         // TODO: Should override request type so file is a type on request
         // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
         let data;
-        // @ts-expect-error
-        if (req.file) {
-            // @ts-expect-error
-            if (mime.getType(req.file.originalname) === 'text/yaml') {
-                // @ts-expect-error
-                data = YAML.load(req.file.buffer);
+        // @ts-expect-error req.file may not exist in the type
+        const file = req.file;
+        if (file) {
+            if (mime.getType(file.originalname) === 'text/yaml') {
+                data = YAML.load(file.buffer);
             } else {
-                // @ts-expect-error
-                data = JSON.parse(req.file.buffer);
+                data = JSON.parse(file.buffer);
             }
         } else {
             data = req.body;

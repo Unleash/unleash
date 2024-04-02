@@ -107,6 +107,7 @@ import type { FeatureToggleInsert } from './feature-toggle-store';
 import ArchivedFeatureError from '../../error/archivedfeature-error';
 import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events';
 import type { EventEmitter } from 'stream';
+import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 
 interface IFeatureContext {
     featureName: string;
@@ -1717,7 +1718,7 @@ class FeatureToggleService {
         user?: IUser,
         shouldActivateDisabledStrategies = false,
     ): Promise<void> {
-        await Promise.all(
+        await allSettledWithRejection(
             featureNames.map((featureName) =>
                 this.updateEnabled(
                     project,

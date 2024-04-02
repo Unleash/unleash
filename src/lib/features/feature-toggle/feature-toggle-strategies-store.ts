@@ -107,7 +107,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
     };
 }
 
-const sortEnvironments = (overview: IFeatureOverview) => {
+const sortEnvironments = (overview: Record<string, IFeatureOverview>) => {
     return Object.values(overview).map((data: IFeatureOverview) => ({
         ...data,
         environments: data.environments
@@ -728,7 +728,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         }, {});
     }
 
-    getFeatureOverviewData(rows): IFeatureOverview {
+    getFeatureOverviewData(rows): Record<string, IFeatureOverview> {
         return rows.reduce((acc, row) => {
             if (acc[row.feature_name]) {
                 const environmentExists = acc[

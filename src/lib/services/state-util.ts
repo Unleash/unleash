@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as mime from 'mime';
+import mime from 'mime';
 import * as YAML from 'js-yaml';
 
 export const readFile: (file: string) => Promise<string> = (file) =>

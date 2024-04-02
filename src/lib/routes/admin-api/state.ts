@@ -1,4 +1,4 @@
-import * as mime from 'mime';
+import mime from 'mime';
 import YAML from 'js-yaml';
 import multer from 'multer';
 import { format as formatDate } from 'date-fns';

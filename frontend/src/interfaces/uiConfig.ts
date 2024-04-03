@@ -77,7 +77,7 @@ export type UiFlags = {
     outdatedSdksBanner?: boolean;
     projectOverviewRefactor?: string;
     collectTrafficDataUsage?: boolean;
-    newContextFieldsUI?: boolean;
+    disableShowContextFieldSelectionValues?: boolean;
     variantDependencies?: boolean;
     projectOverviewRefactorFeedback?: boolean;
 };

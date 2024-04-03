@@ -88,7 +88,9 @@ export const RestrictiveLegalValues = ({
     // Lazily initialise the values because there might be a lot of them.
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
 
-    const newContextFieldsUI = useUiFlag('newContextFieldsUI');
+    const disableShowContextFieldSelectionValues = useUiFlag(
+        'disableShowContextFieldSelectionValues',
+    );
 
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
         const deletedValuesSet = getLegalValueSet(deletedLegalValues);
@@ -162,14 +164,9 @@ export const RestrictiveLegalValues = ({
                 <ConstraintFormHeader>
                     Select values from a predefined set
                 </ConstraintFormHeader>
-                <ConditionallyRender
-                    condition={newContextFieldsUI}
-                    show={
-                        <Button variant={'text'} onClick={onSelectAll}>
-                            {isAllSelected ? 'Unselect all' : 'Select all'}
-                        </Button>
-                    }
-                />
+                <Button variant={'text'} onClick={onSelectAll}>
+                    {isAllSelected ? 'Unselect all' : 'Select all'}
+                </Button>
             </StyledStack>
             <ConditionallyRender
                 condition={legalValues.length > 100}
@@ -177,7 +174,8 @@ export const RestrictiveLegalValues = ({
                     <>
                         <ConditionallyRender
                             condition={
-                                Boolean(newContextFieldsUI) && Boolean(values)
+                                !disableShowContextFieldSelectionValues &&
+                                Boolean(values)
                             }
                             show={
                                 <StyledValuesContainer sx={{ border: 0 }}>

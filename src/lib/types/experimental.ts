@@ -56,7 +56,8 @@ export type IFlagKey =
     | 'projectOverviewRefactor'
     | 'variantDependencies'
     | 'newContextFieldsUI'
-    | 'bearerTokenMiddleware';
+    | 'bearerTokenMiddleware'
+    | 'projectOverviewRefactorFeedback';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -275,6 +276,10 @@ const flags: IFlags = {
     ),
     bearerTokenMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_BEARER_TOKEN_MIDDLEWARE,
+        false,
+    ),
+    projectOverviewRefactorFeedback: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
         false,
     ),
 };

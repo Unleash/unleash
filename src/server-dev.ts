@@ -53,6 +53,7 @@ process.nextTick(async () => {
                         projectOverviewRefactor: true,
                         newContextFieldsUI: true,
                         variantDependencies: true,
+                        projectOverviewRefactorFeedback: true,
                     },
                 },
                 authentication: {

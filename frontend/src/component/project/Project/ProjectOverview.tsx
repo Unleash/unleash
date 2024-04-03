@@ -105,11 +105,18 @@ const useDelayedFeedbackPrompt = () => {
         'newProjectOverview',
         'manual',
     );
+    const projectOverviewRefactorFeedback = useUiFlag(
+        'projectOverviewRefactorFeedback',
+    );
 
     const [seenFeedback, setSeenFeedback] = useState(false);
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (!seenFeedback && !hasSubmittedFeedback) {
+            if (
+                projectOverviewRefactorFeedback &&
+                !seenFeedback &&
+                !hasSubmittedFeedback
+            ) {
                 openFeedback({
                     title: 'How easy was it to work with the project overview in Unleash?',
                     positiveLabel:

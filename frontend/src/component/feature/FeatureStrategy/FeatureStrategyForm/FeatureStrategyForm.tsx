@@ -46,7 +46,6 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -221,9 +220,6 @@ export const FeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
-    const newStrategyConfigurationFeedback = useUiFlag(
-        'newStrategyConfigurationFeedback',
-    );
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -351,7 +347,7 @@ export const FeatureStrategyForm = ({
         try {
             await onSubmit();
 
-            if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
+            if (!hasSubmittedFeedback) {
                 createFeedbackContext();
             }
         } catch (e) {

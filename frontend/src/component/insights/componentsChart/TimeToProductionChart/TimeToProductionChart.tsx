@@ -37,6 +37,7 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
                 (item) => item.data,
             ),
         );
+        console.log(result);
         const data = Object.entries(result)
             .map(([date, timeToProduction]) => ({ date, timeToProduction }))
             .sort(
@@ -59,6 +60,7 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
     }, [JSON.stringify(projectsDatasets), theme]);
 
     const data = isAggregate ? aggregatedPerDay : projectsDatasets;
+    console.log(data);
     const placeholderData = usePlaceholderData();
     return (
         <LineChart

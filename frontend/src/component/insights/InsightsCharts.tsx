@@ -40,8 +40,8 @@ interface IChartsProps {
         averageUsers: number;
         averageHealth?: string;
         flagsPerUser?: string;
+        medianTimeToProduction?: number;
     };
-    medianTimeToProduction: number;
     loading: boolean;
     projects: string[];
 }
@@ -71,7 +71,6 @@ export const InsightsCharts: VFC<IChartsProps> = ({
     userTrends,
     groupedProjectsData,
     flagTrends,
-    medianTimeToProduction,
     groupedMetricsData,
     environmentTypeTrends,
     loading,
@@ -167,7 +166,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                 </ChartWidget>
                 <Widget {...chartInfo.medianTimeToProduction}>
                     <TimeToProduction
-                        daysToProduction={medianTimeToProduction}
+                        daysToProduction={summary.medianTimeToProduction}
                     />
                 </Widget>
                 <ChartWidget

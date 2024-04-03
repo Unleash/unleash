@@ -32,7 +32,7 @@ export const OutdatedSdksBanner = () => {
     };
 
     const outdatedSdksBanner: IBanner = {
-        message: `We noticed that you're using outdated SDKs. `,
+        message: `We noticed that an outdated SDK version is connected to this Unleash instance.`,
         variant: 'warning',
         link: 'dialog',
         linkText: 'Please update those versions',

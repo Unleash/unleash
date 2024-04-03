@@ -16,6 +16,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 0,
                         users: 1,
                         date: '',
+                        timeToProduction: 4,
                     },
                     {
                         week: '2024-01',
@@ -26,6 +27,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 0,
                         users: 2,
                         date: '',
+                        timeToProduction: 5,
                     },
                     {
                         week: '2024-02',
@@ -36,6 +38,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 1,
                         users: 1,
                         date: '',
+                        timeToProduction: 4,
                     },
                     {
                         week: '2024-02',
@@ -46,6 +49,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 0,
                         users: 3,
                         date: '',
+                        timeToProduction: 2,
                     },
                 ],
                 { total: 1 } as unknown as InstanceInsightsSchemaUsers,
@@ -60,6 +64,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 2,
             averageHealth: '79',
             flagsPerUser: '14.00',
+            medianTimeToProduction: 3,
         });
     });
 
@@ -76,6 +81,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 0,
                         users: 0,
                         date: '',
+                        timeToProduction: 4,
                     },
                 ],
                 { total: 1 } as unknown as InstanceInsightsSchemaUsers,
@@ -90,6 +96,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 0,
             averageHealth: '100',
             flagsPerUser: '5.00',
+            medianTimeToProduction: 4,
         });
     });
 
@@ -106,6 +113,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 0,
                         users: 0,
                         date: '',
+                        timeToProduction: 2,
                     },
                     {
                         week: '2024-01',
@@ -116,6 +124,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 0,
                         users: 3,
                         date: '',
+                        timeToProduction: 5,
                     },
                 ],
                 { total: 1 } as unknown as InstanceInsightsSchemaUsers,
@@ -130,6 +139,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 1.5,
             averageHealth: '100',
             flagsPerUser: '10.00',
+            medianTimeToProduction: 3.5,
         });
     });
 
@@ -146,6 +156,7 @@ describe('useFilteredFlagTrends', () => {
                         potentiallyStale: 0,
                         users: 0,
                         date: '',
+                        timeToProduction: 0,
                     },
                 ],
                 { total: 1 } as unknown as InstanceInsightsSchemaUsers,
@@ -160,6 +171,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 0,
             averageHealth: undefined,
             flagsPerUser: '0.00',
+            medianTimeToProduction: 0,
         });
     });
 });

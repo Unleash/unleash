@@ -3,7 +3,6 @@ import type { InstanceInsightsSchema } from 'openapi';
 import { useFilteredTrends } from './useFilteredTrends';
 import { useGroupedProjectTrends } from './useGroupedProjectTrends';
 import { useFilteredFlagsSummary } from './useFilteredFlagsSummary';
-import { useMedianTimeToProduction } from './useMedianTimeToProduction';
 
 export const useInsightsData = (
     executiveDashboardData: InstanceInsightsSchema,
@@ -27,9 +26,6 @@ export const useInsightsData = (
         executiveDashboardData.users,
     );
 
-    const medianTimeToProduction =
-        useMedianTimeToProduction(groupedProjectsData);
-
     return useMemo(
         () => ({
             ...executiveDashboardData,
@@ -40,7 +36,6 @@ export const useInsightsData = (
             users: executiveDashboardData.users,
             environmentTypeTrends: executiveDashboardData.environmentTypeTrends,
             summary,
-            medianTimeToProduction,
         }),
         [
             executiveDashboardData,
@@ -50,7 +45,6 @@ export const useInsightsData = (
             metricsData,
             groupedMetricsData,
             summary,
-            medianTimeToProduction,
         ],
     );
 };

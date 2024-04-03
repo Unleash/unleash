@@ -1,10 +1,10 @@
-import { createRef, useLayoutEffect } from 'react';
+import { createRef, useEffect } from 'react';
 
 type refElement = HTMLDivElement;
 
 const useLoading = (loading: boolean, selector = '[data-loading=true]') => {
     const ref = createRef<refElement>();
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (ref.current) {
             const elements = ref.current.querySelectorAll(selector);
 
@@ -16,7 +16,7 @@ const useLoading = (loading: boolean, selector = '[data-loading=true]') => {
                 }
             });
         }
-    }, [loading]);
+    }, [loading, selector, ref]);
 
     return ref;
 };

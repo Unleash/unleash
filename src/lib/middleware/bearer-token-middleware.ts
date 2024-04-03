@@ -10,7 +10,7 @@ export const bearerTokenMiddleware = ({
 
     return (req: Request, _: Response, next: NextFunction) => {
         if (
-            req.path.startsWith('/api/signal-endpoint/') ||
+            req.path.includes('/signal-endpoint/') ||
             flagResolver.isEnabled('bearerTokenMiddleware')
         ) {
             const authHeader = req.headers.authorization;

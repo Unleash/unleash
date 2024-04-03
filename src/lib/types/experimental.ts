@@ -32,7 +32,6 @@ export type IFlagKey =
     | 'celebrateUnleash'
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
-    | 'newStrategyConfigurationFeedback'
     | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
@@ -57,7 +56,8 @@ export type IFlagKey =
     | 'projectOverviewRefactor'
     | 'variantDependencies'
     | 'disableShowContextFieldSelectionValues'
-    | 'bearerTokenMiddleware';
+    | 'bearerTokenMiddleware'
+    | 'projectOverviewRefactorFeedback';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -163,10 +163,6 @@ const flags: IFlags = {
     },
     featureSearchFeedbackPosting: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
-        false,
-    ),
-    newStrategyConfigurationFeedback: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_CONFIGURATION_FEEDBACK,
         false,
     ),
     encryptEmails: parseEnvVarBoolean(
@@ -281,6 +277,10 @@ const flags: IFlags = {
     ),
     bearerTokenMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_BEARER_TOKEN_MIDDLEWARE,
+        false,
+    ),
+    projectOverviewRefactorFeedback: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
         false,
     ),
 };

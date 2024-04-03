@@ -45,8 +45,6 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
-import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -187,8 +185,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const feedbackCategory = 'newStrategyForm';
-
 export const FeatureStrategyForm = ({
     projectId,
     feature,
@@ -207,10 +203,6 @@ export const FeatureStrategyForm = ({
     setTab,
     StrategyVariants,
 }: IFeatureStrategyFormProps) => {
-    const { openFeedback, hasSubmittedFeedback } = useFeedback(
-        feedbackCategory,
-        'manual',
-    );
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
@@ -221,9 +213,6 @@ export const FeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
-    const newStrategyConfigurationFeedback = useUiFlag(
-        'newStrategyConfigurationFeedback',
-    );
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -312,15 +301,6 @@ export const FeatureStrategyForm = ({
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
-    const createFeedbackContext = () => {
-        openFeedback({
-            title: 'How easy was it to work with the new strategy form?',
-            positiveLabel: 'What do you like most about the new strategy form?',
-            areasForImprovementsLabel:
-                'What should be improved the new strategy form?',
-        });
-    };
-
     const onSubmitWithValidation = async (event: React.FormEvent) => {
         if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
             trackEvent('strategy-variants', {
@@ -343,19 +323,7 @@ export const FeatureStrategyForm = ({
         if (enableProdGuard && !isChangeRequest) {
             setShowProdGuard(true);
         } else {
-            await onSubmitWithFeedback();
-        }
-    };
-
-    const onSubmitWithFeedback = async () => {
-        try {
-            await onSubmit();
-
-            if (newStrategyConfigurationFeedback && !hasSubmittedFeedback) {
-                createFeedbackContext();
-            }
-        } catch (e) {
-            console.error(e);
+            onSubmit();
         }
     };
 
@@ -584,7 +552,7 @@ export const FeatureStrategyForm = ({
                     <FeatureStrategyProdGuard
                         open={showProdGuard}
                         onClose={() => setShowProdGuard(false)}
-                        onClick={onSubmitWithFeedback}
+                        onClick={onSubmit}
                         loading={loading}
                         label='Save strategy'
                     />

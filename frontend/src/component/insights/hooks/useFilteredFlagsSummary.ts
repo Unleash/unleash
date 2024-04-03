@@ -4,6 +4,10 @@ import type {
     InstanceInsightsSchemaUsers,
 } from 'openapi';
 
+const validTimeToProduction = (
+    item: InstanceInsightsSchemaProjectFlagTrendsItem,
+) => Boolean(item) && typeof item.timeToProduction === 'number';
+
 // NOTE: should we move project filtering to the backend?
 export const useFilteredFlagsSummary = (
     filteredProjectFlagTrends: InstanceInsightsSchemaProjectFlagTrendsItem[],
@@ -42,6 +46,20 @@ export const useFilteredFlagsSummary = (
             },
         );
 
+        const timesToProduction: number[] = lastWeekSummary
+            .filter(validTimeToProduction)
+            .map((item) => item.timeToProduction!); // Non-null assertion is safe due to filter
+
+        // Calculate median timeToProduction for lastWeekSummary
+        timesToProduction.sort((a, b) => a - b);
+        const midIndex = Math.floor(timesToProduction.length / 2);
+        const medianTimeToProduction =
+            timesToProduction.length % 2 === 0
+                ? (timesToProduction[midIndex - 1] +
+                      timesToProduction[midIndex]) /
+                  2
+                : timesToProduction[midIndex];
+
         const flagsPerUserCalculation = sum.total / users.total;
         const flagsPerUser = Number.isNaN(flagsPerUserCalculation)
             ? 'N/A'
@@ -54,5 +72,6 @@ export const useFilteredFlagsSummary = (
             averageHealth: sum.total
                 ? ((sum.active / (sum.total || 1)) * 100).toFixed(0)
                 : undefined,
+            medianTimeToProduction,
         };
     }, [filteredProjectFlagTrends]);

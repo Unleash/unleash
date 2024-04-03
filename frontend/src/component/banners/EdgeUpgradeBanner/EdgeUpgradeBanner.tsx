@@ -6,7 +6,7 @@ import type { IBanner } from '../../../interfaces/banner';
 export const EdgeUpgradeBanner = () => {
     const displayUpgradeEdgeBanner = useUiFlag('displayUpgradeEdgeBanner');
     const upgradeEdgeBanner: IBanner = {
-        message: `We noticed that you're using an outdated Unleash Edge. To ensure you continue to receive metrics, we recommend upgrading to v17.0.0 or later.`,
+        message: `We noticed that an outdated Edge version is connected to this Unleash instance. To ensure you continue to receive metrics, we recommend upgrading to v17.0.0 or later.`,
         link: 'https://github.com/Unleash/unleash-edge',
         linkText: 'Get latest',
         variant: 'warning',

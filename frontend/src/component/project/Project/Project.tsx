@@ -272,20 +272,23 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        <span>
+                                        <>
                                             <ConditionallyRender
                                                 condition={Boolean(tab.new)}
                                                 show={
-                                                    <StyledBadge color='success'>
-                                                        Beta
-                                                    </StyledBadge>
+                                                    // extra span to avoid badge getting color override from the overly specific parent component
+                                                    <span>
+                                                        <StyledBadge color='success'>
+                                                            Beta
+                                                        </StyledBadge>
+                                                    </span>
                                                 }
                                             />
                                             {(tab.isEnterprise &&
                                                 isPro() &&
                                                 enterpriseIcon) ||
                                                 undefined}
-                                        </span>
+                                        </>
                                     }
                                 />
                             );

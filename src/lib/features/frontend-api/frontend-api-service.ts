@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import type {
     IUnleashConfig,
     IUnleashServices,
@@ -88,7 +89,8 @@ export class FrontendApiService {
     ): Promise<FrontendApiFeatureSchema[]> {
         const client = await this.clientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
-        const sessionId = context.sessionId || String(Math.random());
+        const sessionId =
+            context.sessionId || crypto.randomBytes(18).toString('hex');
 
         const resultDefinitions = definitions
             .filter((feature) =>
@@ -115,7 +117,8 @@ export class FrontendApiService {
     ): Promise<FrontendApiFeatureSchema[]> {
         const client = await this.newClientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
-        const sessionId = context.sessionId || String(Math.random());
+        const sessionId =
+            context.sessionId || crypto.randomBytes(18).toString('hex');
 
         const resultDefinitions = definitions
             .filter((feature) => {

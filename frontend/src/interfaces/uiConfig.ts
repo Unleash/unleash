@@ -67,7 +67,6 @@ export type UiFlags = {
     celebrateUnleash?: boolean;
     featureSearchFeedback?: Variant;
     enableLicense?: boolean;
-    newStrategyConfigurationFeedback?: boolean;
     adminTokenKillSwitch?: boolean;
     executiveDashboardUI?: boolean;
     feedbackComments?: Variant;
@@ -80,6 +79,7 @@ export type UiFlags = {
     collectTrafficDataUsage?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
     variantDependencies?: boolean;
+    projectOverviewRefactorFeedback?: boolean;
 };
 
 export interface IVersionInfo {

@@ -134,6 +134,7 @@ exports[`should create default config 1`] = `
       "outdatedSdksBanner": false,
       "personalAccessTokensKillSwitch": false,
       "projectOverviewRefactor": false,
+      "projectOverviewRefactorFeedback": false,
       "queryMissingTokens": false,
       "responseTimeMetricsFix": false,
       "responseTimeWithAppNameKillSwitch": false,

@@ -67,7 +67,6 @@ export type UiFlags = {
     celebrateUnleash?: boolean;
     featureSearchFeedback?: Variant;
     enableLicense?: boolean;
-    newStrategyConfigurationFeedback?: boolean;
     adminTokenKillSwitch?: boolean;
     executiveDashboardUI?: boolean;
     feedbackComments?: Variant;

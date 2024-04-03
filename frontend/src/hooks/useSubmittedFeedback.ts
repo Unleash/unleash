@@ -2,7 +2,6 @@ import { createLocalStorage } from '../utils/createLocalStorage';
 
 export type IFeedbackCategory =
     | 'search'
-    | 'newStrategyForm'
     | 'insights'
     | 'applicationOverview'
     | 'newProjectOverview';

@@ -43,7 +43,6 @@ process.nextTick(async () => {
                         stripClientHeadersOn304: true,
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
-                        newStrategyConfigurationFeedback: true,
                         featureSearchFeedbackPosting: true,
                         executiveDashboard: true,
                         executiveDashboardUI: true,

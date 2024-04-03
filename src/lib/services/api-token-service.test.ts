@@ -1,11 +1,6 @@
 import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
-import type {
-    IApiUser,
-    IUnleashConfig,
-    IUnleashOptions,
-    IUser,
-} from '../server-impl';
+import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
 import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
 import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
@@ -258,34 +253,23 @@ describe('When token is added by another instance', () => {
                 },
             },
         });
-        const spy = jest.spyOn(apiTokenStore, 'get');
+        const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
 
         const invalidToken = 'invalid-token';
-        let found: IApiUser | undefined = undefined;
         for (let i = 0; i < 10; i++) {
-            try {
-                found = await apiTokenService.getUserForToken(
-                    `${invalidToken}-${i % 2}`,
-                );
-            } catch (e) {
-                // ignore
-            }
-            expect(found).toBeUndefined();
+            expect(
+                await apiTokenService.getUserForToken(invalidToken),
+            ).toBeUndefined();
         }
-        expect(spy).toHaveBeenCalledTimes(2);
+        expect(apiTokenStoreGet).toHaveBeenCalledTimes(1);
 
         // after more than 5 minutes we should be able to query again
         jest.advanceTimersByTime(minutesToMilliseconds(6));
         for (let i = 0; i < 10; i++) {
-            try {
-                found = await apiTokenService.getUserForToken(
-                    `${invalidToken}-${i % 2}`,
-                );
-            } catch (e) {
-                // ignore
-            }
-            expect(found).toBeUndefined();
+            expect(
+                await apiTokenService.getUserForToken(invalidToken),
+            ).toBeUndefined();
         }
-        expect(spy).toHaveBeenCalledTimes(4);
+        expect(apiTokenStoreGet).toHaveBeenCalledTimes(2);
     });
 });

@@ -124,7 +124,20 @@ export class PlaygroundService {
                 this.resolveFeatures(filteredProjects, env),
             ),
         );
-        const contexts = generateObjectCombinations(context);
+
+        const { appName, properties, ...otherContextFields } = context;
+
+        const cleanedContextFields = Object.fromEntries(
+            Object.entries(otherContextFields).filter(([_, value]) => {
+                return typeof value === 'string';
+            }),
+        );
+
+        const contexts = generateObjectCombinations({
+            ...cleanedContextFields,
+            appName,
+            properties,
+        });
 
         validateQueryComplexity(
             environments.length,

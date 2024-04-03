@@ -59,7 +59,6 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
     }, [JSON.stringify(projectsDatasets), theme]);
 
     const data = isAggregate ? aggregatedPerDay : projectsDatasets;
-    console.log(data);
     const placeholderData = usePlaceholderData();
     return (
         <LineChart

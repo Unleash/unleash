@@ -2,15 +2,17 @@ import type { Request, Response, NextFunction } from 'express';
 import type { IUnleashConfig } from '../types';
 
 export const bearerTokenMiddleware = ({
+    server,
     getLogger,
     flagResolver,
-}: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>) => {
+}: Pick<IUnleashConfig, 'server' | 'getLogger' | 'flagResolver'>) => {
     const logger = getLogger('/middleware/bearer-token-middleware.ts');
     logger.debug('Enabling bearer token middleware');
+    const baseUriPath = server.baseUriPath || '';
 
     return (req: Request, _: Response, next: NextFunction) => {
         if (
-            req.path.includes('/signal-endpoint/') ||
+            req.path.startsWith(`${baseUriPath}/api/signal-endpoint/`) ||
             flagResolver.isEnabled('bearerTokenMiddleware')
         ) {
             const authHeader = req.headers.authorization;

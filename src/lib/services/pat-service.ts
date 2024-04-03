@@ -10,6 +10,7 @@ import { OperationDeniedError } from '../error/operation-denied-error';
 import { PAT_LIMIT } from '../util/constants';
 import type EventService from '../features/events/event-service';
 import type { CreatePatSchema, PatSchema } from '../openapi';
+import { extractUserIdFromUser, extractUsernameFromUser } from '../util';
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -41,9 +42,10 @@ export default class PatService {
         const secret = this.generateSecretKey();
         const newPat = await this.patStore.create(pat, secret, forUserId);
 
-        await this.eventService.storeUserEvent({
+        await this.eventService.storeEvent({
             type: PAT_CREATED,
-            byUser,
+            createdBy: extractUsernameFromUser(byUser),
+            createdByUserId: extractUserIdFromUser(byUser),
             data: { ...pat, secret: '***' },
         });
 
@@ -61,9 +63,10 @@ export default class PatService {
     ): Promise<void> {
         const pat = await this.patStore.get(id);
 
-        await this.eventService.storeUserEvent({
+        await this.eventService.storeEvent({
             type: PAT_DELETED,
-            byUser,
+            createdBy: extractUsernameFromUser(byUser),
+            createdByUserId: extractUserIdFromUser(byUser),
             data: { ...pat, secret: '***' },
         });
 

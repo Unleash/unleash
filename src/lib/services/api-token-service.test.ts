@@ -1,6 +1,11 @@
 import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
-import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
+import type {
+    IApiUser,
+    IUnleashConfig,
+    IUnleashOptions,
+    IUser,
+} from '../server-impl';
 import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
 import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
@@ -11,7 +16,7 @@ import {
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
 } from '../types';
-import { addDays } from 'date-fns';
+import { addDays, minutesToMilliseconds } from 'date-fns';
 import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../../lib/features';
@@ -242,5 +247,45 @@ describe('When token is added by another instance', () => {
         const found = await apiTokenService.getUserForToken(token.secret);
         expect(found).toBeDefined();
         expect(found?.username).toBe(token.tokenName);
+    });
+
+    test('should query the db only once for invalid tokens', async () => {
+        jest.useFakeTimers();
+        const { apiTokenService, apiTokenStore } = setup({
+            experimental: {
+                flags: {
+                    queryMissingTokens: true,
+                },
+            },
+        });
+        const spy = jest.spyOn(apiTokenStore, 'get');
+
+        const invalidToken = 'invalid-token';
+        let found: IApiUser | undefined = undefined;
+        for (let i = 0; i < 10; i++) {
+            try {
+                found = await apiTokenService.getUserForToken(
+                    `${invalidToken}-${i % 2}`,
+                );
+            } catch (e) {
+                // ignore
+            }
+            expect(found).toBeUndefined();
+        }
+        expect(spy).toHaveBeenCalledTimes(2);
+
+        // after more than 5 minutes we should be able to query again
+        jest.advanceTimersByTime(minutesToMilliseconds(6));
+        for (let i = 0; i < 10; i++) {
+            try {
+                found = await apiTokenService.getUserForToken(
+                    `${invalidToken}-${i % 2}`,
+                );
+            } catch (e) {
+                // ignore
+            }
+            expect(found).toBeUndefined();
+        }
+        expect(spy).toHaveBeenCalledTimes(4);
     });
 });

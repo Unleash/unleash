@@ -79,6 +79,7 @@ export type UiFlags = {
     collectTrafficDataUsage?: boolean;
     newContextFieldsUI?: boolean;
     variantDependencies?: boolean;
+    projectOverviewRefactorFeedback?: boolean;
 };
 
 export interface IVersionInfo {

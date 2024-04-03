@@ -29,6 +29,7 @@ afterAll(async () => {
 
 test('strips invalid context properties from input before using it', async () => {
     const invalidJsonTypes = {
+        object: {},
         array: [],
         true: true,
         false: false,

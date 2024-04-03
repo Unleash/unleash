@@ -195,7 +195,7 @@ export class ApiTokenService {
             this.flagResolver.isEnabled('queryMissingTokens', flagContext)
         ) {
             if (this.queryAfter.size > 1000) {
-                // establish a max limit to query after size to prevent memory leak
+                // establish a max limit for queryAfter size to prevent memory leak
                 this.queryAfter.clear();
             }
             // prevent querying the same invalid secret multiple times. Expire after 5 minutes

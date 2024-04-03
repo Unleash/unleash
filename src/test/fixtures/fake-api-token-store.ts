@@ -5,7 +5,6 @@ import type {
     IApiTokenCreate,
 } from '../../lib/types/models/api-token';
 
-import NotFoundError from '../../lib/error/notfound-error';
 import EventEmitter from 'events';
 
 export default class FakeApiTokenStore
@@ -39,11 +38,8 @@ export default class FakeApiTokenStore
     }
 
     async get(key: string): Promise<IApiToken> {
-        const token = this.tokens.find((t) => t.secret === key);
-        if (token) {
-            return token;
-        }
-        throw new NotFoundError(`Could not find token with secret ${key}`);
+        // get can return undefined. See api-token-store.e2e.test.ts
+        return this.tokens.find((t) => t.secret === key);
     }
 
     async getAll(): Promise<IApiToken[]> {

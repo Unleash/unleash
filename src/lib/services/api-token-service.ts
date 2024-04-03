@@ -36,6 +36,7 @@ import {
     omitKeys,
 } from '../util';
 import type EventService from '../features/events/event-service';
+import { addMinutes, isPast } from 'date-fns';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -61,6 +62,8 @@ export class ApiTokenService {
     private logger: Logger;
 
     private activeTokens: IApiToken[] = [];
+
+    private queryAfter = new Map<string, Date>();
 
     private initialized = false;
 
@@ -185,10 +188,19 @@ export class ApiTokenService {
             );
         }
 
+        const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
         if (
             !token &&
+            isPast(nextAllowedQuery) &&
             this.flagResolver.isEnabled('queryMissingTokens', flagContext)
         ) {
+            if (this.queryAfter.size > 1000) {
+                // establish a max limit for queryAfter size to prevent memory leak
+                this.queryAfter.clear();
+            }
+            // prevent querying the same invalid secret multiple times. Expire after 5 minutes
+            this.queryAfter.set(secret, addMinutes(new Date(), 5));
+
             token = await this.store.get(secret);
             if (token) {
                 this.activeTokens.push(token);

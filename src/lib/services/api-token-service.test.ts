@@ -11,7 +11,7 @@ import {
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
 } from '../types';
-import { addDays } from 'date-fns';
+import { addDays, minutesToMilliseconds } from 'date-fns';
 import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../../lib/features';
@@ -242,5 +242,34 @@ describe('When token is added by another instance', () => {
         const found = await apiTokenService.getUserForToken(token.secret);
         expect(found).toBeDefined();
         expect(found?.username).toBe(token.tokenName);
+    });
+
+    test('should query the db only once for invalid tokens', async () => {
+        jest.useFakeTimers();
+        const { apiTokenService, apiTokenStore } = setup({
+            experimental: {
+                flags: {
+                    queryMissingTokens: true,
+                },
+            },
+        });
+        const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
+
+        const invalidToken = 'invalid-token';
+        for (let i = 0; i < 10; i++) {
+            expect(
+                await apiTokenService.getUserForToken(invalidToken),
+            ).toBeUndefined();
+        }
+        expect(apiTokenStoreGet).toHaveBeenCalledTimes(1);
+
+        // after more than 5 minutes we should be able to query again
+        jest.advanceTimersByTime(minutesToMilliseconds(6));
+        for (let i = 0; i < 10; i++) {
+            expect(
+                await apiTokenService.getUserForToken(invalidToken),
+            ).toBeUndefined();
+        }
+        expect(apiTokenStoreGet).toHaveBeenCalledTimes(2);
     });
 });

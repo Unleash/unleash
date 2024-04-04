@@ -31,16 +31,12 @@ afterAll(async () => {
 });
 
 test('strips invalid context properties from input before using it', async () => {
-    const invalidData = {
-        invalid: {},
-    };
-
     const validData = {
         appName: 'test',
     };
 
     const inputContext = {
-        ...invalidData,
+        invalid: {},
         ...validData,
     };
 
@@ -53,10 +49,30 @@ test('strips invalid context properties from input before using it', async () =>
         })
         .expect(200);
 
-    expect(body.input.context).toMatchObject(inputContext);
-
     const evaluatedContext =
         body.features[0].environments.production[0].context;
 
     expect(evaluatedContext).toStrictEqual(validData);
+});
+
+test('returns the input context exactly as it came in, even if invalid values have been removed for the evaluation', async () => {
+    const invalidData = {
+        invalid: {},
+    };
+
+    const inputContext = {
+        ...invalidData,
+        appName: 'test',
+    };
+
+    const { body } = await app.request
+        .post('/api/admin/playground/advanced')
+        .send({
+            context: inputContext,
+            environments: ['production'],
+            projects: '*',
+        })
+        .expect(200);
+
+    expect(body.input.context).toMatchObject(inputContext);
 });

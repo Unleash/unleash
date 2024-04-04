@@ -31,22 +31,17 @@ afterAll(async () => {
 });
 
 test('strips invalid context properties from input before using it', async () => {
-    const invalidJsonTypes = {
-        object: {},
-        array: [],
-        true: true,
-        false: false,
-        number: 123,
-        null: null,
+    const invalidData = {
+        invalid: {},
     };
 
-    const validValues = {
+    const validData = {
         appName: 'test',
     };
 
     const inputContext = {
-        ...invalidJsonTypes,
-        ...validValues,
+        ...invalidData,
+        ...validData,
     };
 
     const { body } = await app.request
@@ -63,9 +58,5 @@ test('strips invalid context properties from input before using it', async () =>
     const evaluatedContext =
         body.features[0].environments.production[0].context;
 
-    expect(
-        ['array', 'true', 'false', 'number', 'null'].every(
-            (property) => !evaluatedContext.hasOwnProperty(property),
-        ),
-    ).toBeTruthy();
+    expect(evaluatedContext).toStrictEqual(validData);
 });

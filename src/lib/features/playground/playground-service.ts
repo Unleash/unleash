@@ -28,6 +28,7 @@ import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/s
 import { validateQueryComplexity } from './validateQueryComplexity';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { getDefaultVariant } from './feature-evaluator/variant';
+import { cleanContext } from './clean-context';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -125,19 +126,7 @@ export class PlaygroundService {
             ),
         );
 
-        const { appName, properties, ...otherContextFields } = context;
-
-        const cleanedContextFields = Object.fromEntries(
-            Object.entries(otherContextFields).filter(([_, value]) => {
-                return typeof value === 'string';
-            }),
-        );
-
-        const contexts = generateObjectCombinations({
-            ...cleanedContextFields,
-            appName,
-            properties,
-        });
+        const contexts = generateObjectCombinations(cleanContext(context));
 
         validateQueryComplexity(
             environments.length,

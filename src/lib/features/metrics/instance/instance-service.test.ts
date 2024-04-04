@@ -3,10 +3,11 @@ import type { IClientApp } from '../../../types/model';
 import FakeEventStore from '../../../../test/fixtures/fake-event-store';
 import { createTestConfig } from '../../../../test/config/test-config';
 import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
-import type { IUnleashConfig } from '../../../types';
+import type { IClientApplicationsStore, IUnleashConfig } from '../../../types';
 import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2';
 import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store';
 import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';
+import type { IApplicationOverview } from './models';
 
 let config: IUnleashConfig;
 beforeAll(() => {
@@ -188,4 +189,69 @@ test('No registrations during a time period will not call stores', async () => {
 
     expect(appStoreSpy).toHaveBeenCalledTimes(0);
     expect(bulkSpy).toHaveBeenCalledTimes(0);
+});
+
+test('filter out private projects from overview', async () => {
+    const clientApplicationsStore = {
+        async getApplicationOverview(
+            appName: string,
+        ): Promise<IApplicationOverview> {
+            return {
+                environments: [
+                    {
+                        name: 'development',
+                        instanceCount: 1,
+                        sdks: ['unleash-client-node:3.5.1'],
+                        lastSeen: new Date(),
+                        issues: {
+                            missingFeatures: [],
+                            outdatedSdks: [],
+                        },
+                    },
+                ],
+                projects: ['privateProject', 'publicProject'],
+                issues: {
+                    missingStrategies: [],
+                },
+                featureCount: 0,
+            };
+        },
+    } as IClientApplicationsStore;
+    const privateProjectsChecker = {
+        async filterUserAccessibleProjects(
+            userId: number,
+            projects: string[],
+        ): Promise<string[]> {
+            return projects.filter((project) => !project.includes('private'));
+        },
+    } as FakePrivateProjectChecker;
+    const clientInstanceService = new ClientInstanceService(
+        { clientApplicationsStore } as any,
+        config,
+        privateProjectsChecker,
+    );
+
+    const overview = await clientInstanceService.getApplicationOverview(
+        'appName',
+        123,
+    );
+
+    expect(overview).toMatchObject({
+        environments: [
+            {
+                name: 'development',
+                instanceCount: 1,
+                sdks: ['unleash-client-node:3.5.1'],
+                issues: {
+                    missingFeatures: [],
+                    outdatedSdks: ['unleash-client-node:3.5.1'],
+                },
+            },
+        ],
+        projects: ['publicProject'],
+        issues: {
+            missingStrategies: [],
+        },
+        featureCount: 0,
+    });
 });

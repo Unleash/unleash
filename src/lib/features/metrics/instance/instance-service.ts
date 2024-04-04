@@ -220,9 +220,16 @@ export default class ClientInstanceService {
 
     async getApplicationOverview(
         appName: string,
+        userId: number,
     ): Promise<IApplicationOverview> {
         const result =
             await this.clientApplicationsStore.getApplicationOverview(appName);
+        const accessibleProjects =
+            await this.privateProjectChecker.filterUserAccessibleProjects(
+                userId,
+                result.projects,
+            );
+        result.projects = accessibleProjects;
         result.environments.forEach((environment) => {
             environment.issues.outdatedSdks = findOutdatedSDKs(
                 environment.sdks,

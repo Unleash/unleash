@@ -78,7 +78,7 @@ Everything’s now setup on the Unleash side. Let’s go to the code now.
 
 We’ll use `httpx` to make our http requests and the Unleash SDK to connect to your local Unleash instance and retrieve your feature flag.
 
-Open a new tab in your terminal, and create a new folder. (NOT in the unleash folder)
+Open a new tab in your terminal, and create a new folder (NOT in the unleash folder).
 
 ```sh
 mkdir unleash-ruby

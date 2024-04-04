@@ -4,9 +4,9 @@ description: "How to use Unleash feature flags with Ruby."
 slug: /feature-flag-tutorials/ruby
 ---
 
-Hello! In this tutorial we’ll show you how to add feature flags to your Ruby app, using  [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
+Hello! In this tutorial we’ll show you how to add feature flags to your Ruby app , using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
 
-In a classic tutorial fashion, we’ll get a list of planets from the [Star Wars API](https://swapi.dev/), with Ruby. We’ll use a feature flag to decide whether to call the REST or the GraphQL version of the API.
+In a classic tutorial fashion, we’ll get a list of planets from the [Star Wars API](https://swapi.dev/), with just Ruby (i.e., not Ruby on Rails). We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
 - [Prerequisites](#prerequisites)
 - [1. Best practices for backend apps with Unleash](#1-best-practices-for-backend-apps-with-unleash)
@@ -25,10 +25,11 @@ For this tutorial, you’ll need the following:
 - Ruby v3+
 - Git
 - Docker and Docker Compose
+- (Optional) Bundler, to manage your gemfile
 
 ![architecture diagram for our implementation](./diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
 
 ## 1. Best practices for backend apps with Unleash
 
@@ -37,13 +38,9 @@ Ruby is a backend language, so there are special considerations to plan around w
 Most importantly, you must:
 
 - Limit feature flag payloads for scalability, security, and efficiency
-- Use graceful degradation where possible to improve the resiliency of your architecture
+- Use graceful degradation where possible to improve the resiliency of your architecture.
 
-A feature flagging system should not be the reason your app slows down or fails. That’s why we recommend limiting the size of your feature flag payloads. For example, instead of making one large call to retrieve flag statuses for all users, group your users by specific attributes as part of your targeting rules.
-
-Our SDKs cache your feature flag configuration to help reduce network round trips. You can rely on that cache if don’t have a Feature Flag Control Service, which will mitigate potential failure.
-
-For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
+For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
 ## 2. Install a local feature flag provider
 
@@ -122,7 +119,7 @@ You should see `There are 10 planets` in your terminal.
 
 ## 4. Add the GraphQL endpoint
 
-The point of this tutorial is to mimic a real-world scenario where, based on a feature flag, you would migrate from a REST API to GraphQL. So far, we’ve just used REST. Now, let’s add the GraphQL version. The GraphQL endpoint is `https://swapi-graphql.netlify.app/.netlify/functions/index`, which looks like someone’s weekend project but is an official endpoint [from Apollo](http://graphql.org/swapi-graphql).
+The point of this tutorial is to mimic a real-world scenario where, based on a boolean feature flag, you would migrate from a REST API to GraphQL. So far, we’ve just used REST. Now, let’s add the GraphQL version. The GraphQL endpoint is `https://swapi-graphql.netlify.app/.netlify/functions/index`, which looks like someone’s weekend project but is an official endpoint [from Apollo](http://graphql.org/swapi-graphql).
 
 Let’s create a static feature flag, for now, just to test that we can call both versions successfully.
 
@@ -172,11 +169,11 @@ ruby main.rb
 
 You should see `Hello GraphQL`, followed by `There are 60 planets` in your terminal.
 
-Yes, there are more planets with the GraphQL API. I’m not sure why but this a real-world scenario, with everything that comes with it.
+Yes, there are more planets with the GraphQL API, this is because the REST API is paginated.
 
 ## 5. Add Unleash to your Ruby app
 
-Now, let’s connect our project to Unleash so that you can toggle that feature flag at runtime, with all the benefits that come with that.
+Now, let’s connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a gradual rollout, use it for a/b testing, etc.
 
 You’ll need 2 things:
 
@@ -191,9 +188,9 @@ With these 2, you can initialize your Unleash client as follows:
 })
 ```
 
-You can check our [API token and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more specifics.
+You can check our [API token and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more specifics.
 
-Now, let’s add our client to our project and grab the feature flag from Unleash
+Now, let’s add our client to our project, grab the feature flag from Unleash, and update our conditional statement. Don't forget to also update the config with your API key.
 
 ```diff
 require 'httpx'
@@ -214,13 +211,13 @@ require 'unleash'
 
 ```
 
-See additional use cases in our [Server-Side SDK with Ruby](https://docs.getunleash.io/reference/sdks/ruby) documentation.
+See additional use cases in our [Server-Side SDK with Ruby](https://docs.getunleash.io/reference/sdks/ruby) documentation.
 
 ## 6. Verify the toggle experience[](https://docs.getunleash.io/feature-flag-tutorials/python#6-verify-the-toggle-experience)
 
 Now that we’ve connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the `Hello GraphQL` message and only get 10 planets.
 
-> **Note:** An update to a feature flag may take 30 seconds to propagate.
+> **Note:** An update to a feature flag may take 30 seconds to propagate.
 
 ![A feature flag called `graphql-api` is now disabled](./graphql-ff.png)
 

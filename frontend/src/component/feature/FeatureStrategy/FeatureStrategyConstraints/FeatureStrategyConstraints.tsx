@@ -18,7 +18,10 @@ interface IFeatureStrategyConstraintsProps {
 }
 
 const filterConstraints = (constraint: any) => {
-    if (constraint.hasOwnProperty('values')) {
+    if (
+        constraint.hasOwnProperty('values') &&
+        (!constraint.hasOwnProperty('value') || constraint.value === '')
+    ) {
         return constraint.values && constraint.values.length > 0;
     }
 

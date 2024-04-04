@@ -150,13 +150,13 @@ To fix this, start a new container and make sure you give it the `-p 5432:5432` 
 
 ### Running end-to-end (e2e) tests
 
-To run the e2e tests, you'll need a running Postgres instance that you can connect to. The easiest way to set this up is to use Docker. This command starts a Postgres instance with the required configuration running on port 5432:
+To run the e2e tests, you'll need a running Postgres instance that you can connect to. The easiest way to set this up is to use Docker. This command starts a Postgres instance with the required configuration (according to the details in `src/test/e2e/helpers/database-config.ts`):
 
 ```sh
 docker run --name unleash-postgres -p 5432:5432 -e POSTGRES_USER=unleash_user -e POSTGRES_PASSWORD=password -e POSTGRES_DB=unleash_test -d postgres:15
 ```
 
-Unleash will attempt to connect using the connection string in `src/test/e2e/helpers/database-config.ts` or the environment variable `TEST_DATABASE_URL`. The previous docker command uses the current defaults, but in case this changes later, you can check the connection details in the file.
+Unleash will attempt to connect using the connection string in `src/test/e2e/helpers/database-config.ts` or the environment variable `TEST_DATABASE_URL`. 
 
 ## Nice to know
 

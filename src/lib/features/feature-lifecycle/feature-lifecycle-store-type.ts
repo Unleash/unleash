@@ -10,11 +10,14 @@ export type FeatureLifecycleStage = {
     stage: StageName;
 };
 
-export type FeatureStageView = { stage: StageName; enteredStageAt: Date };
+export type FeatureLifecycleStageView = {
+    stage: StageName;
+    enteredStageAt: Date;
+};
 
-export type LifecycleView = FeatureStageView[];
+export type FeatureLifecycleView = FeatureLifecycleStageView[];
 
 export interface IFeatureLifecycleStore {
     insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void>;
-    get(feature: string): Promise<LifecycleView>;
+    get(feature: string): Promise<FeatureLifecycleView>;
 }

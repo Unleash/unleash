@@ -1,7 +1,7 @@
 import { FEATURE_CREATED, type IEventStore } from '../../types';
 import type {
     IFeatureLifecycleStore,
-    LifecycleView,
+    FeatureLifecycleView,
 } from './feature-lifecycle-store-type';
 
 export class FeatureLifecycleService {
@@ -26,7 +26,7 @@ export class FeatureLifecycleService {
         });
     }
 
-    async getFeatureLifecycle(feature: string): Promise<LifecycleView> {
+    async getFeatureLifecycle(feature: string): Promise<FeatureLifecycleView> {
         return this.featureLifecycleStore.get(feature);
     }
 

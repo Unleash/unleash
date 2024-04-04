@@ -1,11 +1,11 @@
 import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
-    LifecycleView,
+    FeatureLifecycleView,
 } from './feature-lifecycle-store-type';
 
 export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
-    private lifecycles: Record<string, LifecycleView> = {};
+    private lifecycles: Record<string, FeatureLifecycleView> = {};
 
     async insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void> {
         const existing = await this.get(featureLifecycleStage.feature);
@@ -18,7 +18,7 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
         ];
     }
 
-    async get(feature: string): Promise<LifecycleView> {
+    async get(feature: string): Promise<FeatureLifecycleView> {
         return this.lifecycles[feature] || [];
     }
 }

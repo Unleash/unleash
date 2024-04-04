@@ -1,7 +1,10 @@
-import type { IUnleashStores } from '../../../../lib/types';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import { type IUnleashTest, setupApp } from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import {
+    type IUnleashTest,
+    setupApp,
+} from '../../../test/e2e/helpers/test-helper';
+import type { IUnleashStores } from '../../types';
+import getLogger from '../../../test/fixtures/no-logger';
 
 let stores: IUnleashStores;
 let db: ITestDb;

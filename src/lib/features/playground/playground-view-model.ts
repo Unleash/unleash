@@ -40,7 +40,6 @@ const addStrategyEditLink = (
 export const advancedPlaygroundViewModel = (
     input: AdvancedPlaygroundRequestSchema,
     playgroundResult: AdvancedPlaygroundFeatureEvaluationResult[],
-    invalidContextProperties?: string[],
 ): AdvancedPlaygroundResponseSchema => {
     const features = playgroundResult.map(({ environments, ...rest }) => {
         const transformedEnvironments = Object.entries(environments).map(

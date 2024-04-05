@@ -28,7 +28,6 @@ import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/s
 import { validateQueryComplexity } from './validateQueryComplexity';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { getDefaultVariant } from './feature-evaluator/variant';
-import { cleanContext } from './clean-context';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -103,10 +102,7 @@ export class PlaygroundService {
         context: SdkContextSchema,
         limit: number,
         userId: number,
-    ): Promise<{
-        result: AdvancedPlaygroundFeatureEvaluationResult[];
-        invalidContextProperties: string[];
-    }> {
+    ): Promise<AdvancedPlaygroundFeatureEvaluationResult[]> {
         const segments = await this.segmentReadModel.getActive();
 
         let filteredProjects: typeof projects = projects;
@@ -128,10 +124,7 @@ export class PlaygroundService {
                 this.resolveFeatures(filteredProjects, env),
             ),
         );
-
-        const { context: cleanedContext, removedProperties } =
-            cleanContext(context);
-        const contexts = generateObjectCombinations(cleanedContext);
+        const contexts = generateObjectCombinations(context);
 
         validateQueryComplexity(
             environments.length,
@@ -156,7 +149,7 @@ export class PlaygroundService {
         );
         const items = results.flat();
         const itemsByName = groupBy(items, (item) => item.name);
-        const result = Object.values(itemsByName).map((entries) => {
+        return Object.values(itemsByName).map((entries) => {
             const groupedEnvironments = groupBy(
                 entries,
                 (entry) => entry.environment,
@@ -167,11 +160,6 @@ export class PlaygroundService {
                 environments: groupedEnvironments,
             };
         });
-
-        return {
-            result,
-            invalidContextProperties: removedProperties,
-        };
     }
 
     private async evaluate({

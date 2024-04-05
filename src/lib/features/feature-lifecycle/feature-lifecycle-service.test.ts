@@ -20,8 +20,8 @@ test('can insert and read lifecycle stages', async () => {
         } as unknown as IUnleashConfig);
     const featureName = 'testFeature';
 
-    async function emitMetricsEvent(environment: string) {
-        await eventBus.emit(CLIENT_METRICS, { featureName, environment });
+    function emitMetricsEvent(environment: string) {
+        eventBus.emit(CLIENT_METRICS, { featureName, environment });
     }
     function reachedStage(name: StageName) {
         return new Promise((resolve) =>

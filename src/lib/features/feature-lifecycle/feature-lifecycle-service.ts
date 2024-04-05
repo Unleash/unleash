@@ -12,9 +12,11 @@ import type {
     FeatureLifecycleView,
     IFeatureLifecycleStore,
 } from './feature-lifecycle-store-type';
-import type EventEmitter from 'events';
+import EventEmitter from 'events';
 
-export class FeatureLifecycleService {
+export const STAGE_ENTERED = 'STAGE_ENTERED';
+
+export class FeatureLifecycleService extends EventEmitter {
     private eventStore: IEventStore;
 
     private featureLifecycleStore: IFeatureLifecycleStore;
@@ -40,6 +42,7 @@ export class FeatureLifecycleService {
             eventBus,
         }: Pick<IUnleashConfig, 'flagResolver' | 'eventBus'>,
     ) {
+        super();
         this.eventStore = eventStore;
         this.featureLifecycleStore = featureLifecycleStore;
         this.environmentStore = environmentStore;
@@ -86,6 +89,7 @@ export class FeatureLifecycleService {
 
     private async featureInitialized(feature: string) {
         await this.featureLifecycleStore.insert({ feature, stage: 'initial' });
+        this.emit(STAGE_ENTERED, { stage: 'initial' });
     }
 
     private async stageReceivedMetrics(
@@ -98,6 +102,7 @@ export class FeatureLifecycleService {
         });
         if (!stageExists) {
             await this.featureLifecycleStore.insert({ feature, stage });
+            this.emit(STAGE_ENTERED, { stage });
         }
     }
 
@@ -118,9 +123,11 @@ export class FeatureLifecycleService {
             feature,
             stage: 'completed',
         });
+        this.emit(STAGE_ENTERED, { stage: 'completed' });
     }
 
     private async featureArchived(feature: string) {
         await this.featureLifecycleStore.insert({ feature, stage: 'archived' });
+        this.emit(STAGE_ENTERED, { stage: 'archived' });
     }
 }

@@ -8,10 +8,8 @@ import {
 } from '../../types';
 import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
 import EventEmitter from 'events';
-
-function ms(timeMs) {
-    return new Promise((resolve) => setTimeout(resolve, timeMs));
-}
+import type { StageName } from './feature-lifecycle-store-type';
+import { STAGE_ENTERED } from './feature-lifecycle-service';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();
@@ -24,7 +22,13 @@ test('can insert and read lifecycle stages', async () => {
 
     async function emitMetricsEvent(environment: string) {
         await eventBus.emit(CLIENT_METRICS, { featureName, environment });
-        await ms(1);
+    }
+    function reachedStage(name: StageName) {
+        return new Promise((resolve) =>
+            featureLifecycleService.on(STAGE_ENTERED, (event) => {
+                if (event.stage === name) resolve(name);
+            }),
+        );
     }
 
     await environmentStore.create({
@@ -45,18 +49,23 @@ test('can insert and read lifecycle stages', async () => {
     } as IEnvironment);
     featureLifecycleService.listen();
 
-    await eventStore.emit(FEATURE_CREATED, { featureName });
+    eventStore.emit(FEATURE_CREATED, { featureName });
+    await reachedStage('initial');
 
-    await emitMetricsEvent('unknown-environment');
-    await emitMetricsEvent('my-dev-environment');
-    await emitMetricsEvent('my-dev-environment');
-    await emitMetricsEvent('my-another-dev-environment');
-    await emitMetricsEvent('my-prod-environment');
-    await emitMetricsEvent('my-prod-environment');
-    await emitMetricsEvent('my-another-prod-environment');
+    emitMetricsEvent('unknown-environment');
+    emitMetricsEvent('my-dev-environment');
+    await reachedStage('pre-live');
+    emitMetricsEvent('my-dev-environment');
+    emitMetricsEvent('my-another-dev-environment');
+    emitMetricsEvent('my-prod-environment');
+    await reachedStage('live');
+    emitMetricsEvent('my-prod-environment');
+    emitMetricsEvent('my-another-prod-environment');
 
-    await eventStore.emit(FEATURE_COMPLETED, { featureName });
-    await eventStore.emit(FEATURE_ARCHIVED, { featureName });
+    eventStore.emit(FEATURE_COMPLETED, { featureName });
+    await reachedStage('completed');
+    eventStore.emit(FEATURE_ARCHIVED, { featureName });
+    await reachedStage('archived');
 
     const lifecycle =
         await featureLifecycleService.getFeatureLifecycle(featureName);

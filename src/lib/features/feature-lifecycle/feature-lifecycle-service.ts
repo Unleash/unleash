@@ -1,4 +1,8 @@
-import { FEATURE_CREATED, type IEventStore } from '../../types';
+import {
+    FEATURE_ARCHIVED,
+    FEATURE_CREATED,
+    type IEventStore,
+} from '../../types';
 import type {
     IFeatureLifecycleStore,
     FeatureLifecycleView,
@@ -24,6 +28,9 @@ export class FeatureLifecycleService {
         this.eventStore.on(FEATURE_CREATED, (event) => {
             this.featureInitialized(event.featureName);
         });
+        this.eventStore.on(FEATURE_ARCHIVED, (event) => {
+            this.featureArchived(event.featureName);
+        });
     }
 
     async getFeatureLifecycle(feature: string): Promise<FeatureLifecycleView> {
@@ -34,8 +41,11 @@ export class FeatureLifecycleService {
         await this.featureLifecycleStore.insert({ feature, stage: 'initial' });
     }
 
+    async featureArchived(feature: string) {
+        await this.featureLifecycleStore.insert({ feature, stage: 'archived' });
+    }
+
     async featureWentPreLive(featureName: string) {}
     async featureWentLive(featureName: string) {}
     async featureCompleted(featureName: string) {}
-    async featureArchived(featureName: string) {}
 }

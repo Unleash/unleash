@@ -124,6 +124,8 @@ import {
     createFakeProjectInsightsService,
     createProjectInsightsService,
 } from '../features/project-insights/createProjectInsightsService';
+import { LeaderElectionService } from '../features/scheduler/leader-election-service';
+import { JobStore } from '../features/scheduler/job-store';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -348,6 +350,11 @@ export const createServices = (
         userService,
     });
 
+    const leaderElectionService = new LeaderElectionService(
+        new JobStore(db!, config),
+        config.getLogger,
+    );
+
     return {
         accessService,
         accountService,
@@ -406,6 +413,7 @@ export const createServices = (
         featureSearchService,
         inactiveUsersService,
         projectInsightsService,
+        leaderElectionService,
     };
 };
 

@@ -53,6 +53,7 @@ import type { ClientFeatureToggleService } from '../features/client-feature-togg
 import type { FeatureSearchService } from '../features/feature-search/feature-search-service';
 import type { InactiveUsersService } from '../users/inactive/inactive-users-service';
 import type { ProjectInsightsService } from '../features/project-insights/project-insights-service';
+import type { LeaderElectionService } from '../features/scheduler/leader-election-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -115,4 +116,5 @@ export interface IUnleashServices {
     featureSearchService: FeatureSearchService;
     inactiveUsersService: InactiveUsersService;
     projectInsightsService: ProjectInsightsService;
+    leaderElectionService: LeaderElectionService;
 }

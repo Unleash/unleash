@@ -30,12 +30,27 @@ export const scheduleServices = async (
         lastSeenService,
         frontendApiService,
         clientMetricsServiceV2,
+        leaderElectionService,
     } = services;
 
     schedulerService.schedule(
         lastSeenService.cleanLastSeen.bind(lastSeenService),
         hoursToMilliseconds(1),
         'cleanLastSeen',
+    );
+
+    schedulerService.schedule(
+        () =>
+            leaderElectionService.onlyLeaderExecutes(
+                'test',
+                async (previous?: string) => {
+                    console.log(`Previous: ${previous}`);
+                    return `${Number(previous ?? 0) + 1}`;
+                },
+                1,
+            ),
+        secondsToMilliseconds(10),
+        'test',
     );
 
     schedulerService.schedule(
@@ -133,17 +148,13 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.bulkAdd().catch(console.error);
-        },
+        () => clientMetricsServiceV2.bulkAdd().catch(console.error),
         secondsToMilliseconds(5),
         'bulkAddMetrics',
     );
 
     schedulerService.schedule(
-        () => {
-            clientMetricsServiceV2.clearMetrics(48).catch(console.error);
-        },
+        () => clientMetricsServiceV2.clearMetrics(48).catch(console.error),
         hoursToMilliseconds(12),
         'clearMetrics',
     );

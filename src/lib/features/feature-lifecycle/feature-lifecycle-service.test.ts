@@ -4,6 +4,7 @@ import {
     FEATURE_COMPLETED,
     FEATURE_CREATED,
     type IEnvironment,
+    type IUnleashConfig,
 } from '../../types';
 import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
 
@@ -13,12 +14,16 @@ function ms(timeMs) {
 
 test('can insert and read lifecycle stages', async () => {
     const { featureLifecycleService, eventStore, environmentStore } =
-        createFakeFeatureLifecycleService();
+        createFakeFeatureLifecycleService({
+            flagResolver: { isEnabled: () => true },
+        } as unknown as IUnleashConfig);
     const featureName = 'testFeature';
+
     async function emitMetricsEvent(environment: string) {
         await eventStore.emit(CLIENT_METRICS, { featureName, environment });
         await ms(1);
     }
+
     await environmentStore.create({
         name: 'my-dev-environment',
         type: 'development',
@@ -60,4 +65,31 @@ test('can insert and read lifecycle stages', async () => {
         { stage: 'completed', enteredStageAt: expect.any(Date) },
         { stage: 'archived', enteredStageAt: expect.any(Date) },
     ]);
+});
+
+test('ignores lifecycle state updates when flag disabled', async () => {
+    const { featureLifecycleService, eventStore, environmentStore } =
+        createFakeFeatureLifecycleService({
+            flagResolver: { isEnabled: () => false },
+        } as unknown as IUnleashConfig);
+    const featureName = 'testFeature';
+
+    await environmentStore.create({
+        name: 'my-dev-environment',
+        type: 'development',
+    } as IEnvironment);
+    featureLifecycleService.listen();
+
+    await eventStore.emit(FEATURE_CREATED, { featureName });
+    await eventStore.emit(FEATURE_COMPLETED, { featureName });
+    await eventStore.emit(CLIENT_METRICS, {
+        featureName,
+        environment: 'development',
+    });
+    await eventStore.emit(FEATURE_ARCHIVED, { featureName });
+
+    const lifecycle =
+        await featureLifecycleService.getFeatureLifecycle(featureName);
+
+    expect(lifecycle).toEqual([]);
 });

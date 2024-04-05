@@ -124,6 +124,8 @@ import {
     createFakeProjectInsightsService,
     createProjectInsightsService,
 } from '../features/project-insights/createProjectInsightsService';
+import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
+import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -347,6 +349,9 @@ export const createServices = (
     const inactiveUsersService = new InactiveUsersService(stores, config, {
         userService,
     });
+    const { featureLifecycleService } =
+        createFakeFeatureLifecycleService(config);
+    featureLifecycleService.listen();
 
     return {
         accessService,
@@ -406,6 +411,7 @@ export const createServices = (
         featureSearchService,
         inactiveUsersService,
         projectInsightsService,
+        featureLifecycleService,
     };
 };
 
@@ -453,4 +459,5 @@ export {
     ClientFeatureToggleService,
     FeatureSearchService,
     ProjectInsightsService,
+    FeatureLifecycleService,
 };

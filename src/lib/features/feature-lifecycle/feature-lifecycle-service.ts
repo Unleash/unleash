@@ -5,6 +5,8 @@ import {
     FEATURE_CREATED,
     type IEnvironmentStore,
     type IEventStore,
+    type IFlagResolver,
+    type IUnleashConfig,
 } from '../../types';
 import type {
     FeatureLifecycleView,
@@ -18,35 +20,56 @@ export class FeatureLifecycleService {
 
     private environmentStore: IEnvironmentStore;
 
-    constructor({
-        eventStore,
-        featureLifecycleStore,
-        environmentStore,
-    }: {
-        eventStore: IEventStore;
-        environmentStore: IEnvironmentStore;
-        featureLifecycleStore: IFeatureLifecycleStore;
-    }) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        {
+            eventStore,
+            featureLifecycleStore,
+            environmentStore,
+        }: {
+            eventStore: IEventStore;
+            environmentStore: IEnvironmentStore;
+            featureLifecycleStore: IFeatureLifecycleStore;
+        },
+        { flagResolver }: Pick<IUnleashConfig, 'flagResolver'>,
+    ) {
         this.eventStore = eventStore;
         this.featureLifecycleStore = featureLifecycleStore;
         this.environmentStore = environmentStore;
+        this.flagResolver = flagResolver;
+    }
+
+    private async checkEnabled(fn: () => Promise<void>) {
+        const enabled = this.flagResolver.isEnabled('featureLifecycle');
+        if (enabled) {
+            return fn();
+        }
     }
 
     listen() {
         this.eventStore.on(FEATURE_CREATED, async (event) => {
-            await this.featureInitialized(event.featureName);
+            await this.checkEnabled(() =>
+                this.featureInitialized(event.featureName),
+            );
         });
         this.eventStore.on(CLIENT_METRICS, async (event) => {
-            await this.featureReceivedMetrics(
-                event.featureName,
-                event.environment,
+            await this.checkEnabled(() =>
+                this.featureReceivedMetrics(
+                    event.featureName,
+                    event.environment,
+                ),
             );
         });
         this.eventStore.on(FEATURE_COMPLETED, async (event) => {
-            await this.featureCompleted(event.featureName);
+            await this.checkEnabled(() =>
+                this.featureCompleted(event.featureName),
+            );
         });
         this.eventStore.on(FEATURE_ARCHIVED, async (event) => {
-            await this.featureArchived(event.featureName);
+            await this.checkEnabled(() =>
+                this.featureArchived(event.featureName),
+            );
         });
     }
 
@@ -54,11 +77,14 @@ export class FeatureLifecycleService {
         return this.featureLifecycleStore.get(feature);
     }
 
-    async featureInitialized(feature: string) {
+    private async featureInitialized(feature: string) {
         await this.featureLifecycleStore.insert({ feature, stage: 'initial' });
     }
 
-    async stageReceivedMetrics(feature: string, stage: 'live' | 'pre-live') {
+    private async stageReceivedMetrics(
+        feature: string,
+        stage: 'live' | 'pre-live',
+    ) {
         const stageExists = await this.featureLifecycleStore.stageExists({
             stage,
             feature,
@@ -68,7 +94,7 @@ export class FeatureLifecycleService {
         }
     }
 
-    async featureReceivedMetrics(feature: string, environment: string) {
+    private async featureReceivedMetrics(feature: string, environment: string) {
         const env = await this.environmentStore.get(environment);
         if (!env) {
             return;
@@ -80,14 +106,14 @@ export class FeatureLifecycleService {
         }
     }
 
-    async featureCompleted(feature: string) {
+    private async featureCompleted(feature: string) {
         await this.featureLifecycleStore.insert({
             feature,
             stage: 'completed',
         });
     }
 
-    async featureArchived(feature: string) {
+    private async featureArchived(feature: string) {
         await this.featureLifecycleStore.insert({ feature, stage: 'archived' });
     }
 }

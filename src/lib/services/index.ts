@@ -411,6 +411,7 @@ export const createServices = (
         featureSearchService,
         inactiveUsersService,
         projectInsightsService,
+        featureLifecycleService,
     };
 };
 

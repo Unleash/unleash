@@ -58,36 +58,26 @@ export class FeatureLifecycleService {
         await this.featureLifecycleStore.insert({ feature, stage: 'initial' });
     }
 
+    async stageReceivedMetrics(feature: string, stage: 'live' | 'pre-live') {
+        const stageExists = await this.featureLifecycleStore.stageExists({
+            stage,
+            feature,
+        });
+        if (!stageExists) {
+            await this.featureLifecycleStore.insert({ feature, stage });
+        }
+    }
+
     async featureReceivedMetrics(feature: string, environment: string) {
         const env = await this.environmentStore.get(environment);
         if (!env) {
             return;
         }
         if (env.type === 'production') {
-            const stageExists = await this.featureLifecycleStore.stageExists({
-                stage: 'live',
-                feature,
-            });
-            if (!stageExists) {
-                await this.featureWentLive(feature);
-            }
+            await this.stageReceivedMetrics(feature, 'live');
         } else if (env.type === 'development') {
-            const stageExists = await this.featureLifecycleStore.stageExists({
-                stage: 'pre-live',
-                feature,
-            });
-            if (!stageExists) {
-                await this.featureWentPreLive(feature);
-            }
+            await this.stageReceivedMetrics(feature, 'pre-live');
         }
-    }
-
-    async featureWentPreLive(feature: string) {
-        await this.featureLifecycleStore.insert({ feature, stage: 'pre-live' });
-    }
-
-    async featureWentLive(feature: string) {
-        await this.featureLifecycleStore.insert({ feature, stage: 'live' });
     }
 
     async featureCompleted(feature: string) {

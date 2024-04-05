@@ -20,4 +20,5 @@ export type FeatureLifecycleView = FeatureLifecycleStageView[];
 export interface IFeatureLifecycleStore {
     insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void>;
     get(feature: string): Promise<FeatureLifecycleView>;
+    stageExists(stage: FeatureLifecycleStage): Promise<boolean>;
 }

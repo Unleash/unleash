@@ -30,6 +30,7 @@ export const FEATURE_STRATEGY_REMOVE = 'feature-strategy-remove' as const;
 export const DROP_FEATURE_TAGS = 'drop-feature-tags' as const;
 export const FEATURE_UNTAGGED = 'feature-untagged' as const;
 export const FEATURE_STALE_ON = 'feature-stale-on' as const;
+export const FEATURE_COMPLETED = 'feature-completed' as const;
 export const FEATURE_STALE_OFF = 'feature-stale-off' as const;
 export const DROP_FEATURES = 'drop-features' as const;
 export const FEATURE_ENVIRONMENT_ENABLED =

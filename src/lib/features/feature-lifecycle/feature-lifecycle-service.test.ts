@@ -67,7 +67,7 @@ test('can insert and read lifecycle stages', async () => {
     ]);
 });
 
-test('ignores updates when flag disabled', async () => {
+test('ignores lifecycle state updates when flag disabled', async () => {
     const { featureLifecycleService, eventStore, environmentStore } =
         createFakeFeatureLifecycleService({
             flagResolver: { isEnabled: () => false },

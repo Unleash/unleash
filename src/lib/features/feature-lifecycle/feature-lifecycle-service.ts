@@ -12,6 +12,7 @@ import type {
     FeatureLifecycleView,
     IFeatureLifecycleStore,
 } from './feature-lifecycle-store-type';
+import type EventEmitter from 'events';
 
 export class FeatureLifecycleService {
     private eventStore: IEventStore;
@@ -21,6 +22,8 @@ export class FeatureLifecycleService {
     private environmentStore: IEnvironmentStore;
 
     private flagResolver: IFlagResolver;
+
+    private eventBus: EventEmitter;
 
     constructor(
         {
@@ -32,12 +35,16 @@ export class FeatureLifecycleService {
             environmentStore: IEnvironmentStore;
             featureLifecycleStore: IFeatureLifecycleStore;
         },
-        { flagResolver }: Pick<IUnleashConfig, 'flagResolver'>,
+        {
+            flagResolver,
+            eventBus,
+        }: Pick<IUnleashConfig, 'flagResolver' | 'eventBus'>,
     ) {
         this.eventStore = eventStore;
         this.featureLifecycleStore = featureLifecycleStore;
         this.environmentStore = environmentStore;
         this.flagResolver = flagResolver;
+        this.eventBus = eventBus;
     }
 
     private async checkEnabled(fn: () => Promise<void>) {
@@ -53,7 +60,7 @@ export class FeatureLifecycleService {
                 this.featureInitialized(event.featureName),
             );
         });
-        this.eventStore.on(CLIENT_METRICS, async (event) => {
+        this.eventBus.on(CLIENT_METRICS, async (event) => {
             await this.checkEnabled(() =>
                 this.featureReceivedMetrics(
                     event.featureName,

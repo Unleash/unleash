@@ -349,7 +349,8 @@ export const createServices = (
     const inactiveUsersService = new InactiveUsersService(stores, config, {
         userService,
     });
-    const { featureLifecycleService } = createFakeFeatureLifecycleService();
+    const { featureLifecycleService } =
+        createFakeFeatureLifecycleService(config);
     featureLifecycleService.listen();
 
     return {

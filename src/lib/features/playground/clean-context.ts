@@ -1,16 +1,26 @@
 import type { SdkContextSchema } from '../../openapi';
 
-export const cleanContext = (context: SdkContextSchema): SdkContextSchema => {
+export const cleanContext = (
+    context: SdkContextSchema,
+): { context: SdkContextSchema; removedProperties: string[] } => {
     const { appName, ...otherContextFields } = context;
+    const removedProperties: string[] = [];
 
     const cleanedContextFields = Object.fromEntries(
-        Object.entries(otherContextFields).filter(
-            ([key, value]) => key === 'properties' || typeof value === 'string',
-        ),
+        Object.entries(otherContextFields).filter(([key, value]) => {
+            if (key === 'properties' || typeof value === 'string') {
+                return true;
+            }
+            removedProperties.push(key);
+            return false;
+        }),
     );
 
     return {
-        ...cleanedContextFields,
-        appName,
+        context: {
+            ...cleanedContextFields,
+            appName,
+        },
+        removedProperties,
     };
 };

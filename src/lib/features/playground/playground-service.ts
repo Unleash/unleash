@@ -126,7 +126,8 @@ export class PlaygroundService {
             ),
         );
 
-        const contexts = generateObjectCombinations(cleanContext(context));
+        const { context: cleanedContext } = cleanContext(context);
+        const contexts = generateObjectCombinations(cleanedContext);
 
         validateQueryComplexity(
             environments.length,

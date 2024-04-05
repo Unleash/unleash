@@ -1,15 +1,15 @@
 import { cleanContext } from './clean-context';
 
-test('strips invalid context properties from the context', async () => {
-    const invalidJsonTypes = {
-        object: {},
-        array: [],
-        true: true,
-        false: false,
-        number: 123,
-        null: null,
-    };
+const invalidJsonTypes = {
+    object: {},
+    array: [],
+    true: true,
+    false: false,
+    number: 123,
+    null: null,
+};
 
+test('strips invalid context properties from the context', async () => {
     const validValues = {
         appName: 'test',
     };
@@ -19,7 +19,7 @@ test('strips invalid context properties from the context', async () => {
         ...validValues,
     };
 
-    const cleanedContext = cleanContext(inputContext);
+    const { context: cleanedContext } = cleanContext(inputContext);
 
     expect(cleanedContext).toStrictEqual(validValues);
 });
@@ -29,7 +29,25 @@ test("doesn't add non-existing properties", async () => {
         appName: 'test',
     };
 
-    const output = cleanContext(input);
+    const { context: output } = cleanContext(input);
 
     expect(output).toStrictEqual(input);
+});
+
+test('it returns the names of all the properties it removed', async () => {
+    const { removedProperties } = cleanContext({
+        appName: 'test',
+        ...invalidJsonTypes,
+    });
+
+    const invalidProperties = Object.keys(invalidJsonTypes);
+
+    // verify that the two lists contain all the same elements
+    expect(removedProperties).toEqual(
+        expect.arrayContaining(invalidProperties),
+    );
+
+    expect(invalidProperties).toEqual(
+        expect.arrayContaining(removedProperties),
+    );
 });

@@ -30,6 +30,20 @@ export const advancedPlaygroundResponseSchema = {
                 $ref: advancedPlaygroundFeatureSchema.$id,
             },
         },
+        warnings: {
+            type: 'object',
+            description: 'Warnings that occurred during evaluation.',
+            properties: {
+                invalidContextProperties: {
+                    type: 'array',
+                    description:
+                        'A list of top-level context properties that were provided as input that are not valid due to being the wrong type.',
+                    items: {
+                        type: 'string',
+                    },
+                },
+            },
+        },
     },
     components: {
         schemas: {

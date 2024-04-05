@@ -7,20 +7,23 @@ import {
     type IUnleashConfig,
 } from '../../types';
 import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
+import EventEmitter from 'events';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
 }
 
 test('can insert and read lifecycle stages', async () => {
+    const eventBus = new EventEmitter();
     const { featureLifecycleService, eventStore, environmentStore } =
         createFakeFeatureLifecycleService({
             flagResolver: { isEnabled: () => true },
+            eventBus,
         } as unknown as IUnleashConfig);
     const featureName = 'testFeature';
 
     async function emitMetricsEvent(environment: string) {
-        await eventStore.emit(CLIENT_METRICS, { featureName, environment });
+        await eventBus.emit(CLIENT_METRICS, { featureName, environment });
         await ms(1);
     }
 
@@ -68,9 +71,11 @@ test('can insert and read lifecycle stages', async () => {
 });
 
 test('ignores lifecycle state updates when flag disabled', async () => {
+    const eventBus = new EventEmitter();
     const { featureLifecycleService, eventStore, environmentStore } =
         createFakeFeatureLifecycleService({
             flagResolver: { isEnabled: () => false },
+            eventBus,
         } as unknown as IUnleashConfig);
     const featureName = 'testFeature';
 
@@ -82,7 +87,7 @@ test('ignores lifecycle state updates when flag disabled', async () => {
 
     await eventStore.emit(FEATURE_CREATED, { featureName });
     await eventStore.emit(FEATURE_COMPLETED, { featureName });
-    await eventStore.emit(CLIENT_METRICS, {
+    await eventBus.emit(CLIENT_METRICS, {
         featureName,
         environment: 'development',
     });

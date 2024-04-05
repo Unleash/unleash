@@ -4,9 +4,15 @@ import {
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
+import {
+    FEATURE_ARCHIVED,
+    FEATURE_CREATED,
+    type IEventStore,
+} from '../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let eventStore: IEventStore;
 
 beforeAll(async () => {
     db = await dbInit('feature_lifecycle', getLogger);
@@ -21,6 +27,7 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+    eventStore = db.stores.eventStore;
 
     await app.request
         .post(`/auth/demo/login`)
@@ -43,10 +50,18 @@ const getFeatureLifecycle = async (featureName: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+function ms(timeMs) {
+    return new Promise((resolve) => setTimeout(resolve, timeMs));
+}
+
 test('should return lifecycle stages', async () => {
-    await app.createFeature('my_feature_a');
+    await eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
+    await eventStore.emit(FEATURE_ARCHIVED, { featureName: 'my_feature_a' });
 
     const { body } = await getFeatureLifecycle('my_feature_a');
 
-    expect(body).toEqual([]);
+    expect(body).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(String) },
+        { stage: 'archived', enteredStageAt: expect.any(String) },
+    ]);
 });

@@ -1,0 +1,52 @@
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../../test/e2e/helpers/test-helper';
+import getLogger from '../../../test/fixtures/no-logger';
+
+let app: IUnleashTest;
+let db: ITestDb;
+
+beforeAll(async () => {
+    db = await dbInit('feature_lifecycle', getLogger);
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    featureLifecycle: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
+    await app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: 'user@getunleash.io',
+        })
+        .expect(200);
+});
+
+afterAll(async () => {
+    await app.destroy();
+    await db.destroy();
+});
+
+beforeEach(async () => {});
+
+const getFeatureLifecycle = async (featureName: string, expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/projects/default/features/${featureName}/lifecycle`)
+        .expect(expectedCode);
+};
+
+test('should return lifecycle stages', async () => {
+    await app.createFeature('my_feature_a');
+
+    const { body } = await getFeatureLifecycle('my_feature_a');
+
+    expect(body).toEqual([]);
+});

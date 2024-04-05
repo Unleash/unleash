@@ -75,6 +75,7 @@ export * from './feature-dependencies-schema';
 export * from './feature-environment-metrics-schema';
 export * from './feature-environment-schema';
 export * from './feature-events-schema';
+export * from './feature-lifecycle-schema';
 export * from './feature-metrics-schema';
 export * from './feature-schema';
 export * from './feature-search-environment-schema';

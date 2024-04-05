@@ -28,6 +28,7 @@ import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/s
 import { validateQueryComplexity } from './validateQueryComplexity';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import { getDefaultVariant } from './feature-evaluator/variant';
+import { cleanContext } from './clean-context';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -124,7 +125,8 @@ export class PlaygroundService {
                 this.resolveFeatures(filteredProjects, env),
             ),
         );
-        const contexts = generateObjectCombinations(context);
+
+        const contexts = generateObjectCombinations(cleanContext(context));
 
         validateQueryComplexity(
             environments.length,

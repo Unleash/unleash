@@ -125,21 +125,16 @@ export default class PlaygroundController extends Controller {
                 ? Number.parseInt(payload?.value)
                 : 15000;
 
-        const { result, invalidContextProperties } =
-            await this.playgroundService.evaluateAdvancedQuery(
-                req.body.projects || '*',
-                req.body.environments,
-                req.body.context,
-                limit,
-                extractUserIdFromUser(user),
-            );
+        const result = await this.playgroundService.evaluateAdvancedQuery(
+            req.body.projects || '*',
+            req.body.environments,
+            req.body.context,
+            limit,
+            extractUserIdFromUser(user),
+        );
 
         const response: AdvancedPlaygroundResponseSchema =
-            advancedPlaygroundViewModel(
-                req.body,
-                result,
-                invalidContextProperties,
-            );
+            advancedPlaygroundViewModel(req.body, result);
 
         res.json(response);
     }

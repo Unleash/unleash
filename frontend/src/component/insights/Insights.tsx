@@ -16,7 +16,7 @@ const StickyWrapper = styled(Box, {
 })<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
     position: 'sticky',
     top: 0,
-    zIndex: 1000,
+    zIndex: theme.zIndex.sticky,
     padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
     background: theme.palette.background.application,
     transition: 'padding 0.3s ease',

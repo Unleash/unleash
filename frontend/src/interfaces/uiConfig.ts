@@ -81,6 +81,7 @@ export type UiFlags = {
     variantDependencies?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
+    scimApi?: boolean;
 };
 
 export interface IVersionInfo {

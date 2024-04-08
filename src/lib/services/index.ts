@@ -67,6 +67,7 @@ import {
     createEnvironmentService,
     createFakeEnvironmentService,
     createFakeProjectService,
+    createFeatureLifecycleService,
     createFeatureToggleService,
     createProjectService,
 } from '../features';
@@ -349,8 +350,9 @@ export const createServices = (
     const inactiveUsersService = new InactiveUsersService(stores, config, {
         userService,
     });
-    const { featureLifecycleService } =
-        createFakeFeatureLifecycleService(config);
+    const { featureLifecycleService } = db
+        ? createFeatureLifecycleService(db, config)
+        : createFakeFeatureLifecycleService(config);
     featureLifecycleService.listen();
 
     return {

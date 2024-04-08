@@ -55,7 +55,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
-    "@types/node": "18.19.26",
+    "@types/node": "18.19.28",
     "@types/react": "17.0.80",
     "@types/react-dom": "17.0.25",
     "@types/react-linkify": "1.0.4",

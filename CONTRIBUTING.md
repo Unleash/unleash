@@ -33,7 +33,7 @@ Follow the steps in [the "how to run the project" section](#how-to-run-the-proje
 
 ### Make your update:
 
-Make your changes to the file(s) you'd like to update. You'll need **Node.js v14** and PostgreSQL 10 to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
+Make your changes to the file(s) you'd like to update. You'll need **Node.js v18** and PostgreSQL 14 to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
 
 ### Open a pull request
 

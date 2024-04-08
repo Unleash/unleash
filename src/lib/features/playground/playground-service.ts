@@ -103,7 +103,10 @@ export class PlaygroundService {
         context: SdkContextSchema,
         limit: number,
         userId: number,
-    ): Promise<AdvancedPlaygroundFeatureEvaluationResult[]> {
+    ): Promise<{
+        result: AdvancedPlaygroundFeatureEvaluationResult[];
+        invalidContextProperties: string[];
+    }> {
         const segments = await this.segmentReadModel.getActive();
 
         let filteredProjects: typeof projects = projects;
@@ -126,7 +129,9 @@ export class PlaygroundService {
             ),
         );
 
-        const contexts = generateObjectCombinations(cleanContext(context));
+        const { context: cleanedContext, removedProperties } =
+            cleanContext(context);
+        const contexts = generateObjectCombinations(cleanedContext);
 
         validateQueryComplexity(
             environments.length,
@@ -151,7 +156,7 @@ export class PlaygroundService {
         );
         const items = results.flat();
         const itemsByName = groupBy(items, (item) => item.name);
-        return Object.values(itemsByName).map((entries) => {
+        const result = Object.values(itemsByName).map((entries) => {
             const groupedEnvironments = groupBy(
                 entries,
                 (entry) => entry.environment,
@@ -162,6 +167,11 @@ export class PlaygroundService {
                 environments: groupedEnvironments,
             };
         });
+
+        return {
+            result,
+            invalidContextProperties: removedProperties,
+        };
     }
 
     private async evaluate({

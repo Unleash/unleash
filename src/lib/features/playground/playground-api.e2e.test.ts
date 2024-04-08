@@ -76,3 +76,30 @@ test('returns the input context exactly as it came in, even if invalid values ha
 
     expect(body.input.context).toMatchObject(inputContext);
 });
+
+test('adds all removed top-level context properties to the list of warnings', async () => {
+    const invalidData = {
+        invalid1: {},
+        invalid2: {},
+    };
+
+    const inputContext = {
+        ...invalidData,
+        appName: 'test',
+    };
+
+    const { body } = await app.request
+        .post('/api/admin/playground/advanced')
+        .send({
+            context: inputContext,
+            environments: ['production'],
+            projects: '*',
+        })
+        .expect(200);
+
+    const warned = body.warnings.invalidContextProperties;
+    const invalidKeys = Object.keys(invalidData);
+
+    expect(warned).toEqual(expect.arrayContaining(invalidKeys));
+    expect(invalidKeys).toEqual(expect.arrayContaining(warned));
+});

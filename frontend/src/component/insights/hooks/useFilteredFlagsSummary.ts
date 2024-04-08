@@ -63,7 +63,7 @@ export const useFilteredFlagsSummary = (
         const medianTimeToProduction = Number.isNaN(
             medianTimeToProductionCalculation,
         )
-            ? 'N/A'
+            ? 0
             : medianTimeToProductionCalculation;
 
         const flagsPerUserCalculation = sum.total / users.total;

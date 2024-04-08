@@ -77,6 +77,15 @@ test('should return lifecycle stages', async () => {
         featureName: 'my_feature_a',
         environment: 'default',
     });
+    // missing feature
+    eventBus.emit(CLIENT_METRICS, {
+        environment: 'default',
+    });
+    // non existent env
+    eventBus.emit(CLIENT_METRICS, {
+        featureName: 'my_feature_a',
+        environment: 'non-existent',
+    });
     await reachedStage('live');
     eventStore.emit(FEATURE_ARCHIVED, { featureName: 'my_feature_a' });
     await reachedStage('archived');

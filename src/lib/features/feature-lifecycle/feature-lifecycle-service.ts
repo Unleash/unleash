@@ -13,6 +13,7 @@ import type {
     IFeatureLifecycleStore,
 } from './feature-lifecycle-store-type';
 import EventEmitter from 'events';
+import type { Logger } from '../../logger';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
 
@@ -27,6 +28,8 @@ export class FeatureLifecycleService extends EventEmitter {
 
     private eventBus: EventEmitter;
 
+    private logger: Logger;
+
     constructor(
         {
             eventStore,
@@ -40,7 +43,8 @@ export class FeatureLifecycleService extends EventEmitter {
         {
             flagResolver,
             eventBus,
-        }: Pick<IUnleashConfig, 'flagResolver' | 'eventBus'>,
+            getLogger,
+        }: Pick<IUnleashConfig, 'flagResolver' | 'eventBus' | 'getLogger'>,
     ) {
         super();
         this.eventStore = eventStore;
@@ -48,6 +52,9 @@ export class FeatureLifecycleService extends EventEmitter {
         this.environmentStore = environmentStore;
         this.flagResolver = flagResolver;
         this.eventBus = eventBus;
+        this.logger = getLogger(
+            'feature-lifecycle/feature-lifecycle-service.ts',
+        );
     }
 
     private async checkEnabled(fn: () => Promise<void>) {
@@ -64,6 +71,7 @@ export class FeatureLifecycleService extends EventEmitter {
             );
         });
         this.eventBus.on(CLIENT_METRICS, async (event) => {
+            if (!event.featureName || !event.environment) return;
             await this.checkEnabled(() =>
                 this.featureReceivedMetrics(
                     event.featureName,
@@ -107,14 +115,22 @@ export class FeatureLifecycleService extends EventEmitter {
     }
 
     private async featureReceivedMetrics(feature: string, environment: string) {
-        const env = await this.environmentStore.get(environment);
-        if (!env) {
-            return;
-        }
-        if (env.type === 'production') {
-            await this.stageReceivedMetrics(feature, 'live');
-        } else if (env.type === 'development') {
-            await this.stageReceivedMetrics(feature, 'pre-live');
+        try {
+            const env = await this.environmentStore.get(environment);
+
+            if (!env) {
+                return;
+            }
+            if (env.type === 'production') {
+                await this.stageReceivedMetrics(feature, 'live');
+            } else if (env.type === 'development') {
+                await this.stageReceivedMetrics(feature, 'pre-live');
+            }
+        } catch (e) {
+            this.logger.warn(
+                `Error handling metrics for ${feature} in ${environment}`,
+                e,
+            );
         }
     }
 

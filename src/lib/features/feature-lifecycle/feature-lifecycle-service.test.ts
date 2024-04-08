@@ -10,6 +10,7 @@ import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
 import EventEmitter from 'events';
 import type { StageName } from './feature-lifecycle-store-type';
 import { STAGE_ENTERED } from './feature-lifecycle-service';
+import noLoggerProvider from '../../../test/fixtures/no-logger';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();
@@ -17,6 +18,7 @@ test('can insert and read lifecycle stages', async () => {
         createFakeFeatureLifecycleService({
             flagResolver: { isEnabled: () => true },
             eventBus,
+            getLogger: noLoggerProvider,
         } as unknown as IUnleashConfig);
     const featureName = 'testFeature';
 
@@ -85,6 +87,7 @@ test('ignores lifecycle state updates when flag disabled', async () => {
         createFakeFeatureLifecycleService({
             flagResolver: { isEnabled: () => false },
             eventBus,
+            getLogger: noLoggerProvider,
         } as unknown as IUnleashConfig);
     const featureName = 'testFeature';
 

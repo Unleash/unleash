@@ -131,7 +131,6 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
         return { datasets };
     }, [theme, environmentTypeTrends]);
 
-    console.log(data);
     return (
         <LineChart
             data={notEnoughData || isLoading ? placeholderData : data}

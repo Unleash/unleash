@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.11.1] - 2024-04-09
+
+### Bug Fixes
+
+- Dark mode background ([#6803](https://github.com/Unleash/unleash/issues/6803)) ([#6804](https://github.com/Unleash/unleash/issues/6804))
+
+
 ## [5.11.0] - 2024-04-05
 
 ### Bug Fixes

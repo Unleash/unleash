@@ -2,6 +2,7 @@ import type { VFC } from 'react';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -126,24 +127,40 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                         title={`Not exposed: ${point.value.totalNo ?? 0}`}
                         color={'error'}
                     />
-                    <Divider
-                        sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}
-                    />
-                    <InfoSummary
-                        data={[
-                            {
-                                key: 'Flags',
-                                value: point.value.totalFlags ?? 'N/A',
-                            },
-                            {
-                                key: 'Environments',
-                                value: point.value.totalEnvironments ?? 'N/A',
-                            },
-                            {
-                                key: 'Apps',
-                                value: point.value.totalApps ?? 'N/A',
-                            },
-                        ]}
+                    <ConditionallyRender
+                        condition={Boolean(
+                            point.value.totalApps &&
+                                Boolean(point.value.totalEnvironments),
+                        )}
+                        show={
+                            <>
+                                <Divider
+                                    sx={(theme) => ({
+                                        margin: theme.spacing(1.5, 0),
+                                    })}
+                                />
+                                <InfoSummary
+                                    data={[
+                                        {
+                                            key: 'Flags',
+                                            value:
+                                                point.value.totalFlags ?? 'N/A',
+                                        },
+                                        {
+                                            key: 'Environments',
+                                            value:
+                                                point.value.totalEnvironments ??
+                                                'N/A',
+                                        },
+                                        {
+                                            key: 'Apps',
+                                            value:
+                                                point.value.totalApps ?? 'N/A',
+                                        },
+                                    ]}
+                                />
+                            </>
+                        }
                     />
                 </StyledTooltipItemContainer>
             )) || null}

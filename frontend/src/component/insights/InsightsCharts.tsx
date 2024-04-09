@@ -12,7 +12,11 @@ import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduc
 import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
 import { MetricsSummaryChart } from './componentsChart/MetricsSummaryChart/MetricsSummaryChart';
 import { UpdatesPerEnvironmentTypeChart } from './componentsChart/UpdatesPerEnvironmentTypeChart/UpdatesPerEnvironmentTypeChart';
-import type { InstanceInsightsSchema } from 'openapi';
+import type {
+    InstanceInsightsSchema,
+    InstanceInsightsSchemaFlags,
+    InstanceInsightsSchemaUsers,
+} from 'openapi';
 import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
 import { Box, styled } from '@mui/material';
 import { allOption } from '../common/ProjectSelect/ProjectSelect';
@@ -20,6 +24,7 @@ import type { VFC } from 'react';
 import { chartInfo } from './chart-info';
 
 interface IChartsProps {
+    flags: InstanceInsightsSchema['flags'];
     flagTrends: InstanceInsightsSchema['flagTrends'];
     projectsData: InstanceInsightsSchema['projectFlagTrends'];
     groupedProjectsData: GroupedDataByProject<
@@ -66,6 +71,7 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
 
 export const InsightsCharts: VFC<IChartsProps> = ({
     projects,
+    flags,
     users,
     summary,
     userTrends,
@@ -77,6 +83,16 @@ export const InsightsCharts: VFC<IChartsProps> = ({
 }) => {
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
+
+    function getFlagsPerUser(
+        flags: InstanceInsightsSchemaFlags,
+        users: InstanceInsightsSchemaUsers,
+    ) {
+        const flagsPerUserCalculation = flags.total / users.total;
+        return Number.isNaN(flagsPerUserCalculation)
+            ? 'N/A'
+            : flagsPerUserCalculation.toFixed(2);
+    }
 
     return (
         <>
@@ -122,9 +138,9 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                 />
                 <Widget {...chartInfo.totalFlags}>
                     <FlagStats
-                        count={summary.total}
+                        count={showAllProjects ? flags.total : summary.total}
                         flagsPerUser={
-                            showAllProjects ? summary.flagsPerUser : ''
+                            showAllProjects ? getFlagsPerUser(flags, users) : ''
                         }
                     />
                 </Widget>

@@ -4,7 +4,7 @@ export const StyledContainer = styled('div')(({ theme }) => ({
     display: 'inline-block',
     wordBreak: 'break-word',
     padding: theme.spacing(0.5, 1),
-    background: theme.palette.common.white,
+    background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
 

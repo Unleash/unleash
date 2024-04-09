@@ -9,7 +9,6 @@ export const createOptions = (
     locationSettings: ILocationSettings,
     setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
     isPlaceholder?: boolean,
-    localTooltip?: boolean,
 ) =>
     ({
         responsive: true,

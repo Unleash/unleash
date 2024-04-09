@@ -63,7 +63,6 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
     return (
         <LineChart
             data={notEnoughData ? placeholderData : data}
-            isLocalTooltip
             TooltipComponent={TimeToProductionTooltip}
             overrideOptions={
                 notEnoughData

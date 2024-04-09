@@ -85,7 +85,6 @@ const LineChartComponent: VFC<{
     data: ChartData<'line', unknown>;
     aspectRatio?: number;
     cover?: ReactNode;
-    isLocalTooltip?: boolean;
     overrideOptions?: ChartOptions<'line'>;
     TooltipComponent?: ({
         tooltip,
@@ -94,7 +93,6 @@ const LineChartComponent: VFC<{
     data,
     aspectRatio = 2.5,
     cover,
-    isLocalTooltip,
     overrideOptions,
     TooltipComponent,
 }) => {
@@ -109,7 +107,6 @@ const LineChartComponent: VFC<{
                 locationSettings,
                 setTooltip,
                 Boolean(cover),
-                isLocalTooltip,
             ),
             ...overrideOptions,
         }),

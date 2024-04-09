@@ -128,10 +128,11 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                         color={'error'}
                     />
                     <ConditionallyRender
-                        condition={Boolean(
-                            point.value.totalApps &&
-                                Boolean(point.value.totalEnvironments),
-                        )}
+                        condition={
+                            Boolean(point.value.totalApps) &&
+                            Boolean(point.value.totalEnvironments) &&
+                            Boolean(point.value.totalFlags)
+                        }
                         show={
                             <>
                                 <Divider
@@ -143,19 +144,16 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                                     data={[
                                         {
                                             key: 'Flags',
-                                            value:
-                                                point.value.totalFlags ?? 'N/A',
+                                            value: point.value.totalFlags,
                                         },
                                         {
                                             key: 'Environments',
-                                            value:
-                                                point.value.totalEnvironments ??
-                                                'N/A',
+                                            value: point.value
+                                                .totalEnvironments,
                                         },
                                         {
                                             key: 'Apps',
-                                            value:
-                                                point.value.totalApps ?? 'N/A',
+                                            value: point.value.totalApps,
                                         },
                                     ]}
                                 />

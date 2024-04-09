@@ -113,7 +113,7 @@ const LineChartComponent: VFC<{
             ),
             ...overrideOptions,
         }),
-        [theme, locationSettings, overrideOptions],
+        [theme, locationSettings, overrideOptions, cover],
     );
 
     return (

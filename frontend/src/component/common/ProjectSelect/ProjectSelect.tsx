@@ -5,7 +5,7 @@ import {
     type SetStateAction,
     type VFC,
 } from 'react';
-import { Autocomplete, type SxProps, TextField } from '@mui/material';
+import { Autocomplete, Chip, type SxProps, TextField } from '@mui/material';
 import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
@@ -116,6 +116,24 @@ export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
                 }
                 onChange={onProjectsChange}
                 data-testid={dataTestId ? dataTestId : 'PROJECT_SELECT'}
+                renderTags={(value, getTagProps) => {
+                    const numTags = value.length;
+                    const limitTags = 1;
+
+                    return (
+                        <>
+                            {value.slice(0, limitTags).map((option, index) => (
+                                <Chip
+                                    {...getTagProps({ index })}
+                                    key={index}
+                                    label={option.label}
+                                />
+                            ))}
+
+                            {numTags > limitTags && ` +${numTags - limitTags}`}
+                        </>
+                    );
+                }}
             />
         );
     },

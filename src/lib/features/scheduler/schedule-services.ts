@@ -30,7 +30,7 @@ export const scheduleServices = async (
         lastSeenService,
         frontendApiService,
         clientMetricsServiceV2,
-        leaderElectionService,
+        jobService,
     } = services;
 
     schedulerService.schedule(
@@ -39,18 +39,18 @@ export const scheduleServices = async (
         'cleanLastSeen',
     );
 
+    const uploadToS3JobName = 'uploadToS3';
     schedulerService.schedule(
-        () =>
-            leaderElectionService.onlyLeaderExecutes(
-                'test',
-                async (previous?: string) => {
-                    console.log(`Previous: ${previous}`);
-                    return `${Number(previous ?? 0) + 1}`;
-                },
-                1,
-            ),
-        secondsToMilliseconds(10),
-        'test',
+        jobService.singleInstance(
+            uploadToS3JobName,
+            async (range: { from: Date; to: Date }) => {
+                console.log(`Range: ${range}`);
+                return `${range.from.toISOString()} to ${range.to.toISOString()}`;
+            },
+            5, // 5 minutes bucket size
+        ),
+        minutesToMilliseconds(3), // every 3 minutes (to make sure we don't miss any bucket)
+        uploadToS3JobName,
     );
 
     schedulerService.schedule(

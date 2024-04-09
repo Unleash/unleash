@@ -63,7 +63,6 @@ export const Insights: VFC = () => {
                                 flex: 1,
                                 maxWidth: '360px',
                                 width: '100%',
-                                zIndex: 100000,
                             }}
                         />
                     }

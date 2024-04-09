@@ -17,29 +17,55 @@ interface IUpdatesPerEnvironmnetTypeChart {
     isLoading?: boolean;
 }
 
-const groupByDate = (
+export const groupByDateAndFillMissingDatapoints = (
     items: InstanceInsightsSchemaEnvironmentTypeTrendsItem[],
 ): Record<string, InstanceInsightsSchemaEnvironmentTypeTrendsItem[]> => {
-    if (!items) {
+    if (!items.length) {
         return {};
     }
 
-    const grouped = items.reduce(
-        (acc, item) => {
-            const key = item.environmentType;
+    const initialGrouping: Record<
+        string,
+        InstanceInsightsSchemaEnvironmentTypeTrendsItem[]
+    > = {};
+    for (const item of items) {
+        if (!initialGrouping[item.date]) {
+            initialGrouping[item.date] = [];
+        }
+        initialGrouping[item.date].push(item);
+    }
 
-            if (!acc[key]) {
-                acc[key] = [];
-            }
-
-            acc[key].push(item);
-
-            return acc;
-        },
-        {} as Record<string, InstanceInsightsSchemaEnvironmentTypeTrendsItem[]>,
+    const allEnvironmentTypes = Array.from(
+        new Set(items.map((item) => item.environmentType)),
     );
 
-    return grouped;
+    const finalGrouping: Record<
+        string,
+        InstanceInsightsSchemaEnvironmentTypeTrendsItem[]
+    > = {};
+    Object.entries(initialGrouping).forEach(([date, environmentItems]) => {
+        const fullSetForDate = allEnvironmentTypes.map((envType) => {
+            const existingItem = environmentItems.find(
+                (item) => item.environmentType === envType,
+            );
+            if (existingItem) {
+                return existingItem;
+            } else {
+                const week =
+                    items.find((item) => item.date === date)?.week || '';
+                return {
+                    date,
+                    environmentType: envType,
+                    totalUpdates: 0,
+                    week,
+                };
+            }
+        });
+
+        finalGrouping[date] = fullSetForDate;
+    });
+
+    return finalGrouping;
 };
 
 const useEnvironmentTypeColor = () => {
@@ -70,19 +96,38 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
     const placeholderData = usePlaceholderData({ fill: true, type: 'double' });
 
     const data = useMemo(() => {
-        const grouped = groupByDate(environmentTypeTrends);
-        const datasets = Object.entries(grouped).map(
-            ([environmentType, trends]) => {
+        const groupedByDate = groupByDateAndFillMissingDatapoints(
+            environmentTypeTrends,
+        );
+
+        const aggregatedByType: Record<
+            string,
+            InstanceInsightsSchemaEnvironmentTypeTrendsItem[]
+        > = {};
+
+        Object.entries(groupedByDate).forEach(([date, trends]) => {
+            trends.forEach((trend) => {
+                if (!aggregatedByType[trend.environmentType]) {
+                    aggregatedByType[trend.environmentType] = [];
+                }
+                // Add an object that includes the date and totalUpdates for that environmentType
+                aggregatedByType[trend.environmentType].push(trend);
+            });
+        });
+
+        const datasets = Object.entries(aggregatedByType).map(
+            ([environmentType, dataPoints]) => {
                 const color = getEnvironmentTypeColor(environmentType);
                 return {
                     label: environmentType,
-                    data: trends,
+                    data: dataPoints,
                     borderColor: color,
                     backgroundColor: color,
                     fill: false,
                 };
             },
         );
+
         return { datasets };
     }, [theme, environmentTypeTrends]);
 

@@ -48,17 +48,23 @@ export const useFilteredFlagsSummary = (
 
         const timesToProduction: number[] = lastWeekSummary
             .filter(validTimeToProduction)
-            .map((item) => item.timeToProduction!); // Non-null assertion is safe due to filter
+            .map((item) => item.timeToProduction!);
 
         // Calculate median timeToProduction for lastWeekSummary
         timesToProduction.sort((a, b) => a - b);
         const midIndex = Math.floor(timesToProduction.length / 2);
-        const medianTimeToProduction =
+        const medianTimeToProductionCalculation =
             timesToProduction.length % 2 === 0
                 ? (timesToProduction[midIndex - 1] +
                       timesToProduction[midIndex]) /
                   2
                 : timesToProduction[midIndex];
+
+        const medianTimeToProduction = Number.isNaN(
+            medianTimeToProductionCalculation,
+        )
+            ? undefined
+            : medianTimeToProductionCalculation;
 
         const flagsPerUserCalculation = sum.total / users.total;
         const flagsPerUser = Number.isNaN(flagsPerUserCalculation)

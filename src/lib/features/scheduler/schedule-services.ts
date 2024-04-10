@@ -158,7 +158,7 @@ export const scheduleServices = async (
     if (config.server.enableScheduledCreatedByMigration) {
         schedulerService.schedule(
             eventService.setEventCreatedByUserId.bind(eventService),
-            minutesToMilliseconds(2),
+            minutesToMilliseconds(15),
             'setEventCreatedByUserId',
         );
         schedulerService.schedule(

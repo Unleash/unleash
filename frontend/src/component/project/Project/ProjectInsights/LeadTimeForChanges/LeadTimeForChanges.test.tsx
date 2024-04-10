@@ -18,7 +18,9 @@ test('Show outdated SDKs and apps using them', async () => {
         <Routes>
             <Route
                 path={'/projects/:projectId'}
-                element={<LeadTimeForChanges leadTime={leadTime} />}
+                element={
+                    <LeadTimeForChanges leadTime={leadTime} loading={false} />
+                }
             />
         </Routes>,
         {

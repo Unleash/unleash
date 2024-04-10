@@ -297,7 +297,7 @@ export const ProjectFeatureToggles = ({
                     stale: false,
                     environments: [
                         {
-                            name: 'production',
+                            name: 'development',
                             enabled: false,
                         },
                         {

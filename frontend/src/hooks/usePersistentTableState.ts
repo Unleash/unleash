@@ -42,6 +42,9 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
 
     const [tableState, setTableStateInternal] = useQueryParams(
         queryParamsDefinition,
+        {
+            updateType: 'replace',
+        },
     );
 
     const [searchParams] = useSearchParams();

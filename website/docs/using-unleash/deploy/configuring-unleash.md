@@ -121,6 +121,7 @@ unleash.start(unleashOptions);
   - _unleashUrl_ (string) - Used to specify the official URL this instance of Unleash can be accessed at for an end user. Can also be configured through the environment variable `UNLEASH_URL`.
   - _gracefulShutdownEnable_: (boolean) - Used to control if Unleash should shutdown gracefully (close connections, stop tasks,). Defaults to true. `GRACEFUL_SHUTDOWN_ENABLE`
   - _gracefulShutdownTimeout_: (number) - Used to control the timeout, in milliseconds, for shutdown Unleash gracefully. Will kill all connections regardless if this timeout is exceeded. Defaults to 1000ms `GRACEFUL_SHUTDOWN_TIMEOUT`
+  - _enableScheduledCreatedByMigration_: (boolean) - Schedules migrations that resolves created_by for events and features. Defaults to false. `ENABLE_SCHEDULED_CREATED_BY_MIGRATION`
 - **session** - The session config object takes the following options:
   - _ttlHours_ (number) - The number of hours a user session is allowed to live before a new sign-in is required. Defaults to 48 hours. `SESSION_TTL_HOURS`
   - _clearSiteDataOnLogout_ (boolean) - When `true`, a logout action will return a Clear Site Data response header instructing the browser to clear all cookies on the same domain Unleash is running on. If disabled unleash will only destroy and clear the session cookie. Defaults to _true_. `SESSION_CLEAR_SITE_DATA_ON_LOGOUT`

@@ -36,7 +36,7 @@ export class JobStore
             });
     }
 
-    public async acquireBucket(
+    async acquireBucket(
         key: string,
         bucketLengthInMinutes: number,
     ): Promise<{ name: string; bucket: Date } | undefined> {
@@ -59,7 +59,7 @@ export class JobStore
         return bucket[0];
     }
 
-    public async update(
+    async update(
         name: string,
         bucket: Date,
         data: Partial<Omit<JobModel, 'name' | 'bucket'>>,
@@ -71,7 +71,7 @@ export class JobStore
         return rows[0];
     }
 
-    public async get(pk: { name: string; bucket: Date }): Promise<JobModel> {
+    async get(pk: { name: string; bucket: Date }): Promise<JobModel> {
         const rows = await this.db(TABLE).where(pk);
         return rows[0];
     }
@@ -100,10 +100,9 @@ export class JobStore
         return this.db(TABLE).delete();
     }
 
-    async destroy(): void {
-        throw new Error('Method not implemented.');
-    }
-    count(): Promise<number> {
+    destroy(): void {}
+
+    async count(): Promise<number> {
         return this.db(TABLE)
             .count()
             .then((res) => Number(res[0].count));

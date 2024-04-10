@@ -72,24 +72,40 @@ export class JobStore
     }
 
     public async get(pk: { name: string; bucket: Date }): Promise<JobModel> {
-        const rows = await this.db(TABLE).select('*').where(pk);
+        const rows = await this.db(TABLE).where(pk);
         return rows[0];
     }
 
-    getAll(query?: Object | undefined): Promise<JobModel[]> {
-        throw new Error('Method not implemented.');
+    async getAll(query?: Object | undefined): Promise<JobModel[]> {
+        if (query) {
+            return this.db(TABLE).where(query);
+        }
+        return this.db(TABLE);
     }
 
-    exists(key: { name: string; bucket: Date }): Promise<boolean> {
+    async exists(key: { name: string; bucket: Date }): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE name = ? AND bucket = ?) AS present`,
+            [key.name, key.bucket],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async delete(key: { name: string; bucket: Date }): Promise<void> {
+        await this.db(TABLE).where(key).delete();
+    }
+
+    async deleteAll(): Promise<void> {
+        return this.db(TABLE).delete();
+    }
+
+    async destroy(): void {
         throw new Error('Method not implemented.');
     }
-    delete(key: { name: string; bucket: Date }): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-    deleteAll(): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-    destroy(): void {
-        throw new Error('Method not implemented.');
+    count(): Promise<number> {
+        return this.db(TABLE)
+            .count()
+            .then((res) => Number(res[0].count));
     }
 }

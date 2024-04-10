@@ -11,6 +11,10 @@ beforeAll(async () => {
     store = new JobStore(db.rawDatabase, config);
 });
 
+afterEach(async () => {
+    await store.deleteAll();
+});
+
 afterAll(async () => {
     await db.destroy();
 });
@@ -29,6 +33,9 @@ test('Only executes job once within time period', async () => {
     await job();
     await job();
     expect(counter).toBe(1);
+    const jobs = await store.getAll();
+    expect(jobs).toHaveLength(1);
+    expect(jobs.every((j) => j.finishedAt !== null)).toBe(true);
 });
 
 test('Will execute jobs with different keys', async () => {
@@ -55,4 +62,7 @@ test('Will execute jobs with different keys', async () => {
     await incrementOtherCounter();
     expect(counter).toBe(1);
     expect(otherCounter).toBe(1);
+    const jobs = await store.getAll();
+    expect(jobs).toHaveLength(2);
+    expect(jobs.every((j) => j.finishedAt !== null)).toBe(true);
 });

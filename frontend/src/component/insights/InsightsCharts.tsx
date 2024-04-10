@@ -49,6 +49,7 @@ interface IChartsProps {
     };
     loading: boolean;
     projects: string[];
+    allMetricsDatapoints: string[];
 }
 
 const StyledGrid = styled(Box)(({ theme }) => ({
@@ -79,11 +80,12 @@ export const InsightsCharts: VFC<IChartsProps> = ({
     flagTrends,
     groupedMetricsData,
     environmentTypeTrends,
+    allMetricsDatapoints,
     loading,
 }) => {
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
-
+    console.log(allMetricsDatapoints);
     function getFlagsPerUser(
         flags: InstanceInsightsSchemaFlags,
         users: InstanceInsightsSchemaUsers,
@@ -203,6 +205,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
             >
                 <MetricsSummaryChart
                     metricsSummaryTrends={groupedMetricsData}
+                    allDatapointsSorted={allMetricsDatapoints}
                     isAggregate={showAllProjects}
                 />
             </Widget>

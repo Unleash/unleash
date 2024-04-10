@@ -31,13 +31,7 @@ const placeholderData: ProjectInsightsSchema = {
     ],
     leadTime: {
         projectAverage: 0,
-        features: [
-            { name: 'feature1', timeToProduction: 0 },
-            { name: 'feature2', timeToProduction: 0 },
-            { name: 'feature3', timeToProduction: 0 },
-            { name: 'feature4', timeToProduction: 0 },
-            { name: 'feature5', timeToProduction: 2 },
-        ],
+        features: [],
     },
     health: {
         rating: 0,

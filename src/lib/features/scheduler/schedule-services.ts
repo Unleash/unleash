@@ -3,7 +3,7 @@ import {
     minutesToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
-import type { IUnleashServices } from '../../server-impl';
+import type { IUnleashConfig, IUnleashServices } from '../../server-impl';
 
 /**
  * Schedules service methods.
@@ -13,6 +13,7 @@ import type { IUnleashServices } from '../../server-impl';
  */
 export const scheduleServices = async (
     services: IUnleashServices,
+    config: IUnleashConfig,
 ): Promise<void> => {
     const {
         accountService,
@@ -150,16 +151,18 @@ export const scheduleServices = async (
         'updateAccountLastSeen',
     );
 
-    schedulerService.schedule(
-        eventService.setEventCreatedByUserId.bind(eventService),
-        minutesToMilliseconds(2),
-        'setEventCreatedByUserId',
-    );
-    schedulerService.schedule(
-        featureToggleService.setFeatureCreatedByUserIdFromEvents.bind(
-            featureToggleService,
-        ),
-        minutesToMilliseconds(15),
-        'setFeatureCreatedByUserIdFromEvents',
-    );
+    if (config.server.enableScheduledCreatedByMigration) {
+        schedulerService.schedule(
+            eventService.setEventCreatedByUserId.bind(eventService),
+            minutesToMilliseconds(15),
+            'setEventCreatedByUserId',
+        );
+        schedulerService.schedule(
+            featureToggleService.setFeatureCreatedByUserIdFromEvents.bind(
+                featureToggleService,
+            ),
+            minutesToMilliseconds(15),
+            'setFeatureCreatedByUserIdFromEvents',
+        );
+    }
 };

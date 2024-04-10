@@ -47,7 +47,7 @@ async function createApp(
     const stores = createStores(config, db);
     const services = createServices(stores, config, db);
     if (!config.disableScheduler) {
-        await scheduleServices(services);
+        await scheduleServices(services, config);
     }
 
     const metricsMonitor = createMetricsMonitor();

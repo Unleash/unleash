@@ -100,6 +100,7 @@ export interface IServerOption {
     gracefulShutdownEnable: boolean;
     gracefulShutdownTimeout: number;
     secret: string;
+    enableScheduledCreatedByMigration: boolean;
 }
 
 export interface IClientCachingOption {

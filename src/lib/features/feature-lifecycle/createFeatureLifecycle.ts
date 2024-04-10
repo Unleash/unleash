@@ -13,7 +13,7 @@ export const createFeatureLifecycleService = (
     config: IUnleashConfig,
 ) => {
     const { eventBus, getLogger, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger, flagResolver);
+    const eventStore = new EventStore(db, getLogger);
     const featureLifecycleStore = new FeatureLifecycleStore(db);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
     const featureLifecycleService = new FeatureLifecycleService(

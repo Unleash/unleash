@@ -5,7 +5,7 @@ import { render } from 'utils/testRenderer';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import mediaQuery from 'css-mediaquery';
 
-function createMatchMedia(width: number) {
+const createMatchMedia = (width: number) => {
     return (query: string) => {
         return {
             matches: mediaQuery.match(query, { width }),
@@ -18,11 +18,11 @@ function createMatchMedia(width: number) {
             dispatchEvent: () => true,
         };
     };
-}
+};
 
-function resizeScreen(width: number) {
+const resizeScreen = (width: number) => {
     window.matchMedia = createMatchMedia(width);
-}
+};
 
 const columnIds = [
     'select',

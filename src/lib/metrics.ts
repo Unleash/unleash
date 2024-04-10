@@ -664,7 +664,12 @@ export default class MetricsMonitor {
             });
 
             await schedulerService.schedule(
-                this.registerPoolMetrics.bind(this, db.client.pool, eventBus),
+                async () =>
+                    this.registerPoolMetrics.bind(
+                        this,
+                        db.client.pool,
+                        eventBus,
+                    ),
                 minutesToMilliseconds(1),
                 'registerPoolMetrics',
                 0, // no jitter

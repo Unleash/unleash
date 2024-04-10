@@ -125,6 +125,8 @@ import {
     createFakeProjectInsightsService,
     createProjectInsightsService,
 } from '../features/project-insights/createProjectInsightsService';
+import { JobService } from '../features/scheduler/job-service';
+import { JobStore } from '../features/scheduler/job-store';
 import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
 import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
 
@@ -350,6 +352,12 @@ export const createServices = (
     const inactiveUsersService = new InactiveUsersService(stores, config, {
         userService,
     });
+
+    const jobService = new JobService(
+        new JobStore(db!, config),
+        config.getLogger,
+    );
+
     const { featureLifecycleService } = db
         ? createFeatureLifecycleService(db, config)
         : createFakeFeatureLifecycleService(config);
@@ -413,6 +421,7 @@ export const createServices = (
         featureSearchService,
         inactiveUsersService,
         projectInsightsService,
+        jobService,
         featureLifecycleService,
     };
 };
@@ -461,5 +470,6 @@ export {
     ClientFeatureToggleService,
     FeatureSearchService,
     ProjectInsightsService,
+    JobService,
     FeatureLifecycleService,
 };

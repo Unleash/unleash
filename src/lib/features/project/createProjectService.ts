@@ -47,7 +47,7 @@ export const createProjectService = (
     config: IUnleashConfig,
 ): ProjectService => {
     const { eventBus, getLogger, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger, flagResolver);
+    const eventStore = new EventStore(db, getLogger);
     const projectStore = new ProjectStore(
         db,
         eventBus,

@@ -3,13 +3,8 @@ import EventStore from './event-store';
 import getLogger from '../../../test/fixtures/no-logger';
 import { subHours, formatRFC3339 } from 'date-fns';
 import dbInit from '../../../test/e2e/helpers/database-init';
-import { defaultExperimentalOptions } from '../../types/experimental';
-import FlagResolver from '../../util/flag-resolver';
-
-let resolver: FlagResolver;
 
 beforeAll(() => {
-    resolver = new FlagResolver(defaultExperimentalOptions);
     getLogger.setMuteError(true);
 });
 
@@ -21,7 +16,7 @@ test('Trying to get events if db fails should yield empty list', async () => {
     const db = knex({
         client: 'pg',
     });
-    const store = new EventStore(db, getLogger, resolver);
+    const store = new EventStore(db, getLogger);
     const events = await store.getEvents();
     expect(events.length).toBe(0);
     await db.destroy();
@@ -31,7 +26,7 @@ test('Trying to get events by name if db fails should yield empty list', async (
     const db = knex({
         client: 'pg',
     });
-    const store = new EventStore(db, getLogger, resolver);
+    const store = new EventStore(db, getLogger);
     const events = await store.searchEvents({ type: 'application-created' });
     expect(events).toBeTruthy();
     expect(events.length).toBe(0);
@@ -51,7 +46,7 @@ test('Find unannounced events returns all events', async () => {
     }));
     await db.rawDatabase('events').insert(allEvents).returning(['id']);
 
-    const store = new EventStore(db.rawDatabase, getLogger, resolver);
+    const store = new EventStore(db.rawDatabase, getLogger);
     const events = await store.setUnannouncedToAnnounced();
     expect(events).toBeTruthy();
     expect(events.length).toBe(505);

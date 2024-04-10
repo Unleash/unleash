@@ -3,6 +3,26 @@ import { screen } from '@testing-library/react';
 import { useDefaultColumnVisibility } from './useDefaultColumnVisibility';
 import { render } from 'utils/testRenderer';
 import { ThemeProvider } from 'themes/ThemeProvider';
+import mediaQuery from 'css-mediaquery';
+
+function createMatchMedia(width: number) {
+    return (query: string) => {
+        return {
+            matches: mediaQuery.match(query, { width }),
+            media: '',
+            addListener: () => {},
+            removeListener: () => {},
+            onchange: () => {},
+            addEventListener: () => {},
+            removeEventListener: () => {},
+            dispatchEvent: () => true,
+        };
+    };
+}
+
+function resizeScreen(width: number) {
+    window.matchMedia = createMatchMedia(width);
+}
 
 const columnIds = [
     'select',
@@ -19,25 +39,16 @@ const columnIds = [
     'actions',
 ];
 
-type TestComponentProps = {
-    screenWidth: number;
-};
-
-const TestComponent: React.FC<TestComponentProps> = ({
-    screenWidth,
-}: TestComponentProps) => {
+const TestComponent: React.FC = () => {
     const columns = useDefaultColumnVisibility(columnIds);
 
     return (
         <ThemeProvider>
-            <div
-                data-testid='wrapper'
-                style={{
-                    maxWidth: screenWidth,
-                }}
-            >
-                {columns.toString()}
-            </div>
+            <ul data-testid='wrapper'>
+                {Object.keys(columns).map((c) => (
+                    <li key={c}>{c}</li>
+                ))}
+            </ul>
         </ThemeProvider>
     );
 };
@@ -45,15 +56,12 @@ const TestComponent: React.FC<TestComponentProps> = ({
 test.each(Object.keys(theme.breakpoints.values))(
     'it renders all envs on %s screens',
     (screenSize) => {
-        render(
-            <TestComponent
-                screenWidth={
-                    theme.breakpoints.values[
-                        screenSize as keyof typeof theme.breakpoints.values
-                    ]
-                }
-            />,
+        resizeScreen(
+            theme.breakpoints.values[
+                screenSize as keyof typeof theme.breakpoints.values
+            ] + 1,
         );
+        render(<TestComponent />);
 
         const allEnvs = columnIds.filter((column) =>
             column.startsWith('environment:'),

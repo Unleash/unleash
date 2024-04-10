@@ -1,4 +1,4 @@
-import type { InstanceInsightsSchema } from '../../../../openapi';
+import type { InstanceInsightsSchema } from 'openapi';
 
 export function aggregateDataPerDate(
     items: InstanceInsightsSchema['metricsSummaryTrends'],

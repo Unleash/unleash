@@ -186,7 +186,6 @@ export const LeadTimeForChanges = ({
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    console.log(loadingLeadTimeFeatures);
     const {
         getTableProps,
         getTableBodyProps,

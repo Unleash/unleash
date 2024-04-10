@@ -57,7 +57,8 @@ export type IFlagKey =
     | 'disableShowContextFieldSelectionValues'
     | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
-    | 'featureLifecycle';
+    | 'featureLifecycle'
+    | 'projectListFilterMyProjects';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -281,6 +282,10 @@ const flags: IFlags = {
     ),
     featureLifecycle: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_LIFECYCLE,
+        false,
+    ),
+    projectListFilterMyProjects: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_MY_PROJECTS,
         false,
     ),
 };

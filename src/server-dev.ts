@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         variantDependencies: true,
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,
+                        projectListFilterMyProjects: true,
                     },
                 },
                 authentication: {

@@ -30,7 +30,6 @@ export const scheduleServices = async (
         lastSeenService,
         frontendApiService,
         clientMetricsServiceV2,
-        jobService,
     } = services;
 
     schedulerService.schedule(

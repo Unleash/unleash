@@ -8,6 +8,7 @@ import {
     CLIENT_REGISTER,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_UPDATED,
+    PROJECT_ENVIRONMENT_REMOVED,
 } from './types/events';
 import { createMetricsMonitor } from './metrics';
 import createStores from '../test/fixtures/store';
@@ -257,4 +258,20 @@ test('Should not collect client sdk version if sdkVersion is of wrong format or 
         'client_sdk_versions',
     );
     expect(metrics).not.toMatch(/unleash-client-rust/);
+});
+
+test('should collect metrics for project disabled numbers', async () => {
+    eventStore.emit(PROJECT_ENVIRONMENT_REMOVED, {
+        project: 'default',
+        environment: 'staging',
+        createdBy: 'Jay',
+        createdByUserId: 26,
+    });
+
+    const recordedMetric = await prometheusRegister.getSingleMetricAsString(
+        'project_environments_disabled',
+    );
+    expect(recordedMetric).toMatch(
+        /project_environments_disabled{project_id=\"default\"} 1/,
+    );
 });

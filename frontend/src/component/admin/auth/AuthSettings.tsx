@@ -11,10 +11,14 @@ import { ADMIN } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { useState } from 'react';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ScimSettings } from './ScimSettings/ScimSettings';
 
 export const AuthSettings = () => {
     const { authenticationType } = useUiConfig().uiConfig;
     const { uiConfig } = useUiConfig();
+
+    const scimEnabled = useUiFlag('scimApi');
 
     const tabs = [
         {
@@ -36,6 +40,14 @@ export const AuthSettings = () => {
     ].filter(
         (item) => uiConfig.flags?.googleAuthEnabled || item.label !== 'Google',
     );
+
+    if (scimEnabled) {
+        tabs.push({
+            label: 'Provisioning (SCIM)',
+            component: <ScimSettings />,
+        });
+    }
+
     const [activeTab, setActiveTab] = useState(0);
 
     return (

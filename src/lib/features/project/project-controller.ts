@@ -40,6 +40,7 @@ import {
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters';
 import { normalizeQueryParams } from '../feature-search/search-utils';
 import ProjectInsightsController from '../project-insights/project-insights-controller';
+import FeatureLifecycleController from '../feature-lifecycle/feature-lifecycle-controller';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -181,6 +182,7 @@ export default class ProjectController extends Controller {
             ).router,
         );
         this.use('/', new ProjectInsightsController(config, services).router);
+        this.use('/', new FeatureLifecycleController(config, services).router);
     }
 
     async getProjects(

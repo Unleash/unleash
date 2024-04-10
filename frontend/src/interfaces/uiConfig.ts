@@ -80,6 +80,8 @@ export type UiFlags = {
     disableShowContextFieldSelectionValues?: boolean;
     variantDependencies?: boolean;
     projectOverviewRefactorFeedback?: boolean;
+    featureLifecycle?: boolean;
+    scimApi?: boolean;
 };
 
 export interface IVersionInfo {

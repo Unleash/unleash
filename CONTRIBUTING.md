@@ -33,7 +33,7 @@ Follow the steps in [the "how to run the project" section](#how-to-run-the-proje
 
 ### Make your update:
 
-Make your changes to the file(s) you'd like to update. You'll need **Node.js v14** and PostgreSQL 10 to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
+Make your changes to the file(s) you'd like to update. You'll need **Node.js v18** and PostgreSQL 14 to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
 
 ### Open a pull request
 
@@ -147,6 +147,16 @@ Have any issues when getting set up?
 If you can't connect to the docker container, check its status by running `docker ps`. This command lists the currently running containers. Find the name of the container that you set up. If it's there, make sure that its port is mapped to your local machine: It should look like this: `0.0.0.0:5432->5432/tcp` with the arrow (`->`) connector. If it just says `5432/tcp`, it is _not_ exposed to your local network.
 
 To fix this, start a new container and make sure you give it the `-p 5432:5432` option.
+
+### Running end-to-end (e2e) tests
+
+To run the e2e tests, you'll need a running Postgres instance that you can connect to. The easiest way to set this up is to use Docker. This command starts a Postgres instance with the required configuration (according to the details in `src/test/e2e/helpers/database-config.ts`):
+
+```sh
+docker run --name unleash-postgres -p 5432:5432 -e POSTGRES_USER=unleash_user -e POSTGRES_PASSWORD=password -e POSTGRES_DB=unleash_test -d postgres:15
+```
+
+Unleash will attempt to connect using the connection string in `src/test/e2e/helpers/database-config.ts` or the environment variable `TEST_DATABASE_URL`. 
 
 ## Nice to know
 

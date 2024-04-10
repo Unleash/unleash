@@ -17,7 +17,7 @@ const StyledItemHeader = styled(Box)(({ theme }) => ({
 
 const getInterval = (days?: number) => {
     if (!days) {
-        return 'N/A';
+        return 0;
     }
 
     if (days > 11) {

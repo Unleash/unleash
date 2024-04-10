@@ -281,12 +281,16 @@ class MetricsController extends Controller {
     }
 
     async getApplicationOverview(
-        req: Request<{ appName: string }>,
+        req: IAuthRequest<{ appName: string }>,
         res: Response<ApplicationOverviewSchema>,
     ): Promise<void> {
         const { appName } = req.params;
+        const { user } = req;
         const overview =
-            await this.clientInstanceService.getApplicationOverview(appName);
+            await this.clientInstanceService.getApplicationOverview(
+                appName,
+                extractUserIdFromUser(user),
+            );
 
         this.openApiService.respondWithValidation(
             200,

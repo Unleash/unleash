@@ -16,7 +16,7 @@ const StickyWrapper = styled(Box, {
 })<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
     position: 'sticky',
     top: 0,
-    zIndex: 1000,
+    zIndex: theme.zIndex.sticky,
     padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
     background: theme.palette.background.application,
     transition: 'padding 0.3s ease',
@@ -59,7 +59,11 @@ export const Insights: VFC = () => {
                             selectedProjects={projects}
                             onChange={setProjects}
                             dataTestId={'DASHBOARD_PROJECT_SELECT'}
-                            sx={{ flex: 1, maxWidth: '360px', width: '100%' }}
+                            sx={{
+                                flex: 1,
+                                maxWidth: '360px',
+                                width: '100%',
+                            }}
                         />
                     }
                 />

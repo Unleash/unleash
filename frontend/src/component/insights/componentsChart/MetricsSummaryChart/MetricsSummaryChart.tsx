@@ -63,7 +63,6 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
     return (
         <LineChart
             data={notEnoughData ? placeholderData : data}
-            isLocalTooltip
             TooltipComponent={MetricsSummaryTooltip}
             overrideOptions={
                 notEnoughData

@@ -67,6 +67,7 @@ import {
     createEnvironmentService,
     createFakeEnvironmentService,
     createFakeProjectService,
+    createFeatureLifecycleService,
     createFeatureToggleService,
     createProjectService,
 } from '../features';
@@ -126,6 +127,8 @@ import {
 } from '../features/project-insights/createProjectInsightsService';
 import { JobService } from '../features/scheduler/job-service';
 import { JobStore } from '../features/scheduler/job-store';
+import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
+import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -355,6 +358,11 @@ export const createServices = (
         config.getLogger,
     );
 
+    const { featureLifecycleService } = db
+        ? createFeatureLifecycleService(db, config)
+        : createFakeFeatureLifecycleService(config);
+    featureLifecycleService.listen();
+
     return {
         accessService,
         accountService,
@@ -414,6 +422,7 @@ export const createServices = (
         inactiveUsersService,
         projectInsightsService,
         jobService,
+        featureLifecycleService,
     };
 };
 
@@ -461,4 +470,6 @@ export {
     ClientFeatureToggleService,
     FeatureSearchService,
     ProjectInsightsService,
+    JobService,
+    FeatureLifecycleService,
 };

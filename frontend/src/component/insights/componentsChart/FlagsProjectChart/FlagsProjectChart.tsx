@@ -31,7 +31,6 @@ export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
     return (
         <LineChart
             data={notEnoughData ? placeholderData : data}
-            isLocalTooltip
             overrideOptions={{
                 parsing: {
                     yAxisKey: 'total',

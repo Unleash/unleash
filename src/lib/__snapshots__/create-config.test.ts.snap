@@ -98,6 +98,7 @@ exports[`should create default config 1`] = `
       "executiveDashboard": false,
       "executiveDashboardUI": false,
       "extendedUsageMetrics": false,
+      "featureLifecycle": false,
       "featureSearchFeedback": {
         "enabled": false,
         "name": "withText",

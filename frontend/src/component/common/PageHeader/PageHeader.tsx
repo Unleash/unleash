@@ -57,6 +57,47 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+const StyledFilterSelector = styled('fieldset')(({ theme }) => ({
+    padding: 0,
+    border: 'none',
+
+    label: {
+        '--border-radius': '3px',
+        color: theme.palette.primary.main,
+        background: theme.palette.background,
+        paddingInline: theme.spacing(2),
+        paddingBlock: theme.spacing(1),
+        border: `1px solid ${theme.palette.background.alternative}`,
+        borderInlineStart: 'none',
+    },
+    'label:first-of-type': {
+        borderInlineStart: `1px solid ${theme.palette.background.alternative}`,
+        borderRadius: `var(--border-radius) 0 0 var(--border-radius)`,
+    },
+    'label:last-of-type': {
+        borderRadius: `0 var(--border-radius) var(--border-radius) 0`,
+    },
+    'label:has(input:checked)': {
+        background: theme.palette.background.alternative,
+        color: theme.palette.primary.contrastText,
+    },
+    'label:focus-within': {
+        outline: `2px solid ${theme.palette.background.alternative}`,
+        outlineOffset: theme.spacing(0.5),
+    },
+    '.sr-only': {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 'auto',
+        margin: 0,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        width: '1px',
+        whiteSpace: 'nowrap',
+    },
+}));
+
 interface IPageHeaderProps {
     title?: string;
     titleElement?: ReactNode;
@@ -100,6 +141,28 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
                     </StyledHeaderTitle>
                     {subtitle && <small>{subtitle}</small>}
                 </StyledHeader>
+                <StyledFilterSelector>
+                    <legend className='sr-only'>Set project list filter</legend>
+                    <label>
+                        All projects
+                        <input
+                            className='sr-only'
+                            name='filter'
+                            type='radio'
+                            value='all projects'
+                            checked
+                        />
+                    </label>
+                    <label>
+                        My projects
+                        <input
+                            className='sr-only'
+                            name='filter'
+                            type='radio'
+                            value='my projects'
+                        />
+                    </label>
+                </StyledFilterSelector>
                 <ConditionallyRender
                     condition={Boolean(actions)}
                     show={<StyledHeaderActions>{actions}</StyledHeaderActions>}

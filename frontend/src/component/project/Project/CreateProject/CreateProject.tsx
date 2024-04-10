@@ -58,7 +58,7 @@ const CreateProject = () => {
             try {
                 await createProject(payload);
                 refetchUser();
-                navigate(`/projects/${projectId}`);
+                navigate(`/projects/${projectId}`, { replace: true });
                 setToastData({
                     title: 'Project created',
                     text: 'Now you can add toggles to this project',

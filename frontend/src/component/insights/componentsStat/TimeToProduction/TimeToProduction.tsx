@@ -47,7 +47,7 @@ const resolveValue = (
     gauge: number | undefined;
     score: 'Fast' | 'Medium' | 'Slow' | undefined;
 } => {
-    if (daysToProduction === undefined) {
+    if (daysToProduction === undefined || daysToProduction === 0) {
         return {
             value: undefined,
             gauge: undefined,

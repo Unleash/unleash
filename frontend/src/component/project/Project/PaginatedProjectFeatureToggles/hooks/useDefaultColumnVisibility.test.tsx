@@ -45,8 +45,8 @@ const TestComponent: React.FC = () => {
     return (
         <ThemeProvider>
             <ul data-testid='wrapper'>
-                {Object.keys(columns).map((c) => (
-                    <li key={c}>{c}</li>
+                {Object.keys(columns).map((column) => (
+                    <li key={column}>{column}</li>
                 ))}
             </ul>
         </ThemeProvider>

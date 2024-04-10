@@ -85,7 +85,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
 }) => {
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
-    console.log(allMetricsDatapoints);
+
     function getFlagsPerUser(
         flags: InstanceInsightsSchemaFlags,
         users: InstanceInsightsSchemaUsers,

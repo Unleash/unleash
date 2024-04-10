@@ -8,6 +8,8 @@ let store: JobStore;
 const config = createTestConfig();
 beforeAll(async () => {
     db = await dbInit('job_service_serial', config.getLogger);
+    // @ts-ignore setMuteError is not part of getLogger interface
+    config.getLogger.setMuteError(true);
     store = new JobStore(db.rawDatabase, config);
 });
 
@@ -36,6 +38,7 @@ test('Only executes job once within time period', async () => {
     const jobs = await store.getAll();
     expect(jobs).toHaveLength(1);
     expect(jobs.every((j) => j.finishedAt !== null)).toBe(true);
+    expect(jobs.every((j) => j.stage === 'completed')).toBe(true);
 });
 
 test('Will execute jobs with different keys', async () => {
@@ -65,4 +68,22 @@ test('Will execute jobs with different keys', async () => {
     const jobs = await store.getAll();
     expect(jobs).toHaveLength(2);
     expect(jobs.every((j) => j.finishedAt !== null)).toBe(true);
+    expect(jobs.every((j) => j.stage === 'completed')).toBe(true);
+});
+
+test('When the provided function fails we record the failure', async () => {
+    const service = new JobService(store, config.getLogger);
+    const faultyJob = service.singleInstance(
+        'will-fail',
+        async () => {
+            throw new Error('fail');
+        },
+        60,
+    );
+    await faultyJob();
+    await faultyJob();
+    const jobs = await store.getAll();
+    expect(jobs).toHaveLength(1);
+    expect(jobs.every((j) => j.finishedAt !== null)).toBe(true);
+    expect(jobs.every((j) => j.stage === 'failed')).toBe(true);
 });

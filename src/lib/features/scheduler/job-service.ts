@@ -45,10 +45,16 @@ export class JobService {
                         from: subMinutes(bucket, bucketSizeInMinutes),
                         to: bucket,
                     };
-                    return fn(range);
-                } finally {
+                    const response = await fn(range);
                     await this.jobStore.update(name, bucket, {
                         stage: 'completed',
+                        finishedAt: new Date(),
+                    });
+                    return response;
+                } catch (err) {
+                    this.logger.error(`Failed to execute job ${name}`, err);
+                    await this.jobStore.update(name, bucket, {
+                        stage: 'failed',
                         finishedAt: new Date(),
                     });
                 }

@@ -27,8 +27,10 @@ CREATE INDEX IF NOT EXISTS idx_job_stage ON jobs(stage);
 exports.down = function (db, cb) {
     db.runSql(
         `
+            DROP INDEX IF EXISTS idx_job_finished;
+            DROP INDEX IF EXISTS idx_job_stage;
             DROP TABLE IF EXISTS jobs;
-            DROP INDEX IF EXISTS idx_job_names;
+            
         `,
         cb,
     );

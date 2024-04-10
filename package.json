@@ -180,7 +180,7 @@
     "concurrently": "^8.0.1",
     "copyfiles": "2.4.1",
     "coveralls": "3.1.1",
-    "css-mediaquery": "0.1.2",
+    "css-mediaquery": "^0.1.2",
     "del-cli": "5.1.0",
     "faker": "5.5.3",
     "fast-check": "3.17.1",

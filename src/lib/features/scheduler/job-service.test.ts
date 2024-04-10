@@ -1,0 +1,58 @@
+import { createTestConfig } from '../../../test/config/test-config';
+import { JobStore } from './job-store';
+import { JobService } from './job-service';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+
+let db: ITestDb;
+let store: JobStore;
+const config = createTestConfig();
+beforeAll(async () => {
+    db = await dbInit('job_service_serial', config.getLogger);
+    store = new JobStore(db.rawDatabase, config);
+});
+
+afterAll(async () => {
+    await db.destroy();
+});
+
+// note: this might be flaky if the test runs exactly at 59 minutes and 59 seconds of an hour and 999 milliseconds but should be unlikely
+test('Only executes job once within time period', async () => {
+    let counter = 0;
+    const service = new JobService(store, config.getLogger);
+    const job = service.singleInstance(
+        'test',
+        async () => {
+            counter++;
+        },
+        60,
+    );
+    await job();
+    await job();
+    expect(counter).toBe(1);
+});
+
+test('Will execute jobs with different keys', async () => {
+    let counter = 0;
+    let otherCounter = 0;
+    const service = new JobService(store, config.getLogger);
+    const incrementCounter = service.singleInstance(
+        'one',
+        async () => {
+            counter++;
+        },
+        60,
+    );
+    const incrementOtherCounter = service.singleInstance(
+        'two',
+        async () => {
+            otherCounter++;
+        },
+        60,
+    );
+    await incrementCounter();
+    await incrementCounter();
+    await incrementOtherCounter();
+    await incrementOtherCounter();
+    expect(counter).toBe(1);
+    expect(otherCounter).toBe(1);
+});

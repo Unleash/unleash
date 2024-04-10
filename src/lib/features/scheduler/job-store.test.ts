@@ -20,3 +20,11 @@ test('cannot acquireBucket twice', async () => {
     const bucket2 = await store.acquireBucket('test', 60);
     expect(bucket2).toBeUndefined();
 });
+
+test('Can acquire bucket for two different key names within the same period', async () => {
+    const store = new JobStore(db.rawDatabase, config);
+    const firstBucket = await store.acquireBucket('first', 60);
+    const secondBucket = await store.acquireBucket('second', 60);
+    expect(firstBucket).toBeDefined();
+    expect(secondBucket).toBeDefined();
+});

@@ -28,6 +28,23 @@ You can choose to trigger updates for the following events (we might add more ev
 - feature-stale-off
 - feature-environment-enabled
 - feature-environment-disabled
+- feature-variants-updated
+- feature-tagged
+- feature-untagged
+- change-request-created
+- change-request-discarded
+- change-added
+- change-discarded
+- change-request-approved
+- change-request-approval-added
+- change-request-cancelled
+- change-request-sent-to-review
+- change-request-applied
+- change-request-scheduled
+- change-request-scheduled-application-success
+- change-request-scheduled-application-failure
+- change-request-schedule-suspended
+- feature-potentially-stale-on
 
 > *) Deprecated, and will not be used after transition to environments in Unleash v4.3
 

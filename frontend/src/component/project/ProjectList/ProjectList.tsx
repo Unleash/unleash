@@ -204,35 +204,37 @@ export const ProjectListNew = () => {
             header={
                 <PageHeader
                     title={`Projects (${projectCount})`}
+                    leftActions={
+                        <ConditionallyRender
+                            condition={showProjectFilterButtons}
+                            show={
+                                <StyledButtonGroup
+                                    aria-label='project list filter'
+                                    color='primary'
+                                    value={filter}
+                                    exclusive
+                                    onChange={(event, value) => {
+                                        if (value !== null) {
+                                            setFilter(value);
+                                        }
+                                    }}
+                                >
+                                    {filters.map((filter) => {
+                                        return (
+                                            <ToggleButton
+                                                key={filter}
+                                                value={filter}
+                                            >
+                                                {filter}
+                                            </ToggleButton>
+                                        );
+                                    })}
+                                </StyledButtonGroup>
+                            }
+                        />
+                    }
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={showProjectFilterButtons}
-                                show={
-                                    <StyledButtonGroup
-                                        aria-label='project list filter'
-                                        color='primary'
-                                        value={filter}
-                                        exclusive
-                                        onChange={(event, value) => {
-                                            if (value !== null) {
-                                                setFilter(value);
-                                            }
-                                        }}
-                                    >
-                                        {filters.map((filter) => {
-                                            return (
-                                                <ToggleButton
-                                                    key={filter}
-                                                    value={filter}
-                                                >
-                                                    {filter}
-                                                </ToggleButton>
-                                            );
-                                        })}
-                                    </StyledButtonGroup>
-                                }
-                            />
                             <ConditionallyRender
                                 condition={!isSmallScreen}
                                 show={

@@ -57,6 +57,14 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+const StyledLeftHeaderActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 interface IPageHeaderProps {
     title?: string;
     titleElement?: ReactNode;
@@ -64,6 +72,7 @@ interface IPageHeaderProps {
     variant?: TypographyProps['variant'];
     loading?: boolean;
     actions?: ReactNode;
+    leftActions?: ReactNode;
     className?: string;
     secondary?: boolean;
 }
@@ -74,6 +83,7 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
     title,
     titleElement,
     actions,
+    leftActions,
     subtitle,
     variant,
     loading,
@@ -100,6 +110,14 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
                     </StyledHeaderTitle>
                     {subtitle && <small>{subtitle}</small>}
                 </StyledHeader>
+                <ConditionallyRender
+                    condition={Boolean(leftActions)}
+                    show={
+                        <StyledLeftHeaderActions>
+                            {leftActions}
+                        </StyledLeftHeaderActions>
+                    }
+                />
                 <ConditionallyRender
                     condition={Boolean(actions)}
                     show={<StyledHeaderActions>{actions}</StyledHeaderActions>}

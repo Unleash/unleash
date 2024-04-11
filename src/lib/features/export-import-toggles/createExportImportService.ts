@@ -180,7 +180,7 @@ export const deferredExportImportTogglesService = (
             eventBus,
             getLogger,
         );
-        const eventStore = new EventStore(db, getLogger, flagResolver);
+        const eventStore = new EventStore(db, getLogger);
         const accessService = createAccessService(db, config);
         const featureToggleService = createFeatureToggleService(db, config);
         const privateProjectChecker = createPrivateProjectChecker(db, config);

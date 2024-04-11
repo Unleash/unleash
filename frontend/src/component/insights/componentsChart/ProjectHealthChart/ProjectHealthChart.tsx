@@ -66,16 +66,19 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
                     );
             })
             .sort((a, b) => (a.week > b.week ? 1 : -1));
-
         return {
             datasets: [
                 {
                     label: 'Health',
                     data: weeks.map((item) => ({
                         health: item.total
-                            ? ((item.total - item.stale) / item.total) * 100
+                            ? (
+                                  ((item.total - item.stale) / item.total) *
+                                  100
+                              ).toFixed(2)
                             : undefined,
                         date: item.date,
+                        total: item.total,
                     })),
                     borderColor: theme.palette.primary.light,
                     backgroundColor: fillGradientPrimary,
@@ -104,7 +107,7 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
         <LineChart
             key={isAggregate ? 'aggregate' : 'project'}
             data={data}
-            TooltipComponent={isAggregate ? undefined : HealthTooltip}
+            TooltipComponent={HealthTooltip}
             overrideOptions={
                 notEnoughData
                     ? {}

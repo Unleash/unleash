@@ -24,9 +24,7 @@ export const useDefaultColumnVisibility = (allColumnIds: string[]) => {
 
     const showEnvironments = useCallback(
         (environmentsToShow: number = 0) =>
-            allColumnIds
-                .filter((id) => id.startsWith('environment:') !== false)
-                .slice(0, environmentsToShow),
+            allColumnIds.filter((id) => id.startsWith('environment:')),
         [allColumnIds],
     );
 

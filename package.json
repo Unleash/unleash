@@ -2,7 +2,14 @@
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
   "version": "5.11.0+main",
-  "keywords": ["unleash", "feature toggle", "feature", "toggle"],
+  "keywords": [
+    "unleash",
+    "feature toggle",
+    "feature",
+    "toggle",
+    "feature flag",
+    "flag"
+  ],
   "files": [
     "dist",
     "docs",
@@ -151,8 +158,8 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.24.3",
-    "@biomejs/biome": "1.6.3",
+    "@babel/core": "7.24.4",
+    "@biomejs/biome": "1.6.4",
     "@swc/core": "1.4.11",
     "@swc/jest": "0.2.36",
     "@types/bcryptjs": "2.4.6",
@@ -167,7 +174,7 @@
     "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.11",
     "@types/mime": "3.0.4",
-    "@types/node": "18.19.28",
+    "@types/node": "18.19.29",
     "@types/nodemailer": "6.4.14",
     "@types/owasp-password-strength-test": "1.3.2",
     "@types/pg": "8.11.4",

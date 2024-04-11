@@ -730,9 +730,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const USERS_TABLE = 'users';
         const API_TOKEN_TABLE = 'api_tokens';
 
-        if (!this.flagResolver.isEnabled('createdByUserIdDataMigration')) {
-            return undefined;
-        }
         const toUpdate = await this.db(`${TABLE} as f`)
             .joinRaw(`JOIN ${EVENTS_TABLE} AS ev ON ev.feature_name = f.name`)
             .joinRaw(

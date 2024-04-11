@@ -46,19 +46,14 @@ export function responseTimeMetrics(
 ): RequestHandler {
     return _responseTime((req, res, time) => {
         const { statusCode } = res;
-        const responseTimeMetricsFix = flagResolver.isEnabled(
-            'responseTimeMetricsFix',
-        );
         let pathname: string | undefined = undefined;
-        if (responseTimeMetricsFix && res.locals.route) {
+        if (res.locals.route) {
             pathname = res.locals.route;
         } else if (req.route) {
             pathname = req.baseUrl + req.route.path;
         }
         // when pathname is undefined use a fallback
-        pathname =
-            pathname ??
-            (responseTimeMetricsFix ? collapse(req.path) : '(hidden)');
+        pathname = pathname ?? collapse(req.path);
         let appName: string | undefined;
         if (
             !flagResolver.isEnabled('responseTimeWithAppNameKillSwitch') &&

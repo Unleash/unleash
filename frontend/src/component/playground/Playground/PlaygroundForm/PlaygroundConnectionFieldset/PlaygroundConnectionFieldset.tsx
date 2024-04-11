@@ -254,6 +254,7 @@ export const PlaygroundConnectionFieldset: VFC<
                             onChange={setProjects}
                             dataTestId={'PLAYGROUND_PROJECT_SELECT'}
                             disabled={Boolean(token)}
+                            limitTags={3}
                         />
                     </Tooltip>
                 </Box>

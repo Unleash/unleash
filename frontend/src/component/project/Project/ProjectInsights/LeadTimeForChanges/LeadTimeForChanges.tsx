@@ -45,9 +45,21 @@ const resolveDoraMetrics = (input: number) => {
 
 interface ILeadTimeForChangesProps {
     leadTime: ProjectDoraMetricsSchema;
+    loading: boolean;
 }
 
-export const LeadTimeForChanges = ({ leadTime }: ILeadTimeForChangesProps) => {
+const loadingLeadTimeFeatures = [
+    { name: 'feature1', timeToProduction: 0 },
+    { name: 'feature2', timeToProduction: 0 },
+    { name: 'feature3', timeToProduction: 0 },
+    { name: 'feature4', timeToProduction: 0 },
+    { name: 'feature5', timeToProduction: 2 },
+];
+
+export const LeadTimeForChanges = ({
+    leadTime,
+    loading,
+}: ILeadTimeForChangesProps) => {
     const columns = useMemo(
         () => [
             {
@@ -157,7 +169,7 @@ export const LeadTimeForChanges = ({ leadTime }: ILeadTimeForChangesProps) => {
                 disableSortBy: true,
             },
         ],
-        [JSON.stringify(leadTime.features)],
+        [JSON.stringify(leadTime.features), loading],
     );
 
     const initialState = useMemo(
@@ -185,7 +197,7 @@ export const LeadTimeForChanges = ({ leadTime }: ILeadTimeForChangesProps) => {
     } = useTable(
         {
             columns: columns as any[],
-            data: leadTime.features,
+            data: loading ? loadingLeadTimeFeatures : leadTime.features,
             initialState,
             autoResetGlobalFilter: false,
             autoResetSortBy: false,

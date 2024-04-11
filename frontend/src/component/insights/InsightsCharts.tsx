@@ -49,6 +49,7 @@ interface IChartsProps {
     };
     loading: boolean;
     projects: string[];
+    allMetricsDatapoints: string[];
 }
 
 const StyledGrid = styled(Box)(({ theme }) => ({
@@ -79,6 +80,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
     flagTrends,
     groupedMetricsData,
     environmentTypeTrends,
+    allMetricsDatapoints,
     loading,
 }) => {
     const showAllProjects = projects[0] === allOption.id;
@@ -212,6 +214,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
             >
                 <MetricsSummaryChart
                     metricsSummaryTrends={groupedMetricsData}
+                    allDatapointsSorted={allMetricsDatapoints}
                     isAggregate={showAllProjects}
                     isLoading={loading}
                 />

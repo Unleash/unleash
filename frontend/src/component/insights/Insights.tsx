@@ -59,6 +59,7 @@ export const Insights: VFC = () => {
                             selectedProjects={projects}
                             onChange={setProjects}
                             dataTestId={'DASHBOARD_PROJECT_SELECT'}
+                            limitTags={1}
                             sx={{
                                 flex: 1,
                                 maxWidth: '360px',

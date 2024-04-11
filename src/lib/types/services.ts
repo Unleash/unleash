@@ -53,6 +53,7 @@ import type { ClientFeatureToggleService } from '../features/client-feature-togg
 import type { FeatureSearchService } from '../features/feature-search/feature-search-service';
 import type { InactiveUsersService } from '../users/inactive/inactive-users-service';
 import type { ProjectInsightsService } from '../features/project-insights/project-insights-service';
+import type { JobService } from '../features/scheduler/job-service';
 import type { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
 
 export interface IUnleashServices {
@@ -116,5 +117,6 @@ export interface IUnleashServices {
     featureSearchService: FeatureSearchService;
     inactiveUsersService: InactiveUsersService;
     projectInsightsService: ProjectInsightsService;
+    jobService: JobService;
     featureLifecycleService: FeatureLifecycleService;
 }

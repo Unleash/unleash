@@ -322,7 +322,7 @@ export const NetworkTrafficUsage: VFC = () => {
     };
 
     const { isOss } = useUiConfig();
-    const flagEnabled = useUiFlag('collectTrafficDataUsage');
+    const flagEnabled = useUiFlag('displayTrafficDataUsage');
 
     useEffect(() => {
         setDatasets(toChartData(labels, traffic, endpointsInfo));

@@ -38,10 +38,10 @@ export type IFlagKey =
     | 'executiveDashboard'
     | 'executiveDashboardUI'
     | 'feedbackComments'
-    | 'createdByUserIdDataMigration'
     | 'showInactiveUsers'
     | 'inMemoryScheduledChangeRequests'
     | 'collectTrafficDataUsage'
+    | 'displayTrafficDataUsage'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
     | 'userAccessUIEnabled'
@@ -58,7 +58,8 @@ export type IFlagKey =
     | 'disableShowContextFieldSelectionValues'
     | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
-    | 'featureLifecycle';
+    | 'featureLifecycle'
+    | 'projectListFilterMyProjects';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -207,10 +208,6 @@ const flags: IFlags = {
                 '',
         },
     },
-    createdByUserIdDataMigration: parseEnvVarBoolean(
-        process.env.CREATED_BY_USERID_DATA_MIGRATION,
-        false,
-    ),
     showInactiveUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_INACTIVE_USERS,
         false,
@@ -225,6 +222,10 @@ const flags: IFlags = {
     ),
     collectTrafficDataUsage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
+        false,
+    ),
+    displayTrafficDataUsage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_TRAFFIC_DATA_USAGE,
         false,
     ),
     userAccessUIEnabled: parseEnvVarBoolean(
@@ -286,6 +287,10 @@ const flags: IFlags = {
     ),
     featureLifecycle: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_LIFECYCLE,
+        false,
+    ),
+    projectListFilterMyProjects: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_MY_PROJECTS,
         false,
     ),
 };

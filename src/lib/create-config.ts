@@ -259,6 +259,10 @@ const defaultServerOption: IServerOption = {
         secondsToMilliseconds(1),
     ),
     secret: process.env.UNLEASH_SECRET || 'super-secret',
+    enableScheduledCreatedByMigration: parseEnvVarBoolean(
+        process.env.ENABLE_SCHEDULED_CREATED_BY_MIGRATION,
+        false,
+    ),
 };
 
 const defaultVersionOption: IVersionOption = {

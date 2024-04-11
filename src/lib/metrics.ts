@@ -18,6 +18,7 @@ import {
     FEATURE_UPDATED,
     CLIENT_METRICS,
     CLIENT_REGISTER,
+    PROJECT_ENVIRONMENT_REMOVED,
 } from './types/events';
 import type { IUnleashConfig } from './types/option';
 import type { IUnleashStores } from './types/stores';
@@ -256,6 +257,12 @@ export default class MetricsMonitor {
         const mapFeaturesForClientDuration = createHistogram({
             name: 'map_features_for_client_duration',
             help: 'Duration of mapFeaturesForClient function',
+        });
+
+        const projectEnvironmentsDisabled = createCounter({
+            name: 'project_environments_disabled',
+            help: 'How many "environment disabled" events we have received for each project',
+            labelNames: ['project_id'],
         });
 
         async function collectStaticCounters() {
@@ -607,6 +614,9 @@ export default class MetricsMonitor {
                 });
             }
         });
+        eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
+            projectEnvironmentsDisabled.increment({ project_id: project });
+        });
 
         await this.configureDbMetrics(db, eventBus, schedulerService);
 
@@ -654,7 +664,12 @@ export default class MetricsMonitor {
             });
 
             await schedulerService.schedule(
-                this.registerPoolMetrics.bind(this, db.client.pool, eventBus),
+                async () =>
+                    this.registerPoolMetrics.bind(
+                        this,
+                        db.client.pool,
+                        eventBus,
+                    ),
                 minutesToMilliseconds(1),
                 'registerPoolMetrics',
                 0, // no jitter

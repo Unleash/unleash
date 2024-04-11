@@ -5,7 +5,7 @@ import {
     type SetStateAction,
     type VFC,
 } from 'react';
-import { Autocomplete, type SxProps, TextField } from '@mui/material';
+import { Autocomplete, Chip, type SxProps, TextField } from '@mui/material';
 import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
@@ -21,6 +21,7 @@ interface IProjectSelectProps {
     onChange:
         | Dispatch<SetStateAction<string[]>>
         | ((projects: string[]) => void);
+    limitTags: number;
     dataTestId?: string;
     sx?: SxProps;
     disabled?: boolean;
@@ -38,7 +39,15 @@ function findAllIndexes(arr: string[], name: string): number[] {
 
 export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
     (
-        { selectedProjects, onChange, dataTestId, sx, disabled, ...props },
+        {
+            limitTags,
+            selectedProjects,
+            onChange,
+            dataTestId,
+            sx,
+            disabled,
+            ...props
+        },
         ref,
     ) => {
         const { projects: availableProjects } = useProjects();
@@ -95,7 +104,7 @@ export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
                 ref={ref}
                 disablePortal
                 id='projects'
-                limitTags={3}
+                limitTags={limitTags}
                 multiple={!isAllProjects}
                 options={projectsOptions}
                 sx={sx}
@@ -116,6 +125,23 @@ export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
                 }
                 onChange={onProjectsChange}
                 data-testid={dataTestId ? dataTestId : 'PROJECT_SELECT'}
+                renderTags={(value, getTagProps) => {
+                    const numTags = value.length;
+
+                    return (
+                        <>
+                            {value.slice(0, limitTags).map((option, index) => (
+                                <Chip
+                                    {...getTagProps({ index })}
+                                    key={index}
+                                    label={option.label}
+                                />
+                            ))}
+
+                            {numTags > limitTags && ` +${numTags - limitTags}`}
+                        </>
+                    );
+                }}
             />
         );
     },

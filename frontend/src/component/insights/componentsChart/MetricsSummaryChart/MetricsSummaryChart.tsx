@@ -8,27 +8,32 @@ import {
     NotEnoughData,
 } from 'component/insights/components/LineChart/LineChart';
 import { MetricsSummaryTooltip } from './MetricsChartTooltip/MetricsChartTooltip';
-import { useMetricsSummary } from 'component/insights/hooks/useMetricsSummary';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
 import { useTheme } from '@mui/material';
-import { aggregateDataPerDate } from './MetricsChartTooltip/aggregate-metrics-by-day';
+import { aggregateDataPerDate } from './aggregate-metrics-by-day';
+import { useFilledMetricsSummary } from '../../hooks/useFilledMetricsSummary';
 
 interface IMetricsSummaryChartProps {
     metricsSummaryTrends: GroupedDataByProject<
         InstanceInsightsSchema['metricsSummaryTrends']
     >;
     isAggregate?: boolean;
+    allDatapointsSorted: string[];
     isLoading?: boolean;
 }
 
 export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
     metricsSummaryTrends,
     isAggregate,
+    allDatapointsSorted,
     isLoading,
 }) => {
     const theme = useTheme();
-    const metricsSummary = useMetricsSummary(metricsSummaryTrends);
+    const metricsSummary = useFilledMetricsSummary(
+        metricsSummaryTrends,
+        allDatapointsSorted,
+    );
     const notEnoughData = useMemo(
         () =>
             !isLoading &&

@@ -180,6 +180,7 @@ const theme = {
             focus: actionColors[0.12],
             focusOpacity: 0.12,
             activatedOpacity: 0.12,
+            alternative: colors.purple[1000],
         },
 
         /**

@@ -155,6 +155,18 @@ declare module '@mui/material/styles' {
     interface PaletteOptions extends CustomPalette {}
     interface TypeBackground extends CustomTypeBackground {}
 
+    /* Extend the action object from MUI */
+    interface CustomTypeAction {
+        /**
+         * Add background color on hover for the interactive elements
+         * that use the alternative primary color. First used to add
+         * hover colors to button group elements
+         **/
+        alternative: string;
+    }
+
+    interface TypeAction extends CustomTypeAction {}
+
     /* Extend the background object from MUI */
     interface CustomTypeBackground {
         application: string;

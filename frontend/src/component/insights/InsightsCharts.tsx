@@ -147,6 +147,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                         flagsPerUser={
                             showAllProjects ? getFlagsPerUser(flags, users) : ''
                         }
+                        isLoading={loading}
                     />
                 </Widget>
                 <ConditionallyRender

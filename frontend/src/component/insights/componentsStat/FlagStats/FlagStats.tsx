@@ -68,17 +68,21 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
 interface IFlagStatsProps {
     count: number;
     flagsPerUser?: string;
+    isLoading?: boolean;
 }
 
 export const FlagStats: React.FC<IFlagStatsProps> = ({
     count,
     flagsPerUser,
+    isLoading,
 }) => {
     return (
         <>
             <StyledRingContainer>
                 <StyledRing>
-                    <StyledRingContent>{count}</StyledRingContent>
+                    <StyledRingContent>
+                        {isLoading ? '' : count}
+                    </StyledRingContent>
                 </StyledRing>
             </StyledRingContainer>
 

@@ -730,23 +730,27 @@ export default class UserAdminController extends Controller {
         id,
         scimId,
     }: Pick<IUser, 'id' | 'scimId'>): Promise<void> {
-        if (this.isEnterprise && this.flagResolver.isEnabled('scimApi')) {
-            const { enabled } = await this.settingService.getWithDefault(
-                'scim',
-                { enabled: false },
-            );
+        if (!this.isEnterprise) return;
+        if (!this.flagResolver.isEnabled('scimApi')) return;
 
-            if (enabled) {
-                const isScim =
-                    Boolean(scimId) ||
-                    Boolean((await this.userService.getUser(id)).scimId);
+        const isScimUser = await this.isScimUser({ id, scimId });
+        if (!isScimUser) return;
 
-                if (isScim) {
-                    throw new ForbiddenError(
-                        'Cannot perform this operation on SCIM users',
-                    );
-                }
-            }
-        }
+        const { enabled } = await this.settingService.getWithDefault('scim', {
+            enabled: false,
+        });
+        if (!enabled) return;
+
+        throw new ForbiddenError('Cannot perform this operation on SCIM users');
+    }
+
+    async isScimUser({
+        id,
+        scimId,
+    }: Pick<IUser, 'id' | 'scimId'>): Promise<boolean> {
+        return (
+            Boolean(scimId) ||
+            Boolean((await this.userService.getUser(id)).scimId)
+        );
     }
 }

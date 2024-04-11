@@ -40,7 +40,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(5),
 }));
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({

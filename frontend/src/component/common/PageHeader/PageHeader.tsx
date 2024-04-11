@@ -1,4 +1,4 @@
-import { type ReactNode, type FC, type VFC, useState } from 'react';
+import type { ReactNode, FC, VFC } from 'react';
 import classnames from 'classnames';
 
 import {
@@ -8,8 +8,6 @@ import {
     type Theme,
     Typography,
     type TypographyProps,
-    ToggleButtonGroup,
-    ToggleButton,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -59,27 +57,6 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-    'html[data-theme="light"] button': {
-        '--hover-background-color': '#615BC2',
-    },
-    'html[data-theme="dark"] button': {
-        '--hover-background-color': '#34325E',
-    },
-
-    button: {
-        color: theme.palette.primary.main,
-        backgroundColor: theme.palette.background,
-        textTransform: 'capitalize',
-    },
-    'button[aria-pressed=true]': {
-        backgroundColor: theme.palette.background.alternative,
-        color: theme.palette.primary.contrastText,
-    },
-    'button[aria-pressed=true]:hover': {
-        backgroundColor: 'var(--hover-background-color)',
-    },
-}));
 interface IPageHeaderProps {
     title?: string;
     titleElement?: ReactNode;
@@ -106,9 +83,6 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
 }) => {
     const headerClasses = classnames({ skeleton: loading });
 
-    const [filter, setFilter] = useState('all projects');
-    const filters = ['all projects', 'my projects'];
-
     usePageTitle(secondary ? '' : title);
 
     return (
@@ -126,25 +100,6 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
                     </StyledHeaderTitle>
                     {subtitle && <small>{subtitle}</small>}
                 </StyledHeader>
-                <StyledButtonGroup
-                    aria-label='project list filter'
-                    color='primary'
-                    value={filter}
-                    exclusive
-                    onChange={(event, value) => {
-                        if (value !== null) {
-                            setFilter(value);
-                        }
-                    }}
-                >
-                    {filters.map((filter) => {
-                        return (
-                            <ToggleButton key={filter} value={filter}>
-                                {filter}
-                            </ToggleButton>
-                        );
-                    })}
-                </StyledButtonGroup>
                 <ConditionallyRender
                     condition={Boolean(actions)}
                     show={<StyledHeaderActions>{actions}</StyledHeaderActions>}

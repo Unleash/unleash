@@ -65,7 +65,7 @@ const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 
     button: {
         color: theme.palette.primary.main,
-        backgroundColor: theme.palette.background,
+        borderColor: theme.palette.background.alternative,
         textTransform: 'capitalize',
         paddingInline: theme.spacing(3),
     },

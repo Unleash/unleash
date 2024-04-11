@@ -56,25 +56,23 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
 }));
 
 const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-    'html[data-theme="light"] button': {
-        '--hover-background-color': '#615BC2',
-    },
-    'html[data-theme="dark"] button': {
-        '--hover-background-color': '#34325E',
-    },
-
     button: {
         color: theme.palette.primary.main,
         borderColor: theme.palette.background.alternative,
         textTransform: 'capitalize',
         paddingInline: theme.spacing(3),
+        transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     },
     'button[aria-pressed=true]': {
         backgroundColor: theme.palette.background.alternative,
         color: theme.palette.primary.contrastText,
-    },
-    'button[aria-pressed=true]:hover': {
-        backgroundColor: '#615BC2 /*var(--hover-background-color) */',
+
+        '&:hover': {
+            // @todo: this is only correct in light mode. it works
+            // in dark mode too, but doesn't match the button
+            // hover color.
+            backgroundColor: theme.palette.primary.dark,
+        },
     },
 }));
 

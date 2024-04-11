@@ -68,9 +68,6 @@ const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
         color: theme.palette.primary.contrastText,
 
         '&:hover': {
-            // @todo: (issue 1-2287) this is only correct in light mode. it works
-            // in dark mode too, but doesn't match the button
-            // hover color.
             backgroundColor: theme.palette.action.alternative,
         },
     },

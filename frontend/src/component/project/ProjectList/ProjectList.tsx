@@ -67,6 +67,7 @@ const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
         color: theme.palette.primary.main,
         backgroundColor: theme.palette.background,
         textTransform: 'capitalize',
+        paddingInline: theme.spacing(3),
     },
     'button[aria-pressed=true]': {
         backgroundColor: theme.palette.background.alternative,
@@ -210,6 +211,7 @@ export const ProjectListNew = () => {
                             show={
                                 <StyledButtonGroup
                                     aria-label='project list filter'
+                                    size='small'
                                     color='primary'
                                     value={filter}
                                     exclusive

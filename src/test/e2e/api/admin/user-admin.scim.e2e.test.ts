@@ -24,6 +24,9 @@ const regularUser = {
     name: 'Regular User',
 };
 
+const scimGuardErrorMessage =
+    'This user is managed by your SCIM provider and cannot be changed manually';
+
 beforeAll(async () => {
     db = await dbInit('user_admin_scim', getLogger);
     stores = db.stores;
@@ -81,9 +84,7 @@ test('should prevent editing a SCIM user', async () => {
         })
         .expect(403);
 
-    expect(body.details[0].message).toBe(
-        'Cannot perform this operation on SCIM users',
-    );
+    expect(body.details[0].message).toBe(scimGuardErrorMessage);
 });
 
 test('should prevent deleting a SCIM user', async () => {
@@ -91,9 +92,7 @@ test('should prevent deleting a SCIM user', async () => {
         .delete(`/api/admin/user-admin/${scimUserId}`)
         .expect(403);
 
-    expect(body.details[0].message).toBe(
-        'Cannot perform this operation on SCIM users',
-    );
+    expect(body.details[0].message).toBe(scimGuardErrorMessage);
 });
 
 test('should prevent changing password for a SCIM user', async () => {
@@ -104,9 +103,7 @@ test('should prevent changing password for a SCIM user', async () => {
         })
         .expect(403);
 
-    expect(body.details[0].message).toBe(
-        'Cannot perform this operation on SCIM users',
-    );
+    expect(body.details[0].message).toBe(scimGuardErrorMessage);
 });
 
 test('should prevent resetting password for a SCIM user', async () => {
@@ -115,7 +112,5 @@ test('should prevent resetting password for a SCIM user', async () => {
         .send({ id: scimUser.email })
         .expect(403);
 
-    expect(body.details[0].message).toBe(
-        'Cannot perform this operation on SCIM users',
-    );
+    expect(body.details[0].message).toBe(scimGuardErrorMessage);
 });

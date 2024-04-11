@@ -741,7 +741,9 @@ export default class UserAdminController extends Controller {
         });
         if (!enabled) return;
 
-        throw new ForbiddenError('Cannot perform this operation on SCIM users');
+        throw new ForbiddenError(
+            'This user is managed by your SCIM provider and cannot be changed manually',
+        );
     }
 
     async isScimUser({

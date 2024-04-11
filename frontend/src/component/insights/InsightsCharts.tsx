@@ -1,4 +1,6 @@
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
+import type { VFC } from 'react';
+import { Box, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Widget } from './components/Widget/Widget';
 import { UserStats } from './componentsStat/UserStats/UserStats';
 import { UsersChart } from './componentsChart/UsersChart/UsersChart';
@@ -18,9 +20,7 @@ import type {
     InstanceInsightsSchemaUsers,
 } from 'openapi';
 import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
-import { Box, styled } from '@mui/material';
-import { allOption } from '../common/ProjectSelect/ProjectSelect';
-import type { VFC } from 'react';
+import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { chartInfo } from './chart-info';
 
 interface IChartsProps {
@@ -105,6 +105,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                                 count={users.total}
                                 active={users.active}
                                 inactive={users.inactive}
+                                isLoading={loading}
                             />
                         </Widget>
                     }
@@ -114,7 +115,10 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                                 ? chartInfo.usersInProject
                                 : chartInfo.avgUsersPerProject)}
                         >
-                            <UserStats count={summary.averageUsers} />
+                            <UserStats
+                                count={summary.averageUsers}
+                                isLoading={loading}
+                            />
                         </Widget>
                     }
                 />
@@ -132,6 +136,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                         <ChartWidget {...chartInfo.usersPerProject}>
                             <UsersPerProjectChart
                                 projectFlagTrends={groupedProjectsData}
+                                isLoading={loading}
                             />
                         </ChartWidget>
                     }
@@ -158,6 +163,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                         <ChartWidget {...chartInfo.flagsPerProject}>
                             <FlagsProjectChart
                                 projectFlagTrends={groupedProjectsData}
+                                isLoading={loading}
                             />
                         </ChartWidget>
                     }
@@ -178,6 +184,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                     <ProjectHealthChart
                         projectFlagTrends={groupedProjectsData}
                         isAggregate={showAllProjects}
+                        isLoading={loading}
                     />
                 </ChartWidget>
                 <Widget {...chartInfo.medianTimeToProduction}>
@@ -193,6 +200,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                     <TimeToProductionChart
                         projectFlagTrends={groupedProjectsData}
                         isAggregate={showAllProjects}
+                        isLoading={loading}
                     />
                 </ChartWidget>
             </StyledGrid>
@@ -204,6 +212,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                 <MetricsSummaryChart
                     metricsSummaryTrends={groupedMetricsData}
                     isAggregate={showAllProjects}
+                    isLoading={loading}
                 />
             </Widget>
             <Widget

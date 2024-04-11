@@ -10,20 +10,24 @@ import {
 } from 'component/insights/components/LineChart/LineChart';
 import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends';
+import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
 
 interface IProjectHealthChartProps {
     projectFlagTrends: GroupedDataByProject<
         InstanceInsightsSchema['projectFlagTrends']
     >;
     isAggregate?: boolean;
+    isLoading?: boolean;
 }
 
 export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
     projectFlagTrends,
     isAggregate,
+    isLoading,
 }) => {
     const projectsData = useProjectChartData(projectFlagTrends);
     const theme = useTheme();
+    const placeholderData = usePlaceholderData();
 
     const aggregateHealthData = useMemo(() => {
         const labels = Array.from(
@@ -82,12 +86,19 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
         };
     }, [projectsData, theme]);
 
-    const data = isAggregate ? aggregateHealthData : projectsData;
+    const aggregateOrProjectData = isAggregate
+        ? aggregateHealthData
+        : projectsData;
     const notEnoughData = useMemo(
         () =>
-            projectsData.datasets.some((d) => d.data.length > 1) ? false : true,
-        [projectsData],
+            !isLoading &&
+            (projectsData.datasets.some((d) => d.data.length > 1)
+                ? false
+                : true),
+        [projectsData, isLoading],
     );
+    const data =
+        notEnoughData || isLoading ? placeholderData : aggregateOrProjectData;
 
     return (
         <LineChart
@@ -101,7 +112,7 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
                           parsing: { yAxisKey: 'health', xAxisKey: 'date' },
                       }
             }
-            cover={notEnoughData ? <NotEnoughData /> : false}
+            cover={notEnoughData ? <NotEnoughData /> : isLoading}
         />
     );
 };

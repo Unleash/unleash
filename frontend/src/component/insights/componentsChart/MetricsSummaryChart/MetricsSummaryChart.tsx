@@ -19,17 +19,21 @@ interface IMetricsSummaryChartProps {
         InstanceInsightsSchema['metricsSummaryTrends']
     >;
     isAggregate?: boolean;
+    isLoading?: boolean;
 }
 
 export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
     metricsSummaryTrends,
     isAggregate,
+    isLoading,
 }) => {
     const theme = useTheme();
     const metricsSummary = useMetricsSummary(metricsSummaryTrends);
     const notEnoughData = useMemo(
-        () => !metricsSummary.datasets.some((d) => d.data.length > 1),
-        [metricsSummary],
+        () =>
+            !isLoading &&
+            !metricsSummary.datasets.some((d) => d.data.length > 1),
+        [metricsSummary, isLoading],
     );
     const placeholderData = usePlaceholderData();
 
@@ -62,7 +66,7 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
 
     return (
         <LineChart
-            data={notEnoughData ? placeholderData : data}
+            data={notEnoughData || isLoading ? placeholderData : data}
             TooltipComponent={MetricsSummaryTooltip}
             overrideOptions={
                 notEnoughData
@@ -74,7 +78,7 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
                           },
                       }
             }
-            cover={notEnoughData ? <NotEnoughData /> : false}
+            cover={notEnoughData ? <NotEnoughData /> : isLoading}
         />
     );
 };

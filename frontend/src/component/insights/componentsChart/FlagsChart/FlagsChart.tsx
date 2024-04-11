@@ -18,7 +18,7 @@ export const FlagsChart: VFC<IFlagsChartProps> = ({
     isLoading,
 }) => {
     const theme = useTheme();
-    const notEnoughData = flagTrends.length < 2;
+    const notEnoughData = !isLoading && flagTrends.length < 2;
     const placeholderData = usePlaceholderData({ fill: true, type: 'double' });
 
     const data = useMemo(

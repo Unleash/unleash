@@ -63,6 +63,7 @@ const StyledLeftHeaderActions = styled('div')(({ theme }) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     gap: theme.spacing(1),
+    marginRight: theme.spacing(2),
 }));
 
 interface IPageHeaderProps {

@@ -41,6 +41,7 @@ export type IFlagKey =
     | 'showInactiveUsers'
     | 'inMemoryScheduledChangeRequests'
     | 'collectTrafficDataUsage'
+    | 'displayTrafficDataUsage'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
     | 'userAccessUIEnabled'
@@ -221,6 +222,10 @@ const flags: IFlags = {
     ),
     collectTrafficDataUsage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
+        false,
+    ),
+    displayTrafficDataUsage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_TRAFFIC_DATA_USAGE,
         false,
     ),
     userAccessUIEnabled: parseEnvVarBoolean(

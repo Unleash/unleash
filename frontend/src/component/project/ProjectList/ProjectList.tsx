@@ -59,7 +59,7 @@ const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     button: {
         color: theme.palette.primary.main,
         borderColor: theme.palette.background.alternative,
-        textTransform: 'capitalize',
+        textTransform: 'none',
         paddingInline: theme.spacing(3),
         transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     },
@@ -137,8 +137,8 @@ export const ProjectListNew = () => {
     );
 
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
-    const [filter, setFilter] = useState('all projects');
-    const filters = ['all projects', 'my projects'];
+    const filters = ['All projects', 'My projects'];
+    const [filter, setFilter] = useState(filters[0]);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

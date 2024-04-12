@@ -94,6 +94,9 @@ test('should display error on submit', async () => {
 });
 
 describe('context warnings on successful evaluation', () => {
+    const warningSummaryText =
+        'Some context properties were not taken into account during evaluation';
+
     test('should show context warnings if they exist in the response', async () => {
         const response = {
             features: [],
@@ -138,10 +141,7 @@ describe('context warnings on successful evaluation', () => {
         const submitButton = screen.getByText('Submit');
         await user.click(submitButton);
 
-        await screen.findByText(
-            'We removed invalid context properties from your query',
-            { exact: false },
-        );
+        await screen.findByText(warningSummaryText, { exact: false });
         for (const prop of response.warnings.invalidContextProperties) {
             await screen.findByText(prop);
         }
@@ -175,10 +175,9 @@ describe('context warnings on successful evaluation', () => {
         const submitButton = screen.getByText('Submit');
         await user.click(submitButton);
 
-        const warningSummary = screen.queryByText(
-            'We removed invalid context properties from your query',
-            { exact: false },
-        );
+        const warningSummary = screen.queryByText(warningSummaryText, {
+            exact: false,
+        });
 
         expect(warningSummary).toBeNull();
     });
@@ -208,10 +207,9 @@ describe('context warnings on successful evaluation', () => {
         const submitButton = screen.getByText('Submit');
         await user.click(submitButton);
 
-        const warningSummary = screen.queryByText(
-            'We removed invalid context properties from your query',
-            { exact: false },
-        );
+        const warningSummary = screen.queryByText(warningSummaryText, {
+            exact: false,
+        });
 
         expect(warningSummary).toBeNull();
     });

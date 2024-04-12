@@ -36,7 +36,8 @@ const GenerateWarningMessages: React.FC<{
 
     if (invalidContextProperties && invalidContextProperties.length > 0) {
         invalidContextProperties.sort;
-        const summary = 'We removed invalid context properties from your query';
+        const summary =
+            'Some context properties were not taken into account during evaluation';
 
         return (
             <StyledAlert severity='warning'>

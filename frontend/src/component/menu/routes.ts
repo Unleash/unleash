@@ -162,7 +162,7 @@ export const routes: IRoute[] = [
         menu: { mobile: true },
     },
 
-    // Insights - previously "Executive dashboard"
+    // Insights
     {
         path: '/insights',
         title: 'Insights',

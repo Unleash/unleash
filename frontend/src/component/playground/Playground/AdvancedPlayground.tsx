@@ -39,9 +39,13 @@ const GenerateWarningMessages: React.FC<{
         const summary =
             'Some context properties were not taken into account during evaluation';
 
+        const StyledDetails = styled('details')(({ theme }) => ({
+            '* + *': { marginBlockStart: theme.spacing(1) },
+        }));
+
         return (
             <StyledAlert severity='warning'>
-                <details>
+                <StyledDetails>
                     <summary>{summary}</summary>
                     <p>
                         The context you provided for this query contained
@@ -61,7 +65,12 @@ const GenerateWarningMessages: React.FC<{
                         Remember that context fields (with the exception of the{' '}
                         <code>properties</code> object) must be strings.
                     </p>
-                </details>
+                    <p>
+                        Because we didn't take these properties into account
+                        during the feature flag evaluation, they will not appear
+                        in the results table.
+                    </p>
+                </StyledDetails>
             </StyledAlert>
         );
     } else {

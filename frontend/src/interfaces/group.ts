@@ -11,6 +11,7 @@ export interface IGroup {
     userCount?: number;
     mappingsSSO: string[];
     rootRole?: number;
+    scimId?: string;
 }
 
 export interface IGroupUser extends IUser {

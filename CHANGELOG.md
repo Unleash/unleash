@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.11.2] - 2024-04-12
+
+### Miscellaneous Tasks
+
+- Establish a baseline for the number of envs disabled per project ([#6807](https://github.com/Unleash/unleash/issues/6807)) ([#6819](https://github.com/Unleash/unleash/issues/6819))
+
+- Add a separate feature flag for traffic visibility UI ([#6832](https://github.com/Unleash/unleash/issues/6832)) ([#6835](https://github.com/Unleash/unleash/issues/6835))
+
+
 ## [5.11.1] - 2024-04-09
 
 ### Bug Fixes

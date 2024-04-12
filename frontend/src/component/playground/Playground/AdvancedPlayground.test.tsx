@@ -88,7 +88,148 @@ test('should display error on submit', async () => {
 
     const user = userEvent.setup();
     const submitButton = screen.getByText('Submit');
-    user.click(submitButton);
+    await user.click(submitButton);
 
     await screen.findByText('some error about too many items');
+});
+
+describe('context warnings on successful evaluation', () => {
+    const warningSummaryText =
+        'Some context properties were not taken into account during evaluation';
+
+    test('should show context warnings if they exist in the response', async () => {
+        const response = {
+            features: [],
+            input: {
+                environments: [],
+                projects: [],
+                context: {},
+            },
+            warnings: {
+                invalidContextProperties: [
+                    'empty array',
+                    'true',
+                    'false',
+                    'number',
+                    'null',
+                    'accountId',
+                    'object',
+                ],
+            },
+        };
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            response,
+            'post',
+            200,
+        );
+
+        render(testEvaluateComponent);
+
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
+
+        await screen.findByText(warningSummaryText, { exact: false });
+        for (const prop of response.warnings.invalidContextProperties) {
+            await screen.findByText(prop);
+        }
+    });
+
+    test('sorts context warnings alphabetically', async () => {
+        const response = {
+            features: [],
+            input: {
+                environments: [],
+                projects: [],
+                context: {},
+            },
+            warnings: {
+                invalidContextProperties: ['b', 'a', 'z'],
+            },
+        };
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            response,
+            'post',
+            200,
+        );
+
+        render(testEvaluateComponent);
+
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
+
+        const warnings = screen.getAllByTestId('context-warning-list-element');
+
+        expect(warnings[0]).toHaveTextContent('a');
+        expect(warnings[1]).toHaveTextContent('b');
+        expect(warnings[2]).toHaveTextContent('z');
+    });
+
+    test('does not render context warnings if the list of properties is empty', async () => {
+        const response = {
+            features: [],
+            input: {
+                environments: [],
+                projects: [],
+                context: {},
+            },
+            warnings: {
+                invalidContextProperties: [],
+            },
+        };
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            response,
+            'post',
+            200,
+        );
+
+        render(testEvaluateComponent);
+
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
+
+        const warningSummary = screen.queryByText(warningSummaryText, {
+            exact: false,
+        });
+
+        expect(warningSummary).toBeNull();
+    });
+
+    test("should not show context warnings if they don't exist in the response", async () => {
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            {
+                features: [],
+                input: {
+                    environments: [],
+                    projects: [],
+                    context: {},
+                },
+                warnings: {},
+            },
+            'post',
+            200,
+        );
+
+        render(testEvaluateComponent);
+
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
+
+        const warningSummary = screen.queryByText(warningSummaryText, {
+            exact: false,
+        });
+
+        expect(warningSummary).toBeNull();
+    });
 });

@@ -69,7 +69,7 @@ From here, if you have the correct permissions, you can approve and schedule or 
 
 :::info Availability
 
-Change request scheduling is currently in development and will be released in an upcoming version of Unleash. How the feature works (and as such, the contents of this subsection) can change before the feature is released.
+Change request scheduling was released in Unleash 5.10.
 
 :::
 

@@ -103,17 +103,7 @@ describe('context warnings on successful evaluation', () => {
             input: {
                 environments: [],
                 projects: [],
-                context: {
-                    appName: 'playground',
-                    'empty array': [],
-                    true: true,
-                    false: false,
-                    number: 123,
-                    string: 'string',
-                    null: null,
-                    accountId: 1,
-                    object: {},
-                },
+                context: {},
             },
             warnings: {
                 invalidContextProperties: [
@@ -186,9 +176,7 @@ describe('context warnings on successful evaluation', () => {
             input: {
                 environments: [],
                 projects: [],
-                context: {
-                    appName: 'playground',
-                },
+                context: {},
             },
             warnings: {
                 invalidContextProperties: [],
@@ -224,9 +212,7 @@ describe('context warnings on successful evaluation', () => {
                 input: {
                     environments: [],
                     projects: [],
-                    context: {
-                        appName: 'playground',
-                    },
+                    context: {},
                 },
                 warnings: {},
             },

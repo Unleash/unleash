@@ -93,55 +93,98 @@ test('should display error on submit', async () => {
     await screen.findByText('some error about too many items');
 });
 
-test('should show warnings if context data has been removed', async () => {
-    const response = {
-        features: [],
-        input: {
-            environments: [],
-            projects: [],
-            context: {
-                appName: 'playground',
-                'empty array': [],
-                true: true,
-                false: false,
-                number: 123,
-                string: 'string',
-                null: null,
-                accountId: 1,
-                object: {},
+describe('context warnings on successful evaluation', () => {
+    test('should show context warnings if they exist in the response', async () => {
+        const response = {
+            features: [],
+            input: {
+                environments: [],
+                projects: [],
+                context: {
+                    appName: 'playground',
+                    'empty array': [],
+                    true: true,
+                    false: false,
+                    number: 123,
+                    string: 'string',
+                    null: null,
+                    accountId: 1,
+                    object: {},
+                },
             },
-        },
-        warnings: {
-            invalidContextProperties: [
-                'empty array',
-                'true',
-                'false',
-                'number',
-                'null',
-                'accountId',
-                'object',
-            ],
-        },
-    };
-    testServerRoute(
-        server,
-        '/api/admin/playground/advanced',
-        response,
-        'post',
-        200,
-    );
+            warnings: {
+                invalidContextProperties: [
+                    'empty array',
+                    'true',
+                    'false',
+                    'number',
+                    'null',
+                    'accountId',
+                    'object',
+                ],
+            },
+        };
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            response,
+            'post',
+            200,
+        );
 
-    render(testEvaluateComponent);
+        render(testEvaluateComponent);
 
-    const user = userEvent.setup();
-    const submitButton = screen.getByText('Submit');
-    user.click(submitButton);
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
 
-    await screen.findByText(
-        'We removed invalid context properties from your query',
-        { exact: false },
-    );
-    for (const prop of response.warnings.invalidContextProperties) {
-        await screen.findByText(prop);
-    }
+        await screen.findByText(
+            'We removed invalid context properties from your query',
+            { exact: false },
+        );
+        for (const prop of response.warnings.invalidContextProperties) {
+            await screen.findByText(prop);
+        }
+    });
+
+    test("should not show context warnings if they don't exist in the response", async () => {
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            {
+                features: [],
+                input: {
+                    environments: [],
+                    projects: [],
+                    context: {
+                        appName: 'playground',
+                        'empty array': [],
+                        true: true,
+                        false: false,
+                        number: 123,
+                        string: 'string',
+                        null: null,
+                        accountId: 1,
+                        object: {},
+                    },
+                },
+                warnings: {},
+            },
+            'post',
+            200,
+        );
+
+        render(testEvaluateComponent);
+
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
+
+        const warningSummary = screen.queryByText(
+            'We removed invalid context properties from your query',
+            { exact: false },
+        );
+
+        expect(warningSummary).toBeNull();
+    });
 });

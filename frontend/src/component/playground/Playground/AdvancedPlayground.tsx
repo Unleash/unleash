@@ -28,6 +28,52 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 
+const GenerateWarningMessages: React.FC<{
+    response: AdvancedPlaygroundResponseSchema;
+}> = ({ response }) => {
+    // @ts-ignore
+    const invalidContextProperties = response.warnings.invalidContextProperties;
+    // const invalidContextPairs = response.warnings.invalidContextProperties.map(prop => [prop, response.input.context[prop]])
+    invalidContextProperties.sort;
+
+    // @ts-ignore
+    if (response.warnings.invalidContextProperties) {
+        const summary =
+            'We removed invalid context properties from your query.';
+        // const message = "The context you provided for this query contained top-level properties with invalid values. These properties were not taken into consideration when evaluating your query. The properties are: " + invalidContextProperties.join(", ") + ". Context fields (with the exception of the `properties` object) must be strings."
+
+        return (
+            <StyledAlert severity='warning'>
+                <details>
+                    <summary>
+                        <b>{summary}</b>
+                    </summary>
+                    <p>
+                        The context you provided for this query contained
+                        top-level properties with invalid values. These
+                        properties were not taken into consideration when
+                        evaluating your query. The properties are:
+                    </p>
+                    <ul>
+                        {invalidContextProperties.map((prop) => (
+                            <li key={prop}>
+                                <code>{prop}</code>
+                            </li>
+                        ))}
+                    </ul>
+
+                    <p>
+                        Remember that context fields (with the exception of the{' '}
+                        <code>properties</code> object) must be strings.
+                    </p>
+                </details>
+            </StyledAlert>
+        );
+    } else {
+        return null;
+    }
+};
+
 export const AdvancedPlayground: VFC<{
     FormComponent?: typeof PlaygroundForm;
 }> = ({ FormComponent = PlaygroundForm }) => {
@@ -304,11 +350,16 @@ export const AdvancedPlayground: VFC<{
                                         Object.values(errors).length === 0
                                     }
                                     show={
-                                        <AdvancedPlaygroundResultsTable
-                                            loading={loading}
-                                            features={results?.features}
-                                            input={results?.input}
-                                        />
+                                        <>
+                                            <GenerateWarningMessages
+                                                response={results!}
+                                            />
+                                            <AdvancedPlaygroundResultsTable
+                                                loading={loading}
+                                                features={results?.features}
+                                                input={results?.input}
+                                            />
+                                        </>
                                     }
                                 />
                                 <ConditionallyRender

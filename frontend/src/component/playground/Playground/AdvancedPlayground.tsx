@@ -45,9 +45,7 @@ const GenerateWarningMessages: React.FC<{
         return (
             <StyledAlert severity='warning'>
                 <details>
-                    <summary>
-                        <b>{summary}</b>
-                    </summary>
+                    <summary>{summary}</summary>
                     <p>
                         The context you provided for this query contained
                         top-level properties with invalid values. These

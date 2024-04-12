@@ -14,6 +14,7 @@ export interface UserData {
     loginAttempts?: number;
     createdAt?: Date;
     isService?: boolean;
+    scimId?: string;
 }
 
 export interface IUser {
@@ -29,6 +30,7 @@ export interface IUser {
     isAPI: boolean;
     imageUrl?: string;
     accountType?: AccountType;
+    scimId?: string;
 }
 
 export interface IProjectUser extends IUser {
@@ -58,6 +60,8 @@ export default class User implements IUser {
 
     accountType?: AccountType = 'User';
 
+    scimId?: string;
+
     constructor({
         id,
         name,
@@ -68,6 +72,7 @@ export default class User implements IUser {
         loginAttempts,
         createdAt,
         isService,
+        scimId,
     }: UserData) {
         if (!id) {
             throw new ValidationError('Id is required', [], undefined);
@@ -85,6 +90,7 @@ export default class User implements IUser {
         this.loginAttempts = loginAttempts;
         this.createdAt = createdAt;
         this.accountType = isService ? 'Service Account' : 'User';
+        this.scimId = scimId;
     }
 
     generateImageUrl(): string {

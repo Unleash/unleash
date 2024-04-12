@@ -35,7 +35,7 @@ const GenerateWarningMessages: React.FC<{
         response?.warnings?.invalidContextProperties;
 
     if (invalidContextProperties && invalidContextProperties.length > 0) {
-        invalidContextProperties.sort;
+        invalidContextProperties.sort();
         const summary =
             'Some context properties were not taken into account during evaluation';
 
@@ -55,7 +55,10 @@ const GenerateWarningMessages: React.FC<{
                     </p>
                     <ul>
                         {invalidContextProperties.map((prop) => (
-                            <li key={prop}>
+                            <li
+                                key={prop}
+                                data-testid='context-warning-list-element'
+                            >
                                 <code>{prop}</code>
                             </li>
                         ))}

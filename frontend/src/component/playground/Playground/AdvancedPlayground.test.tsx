@@ -147,6 +147,39 @@ describe('context warnings on successful evaluation', () => {
         }
     });
 
+    test('sorts context warnings alphabetically', async () => {
+        const response = {
+            features: [],
+            input: {
+                environments: [],
+                projects: [],
+                context: {},
+            },
+            warnings: {
+                invalidContextProperties: ['b', 'a', 'z'],
+            },
+        };
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            response,
+            'post',
+            200,
+        );
+
+        render(testEvaluateComponent);
+
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
+
+        const warnings = screen.getAllByTestId('context-warning-list-element');
+
+        expect(warnings[0]).toHaveTextContent('a');
+        expect(warnings[1]).toHaveTextContent('b');
+        expect(warnings[2]).toHaveTextContent('z');
+    });
+
     test('does not render context warnings if the list of properties is empty', async () => {
         const response = {
             features: [],

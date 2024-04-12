@@ -147,6 +147,42 @@ describe('context warnings on successful evaluation', () => {
         }
     });
 
+    test('does not render context warnings if the list of properties is empty', async () => {
+        const response = {
+            features: [],
+            input: {
+                environments: [],
+                projects: [],
+                context: {
+                    appName: 'playground',
+                },
+            },
+            warnings: {
+                invalidContextProperties: [],
+            },
+        };
+        testServerRoute(
+            server,
+            '/api/admin/playground/advanced',
+            response,
+            'post',
+            200,
+        );
+
+        render(testEvaluateComponent);
+
+        const user = userEvent.setup();
+        const submitButton = screen.getByText('Submit');
+        await user.click(submitButton);
+
+        const warningSummary = screen.queryByText(
+            'We removed invalid context properties from your query',
+            { exact: false },
+        );
+
+        expect(warningSummary).toBeNull();
+    });
+
     test("should not show context warnings if they don't exist in the response", async () => {
         testServerRoute(
             server,

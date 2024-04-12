@@ -35,7 +35,7 @@ const GenerateWarningMessages: React.FC<{
         // @ts-ignore
         response.warnings?.invalidContextProperties;
 
-    if (invalidContextProperties) {
+    if (invalidContextProperties && invalidContextProperties.length > 0) {
         // @ts-ignore
         invalidContextProperties.sort;
         const summary = 'We removed invalid context properties from your query';

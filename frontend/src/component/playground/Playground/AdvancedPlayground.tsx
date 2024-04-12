@@ -31,15 +31,14 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 const GenerateWarningMessages: React.FC<{
     response: AdvancedPlaygroundResponseSchema;
 }> = ({ response }) => {
-    // @ts-ignore
-    const invalidContextProperties = response.warnings.invalidContextProperties;
-    // const invalidContextPairs = response.warnings.invalidContextProperties.map(prop => [prop, response.input.context[prop]])
-    invalidContextProperties.sort;
+    const invalidContextProperties: string[] =
+        // @ts-ignore
+        response.warnings?.invalidContextProperties;
 
-    // @ts-ignore
-    if (response.warnings.invalidContextProperties) {
+    if (invalidContextProperties) {
+        // @ts-ignore
+        invalidContextProperties.sort;
         const summary = 'We removed invalid context properties from your query';
-        // const message = "The context you provided for this query contained top-level properties with invalid values. These properties were not taken into consideration when evaluating your query. The properties are: " + invalidContextProperties.join(", ") + ". Context fields (with the exception of the `properties` object) must be strings."
 
         return (
             <StyledAlert severity='warning'>

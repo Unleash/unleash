@@ -29,14 +29,12 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 const GenerateWarningMessages: React.FC<{
-    response: AdvancedPlaygroundResponseSchema;
+    response?: AdvancedPlaygroundResponseSchema;
 }> = ({ response }) => {
-    const invalidContextProperties: string[] =
-        // @ts-ignore
-        response.warnings?.invalidContextProperties;
+    const invalidContextProperties =
+        response?.warnings?.invalidContextProperties;
 
     if (invalidContextProperties && invalidContextProperties.length > 0) {
-        // @ts-ignore
         invalidContextProperties.sort;
         const summary = 'We removed invalid context properties from your query';
 
@@ -348,7 +346,7 @@ export const AdvancedPlayground: VFC<{
                                     show={
                                         <>
                                             <GenerateWarningMessages
-                                                response={results!}
+                                                response={results}
                                             />
                                             <AdvancedPlaygroundResultsTable
                                                 loading={loading}

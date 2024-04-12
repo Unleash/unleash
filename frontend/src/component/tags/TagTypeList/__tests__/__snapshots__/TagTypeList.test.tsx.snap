@@ -19,7 +19,7 @@ exports[`renders an empty list correctly 1`] = `
             className="css-mt0dvk"
           >
             <div
-              className=" css-1gg5pjj"
+              className=" css-1kxj5dx"
               data-loading={true}
             >
               <h1

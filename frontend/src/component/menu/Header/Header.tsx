@@ -9,7 +9,6 @@ import {
     styled,
     type Theme,
     Box,
-    Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -118,21 +117,20 @@ const styledIconProps = (theme: Theme) => ({
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
+const StyledText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 const StyledLinkWithBetaBadge = ({
     title,
     to,
 }: { title: string; to: string }) => (
     <StyledLink to={to} sx={{ margin: 0 }}>
-        <Typography
-            component='div'
-            sx={(theme) => ({
-                display: 'flex',
-                alignItems: 'center',
-                gap: theme.spacing(1),
-            })}
-        >
+        <StyledText>
             <span>{title}</span> <Badge color='success'>Beta</Badge>
-        </Typography>
+        </StyledText>
     </StyledLink>
 );
 

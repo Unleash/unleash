@@ -201,7 +201,7 @@
     "superagent": "8.1.2",
     "supertest": "6.3.4",
     "ts-node": "10.9.2",
-    "tsc-watch": "6.0.4",
+    "tsc-watch": "6.2.0",
     "typescript": "5.4.2",
     "wait-on": "^7.2.0"
   },

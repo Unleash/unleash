@@ -5,6 +5,7 @@
  */
 import type { AdvancedPlaygroundFeatureSchema } from './advancedPlaygroundFeatureSchema';
 import type { AdvancedPlaygroundRequestSchema } from './advancedPlaygroundRequestSchema';
+import type { AdvancedPlaygroundResponseSchemaWarnings } from './advancedPlaygroundResponseSchemaWarnings';
 
 /**
  * The state of all features given the provided input.
@@ -14,4 +15,6 @@ export interface AdvancedPlaygroundResponseSchema {
     features: AdvancedPlaygroundFeatureSchema[];
     /** The given input used to evaluate the features. */
     input: AdvancedPlaygroundRequestSchema;
+    /** Warnings that occurred during evaluation. */
+    warnings?: AdvancedPlaygroundResponseSchemaWarnings;
 }

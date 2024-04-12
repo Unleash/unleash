@@ -92,3 +92,55 @@ test('should display error on submit', async () => {
 
     await screen.findByText('some error about too many items');
 });
+
+test('should show warnings if context data has been removed', async () => {
+    const response = {
+        features: [],
+        input: {
+            environments: [],
+            projects: [],
+            context: {
+                appName: 'playground',
+                'empty array': [],
+                true: true,
+                false: false,
+                number: 123,
+                string: 'string',
+                null: null,
+                accountId: 1,
+                object: {},
+            },
+        },
+        warnings: {
+            invalidContextProperties: [
+                'empty array',
+                'true',
+                'false',
+                'number',
+                'null',
+                'accountId',
+                'object',
+            ],
+        },
+    };
+    testServerRoute(
+        server,
+        '/api/admin/playground/advanced',
+        response,
+        'post',
+        200,
+    );
+
+    render(testEvaluateComponent);
+
+    const user = userEvent.setup();
+    const submitButton = screen.getByText('Submit');
+    user.click(submitButton);
+
+    await screen.findByText(
+        'We removed invalid context properties from your query',
+    );
+    for (const prop of response.warnings.invalidContextProperties) {
+        await screen.findByText(prop);
+    }
+});

@@ -88,7 +88,7 @@ test('should display error on submit', async () => {
 
     const user = userEvent.setup();
     const submitButton = screen.getByText('Submit');
-    user.click(submitButton);
+    await user.click(submitButton);
 
     await screen.findByText('some error about too many items');
 });

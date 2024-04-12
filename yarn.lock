@@ -5699,9 +5699,9 @@ pg-connection-string@2.6.1:
   integrity sha512-w6ZzNu6oMmIzEAYVw+RLK0+nqHPt8K3ZnknKi+g48Ak2pr3dtljJW3o+D/n2zzCG07Zoe9VOX3aiKpj+BN0pjg==
 
 pg-connection-string@^2.5.0, pg-connection-string@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.6.2.tgz#713d82053de4e2bd166fab70cd4f26ad36aab475"
-  integrity sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.6.4.tgz#f543862adfa49fa4e14bc8a8892d2a84d754246d"
+  integrity sha512-v+Z7W/0EO707aNMaAEfiGnGL9sxxumwLl2fJvCQtMn9Fxsg+lPpPkdcyBSv/KFgpGdYkMfn+EI1Or2EHjpgLCA==
 
 pg-int8@1.0.1:
   version "1.0.1"

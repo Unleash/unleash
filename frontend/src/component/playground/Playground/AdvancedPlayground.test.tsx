@@ -139,6 +139,7 @@ test('should show warnings if context data has been removed', async () => {
 
     await screen.findByText(
         'We removed invalid context properties from your query',
+        { exact: false },
     );
     for (const prop of response.warnings.invalidContextProperties) {
         await screen.findByText(prop);

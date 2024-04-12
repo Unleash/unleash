@@ -38,8 +38,7 @@ const GenerateWarningMessages: React.FC<{
 
     // @ts-ignore
     if (response.warnings.invalidContextProperties) {
-        const summary =
-            'We removed invalid context properties from your query.';
+        const summary = 'We removed invalid context properties from your query';
         // const message = "The context you provided for this query contained top-level properties with invalid values. These properties were not taken into consideration when evaluating your query. The properties are: " + invalidContextProperties.join(", ") + ". Context fields (with the exception of the `properties` object) must be strings."
 
         return (

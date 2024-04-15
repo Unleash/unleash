@@ -116,6 +116,7 @@ const LineChartComponent: VFC<{
     return (
         <StyledContainer>
             <Line
+                key={cover ? 'cover' : 'chart'}
                 options={options}
                 data={data}
                 plugins={[customHighlightPlugin]}

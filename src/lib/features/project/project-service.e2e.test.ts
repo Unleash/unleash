@@ -2481,3 +2481,60 @@ test('should get project settings with mode', async () => {
     expect(foundProjectTwo!.mode).toBe('open');
     expect(foundProjectTwo!.defaultStickiness).toBe('default');
 });
+
+describe('create project with environments and change request environments', () => {
+    const extraEnvs = [
+        { name: 'development', type: 'development' },
+        { name: 'production', type: 'production' },
+        { name: 'staging', type: 'staging' },
+        { name: 'QA', type: 'QA' },
+    ];
+
+    const allEnvs = ['QA', 'default', 'development', 'production', 'staging'];
+
+    beforeAll(async () => {
+        await Promise.all(
+            extraEnvs.map((env) => stores.environmentStore.create(env)),
+        );
+    });
+
+    const createProjectWithEnvs = async (environments) => {
+        const project = await projectService.createProject(
+            {
+                id: randomId(),
+                name: 'New name',
+                mode: 'open' as const,
+                defaultStickiness: 'default',
+                ...(environments ? { environments } : {}),
+            },
+            user,
+        );
+
+        const projectEnvs = (
+            await projectService.getProjectOverview(project.id)
+        ).environments.map(({ environment }) => environment);
+
+        projectEnvs.sort();
+        return projectEnvs;
+    };
+
+    test('no environments specified means all envs are enabled', async () => {
+        const created = await createProjectWithEnvs(undefined);
+
+        expect(created).toMatchObject(allEnvs);
+    });
+    test('`*` means all envs are enabled', async () => {});
+    test('an empty list throws an error', async () => {
+        // todo: we need to decide for sure whether this should give a
+        // 400 or mean "all" in the API, so this test may change.
+    });
+    test('it only enables the envs it is asked to enable', async () => {
+        const selectedEnvs = ['development', 'production'];
+        const created = await createProjectWithEnvs(selectedEnvs);
+
+        expect(created).toMatchObject(selectedEnvs);
+    });
+
+    test('it only enables CRs for the envs it is asked to enable CRs for', async () => {});
+    test('environments in CR env list but not in the envs list are ignored', async () => {});
+});

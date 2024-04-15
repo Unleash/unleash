@@ -132,6 +132,7 @@ exports[`should create default config 1`] = `
       },
       "migrationLock": true,
       "outdatedSdksBanner": false,
+      "parseProjectFromSession": false,
       "personalAccessTokensKillSwitch": false,
       "projectListFilterMyProjects": false,
       "projectOverviewRefactor": false,

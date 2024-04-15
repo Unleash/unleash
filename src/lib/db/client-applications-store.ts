@@ -423,7 +423,6 @@ export default class ClientApplicationsStore
     }
 
     private remapUsageRow = (input) => {
-        console.log(input);
         if (this.flagResolver.isEnabled('parseProjectFromSession')) {
             if (!input.projects || input.projects.length === 0) {
                 return [

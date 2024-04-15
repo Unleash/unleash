@@ -104,10 +104,8 @@ export default class RegisterController extends Controller {
         data.environment = this.resolveEnvironment(user, data);
         if (this.flagResolver.isEnabled('parseProjectFromSession')) {
             data.projects = this.resolveProject(user);
-            console.log('Project from session: ', data.projects);
         } else {
             data.project = this.extractProjectFromRequest(req);
-            console.log('Project from request: ', data.project);
         }
 
         await this.clientInstanceService.registerClient(data, clientIp);

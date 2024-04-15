@@ -31,6 +31,8 @@ import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-
 import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
+import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
 const StyledDivContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -139,6 +141,7 @@ export const ProjectListNew = () => {
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
     const filters = ['All projects', 'My projects'];
     const [filter, setFilter] = useState(filters[0]);
+    const myProjects = new Set(useProfile().profile?.projects || []);
 
     useEffect(() => {
         const tableState: PageQueryType = {};
@@ -152,11 +155,18 @@ export const ProjectListNew = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
+        const preFilteredProjects =
+            showProjectFilterButtons && filter === 'My projects'
+                ? projects.filter(shouldDisplayInMyProjects(myProjects))
+                : projects;
+
         const regExp = safeRegExp(searchValue, 'i');
         return (
             searchValue
-                ? projects.filter((project) => regExp.test(project.name))
-                : projects
+                ? preFilteredProjects.filter((project) =>
+                      regExp.test(project.name),
+                  )
+                : preFilteredProjects
         ).sort((a, b) => {
             if (a?.favorite && !b?.favorite) {
                 return -1;
@@ -166,7 +176,7 @@ export const ProjectListNew = () => {
             }
             return 0;
         });
-    }, [projects, searchValue]);
+    }, [projects, searchValue, filter, myProjects, showProjectFilterButtons]);
 
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {

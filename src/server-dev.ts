@@ -56,7 +56,7 @@ process.nextTick(async () => {
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,
                         projectListFilterMyProjects: true,
-                        parseProjectFromSession: false,
+                        parseProjectFromSession: true,
                     },
                 },
                 authentication: {

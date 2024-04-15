@@ -92,4 +92,5 @@ export const clientRegisterSchema = joi
         interval: joi.number().required(),
         environment: joi.string().optional(),
         project: joi.string().optional(),
+        projects: joi.array().optional().items(joi.string()),
     });

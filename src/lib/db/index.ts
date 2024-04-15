@@ -65,6 +65,7 @@ export const createStores = (
             db,
             eventBus,
             getLogger,
+            config.flagResolver,
         ),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
         clientMetricsStoreV2: new ClientMetricsStoreV2(

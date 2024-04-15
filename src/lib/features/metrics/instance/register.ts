@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import Controller from '../../../routes/controller';
-import type { IUnleashServices } from '../../../types';
+import type { IFlagResolver, IUnleashServices } from '../../../types';
 import type { IUnleashConfig } from '../../../types/option';
 import type { Logger } from '../../../logger';
 import type ClientInstanceService from './instance-service';
@@ -24,6 +24,8 @@ export default class RegisterController extends Controller {
 
     openApiService: OpenApiService;
 
+    flagResolver: IFlagResolver;
+
     constructor(
         {
             clientInstanceService,
@@ -35,6 +37,7 @@ export default class RegisterController extends Controller {
         this.logger = config.getLogger('/api/client/register');
         this.clientInstanceService = clientInstanceService;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -62,7 +65,7 @@ export default class RegisterController extends Controller {
         });
     }
 
-    private static resolveEnvironment(
+    private resolveEnvironment(
         user: IUser | IApiUser,
         data: Partial<IClientApp>,
     ) {
@@ -76,7 +79,14 @@ export default class RegisterController extends Controller {
         return 'default';
     }
 
-    private static extractProjectFromRequest(
+    private resolveProject(user: IUser | IApiUser) {
+        if (user instanceof ApiUser) {
+            return user.projects;
+        }
+        return ['default'];
+    }
+
+    private extractProjectFromRequest(
         req: IAuthRequest<unknown, void, ClientApplicationSchema>,
     ) {
         const token = req.get('Authorisation') || req.headers.authorization;
@@ -91,8 +101,15 @@ export default class RegisterController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
-        data.environment = RegisterController.resolveEnvironment(user, data);
-        data.project = RegisterController.extractProjectFromRequest(req);
+        data.environment = this.resolveEnvironment(user, data);
+        if (this.flagResolver.isEnabled('parseProjectFromSession')) {
+            data.projects = this.resolveProject(user);
+            console.log('Project from session: ', data.projects);
+        } else {
+            data.project = this.extractProjectFromRequest(req);
+            console.log('Project from request: ', data.project);
+        }
+
         await this.clientInstanceService.registerClient(data, clientIp);
         res.header('X-Unleash-Version', version).status(202).end();
     }

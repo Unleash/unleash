@@ -147,6 +147,21 @@ module.exports = {
                     ],
                 },
                 {
+                    type: 'category',
+                    label: 'Ruby',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/ruby/ruby-examples',
+                        },
+                    ],
+                },
+                {
                     type: 'doc',
                     label: 'Serverless',
                     id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
@@ -165,15 +180,6 @@ module.exports = {
                     type: 'doc',
                     label: 'SvelteKit',
                     id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
-                },
-                {
-                    type: 'category',
-                    label: 'Ruby',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
-                    },
-                    items: [],
                 },
             ],
         },

@@ -141,9 +141,7 @@ export const ProjectListNew = () => {
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
     const filters = ['All projects', 'My projects'];
     const [filter, setFilter] = useState(filters[0]);
-
     const myProjects = new Set(useProfile().profile?.projects || []);
-    console.log('my projects are', myProjects);
 
     useEffect(() => {
         const tableState: PageQueryType = {};

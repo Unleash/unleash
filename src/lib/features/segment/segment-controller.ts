@@ -41,6 +41,7 @@ import {
 
 import { anonymiseKeys, extractUserIdFromUser } from '../../util';
 import { BadDataError } from '../../error';
+import idNumberMiddleware from '../../middleware/id-number-middleware';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
     {},
@@ -219,6 +220,7 @@ export class SegmentsController extends Controller {
                         ...getStandardResponses(404),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
 

@@ -160,6 +160,7 @@ export class SegmentsController extends Controller {
                         200: createResponseSchema('segmentStrategiesSchema'),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
 
@@ -181,6 +182,7 @@ export class SegmentsController extends Controller {
                         ...getStandardResponses(401, 403, 409),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
 
@@ -201,6 +203,7 @@ export class SegmentsController extends Controller {
                         ...getStandardResponses(400, 401, 403, 409, 415),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
 

@@ -3,17 +3,9 @@ import supertest from 'supertest';
 import idNumberMiddleware from './id-number-middleware';
 
 describe('idNumberMiddleware', () => {
-    const fakeLogger = {
-        debug: () => {},
-        info: () => {},
-        warn: jest.fn(),
-        error: jest.fn(),
-        fatal: console.error,
-    };
-
     it('should pass when id is a valid integer', async () => {
         const app = express();
-        app.use('/:id', idNumberMiddleware({ getLogger: () => fakeLogger }));
+        app.use('/:id', idNumberMiddleware());
         app.get('/:id', (req, res) => {
             res.status(200).send('Valid ID');
         });
@@ -27,7 +19,7 @@ describe('idNumberMiddleware', () => {
     });
     it('should throw BadDataError when id is not a valid integer', async () => {
         const app = express();
-        app.use('/:id', idNumberMiddleware({ getLogger: () => fakeLogger }));
+        app.use('/:id', idNumberMiddleware());
         app.get('/:id', (req, res) => {
             res.status(200).send('This should not be executed');
         });

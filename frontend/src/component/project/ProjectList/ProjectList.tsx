@@ -1,5 +1,6 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useContext, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { BooleanParam, StringParam, withDefault } from 'use-query-params';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -31,6 +32,7 @@ import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-
 import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
@@ -74,8 +76,6 @@ const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
         },
     },
 }));
-
-type PageQueryType = Partial<Record<'search', string>>;
 
 type projectMap = {
     [index: string]: boolean;
@@ -131,32 +131,34 @@ export const ProjectListNew = () => {
     const { projects, loading, error, refetch } = useProjects();
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
     const { isOss } = useUiConfig();
-
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || '',
-    );
-
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
-    const filters = ['All projects', 'My projects'];
-    const [filter, setFilter] = useState(filters[0]);
     const myProjects = new Set(useProfile().profile?.projects || []);
 
-    useEffect(() => {
-        const tableState: PageQueryType = {};
-        if (searchValue) {
-            tableState.search = searchValue;
-        }
+    const filterOptions = [
+        {
+            label: 'All projects',
+            value: false,
+        },
+        {
+            label: 'My projects',
+            value: true,
+        },
+    ];
 
-        setSearchParams(tableState, {
-            replace: true,
-        });
-    }, [searchValue, setSearchParams]);
+    const stateConfig = {
+        myProjects: withDefault(BooleanParam, false),
+        search: withDefault(StringParam, ''),
+    };
+    const [filterState, setFilterState] = usePersistentTableState(
+        `projects-list`,
+        stateConfig,
+    );
+    const searchValue = filterState.search;
 
     const filteredProjects = useMemo(() => {
         const preFilteredProjects =
-            showProjectFilterButtons && filter === 'My projects'
+            showProjectFilterButtons && filterState.myProjects
                 ? projects.filter(shouldDisplayInMyProjects(myProjects))
                 : projects;
 
@@ -176,7 +178,13 @@ export const ProjectListNew = () => {
             }
             return 0;
         });
-    }, [projects, searchValue, filter, myProjects, showProjectFilterButtons]);
+    }, [
+        projects,
+        searchValue,
+        filterState.myProjects,
+        myProjects,
+        showProjectFilterButtons,
+    ]);
 
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {
@@ -218,21 +226,23 @@ export const ProjectListNew = () => {
                                     aria-label='project list filter'
                                     size='small'
                                     color='primary'
-                                    value={filter}
+                                    value={filterState.myProjects}
                                     exclusive
                                     onChange={(event, value) => {
                                         if (value !== null) {
-                                            setFilter(value);
+                                            setFilterState({
+                                                myProjects: value,
+                                            });
                                         }
                                     }}
                                 >
-                                    {filters.map((filter) => {
+                                    {filterOptions.map((filter) => {
                                         return (
                                             <ToggleButton
-                                                key={filter}
-                                                value={filter}
+                                                key={`${filter.value}`}
+                                                value={filter.value}
                                             >
-                                                {filter}
+                                                {filter.label}
                                             </ToggleButton>
                                         );
                                     })}
@@ -248,7 +258,9 @@ export const ProjectListNew = () => {
                                     <>
                                         <Search
                                             initialValue={searchValue}
-                                            onChange={setSearchValue}
+                                            onChange={(search) =>
+                                                setFilterState({ search })
+                                            }
                                         />
                                         <PageHeader.Divider />
                                     </>
@@ -274,7 +286,9 @@ export const ProjectListNew = () => {
                         show={
                             <Search
                                 initialValue={searchValue}
-                                onChange={setSearchValue}
+                                onChange={(search) =>
+                                    setFilterState({ search })
+                                }
                             />
                         }
                     />

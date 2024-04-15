@@ -156,7 +156,7 @@ export const ProjectListNew = () => {
 
     const filteredProjects = useMemo(() => {
         const preFilteredProjects =
-            filter === 'My projects'
+            showProjectFilterButtons && filter === 'My projects'
                 ? projects.filter(shouldDisplayInMyProjects(myProjects))
                 : projects;
 
@@ -176,7 +176,7 @@ export const ProjectListNew = () => {
             }
             return 0;
         });
-    }, [projects, searchValue, filter, myProjects]);
+    }, [projects, searchValue, filter, myProjects, showProjectFilterButtons]);
 
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {

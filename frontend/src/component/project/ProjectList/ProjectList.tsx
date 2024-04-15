@@ -32,6 +32,7 @@ import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
+import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
 const StyledDivContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -156,18 +157,18 @@ export const ProjectListNew = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
-        const ps =
+        const preFilteredProjects =
             filter === 'My projects'
-                ? projects.filter(
-                      (project) =>
-                          // todo: write test for this filtering logic
-                          project.favorite || myProjects.has(project.id),
-                  )
+                ? projects.filter(shouldDisplayInMyProjects(myProjects))
                 : projects;
 
         const regExp = safeRegExp(searchValue, 'i');
         return (
-            searchValue ? ps.filter((project) => regExp.test(project.name)) : ps
+            searchValue
+                ? preFilteredProjects.filter((project) =>
+                      regExp.test(project.name),
+                  )
+                : preFilteredProjects
         ).sort((a, b) => {
             if (a?.favorite && !b?.favorite) {
                 return -1;

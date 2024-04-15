@@ -51,12 +51,13 @@ import {
     type AdminCountSchema,
     adminCountSchema,
 } from '../../openapi/spec/admin-count-schema';
-import { BadDataError, ForbiddenError } from '../../error';
+import { ForbiddenError } from '../../error';
 import {
     createUserResponseSchema,
     type CreateUserResponseSchema,
 } from '../../openapi/spec/create-user-response-schema';
 import type { IRoleWithPermissions } from '../../types/stores/access-store';
+import idNumberMiddleware from '../../middleware/id-number-middleware';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -354,6 +355,7 @@ export default class UserAdminController extends Controller {
                         ...getStandardResponses(400, 401, 404),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
 
@@ -375,6 +377,7 @@ export default class UserAdminController extends Controller {
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
 
@@ -395,6 +398,7 @@ export default class UserAdminController extends Controller {
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
     }
@@ -505,9 +509,6 @@ export default class UserAdminController extends Controller {
 
     async getUser(req: Request, res: Response<UserSchema>): Promise<void> {
         const { id } = req.params;
-        if (!Number.isInteger(Number(id))) {
-            throw new BadDataError('User id should be an integer');
-        }
         const user = await this.userService.getUser(Number(id));
 
         this.openApiService.respondWithValidation(
@@ -607,9 +608,7 @@ export default class UserAdminController extends Controller {
         const { user, params, body } = req;
         const { id } = params;
         const { name, email, rootRole } = body;
-        if (!Number.isInteger(Number(id))) {
-            throw new BadDataError('User id should be an integer');
-        }
+
         await this.throwIfScimUser({ id: Number(id) });
         const normalizedRootRole = Number.isInteger(Number(rootRole))
             ? Number(rootRole)
@@ -639,9 +638,7 @@ export default class UserAdminController extends Controller {
     async deleteUser(req: IAuthRequest, res: Response): Promise<void> {
         const { user, params } = req;
         const { id } = params;
-        if (!Number.isInteger(Number(id))) {
-            throw new BadDataError('User id should be an integer');
-        }
+
         await this.throwIfScimUser({ id: Number(id) });
 
         await this.userService.deleteUser(+id, user);

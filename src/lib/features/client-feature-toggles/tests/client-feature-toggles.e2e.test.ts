@@ -8,7 +8,7 @@ import {
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../util/constants';
-import type { IUserWithRootRole } from '../../../types';
+import { type IUserWithRootRole, TEST_USER_AUDIT } from '../../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -73,11 +73,14 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
-    dummyAdmin = await app.services.userService.createUser({
-        name: 'Some Name',
-        email: 'test@getunleash.io',
-        rootRole: RoleName.ADMIN,
-    });
+    dummyAdmin = await app.services.userService.createUser(
+        {
+            name: 'Some Name',
+            email: 'test@getunleash.io',
+            rootRole: RoleName.ADMIN,
+        },
+        TEST_USER_AUDIT,
+    );
 });
 
 afterEach(async () => {

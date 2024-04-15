@@ -43,7 +43,7 @@
     "@mui/material": "5.15.3",
     "@mui/x-date-pickers": "^6.18.3",
     "@tanstack/react-table": "^8.10.7",
-    "@testing-library/dom": "8.20.1",
+    "@testing-library/dom": "10.0.0",
     "@testing-library/jest-dom": "6.4.2",
     "@testing-library/react": "12.1.5",
     "@testing-library/react-hooks": "7.0.2",

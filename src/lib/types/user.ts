@@ -37,6 +37,12 @@ export interface IProjectUser extends IUser {
     addedAt: Date;
 }
 
+export interface IAuditUser {
+    id: number;
+    username: string;
+    ip?: string;
+}
+
 export default class User implements IUser {
     isAPI: boolean = false;
 

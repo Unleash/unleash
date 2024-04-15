@@ -1,5 +1,5 @@
 import type { Request } from 'express';
-import type { IUser } from '../types/user';
+import type { IAuditUser, IUser } from '../types/user';
 import type { IApiUser } from '../types';
 
 export interface IAuthRequest<
@@ -11,6 +11,7 @@ export interface IAuthRequest<
     user: IUser;
     logout: (() => void) | ((callback: (err?: any) => void) => void);
     session: any;
+    audit?: IAuditUser;
 }
 
 export interface IApiRequest<
@@ -22,6 +23,7 @@ export interface IApiRequest<
     user: IApiUser;
     logout: (() => void) | ((callback: (err?: any) => void) => void);
     session: any;
+    audit?: IAuditUser;
 }
 
 export interface RequestBody<T> extends Express.Request {

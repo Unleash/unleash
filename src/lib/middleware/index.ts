@@ -1,4 +1,5 @@
 export * from './api-token-middleware';
+export * from './audit-middleware';
 export * from './conditional-middleware';
 export * from './content_type_checker';
 export * from './cors-origin-middleware';

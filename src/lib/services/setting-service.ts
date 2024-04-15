@@ -8,6 +8,7 @@ import {
     SettingUpdatedEvent,
 } from '../types/events';
 import type EventService from '../features/events/event-service';
+import type { IAuditUser } from '../types';
 
 export default class SettingService {
     private config: IUnleashConfig;
@@ -45,8 +46,7 @@ export default class SettingService {
     async insert(
         id: string,
         value: object,
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
         hideEventDetails: boolean = true,
     ): Promise<void> {
         const existingSettings = await this.settingStore.get<object>(id);
@@ -64,9 +64,8 @@ export default class SettingService {
             await this.eventService.storeEvent(
                 new SettingUpdatedEvent(
                     {
-                        createdBy,
                         data,
-                        createdByUserId,
+                        auditUser,
                     },
                     preData,
                 ),
@@ -75,24 +74,18 @@ export default class SettingService {
             await this.settingStore.insert(id, value);
             await this.eventService.storeEvent(
                 new SettingCreatedEvent({
-                    createdByUserId,
-                    createdBy,
+                    auditUser,
                     data,
                 }),
             );
         }
     }
 
-    async delete(
-        id: string,
-        createdBy: string,
-        createdByUserId: number,
-    ): Promise<void> {
+    async delete(id: string, auditUser: IAuditUser): Promise<void> {
         await this.settingStore.delete(id);
         await this.eventService.storeEvent(
             new SettingDeletedEvent({
-                createdByUserId,
-                createdBy,
+                auditUser,
                 data: {
                     id,
                 },

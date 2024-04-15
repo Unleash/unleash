@@ -13,6 +13,7 @@ import type { ITagStore } from '../types/stores/tag-store';
 import type { ITag } from '../types/model';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error';
 import type EventService from '../features/events/event-service';
+import type { IAuditUser } from '../types';
 
 class FeatureTagService {
     private tagStore: ITagStore;
@@ -56,22 +57,22 @@ class FeatureTagService {
     async addTag(
         featureName: string,
         tag: ITag,
-        userName: string,
-        addedByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<ITag> {
         const featureToggle = await this.featureToggleStore.get(featureName);
         const validatedTag = await tagSchema.validateAsync(tag);
-        await this.createTagIfNeeded(validatedTag, userName, addedByUserId);
+        await this.createTagIfNeeded(validatedTag, auditUser);
         await this.featureTagStore.tagFeature(
             featureName,
             validatedTag,
-            addedByUserId,
+            auditUser.id,
         );
 
         await this.eventService.storeEvent({
             type: FEATURE_TAGGED,
-            createdBy: userName,
-            createdByUserId: addedByUserId,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
             featureName,
             project: featureToggle.project,
             data: validatedTag,
@@ -83,15 +84,12 @@ class FeatureTagService {
         featureNames: string[],
         addedTags: ITag[],
         removedTags: ITag[],
-        userName: string,
-        updatedByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const featureToggles =
             await this.featureToggleStore.getAllByNames(featureNames);
         await Promise.all(
-            addedTags.map((tag) =>
-                this.createTagIfNeeded(tag, userName, updatedByUserId),
-            ),
+            addedTags.map((tag) => this.createTagIfNeeded(tag, auditUser)),
         );
         const createdFeatureTags: IFeatureTagInsert[] = featureNames.flatMap(
             (featureName) =>
@@ -99,7 +97,7 @@ class FeatureTagService {
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
-                    createdByUserId: updatedByUserId,
+                    createdByUserId: auditUser.id,
                 })),
         );
 
@@ -119,22 +117,24 @@ class FeatureTagService {
         const creationEvents = featureToggles.flatMap((featureToggle) =>
             addedTags.map((addedTag) => ({
                 type: FEATURE_TAGGED,
-                createdBy: userName,
+                createdBy: auditUser.username,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
                 data: addedTag,
-                createdByUserId: updatedByUserId,
+                createdByUserId: auditUser.id,
+                ip: auditUser.ip,
             })),
         );
 
         const removalEvents = featureToggles.flatMap((featureToggle) =>
             removedTags.map((removedTag) => ({
                 type: FEATURE_UNTAGGED,
-                createdBy: userName,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
                 preData: removedTag,
-                createdByUserId: updatedByUserId,
+                createdBy: auditUser.username,
+                createdByUserId: auditUser.id,
+                ip: auditUser.ip,
             })),
         );
 
@@ -144,11 +144,7 @@ class FeatureTagService {
         ]);
     }
 
-    async createTagIfNeeded(
-        tag: ITag,
-        userName: string,
-        createdByUserId: number,
-    ): Promise<void> {
+    async createTagIfNeeded(tag: ITag, auditUser: IAuditUser): Promise<void> {
         try {
             await this.tagStore.getTag(tag.type, tag.value);
         } catch (error) {
@@ -157,8 +153,9 @@ class FeatureTagService {
                     await this.tagStore.createTag(tag);
                     await this.eventService.storeEvent({
                         type: TAG_CREATED,
-                        createdBy: userName,
-                        createdByUserId,
+                        createdBy: auditUser.username,
+                        createdByUserId: auditUser.id,
+                        ip: auditUser.ip,
                         data: tag,
                     });
                 } catch (err) {
@@ -176,8 +173,7 @@ class FeatureTagService {
     async removeTag(
         featureName: string,
         tag: ITag,
-        userName: string,
-        removedByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const featureToggle = await this.featureToggleStore.get(featureName);
         const tags =
@@ -185,8 +181,9 @@ class FeatureTagService {
         await this.featureTagStore.untagFeature(featureName, tag);
         await this.eventService.storeEvent({
             type: FEATURE_UNTAGGED,
-            createdBy: userName,
-            createdByUserId: removedByUserId,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
             featureName,
             project: featureToggle.project,
             preData: tag,

@@ -1,5 +1,5 @@
 import * as permissions from '../types/permissions';
-import type { IUser } from '../types/user';
+import type { IAuditUser, IUser } from '../types/user';
 import type {
     IAccessInfo,
     IAccessStore,
@@ -336,14 +336,14 @@ export class AccessService {
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
-        createdBy: string,
+        auditUser: IAuditUser,
     ): Promise<void> {
         return this.store.addRoleAccessToProject(
             users,
             groups,
             projectId,
             roleId,
-            createdBy,
+            auditUser.username,
         );
     }
 

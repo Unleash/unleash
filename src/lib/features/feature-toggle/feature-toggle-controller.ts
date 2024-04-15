@@ -16,7 +16,6 @@ import {
     UPDATE_FEATURE_STRATEGY,
 } from '../../types';
 import type { Logger } from '../../logger';
-import { extractUsername } from '../../util';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import {
     type AdminFeaturesQuerySchema,
@@ -656,13 +655,11 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const { name, replaceGroupId } = req.body;
-        const userName = extractUsername(req);
         const created = await this.featureService.cloneFeatureToggle(
             featureName,
             projectId,
             name,
-            userName,
-            req.user.id,
+            req.audit,
             replaceGroupId,
         );
 
@@ -680,15 +677,13 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
 
-        const userName = extractUsername(req);
         const created = await this.featureService.createFeatureToggle(
             projectId,
             {
                 ...req.body,
                 description: req.body.description || undefined,
             },
-            userName,
-            req.user.id,
+            req.audit,
         );
 
         this.openApiService.respondWithValidation(
@@ -726,7 +721,6 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const { createdAt, ...data } = req.body;
-        const userName = extractUsername(req);
         if (data.name && data.name !== featureName) {
             throw new BadDataError('Cannot change name of feature toggle');
         }
@@ -736,9 +730,8 @@ export default class ProjectFeaturesController extends Controller {
                 ...data,
                 name: featureName,
             },
-            userName,
             featureName,
-            req.user.id,
+            req.audit,
         );
 
         this.openApiService.respondWithValidation(
@@ -762,9 +755,8 @@ export default class ProjectFeaturesController extends Controller {
         const updated = await this.featureService.patchFeature(
             projectId,
             featureName,
-            extractUsername(req),
             req.body,
-            req.user.id,
+            req.audit,
         );
         this.openApiService.respondWithValidation(
             200,
@@ -788,6 +780,7 @@ export default class ProjectFeaturesController extends Controller {
             this.transactionalFeatureToggleService(tx).archiveToggle(
                 featureName,
                 req.user,
+                req.audit,
                 projectId,
             ),
         );
@@ -800,14 +793,12 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { features, stale } = req.body;
         const { projectId } = req.params;
-        const userName = extractUsername(req);
 
         await this.featureService.setToggleStaleness(
             features,
             stale,
-            userName,
             projectId,
-            req.user.id,
+            req.audit,
         );
         res.status(202).end();
     }
@@ -862,7 +853,7 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
             environment,
             true,
-            extractUsername(req),
+            req.audit,
             req.user,
             shouldActivateDisabledStrategies === 'true',
         );
@@ -893,7 +884,7 @@ export default class ProjectFeaturesController extends Controller {
                 features,
                 environment,
                 true,
-                extractUsername(req),
+                req.audit,
                 req.user,
                 shouldActivateDisabledStrategies === 'true',
             ),
@@ -925,7 +916,7 @@ export default class ProjectFeaturesController extends Controller {
                 features,
                 environment,
                 false,
-                extractUsername(req),
+                req.audit,
                 req.user,
                 shouldActivateDisabledStrategies === 'true',
             ),
@@ -943,7 +934,7 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
             environment,
             false,
-            extractUsername(req),
+            req.audit,
             req.user,
         );
         res.status(200).end();
@@ -964,11 +955,10 @@ export default class ProjectFeaturesController extends Controller {
             strategyConfig.segmentIds = [];
         }
 
-        const userName = extractUsername(req);
         const strategy = await this.featureService.createStrategy(
             strategyConfig,
             { environment, projectId, featureName },
-            userName,
+            req.audit,
             req.user,
         );
 
@@ -1002,7 +992,6 @@ export default class ProjectFeaturesController extends Controller {
         res: Response,
     ): Promise<void> {
         const { featureName, projectId, environment } = req.params;
-        const createdBy = extractUsername(req);
         await this.startTransaction(async (tx) =>
             this.transactionalFeatureToggleService(
                 tx,
@@ -1013,7 +1002,7 @@ export default class ProjectFeaturesController extends Controller {
                     projectId,
                 },
                 req.body,
-                createdBy,
+                req.audit,
             ),
         );
 
@@ -1025,7 +1014,6 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
-        const userName = extractUsername(req);
 
         if (!req.body.segmentIds) {
             req.body.segmentIds = [];
@@ -1036,7 +1024,7 @@ export default class ProjectFeaturesController extends Controller {
                 strategyId,
                 req.body,
                 { environment, projectId, featureName },
-                userName,
+                req.audit,
                 req.user,
             ),
         );
@@ -1049,7 +1037,6 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         const { strategyId, projectId, environment, featureName } = req.params;
-        const userName = extractUsername(req);
         const patch = req.body;
         const strategy = await this.featureService.getStrategy(strategyId);
 
@@ -1059,7 +1046,7 @@ export default class ProjectFeaturesController extends Controller {
                 strategyId,
                 newDocument,
                 { environment, projectId, featureName },
-                userName,
+                req.audit,
                 req.user,
             ),
         );
@@ -1084,13 +1071,12 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         this.logger.info('Deleting strategy');
         const { environment, projectId, featureName } = req.params;
-        const userName = extractUsername(req);
         const { strategyId } = req.params;
         this.logger.info(strategyId);
         const strategy = await this.featureService.deleteStrategy(
             strategyId,
             { environment, projectId, featureName },
-            userName,
+            req.audit,
             req.user,
         );
         res.status(200).json(strategy);
@@ -1106,7 +1092,6 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
-        const userName = extractUsername(req);
         const { name, value } = req.body;
 
         const updatedStrategy =
@@ -1115,8 +1100,7 @@ export default class ProjectFeaturesController extends Controller {
                 name,
                 value,
                 { environment, projectId, featureName },
-                userName,
-                req.user.id,
+                req.audit,
             );
         res.status(200).json(updatedStrategy);
     }
@@ -1126,13 +1110,11 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<TagSchema>,
     ): Promise<void> {
         const { features, tags } = req.body;
-        const userName = extractUsername(req);
         await this.featureTagService.updateTags(
             features,
             tags.addedTags,
             tags.removedTags,
-            userName,
-            req.user.id,
+            req.audit,
         );
         res.status(200).end();
     }

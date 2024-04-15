@@ -218,6 +218,7 @@ export default class DependentFeaturesController extends Controller {
                     feature,
                 },
                 req.user,
+                req.audit,
             ),
         );
 
@@ -238,6 +239,7 @@ export default class DependentFeaturesController extends Controller {
                 },
                 projectId,
                 req.user,
+                req.audit,
             ),
         );
         res.status(200).end();
@@ -250,7 +252,12 @@ export default class DependentFeaturesController extends Controller {
         const { child, projectId } = req.params;
 
         await this.dependentFeaturesService.transactional((service) =>
-            service.deleteFeaturesDependencies([child], projectId, req.user),
+            service.deleteFeaturesDependencies(
+                [child],
+                projectId,
+                req.user,
+                req.audit,
+            ),
         );
         res.status(200).end();
     }

@@ -15,7 +15,7 @@ import type {
 import {
     type IUnleashStores,
     type IUnleashConfig,
-    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
 } from '../types';
 import type { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
@@ -186,8 +186,7 @@ export default class AddonService {
                     await this.tagTypeService.validateUnique(tagType.name);
                     await this.tagTypeService.createTagType(
                         tagType,
-                        providerName,
-                        SYSTEM_USER.id,
+                        SYSTEM_USER_AUDIT,
                     );
                 } catch (err) {
                     if (!(err instanceof NameExistsError)) {

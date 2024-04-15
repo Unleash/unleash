@@ -1,9 +1,10 @@
 import crypto from 'crypto';
 import type { Logger } from '../logger';
 import {
+    type IAuditUser,
     type IUnleashConfig,
     type IUnleashStores,
-    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
 } from '../types';
 import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
 import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
@@ -80,14 +81,12 @@ export class PublicSignupTokenService {
     public async update(
         secret: string,
         { expiresAt, enabled }: { expiresAt?: Date; enabled?: boolean },
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<PublicSignupTokenSchema> {
         const result = await this.store.update(secret, { expiresAt, enabled });
         await this.eventService.storeEvent(
             new PublicSignupTokenUpdatedEvent({
-                createdBy,
-                createdByUserId,
+                auditUser,
                 data: { secret, enabled, expiresAt },
             }),
         );
@@ -97,17 +96,20 @@ export class PublicSignupTokenService {
     public async addTokenUser(
         secret: string,
         createUser: CreateInvitedUserSchema,
+        auditUser: IAuditUser,
     ): Promise<IUser> {
         const token = await this.get(secret);
-        const user = await this.userService.createUser({
-            ...createUser,
-            rootRole: token.role.id,
-        });
+        const user = await this.userService.createUser(
+            {
+                ...createUser,
+                rootRole: token.role.id,
+            },
+            auditUser,
+        );
         await this.store.addTokenUser(secret, user.id);
         await this.eventService.storeEvent(
             new PublicSignupTokenUserAddedEvent({
-                createdBy: SYSTEM_USER.username,
-                createdByUserId: SYSTEM_USER.id,
+                auditUser: SYSTEM_USER_AUDIT,
                 data: { secret, userId: user.id },
             }),
         );
@@ -116,8 +118,7 @@ export class PublicSignupTokenService {
 
     public async createNewPublicSignupToken(
         tokenCreate: PublicSignupTokenCreateSchema,
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<PublicSignupTokenSchema> {
         const viewerRole = await this.roleStore.getRoleByName(RoleName.VIEWER);
         const secret = this.generateSecretKey();
@@ -131,15 +132,14 @@ export class PublicSignupTokenService {
             expiresAt: cappedDate,
             secret: secret,
             roleId: viewerRole ? viewerRole.id : -1,
-            createdBy: createdBy,
+            createdBy: auditUser.username,
             url: url,
         };
         const token = await this.store.insert(newToken);
 
         await this.eventService.storeEvent(
             new PublicSignupTokenCreatedEvent({
-                createdBy: createdBy,
-                createdByUserId,
+                auditUser,
                 data: token,
             }),
         );

@@ -1,5 +1,5 @@
 import memoizee from 'memoizee';
-import type { IUnleashConfig } from '../../types';
+import type { IAuditUser, IUnleashConfig } from '../../types';
 import type { Logger } from '../../logger';
 import type SettingService from '../../services/setting-service';
 import { maintenanceSettingsKey } from '../../types/settings/maintenance-settings';
@@ -53,16 +53,14 @@ export default class MaintenanceService implements IMaintenanceStatus {
 
     async toggleMaintenanceMode(
         setting: MaintenanceSchema,
-        user: string,
-        toggledByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         //@ts-ignore
         this.resolveMaintenance.clear();
         return this.settingService.insert(
             maintenanceSettingsKey,
             setting,
-            user,
-            toggledByUserId,
+            auditUser,
             false,
         );
     }

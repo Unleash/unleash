@@ -10,12 +10,18 @@ import {
 import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import type { IEventStore } from '../../../lib/types/stores/event-store';
-import type { IUnleashStores } from '../../../lib/types';
+import type { IAuditUser, IUnleashStores } from '../../../lib/types';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let eventStore: IEventStore;
 const TEST_USER_ID = -9999;
+
+const testAudit: IAuditUser = {
+    id: TEST_USER_ID,
+    username: 'test@example.com',
+    ip: '127.0.0.1',
+};
 
 beforeAll(async () => {
     db = await dbInit('event_store_serial', getLogger);
@@ -37,6 +43,7 @@ test('Should include id and createdAt when saving', async () => {
         type: APPLICATION_CREATED,
         createdBy: '127.0.0.1',
         createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
         data: {
             clientIp: '127.0.0.1',
             appName: 'test1',
@@ -60,6 +67,7 @@ test('Should include empty tags array for new event', async () => {
         type: FEATURE_CREATED,
         createdBy: 'me@mail.com',
         createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
         data: {
             name: 'someName',
             enabled: true,
@@ -112,7 +120,7 @@ test('Should be able to store multiple events at once', async () => {
         },
         tags: [{ type: 'simple', value: 'mytest' }],
     };
-    const seen = [];
+    const seen: IEvent[] = [];
     eventStore.on(APPLICATION_CREATED, (e) => seen.push(e));
     await eventStore.batchStore([event1, event2, event3]);
     await eventStore.publishUnannouncedEvents();
@@ -205,8 +213,7 @@ test('Should get all events of type', async () => {
                     ? new FeatureCreatedEvent({
                           project: data.project,
                           featureName: data.name,
-                          createdBy: 'test-user',
-                          createdByUserId: TEST_USER_ID,
+                          auditUser: testAudit,
 
                           data,
                       })
@@ -214,8 +221,7 @@ test('Should get all events of type', async () => {
                           project: data.project,
                           preData: data,
                           featureName: data.name,
-                          createdBy: 'test-user',
-                          createdByUserId: TEST_USER_ID,
+                          auditUser: testAudit,
 
                           tags: [],
                       });

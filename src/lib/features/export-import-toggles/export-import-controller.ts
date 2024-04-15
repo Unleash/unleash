@@ -159,7 +159,7 @@ class ExportImportController extends Controller {
         res: Response,
     ): Promise<void> {
         this.verifyExportImportEnabled();
-        const { user } = req;
+        const { user, audit } = req;
 
         if (user instanceof ApiUser && user.type === 'admin') {
             throw new BadDataError(
@@ -170,7 +170,7 @@ class ExportImportController extends Controller {
         const dto = req.body;
 
         await this.importService.transactional((service) =>
-            service.import(dto, user),
+            service.import(dto, user, audit),
         );
 
         res.status(200).end();

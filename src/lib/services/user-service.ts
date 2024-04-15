@@ -4,7 +4,11 @@ import Joi from 'joi';
 
 import type { URL } from 'url';
 import type { Logger } from '../logger';
-import User, { type IUser, type IUserWithRootRole } from '../types/user';
+import User, {
+    type IAuditUser,
+    type IUser,
+    type IUserWithRootRole,
+} from '../types/user';
 import isEmail from '../util/is-email';
 import type { AccessService } from './access-service';
 import type ResetTokenService from './reset-token-service';
@@ -33,7 +37,7 @@ import type { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
 import type EventService from '../features/events/event-service';
 
-import { SYSTEM_USER } from '../types';
+import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
 
 export interface ICreateUser {
     name?: string;
@@ -203,7 +207,7 @@ class UserService {
 
     async createUser(
         { username, email, name, password, rootRole }: ICreateUser,
-        updatedBy?: IUser,
+        auditUser: IAuditUser,
     ): Promise<IUserWithRootRole> {
         if (!username && !email) {
             throw new BadDataError('You must specify username or email');
@@ -235,8 +239,7 @@ class UserService {
 
         await this.eventService.storeEvent(
             new UserCreatedEvent({
-                createdBy: this.getCreatedBy(updatedBy),
-                createdByUserId: user.id,
+                auditUser,
                 userCreated,
             }),
         );
@@ -244,13 +247,9 @@ class UserService {
         return userCreated;
     }
 
-    private getCreatedBy(updatedBy: IUser = new User(SYSTEM_USER)): string {
-        return updatedBy.username || updatedBy.email;
-    }
-
     async updateUser(
         { id, name, email, rootRole }: IUpdateUser,
-        updatedBy?: IUser,
+        auditUser: IAuditUser,
     ): Promise<IUserWithRootRole> {
         const preUser = await this.getUser(id);
 
@@ -276,17 +275,16 @@ class UserService {
 
         await this.eventService.storeEvent(
             new UserUpdatedEvent({
-                createdBy: this.getCreatedBy(updatedBy),
+                auditUser,
                 preUser: preUser,
                 postUser: storedUser,
-                createdByUserId: user.id,
             }),
         );
 
         return storedUser;
     }
 
-    async deleteUser(userId: number, updatedBy?: IUser): Promise<void> {
+    async deleteUser(userId: number, auditUser: IAuditUser): Promise<void> {
         const user = await this.getUser(userId);
         await this.accessService.wipeUserPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);
@@ -295,9 +293,8 @@ class UserService {
 
         await this.eventService.storeEvent(
             new UserDeletedEvent({
-                createdBy: this.getCreatedBy(updatedBy),
                 deletedUser: user,
-                createdByUserId: updatedBy?.id || -1337,
+                auditUser,
             }),
         );
     }
@@ -366,11 +363,14 @@ class UserService {
         } catch (e) {
             // User does not exists. Create if 'autoCreate' is enabled
             if (autoCreate) {
-                user = await this.createUser({
-                    email,
-                    name,
-                    rootRole: rootRole || RoleName.EDITOR,
-                });
+                user = await this.createUser(
+                    {
+                        email,
+                        name,
+                        rootRole: rootRole || RoleName.EDITOR,
+                    },
+                    SYSTEM_USER_AUDIT,
+                );
             } else {
                 throw e;
             }

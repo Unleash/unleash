@@ -7,10 +7,14 @@ import type {
 } from './dependent-features';
 import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
 import type { EventService } from '../../services';
-import type { IUser } from '../../server-impl';
-import { SKIP_CHANGE_REQUEST } from '../../types';
+import type { IAuditUser, IUser } from '../../server-impl';
+import {
+    FeatureDependenciesRemovedEvent,
+    FeatureDependencyAddedEvent,
+    FeatureDependencyRemovedEvent,
+    SKIP_CHANGE_REQUEST,
+} from '../../types';
 import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
-import { extractUsernameFromUser } from '../../util';
 import type { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type';
 
 interface IDependentFeaturesServiceDeps {
@@ -52,8 +56,7 @@ export class DependentFeaturesService {
             newFeatureName,
             projectId,
         }: { featureName: string; newFeatureName: string; projectId: string },
-        user: string,
-        userId: number,
+        auditUser: IAuditUser,
     ) {
         const parents =
             await this.dependentFeaturesReadModel.getParents(featureName);
@@ -66,8 +69,7 @@ export class DependentFeaturesService {
                         enabled: parent.enabled,
                         variants: parent.variants,
                     },
-                    user,
-                    userId,
+                    auditUser,
                 ),
             ),
         );
@@ -77,22 +79,21 @@ export class DependentFeaturesService {
         { child, projectId }: { child: string; projectId: string },
         dependentFeature: CreateDependentFeatureSchema,
         user: IUser,
+        auditUser: IAuditUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
         return this.unprotectedUpsertFeatureDependency(
             { child, projectId },
             dependentFeature,
-            extractUsernameFromUser(user),
-            user.id,
+            auditUser,
         );
     }
 
     async unprotectedUpsertFeatureDependency(
         { child, projectId }: { child: string; projectId: string },
         dependentFeature: CreateDependentFeatureSchema,
-        user: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
@@ -148,82 +149,81 @@ export class DependentFeaturesService {
                       variants,
                   };
         await this.dependentFeaturesStore.upsert(featureDependency);
-        await this.eventService.storeEvent({
-            type: 'feature-dependency-added',
-            project: projectId,
-            featureName: child,
-            createdBy: user,
-            createdByUserId: userId,
-            data: {
-                feature: parent,
-                enabled: featureDependency.enabled,
-                ...(variants !== undefined && { variants }),
-            },
-        });
+        await this.eventService.storeEvent(
+            new FeatureDependencyAddedEvent({
+                project: projectId,
+                featureName: child,
+                auditUser,
+                data: {
+                    feature: parent,
+                    enabled: featureDependency.enabled,
+                    ...(variants !== undefined && { variants }),
+                },
+            }),
+        );
     }
 
     async deleteFeatureDependency(
         dependency: FeatureDependencyId,
         projectId: string,
         user: IUser,
+        auditUser: IAuditUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
         return this.unprotectedDeleteFeatureDependency(
             dependency,
             projectId,
-            extractUsernameFromUser(user),
-            user.id,
+            auditUser,
         );
     }
 
     async unprotectedDeleteFeatureDependency(
         dependency: FeatureDependencyId,
         projectId: string,
-        user: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         await this.dependentFeaturesStore.delete(dependency);
-        await this.eventService.storeEvent({
-            type: 'feature-dependency-removed',
-            project: projectId,
-            featureName: dependency.child,
-            createdBy: user,
-            createdByUserId: userId,
-            data: { feature: dependency.parent },
-        });
+        await this.eventService.storeEvent(
+            new FeatureDependencyRemovedEvent({
+                project: projectId,
+                featureName: dependency.child,
+                auditUser,
+                data: { feature: dependency.parent },
+            }),
+        );
     }
 
     async deleteFeaturesDependencies(
         features: string[],
         projectId: string,
         user: IUser,
+        auditUser: IAuditUser,
     ): Promise<void> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
         return this.unprotectedDeleteFeaturesDependencies(
             features,
             projectId,
-            extractUsernameFromUser(user),
-            user.id,
+            auditUser,
         );
     }
 
     async unprotectedDeleteFeaturesDependencies(
         features: string[],
         projectId: string,
-        user: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         await this.dependentFeaturesStore.deleteAll(features);
         await this.eventService.storeEvents(
-            features.map((feature) => ({
-                type: 'feature-dependencies-removed',
-                project: projectId,
-                featureName: feature,
-                createdBy: user,
-                createdByUserId: userId,
-            })),
+            features.map(
+                (feature) =>
+                    new FeatureDependenciesRemovedEvent({
+                        project: projectId,
+                        featureName: feature,
+                        auditUser,
+                    }),
+            ),
         );
     }
 

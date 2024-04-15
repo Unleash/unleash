@@ -239,6 +239,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             projectId,
             req.body,
             req.user,
+            req.audit,
         );
         res.status(200).json({
             version: 1,
@@ -256,8 +257,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             featureName,
             projectId,
             req.body,
-            userName,
-            req.user.id,
+            req.audit,
         );
         res.status(200).json({
             version: 1,
@@ -300,6 +300,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             environments,
             variantsWithDefaults,
             req.user,
+            req.audit,
         );
         res.status(200).json({
             version: 1,
@@ -354,6 +355,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             environment,
             req.body,
             req.user,
+            req.audit,
         );
         res.status(200).json({
             version: 1,
@@ -372,6 +374,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             environment,
             req.body,
             req.user,
+            req.audit,
         );
         res.status(200).json({
             version: 1,

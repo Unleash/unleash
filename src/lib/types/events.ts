@@ -1,8 +1,7 @@
-import { extractUsernameFromUser } from '../util';
 import type { IApiUser } from './api-user';
 import type { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import type { IApiToken } from './models/api-token';
-import type { IUser, IUserWithRootRole } from './user';
+import type { IAuditUser, IUser, IUserWithRootRole } from './user';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -348,6 +347,7 @@ export interface IBaseEvent {
     project?: string;
     environment?: string;
     featureName?: string;
+    ip?: string;
     data?: any;
     preData?: any;
     tags?: ITag[];
@@ -381,22 +381,16 @@ class BaseEvent implements IBaseEvent {
 
     readonly createdByUserId: number;
 
+    readonly ip: string;
     /**
      * @param type the type of the event we're creating.
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     * @param createdByUserId accepts a number representing the internal id of the user creating this event
+     * @param auditUser USer info used to track which user performed the action. Includes username (email or username), userId and ip
      */
-    constructor(
-        type: IEventType,
-        createdBy: string | IUser,
-        createdByUserId: number,
-    ) {
+    constructor(type: IEventType, auditUser: IAuditUser) {
         this.type = type;
-        this.createdBy =
-            typeof createdBy === 'string'
-                ? createdBy
-                : extractUsernameFromUser(createdBy);
-        this.createdByUserId = createdByUserId;
+        this.createdBy = auditUser.username;
+        this.createdByUserId = auditUser.id;
+        this.ip = auditUser.ip;
     }
 }
 
@@ -405,21 +399,13 @@ export class FeatureStaleEvent extends BaseEvent {
 
     readonly featureName: string;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         stale: boolean;
         project: string;
         featureName: string;
-        createdBy: string | IUser;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            p.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
-            p.createdBy,
-            p.createdByUserId,
-        );
+        super(p.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF, p.auditUser);
         this.project = p.project;
         this.featureName = p.featureName;
     }
@@ -432,23 +418,18 @@ export class FeatureEnvironmentEvent extends BaseEvent {
 
     readonly environment: string;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         enabled: boolean;
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string | IUser;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
         super(
             p.enabled
                 ? FEATURE_ENVIRONMENT_ENABLED
                 : FEATURE_ENVIRONMENT_DISABLED,
-            p.createdBy,
-            p.createdByUserId,
+            p.auditUser,
         );
         this.project = p.project;
         this.featureName = p.featureName;
@@ -467,19 +448,15 @@ export class StrategiesOrderChangedEvent extends BaseEvent {
 
     readonly preData: StrategyIds;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string | IUser;
         data: StrategyIds;
         preData: StrategyIds;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(STRATEGY_ORDER_CHANGED, p.createdBy, p.createdByUserId);
+        super(STRATEGY_ORDER_CHANGED, p.auditUser);
         const { project, featureName, environment, data, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -498,18 +475,14 @@ export class FeatureVariantEvent extends BaseEvent {
 
     readonly preData: { variants: IVariant[] };
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string | IUser;
         newVariants: IVariant[];
         oldVariants: IVariant[];
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_VARIANTS_UPDATED, p.createdBy, p.createdByUserId);
+        super(FEATURE_VARIANTS_UPDATED, p.auditUser);
         this.project = p.project;
         this.featureName = p.featureName;
         this.data = { variants: p.newVariants };
@@ -529,22 +502,16 @@ export class EnvironmentVariantEvent extends BaseEvent {
     readonly preData: { variants: IVariant[] };
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         featureName: string;
         environment: string;
         project: string;
-        createdBy: string | IUser;
         newVariants: IVariant[];
         oldVariants: IVariant[];
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
-            p.createdBy,
-            p.createdByUserId,
-        );
+        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.auditUser);
         this.featureName = p.featureName;
         this.environment = p.environment;
         this.project = p.project;
@@ -563,17 +530,13 @@ export class FeatureChangeProjectEvent extends BaseEvent {
         newProject: string;
     };
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         oldProject: string;
         newProject: string;
         featureName: string;
-        createdBy: string | IUser;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_PROJECT_CHANGE, p.createdBy, p.createdByUserId);
+        super(FEATURE_PROJECT_CHANGE, p.auditUser);
         const { newProject, oldProject, featureName } = p;
         this.project = newProject;
         this.featureName = featureName;
@@ -588,21 +551,79 @@ export class FeatureCreatedEvent extends BaseEvent {
 
     readonly data: FeatureToggle;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string | IUser;
         data: FeatureToggle;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_CREATED, p.createdBy, p.createdByUserId);
+        super(FEATURE_CREATED, p.auditUser);
         const { project, featureName, data } = p;
         this.project = project;
         this.featureName = featureName;
         this.data = data;
+    }
+}
+
+export class FeatureDependencyAddedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly data: any;
+    constructor(eventData: {
+        project: string;
+        featureName: string;
+        auditUser: IAuditUser;
+        data: any;
+    }) {
+        super('feature-dependency-added', eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.data = eventData.data;
+    }
+}
+
+export class FeatureDependencyRemovedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly data: any;
+    constructor(eventData: {
+        project: string;
+        featureName: string;
+        auditUser: IAuditUser;
+        data: any;
+    }) {
+        super('feature-dependency-removed', eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.data = eventData.data;
+    }
+}
+export class FeatureDependenciesRemovedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+
+    constructor(eventData: {
+        project: string;
+        featureName: string;
+        auditUser: IAuditUser;
+    }) {
+        super('feature-dependencies-removed', eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+    }
+}
+
+export class FeaturesImportedEvent extends BaseEvent {
+    readonly project: string;
+    readonly environment: string;
+    constructor(eventData: {
+        project: string;
+        environment: string;
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURES_IMPORTED, eventData.auditUser);
+        this.project = eventData.project;
+        this.environment = eventData.environment;
     }
 }
 
@@ -611,16 +632,12 @@ export class FeatureArchivedEvent extends BaseEvent {
 
     readonly featureName: string;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string | IUser;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_ARCHIVED, p.createdBy, p.createdByUserId);
+        super(FEATURE_ARCHIVED, p.auditUser);
         const { project, featureName } = p;
         this.project = project;
         this.featureName = featureName;
@@ -633,15 +650,13 @@ export class FeatureRevivedEvent extends BaseEvent {
     readonly featureName: string;
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         project: string;
         featureName: string;
-        createdBy: string | IUser;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_REVIVED, p.createdBy, p.createdByUserId);
+        super(FEATURE_REVIVED, p.auditUser);
         const { project, featureName } = p;
         this.project = project;
         this.featureName = featureName;
@@ -658,17 +673,15 @@ export class FeatureDeletedEvent extends BaseEvent {
     readonly tags: ITag[];
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         project: string;
         featureName: string;
         preData: FeatureToggle;
-        createdBy: string | IUser;
         tags: ITag[];
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_DELETED, p.createdBy, p.createdByUserId);
+        super(FEATURE_DELETED, p.auditUser);
         const { project, featureName, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -687,17 +700,15 @@ export class FeatureMetadataUpdateEvent extends BaseEvent {
     readonly preData: FeatureToggle;
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         featureName: string;
-        createdBy: string | IUser;
         project: string;
         data: FeatureToggle;
         preData: FeatureToggle;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_METADATA_UPDATED, p.createdBy, p.createdByUserId);
+        super(FEATURE_METADATA_UPDATED, p.auditUser);
         const { project, featureName, data, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -716,17 +727,15 @@ export class FeatureStrategyAddEvent extends BaseEvent {
     readonly data: IStrategyConfig;
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string | IUser;
         data: IStrategyConfig;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_STRATEGY_ADD, p.createdBy, p.createdByUserId);
+        super(FEATURE_STRATEGY_ADD, p.auditUser);
         const { project, featureName, environment, data } = p;
         this.project = project;
         this.featureName = featureName;
@@ -747,18 +756,16 @@ export class FeatureStrategyUpdateEvent extends BaseEvent {
     readonly preData: IStrategyConfig;
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string | IUser;
         data: IStrategyConfig;
         preData: IStrategyConfig;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_STRATEGY_UPDATE, p.createdBy, p.createdByUserId);
+        super(FEATURE_STRATEGY_UPDATE, p.auditUser);
         const { project, featureName, environment, data, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -777,18 +784,14 @@ export class FeatureStrategyRemoveEvent extends BaseEvent {
 
     readonly preData: IStrategyConfig;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
-        createdBy: string | IUser;
         preData: IStrategyConfig;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(FEATURE_STRATEGY_REMOVE, p.createdBy, p.createdByUserId);
+        super(FEATURE_STRATEGY_REMOVE, p.auditUser);
         const { project, featureName, environment, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -805,15 +808,13 @@ export class ProjectUserAddedEvent extends BaseEvent {
     readonly preData: any;
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(PROJECT_USER_ADDED, p.createdBy, p.createdByUserId);
+        super(PROJECT_USER_ADDED, p.auditUser);
         const { project, data } = p;
         this.project = project;
         this.data = data;
@@ -828,16 +829,12 @@ export class ProjectUserRemovedEvent extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(PROJECT_USER_REMOVED, p.createdBy, p.createdByUserId);
+        super(PROJECT_USER_REMOVED, p.auditUser);
         const { project, preData } = p;
         this.project = project;
         this.data = null;
@@ -852,21 +849,13 @@ export class ProjectUserUpdateRoleEvent extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
         project: string;
-        createdBy: string | IUser;
         data: any;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PROJECT_USER_ROLE_CHANGED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(PROJECT_USER_ROLE_CHANGED, eventData.auditUser);
         const { project, data, preData } = eventData;
         this.project = project;
         this.data = data;
@@ -881,16 +870,12 @@ export class ProjectGroupAddedEvent extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(PROJECT_GROUP_ADDED, p.createdBy, p.createdByUserId);
+        super(PROJECT_GROUP_ADDED, p.auditUser);
         const { project, data } = p;
         this.project = project;
         this.data = data;
@@ -906,15 +891,13 @@ export class ProjectGroupRemovedEvent extends BaseEvent {
     readonly preData: any;
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(PROJECT_GROUP_REMOVED, p.createdBy, p.createdByUserId);
+        super(PROJECT_GROUP_REMOVED, p.auditUser);
         const { project, preData } = p;
         this.project = project;
         this.data = null;
@@ -930,20 +913,14 @@ export class ProjectGroupUpdateRoleEvent extends BaseEvent {
     readonly preData: any;
 
     /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
     constructor(eventData: {
         project: string;
-        createdBy: string | IUser;
         data: any;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PROJECT_GROUP_ROLE_CHANGED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(PROJECT_GROUP_ROLE_CHANGED, eventData.auditUser);
         const { project, data, preData } = eventData;
         this.project = project;
         this.data = data;
@@ -958,16 +935,12 @@ export class ProjectAccessAddedEvent extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(PROJECT_ACCESS_ADDED, p.createdBy, p.createdByUserId);
+        super(PROJECT_ACCESS_ADDED, p.auditUser);
         const { project, data } = p;
         this.project = project;
         this.data = data;
@@ -982,21 +955,13 @@ export class ProjectAccessUserRolesUpdated extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         data: any;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PROJECT_ACCESS_USER_ROLES_UPDATED,
-            p.createdBy,
-            p.createdByUserId,
-        );
+        super(PROJECT_ACCESS_USER_ROLES_UPDATED, p.auditUser);
         const { project, data, preData } = p;
         this.project = project;
         this.data = data;
@@ -1011,21 +976,13 @@ export class ProjectAccessGroupRolesUpdated extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         data: any;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PROJECT_ACCESS_GROUP_ROLES_UPDATED,
-            p.createdBy,
-            p.createdByUserId,
-        );
+        super(PROJECT_ACCESS_GROUP_ROLES_UPDATED, p.auditUser);
         const { project, data, preData } = p;
         this.project = project;
         this.data = data;
@@ -1040,20 +997,12 @@ export class ProjectAccessUserRolesDeleted extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PROJECT_ACCESS_USER_ROLES_DELETED,
-            p.createdBy,
-            p.createdByUserId,
-        );
+        super(PROJECT_ACCESS_USER_ROLES_DELETED, p.auditUser);
         const { project, preData } = p;
         this.project = project;
         this.data = null;
@@ -1068,20 +1017,12 @@ export class ProjectAccessGroupRolesDeleted extends BaseEvent {
 
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(p: {
         project: string;
-        createdBy: string | IUser;
         preData: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PROJECT_ACCESS_GROUP_ROLES_DELETED,
-            p.createdBy,
-            p.createdByUserId,
-        );
+        super(PROJECT_ACCESS_GROUP_ROLES_DELETED, p.auditUser);
         const { project, preData } = p;
         this.project = project;
         this.data = null;
@@ -1092,15 +1033,11 @@ export class ProjectAccessGroupRolesDeleted extends BaseEvent {
 export class SettingCreatedEvent extends BaseEvent {
     readonly data: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(SETTING_CREATED, eventData.createdBy, eventData.createdByUserId);
+        super(SETTING_CREATED, eventData.auditUser);
         this.data = eventData.data;
     }
 }
@@ -1108,15 +1045,11 @@ export class SettingCreatedEvent extends BaseEvent {
 export class SettingDeletedEvent extends BaseEvent {
     readonly data: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(SETTING_DELETED, eventData.createdBy, eventData.createdByUserId);
+        super(SETTING_DELETED, eventData.auditUser);
         this.data = eventData.data;
     }
 }
@@ -1125,18 +1058,14 @@ export class SettingUpdatedEvent extends BaseEvent {
     readonly data: any;
     readonly preData: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(
         eventData: {
-            createdBy: string | IUser;
             data: any;
-            createdByUserId: number;
+            auditUser: IAuditUser;
         },
         preData: any,
     ) {
-        super(SETTING_UPDATED, eventData.createdBy, eventData.createdByUserId);
+        super(SETTING_UPDATED, eventData.auditUser);
         this.data = eventData.data;
         this.preData = preData;
     }
@@ -1145,19 +1074,11 @@ export class SettingUpdatedEvent extends BaseEvent {
 export class PublicSignupTokenCreatedEvent extends BaseEvent {
     readonly data: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PUBLIC_SIGNUP_TOKEN_CREATED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(PUBLIC_SIGNUP_TOKEN_CREATED, eventData.auditUser);
         this.data = eventData.data;
     }
 }
@@ -1165,19 +1086,11 @@ export class PublicSignupTokenCreatedEvent extends BaseEvent {
 export class PublicSignupTokenUpdatedEvent extends BaseEvent {
     readonly data: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED, eventData.auditUser);
         this.data = eventData.data;
     }
 }
@@ -1185,19 +1098,11 @@ export class PublicSignupTokenUpdatedEvent extends BaseEvent {
 export class PublicSignupTokenUserAddedEvent extends BaseEvent {
     readonly data: any;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         data: any;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            PUBLIC_SIGNUP_TOKEN_USER_ADDED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(PUBLIC_SIGNUP_TOKEN_USER_ADDED, eventData.auditUser);
         this.data = eventData.data;
     }
 }
@@ -1209,19 +1114,11 @@ export class ApiTokenCreatedEvent extends BaseEvent {
 
     readonly project: string;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         apiToken: Omit<IApiToken, 'secret'>;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            API_TOKEN_CREATED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(API_TOKEN_CREATED, eventData.auditUser);
         this.data = eventData.apiToken;
         this.environment = eventData.apiToken.environment;
         this.project = eventData.apiToken.project;
@@ -1235,19 +1132,11 @@ export class ApiTokenDeletedEvent extends BaseEvent {
 
     readonly project: string;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         apiToken: Omit<IApiToken, 'secret'>;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            API_TOKEN_DELETED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(API_TOKEN_DELETED, eventData.auditUser);
         this.preData = eventData.apiToken;
         this.environment = eventData.apiToken.environment;
         this.project = eventData.apiToken.project;
@@ -1263,20 +1152,12 @@ export class ApiTokenUpdatedEvent extends BaseEvent {
 
     readonly project: string;
 
-    /**
-     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
-     */
     constructor(eventData: {
-        createdBy: string | IUser;
         previousToken: Omit<IApiToken, 'secret'>;
         apiToken: Omit<IApiToken, 'secret'>;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            API_TOKEN_UPDATED,
-            eventData.createdBy,
-            eventData.createdByUserId,
-        );
+        super(API_TOKEN_UPDATED, eventData.auditUser);
         this.preData = eventData.previousToken;
         this.data = eventData.apiToken;
         this.environment = eventData.apiToken.environment;
@@ -1292,13 +1173,9 @@ export class PotentiallyStaleOnEvent extends BaseEvent {
     constructor(eventData: {
         featureName: string;
         project: string;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(
-            FEATURE_POTENTIALLY_STALE_ON,
-            'unleash-system',
-            eventData.createdByUserId,
-        );
+        super(FEATURE_POTENTIALLY_STALE_ON, eventData.auditUser);
         this.featureName = eventData.featureName;
         this.project = eventData.project;
     }
@@ -1308,11 +1185,10 @@ export class UserCreatedEvent extends BaseEvent {
     readonly data: IUserEventData;
 
     constructor(eventData: {
-        createdBy: string | IUser;
         userCreated: IUserEventData;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(USER_CREATED, eventData.createdBy, eventData.createdByUserId);
+        super(USER_CREATED, eventData.auditUser);
         this.data = mapUserToData(eventData.userCreated);
     }
 }
@@ -1322,12 +1198,11 @@ export class UserUpdatedEvent extends BaseEvent {
     readonly preData: IUserEventData;
 
     constructor(eventData: {
-        createdBy: string | IUser;
         preUser: IUserEventData;
         postUser: IUserEventData;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(USER_UPDATED, eventData.createdBy, eventData.createdByUserId);
+        super(USER_UPDATED, eventData.auditUser);
         this.preData = mapUserToData(eventData.preUser);
         this.data = mapUserToData(eventData.postUser);
     }
@@ -1337,12 +1212,22 @@ export class UserDeletedEvent extends BaseEvent {
     readonly preData: IUserEventData;
 
     constructor(eventData: {
-        createdBy: string | IUser;
         deletedUser: IUserEventData;
-        createdByUserId: number;
+        auditUser: IAuditUser;
     }) {
-        super(USER_DELETED, eventData.createdBy, eventData.createdByUserId);
+        super(USER_DELETED, eventData.auditUser);
         this.preData = mapUserToData(eventData.deletedUser);
+    }
+}
+
+export class TagTypeCreated extends BaseEvent {
+    readonly data: any;
+    constructor(eventData: {
+        auditUser: IAuditUser;
+        data: any;
+    }) {
+        super('tag-type-created', eventData.auditUser);
+        this.data = eventData.data;
     }
 }
 

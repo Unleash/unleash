@@ -27,7 +27,6 @@ import type {
     ProjectService,
     FrontendApiService,
 } from '../../../services';
-import { extractUserId, extractUsername } from '../../../util';
 import type { IAuthRequest } from '../../unleash-types';
 import Controller from '../../controller';
 import type { Logger } from '../../../logger';
@@ -189,8 +188,7 @@ export class ProjectApiTokenController extends Controller {
         ) {
             const token = await this.apiTokenService.createApiToken(
                 createToken,
-                extractUsername(req),
-                extractUserId(req),
+                req.audit,
             );
             this.openApiService.respondWithValidation(
                 201,
@@ -221,11 +219,7 @@ export class ProjectApiTokenController extends Controller {
                 (storedToken.projects.length === 1 &&
                     storedToken.project[0] === projectId))
         ) {
-            await this.apiTokenService.delete(
-                token,
-                extractUsername(req),
-                user.id,
-            );
+            await this.apiTokenService.delete(token, req.audit);
             await this.frontendApiService.deleteClientForFrontendApiToken(
                 token,
             );

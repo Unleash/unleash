@@ -163,7 +163,10 @@ export const ProjectFeatureTogglesHeader: VFC<
                             }
                         />
                         <ConditionallyRender
-                            condition={projectOverviewRefactorFeedback}
+                            condition={
+                                projectOverviewRefactorFeedback &&
+                                !isSmallScreen
+                            }
                             show={
                                 <Button
                                     startIcon={<ReviewsOutlined />}

@@ -32,14 +32,14 @@ interface IGroupCardActions {
     groupId: number;
     onEditUsers: () => void;
     onRemove: () => void;
-    scimEnabled?: boolean;
+    isScimGroup?: boolean;
 }
 
 export const GroupCardActions: FC<IGroupCardActions> = ({
     groupId,
     onEditUsers,
     onRemove,
-    scimEnabled,
+    isScimGroup,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -62,7 +62,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
             }}
         >
             <Tooltip
-                title={scimEnabled ? scimGroupTooltip : 'Group actions'}
+                title={isScimGroup ? scimGroupTooltip : 'Group actions'}
                 arrow
                 describeChild
             >
@@ -74,7 +74,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClick}
                         type='button'
-                        disabled={scimEnabled}
+                        disabled={isScimGroup}
                     >
                         <MoreVert />
                     </IconButton>

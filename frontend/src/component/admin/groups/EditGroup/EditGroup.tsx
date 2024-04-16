@@ -16,7 +16,6 @@ import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import type { IGroup } from 'interfaces/group';
 import { scimGroupTooltip } from '../group-constants';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 export const EditGroupContainer = () => {
     const groupId = Number(useRequiredPathParam('groupId'));
@@ -46,18 +45,13 @@ export const EditGroup = ({
 }: IEditGroupProps) => {
     const { refetchGroups } = useGroups();
     const { setToastData, setToastApiError } = useToast();
-    const { uiConfig, isEnterprise } = useUiConfig();
+    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
 
     const {
-        settings: { enabled: scimSettingEnabled },
+        settings: { enabled: scimEnabled },
     } = useScimSettings();
-    const scimFlagEnabled = useUiFlag('scimApi');
-    const scimEnabled =
-        isEnterprise() &&
-        scimSettingEnabled &&
-        scimFlagEnabled &&
-        Boolean(group?.scimId);
+    const isScimGroup = scimEnabled && Boolean(group?.scimId);
 
     const {
         name,
@@ -156,15 +150,14 @@ export const EditGroup = ({
                 handleCancel={handleCancel}
                 mode={EDIT}
             >
-                <Tooltip title={scimEnabled ? scimGroupTooltip : ''} arrow>
+                <Tooltip title={isScimGroup ? scimGroupTooltip : ''} arrow>
                     <div>
                         <Button
                             type='submit'
                             variant='contained'
                             color='primary'
-                            disabled={scimEnabled || !isValid}
+                            disabled={isScimGroup || !isValid}
                             data-testid={UG_SAVE_BTN_ID}
-                            title='test'
                         >
                             Save
                         </Button>

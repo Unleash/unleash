@@ -2531,7 +2531,7 @@ describe('create project with environments', () => {
         return projectEnvs;
     };
 
-    test.skip('no environments specified means all enabled envs are enabled', async () => {
+    test('no environments specified means all enabled envs are enabled', async () => {
         const created = await createProjectWithEnvs(undefined);
 
         expect(created).toMatchObject(allEnabledEnvs);

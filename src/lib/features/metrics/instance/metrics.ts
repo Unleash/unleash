@@ -121,8 +121,8 @@ export default class ClientMetricsController extends Controller {
 
                 await this.metricsV2.registerClientMetrics(data, clientIp);
                 res.getHeaderNames().forEach((header) =>
-                      res.removeHeader(header),
-                  );
+                    res.removeHeader(header),
+                );
                 res.status(202).end();
             } catch (e) {
                 res.status(400).end();

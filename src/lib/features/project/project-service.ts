@@ -252,23 +252,31 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
     ): Promise<IProject> {
+        if (newProject.environments && newProject.environments.length === 0) {
+            throw new BadDataError(
+                'A project must always have at least one environment.',
+            );
+        }
+
         const validatedData = await projectSchema.validateAsync(newProject);
         const data = this.removeModeForNonEnterprise(validatedData);
         await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
 
-        const enabledEnvironments = await this.environmentStore.getAll({
-            enabled: true,
-        });
+        const envsToEnable = newProject.environments?.length
+            ? newProject.environments
+            : (
+                  await this.environmentStore.getAll({
+                      enabled: true,
+                  })
+              ).map((env) => env.name);
 
-        // TODO: Only if enabled!
+        console.log('got these envs to enable', envsToEnable);
+
         await Promise.all(
-            enabledEnvironments.map(async (e) => {
-                await this.featureEnvironmentStore.connectProject(
-                    e.name,
-                    data.id,
-                );
+            envsToEnable.map(async (env) => {
+                await this.featureEnvironmentStore.connectProject(env, data.id);
             }),
         );
 

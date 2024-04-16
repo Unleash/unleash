@@ -15,9 +15,9 @@ exports[`should create default config 1`] = `
     "styleSrc": [],
   },
   "authentication": {
-    "demoAllowAdminLogin": false,
     "createAdminUser": true,
     "customAuthHandler": [Function],
+    "demoAllowAdminLogin": false,
     "enableApiToken": true,
     "initApiTokens": [],
     "initialAdminUser": {

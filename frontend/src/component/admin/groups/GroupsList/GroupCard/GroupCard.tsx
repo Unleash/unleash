@@ -7,6 +7,9 @@ import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
+import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -96,6 +99,18 @@ export const GroupCard = ({
     onRemoveGroup,
 }: IGroupCardProps) => {
     const navigate = useNavigate();
+    const { isEnterprise } = useUiConfig();
+
+    const {
+        settings: { enabled: scimSettingEnabled },
+    } = useScimSettings();
+    const scimFlagEnabled = useUiFlag('scimApi');
+    const scimEnabled =
+        isEnterprise() &&
+        scimSettingEnabled &&
+        scimFlagEnabled &&
+        Boolean(group.scimId);
+
     return (
         <>
             <StyledLink key={group.id} to={`/admin/groups/${group.id}`}>
@@ -107,6 +122,7 @@ export const GroupCard = ({
                                 groupId={group.id}
                                 onEditUsers={() => onEditUsers(group)}
                                 onRemove={() => onRemoveGroup(group)}
+                                scimEnabled={scimEnabled}
                             />
                         </StyledHeaderActions>
                     </StyledTitleRow>

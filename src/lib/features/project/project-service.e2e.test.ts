@@ -2539,7 +2539,4 @@ describe('create project with environments and change request environments', () 
 
         expect(created).toMatchObject(selectedEnvs);
     });
-
-    test('it only enables CRs for the envs it is asked to enable CRs for', async () => {});
-    test('environments in CR env list but not in the envs list are ignored', async () => {});
 });

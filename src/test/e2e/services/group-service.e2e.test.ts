@@ -190,8 +190,7 @@ test('adding a root role to a group with a project role should not fail', async 
             name: 'root_group',
             description: 'root_group',
         },
-        'test',
-        -9999,
+        TEST_AUDIT_USER,
     );
 
     await stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');

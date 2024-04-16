@@ -35,6 +35,8 @@ export interface UserSchema {
     permissions?: string[];
     /** Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned */
     rootRole?: number;
+    /** The SCIM ID of the user, only present if managed by SCIM */
+    scimId?: string | null;
     /** The last time this user logged in */
     seenAt?: string | null;
     /** A unique username for the user */

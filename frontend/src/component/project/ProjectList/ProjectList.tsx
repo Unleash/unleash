@@ -5,6 +5,7 @@ import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetche
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard as LegacyProjectCard } from '../LegacyProjectCard/LegacyProjectCard';
+import { ProjectCard as NewProjectCard } from '../ProjectCard/ProjectCard';
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -48,6 +49,7 @@ const StyledDivContainer = styled('div')(({ theme }) => ({
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+    gap: theme.spacing(2),
 }));
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
@@ -147,7 +149,7 @@ export const ProjectListNew = () => {
     );
 
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
-    const projectListGridUi = useUiFlag('projectListGridUi');
+    const projectListGridUi = true;
     const filters = ['All projects', 'My projects'];
     const [filter, setFilter] = useState(filters[0]);
     const myProjects = new Set(useProfile().profile?.projects || []);
@@ -216,8 +218,7 @@ export const ProjectListNew = () => {
     const StyledItemsContainer = projectListGridUi
         ? StyledGridContainer
         : StyledDivContainer;
-    // const ProjectCard = projectListGridUi ? NewProjectCard : LegacyProjectCard;
-    const ProjectCard = LegacyProjectCard;
+    const ProjectCard = projectListGridUi ? NewProjectCard : LegacyProjectCard;
 
     return (
         <PageContent

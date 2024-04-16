@@ -26,6 +26,7 @@ import {
     createPatSchema,
 } from '../../../openapi/spec/create-pat-schema';
 import { ForbiddenError, NotFoundError } from '../../../error';
+import idNumberMiddleware from '../../../middleware/id-number-middleware';
 
 export default class PatController extends Controller {
     private patService: PatService;
@@ -109,6 +110,7 @@ export default class PatController extends Controller {
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
+                idNumberMiddleware(),
             ],
         });
     }

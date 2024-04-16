@@ -28,6 +28,7 @@ export interface IApplication {
     instances?: IClientInstance[];
     seenToggles?: Record<string, any>;
     project?: string;
+    projects?: string[];
     environment?: string;
     links?: Record<string, string>;
 }

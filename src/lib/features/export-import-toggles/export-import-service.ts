@@ -3,7 +3,7 @@ import type { IStrategy } from '../../types/stores/strategy-store';
 import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import {
-    FEATURES_EXPORTED,
+    FeaturesExportedEvent,
     FeaturesImportedEvent,
     type FeatureToggleDTO,
     type IAuditUser,
@@ -72,8 +72,7 @@ export type IImportService = {
 export type IExportService = {
     export(
         query: ExportQuerySchema,
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<ExportResultSchema>;
 };
 
@@ -803,8 +802,7 @@ export default class ExportImportService
 
     async export(
         query: ExportQuerySchema,
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<ExportResultSchema> {
         let featureNames: string[] = [];
         if (typeof query.tag === 'string') {
@@ -937,12 +935,9 @@ export default class ExportImportService
             tagTypes: filteredTagTypes,
             dependencies: mappedFeatureDependencies,
         };
-        await this.eventService.storeEvent({
-            type: FEATURES_EXPORTED,
-            createdBy: userName,
-            createdByUserId: userId,
-            data: result,
-        });
+        await this.eventService.storeEvent(
+            new FeaturesExportedEvent({ data: result, auditUser }),
+        );
 
         return result;
     }

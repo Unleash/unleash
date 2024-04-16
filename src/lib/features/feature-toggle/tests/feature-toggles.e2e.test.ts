@@ -27,7 +27,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import type supertest from 'supertest';
 import { randomId } from '../../../util/random-id';
-import { DEFAULT_PROJECT } from '../../../types';
+import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../../types';
 import type {
     FeatureStrategySchema,
     SetStrategySortOrderSchema,
@@ -55,7 +55,7 @@ const createSegment = async (segmentName: string) => {
                 },
             ],
         },
-        { username: 'testuser', email: 'test@test.com' },
+        TEST_AUDIT_USER,
     );
 
     return segment;
@@ -268,6 +268,7 @@ test('should not allow to change project with dependencies', async () => {
             // @ts-ignore
             user,
             'default',
+            TEST_AUDIT_USER,
         ),
     ).rejects.toThrow(
         new ForbiddenError(
@@ -727,11 +728,14 @@ describe('Interacting with features using project IDs that belong to other proje
     const nonExistingProject = 'this-is-not-a-project';
 
     beforeAll(async () => {
-        const dummyAdmin = await app.services.userService.createUser({
-            name: 'Some Name',
-            email: 'test@getunleash.io',
-            rootRole: RoleName.ADMIN,
-        });
+        const dummyAdmin = await app.services.userService.createUser(
+            {
+                name: 'Some Name',
+                email: 'test@getunleash.io',
+                rootRole: RoleName.ADMIN,
+            },
+            TEST_AUDIT_USER,
+        );
         await app.services.projectService.createProject(
             {
                 name: otherProject,
@@ -740,6 +744,7 @@ describe('Interacting with features using project IDs that belong to other proje
                 defaultStickiness: 'clientId',
             },
             dummyAdmin,
+            TEST_AUDIT_USER,
         );
 
         // ensure the new project has been created
@@ -2307,6 +2312,7 @@ test('Should not allow changing project to target project without the same enabl
             //@ts-ignore
             user,
             'default',
+            TEST_AUDIT_USER,
         ),
     ).rejects.toThrow(new IncompatibleProjectError(targetProject));
 });
@@ -2387,6 +2393,7 @@ test('Should allow changing project to target project with the same enabled envi
             //@ts-ignore
             user,
             'default',
+            TEST_AUDIT_USER,
         ),
     ).resolves;
 });

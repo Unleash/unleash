@@ -16,6 +16,7 @@ import {
     type IStrategyConfig,
     type ITagStore,
     type IVariant,
+    TEST_AUDIT_USER,
 } from '../../types';
 import { DEFAULT_ENV } from '../../util';
 import type {
@@ -24,7 +25,6 @@ import type {
     UpsertSegmentSchema,
     VariantsSchema,
 } from '../../openapi';
-import User from '../../types/user';
 import type { IContextFieldDto } from '../../types/stores/context-field-store';
 
 let app: IUnleashTest;
@@ -67,8 +67,7 @@ const createToggle = async (
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
         toggle,
-        username,
-        -9999,
+        TEST_AUDIT_USER,
     );
     if (strategy) {
         await app.services.featureToggleServiceV2.createStrategy(
@@ -78,7 +77,7 @@ const createToggle = async (
                 featureName: toggle.name,
                 environment: DEFAULT_ENV,
             },
-            username,
+            TEST_AUDIT_USER,
         );
     }
     await Promise.all(
@@ -89,8 +88,7 @@ const createToggle = async (
                     type: 'simple',
                     value: tag,
                 },
-                username,
-                userId,
+                TEST_AUDIT_USER,
             );
         }),
     );
@@ -110,7 +108,7 @@ const createVariants = async (feature: string, variants: IVariant[]) => {
         feature,
         DEFAULT_ENV,
         variants,
-        new User({ id: 1 }),
+        TEST_AUDIT_USER,
     );
 };
 
@@ -138,9 +136,7 @@ const createProjects = async (
 };
 
 const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
-    return app.services.segmentService.create(postData, {
-        email: 'test@example.com',
-    });
+    return app.services.segmentService.create(postData, TEST_AUDIT_USER);
 };
 
 const unArchiveFeature = async (featureName: string) => {

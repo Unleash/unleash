@@ -1,6 +1,11 @@
 import NotFoundError from '../error/notfound-error';
 import type { Logger } from '../logger';
-import { FEATURE_TAGGED, FEATURE_UNTAGGED, TAG_CREATED } from '../types/events';
+import {
+    FEATURE_TAGGED,
+    FEATURE_UNTAGGED,
+    FeatureTaggedEvent,
+    TAG_CREATED,
+} from '../types/events';
 import type { IUnleashConfig } from '../types/option';
 import type { IFeatureToggleStore, IUnleashStores } from '../types/stores';
 import { tagSchema } from './tag-schema';
@@ -68,15 +73,14 @@ class FeatureTagService {
             auditUser.id,
         );
 
-        await this.eventService.storeEvent({
-            type: FEATURE_TAGGED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
-            featureName,
-            project: featureToggle.project,
-            data: validatedTag,
-        });
+        await this.eventService.storeEvent(
+            new FeatureTaggedEvent({
+                featureName,
+                project: featureToggle.project,
+                data: validatedTag,
+                auditUser,
+            }),
+        );
         return validatedTag;
     }
 

@@ -13,9 +13,14 @@ import {
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
-import type { IUnleashStores, IUser } from '../../../lib/types';
+import {
+    type IUnleashStores,
+    type IUser,
+    TEST_AUDIT_USER,
+} from '../../../lib/types';
 import type { User } from '../../../lib/server-impl';
 import { createProjectInsightsService } from './createProjectInsightsService';
+import { extractAuditInfoFromUser } from '../../util';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -77,7 +82,11 @@ test('should return average time to production per toggle', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(
+        project,
+        user,
+        extractAuditInfoFromUser(user),
+    );
 
     const toggles = [
         { name: 'average-prod-time-pt', subdays: 7 },
@@ -92,8 +101,7 @@ test('should return average time to production per toggle', async () => {
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                extractAuditInfoFromUser(opsUser),
             );
         }),
     );
@@ -106,8 +114,7 @@ test('should return average time to production per toggle', async () => {
                     project: project.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser: TEST_AUDIT_USER,
                 }),
             );
         }),
@@ -143,8 +150,16 @@ test('should return average time to production per toggle for a specific project
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project1, user);
-    await projectService.createProject(project2, user);
+    await projectService.createProject(
+        project1,
+        user,
+        extractAuditInfoFromUser(user),
+    );
+    await projectService.createProject(
+        project2,
+        user,
+        extractAuditInfoFromUser(user),
+    );
 
     const togglesProject1 = [
         { name: 'average-prod-time-pt-10', subdays: 7 },
@@ -162,8 +177,7 @@ test('should return average time to production per toggle for a specific project
             return featureToggleService.createFeatureToggle(
                 project1.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                extractAuditInfoFromUser(opsUser),
             );
         }),
     );
@@ -173,8 +187,7 @@ test('should return average time to production per toggle for a specific project
             return featureToggleService.createFeatureToggle(
                 project2.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                extractAuditInfoFromUser(opsUser),
             );
         }),
     );
@@ -187,8 +200,7 @@ test('should return average time to production per toggle for a specific project
                     project: project1.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser: TEST_AUDIT_USER,
                 }),
             );
         }),
@@ -202,8 +214,7 @@ test('should return average time to production per toggle for a specific project
                     project: project2.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser: TEST_AUDIT_USER,
                 }),
             );
         }),
@@ -244,7 +255,11 @@ test('should return average time to production per toggle and include archived t
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project1, user);
+    await projectService.createProject(
+        project1,
+        user,
+        extractAuditInfoFromUser(user),
+    );
 
     const togglesProject1 = [
         { name: 'average-prod-time-pta-10', subdays: 7 },
@@ -257,8 +272,7 @@ test('should return average time to production per toggle and include archived t
             return featureToggleService.createFeatureToggle(
                 project1.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                extractAuditInfoFromUser(opsUser),
             );
         }),
     );
@@ -271,8 +285,7 @@ test('should return average time to production per toggle and include archived t
                     project: project1.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser: TEST_AUDIT_USER,
                 }),
             );
         }),
@@ -286,7 +299,11 @@ test('should return average time to production per toggle and include archived t
         ),
     );
 
-    await featureToggleService.archiveToggle('average-prod-time-pta-12', user);
+    await featureToggleService.archiveToggle(
+        'average-prod-time-pta-12',
+        user,
+        extractAuditInfoFromUser(user),
+    );
 
     const resultProject1 = await projectInsightsService.getDoraMetrics(
         project1.id,

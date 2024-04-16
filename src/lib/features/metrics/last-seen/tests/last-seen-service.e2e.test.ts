@@ -6,6 +6,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../../test/fixtures/no-logger';
+import { TEST_AUDIT_USER } from '../../../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -45,8 +46,7 @@ test('should clean unknown feature toggle names from last seen store', async () 
             featureToggleService.createFeatureToggle(
                 'default',
                 { name: featureName },
-                'user',
-                -9999,
+                TEST_AUDIT_USER,
             ),
         ),
     );
@@ -101,8 +101,7 @@ test('should clean unknown feature toggle environments from last seen store', as
             featureToggleService.createFeatureToggle(
                 'default',
                 { name: feature.name },
-                'user',
-                -9999,
+                TEST_AUDIT_USER,
             ),
         ),
     );

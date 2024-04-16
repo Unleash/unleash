@@ -4,7 +4,7 @@ import getLogger from '../../../fixtures/no-logger';
 import type { ApiTokenService } from '../../../../lib/services/api-token-service';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { SYSTEM_USER } from '../../../../lib/types';
+import { TEST_AUDIT_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -43,14 +43,12 @@ beforeAll(async () => {
     await environmentService.addEnvironmentToProject(
         environment,
         project,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        TEST_AUDIT_USER,
     );
     await environmentService.addEnvironmentToProject(
         environment,
         project2,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        TEST_AUDIT_USER,
     );
 
     await featureToggleServiceV2.createFeatureToggle(
@@ -59,8 +57,7 @@ beforeAll(async () => {
             name: feature1,
             description: 'the #1 feature',
         },
-        tokenName,
-        tokenUserId,
+        TEST_AUDIT_USER,
     );
 
     await featureToggleServiceV2.createStrategy(
@@ -70,7 +67,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project, featureName: feature1, environment: DEFAULT_ENV },
-        tokenName,
+        TEST_AUDIT_USER,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -79,7 +76,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project, featureName: feature1, environment },
-        tokenName,
+        TEST_AUDIT_USER,
     );
 
     // create feature 2
@@ -88,8 +85,7 @@ beforeAll(async () => {
         {
             name: feature2,
         },
-        tokenName,
-        tokenUserId,
+        TEST_AUDIT_USER,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -98,7 +94,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project, featureName: feature2, environment },
-        tokenName,
+        TEST_AUDIT_USER,
     );
 
     // create feature 3
@@ -107,8 +103,7 @@ beforeAll(async () => {
         {
             name: feature3,
         },
-        tokenName,
-        tokenUserId,
+        TEST_AUDIT_USER,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -117,7 +112,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project2, featureName: feature3, environment },
-        tokenName,
+        TEST_AUDIT_USER,
     );
 });
 

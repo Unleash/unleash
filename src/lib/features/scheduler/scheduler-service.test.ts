@@ -7,6 +7,7 @@ import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
 import type EventService from '../events/event-service';
 import { SCHEDULER_JOB_TIME } from '../../metric-events';
 import EventEmitter from 'events';
+import { TEST_AUDIT_USER } from '../../types';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -34,8 +35,7 @@ const toggleMaintenanceMode = async (
 ) => {
     await maintenanceService.toggleMaintenanceMode(
         { enabled },
-        'irrelevant user',
-        -9999,
+        TEST_AUDIT_USER,
     );
 };
 

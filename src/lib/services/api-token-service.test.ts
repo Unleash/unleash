@@ -10,11 +10,13 @@ import {
     API_TOKEN_CREATED,
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
+    TEST_AUDIT_USER,
 } from '../types';
 import { addDays, minutesToMilliseconds } from 'date-fns';
 import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../../lib/features';
+import { extractAuditInfoFromUser } from '../util';
 
 test('Should init api token', async () => {
     const token = {
@@ -135,8 +137,12 @@ test('Api token operations should all have events attached', async () => {
     );
     const saved = await apiTokenService.createApiTokenWithProjects(token);
     const newExpiry = addDays(new Date(), 30);
-    await apiTokenService.updateExpiry(saved.secret, newExpiry, 'test', -9999);
-    await apiTokenService.delete(saved.secret, 'test', -9999);
+    await apiTokenService.updateExpiry(
+        saved.secret,
+        newExpiry,
+        TEST_AUDIT_USER,
+    );
+    await apiTokenService.delete(saved.secret, TEST_AUDIT_USER);
     const { events } = await eventService.getEvents();
     const createdApiTokenEvents = events.filter(
         (e) => e.type === API_TOKEN_CREATED,
@@ -182,7 +188,7 @@ test('getUserForToken should get a user with admin token user id and token name'
             type: ApiTokenType.ADMIN,
             tokenName: 'admin.token',
         },
-        ADMIN_TOKEN_USER as IUser,
+        extractAuditInfoFromUser(ADMIN_TOKEN_USER as IUser),
     );
 
     const user = await tokenService.getUserForToken(token.secret);

@@ -7,8 +7,7 @@ import type {
 } from '../types/stores/feature-type-store';
 import NotFoundError from '../error/notfound-error';
 import type EventService from '../features/events/event-service';
-import { FEATURE_TYPE_UPDATED, type IUser } from '../types';
-import { extractUsernameFromUser } from '../util';
+import { FeatureTypeUpdatedEvent, type IAuditUser } from '../types';
 
 export default class FeatureTypeService {
     private featureTypeStore: IFeatureTypeStore;
@@ -34,7 +33,7 @@ export default class FeatureTypeService {
     async updateLifetime(
         id: string,
         newLifetimeDays: number | null,
-        user: IUser,
+        auditUser: IAuditUser,
     ): Promise<IFeatureType> {
         // because our OpenAPI library does type coercion, any `null` values you
         // pass in get converted to `0`.
@@ -54,13 +53,13 @@ export default class FeatureTypeService {
             );
         }
 
-        await this.eventService.storeEvent({
-            type: FEATURE_TYPE_UPDATED,
-            createdBy: extractUsernameFromUser(user),
-            createdByUserId: user.id,
-            data: { ...featureType, lifetimeDays: translatedLifetime },
-            preData: featureType,
-        });
+        await this.eventService.storeEvent(
+            new FeatureTypeUpdatedEvent({
+                auditUser,
+                data: { ...featureType, lifetimeDays: translatedLifetime },
+                preData: featureType,
+            }),
+        );
 
         return result;
     }

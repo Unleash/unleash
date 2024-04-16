@@ -4,13 +4,13 @@ import type { Logger } from '../logger';
 import type { IFavoriteFeaturesStore } from '../types/stores/favorite-features';
 import type { IFavoriteFeature, IFavoriteProject } from '../types/favorites';
 import {
-    FEATURE_FAVORITED,
-    FEATURE_UNFAVORITED,
-    PROJECT_FAVORITED,
-    PROJECT_UNFAVORITED,
+    FeatureFavoritedEvent,
+    FeatureUnfavoritedEvent,
+    type IAuditUser,
+    ProjectFavoritedEvent,
+    ProjectUnfavoritedEvent,
 } from '../types';
 import type { IUser } from '../types/user';
-import { extractUsernameFromUser } from '../util';
 import type { IFavoriteProjectKey } from '../types/stores/favorite-projects';
 import type EventService from '../features/events/event-service';
 
@@ -53,81 +53,83 @@ export class FavoritesService {
         this.eventService = eventService;
     }
 
-    async favoriteFeature({
-        feature,
-        user,
-    }: IFavoriteFeatureProps): Promise<IFavoriteFeature> {
+    async favoriteFeature(
+        { feature, user }: IFavoriteFeatureProps,
+        auditUser: IAuditUser,
+    ): Promise<IFavoriteFeature> {
         const data = await this.favoriteFeaturesStore.addFavoriteFeature({
             feature: feature,
             userId: user.id,
         });
-        await this.eventService.storeEvent({
-            type: FEATURE_FAVORITED,
-            featureName: feature,
-            createdBy: extractUsernameFromUser(user),
-            createdByUserId: user.id,
-            data: {
-                feature,
-            },
-        });
+        await this.eventService.storeEvent(
+            new FeatureFavoritedEvent({
+                featureName: feature,
+                data: {
+                    feature,
+                },
+                auditUser,
+            }),
+        );
         return data;
     }
 
-    async unfavoriteFeature({
-        feature,
-        user,
-    }: IFavoriteFeatureProps): Promise<void> {
+    async unfavoriteFeature(
+        { feature, user }: IFavoriteFeatureProps,
+        auditUser: IAuditUser,
+    ): Promise<void> {
         const data = await this.favoriteFeaturesStore.delete({
             feature: feature,
             userId: user.id,
         });
-        await this.eventService.storeEvent({
-            type: FEATURE_UNFAVORITED,
-            featureName: feature,
-            createdBy: extractUsernameFromUser(user),
-            createdByUserId: user.id,
-            data: {
-                feature,
-            },
-        });
+        await this.eventService.storeEvent(
+            new FeatureUnfavoritedEvent({
+                featureName: feature,
+                data: {
+                    feature,
+                },
+                auditUser,
+            }),
+        );
         return data;
     }
 
-    async favoriteProject({
-        project,
-        user,
-    }: IFavoriteProjectProps): Promise<IFavoriteProject> {
+    async favoriteProject(
+        { project, user }: IFavoriteProjectProps,
+        auditUser: IAuditUser,
+    ): Promise<IFavoriteProject> {
         const data = this.favoriteProjectsStore.addFavoriteProject({
             project,
             userId: user.id,
         });
-        await this.eventService.storeEvent({
-            type: PROJECT_FAVORITED,
-            createdBy: extractUsernameFromUser(user),
-            createdByUserId: user.id,
-            data: {
+        await this.eventService.storeEvent(
+            new ProjectFavoritedEvent({
+                data: {
+                    project,
+                },
                 project,
-            },
-        });
+                auditUser,
+            }),
+        );
         return data;
     }
 
-    async unfavoriteProject({
-        project,
-        user,
-    }: IFavoriteProjectProps): Promise<void> {
+    async unfavoriteProject(
+        { project, user }: IFavoriteProjectProps,
+        auditUser: IAuditUser,
+    ): Promise<void> {
         const data = this.favoriteProjectsStore.delete({
             project: project,
             userId: user.id,
         });
-        await this.eventService.storeEvent({
-            type: PROJECT_UNFAVORITED,
-            createdBy: extractUsernameFromUser(user),
-            createdByUserId: user.id,
-            data: {
+        await this.eventService.storeEvent(
+            new ProjectUnfavoritedEvent({
+                data: {
+                    project,
+                },
                 project,
-            },
-        });
+                auditUser,
+            }),
+        );
         return data;
     }
 

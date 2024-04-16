@@ -23,8 +23,8 @@ import type {
     FeatureStrategySchema,
     UpsertSegmentSchema,
 } from '../../openapi';
-import { DEFAULT_ENV } from '../../util';
-import { DEFAULT_PROJECT } from '../../types';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util';
+import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../types';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -50,19 +50,22 @@ const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
 };
 
 const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
-    return app.services.segmentService.create(postData, {
-        email: 'test@example.com',
-    });
+    return app.services.segmentService.create(postData, TEST_AUDIT_USER);
 };
 
 const updateSegment = (
     id: number,
     postData: UpsertSegmentSchema,
 ): Promise<void> => {
-    return app.services.segmentService.update(id, postData, {
-        email: 'test@example.com',
-        id: 1,
-    });
+    return app.services.segmentService.update(
+        id,
+        postData,
+        {
+            email: 'test@example.com',
+            id: 1,
+        },
+        TEST_AUDIT_USER,
+    );
 };
 
 const mockStrategy = (segments: number[] = []) => {
@@ -298,7 +301,11 @@ test('should store segment-created and segment-deleted events', async () => {
 
     await createSegment({ name: 'S1', constraints });
     const [segment1] = await fetchSegments();
-    await app.services.segmentService.delete(segment1.id, user);
+    await app.services.segmentService.delete(
+        segment1.id,
+        user,
+        extractAuditInfoFromUser(user),
+    );
     const events = await db.stores.eventStore.getEvents();
 
     expect(events[0].type).toEqual('segment-deleted');

@@ -116,7 +116,7 @@ When a feature toggle type's expected lifetime is changed, this will also cause 
         const result = await this.featureTypeService.updateLifetime(
             req.params.id.toLowerCase(),
             req.body.lifetimeDays,
-            req.user,
+            req.audit,
         );
 
         this.openApiService.respondWithValidation(

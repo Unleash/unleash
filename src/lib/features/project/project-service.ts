@@ -34,16 +34,16 @@ import {
     type IUnleashConfig,
     type IUnleashStores,
     MOVE_FEATURE_TOGGLE,
-    PROJECT_CREATED,
-    PROJECT_DELETED,
-    PROJECT_UPDATED,
     ProjectAccessAddedEvent,
     ProjectAccessGroupRolesUpdated,
     ProjectAccessUserRolesDeleted,
     ProjectAccessUserRolesUpdated,
+    ProjectCreatedEvent,
+    ProjectDeletedEvent,
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    ProjectUpdatedEvent,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
@@ -283,6 +283,7 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
         enableChangeRequestsForSpecifiedEnvironments: () => Promise<void> = async () => {},
+        auditUser: IAuditUser,
     ): Promise<IProject> {
         await this.validateProjectEnvironments(newProject.environments);
 
@@ -312,20 +313,20 @@ export default class ProjectService {
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 
-        await this.eventService.storeEvent({
-            type: PROJECT_CREATED,
-            createdBy: getCreatedBy(user),
-            createdByUserId: user.id,
-            data,
-            project: newProject.id,
-        });
+        await this.eventService.storeEvent(
+            new ProjectCreatedEvent({
+                data,
+                project: newProject.id,
+                auditUser,
+            }),
+        );
 
         return data;
     }
 
     async updateProject(
         updatedProject: IProjectUpdate,
-        user: IUser,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);
 
@@ -334,19 +335,19 @@ export default class ProjectService {
         // updated project contains instructions to update the project but it may not represent a whole project
         const afterData = await this.projectStore.get(updatedProject.id);
 
-        await this.eventService.storeEvent({
-            type: PROJECT_UPDATED,
-            project: updatedProject.id,
-            createdBy: getCreatedBy(user),
-            createdByUserId: user.id,
-            data: afterData,
-            preData,
-        });
+        await this.eventService.storeEvent(
+            new ProjectUpdatedEvent({
+                project: updatedProject.id,
+                data: afterData,
+                preData,
+                auditUser,
+            }),
+        );
     }
 
     async updateProjectEnterpriseSettings(
         updatedProject: IProjectEnterpriseSettingsUpdate,
-        user: IUser,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);
 
@@ -358,14 +359,14 @@ export default class ProjectService {
 
         await this.projectStore.updateProjectEnterpriseSettings(updatedProject);
 
-        await this.eventService.storeEvent({
-            type: PROJECT_UPDATED,
-            project: updatedProject.id,
-            createdBy: getCreatedBy(user),
-            createdByUserId: user.id,
-            data: { ...preData, ...updatedProject },
-            preData,
-        });
+        await this.eventService.storeEvent(
+            new ProjectUpdatedEvent({
+                project: updatedProject.id,
+                data: { ...preData, ...updatedProject },
+                preData,
+                auditUser,
+            }),
+        );
     }
 
     async checkProjectsCompatibility(
@@ -471,12 +472,12 @@ export default class ProjectService {
 
         await this.projectStore.delete(id);
 
-        await this.eventService.storeEvent({
-            type: PROJECT_DELETED,
-            createdBy: getCreatedBy(user),
-            project: id,
-            createdByUserId: user.id,
-        });
+        await this.eventService.storeEvent(
+            new ProjectDeletedEvent({
+                project: id,
+                auditUser,
+            }),
+        );
 
         await this.accessService.removeDefaultProjectRoles(user, id);
     }

@@ -22,8 +22,8 @@ import type { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import {
     UserCreatedEvent,
-    UserUpdatedEvent,
     UserDeletedEvent,
+    UserUpdatedEvent,
 } from '../types/events';
 import type { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
@@ -207,7 +207,7 @@ class UserService {
 
     async createUser(
         { username, email, name, password, rootRole }: ICreateUser,
-        auditUser: IAuditUser,
+        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IUserWithRootRole> {
         if (!username && !email) {
             throw new BadDataError('You must specify username or email');

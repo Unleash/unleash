@@ -10,7 +10,11 @@ export const auditAccessMiddleware = ({
         if (!req.user) {
             logger.info('Could not find user');
         } else {
-            req.audit = extractAuditInfo(req);
+            try {
+                req.audit = extractAuditInfo(req);
+            } catch (e) {
+                logger.warn('Could not find audit info in request');
+            }
         }
         next();
     };

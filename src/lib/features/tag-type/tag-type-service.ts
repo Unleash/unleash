@@ -4,9 +4,9 @@ import { tagTypeSchema } from '../../services/tag-type-schema';
 
 import type { IUnleashStores } from '../../types/stores';
 import {
-    TAG_TYPE_DELETED,
-    TAG_TYPE_UPDATED,
-    TagTypeCreated,
+    TagTypeCreatedEvent,
+    TagTypeDeletedEvent,
+    TagTypeUpdatedEvent,
 } from '../../types/events';
 
 import type { Logger } from '../../logger';
@@ -50,7 +50,7 @@ export default class TagTypeService {
         await this.validateUnique(data.name);
         await this.tagTypeStore.createTagType(data);
         await this.eventService.storeEvent(
-            new TagTypeCreated({
+            new TagTypeCreatedEvent({
                 auditUser,
                 data,
             }),
@@ -78,13 +78,12 @@ export default class TagTypeService {
     async deleteTagType(name: string, auditUser: IAuditUser): Promise<void> {
         const tagType = await this.tagTypeStore.get(name);
         await this.tagTypeStore.delete(name);
-        await this.eventService.storeEvent({
-            type: TAG_TYPE_DELETED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
-            preData: tagType,
-        });
+        await this.eventService.storeEvent(
+            new TagTypeDeletedEvent({
+                preData: tagType,
+                auditUser,
+            }),
+        );
     }
 
     async updateTagType(
@@ -93,13 +92,12 @@ export default class TagTypeService {
     ): Promise<ITagType> {
         const data = await tagTypeSchema.validateAsync(updatedTagType);
         await this.tagTypeStore.updateTagType(data);
-        await this.eventService.storeEvent({
-            type: TAG_TYPE_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
-            data,
-        });
+        await this.eventService.storeEvent(
+            new TagTypeUpdatedEvent({
+                data,
+                auditUser,
+            }),
+        );
         return data;
     }
 }

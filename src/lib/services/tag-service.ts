@@ -1,12 +1,13 @@
 import { tagSchema } from './tag-schema';
 import NameExistsError from '../error/name-exists-error';
-import { TAG_CREATED, TAG_DELETED } from '../types/events';
+import { TagCreatedEvent, TagDeletedEvent } from '../types/events';
 import type { Logger } from '../logger';
 import type { IUnleashStores } from '../types/stores';
 import type { IUnleashConfig } from '../types/option';
 import type { ITagStore } from '../types/stores/tag-store';
 import type { ITag } from '../types/model';
 import type EventService from '../features/events/event-service';
+import type { IAuditUser } from '../types';
 
 export default class TagService {
     private tagStore: ITagStore;
@@ -50,31 +51,27 @@ export default class TagService {
         return data;
     }
 
-    async createTag(
-        tag: ITag,
-        userName: string,
-        userId: number,
-    ): Promise<ITag> {
+    async createTag(tag: ITag, auditUser: IAuditUser): Promise<ITag> {
         const data = await this.validate(tag);
         await this.tagStore.createTag(data);
-        await this.eventService.storeEvent({
-            type: TAG_CREATED,
-            createdBy: userName,
-            createdByUserId: userId,
-            data,
-        });
+        await this.eventService.storeEvent(
+            new TagCreatedEvent({
+                data,
+                auditUser,
+            }),
+        );
 
         return data;
     }
 
-    async deleteTag(tag: ITag, userName: string, userId): Promise<void> {
+    async deleteTag(tag: ITag, auditUser: IAuditUser): Promise<void> {
         await this.tagStore.delete(tag);
-        await this.eventService.storeEvent({
-            type: TAG_DELETED,
-            createdBy: userName,
-            createdByUserId: userId,
-            data: tag,
-        });
+        await this.eventService.storeEvent(
+            new TagDeletedEvent({
+                data: tag,
+                auditUser,
+            }),
+        );
     }
 }
 

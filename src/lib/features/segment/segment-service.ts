@@ -1,20 +1,18 @@
 import type { IUnleashConfig } from '../../types/option';
 import {
+    type IAuditUser,
     type IFlagResolver,
     type IUnleashStores,
+    SegmentCreatedEvent,
+    SegmentDeletedEvent,
+    SegmentUpdatedEvent,
     SKIP_CHANGE_REQUEST,
-    SYSTEM_USER,
 } from '../../types';
 import type { Logger } from '../../logger';
 import NameExistsError from '../../error/name-exists-error';
 import type { ISegmentStore } from './segment-store-type';
 import type { ISegment } from '../../types/model';
 import { segmentSchema } from '../../services/segment-schema';
-import {
-    SEGMENT_CREATED,
-    SEGMENT_DELETED,
-    SEGMENT_UPDATED,
-} from '../../types/events';
 import type User from '../../types/user';
 import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import BadDataError from '../../error/bad-data-error';
@@ -125,36 +123,38 @@ export class SegmentService implements ISegmentService {
         return strategies.length > 0 || changeRequestStrategies.length > 0;
     }
 
-    async create(
-        data: unknown,
-        user: Partial<Pick<User, 'id' | 'username' | 'email'>>,
-    ): Promise<ISegment> {
+    async create(data: unknown, auditUser: IAuditUser): Promise<ISegment> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
         await this.validateName(input.name);
-        const segment = await this.segmentStore.create(input, user);
+        const segment = await this.segmentStore.create(input, auditUser);
 
-        await this.eventService.storeEvent({
-            type: SEGMENT_CREATED,
-            createdBy: user.email || user.username || SYSTEM_USER.username,
-            createdByUserId: user.id || SYSTEM_USER.id,
-            data: segment,
-            project: segment.project,
-        });
+        await this.eventService.storeEvent(
+            new SegmentCreatedEvent({
+                data: segment,
+                project: segment.project || 'no-project',
+                auditUser,
+            }),
+        );
 
         return segment;
     }
 
-    async update(id: number, data: unknown, user: User): Promise<void> {
+    async update(
+        id: number,
+        data: unknown,
+        user: User,
+        auditUser: IAuditUser,
+    ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         await this.stopWhenChangeRequestsEnabled(input.project, user);
-        return this.unprotectedUpdate(id, data, user);
+        return this.unprotectedUpdate(id, data, auditUser);
     }
 
     async unprotectedUpdate(
         id: number,
         data: unknown,
-        user: User,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
@@ -168,38 +168,38 @@ export class SegmentService implements ISegmentService {
 
         const segment = await this.segmentStore.update(id, input);
 
-        await this.eventService.storeEvent({
-            type: SEGMENT_UPDATED,
-            createdBy: user.email || user.username || 'unknown',
-            createdByUserId: user.id,
-            data: segment,
-            preData,
-            project: segment.project,
-        });
+        await this.eventService.storeEvent(
+            new SegmentUpdatedEvent({
+                data: segment,
+                preData,
+                project: segment.project!,
+                auditUser,
+            }),
+        );
     }
 
-    async delete(id: number, user: User): Promise<void> {
+    async delete(id: number, user: User, auditUser: IAuditUser): Promise<void> {
         const segment = await this.segmentStore.get(id);
         await this.stopWhenChangeRequestsEnabled(segment.project, user);
         await this.segmentStore.delete(id);
-        await this.eventService.storeEvent({
-            type: SEGMENT_DELETED,
-            createdBy: user.email || user.username,
-            createdByUserId: user.id,
-            preData: segment,
-            project: segment.project,
-        });
+        await this.eventService.storeEvent(
+            new SegmentDeletedEvent({
+                preData: segment,
+                project: segment.project,
+                auditUser,
+            }),
+        );
     }
 
-    async unprotectedDelete(id: number, user: User): Promise<void> {
+    async unprotectedDelete(id: number, auditUser: IAuditUser): Promise<void> {
         const segment = await this.segmentStore.get(id);
         await this.segmentStore.delete(id);
-        await this.eventService.storeEvent({
-            type: SEGMENT_DELETED,
-            createdBy: user.email || user.username,
-            createdByUserId: user.id,
-            preData: segment,
-        });
+        await this.eventService.storeEvent(
+            new SegmentDeletedEvent({
+                preData: segment,
+                auditUser,
+            }),
+        );
     }
 
     async cloneStrategySegments(

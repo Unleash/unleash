@@ -1,7 +1,6 @@
 import {
     CREATE_FEATURE_STRATEGY,
     EnvironmentVariantEvent,
-    FEATURE_UPDATED,
     FeatureArchivedEvent,
     FeatureChangeProjectEvent,
     FeatureCreatedEvent,
@@ -18,6 +17,7 @@ import {
     type FeatureToggleLegacy,
     type FeatureToggleWithDependencies,
     type FeatureToggleWithEnvironment,
+    FeatureUpdatedEvent,
     FeatureVariantEvent,
     type IAuditUser,
     type IConstraint,
@@ -1849,15 +1849,14 @@ class FeatureToggleService {
 
         // Legacy event. Will not be used from v4.3.
         // We do not include 'preData' on purpose.
-        await this.eventService.storeEvent({
-            type: FEATURE_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
-            featureName,
-            data: feature,
-            project: feature.project,
-        });
+        await this.eventService.storeEvent(
+            new FeatureUpdatedEvent({
+                featureName,
+                data: feature,
+                project: feature.project,
+                auditUser,
+            }),
+        );
         return feature;
     }
 

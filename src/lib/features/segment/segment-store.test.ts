@@ -2,7 +2,7 @@ import type { ISegmentStore } from './segment-store-type';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import NotFoundError from '../../error/notfound-error';
-import type { IUnleashStores, IUser } from '../../types';
+import { type IUnleashStores, type IUser, TEST_AUDIT_USER } from '../../types';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -67,7 +67,7 @@ describe('usage counting', () => {
                 constraints: [],
                 createdAt: new Date(),
             },
-            user,
+            TEST_AUDIT_USER,
         );
 
         await db.rawDatabase.table('change_requests').insert({
@@ -152,7 +152,7 @@ describe('usage counting', () => {
                 constraints: [],
                 createdAt: new Date(),
             },
-            user,
+            TEST_AUDIT_USER,
         );
 
         const segment2 = await segmentStore.create(
@@ -161,7 +161,7 @@ describe('usage counting', () => {
                 constraints: [],
                 createdAt: new Date(),
             },
-            user,
+            TEST_AUDIT_USER,
         );
 
         const strategy =

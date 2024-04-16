@@ -15,7 +15,8 @@ import {
     FEATURE_UPDATED,
     type IConstraint,
     type IStrategyConfig,
-    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
+    TEST_AUDIT_USER,
 } from '../../types';
 import { ProxyRepository } from './index';
 import type { Logger } from '../../logger';
@@ -81,8 +82,7 @@ const createFeatureToggle = async ({
         await app.services.featureToggleService.createFeatureToggle(
             project,
             { name },
-            'userName',
-            TEST_USER_ID,
+            TEST_AUDIT_USER,
             true,
         );
     const createdStrategies = await Promise.all(
@@ -90,7 +90,7 @@ const createFeatureToggle = async ({
             app.services.featureToggleService.createStrategy(
                 s,
                 { projectId: project, featureName: name, environment },
-                'userName',
+                TEST_AUDIT_USER,
             ),
         ),
     );
@@ -99,7 +99,7 @@ const createFeatureToggle = async ({
         name,
         environment,
         enabled,
-        'userName',
+        TEST_AUDIT_USER,
     );
     return [createdFeature, createdStrategies] as const;
 };
@@ -112,6 +112,7 @@ const createProject = async (id: string, name: string): Promise<void> => {
     await app.services.projectService.createProject(
         { id, name, mode: 'open', defaultStickiness: 'default' },
         user,
+        TEST_AUDIT_USER,
     );
 };
 
@@ -728,14 +729,12 @@ test('should filter features by environment', async () => {
     await app.services.environmentService.addEnvironmentToProject(
         environmentA,
         'default',
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
     await app.services.environmentService.addEnvironmentToProject(
         environmentB,
         'default',
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
     const frontendTokenEnvironmentDefault = await createApiToken(
         ApiTokenType.FRONTEND,
@@ -860,11 +859,11 @@ test('should filter features by segment', async () => {
     };
     const segmentA = await app.services.segmentService.create(
         { name: randomId(), constraints: [constraintA] },
-        { email: 'test@example.com' },
+        TEST_AUDIT_USER,
     );
     const segmentB = await app.services.segmentService.create(
         { name: randomId(), constraints: [constraintB] },
-        { email: 'test@example.com' },
+        TEST_AUDIT_USER,
     );
     await app.services.segmentService.addToStrategy(segmentA.id, strategyA.id);
     await app.services.segmentService.addToStrategy(segmentB.id, strategyB.id);

@@ -47,7 +47,7 @@ export const SYSTEM_USER_AUDIT: IAuditUser = {
     ip: '',
 };
 
-export const TEST_USER_AUDIT: IAuditUser = {
+export const TEST_AUDIT_USER: IAuditUser = {
     id: -9999,
     username: 'test@example.com',
     ip: '999.999.999.999',

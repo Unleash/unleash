@@ -139,7 +139,6 @@ exports[`should create default config 1`] = `
       "queryMissingTokens": false,
       "responseTimeMetricsFix": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "returnGlobalFrontendApiCache": false,
       "scimApi": false,
       "showInactiveUsers": false,
       "signals": false,

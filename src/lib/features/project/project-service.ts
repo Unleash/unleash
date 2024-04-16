@@ -252,10 +252,31 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
     ): Promise<IProject> {
-        if (newProject.environments && newProject.environments.length === 0) {
-            throw new BadDataError(
-                'A project must always have at least one environment.',
+        if (newProject.environments) {
+            if (newProject.environments.length === 0) {
+                throw new BadDataError(
+                    'A project must always have at least one environment.',
+                );
+            }
+
+            const projectsAndExistence = await Promise.all(
+                newProject.environments.map(async (env) => [
+                    env,
+                    await this.environmentStore.exists(env),
+                ]),
             );
+
+            const invalidEnvs = projectsAndExistence
+                .filter(([_, exists]) => !exists)
+                .map(([env]) => env);
+
+            if (invalidEnvs.length > 0) {
+                throw new BadDataError(
+                    `These environments do not exist and can not be selected for the project: ${invalidEnvs
+                        .map((env) => `'${env}'`)
+                        .join(', ')}.`,
+                );
+            }
         }
 
         const validatedData = await projectSchema.validateAsync(newProject);

@@ -58,7 +58,8 @@ export type IFlagKey =
     | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
-    | 'projectListFilterMyProjects';
+    | 'projectListFilterMyProjects'
+    | 'parseProjectFromSession';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -285,6 +286,10 @@ const flags: IFlags = {
     ),
     projectListFilterMyProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_MY_PROJECTS,
+        false,
+    ),
+    parseProjectFromSession: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PARSE_PROJECT_FROM_SESSION,
         false,
     ),
 };

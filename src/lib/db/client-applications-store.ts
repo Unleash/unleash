@@ -10,6 +10,7 @@ import type { Logger, LogProvider } from '../logger';
 import type { Db } from './db';
 import type { IApplicationOverview } from '../features/metrics/instance/models';
 import { applySearchFilters } from '../features/feature-search/search-utils';
+import type { IFlagResolver } from '../types';
 
 const COLUMNS = [
     'app_name',
@@ -110,14 +111,6 @@ const remapRow = (input) => {
     return temp;
 };
 
-const remapUsageRow = (input) => {
-    return {
-        app_name: input.appName,
-        project: input.project || '*',
-        environment: input.environment || '*',
-    };
-};
-
 export default class ClientApplicationsStore
     implements IClientApplicationsStore
 {
@@ -125,24 +118,32 @@ export default class ClientApplicationsStore
 
     private logger: Logger;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
+        this.flagResolver = flagResolver;
         this.logger = getLogger('client-applications-store.ts');
     }
 
     async upsert(details: Partial<IClientApplication>): Promise<void> {
         const row = remapRow(details);
         await this.db(TABLE).insert(row).onConflict('app_name').merge();
-        const usageRow = remapUsageRow(details);
+        const usageRows = this.remapUsageRow(details);
         await this.db(TABLE_USAGE)
-            .insert(usageRow)
+            .insert(usageRows)
             .onConflict(['app_name', 'project', 'environment'])
             .merge();
     }
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
         const rows = apps.map(remapRow);
-        const usageRows = apps.map(remapUsageRow);
+        const usageRows = apps.flatMap(this.remapUsageRow);
         await this.db(TABLE).insert(rows).onConflict('app_name').merge();
         await this.db(TABLE_USAGE)
             .insert(usageRows)
@@ -420,4 +421,30 @@ export default class ClientApplicationsStore
             },
         };
     }
+
+    private remapUsageRow = (input) => {
+        if (this.flagResolver.isEnabled('parseProjectFromSession')) {
+            if (!input.projects || input.projects.length === 0) {
+                return [
+                    {
+                        app_name: input.appName,
+                        project: '*',
+                        environment: input.environment || '*',
+                    },
+                ];
+            } else {
+                return input.projects.map((project) => ({
+                    app_name: input.appName,
+                    project: project,
+                    environment: input.environment || '*',
+                }));
+            }
+        } else {
+            return {
+                app_name: input.appName,
+                project: input.project || '*',
+                environment: input.environment || '*',
+            };
+        }
+    };
 }

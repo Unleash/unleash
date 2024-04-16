@@ -22,7 +22,7 @@ function demoAuthentication(
         let user: IUser;
 
         try {
-            if (authentication.authDemoAllowAdminLogin && email === 'admin') {
+            if (authentication.demoAllowAdminLogin && email === 'admin') {
                 user = await userService.loginDemoAuthDefaultAdmin();
             } else {
                 email = flagResolver.isEnabled('encryptEmails', { email })

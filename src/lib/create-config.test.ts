@@ -231,13 +231,13 @@ test('should load demo admin login flag from env var', async () => {
 
     const config = createConfig({});
 
-    expect(config.authentication.authDemoAllowAdminLogin).toBeTruthy();
+    expect(config.authentication.demoAllowAdminLogin).toBeTruthy();
     delete process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN;
 });
 
 test('should default demo admin login to false', async () => {
     const config = createConfig({});
-    expect(config.authentication.authDemoAllowAdminLogin).toBeFalsy();
+    expect(config.authentication.demoAllowAdminLogin).toBeFalsy();
 });
 
 test('should load environment overrides from env var', async () => {

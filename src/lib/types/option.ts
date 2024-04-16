@@ -67,7 +67,7 @@ export type CustomAuthHandler = (
 ) => void;
 
 export interface IAuthOption {
-    authDemoAllowAdminLogin?: boolean;
+    demoAllowAdminLogin?: boolean;
     enableApiToken: boolean;
     type: IAuthType;
     customAuthHandler?: CustomAuthHandler;

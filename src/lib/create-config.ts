@@ -271,7 +271,7 @@ const defaultVersionOption: IVersionOption = {
 };
 
 const defaultAuthentication: IAuthOption = {
-    authDemoAllowAdminLogin: parseEnvVarBoolean(
+    demoAllowAdminLogin: parseEnvVarBoolean(
         process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN,
         false,
     ),

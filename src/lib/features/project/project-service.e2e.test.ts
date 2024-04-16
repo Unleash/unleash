@@ -2501,7 +2501,7 @@ describe('create project with environments', () => {
         'staging',
     ];
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         await Promise.all(
             extraEnvs.map((env) => stores.environmentStore.create(env)),
         );
@@ -2509,6 +2509,12 @@ describe('create project with environments', () => {
         await stores.environmentStore.disable([
             { ...disabledEnv, enabled: true, protected: false, sortOrder: 5 },
         ]);
+    });
+
+    afterAll(async () => {
+        await Promise.all(
+            extraEnvs.map((env) => stores.environmentStore.delete(env.name)),
+        );
     });
 
     const createProjectWithEnvs = async (environments) => {
@@ -2544,21 +2550,21 @@ describe('create project with environments', () => {
         await expect(createProjectWithEnvs([])).rejects.toThrow(BadDataError);
     });
 
-    test.skip('it only enables the envs it is asked to enable', async () => {
+    test('it only enables the envs it is asked to enable', async () => {
         const selectedEnvs = ['development', 'production'];
         const created = await createProjectWithEnvs(selectedEnvs);
 
         expect(created).toMatchObject(selectedEnvs);
     });
 
-    test.skip('it enables deprecated environments when asked explicitly', async () => {
+    test('it enables deprecated environments when asked explicitly', async () => {
         const selectedEnvs = ['disabled'];
         const created = await createProjectWithEnvs(selectedEnvs);
 
         expect(created).toMatchObject(selectedEnvs);
     });
 
-    test.skip("envs that don't exist cause errors", async () => {
+    test("envs that don't exist cause errors", async () => {
         await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
             BadDataError,
         );

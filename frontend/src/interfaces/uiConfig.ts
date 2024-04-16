@@ -83,6 +83,7 @@ export type UiFlags = {
     featureLifecycle?: boolean;
     scimApi?: boolean;
     projectListFilterMyProjects?: boolean;
+    projectListGridUi?: boolean;
 };
 
 export interface IVersionInfo {

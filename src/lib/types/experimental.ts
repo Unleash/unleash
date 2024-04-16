@@ -59,7 +59,8 @@ export type IFlagKey =
     | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
-    | 'projectListFilterMyProjects';
+    | 'projectListFilterMyProjects'
+    | 'projectListGridUi';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

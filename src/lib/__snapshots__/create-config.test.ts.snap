@@ -134,6 +134,7 @@ exports[`should create default config 1`] = `
       "outdatedSdksBanner": false,
       "personalAccessTokensKillSwitch": false,
       "projectListFilterMyProjects": false,
+      "projectListGridUi": false,
       "projectOverviewRefactor": false,
       "projectOverviewRefactorFeedback": false,
       "queryMissingTokens": false,

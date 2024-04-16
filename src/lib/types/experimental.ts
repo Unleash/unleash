@@ -25,7 +25,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'stripClientHeadersOn304'
     | 'stripHeadersOnAPI'
     | 'signals'
     | 'automatedActions'
@@ -59,7 +58,9 @@ export type IFlagKey =
     | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
-    | 'projectListFilterMyProjects';
+    | 'projectListFilterMyProjects'
+    | 'parseProjectFromSession'
+    | 'createProjectWithEnvironmentConfig';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -131,11 +132,6 @@ const flags: IFlags = {
     ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
-        false,
-    ),
-    stripClientHeadersOn304: parseEnvVarBoolean(
-        process.env
-            .UNLEASH_EXPERIMENTAL_DETECT_SEGMENT_USAGE_IN_CHANGE_REQUESTS,
         false,
     ),
     signals: parseEnvVarBoolean(
@@ -291,6 +287,14 @@ const flags: IFlags = {
     ),
     projectListFilterMyProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_MY_PROJECTS,
+        false,
+    ),
+    parseProjectFromSession: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PARSE_PROJECT_FROM_SESSION,
+        false,
+    ),
+    createProjectWithEnvironmentConfig: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CREATE_PROJECT_WITH_ENVIRONMENT_CONFIG,
         false,
     ),
 };

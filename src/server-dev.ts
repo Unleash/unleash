@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        stripClientHeadersOn304: true,
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         featureSearchFeedbackPosting: true,
@@ -56,6 +55,8 @@ process.nextTick(async () => {
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,
                         projectListFilterMyProjects: true,
+                        parseProjectFromSession: true,
+                        createProjectWithEnvironmentConfig: true,
                     },
                 },
                 authentication: {

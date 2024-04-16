@@ -120,11 +120,9 @@ export default class ClientMetricsController extends Controller {
                 );
 
                 await this.metricsV2.registerClientMetrics(data, clientIp);
-                if (this.flagResolver.isEnabled('stripClientHeadersOn304')) {
-                    res.getHeaderNames().forEach((header) =>
-                        res.removeHeader(header),
-                    );
-                }
+                res.getHeaderNames().forEach((header) =>
+                    res.removeHeader(header),
+                );
                 res.status(202).end();
             } catch (e) {
                 res.status(400).end();

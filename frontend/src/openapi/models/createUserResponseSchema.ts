@@ -36,6 +36,8 @@ export interface CreateUserResponseSchema {
     permissions?: string[];
     /** Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role. */
     rootRole?: CreateUserResponseSchemaRootRole;
+    /** The SCIM ID of the user, only present if managed by SCIM */
+    scimId?: string | null;
     /** The last time this user logged in */
     seenAt?: string | null;
     /** A unique username for the user */

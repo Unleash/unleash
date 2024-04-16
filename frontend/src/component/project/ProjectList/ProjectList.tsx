@@ -340,6 +340,7 @@ export const ProjectListNew = () => {
                                         <StyledCardLink
                                             key={project.id}
                                             to={`/projects/${project.id}`}
+                                            data-testid='PROJECT_CARD_LINK'
                                         >
                                             <ProjectCard
                                                 onHover={() =>

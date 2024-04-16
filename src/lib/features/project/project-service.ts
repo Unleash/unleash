@@ -248,23 +248,19 @@ export default class ProjectService {
         return featureNaming;
     };
 
-    async createProject(
-        newProject: CreateProject,
-        user: IUser,
-    ): Promise<IProject> {
-        const createWithEnvironments = this.flagResolver.isEnabled(
-            'createProjectWithEnvironmentConfig',
-        );
-
-        if (createWithEnvironments && newProject.environments) {
-            if (newProject.environments.length === 0) {
+    async validateProjectEnvironments(environments: string[] | undefined) {
+        if (
+            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
+            environments
+        ) {
+            if (environments.length === 0) {
                 throw new BadDataError(
                     'A project must always have at least one environment.',
                 );
             }
 
             const projectsAndExistence = await Promise.all(
-                newProject.environments.map(async (env) => [
+                environments.map(async (env) => [
                     env,
                     await this.environmentStore.exists(env),
                 ]),
@@ -282,6 +278,13 @@ export default class ProjectService {
                 );
             }
         }
+    }
+
+    async createProject(
+        newProject: CreateProject,
+        user: IUser,
+    ): Promise<IProject> {
+        await this.validateProjectEnvironments(newProject.environments);
 
         const validatedData = await projectSchema.validateAsync(newProject);
         const data = this.removeModeForNonEnterprise(validatedData);
@@ -290,7 +293,8 @@ export default class ProjectService {
         await this.projectStore.create(data);
 
         const envsToEnable =
-            createWithEnvironments && newProject.environments?.length
+            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
+            newProject.environments?.length
                 ? newProject.environments
                 : (
                       await this.environmentStore.getAll({

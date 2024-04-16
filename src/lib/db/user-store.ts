@@ -22,6 +22,7 @@ const USER_COLUMNS_PUBLIC = [
     'image_url',
     'seen_at',
     'is_service',
+    'scim_id',
 ];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
@@ -56,6 +57,7 @@ const rowToUser = (row) => {
         seenAt: row.seen_at,
         createdAt: row.created_at,
         isService: row.is_service,
+        scimId: row.scim_id,
     });
 };
 

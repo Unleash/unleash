@@ -91,6 +91,11 @@ export class GroupService {
         return this.mapGroupWithUsers(group, groupUsers, users);
     }
 
+    async isScimGroup(id: number): Promise<boolean> {
+        const group = await this.groupStore.get(id);
+        return Boolean(group.scimId);
+    }
+
     async createGroup(
         group: ICreateGroupModel,
         userName: string,

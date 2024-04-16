@@ -92,7 +92,7 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
 > = ({ environmentTypeTrends, isLoading }) => {
     const theme = useTheme();
     const getEnvironmentTypeColor = useEnvironmentTypeColor();
-    const notEnoughData = environmentTypeTrends?.length < 2;
+    const notEnoughData = !isLoading && environmentTypeTrends?.length < 2;
     const placeholderData = usePlaceholderData({ fill: true, type: 'double' });
 
     const data = useMemo(() => {

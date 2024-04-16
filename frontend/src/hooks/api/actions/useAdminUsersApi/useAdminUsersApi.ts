@@ -1,10 +1,4 @@
 import useAPI from '../useApi/useApi';
-import {
-    handleBadRequest,
-    handleForbidden,
-    handleNotFound,
-    handleUnauthorized,
-} from './errorHandlers';
 
 interface IUserPayload {
     name: string;
@@ -16,10 +10,7 @@ export const REMOVE_USER_ERROR = 'removeUser';
 
 const useAdminUsersApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({
-        handleBadRequest,
-        handleNotFound,
-        handleUnauthorized,
-        handleForbidden,
+        propagateErrors: true,
     });
 
     const addUser = async (user: IUserPayload) => {

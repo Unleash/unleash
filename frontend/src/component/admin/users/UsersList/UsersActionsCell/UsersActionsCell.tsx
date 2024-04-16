@@ -20,6 +20,7 @@ interface IUsersActionsCellProps {
     onChangePassword: (event: React.SyntheticEvent) => void;
     onResetPassword: (event: React.SyntheticEvent) => void;
     onDelete: (event: React.SyntheticEvent) => void;
+    scimEnabled?: boolean;
 }
 
 export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
@@ -28,7 +29,11 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
     onChangePassword,
     onResetPassword,
     onDelete,
+    scimEnabled,
 }) => {
+    const scimTooltip =
+        'This user is managed by your SCIM provider and cannot be changed manually';
+
     return (
         <StyledBox>
             <PermissionIconButton
@@ -36,8 +41,9 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
                 onClick={onEdit}
                 permission={ADMIN}
                 tooltipProps={{
-                    title: 'Edit user',
+                    title: scimEnabled ? scimTooltip : 'Edit user',
                 }}
+                disabled={scimEnabled}
             >
                 <Edit />
             </PermissionIconButton>
@@ -63,8 +69,9 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
                 onClick={onChangePassword}
                 permission={ADMIN}
                 tooltipProps={{
-                    title: 'Change password',
+                    title: scimEnabled ? scimTooltip : 'Change password',
                 }}
+                disabled={scimEnabled}
             >
                 <Lock />
             </PermissionIconButton>
@@ -73,8 +80,9 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
                 onClick={onResetPassword}
                 permission={ADMIN}
                 tooltipProps={{
-                    title: 'Reset password',
+                    title: scimEnabled ? scimTooltip : 'Reset password',
                 }}
+                disabled={scimEnabled}
             >
                 <LockReset />
             </PermissionIconButton>
@@ -83,8 +91,9 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
                 onClick={onDelete}
                 permission={ADMIN}
                 tooltipProps={{
-                    title: 'Remove user',
+                    title: scimEnabled ? scimTooltip : 'Remove user',
                 }}
+                disabled={scimEnabled}
             >
                 <Delete />
             </PermissionIconButton>

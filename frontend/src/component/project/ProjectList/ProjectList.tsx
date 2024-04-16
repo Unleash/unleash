@@ -16,7 +16,12 @@ import Add from '@mui/icons-material/Add';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table';
-import { useMediaQuery, styled } from '@mui/material';
+import {
+    useMediaQuery,
+    styled,
+    ToggleButtonGroup,
+    ToggleButton,
+} from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
@@ -25,6 +30,9 @@ import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-featu
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
+import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
 const StyledDivContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -47,6 +55,24 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     background: 'transparent',
     fontFamily: theme.typography.fontFamily,
     pointer: 'cursor',
+}));
+
+const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+    button: {
+        color: theme.palette.primary.main,
+        borderColor: theme.palette.background.alternative,
+        textTransform: 'none',
+        paddingInline: theme.spacing(3),
+        transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    },
+    'button[aria-pressed=true]': {
+        backgroundColor: theme.palette.background.alternative,
+        color: theme.palette.primary.contrastText,
+
+        '&:hover': {
+            backgroundColor: theme.palette.action.alternative,
+        },
+    },
 }));
 
 type PageQueryType = Partial<Record<'search', string>>;
@@ -112,6 +138,11 @@ export const ProjectListNew = () => {
         searchParams.get('search') || '',
     );
 
+    const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
+    const filters = ['All projects', 'My projects'];
+    const [filter, setFilter] = useState(filters[0]);
+    const myProjects = new Set(useProfile().profile?.projects || []);
+
     useEffect(() => {
         const tableState: PageQueryType = {};
         if (searchValue) {
@@ -124,11 +155,18 @@ export const ProjectListNew = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
+        const preFilteredProjects =
+            showProjectFilterButtons && filter === 'My projects'
+                ? projects.filter(shouldDisplayInMyProjects(myProjects))
+                : projects;
+
         const regExp = safeRegExp(searchValue, 'i');
         return (
             searchValue
-                ? projects.filter((project) => regExp.test(project.name))
-                : projects
+                ? preFilteredProjects.filter((project) =>
+                      regExp.test(project.name),
+                  )
+                : preFilteredProjects
         ).sort((a, b) => {
             if (a?.favorite && !b?.favorite) {
                 return -1;
@@ -138,7 +176,7 @@ export const ProjectListNew = () => {
             }
             return 0;
         });
-    }, [projects, searchValue]);
+    }, [projects, searchValue, filter, myProjects, showProjectFilterButtons]);
 
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {
@@ -172,6 +210,36 @@ export const ProjectListNew = () => {
             header={
                 <PageHeader
                     title={`Projects (${projectCount})`}
+                    leftActions={
+                        <ConditionallyRender
+                            condition={showProjectFilterButtons}
+                            show={
+                                <StyledButtonGroup
+                                    aria-label='project list filter'
+                                    size='small'
+                                    color='primary'
+                                    value={filter}
+                                    exclusive
+                                    onChange={(event, value) => {
+                                        if (value !== null) {
+                                            setFilter(value);
+                                        }
+                                    }}
+                                >
+                                    {filters.map((filter) => {
+                                        return (
+                                            <ToggleButton
+                                                key={filter}
+                                                value={filter}
+                                            >
+                                                {filter}
+                                            </ToggleButton>
+                                        );
+                                    })}
+                                </StyledButtonGroup>
+                            }
+                        />
+                    }
                     actions={
                         <>
                             <ConditionallyRender

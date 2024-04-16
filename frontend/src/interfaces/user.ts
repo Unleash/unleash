@@ -17,6 +17,7 @@ export interface IUser {
     paid?: boolean;
     addedAt?: string;
     accountType?: AccountType;
+    scimId?: string;
 }
 
 export interface IPermission {

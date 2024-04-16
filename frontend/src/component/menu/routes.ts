@@ -60,17 +60,6 @@ export const routes: IRoute[] = [
         isStandalone: true,
     },
 
-    // Insights - previously "Executive dashboard"
-    {
-        path: '/insights',
-        title: 'Insights',
-        component: Insights,
-        type: 'protected',
-        menu: { mobile: true },
-        flag: 'executiveDashboardUI',
-        enterprise: false,
-    },
-
     // Project
     {
         path: '/projects/create',
@@ -171,6 +160,17 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true },
+    },
+
+    // Insights
+    {
+        path: '/insights',
+        title: 'Insights',
+        component: Insights,
+        type: 'protected',
+        menu: { mobile: true },
+        flag: 'executiveDashboardUI',
+        enterprise: false,
     },
 
     // Applications

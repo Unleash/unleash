@@ -75,6 +75,13 @@ export const groupSchema = {
             type: 'integer',
             minimum: 0,
         },
+        scimId: {
+            description:
+                'The SCIM ID of the group, only present if managed by SCIM',
+            type: 'string',
+            nullable: true,
+            example: '01HTMEXAMPLESCIMID7SWWGHN7',
+        },
     },
     components: {
         schemas: {

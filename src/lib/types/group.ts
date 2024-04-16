@@ -10,6 +10,7 @@ export interface IGroup {
     createdAt?: Date;
     userCount?: number;
     createdBy?: string;
+    scimId?: string;
 }
 
 export interface IGroupUser {
@@ -75,6 +76,8 @@ export default class Group implements IGroup {
 
     mappingsSSO: string[];
 
+    scimId?: string;
+
     constructor({
         id,
         name,
@@ -83,6 +86,7 @@ export default class Group implements IGroup {
         rootRole,
         createdBy,
         createdAt,
+        scimId,
     }: IGroup) {
         if (!id) {
             throw new ValidationError('Id is required', [], undefined);
@@ -97,5 +101,6 @@ export default class Group implements IGroup {
         this.mappingsSSO = mappingsSSO;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
+        this.scimId = scimId;
     }
 }

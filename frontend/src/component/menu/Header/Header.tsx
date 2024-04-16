@@ -117,14 +117,20 @@ const styledIconProps = (theme: Theme) => ({
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
+const StyledText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 const StyledLinkWithBetaBadge = ({
     title,
     to,
 }: { title: string; to: string }) => (
     <StyledLink to={to} sx={{ margin: 0 }}>
-        <div>
+        <StyledText>
             <span>{title}</span> <Badge color='success'>Beta</Badge>
-        </div>
+        </StyledText>
     </StyledLink>
 );
 

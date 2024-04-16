@@ -30,6 +30,7 @@ const GROUP_COLUMNS = [
     'created_at',
     'created_by',
     'root_role_id',
+    'scim_id',
 ];
 
 const rowToGroup = (row) => {
@@ -44,6 +45,7 @@ const rowToGroup = (row) => {
         createdAt: row.created_at,
         createdBy: row.created_by,
         rootRole: row.root_role_id,
+        scimId: row.scim_id,
     });
 };
 

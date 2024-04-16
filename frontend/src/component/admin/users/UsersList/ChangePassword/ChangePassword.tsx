@@ -13,6 +13,7 @@ import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMat
 import type { IUser } from 'interfaces/user';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import useToast from 'hooks/useToast';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(5),
@@ -36,6 +37,7 @@ const ChangePassword = ({
     const [validPassword, setValidPassword] = useState(false);
     const { classes: themeStyles } = useThemeStyles();
     const { changePassword } = useAdminUsersApi();
+    const { setToastData } = useToast();
 
     const updateField: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         setError(undefined);
@@ -58,6 +60,11 @@ const ChangePassword = ({
             await changePassword(user.id, data.password);
             setData({});
             closeDialog();
+            setToastData({
+                title: 'Password changed successfully',
+                text: 'The user can now sign in using the new password.',
+                type: 'success',
+            });
         } catch (error: unknown) {
             console.warn(error);
             setError(PASSWORD_FORMAT_MESSAGE);

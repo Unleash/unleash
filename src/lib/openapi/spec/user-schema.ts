@@ -92,6 +92,13 @@ export const userSchema = {
                 type: 'string',
             },
         },
+        scimId: {
+            description:
+                'The SCIM ID of the user, only present if managed by SCIM',
+            type: 'string',
+            nullable: true,
+            example: '01HTMEXAMPLESCIMID7SWWGHN6',
+        },
     },
     components: {},
 } as const;

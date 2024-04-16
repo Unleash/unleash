@@ -70,9 +70,21 @@ interface IUserStatsProps {
     count: number;
     active?: number;
     inactive?: number;
+    isLoading?: boolean;
 }
 
-export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
+const StyledLoadingSkeleton = styled(Box)(() => ({
+    '&:before': {
+        background: 'transparent',
+    },
+}));
+
+export const UserStats: FC<IUserStatsProps> = ({
+    count,
+    active,
+    inactive,
+    isLoading,
+}) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
     const showDistribution =
         showInactiveUsers && active !== undefined && inactive !== undefined;
@@ -83,9 +95,19 @@ export const UserStats: FC<IUserStatsProps> = ({ count, active, inactive }) => {
             <StyledUserContainer>
                 <StyledUserBox>
                     <StyledUserCount variant='h2'>
-                        {Number.parseInt(`${count}`, 10) === count
-                            ? count
-                            : count.toFixed(2)}
+                        <ConditionallyRender
+                            condition={isLoading !== true}
+                            show={
+                                Number.parseInt(`${count}`, 10) === count
+                                    ? count
+                                    : count.toFixed(2)
+                            }
+                            elseShow={
+                                <StyledLoadingSkeleton className='skeleton'>
+                                    &nbsp;
+                                </StyledLoadingSkeleton>
+                            }
+                        />
                     </StyledUserCount>
                 </StyledUserBox>
                 <StyledCustomShadow />

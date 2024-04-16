@@ -13,10 +13,12 @@ interface IUsersPerProjectChartProps {
     projectFlagTrends: GroupedDataByProject<
         InstanceInsightsSchema['projectFlagTrends']
     >;
+    isLoading?: boolean;
 }
 
 export const UsersPerProjectChart: VFC<IUsersPerProjectChartProps> = ({
     projectFlagTrends,
+    isLoading,
 }) => {
     const placeholderData = usePlaceholderData({
         type: 'constant',
@@ -24,20 +26,22 @@ export const UsersPerProjectChart: VFC<IUsersPerProjectChartProps> = ({
 
     const data = useProjectChartData(projectFlagTrends);
     const notEnoughData = useMemo(
-        () => (data.datasets.some((d) => d.data.length > 1) ? false : true),
-        [data],
+        () =>
+            !isLoading &&
+            (data.datasets.some((d) => d.data.length > 1) ? false : true),
+        [data, isLoading],
     );
 
     return (
         <LineChart
-            data={notEnoughData ? placeholderData : data}
+            data={notEnoughData || isLoading ? placeholderData : data}
             overrideOptions={{
                 parsing: {
                     yAxisKey: 'users',
                     xAxisKey: 'date',
                 },
             }}
-            cover={notEnoughData ? <NotEnoughData /> : false}
+            cover={notEnoughData ? <NotEnoughData /> : isLoading}
         />
     );
 };

@@ -241,11 +241,9 @@ export default class FeatureController extends Controller {
 
         if (etag === userVersion) {
             res.status(304);
-            if (this.flagResolver.isEnabled('stripClientHeadersOn304')) {
-                res.getHeaderNames().forEach((header) =>
-                    res.removeHeader(header),
-                );
-            }
+            res.getHeaderNames().forEach((header) =>
+                  res.removeHeader(header),
+              );
             res.end();
             return;
         } else {

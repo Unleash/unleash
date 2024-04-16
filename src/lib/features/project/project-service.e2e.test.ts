@@ -2568,5 +2568,8 @@ describe('create project with environments', () => {
         await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
             BadDataError,
         );
+        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
+            /'fake-project'/,
+        );
     });
 });

@@ -59,7 +59,8 @@ export type IFlagKey =
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
     | 'projectListFilterMyProjects'
-    | 'parseProjectFromSession';
+    | 'parseProjectFromSession'
+    | 'createProjectWithEnvironmentConfig';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -290,6 +291,10 @@ const flags: IFlags = {
     ),
     parseProjectFromSession: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PARSE_PROJECT_FROM_SESSION,
+        false,
+    ),
+    createProjectWithEnvironmentConfig: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CREATE_PROJECT_WITH_ENVIRONMENT_CONFIG,
         false,
     ),
 };

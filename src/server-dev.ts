@@ -56,6 +56,7 @@ process.nextTick(async () => {
                         featureLifecycle: true,
                         projectListFilterMyProjects: true,
                         parseProjectFromSession: true,
+                        createProjectWithEnvironmentConfig: true,
                     },
                 },
                 authentication: {

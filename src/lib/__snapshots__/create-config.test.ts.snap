@@ -144,7 +144,6 @@ exports[`should create default config 1`] = `
       "showInactiveUsers": false,
       "signals": false,
       "strictSchemaValidation": false,
-      "stripClientHeadersOn304": false,
       "useMemoizedActiveTokens": false,
       "userAccessUIEnabled": false,
       "variantDependencies": false,

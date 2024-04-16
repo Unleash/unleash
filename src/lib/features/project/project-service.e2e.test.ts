@@ -2482,20 +2482,33 @@ test('should get project settings with mode', async () => {
     expect(foundProjectTwo!.defaultStickiness).toBe('default');
 });
 
-describe('create project with environments and change request environments', () => {
+describe('create project with environments', () => {
+    const disabledEnv = { name: 'disabled', type: 'production' };
+
     const extraEnvs = [
         { name: 'development', type: 'development' },
         { name: 'production', type: 'production' },
         { name: 'staging', type: 'staging' },
         { name: 'QA', type: 'QA' },
+        disabledEnv,
     ];
 
-    const allEnvs = ['QA', 'default', 'development', 'production', 'staging'];
+    const allEnabledEnvs = [
+        'QA',
+        'default',
+        'development',
+        'production',
+        'staging',
+    ];
 
     beforeAll(async () => {
         await Promise.all(
             extraEnvs.map((env) => stores.environmentStore.create(env)),
         );
+
+        await stores.environmentStore.disable([
+            { ...disabledEnv, enabled: true, protected: false, sortOrder: 5 },
+        ]);
     });
 
     const createProjectWithEnvs = async (environments) => {
@@ -2518,10 +2531,10 @@ describe('create project with environments and change request environments', () 
         return projectEnvs;
     };
 
-    test('no environments specified means all envs are enabled', async () => {
+    test('no environments specified means all enabled envs are enabled', async () => {
         const created = await createProjectWithEnvs(undefined);
 
-        expect(created).toMatchObject(allEnvs);
+        expect(created).toMatchObject(allEnabledEnvs);
     });
 
     test('an empty list throws an error', async () => {
@@ -2533,8 +2546,16 @@ describe('create project with environments and change request environments', () 
             await createProjectWithEnvs([]);
         }).toThrow(BadDataError);
     });
+
     test('it only enables the envs it is asked to enable', async () => {
         const selectedEnvs = ['development', 'production'];
+        const created = await createProjectWithEnvs(selectedEnvs);
+
+        expect(created).toMatchObject(selectedEnvs);
+    });
+
+    test('it enables deprecated environments when asked explicitly', async () => {
+        const selectedEnvs = ['disabled'];
         const created = await createProjectWithEnvs(selectedEnvs);
 
         expect(created).toMatchObject(selectedEnvs);

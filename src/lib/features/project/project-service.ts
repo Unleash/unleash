@@ -252,7 +252,11 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
     ): Promise<IProject> {
-        if (newProject.environments) {
+        const createWithEnvironments = this.flagResolver.isEnabled(
+            'createProjectWithEnvironmentConfig',
+        );
+
+        if (createWithEnvironments && newProject.environments) {
             if (newProject.environments.length === 0) {
                 throw new BadDataError(
                     'A project must always have at least one environment.',
@@ -285,13 +289,14 @@ export default class ProjectService {
 
         await this.projectStore.create(data);
 
-        const envsToEnable = newProject.environments?.length
-            ? newProject.environments
-            : (
-                  await this.environmentStore.getAll({
-                      enabled: true,
-                  })
-              ).map((env) => env.name);
+        const envsToEnable =
+            createWithEnvironments && newProject.environments?.length
+                ? newProject.environments
+                : (
+                      await this.environmentStore.getAll({
+                          enabled: true,
+                      })
+                  ).map((env) => env.name);
 
         console.log('got these envs to enable', envsToEnable);
 

@@ -25,7 +25,7 @@ import {
     SYSTEM_USER_ID,
 } from '../../types';
 import type { User } from '../../server-impl';
-import { InvalidOperationError } from '../../error';
+import { BadDataError, InvalidOperationError } from '../../error';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -2523,10 +2523,15 @@ describe('create project with environments and change request environments', () 
 
         expect(created).toMatchObject(allEnvs);
     });
-    test('`*` means all envs are enabled', async () => {});
+
     test('an empty list throws an error', async () => {
-        // todo: we need to decide for sure whether this should give a
-        // 400 or mean "all" in the API, so this test may change.
+        // You shouldn't be allowed to pass an empty list via the API.
+        // This test checks what happens in the event that an empty
+        // list manages to sneak in.
+
+        expect(async () => {
+            await createProjectWithEnvs([]);
+        }).toThrow(BadDataError);
     });
     test('it only enables the envs it is asked to enable', async () => {
         const selectedEnvs = ['development', 'production'];

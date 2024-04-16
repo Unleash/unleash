@@ -19,13 +19,13 @@ afterAll(async () => {
 const getApp = (adminLoginEnabled: boolean) =>
     setupAppWithCustomAuth(stores, () => {}, {
         authentication: {
-            authDemoAllowAdminLogin: adminLoginEnabled,
+            demoAllowAdminLogin: adminLoginEnabled,
             type: IAuthType.DEMO,
             createAdminUser: true,
         },
     });
 
-test('the authDemoAllowAdminLogin flag should not affect regular user login/creation', async () => {
+test('the demoAllowAdminLogin flag should not affect regular user login/creation', async () => {
     const app = await getApp(true);
     return app.request
         .post(`/auth/demo/login`)
@@ -37,7 +37,7 @@ test('the authDemoAllowAdminLogin flag should not affect regular user login/crea
         });
 });
 
-test('if the authDemoAllowAdminLogin flag is disabled, using `admin` should have the same result as any other invalid email', async () => {
+test('if the demoAllowAdminLogin flag is disabled, using `admin` should have the same result as any other invalid email', async () => {
     const app = await getApp(false);
 
     const nonAdminUsername = 'not-an-email';
@@ -60,7 +60,7 @@ test('if the authDemoAllowAdminLogin flag is disabled, using `admin` should have
     }
 });
 
-test('should allow you to login as admin if the authDemoAllowAdminLogin flag enabled', async () => {
+test('should allow you to login as admin if the demoAllowAdminLogin flag enabled', async () => {
     const app = await getApp(true);
     return app.request
         .post(`/auth/demo/login`)

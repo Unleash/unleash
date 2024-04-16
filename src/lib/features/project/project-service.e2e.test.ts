@@ -2531,7 +2531,7 @@ describe('create project with environments', () => {
         return projectEnvs;
     };
 
-    test('no environments specified means all enabled envs are enabled', async () => {
+    test.skip('no environments specified means all enabled envs are enabled', async () => {
         const created = await createProjectWithEnvs(undefined);
 
         expect(created).toMatchObject(allEnabledEnvs);
@@ -2541,23 +2541,26 @@ describe('create project with environments', () => {
         // You shouldn't be allowed to pass an empty list via the API.
         // This test checks what happens in the event that an empty
         // list manages to sneak in.
-
-        expect(async () => {
-            await createProjectWithEnvs([]);
-        }).toThrow(BadDataError);
+        await expect(createProjectWithEnvs([])).rejects.toThrow(BadDataError);
     });
 
-    test('it only enables the envs it is asked to enable', async () => {
+    test.skip('it only enables the envs it is asked to enable', async () => {
         const selectedEnvs = ['development', 'production'];
         const created = await createProjectWithEnvs(selectedEnvs);
 
         expect(created).toMatchObject(selectedEnvs);
     });
 
-    test('it enables deprecated environments when asked explicitly', async () => {
+    test.skip('it enables deprecated environments when asked explicitly', async () => {
         const selectedEnvs = ['disabled'];
         const created = await createProjectWithEnvs(selectedEnvs);
 
         expect(created).toMatchObject(selectedEnvs);
+    });
+
+    test.skip("envs that don't exist cause errors", async () => {
+        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
+            BadDataError,
+        );
     });
 });

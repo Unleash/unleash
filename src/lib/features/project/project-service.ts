@@ -298,8 +298,6 @@ export default class ProjectService {
                       })
                   ).map((env) => env.name);
 
-        console.log('got these envs to enable', envsToEnable);
-
         await Promise.all(
             envsToEnable.map(async (env) => {
                 await this.featureEnvironmentStore.connectProject(env, data.id);

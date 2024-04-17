@@ -36,7 +36,7 @@ Navigate to the gradual rollout page where you can edit your strategy.
 
 Adjust the percentage of users to 50% or whichever value you choose, and refresh your app in the browser to see if your user has the new feature experience. This might take 30 seconds for a server-side app to propagate.
 
-![A gradual rollout form can allow you to customize your flag strategy.](/img/react-ex-grad-rollout-form.png)
+![A gradual rollout form can allow you to customize your flag strategy.](/img/ex-grad-rollout-form.png)
 
 You can achieve the same result using our API with the following code:
 
@@ -96,15 +96,15 @@ We will build a strategy constraint on our existing gradual rollout strategy. Th
 
 In Unleash, start from the feature flag view and edit your Gradual Rollout strategy from your development environment.
 
-![Edit your gradual rollout strategy by selecting the 'edit strategy' button.](/img/python-ex-edit-strategy.png)
+![Edit your gradual rollout strategy by selecting the 'edit strategy' button.](/img/ex-edit-strategy.png)
 
 This will take you to the gradual rollout form. Next, add a new constraint.
 
-![Add a constraint to your strategy.](/img/python-ex-add-constraint.png)
+![Add a constraint to your strategy.](/img/ex-add-constraint.png)
 
 Let’s say we are experimenting with releasing the “delete” feature to all environments except production to test it with internal users before releasing it to all users.
 
-![The new constraint form includes a context field, operator, and values field to customize the conditions under which a user will be exposed to the flag](/img/python-ex-constraint-page.png)
+![The new constraint form includes a context field, operator, and values field to customize the conditions under which a user will be exposed to the flag](/img/ex-constraint-page.png)
 
 We can configure the constraint in the form to match these requirements:
 
@@ -176,7 +176,7 @@ In Unleash, navigate go to a feature flag, then click on an environment to open 
 
 Click ‘Edit Strategy'
 
-![Add a variant to your gradual rollout strategy.](/img/python-ex-add-strategy-variant.png)
+![Add a variant to your gradual rollout strategy.](/img/ex-add-strategy-variant.png)
 
 Only enable your flag for 50% of users.
 

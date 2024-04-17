@@ -1,9 +1,9 @@
 ---
 title: Java Spring Boot Feature Flag Examples
-slug: /feature-flag-tutorials/java/spring-boot-examples
+slug: /feature-flag-tutorials/spring-boot/examples
 ---
 
-In our [Java Spring Boot feature flag tutorial](/feature-flag-tutorials/java/spring-boot-implementing-feature-flags), we implemented a simple feature flag that could be turned on and off. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in Java Spring Boot with some of those more advanced use cases in mind. 
+In our [Java Spring Boot feature flag tutorial](/feature-flag-tutorials/spring-boot), we implemented a simple feature flag that could be turned on and off. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in Java Spring Boot with some of those more advanced use cases in mind.
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 

@@ -326,7 +326,6 @@ export default class ClientApplicationsStore
             })
             .where('a.app_name', appName)
             .orderBy('m.environment', 'asc');
-        console.log(query.toQuery());
         const rows = await query;
         if (!rows.length) {
             throw new NotFoundError(`Could not find appName=${appName}`);

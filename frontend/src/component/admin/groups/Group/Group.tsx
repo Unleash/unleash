@@ -41,6 +41,8 @@ import {
     UG_EDIT_USERS_BTN_ID,
     UG_REMOVE_USER_BTN_ID,
 } from 'utils/testIds';
+import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
+import { scimGroupTooltip } from '../group-constants';
 
 export const groupUsersPlaceholder: IGroupUser[] = Array(15).fill({
     name: 'Name of the user',
@@ -67,6 +69,11 @@ export const Group: VFC = () => {
     const [editUsersOpen, setEditUsersOpen] = useState(false);
     const [removeUserOpen, setRemoveUserOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<IGroupUser>();
+
+    const {
+        settings: { enabled: scimEnabled },
+    } = useScimSettings();
+    const isScimGroup = scimEnabled && Boolean(group?.scimId);
 
     const columns = useMemo(
         () => [
@@ -127,7 +134,11 @@ export const Group: VFC = () => {
                 Cell: ({ row: { original: rowUser } }: any) => (
                     <ActionCell>
                         <Tooltip
-                            title='Remove user from group'
+                            title={
+                                isScimGroup
+                                    ? scimGroupTooltip
+                                    : 'Remove user from group'
+                            }
                             arrow
                             describeChild
                         >
@@ -138,6 +149,7 @@ export const Group: VFC = () => {
                                         setSelectedUser(rowUser);
                                         setRemoveUserOpen(true);
                                     }}
+                                    disabled={isScimGroup}
                                 >
                                     <Delete />
                                 </IconButton>
@@ -245,8 +257,11 @@ export const Group: VFC = () => {
                                     data-loading
                                     permission={ADMIN}
                                     tooltipProps={{
-                                        title: 'Edit group',
+                                        title: isScimGroup
+                                            ? scimGroupTooltip
+                                            : 'Edit group',
                                     }}
+                                    disabled={isScimGroup}
                                 >
                                     <Edit />
                                 </PermissionIconButton>
@@ -256,8 +271,11 @@ export const Group: VFC = () => {
                                     onClick={() => setRemoveOpen(true)}
                                     permission={ADMIN}
                                     tooltipProps={{
-                                        title: 'Delete group',
+                                        title: isScimGroup
+                                            ? scimGroupTooltip
+                                            : 'Delete group',
                                     }}
+                                    disabled={isScimGroup}
                                 >
                                     <Delete />
                                 </PermissionIconButton>
@@ -304,6 +322,12 @@ export const Group: VFC = () => {
                                             maxWidth='700px'
                                             Icon={Add}
                                             permission={ADMIN}
+                                            disabled={isScimGroup}
+                                            tooltipProps={{
+                                                title: isScimGroup
+                                                    ? scimGroupTooltip
+                                                    : '',
+                                            }}
                                         >
                                             Edit users
                                         </ResponsiveButton>

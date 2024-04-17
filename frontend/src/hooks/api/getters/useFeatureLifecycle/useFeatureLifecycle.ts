@@ -4,7 +4,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type { FeatureLifecycleSchema } from 'openapi';
 
-interface IUseInsightsDataOutput {
+interface IUseFeatureLifecycleDataOutput {
     lifecycle: FeatureLifecycleSchema;
     refetchLifecycle: () => void;
     loading: boolean;
@@ -24,7 +24,7 @@ export const useFeatureLifecycle = (
     projectId: string,
     featureId: string,
     options?: SWRConfiguration,
-): IUseInsightsDataOutput => {
+): IUseFeatureLifecycleDataOutput => {
     const path = formatLifecycleApiPath(projectId, featureId);
 
     const { data, error } = useSWR<FeatureLifecycleSchema>(

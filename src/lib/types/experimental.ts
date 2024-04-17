@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'featureLifecycle'
     | 'projectListFilterMyProjects'
     | 'parseProjectFromSession'
-    | 'createProjectWithEnvironmentConfig';
+    | 'createProjectWithEnvironmentConfig'
+    | 'applicationOverviewNewQuery';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -295,6 +296,10 @@ const flags: IFlags = {
     ),
     createProjectWithEnvironmentConfig: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CREATE_PROJECT_WITH_ENVIRONMENT_CONFIG,
+        false,
+    ),
+    applicationOverviewNewQuery: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_APPLICATION_OVERVIEW_NEW_QUERY,
         false,
     ),
 };

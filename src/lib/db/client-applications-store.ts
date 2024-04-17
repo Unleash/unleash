@@ -294,33 +294,39 @@ export default class ClientApplicationsStore
     ): Promise<IApplicationOverview> {
         const query = this.db
             .with('metrics', (qb) => {
-                qb.distinct(
+                qb.select([
                     'cme.app_name',
                     'cme.environment',
-                    'cme.feature_name',
-                ).from('client_metrics_env as cme');
+                    'f.project',
+                    this.db.raw(
+                        'array_agg(DISTINCT cme.feature_name) as features',
+                    ),
+                ])
+                    .from('client_metrics_env as cme')
+                    .leftJoin('features as f', 'f.name', 'cme.feature_name')
+                    .groupBy('cme.app_name', 'cme.environment', 'f.project');
             })
             .select([
-                'f.project',
-                'cme.environment',
-                'cme.feature_name',
+                'm.project',
+                'm.environment',
+                'm.features',
                 'ci.instance_id',
                 'ci.sdk_version',
                 'ci.last_seen',
                 'a.strategies',
             ])
             .from({ a: 'client_applications' })
-            .leftJoin('metrics as cme', 'cme.app_name', 'a.app_name')
-            .leftJoin('features as f', 'cme.feature_name', 'f.name')
+            .leftJoin('metrics as m', 'm.app_name', 'a.app_name')
             .leftJoin('client_instances as ci', function () {
-                this.on('ci.app_name', '=', 'cme.app_name').andOn(
+                this.on('ci.app_name', '=', 'm.app_name').andOn(
                     'ci.environment',
                     '=',
-                    'cme.environment',
+                    'm.environment',
                 );
             })
             .where('a.app_name', appName)
-            .orderBy('cme.environment', 'asc');
+            .orderBy('m.environment', 'asc');
+        console.log(query.toQuery());
         const rows = await query;
         if (!rows.length) {
             throw new NotFoundError(`Could not find appName=${appName}`);
@@ -336,7 +342,7 @@ export default class ClientApplicationsStore
         rows: any[],
         existingStrategies: string[],
     ): IApplicationOverview {
-        const featureCount = new Set(rows.map((row) => row.feature_name)).size;
+        const featureCount = new Set(rows.flatMap((row) => row.features)).size;
         const missingStrategies: Set<string> = new Set();
 
         const environments = rows.reduce((acc, row) => {
@@ -346,7 +352,7 @@ export default class ClientApplicationsStore
                 sdk_version,
                 last_seen,
                 project,
-                feature_name,
+                features,
                 strategies,
             } = row;
 
@@ -361,7 +367,7 @@ export default class ClientApplicationsStore
                 }
             });
 
-            const featureDoesNotExist = !project && feature_name;
+            const featuresNotMappedToProject = !project;
 
             let env = acc.find((e) => e.name === environment);
             if (!env) {
@@ -374,8 +380,8 @@ export default class ClientApplicationsStore
                         instance_id ? [instance_id] : [],
                     ),
                     issues: {
-                        missingFeatures: featureDoesNotExist
-                            ? [feature_name]
+                        missingFeatures: featuresNotMappedToProject
+                            ? features
                             : [],
                     },
                 };
@@ -385,11 +391,8 @@ export default class ClientApplicationsStore
                     env.uniqueInstanceIds.add(instance_id);
                     env.instanceCount = env.uniqueInstanceIds.size;
                 }
-                if (
-                    featureDoesNotExist &&
-                    !env.issues.missingFeatures.includes(feature_name)
-                ) {
-                    env.issues.missingFeatures.push(feature_name);
+                if (featuresNotMappedToProject) {
+                    env.issues.missingFeatures = features;
                 }
                 if (sdk_version && !env.sdks.includes(sdk_version)) {
                     env.sdks.push(sdk_version);

@@ -74,7 +74,9 @@ Unleash has a few ways to help manage canary deployments for Java apps at scale:
 
 Let’s walk through how to use strategy constraints in our Java app.
 
+
 ### Configure strategy constraints for canary deployments
+
 
 We will build a strategy constraint on our existing gradual rollout strategy. This will allow us to target a subset of users for the rollout.
 
@@ -126,7 +128,9 @@ Check out our [API docs on updating flag strategies](/reference/api/unleash/upda
 
 Read our documentation for more context on [strategy constraint configurations](/reference/strategy-constraints) and use cases.
 
+
 ## Server-side A/B Testing in Java Spring Boot
+
 
 A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. Server-side A/B testing can help with making infrastructure improvements and comparing different versions of server-side methods. At Unleash, we call these strategy [variants](/reference/feature-toggle-variants).
 
@@ -154,6 +158,7 @@ Next, we can examine how Unleash can track the results and provide insights with
 
 
 ## Feature Flag Analytics and Reporting in Java
+
 
 Shipping code is one thing, but monitoring your applications is another aspect of managing code that developers must account for. Some things to consider would be:
 
@@ -221,7 +226,9 @@ For our Spring Boot app, we can view Event logs to monitor the changes to flag s
 
 You can also retrieve event log data by using an API command. Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
+
 ## Flag Automation & Workflow Integration for Java Apps
+
 
 An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. [Our Jira integration](/reference/integrations/jira-server-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
@@ -285,6 +292,7 @@ Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
 
 
 ## Common Usage Examples of Spring Boot Feature Flags
+
 
 We’ve compiled a list of the most common functions to call in a Spring Boot app.
 

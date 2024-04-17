@@ -115,9 +115,7 @@ export const ProjectListNew = () => {
         searchParams.get('search') || '',
     );
 
-    const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
-    const filters = ['All projects', 'My projects'];
-    const [filter, setFilter] = useState(filters[0]);
+    const splitProjectList = useUiFlag('projectListFilterMyProjects');
     const myProjects = new Set(useProfile().profile?.projects || []);
 
     useEffect(() => {
@@ -132,18 +130,11 @@ export const ProjectListNew = () => {
     }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
-        const preFilteredProjects =
-            showProjectFilterButtons && filter === 'My projects'
-                ? projects.filter(shouldDisplayInMyProjects(myProjects))
-                : projects;
-
         const regExp = safeRegExp(searchValue, 'i');
         return (
             searchValue
-                ? preFilteredProjects.filter((project) =>
-                      regExp.test(project.name),
-                  )
-                : preFilteredProjects
+                ? projects.filter((project) => regExp.test(project.name))
+                : projects
         ).sort((a, b) => {
             if (a?.favorite && !b?.favorite) {
                 return -1;
@@ -153,7 +144,26 @@ export const ProjectListNew = () => {
             }
             return 0;
         });
-    }, [projects, searchValue, filter, myProjects, showProjectFilterButtons]);
+    }, [projects, searchValue]);
+
+    const projectsLists = useMemo(() => {
+        if (!splitProjectList) {
+            return { my: [], other: projects };
+        }
+
+        const my: IProjectCard[] = [];
+        const other: IProjectCard[] = [];
+
+        for (const project of filteredProjects) {
+            console.log('handling', project);
+            if (shouldDisplayInMyProjects(myProjects)(project)) {
+                my.push(project);
+            } else {
+                other.push(project);
+            }
+        }
+        return { my, other };
+    }, [filteredProjects, myProjects, splitProjectList]);
 
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {
@@ -267,33 +277,66 @@ export const ProjectListNew = () => {
                                     />
                                 ))
                             }
-                            elseShow={() =>
-                                filteredProjects.map(
-                                    (project: IProjectCard) => (
-                                        <StyledCardLink
-                                            key={project.id}
-                                            to={`/projects/${project.id}`}
-                                        >
-                                            <ProjectCard
-                                                onHover={() =>
-                                                    handleHover(project.id)
-                                                }
-                                                name={project.name}
-                                                mode={project.mode}
-                                                memberCount={
-                                                    project.memberCount ?? 0
-                                                }
-                                                health={project.health}
-                                                id={project.id}
-                                                featureCount={
-                                                    project.featureCount
-                                                }
-                                                isFavorite={project.favorite}
-                                            />
-                                        </StyledCardLink>
-                                    ),
-                                )
-                            }
+                            elseShow={() => (
+                                <>
+                                    MINE
+                                    {projectsLists?.my.map(
+                                        (project: IProjectCard) => (
+                                            <StyledCardLink
+                                                key={project.id}
+                                                to={`/projects/${project.id}`}
+                                            >
+                                                <ProjectCard
+                                                    onHover={() =>
+                                                        handleHover(project.id)
+                                                    }
+                                                    name={project.name}
+                                                    mode={project.mode}
+                                                    memberCount={
+                                                        project.memberCount ?? 0
+                                                    }
+                                                    health={project.health}
+                                                    id={project.id}
+                                                    featureCount={
+                                                        project.featureCount
+                                                    }
+                                                    isFavorite={
+                                                        project.favorite
+                                                    }
+                                                />
+                                            </StyledCardLink>
+                                        ),
+                                    )}
+                                    OTHERS
+                                    {projectsLists?.other.map(
+                                        (project: IProjectCard) => (
+                                            <StyledCardLink
+                                                key={project.id}
+                                                to={`/projects/${project.id}`}
+                                            >
+                                                <ProjectCard
+                                                    onHover={() =>
+                                                        handleHover(project.id)
+                                                    }
+                                                    name={project.name}
+                                                    mode={project.mode}
+                                                    memberCount={
+                                                        project.memberCount ?? 0
+                                                    }
+                                                    health={project.health}
+                                                    id={project.id}
+                                                    featureCount={
+                                                        project.featureCount
+                                                    }
+                                                    isFavorite={
+                                                        project.favorite
+                                                    }
+                                                />
+                                            </StyledCardLink>
+                                        ),
+                                    )}
+                                </>
+                            )}
                         />
                     }
                 />

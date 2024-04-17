@@ -298,51 +298,6 @@ export default class ClientApplicationsStore
         return mapRow(row);
     }
 
-    async getOldApplicationOverview(
-        appName: string,
-    ): Promise<IApplicationOverview> {
-        const stopTimer = this.timer('getApplicationOverviewOld');
-        const query = this.db
-            .with('metrics', (qb) => {
-                qb.distinct(
-                    'cme.app_name',
-                    'cme.environment',
-                    'cme.feature_name',
-                ).from('client_metrics_env as cme');
-            })
-            .select([
-                'f.project',
-                'cme.environment',
-                'cme.feature_name',
-                'ci.instance_id',
-                'ci.sdk_version',
-                'ci.last_seen',
-                'a.strategies',
-            ])
-            .from({ a: 'client_applications' })
-            .leftJoin('metrics as cme', 'cme.app_name', 'a.app_name')
-            .leftJoin('features as f', 'cme.feature_name', 'f.name')
-            .leftJoin('client_instances as ci', function () {
-                this.on('ci.app_name', '=', 'cme.app_name').andOn(
-                    'ci.environment',
-                    '=',
-                    'cme.environment',
-                );
-            })
-            .where('a.app_name', appName)
-            .orderBy('cme.environment', 'asc');
-        const rows = await query;
-        stopTimer();
-        if (!rows.length) {
-            throw new NotFoundError(`Could not find appName=${appName}`);
-        }
-        const existingStrategies: string[] = await this.db
-            .select('name')
-            .from('strategies')
-            .pluck('name');
-        return this.mapApplicationOverviewData(rows, existingStrategies);
-    }
-
     async getApplicationOverview(
         appName: string,
     ): Promise<IApplicationOverview> {
@@ -384,6 +339,51 @@ export default class ClientApplicationsStore
             })
             .where('a.app_name', appName)
             .orderBy('m.environment', 'asc');
+        const rows = await query;
+        stopTimer();
+        if (!rows.length) {
+            throw new NotFoundError(`Could not find appName=${appName}`);
+        }
+        const existingStrategies: string[] = await this.db
+            .select('name')
+            .from('strategies')
+            .pluck('name');
+        return this.mapApplicationOverviewData(rows, existingStrategies);
+    }
+
+    async getOldApplicationOverview(
+        appName: string,
+    ): Promise<IApplicationOverview> {
+        const stopTimer = this.timer('getApplicationOverviewOld');
+        const query = this.db
+            .with('metrics', (qb) => {
+                qb.distinct(
+                    'cme.app_name',
+                    'cme.environment',
+                    'cme.feature_name',
+                ).from('client_metrics_env as cme');
+            })
+            .select([
+                'f.project',
+                'cme.environment',
+                'cme.feature_name',
+                'ci.instance_id',
+                'ci.sdk_version',
+                'ci.last_seen',
+                'a.strategies',
+            ])
+            .from({ a: 'client_applications' })
+            .leftJoin('metrics as cme', 'cme.app_name', 'a.app_name')
+            .leftJoin('features as f', 'cme.feature_name', 'f.name')
+            .leftJoin('client_instances as ci', function () {
+                this.on('ci.app_name', '=', 'cme.app_name').andOn(
+                    'ci.environment',
+                    '=',
+                    'cme.environment',
+                );
+            })
+            .where('a.app_name', appName)
+            .orderBy('cme.environment', 'asc');
         const rows = await query;
         stopTimer();
         if (!rows.length) {

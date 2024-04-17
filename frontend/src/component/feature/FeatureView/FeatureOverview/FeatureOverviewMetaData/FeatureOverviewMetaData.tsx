@@ -58,10 +58,6 @@ const StyledDescription = styled('p')({
     wordBreak: 'break-word',
 });
 
-const Styled = styled('p')({
-    wordBreak: 'break-word',
-});
-
 const FeatureOverviewMetaData = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -128,12 +124,7 @@ const FeatureOverviewMetaData = () => {
                                             title: 'Edit description',
                                         }}
                                     >
-                                        <Edit
-                                        // sx={(theme) => ({
-                                        //     color: theme.palette.primary
-                                        //         .contrastText,
-                                        // })}
-                                        />
+                                        <Edit />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
                             </span>

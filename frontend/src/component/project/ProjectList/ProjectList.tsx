@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BooleanParam, StringParam, withDefault } from 'use-query-params';
+import { StringParam, withDefault } from 'use-query-params';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -125,6 +125,19 @@ function resolveCreateButtonData(
     }
 }
 
+const filterOptions = [
+    {
+        label: 'All projects',
+        value: 'all',
+    },
+    {
+        label: 'My projects',
+        value: 'my_projects',
+    },
+] as const;
+
+// type FilterOptions = (typeof filterOptions)[number]['value'];
+
 export const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
@@ -135,30 +148,18 @@ export const ProjectListNew = () => {
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
     const myProjects = new Set(useProfile().profile?.projects || []);
 
-    const filterOptions = [
-        {
-            label: 'All projects',
-            value: false,
-        },
-        {
-            label: 'My projects',
-            value: true,
-        },
-    ];
-
-    const stateConfig = {
-        myProjects: withDefault(BooleanParam, false),
-        search: withDefault(StringParam, ''),
-    };
     const [filterState, setFilterState] = usePersistentTableState(
         `projects-list`,
-        stateConfig,
+        {
+            filter: withDefault(StringParam, 'all'),
+            search: withDefault(StringParam, ''),
+        },
     );
     const searchValue = filterState.search;
 
     const filteredProjects = useMemo(() => {
         const preFilteredProjects =
-            showProjectFilterButtons && filterState.myProjects
+            showProjectFilterButtons && filterState.filter === 'my_projects'
                 ? projects.filter(shouldDisplayInMyProjects(myProjects))
                 : projects;
 
@@ -181,7 +182,7 @@ export const ProjectListNew = () => {
     }, [
         projects,
         searchValue,
-        filterState.myProjects,
+        filterState.filter,
         myProjects,
         showProjectFilterButtons,
     ]);
@@ -226,23 +227,23 @@ export const ProjectListNew = () => {
                                     aria-label='project list filter'
                                     size='small'
                                     color='primary'
-                                    value={filterState.myProjects}
+                                    value={filterState.filter}
                                     exclusive
-                                    onChange={(event, value) => {
-                                        if (value !== null) {
+                                    onChange={(event, filter) => {
+                                        if (filter !== null) {
                                             setFilterState({
-                                                myProjects: value,
+                                                filter,
                                             });
                                         }
                                     }}
                                 >
-                                    {filterOptions.map((filter) => {
+                                    {filterOptions.map((option) => {
                                         return (
                                             <ToggleButton
-                                                key={`${filter.value}`}
-                                                value={filter.value}
+                                                key={`${option.value}`}
+                                                value={option.value}
                                             >
-                                                {filter.label}
+                                                {option.label}
                                             </ToggleButton>
                                         );
                                     })}

@@ -1,8 +1,5 @@
 ///<reference path="../../global.d.ts" />
-import {
-    SEARCH_INPUT,
-    //@ts-ignore
-} from '../../../src/utils/testIds';
+import { SEARCH_INPUT } from '../../../src/utils/testIds';
 
 describe('project overview', () => {
     const randomId = String(Math.random()).split('.')[1];

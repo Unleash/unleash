@@ -68,6 +68,11 @@ beforeAll(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
     const config = createTestConfig({
         getLogger,
+        experimental: {
+            flags: {
+                createProjectWithEnvironmentConfig: true,
+            },
+        },
     });
     eventService = new EventService(stores, config);
     accessService = createAccessService(db.rawDatabase, config);

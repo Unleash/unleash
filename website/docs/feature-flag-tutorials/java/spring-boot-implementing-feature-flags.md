@@ -382,3 +382,4 @@ The message rendering in the browser confirms that the app is now targeting the 
 
 In this tutorial, we created a new feature flag in Unleash and built a new page in the Spring Pet Clinic app. From there, we created two service implementations within the app for the new page and toggled between them with the feature flag. The Unleash Spring Boot SDK gave us the proper annotations to automatically toggle between the two implementations with minimal configuration.
 
+Continue on to our [Spring Boot examples documentation](/feature-flag-tutorials/spring-boot/examples) for more advanced use cases of feature flags in Java Spring Boot using the Spring PetClinic app!

@@ -98,6 +98,12 @@ interface ICalculateStatus {
     updates: IProjectStats;
 }
 
+type ProjectServiceEnterpriseFunctionality = {
+    enableChangeRequestsForEnvironments: (
+        environments: string[],
+    ) => Promise<void>;
+};
+
 function includes(
     list: number[],
     {
@@ -144,6 +150,8 @@ export default class ProjectService {
 
     private isEnterprise: boolean;
 
+    private enterpriseFunctionality: ProjectServiceEnterpriseFunctionality;
+
     constructor(
         {
             projectStore,
@@ -172,6 +180,7 @@ export default class ProjectService {
         favoriteService: FavoritesService,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
+        enterpriseFunctionality?: ProjectServiceEnterpriseFunctionality,
     ) {
         this.projectStore = projectStore;
         this.environmentStore = environmentStore;
@@ -190,6 +199,9 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
+        this.enterpriseFunctionality = enterpriseFunctionality ?? {
+            enableChangeRequestsForEnvironments: async () => {},
+        };
     }
 
     async getProjects(

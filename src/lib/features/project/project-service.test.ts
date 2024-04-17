@@ -3,13 +3,15 @@ import { createFakeProjectService } from './createProjectService';
 
 describe('enterprise extension: enable change requests', () => {
     test('it calls the change request enablement function', async () => {
-        const enableChangeRequests = jest.fn();
+        expect.assertions(1);
 
         const config = createTestConfig();
         const service = createFakeProjectService(config);
+
+        const projectId = 'fake-project-id';
         await service.createProject(
             {
-                id: 'fake-project-id',
+                id: projectId,
                 name: 'fake-project-name',
             },
             {
@@ -17,9 +19,13 @@ describe('enterprise extension: enable change requests', () => {
                 permissions: [],
                 isAPI: false,
             },
-            enableChangeRequests,
-        );
+            async () => {
+                // @ts-expect-error: we want to verify that the project /has/
+                // been created when calling the function.
+                const project = await service.projectStore.get(projectId);
 
-        expect(enableChangeRequests).toHaveBeenCalled();
+                expect(project).toBeTruthy();
+            },
+        );
     });
 });

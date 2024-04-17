@@ -57,7 +57,7 @@ process.nextTick(async () => {
                         projectListFilterMyProjects: true,
                         parseProjectFromSession: true,
                         createProjectWithEnvironmentConfig: true,
-                        applicationOverviewNewQuery: false,
+                        applicationOverviewNewQuery: true,
                     },
                 },
                 authentication: {

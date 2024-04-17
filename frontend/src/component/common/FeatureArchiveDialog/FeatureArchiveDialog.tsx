@@ -181,15 +181,16 @@ const useActionButtonText = (projectId: string, isBulkArchive: boolean) => {
     const getHighestEnvironment =
         useHighestPermissionChangeRequestEnvironment(projectId);
     const environment = getHighestEnvironment();
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfiguredForReview } =
+        useChangeRequestsEnabled(projectId);
     if (
         environment &&
-        isChangeRequestConfigured(environment) &&
+        isChangeRequestConfiguredForReview(environment) &&
         isBulkArchive
     ) {
         return 'Add to change request';
     }
-    if (environment && isChangeRequestConfigured(environment)) {
+    if (environment && isChangeRequestConfiguredForReview(environment)) {
         return 'Add change to draft';
     }
     if (isBulkArchive) {
@@ -212,7 +213,8 @@ const useArchiveAction = ({
     const { setToastData, setToastApiError } = useToast();
     const { archiveFeatureToggle } = useFeatureApi();
     const { archiveFeatures } = useProjectApi();
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfiguredForReview } =
+        useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
@@ -266,7 +268,10 @@ const useArchiveAction = ({
 
     return async () => {
         try {
-            if (environment && isChangeRequestConfigured(environment)) {
+            if (
+                environment &&
+                isChangeRequestConfiguredForReview(environment)
+            ) {
                 await addArchiveToggleToChangeRequest();
             } else if (isBulkArchive) {
                 await archiveToggles();

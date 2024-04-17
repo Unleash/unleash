@@ -50,6 +50,7 @@ export const theme = {
     fontSizes: {
         extraLargeHeader: '2.5rem',
         largeHeader: '2rem',
+        mediumHeader: '1.5rem',
         mainHeader: '1.25rem',
         bodySize: '1rem',
         smallBody: `${14 / 16}rem`,

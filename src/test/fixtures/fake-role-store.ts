@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { RoleSchema } from '../../lib/openapi';
-import type { ICustomRole } from '../../lib/types/model';
+import { RoleName, RoleType, type ICustomRole } from '../../lib/types/model';
 import type { IRole, IUserRole } from '../../lib/types/stores/access-store';
 import type {
     ICustomRoleInsert,
@@ -21,7 +21,14 @@ export default class FakeRoleStore implements IRoleStore {
         return Promise.resolve(0);
     }
 
-    roles: ICustomRole[] = [];
+    roles: ICustomRole[] = [
+        {
+            id: 5,
+            name: RoleName.OWNER,
+            type: RoleType.PROJECT,
+            description: 'A project owner',
+        },
+    ];
 
     getGroupRolesForProject(projectId: string): Promise<IRole[]> {
         throw new Error('Method not implemented.');

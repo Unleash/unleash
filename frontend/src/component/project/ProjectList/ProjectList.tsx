@@ -16,12 +16,7 @@ import Add from '@mui/icons-material/Add';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table';
-import {
-    useMediaQuery,
-    styled,
-    ToggleButtonGroup,
-    ToggleButton,
-} from '@mui/material';
+import { useMediaQuery, styled } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
@@ -55,24 +50,6 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     background: 'transparent',
     fontFamily: theme.typography.fontFamily,
     pointer: 'cursor',
-}));
-
-const StyledButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-    button: {
-        color: theme.palette.primary.main,
-        borderColor: theme.palette.background.alternative,
-        textTransform: 'none',
-        paddingInline: theme.spacing(3),
-        transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    },
-    'button[aria-pressed=true]': {
-        backgroundColor: theme.palette.background.alternative,
-        color: theme.palette.primary.contrastText,
-
-        '&:hover': {
-            backgroundColor: theme.palette.action.alternative,
-        },
-    },
 }));
 
 type PageQueryType = Partial<Record<'search', string>>;
@@ -210,36 +187,6 @@ export const ProjectListNew = () => {
             header={
                 <PageHeader
                     title={`Projects (${projectCount})`}
-                    leftActions={
-                        <ConditionallyRender
-                            condition={showProjectFilterButtons}
-                            show={
-                                <StyledButtonGroup
-                                    aria-label='project list filter'
-                                    size='small'
-                                    color='primary'
-                                    value={filter}
-                                    exclusive
-                                    onChange={(event, value) => {
-                                        if (value !== null) {
-                                            setFilter(value);
-                                        }
-                                    }}
-                                >
-                                    {filters.map((filter) => {
-                                        return (
-                                            <ToggleButton
-                                                key={filter}
-                                                value={filter}
-                                            >
-                                                {filter}
-                                            </ToggleButton>
-                                        );
-                                    })}
-                                </StyledButtonGroup>
-                            }
-                        />
-                    }
                     actions={
                         <>
                             <ConditionallyRender

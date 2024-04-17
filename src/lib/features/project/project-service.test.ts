@@ -12,7 +12,11 @@ describe('enterprise extension: enable change requests', () => {
                 id: 'fake-project-id',
                 name: 'fake-project-name',
             },
-            { id: 1, permissions: [], isAPI: false },
+            {
+                id: 1,
+                permissions: [],
+                isAPI: false,
+            },
             enableChangeRequests,
         );
 

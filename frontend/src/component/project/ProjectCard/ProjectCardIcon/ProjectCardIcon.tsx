@@ -38,8 +38,7 @@ export const ProjectCardIcon: VFC<IProjectCardIconProps> = ({ mode }) => {
         return (
             <StyledIconBox data-loading>
                 <HtmlTooltip
-                    title={`This projects collaboration mode is set to private. The project and associated feature
-                                        toggles can only be seen by you and the members of the project`}
+                    title='This projects collaboration mode is set to private. The project and associated feature toggles can only be seen by you and the members of the project.'
                     arrow
                 >
                     <StyledVisibilityIcon />
@@ -52,7 +51,7 @@ export const ProjectCardIcon: VFC<IProjectCardIconProps> = ({ mode }) => {
         return (
             <StyledIconBox data-loading>
                 <HtmlTooltip
-                    title={`This projects collaboration mode is set to protected.`}
+                    title='This projects collaboration mode is set to protected. Only admins and project members can submit requests.'
                     arrow
                 >
                     <StyledLockIcon />

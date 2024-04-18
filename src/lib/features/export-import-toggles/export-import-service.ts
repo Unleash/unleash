@@ -76,7 +76,9 @@ export type IExportService = {
     ): Promise<ExportResultSchema>;
 };
 
-export class ExportImportService implements IExportService, IImportService {
+export default class ExportImportService
+    implements IExportService, IImportService
+{
     private logger: Logger;
 
     private toggleStore: IFeatureToggleStore;
@@ -954,5 +956,4 @@ export class ExportImportService implements IExportService, IImportService {
         });
     }
 }
-
 module.exports = ExportImportService;

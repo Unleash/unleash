@@ -384,13 +384,13 @@ class BaseEvent implements IBaseEvent {
     readonly ip: string;
     /**
      * @param type the type of the event we're creating.
-     * @param auditUser USer info used to track which user performed the action. Includes username (email or username), userId and ip
+     * @param auditUser User info used to track which user performed the action. Includes username (email or username), userId and ip
      */
     constructor(type: IEventType, auditUser: IAuditUser) {
         this.type = type;
-        this.createdBy = auditUser.username;
-        this.createdByUserId = auditUser.id;
-        this.ip = auditUser.ip;
+        this.createdBy = auditUser.username || 'unknown';
+        this.createdByUserId = auditUser.id || -1337;
+        this.ip = auditUser.ip || '';
     }
 }
 

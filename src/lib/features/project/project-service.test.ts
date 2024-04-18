@@ -10,11 +10,14 @@ describe('enterprise extension: enable change requests', () => {
         const service = createFakeProjectService(config);
 
         // @ts-expect-error: if we don't set this up, the test will fail due to a missing role.
-        service.accessService.createRole({
-            name: RoleName.OWNER,
-            description: 'Project owner',
-            createdByUserId: -1,
-        });
+        service.accessService.createRole(
+            {
+                name: RoleName.OWNER,
+                description: 'Project owner',
+                createdByUserId: -1,
+            },
+            TEST_AUDIT_USER,
+        );
 
         const projectId = 'fake-project-id';
         await service.createProject(

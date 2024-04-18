@@ -7,7 +7,7 @@ import getLogger from '../../../fixtures/no-logger';
 import { FEATURE_CREATED, type IBaseEvent } from '../../../../lib/types/events';
 import { randomId } from '../../../../lib/util/random-id';
 import { EventService } from '../../../../lib/services';
-import { EventEmitter } from 'stream';
+import EventEmitter from 'events';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -60,7 +60,6 @@ test('Can filter by project', async () => {
         data: { id: 'some-other-feature' },
         tags: [],
         createdBy: 'test-user',
-        environment: 'test',
         createdByUserId: TEST_USER_ID,
     });
     await eventService.storeEvent({

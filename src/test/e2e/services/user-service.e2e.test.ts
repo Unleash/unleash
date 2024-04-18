@@ -13,7 +13,6 @@ import SettingService from '../../../lib/services/setting-service';
 import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings';
 import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service';
-import { randomId } from '../../../lib/util/random-id';
 import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
 import { EventService } from '../../../lib/services';
@@ -21,6 +20,8 @@ import {
     CREATE_ADDON,
     type IUnleashStores,
     type IUserStore,
+    SYSTEM_USER_AUDIT,
+    TEST_AUDIT_USER,
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
@@ -68,17 +69,20 @@ beforeAll(async () => {
     const rootRoles = await accessService.getRootRoles();
     adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN)!;
     viewerRole = rootRoles.find((r) => r.name === RoleName.VIEWER)!;
-    customRole = await accessService.createRole({
-        name: 'Custom role',
-        type: CUSTOM_ROOT_ROLE_TYPE,
-        description: 'A custom role',
-        permissions: [
-            {
-                name: CREATE_ADDON,
-            },
-        ],
-        createdByUserId: 1,
-    });
+    customRole = await accessService.createRole(
+        {
+            name: 'Custom role',
+            type: CUSTOM_ROOT_ROLE_TYPE,
+            description: 'A custom role',
+            permissions: [
+                {
+                    name: CREATE_ADDON,
+                },
+            ],
+            createdByUserId: 1,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 });
 
 afterAll(async () => {
@@ -106,11 +110,14 @@ test('should create initial admin user', async () => {
 });
 
 test('should not init default user if we already have users', async () => {
-    await userService.createUser({
-        username: 'test',
-        password: 'A very strange P4ssw0rd_',
-        rootRole: adminRole.id,
-    });
+    await userService.createUser(
+        {
+            username: 'test',
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        SYSTEM_USER_AUDIT,
+    );
     await userService.initAdminUser({
         createAdminUser: true,
         initialAdminUser: {
@@ -129,16 +136,22 @@ test('should not init default user if we already have users', async () => {
 test('should not be allowed to create existing user', async () => {
     await userStore.insert({ username: 'test', name: 'Hans Mola' });
     await expect(async () =>
-        userService.createUser({ username: 'test', rootRole: adminRole.id }),
+        userService.createUser(
+            { username: 'test', rootRole: adminRole.id },
+            TEST_AUDIT_USER,
+        ),
     ).rejects.toThrow(Error);
 });
 
 test('should create user with password', async () => {
-    await userService.createUser({
-        username: 'test',
-        password: 'A very strange P4ssw0rd_',
-        rootRole: adminRole.id,
-    });
+    await userService.createUser(
+        {
+            username: 'test',
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
     const user = await userService.loginUser(
         'test',
         'A very strange P4ssw0rd_',
@@ -147,10 +160,13 @@ test('should create user with password', async () => {
 });
 
 test('should create user with rootRole in audit-log', async () => {
-    const user = await userService.createUser({
-        username: 'test',
-        rootRole: viewerRole.id,
-    });
+    const user = await userService.createUser(
+        {
+            username: 'test',
+            rootRole: viewerRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 
     const { events } = await eventService.getEvents();
     expect(events[0].type).toBe(USER_CREATED);
@@ -160,12 +176,18 @@ test('should create user with rootRole in audit-log', async () => {
 });
 
 test('should update user with rootRole in audit-log', async () => {
-    const user = await userService.createUser({
-        username: 'test',
-        rootRole: viewerRole.id,
-    });
+    const user = await userService.createUser(
+        {
+            username: 'test',
+            rootRole: viewerRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 
-    await userService.updateUser({ id: user.id, rootRole: adminRole.id });
+    await userService.updateUser(
+        { id: user.id, rootRole: adminRole.id },
+        TEST_AUDIT_USER,
+    );
 
     const { events } = await eventService.getEvents();
     expect(events[0].type).toBe(USER_UPDATED);
@@ -175,12 +197,15 @@ test('should update user with rootRole in audit-log', async () => {
 });
 
 test('should remove user with rootRole in audit-log', async () => {
-    const user = await userService.createUser({
-        username: 'test',
-        rootRole: viewerRole.id,
-    });
+    const user = await userService.createUser(
+        {
+            username: 'test',
+            rootRole: viewerRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 
-    await userService.deleteUser(user.id);
+    await userService.deleteUser(user.id, TEST_AUDIT_USER);
 
     const { events } = await eventService.getEvents();
     expect(events[0].type).toBe(USER_DELETED);
@@ -190,13 +215,16 @@ test('should remove user with rootRole in audit-log', async () => {
 });
 
 test('should not be able to login with deleted user', async () => {
-    const user = await userService.createUser({
-        username: 'deleted_user',
-        password: 'unleash4all',
-        rootRole: adminRole.id,
-    });
+    const user = await userService.createUser(
+        {
+            username: 'deleted_user',
+            password: 'unleash4all',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 
-    await userService.deleteUser(user.id);
+    await userService.deleteUser(user.id, TEST_AUDIT_USER);
 
     await expect(
         userService.loginUser('deleted_user', 'unleash4all'),
@@ -208,11 +236,14 @@ test('should not be able to login with deleted user', async () => {
 });
 
 test('should not be able to login without password_hash on user', async () => {
-    const user = await userService.createUser({
-        username: 'deleted_user',
-        password: 'unleash4all',
-        rootRole: adminRole.id,
-    });
+    const user = await userService.createUser(
+        {
+            username: 'deleted_user',
+            password: 'unleash4all',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 
     /*@ts-ignore: we are testing for null on purpose! */
     await userStore.setPasswordHash(user.id, null);
@@ -230,16 +261,18 @@ test('should not login user if simple auth is disabled', async () => {
     await settingService.insert(
         simpleAuthSettingsKey,
         { disabled: true },
-        randomId(),
-        -9999,
+        TEST_AUDIT_USER,
         true,
     );
 
-    await userService.createUser({
-        username: 'test_no_pass',
-        password: 'A very strange P4ssw0rd_',
-        rootRole: adminRole.id,
-    });
+    await userService.createUser(
+        {
+            username: 'test_no_pass',
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 
     await expect(async () => {
         await userService.loginUser('test_no_pass', 'A very strange P4ssw0rd_');
@@ -250,22 +283,28 @@ test('should not login user if simple auth is disabled', async () => {
 
 test('should login for user _without_ password', async () => {
     const email = 'some@test.com';
-    await userService.createUser({
-        email,
-        password: 'A very strange P4ssw0rd_',
-        rootRole: adminRole.id,
-    });
+    await userService.createUser(
+        {
+            email,
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
     const user = await userService.loginUserWithoutPassword(email);
     expect(user.email).toBe(email);
 });
 
 test('should get user with root role', async () => {
     const email = 'some@test.com';
-    const u = await userService.createUser({
-        email,
-        password: 'A very strange P4ssw0rd_',
-        rootRole: adminRole.id,
-    });
+    const u = await userService.createUser(
+        {
+            email,
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
     const user = await userService.getUser(u.id);
     expect(user.email).toBe(email);
     expect(user.id).toBe(u.id);
@@ -274,11 +313,14 @@ test('should get user with root role', async () => {
 
 test('should get user with root role by name', async () => {
     const email = 'some2@test.com';
-    const u = await userService.createUser({
-        email,
-        password: 'A very strange P4ssw0rd_',
-        rootRole: RoleName.ADMIN,
-    });
+    const u = await userService.createUser(
+        {
+            email,
+            password: 'A very strange P4ssw0rd_',
+            rootRole: RoleName.ADMIN,
+        },
+        TEST_AUDIT_USER,
+    );
     const user = await userService.getUser(u.id);
     expect(user.email).toBe(email);
     expect(user.id).toBe(u.id);
@@ -287,11 +329,14 @@ test('should get user with root role by name', async () => {
 
 test("deleting a user should delete the user's sessions", async () => {
     const email = 'some@test.com';
-    const user = await userService.createUser({
-        email,
-        password: 'A very strange P4ssw0rd_',
-        rootRole: adminRole.id,
-    });
+    const user = await userService.createUser(
+        {
+            email,
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
     const testComSession = {
         sid: 'xyz321',
         sess: {
@@ -308,7 +353,7 @@ test("deleting a user should delete the user's sessions", async () => {
     await sessionService.insertSession(testComSession);
     const userSessions = await sessionService.getSessionsForUser(user.id);
     expect(userSessions.length).toBe(1);
-    await userService.deleteUser(user.id);
+    await userService.deleteUser(user.id, TEST_AUDIT_USER);
     await expect(async () =>
         sessionService.getSessionsForUser(user.id),
     ).rejects.toThrow(NotFoundError);
@@ -316,16 +361,22 @@ test("deleting a user should delete the user's sessions", async () => {
 
 test('updating a user without an email should not strip the email', async () => {
     const email = 'some@test.com';
-    const user = await userService.createUser({
-        email,
-        password: 'A very strange P4ssw0rd_',
-        rootRole: adminRole.id,
-    });
+    const user = await userService.createUser(
+        {
+            email,
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 
-    await userService.updateUser({
-        id: user.id,
-        name: 'some',
-    });
+    await userService.updateUser(
+        {
+            id: user.id,
+            name: 'some',
+        },
+        TEST_AUDIT_USER,
+    );
 
     const updatedUser = await userService.getUser(user.id);
     expect(updatedUser.email).toBe(email);
@@ -362,11 +413,14 @@ test('should throw if rootRole is wrong via SSO', async () => {
 
 test('should update user name when signing in via SSO', async () => {
     const email = 'some@test.com';
-    const originalUser = await userService.createUser({
-        email,
-        rootRole: RoleName.VIEWER,
-        name: 'some',
-    });
+    const originalUser = await userService.createUser(
+        {
+            email,
+            rootRole: RoleName.VIEWER,
+            name: 'some',
+        },
+        TEST_AUDIT_USER,
+    );
 
     await userService.loginUserSSO({
         email,
@@ -384,11 +438,14 @@ test('should update user name when signing in via SSO', async () => {
 
 test('should update name if it is different via SSO', async () => {
     const email = 'some@test.com';
-    const originalUser = await userService.createUser({
-        email,
-        rootRole: RoleName.VIEWER,
-        name: 'some',
-    });
+    const originalUser = await userService.createUser(
+        {
+            email,
+            rootRole: RoleName.VIEWER,
+            name: 'some',
+        },
+        TEST_AUDIT_USER,
+    );
 
     await userService.loginUserSSO({
         email,

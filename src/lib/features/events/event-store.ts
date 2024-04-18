@@ -1,12 +1,12 @@
 import {
-    type IEvent,
-    type IBaseEvent,
-    SEGMENT_UPDATED,
     FEATURE_IMPORT,
     FEATURES_IMPORTED,
+    type IBaseEvent,
+    type IEvent,
     type IEventType,
+    SEGMENT_UPDATED,
 } from '../../types/events';
-import type { LogProvider, Logger } from '../../logger';
+import type { Logger, LogProvider } from '../../logger';
 import type { IEventStore } from '../../types/stores/event-store';
 import type { ITag } from '../../types/model';
 import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
@@ -394,6 +394,7 @@ class EventStore implements IEventStore {
             feature_name: e.featureName,
             project: e.project,
             environment: e.environment,
+            ip: e.ip,
         };
     }
 

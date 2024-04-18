@@ -11,7 +11,7 @@ import { addDays, subDays } from 'date-fns';
 import type ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EventService } from '../../../lib/services';
-import type { IUnleashStores } from '../../../lib/types';
+import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -43,7 +43,7 @@ beforeAll(async () => {
     });
     projectService = createProjectService(db.rawDatabase, config);
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     apiTokenService = new ApiTokenService(stores, config, eventService);
 });
@@ -123,10 +123,10 @@ test('should update expiry of token', async () => {
             project: '*',
             environment: DEFAULT_ENV,
         },
-        'tester',
+        TEST_AUDIT_USER,
     );
 
-    await apiTokenService.updateExpiry(token.secret, newTime, 'tester', -9999);
+    await apiTokenService.updateExpiry(token.secret, newTime, TEST_AUDIT_USER);
 
     const [updatedToken] = await apiTokenService.getAllTokens();
 

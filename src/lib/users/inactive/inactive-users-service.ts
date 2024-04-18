@@ -1,7 +1,7 @@
 import {
+    type IAuditUser,
     type IUnleashConfig,
     type IUnleashStores,
-    type IUser,
     serializeDates,
 } from '../../types';
 import type { IInactiveUsersStore } from './types/inactive-users-store-type';
@@ -48,7 +48,7 @@ export class InactiveUsersService {
     }
 
     async deleteInactiveUsers(
-        calledByUser: IUser,
+        calledByUser: IAuditUser,
         userIds: number[],
     ): Promise<void> {
         this.logger.info('Deleting inactive users');

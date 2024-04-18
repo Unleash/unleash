@@ -5,6 +5,7 @@ import {
 } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
 import type { IUser } from '../../../../../lib/types';
+import { extractAuditInfoFromUser } from '../../../../../lib/util';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -40,7 +41,11 @@ test('Project with no stale toggles should have 100% health rating', async () =>
         name: 'Health rating',
         description: 'Fancy',
     };
-    await app.services.projectService.createProject(project, user);
+    await app.services.projectService.createProject(
+        project,
+        user,
+        extractAuditInfoFromUser(user),
+    );
     await app.request
         .post('/api/admin/projects/fresh/features')
         .send({
@@ -76,7 +81,11 @@ test('Health rating endpoint yields stale, potentially stale and active count on
         name: 'Health rating',
         description: 'Fancy',
     };
-    await app.services.projectService.createProject(project, user);
+    await app.services.projectService.createProject(
+        project,
+        user,
+        extractAuditInfoFromUser(user),
+    );
     await app.request
         .post(`/api/admin/projects/${project.id}/features`)
         .send({
@@ -119,7 +128,11 @@ test('Health rating endpoint does not include archived toggles when calculating 
         name: 'Health rating',
         description: 'Fancy',
     };
-    await app.services.projectService.createProject(project, user);
+    await app.services.projectService.createProject(
+        project,
+        user,
+        extractAuditInfoFromUser(user),
+    );
     await app.request
         .post(`/api/admin/projects/${project.id}/features`)
         .send({
@@ -180,7 +193,11 @@ test('Health rating endpoint correctly handles potentially stale toggles', async
         name: 'Health rating',
         description: 'Fancy',
     };
-    await app.services.projectService.createProject(project, user);
+    await app.services.projectService.createProject(
+        project,
+        user,
+        extractAuditInfoFromUser(user),
+    );
     await app.request
         .post(`/api/admin/projects/${project.id}/features`)
         .send({

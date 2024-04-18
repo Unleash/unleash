@@ -1,5 +1,5 @@
 import { createTestConfig } from '../../../test/config/test-config';
-import { RoleName } from '../../types';
+import { RoleName, TEST_AUDIT_USER } from '../../types';
 import { createFakeProjectService } from './createProjectService';
 
 describe('enterprise extension: enable change requests', () => {
@@ -10,11 +10,14 @@ describe('enterprise extension: enable change requests', () => {
         const service = createFakeProjectService(config);
 
         // @ts-expect-error: if we don't set this up, the test will fail due to a missing role.
-        service.accessService.createRole({
-            name: RoleName.OWNER,
-            description: 'Project owner',
-            createdByUserId: -1,
-        });
+        service.accessService.createRole(
+            {
+                name: RoleName.OWNER,
+                description: 'Project owner',
+                createdByUserId: -1,
+            },
+            TEST_AUDIT_USER,
+        );
 
         const projectId = 'fake-project-id';
         await service.createProject(
@@ -27,6 +30,7 @@ describe('enterprise extension: enable change requests', () => {
                 permissions: [],
                 isAPI: false,
             },
+            TEST_AUDIT_USER,
             async () => {
                 // @ts-expect-error: we want to verify that the project /has/
                 // been created when calling the function.

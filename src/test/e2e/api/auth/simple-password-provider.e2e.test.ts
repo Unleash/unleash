@@ -1,5 +1,9 @@
 import { createTestConfig } from '../../../config/test-config';
-import type { IUnleashConfig, IUnleashStores } from '../../../../lib/types';
+import {
+    type IUnleashConfig,
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../../../lib/types';
 import UserService from '../../../../lib/services/user-service';
 import { AccessService } from '../../../../lib/services/access-service';
 import type { IUser } from '../../../../lib/types/user';
@@ -57,12 +61,15 @@ beforeAll(async () => {
         settingService,
     });
     const adminRole = await accessService.getPredefinedRole(RoleName.ADMIN);
-    adminUser = await userService.createUser({
-        username: 'admin@test.com',
-        email: 'admin@test.com',
-        rootRole: adminRole!.id,
-        password: password,
-    });
+    adminUser = await userService.createUser(
+        {
+            username: 'admin@test.com',
+            email: 'admin@test.com',
+            rootRole: adminRole!.id,
+            password: password,
+        },
+        TEST_AUDIT_USER,
+    );
 });
 
 beforeEach(async () => {

@@ -40,7 +40,7 @@ export interface IProjectUser extends IUser {
 export interface IAuditUser {
     id: number;
     username: string;
-    ip?: string;
+    ip: string;
 }
 
 export default class User implements IUser {

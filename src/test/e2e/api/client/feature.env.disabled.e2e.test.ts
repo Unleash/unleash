@@ -5,7 +5,7 @@ import {
 import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import type { IUser } from '../../../../lib/types';
+import { type IUser, TEST_AUDIT_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -25,14 +25,13 @@ beforeAll(async () => {
             name: featureName,
             description: 'the #1 feature',
         },
-        username,
-        userId,
+        TEST_AUDIT_USER,
     );
 
     await app.services.featureToggleServiceV2.createStrategy(
         { name: 'default', constraints: [], parameters: {} },
         { projectId, featureName, environment: DEFAULT_ENV },
-        username,
+        TEST_AUDIT_USER,
         { id: userId } as IUser,
     );
 });
@@ -48,7 +47,7 @@ test('returns feature toggle for default env', async () => {
         'feature.default.1',
         'default',
         true,
-        'test',
+        TEST_AUDIT_USER,
     );
 
     await app.request

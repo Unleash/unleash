@@ -7,7 +7,11 @@ import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { type IUser, SYSTEM_USER } from '../../../../lib/types';
+import {
+    type IUser,
+    SYSTEM_USER_AUDIT,
+    TEST_AUDIT_USER,
+} from '../../../../lib/types';
 
 const importData = require('../../../examples/import.json');
 
@@ -174,8 +178,7 @@ test('Can roundtrip. I.e. export and then import', async () => {
     await app.services.environmentService.addEnvironmentToProject(
         environment,
         projectId,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
@@ -184,8 +187,7 @@ test('Can roundtrip. I.e. export and then import', async () => {
             name: featureName,
             description: 'Feature for export',
         },
-        userName,
-        userId,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -196,7 +198,7 @@ test('Can roundtrip. I.e. export and then import', async () => {
             parameters: {},
         },
         { projectId, featureName, environment },
-        userName,
+        TEST_AUDIT_USER,
         { id: userId } as IUser,
     );
     const data = await app.services.stateService.export({});
@@ -227,8 +229,7 @@ test('Roundtrip with tags works', async () => {
     await app.services.environmentService.addEnvironmentToProject(
         environment,
         projectId,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
@@ -237,8 +238,7 @@ test('Roundtrip with tags works', async () => {
             name: featureName,
             description: 'Feature for export',
         },
-        userName,
-        userId,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -253,19 +253,17 @@ test('Roundtrip with tags works', async () => {
             featureName,
             environment,
         },
-        userName,
+        TEST_AUDIT_USER,
     );
     await app.services.featureTagService.addTag(
         featureName,
         { type: 'simple', value: 'export-test' },
-        userName,
-        -9999,
+        TEST_AUDIT_USER,
     );
     await app.services.featureTagService.addTag(
         featureName,
         { type: 'simple', value: 'export-test-2' },
-        userName,
-        -9999,
+        TEST_AUDIT_USER,
     );
     const data = await app.services.stateService.export({});
     await app.services.stateService.import({
@@ -303,21 +301,18 @@ test('Roundtrip with strategies in multiple environments works', async () => {
             name: featureName,
             description: 'Feature for export',
         },
-        userName,
-        userId,
+        TEST_AUDIT_USER,
     );
     await app.services.environmentService.addEnvironmentToProject(
         environment,
         projectId,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
 
     await app.services.environmentService.addEnvironmentToProject(
         DEFAULT_ENV,
         projectId,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -328,7 +323,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
             parameters: {},
         },
         { projectId, featureName, environment },
-        userName,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleServiceV2.createStrategy(
         {
@@ -339,7 +334,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
             parameters: {},
         },
         { projectId, featureName, environment: DEFAULT_ENV },
-        userName,
+        TEST_AUDIT_USER,
     );
     const data = await app.services.stateService.export({});
     await app.services.stateService.import({
@@ -405,8 +400,7 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
     await app.services.environmentService.addEnvironmentToProject(
         environment,
         projectId,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
@@ -415,8 +409,7 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
             name: featureName,
             description: 'Feature for export',
         },
-        userName,
-        userId,
+        TEST_AUDIT_USER,
     );
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: apiTokenName,

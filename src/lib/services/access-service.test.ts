@@ -15,7 +15,12 @@ import FakeEnvironmentStore from '../features/project-environments/fake-environm
 import AccessStoreMock from '../../test/fixtures/fake-access-store';
 import { GroupService } from '../services/group-service';
 import type { IRole } from '../../lib/types/stores/access-store';
-import { type IGroup, ROLE_CREATED, SYSTEM_USER } from '../../lib/types';
+import {
+    type IGroup,
+    ROLE_CREATED,
+    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
+} from '../../lib/types';
 import BadDataError from '../../lib/error/bad-data-error';
 import { createFakeEventsService } from '../../lib/features/events/createEventsService';
 
@@ -29,12 +34,15 @@ function getSetup() {
 
 test('should fail when name exists', async () => {
     const { accessService } = getSetup();
-    const existingRole = await accessService.createRole({
-        name: 'existing role',
-        description: 'description',
-        permissions: [],
-        createdByUserId: -9999,
-    });
+    const existingRole = await accessService.createRole(
+        {
+            name: 'existing role',
+            description: 'description',
+            permissions: [],
+            createdByUserId: -9999,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 
     expect(accessService.validateRole(existingRole)).rejects.toThrow(
         new NameExistsError(
@@ -179,7 +187,10 @@ test('user with custom root role should get a user root role', async () => {
         ],
     };
 
-    const customRootRole = await accessService.createRole(createRoleInput);
+    const customRootRole = await accessService.createRole(
+        createRoleInput,
+        SYSTEM_USER_AUDIT,
+    );
     const user = {
         id: 1,
         rootRole: customRootRole.id,
@@ -192,8 +203,9 @@ test('user with custom root role should get a user root role', async () => {
     expect(events).toHaveLength(1);
     expect(events[0]).toEqual({
         type: ROLE_CREATED,
-        createdBy: 'unknown',
-        createdByUserId: -9999,
+        createdBy: SYSTEM_USER_AUDIT.username,
+        createdByUserId: SYSTEM_USER.id,
+        ip: SYSTEM_USER_AUDIT.ip,
         data: {
             id: 0,
             name: 'custom-root-role',
@@ -202,7 +214,7 @@ test('user with custom root role should get a user root role', async () => {
             // make sure we have a cleaned up version of permissions in the event
             permissions: [
                 { environment: 'development', name: 'fake' },
-                { name: 'root-fake-permission' },
+                { name: 'root-fake-permission', environment: undefined },
             ],
         },
     });
@@ -251,7 +263,7 @@ test('throws error when trying to delete a project role in use by group', async 
     );
 
     try {
-        await accessService.deleteRole(1, SYSTEM_USER.username, SYSTEM_USER.id);
+        await accessService.deleteRole(1, SYSTEM_USER_AUDIT);
     } catch (e) {
         expect(e.toString()).toBe(
             'RoleInUseError: Role is in use by users(0) or groups(1). You cannot delete a role that is in use without first removing the role from the users and groups.',

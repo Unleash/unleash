@@ -8,7 +8,7 @@ import type { Logger, LogProvider } from '../../logger';
 import type EventEmitter from 'events';
 import NotFoundError from '../../error/notfound-error';
 import type { PartialSome } from '../../types/partial';
-import type User from '../../types/user';
+import type { IAuditUser } from '../../types/user';
 import type { Db } from '../../db/db';
 import type { IFlagResolver } from '../../types';
 import { isDefined } from '../../util';
@@ -77,7 +77,7 @@ export default class SegmentStore implements ISegmentStore {
 
     async create(
         segment: PartialSome<ISegment, 'id'>,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: Pick<IAuditUser, 'username'>,
     ): Promise<ISegment> {
         const rows = await this.db(T.segments)
             .insert({
@@ -86,7 +86,7 @@ export default class SegmentStore implements ISegmentStore {
                 description: segment.description,
                 segment_project_id: segment.project || null,
                 constraints: JSON.stringify(segment.constraints),
-                created_by: user.username || user.email,
+                created_by: user.username,
             })
             .returning(COLUMNS);
 

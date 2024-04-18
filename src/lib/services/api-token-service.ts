@@ -24,17 +24,12 @@ import {
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
+    type IAuditUser,
     type IFlagContext,
     type IFlagResolver,
-    type IUser,
-    SYSTEM_USER,
-    SYSTEM_USER_ID,
+    SYSTEM_USER_AUDIT,
 } from '../types';
-import {
-    extractUserIdFromUser,
-    extractUsernameFromUser,
-    omitKeys,
-} from '../util';
+import { omitKeys } from '../util';
 import type EventService from '../features/events/event-service';
 import { addMinutes, isPast } from 'date-fns';
 
@@ -151,13 +146,7 @@ export class ApiTokenService {
         try {
             const createAll = tokens
                 .map(mapLegacyTokenWithSecret)
-                .map((t) =>
-                    this.insertNewApiToken(
-                        t,
-                        'init-api-tokens',
-                        SYSTEM_USER_ID,
-                    ),
-                );
+                .map((t) => this.insertNewApiToken(t, SYSTEM_USER_AUDIT));
             await Promise.all(createAll);
         } catch (e) {
             this.logger.error('Unable to create initial Admin API tokens');
@@ -231,15 +220,13 @@ export class ApiTokenService {
     public async updateExpiry(
         secret: string,
         expiresAt: Date,
-        updatedBy: string,
-        updatedById: number,
+        auditUser: IAuditUser,
     ): Promise<IApiToken> {
         const previous = await this.store.get(secret);
         const token = await this.store.setExpiry(secret, expiresAt);
         await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({
-                createdBy: updatedBy,
-                createdByUserId: updatedById,
+                auditUser,
                 previousToken: omitKeys(previous, 'secret'),
                 apiToken: omitKeys(token, 'secret'),
             }),
@@ -247,18 +234,13 @@ export class ApiTokenService {
         return token;
     }
 
-    public async delete(
-        secret: string,
-        deletedBy: string,
-        deletedByUserId: number,
-    ): Promise<void> {
+    public async delete(secret: string, auditUser: IAuditUser): Promise<void> {
         if (await this.store.exists(secret)) {
             const token = await this.store.get(secret);
             await this.store.delete(secret);
             await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({
-                    createdBy: deletedBy,
-                    createdByUserId: deletedByUserId,
+                    auditUser,
                     apiToken: omitKeys(token, 'secret'),
                 }),
             );
@@ -270,15 +252,10 @@ export class ApiTokenService {
      */
     public async createApiToken(
         newToken: Omit<ILegacyApiTokenCreate, 'secret'>,
-        createdBy: string = SYSTEM_USER.username,
-        createdByUserId: number = SYSTEM_USER.id,
+        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IApiToken> {
         const token = mapLegacyToken(newToken);
-        return this.internalCreateApiTokenWithProjects(
-            token,
-            createdBy,
-            createdByUserId,
-        );
+        return this.internalCreateApiTokenWithProjects(token, auditUser);
     }
 
     /**
@@ -288,32 +265,14 @@ export class ApiTokenService {
      */
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
-        createdBy?: string | IApiUser | IUser,
-        createdByUserId?: number,
+        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IApiToken> {
-        // if statement to support old method signature
-        if (
-            createdBy === undefined ||
-            typeof createdBy === 'string' ||
-            createdByUserId
-        ) {
-            return this.internalCreateApiTokenWithProjects(
-                newToken,
-                (createdBy as string) || SYSTEM_USER.username,
-                createdByUserId || SYSTEM_USER.id,
-            );
-        }
-        return this.internalCreateApiTokenWithProjects(
-            newToken,
-            extractUsernameFromUser(createdBy),
-            extractUserIdFromUser(createdBy),
-        );
+        return this.internalCreateApiTokenWithProjects(newToken, auditUser);
     }
 
     private async internalCreateApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
         const environments = await this.environmentStore.getAll();
@@ -321,11 +280,7 @@ export class ApiTokenService {
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
-        return this.insertNewApiToken(
-            createNewToken,
-            createdBy,
-            createdByUserId,
-        );
+        return this.insertNewApiToken(createNewToken, auditUser);
     }
 
     // TODO: Remove this service method after embedded proxy has been released in
@@ -337,25 +292,19 @@ export class ApiTokenService {
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
-        return this.insertNewApiToken(
-            createNewToken,
-            'system-migration',
-            SYSTEM_USER_ID,
-        );
+        return this.insertNewApiToken(createNewToken, SYSTEM_USER_AUDIT);
     }
 
     private async insertNewApiToken(
         newApiToken: IApiTokenCreate,
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<IApiToken> {
         try {
             const token = await this.store.insert(newApiToken);
             this.activeTokens.push(token);
             await this.eventService.storeEvent(
                 new ApiTokenCreatedEvent({
-                    createdBy,
-                    createdByUserId,
+                    auditUser,
                     apiToken: omitKeys(token, 'secret'),
                 }),
             );

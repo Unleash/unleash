@@ -9,11 +9,13 @@ import type {
 
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
-import type {
-    ICreateGroupUserModel,
-    IUnleashStores,
-    IUser,
-    IUserAccessOverview,
+import {
+    type ICreateGroupUserModel,
+    type IUnleashStores,
+    type IUser,
+    type IUserAccessOverview,
+    SYSTEM_USER_AUDIT,
+    TEST_AUDIT_USER,
 } from '../../../lib/types';
 import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
@@ -30,6 +32,7 @@ import { BadDataError } from '../../../lib/error';
 import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import type { ProjectService } from '../../../lib/services';
 import type { IRole } from '../../../lib/types/stores/access-store';
+import { extractAuditInfoFromUser } from '../../../lib/util';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -78,12 +81,15 @@ const createGroup = async ({
 
 let roleIndex = 0;
 const createRole = async (rolePermissions: PermissionRef[]) => {
-    return accessService.createRole({
-        name: `Role ${roleIndex}`,
-        description: `Role ${roleIndex++} description`,
-        permissions: rolePermissions,
-        createdByUserId: TEST_USER_ID,
-    });
+    return accessService.createRole(
+        {
+            name: `Role ${roleIndex}`,
+            description: `Role ${roleIndex++} description`,
+            permissions: rolePermissions,
+            createdByUserId: TEST_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 };
 
 const hasCommonProjectAccess = async (user, projectName, condition) => {
@@ -261,6 +267,7 @@ beforeAll(async () => {
             name: 'Some project',
         },
         testAdmin,
+        TEST_AUDIT_USER,
     );
 
     await projectService.createProject(
@@ -269,6 +276,7 @@ beforeAll(async () => {
             name: 'Another project not used',
         },
         testAdmin,
+        TEST_AUDIT_USER,
     );
 });
 
@@ -724,7 +732,7 @@ test('Should be denied access to delete a role that is in use', async () => {
         name: 'New project',
         description: 'Blah',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     const projectMember = await stores.userStore.insert({
         name: 'CustomProjectMember',
@@ -746,11 +754,11 @@ test('Should be denied access to delete a role that is in use', async () => {
         project.id,
         customRole.id,
         projectMember.id,
-        'systemuser',
+        SYSTEM_USER_AUDIT,
     );
 
     try {
-        await accessService.deleteRole(customRole.id, 'testuser', TEST_USER_ID);
+        await accessService.deleteRole(customRole.id, TEST_AUDIT_USER);
     } catch (e) {
         expect(e.toString()).toBe(
             'RoleInUseError: Role is in use by users(1) or groups(0). You cannot delete a role that is in use without first removing the role from the users and groups.',
@@ -772,16 +780,19 @@ test('Should be denied move feature toggle to project where the user does not ha
         name: 'New project',
         description: 'Blah',
     };
-    await projectService.createProject(projectOrigin, user);
-    await projectService.createProject(projectDest, editorUser2);
+    await projectService.createProject(projectOrigin, user, TEST_AUDIT_USER);
+    await projectService.createProject(
+        projectDest,
+        editorUser2,
+        TEST_AUDIT_USER,
+    );
 
     const featureToggle = { name: 'moveableToggle' };
 
     await featureToggleService.createFeatureToggle(
         projectOrigin.id,
         featureToggle,
-        user.username,
-        user.id,
+        extractAuditInfoFromUser(user),
     );
 
     try {
@@ -790,6 +801,7 @@ test('Should be denied move feature toggle to project where the user does not ha
             featureToggle.name,
             user,
             projectOrigin.id,
+            TEST_AUDIT_USER,
         );
     } catch (e) {
         expect(e.name).toContain('Permission');
@@ -813,16 +825,23 @@ test('Should be allowed move feature toggle to project when the user has access'
         name: 'New project',
         description: 'Blah',
     };
-    await projectService.createProject(projectOrigin, user);
-    await projectService.createProject(projectDest, user);
+    await projectService.createProject(
+        projectOrigin,
+        user,
+        extractAuditInfoFromUser(user),
+    );
+    await projectService.createProject(
+        projectDest,
+        user,
+        extractAuditInfoFromUser(user),
+    );
 
     const featureToggle = { name: 'moveableToggle2' };
 
     await featureToggleService.createFeatureToggle(
         projectOrigin.id,
         featureToggle,
-        user.username,
-        user.id,
+        extractAuditInfoFromUser(user),
     );
 
     await projectService.changeProject(
@@ -830,6 +849,7 @@ test('Should be allowed move feature toggle to project when the user has access'
         featureToggle.name,
         user,
         projectOrigin.id,
+        extractAuditInfoFromUser(user),
     );
 });
 
@@ -845,7 +865,7 @@ test('Should not be allowed to edit a root role', async () => {
     };
 
     try {
-        await accessService.updateRole(roleUpdate);
+        await accessService.updateRole(roleUpdate, TEST_AUDIT_USER);
     } catch (e) {
         expect(e.toString()).toBe(
             'InvalidOperationError: You cannot change built in roles.',
@@ -859,7 +879,7 @@ test('Should not be allowed to delete a root role', async () => {
     const editRole = await accessService.getRoleByName(RoleName.EDITOR);
 
     try {
-        await accessService.deleteRole(editRole.id, 'testuser', TEST_USER_ID);
+        await accessService.deleteRole(editRole.id, TEST_AUDIT_USER);
     } catch (e) {
         expect(e.toString()).toBe(
             'InvalidOperationError: You cannot change built in roles.',
@@ -879,7 +899,7 @@ test('Should not be allowed to edit a project role', async () => {
     };
 
     try {
-        await accessService.updateRole(roleUpdate);
+        await accessService.updateRole(roleUpdate, TEST_AUDIT_USER);
     } catch (e) {
         expect(e.toString()).toBe(
             'InvalidOperationError: You cannot change built in roles.',
@@ -893,7 +913,7 @@ test('Should not be allowed to delete a project role', async () => {
     const ownerRole = await accessService.getRoleByName(RoleName.OWNER);
 
     try {
-        await accessService.deleteRole(ownerRole.id, 'testuser', TEST_USER_ID);
+        await accessService.deleteRole(ownerRole.id, TEST_AUDIT_USER);
     } catch (e) {
         expect(e.toString()).toBe(
             'InvalidOperationError: You cannot change built in roles.',
@@ -909,7 +929,7 @@ test('Should be allowed move feature toggle to project when given access through
 
     const viewerUser = await createUser(readRole.id);
 
-    await projectService.createProject(project, editorUser);
+    await projectService.createProject(project, editorUser, TEST_AUDIT_USER);
 
     const groupWithProjectAccess = await createGroup({
         users: [{ user: viewerUser }],
@@ -936,7 +956,7 @@ test('Should not lose user role access when given permissions from a group', asy
     };
     const user = editorUser;
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     const groupWithNoAccess = await createGroup({
         users: [{ user }],
@@ -968,8 +988,16 @@ test('Should allow user to take multiple group roles and have expected permissio
 
     const viewerUser = await createUser(readRole.id);
 
-    await projectService.createProject(projectForCreate, editorUser);
-    await projectService.createProject(projectForDelete, editorUser);
+    await projectService.createProject(
+        projectForCreate,
+        editorUser,
+        TEST_AUDIT_USER,
+    );
+    await projectService.createProject(
+        projectForDelete,
+        editorUser,
+        TEST_AUDIT_USER,
+    );
 
     const groupWithCreateAccess = await createGroup({
         users: [{ user: viewerUser }],
@@ -1855,14 +1883,17 @@ test('access overview should have group access for groups that they are in', asy
 test('access overview should include users with custom root roles', async () => {
     const email = 'ratatoskr@yggdrasil.com';
 
-    const customRole = await accessService.createRole({
-        name: 'Mischievous Messenger',
-        type: CUSTOM_ROOT_ROLE_TYPE,
-        description:
-            'A squirrel that runs up and down the world tree, carrying messages.',
-        permissions: [{ name: permissions.CREATE_ADDON }],
-        createdByUserId: 1,
-    });
+    const customRole = await accessService.createRole(
+        {
+            name: 'Mischievous Messenger',
+            type: CUSTOM_ROOT_ROLE_TYPE,
+            description:
+                'A squirrel that runs up and down the world tree, carrying messages.',
+            permissions: [{ name: permissions.CREATE_ADDON }],
+            createdByUserId: 1,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 
     const { userStore } = stores;
     const user = await userStore.insert({

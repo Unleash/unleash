@@ -6,12 +6,12 @@ import {
     ApiTokenType,
     type IApiToken,
 } from '../../../../lib/types/models/api-token';
+import { TEST_AUDIT_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 let defaultToken: IApiToken;
-const TEST_USER_ID = -9999;
 beforeAll(async () => {
     db = await dbInit('metrics_two_api_client', getLogger);
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
@@ -107,14 +107,12 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         { name: 't1' },
-        'tester',
-        TEST_USER_ID,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         { name: 't2' },
-        'tester',
-        TEST_USER_ID,
+        TEST_AUDIT_USER,
     );
 
     const token = await app.services.apiTokenService.createApiToken({

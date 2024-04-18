@@ -42,7 +42,6 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service';
-import { extractUserId, extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
 
 interface TokenParam {
@@ -322,8 +321,7 @@ export class ApiTokenController extends Controller {
         if (hasPermission) {
             const token = await this.apiTokenService.createApiToken(
                 createToken,
-                extractUsername(req),
-                extractUserId(req),
+                req.audit,
             );
             this.openApiService.respondWithValidation(
                 201,
@@ -374,8 +372,7 @@ export class ApiTokenController extends Controller {
         await this.apiTokenService.updateExpiry(
             token,
             new Date(expiresAt),
-            extractUsername(req),
-            req.user.id,
+            req.audit,
         );
 
         return res.status(200).end();
@@ -406,11 +403,7 @@ export class ApiTokenController extends Controller {
                 `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
         }
-        await this.apiTokenService.delete(
-            token,
-            extractUsername(req),
-            req.user.id,
-        );
+        await this.apiTokenService.delete(token, req.audit);
         await this.frontendApiService.deleteClientForFrontendApiToken(token);
         res.status(200).end();
     }

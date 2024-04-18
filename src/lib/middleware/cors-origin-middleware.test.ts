@@ -9,7 +9,7 @@ import {
     FrontendApiService,
     SettingService,
 } from '../../lib/services';
-import type { ISettingStore } from '../../lib/types';
+import { type ISettingStore, TEST_AUDIT_USER } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
@@ -56,8 +56,7 @@ test('corsOriginMiddleware origin validation', async () => {
     await expect(() =>
         frontendApiService.setFrontendSettings(
             { frontendApiOrigins: ['a'] },
-            userName,
-            TEST_USER_ID,
+            TEST_AUDIT_USER,
         ),
     ).rejects.toThrow('Invalid origin: a');
 });
@@ -70,16 +69,14 @@ test('corsOriginMiddleware without config', async () => {
     });
     await frontendApiService.setFrontendSettings(
         { frontendApiOrigins: [] },
-        userName,
-        TEST_USER_ID,
+        TEST_AUDIT_USER,
     );
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
     await frontendApiService.setFrontendSettings(
         { frontendApiOrigins: ['*'] },
-        userName,
-        TEST_USER_ID,
+        TEST_AUDIT_USER,
     );
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['*'],
@@ -98,16 +95,14 @@ test('corsOriginMiddleware with config', async () => {
     });
     await frontendApiService.setFrontendSettings(
         { frontendApiOrigins: [] },
-        userName,
-        TEST_USER_ID,
+        TEST_AUDIT_USER,
     );
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: [],
     });
     await frontendApiService.setFrontendSettings(
         { frontendApiOrigins: ['https://example.com', 'https://example.org'] },
-        userName,
-        TEST_USER_ID,
+        TEST_AUDIT_USER,
     );
     expect(await frontendApiService.getFrontendSettings(false)).toEqual({
         frontendApiOrigins: ['https://example.com', 'https://example.org'],
@@ -129,8 +124,7 @@ test('corsOriginMiddleware with caching enabled', async () => {
     //setting
     await frontendApiService.setFrontendSettings(
         { frontendApiOrigins: ['*'] },
-        userName,
-        TEST_USER_ID,
+        TEST_AUDIT_USER,
     );
 
     //still get cached value

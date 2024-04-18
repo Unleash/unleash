@@ -11,9 +11,11 @@ import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../../openapi/util/create-response-schema';
-import { getStandardResponses } from '../../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../../openapi/util/standard-responses';
 import type { OpenApiService } from '../../../services/openapi-service';
-import { emptyResponse } from '../../../openapi/util/standard-responses';
 
 import type PatService from '../../../services/pat-service';
 import { NONE } from '../../../types/permissions';
@@ -131,7 +133,7 @@ export default class PatController extends Controller {
         const createdPat = await this.patService.createPat(
             pat,
             req.user.id,
-            req.user,
+            req.audit,
         );
         this.openApiService.respondWithValidation(
             201,
@@ -161,7 +163,7 @@ export default class PatController extends Controller {
         res: Response,
     ): Promise<void> {
         const { id } = req.params;
-        await this.patService.deletePat(id, req.user.id, req.user);
+        await this.patService.deletePat(id, req.user.id, req.audit);
         res.status(200).end();
     }
 }

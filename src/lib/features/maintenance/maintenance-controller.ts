@@ -10,7 +10,6 @@ import {
 } from '../../openapi';
 import type { OpenApiService } from '../../services';
 import type { IAuthRequest } from '../../routes/unleash-types';
-import { extractUsername } from '../../util';
 import {
     type MaintenanceSchema,
     maintenanceSchema,
@@ -83,8 +82,7 @@ export default class MaintenanceController extends Controller {
     ): Promise<void> {
         await this.maintenanceService.toggleMaintenanceMode(
             req.body,
-            extractUsername(req),
-            req.user.id,
+            req.audit,
         );
         res.status(204).end();
     }

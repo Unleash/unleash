@@ -1,6 +1,6 @@
 import type { IFeatureStrategySegment, ISegment } from '../../types/model';
 import type { Store } from '../../types/stores/store';
-import type User from '../../types/user';
+import type { IAuditUser } from '../../types/user';
 
 export interface ISegmentStore extends Store<ISegment, number> {
     getAll(includeChangeRequestUsageData?: boolean): Promise<ISegment[]>;
@@ -9,7 +9,7 @@ export interface ISegmentStore extends Store<ISegment, number> {
 
     create(
         segment: Omit<ISegment, 'id'>,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        createdBy: Pick<IAuditUser, 'username'>,
     ): Promise<ISegment>;
 
     update(id: number, segment: Omit<ISegment, 'id'>): Promise<ISegment>;

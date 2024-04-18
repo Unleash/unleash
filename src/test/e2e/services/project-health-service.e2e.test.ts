@@ -2,7 +2,7 @@ import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import ProjectHealthService from '../../../lib/services/project-health-service';
 import { createTestConfig } from '../../config/test-config';
-import type { IUnleashStores } from '../../../lib/types';
+import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
 import type { IUser } from '../../../lib/server-impl';
 import { createProjectService } from '../../../lib/features';
 import type { ProjectService } from '../../../lib/services';
@@ -38,7 +38,11 @@ test('Project with no stale toggles should have 100% health rating', async () =>
         name: 'Health rating',
         description: 'Fancy',
     };
-    const savedProject = await projectService.createProject(project, user);
+    const savedProject = await projectService.createProject(
+        project,
+        user,
+        TEST_AUDIT_USER,
+    );
     await stores.featureToggleStore.create('health-rating', {
         name: 'health-rating-not-stale',
         description: 'new',
@@ -62,7 +66,11 @@ test('Project with two stale toggles and two non stale should have 50% health ra
         name: 'Health rating',
         description: 'Fancy',
     };
-    const savedProject = await projectService.createProject(project, user);
+    const savedProject = await projectService.createProject(
+        project,
+        user,
+        TEST_AUDIT_USER,
+    );
     await stores.featureToggleStore.create('health-rating-2', {
         name: 'health-rating-2-not-stale',
         description: 'new',
@@ -98,7 +106,11 @@ test('Project with one non-stale, one potentially stale and one stale should hav
         name: 'Health rating',
         description: 'Fancy',
     };
-    const savedProject = await projectService.createProject(project, user);
+    const savedProject = await projectService.createProject(
+        project,
+        user,
+        TEST_AUDIT_USER,
+    );
     await stores.featureToggleStore.create('health-rating-3', {
         name: 'health-rating-3-not-stale',
         description: 'new',

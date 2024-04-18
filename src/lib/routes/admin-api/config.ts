@@ -20,7 +20,6 @@ import type { OpenApiService } from '../../services/openapi-service';
 import type { EmailService } from '../../services/email-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import type { IAuthRequest } from '../unleash-types';
-import { extractUsername } from '../../util/extract-user';
 import NotFoundError from '../../error/notfound-error';
 import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
@@ -192,8 +191,7 @@ class ConfigController extends Controller {
         if (req.body.frontendSettings) {
             await this.frontendApiService.setFrontendSettings(
                 req.body.frontendSettings,
-                extractUsername(req),
-                req.user.id,
+                req.audit,
             );
             res.sendStatus(204);
             return;

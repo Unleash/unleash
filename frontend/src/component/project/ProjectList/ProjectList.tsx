@@ -175,14 +175,6 @@ export const ProjectListNew = () => {
         return { my, other };
     }, [filteredProjects, myProjects, splitProjectList]);
 
-    const hasOwnProjects = useMemo(() => {
-        const hasNoProjects =
-            myProjects.size === 0 &&
-            projects.filter((p) => p.favorite).length === 0;
-
-        return !hasNoProjects;
-    }, [myProjects, projects]);
-
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {
             return;
@@ -350,7 +342,7 @@ export const ProjectListNew = () => {
         >
             <ConditionallyRender condition={error} show={renderError()} />
             <ConditionallyRender
-                condition={splitProjectList && hasOwnProjects}
+                condition={splitProjectList}
                 show={
                     <>
                         <ProjectGroup

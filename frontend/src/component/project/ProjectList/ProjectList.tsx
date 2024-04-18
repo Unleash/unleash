@@ -27,7 +27,7 @@ import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
-import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
+import { splitProjectsList } from './split-projects-list';
 
 const StyledProjectGroupContainer = styled('article')(({ theme }) => ({
     h3: {
@@ -160,19 +160,7 @@ export const ProjectListNew = () => {
         if (!splitProjectList) {
             return { my: [], other: filteredProjects };
         }
-
-        const my: IProjectCard[] = [];
-        const other: IProjectCard[] = [];
-
-        for (const project of filteredProjects) {
-            console.log('handling', project);
-            if (shouldDisplayInMyProjects(myProjects)(project)) {
-                my.push(project);
-            } else {
-                other.push(project);
-            }
-        }
-        return { my, other };
+        return splitProjectsList(myProjects, filteredProjects);
     }, [filteredProjects, myProjects, splitProjectList]);
 
     const handleHover = (projectId: string) => {

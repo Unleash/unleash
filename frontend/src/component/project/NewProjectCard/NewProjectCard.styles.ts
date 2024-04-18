@@ -2,17 +2,13 @@ import { styled } from '@mui/material';
 import { Card, Box } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
 import { flexRow } from 'themes/themeStyles';
 
 export const StyledProjectCard = styled(Card)(({ theme }) => ({
-    padding: theme.spacing(1, 2, 2, 2),
-    width: '220px',
-    height: '204px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    margin: theme.spacing(1),
+    height: '100%',
     boxShadow: 'none',
     border: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('sm')]: {
@@ -22,22 +18,32 @@ export const StyledProjectCard = styled(Card)(({ theme }) => ({
         transition: 'background-color 0.2s ease-in-out',
         backgroundColor: theme.palette.neutral.light,
     },
+    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
-export const StyledDivHeader = styled('div')(() => ({
+export const StyledProjectCardBody = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(1, 2, 2, 2),
+}));
+
+export const StyledDivHeader = styled('div')(({ theme }) => ({
     ...flexRow,
     width: '100%',
+    marginBottom: theme.spacing(2),
 }));
 
 export const StyledH2Title = styled('h2')(({ theme }) => ({
     fontWeight: 'normal',
     fontSize: theme.fontSizes.bodySize,
-    lineClamp: 2,
+    lineClamp: '2',
+    WebkitLineClamp: 2,
+    lineHeight: '1.2',
     display: '-webkit-box',
     boxOrient: 'vertical',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     alignItems: 'flex-start',
+    WebkitBoxOrient: 'vertical',
+    wordBreak: 'break-word',
 }));
 
 export const StyledBox = styled(Box)(() => ({
@@ -55,13 +61,6 @@ export const StyledDeleteIcon = styled(Delete)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
-    margin: theme.spacing(2, 'auto'),
-    width: '80px',
-    display: 'block',
-    fill: 'red',
-}));
-
 export const StyledDivInfo = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -75,9 +74,4 @@ export const StyledDivInfoContainer = styled('div')(() => ({
 export const StyledParagraphInfo = styled('p')(({ theme }) => ({
     color: theme.palette.primary.dark,
     fontWeight: 'bold',
-}));
-
-export const StyledIconBox = styled(Box)(() => ({
-    display: 'flex',
-    justifyContent: 'center',
 }));

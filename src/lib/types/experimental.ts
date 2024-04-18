@@ -58,7 +58,8 @@ export type IFlagKey =
     | 'variantDependencies'
     | 'disableShowContextFieldSelectionValues'
     | 'bearerTokenMiddleware'
-    | 'projectOverviewRefactorFeedback';
+    | 'projectOverviewRefactorFeedback'
+    | 'applicationOverviewNewQuery';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -286,6 +287,10 @@ const flags: IFlags = {
     ),
     projectOverviewRefactorFeedback: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
+        false,
+    ),
+    applicationOverviewNewQuery: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_APPLICATION_OVERVIEW_NEW_QUERY,
         false,
     ),
 };

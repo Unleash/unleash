@@ -3,6 +3,7 @@ import type {
     IApiRequest,
     IApiUser,
     IAuthRequest,
+    IAuditUser,
     IUser,
 } from '../server-impl';
 
@@ -25,4 +26,12 @@ export const extractUserId = (req: IAuthRequest | IApiRequest) =>
 export const extractUserInfo = (req: IAuthRequest | IApiRequest) => ({
     id: extractUserId(req),
     username: extractUsername(req),
+});
+
+export const extractAuditInfo = (
+    req: IAuthRequest | IApiRequest,
+): IAuditUser => ({
+    id: extractUserId(req),
+    username: extractUsername(req),
+    ip: req.ip,
 });

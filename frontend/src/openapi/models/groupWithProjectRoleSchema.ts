@@ -29,6 +29,8 @@ export interface GroupWithProjectRoleSchema {
     roles?: number[];
     /** A role id that is used as the root role for all users in this group. This can be either the id of the Viewer, Editor or Admin role. */
     rootRole?: number | null;
+    /** The SCIM ID of the group, only present if managed by SCIM */
+    scimId?: string | null;
     /** A list of users belonging to this group */
     users?: GroupUserModelSchema[];
 }

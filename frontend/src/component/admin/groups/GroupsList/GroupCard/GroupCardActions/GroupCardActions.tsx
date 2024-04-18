@@ -15,6 +15,7 @@ import Edit from '@mui/icons-material/Edit';
 import GroupRounded from '@mui/icons-material/GroupRounded';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
+import { scimGroupTooltip } from 'component/admin/groups/group-constants';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -31,12 +32,14 @@ interface IGroupCardActions {
     groupId: number;
     onEditUsers: () => void;
     onRemove: () => void;
+    isScimGroup?: boolean;
 }
 
 export const GroupCardActions: FC<IGroupCardActions> = ({
     groupId,
     onEditUsers,
     onRemove,
+    isScimGroup,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -58,17 +61,24 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                 e.stopPropagation();
             }}
         >
-            <Tooltip title='Group actions' arrow describeChild>
-                <IconButton
-                    id={id}
-                    aria-controls={open ? menuId : undefined}
-                    aria-haspopup='true'
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
-                    type='button'
-                >
-                    <MoreVert />
-                </IconButton>
+            <Tooltip
+                title={isScimGroup ? scimGroupTooltip : 'Group actions'}
+                arrow
+                describeChild
+            >
+                <div>
+                    <IconButton
+                        id={id}
+                        aria-controls={open ? menuId : undefined}
+                        aria-haspopup='true'
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
+                        type='button'
+                        disabled={isScimGroup}
+                    >
+                        <MoreVert />
+                    </IconButton>
+                </div>
             </Tooltip>
             <StyledPopover
                 id={menuId}

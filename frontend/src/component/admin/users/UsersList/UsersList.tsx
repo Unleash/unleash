@@ -58,10 +58,8 @@ const UsersList = () => {
     });
     const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
     const {
-        settings: { enabled: scimSettingEnabled },
+        settings: { enabled: scimEnabled },
     } = useScimSettings();
-    const scimFlagEnabled = useUiFlag('scimApi');
-    const scimEnabled = isEnterprise() && scimSettingEnabled && scimFlagEnabled;
     const [delDialog, setDelDialog] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
@@ -218,7 +216,7 @@ const UsersList = () => {
                         onChangePassword={openPwDialog(user)}
                         onResetPassword={openResetPwDialog(user)}
                         onDelete={openDelDialog(user)}
-                        scimEnabled={scimEnabled && Boolean(user.scimId)}
+                        isScimUser={scimEnabled && Boolean(user.scimId)}
                     />
                 ),
                 width: userAccessUIEnabled ? 240 : 200,

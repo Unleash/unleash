@@ -6,7 +6,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import { EDIT } from 'constants/misc';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
@@ -14,6 +14,8 @@ import { UG_SAVE_BTN_ID } from 'utils/testIds';
 import { GO_BACK } from 'constants/navigate';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import type { IGroup } from 'interfaces/group';
+import { scimGroupTooltip } from '../group-constants';
+import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 
 export const EditGroupContainer = () => {
     const groupId = Number(useRequiredPathParam('groupId'));
@@ -45,6 +47,11 @@ export const EditGroup = ({
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
+
+    const {
+        settings: { enabled: scimEnabled },
+    } = useScimSettings();
+    const isScimGroup = scimEnabled && Boolean(group?.scimId);
 
     const {
         name,
@@ -143,15 +150,19 @@ export const EditGroup = ({
                 handleCancel={handleCancel}
                 mode={EDIT}
             >
-                <Button
-                    type='submit'
-                    variant='contained'
-                    color='primary'
-                    disabled={!isValid}
-                    data-testid={UG_SAVE_BTN_ID}
-                >
-                    Save
-                </Button>
+                <Tooltip title={isScimGroup ? scimGroupTooltip : ''} arrow>
+                    <div>
+                        <Button
+                            type='submit'
+                            variant='contained'
+                            color='primary'
+                            disabled={isScimGroup || !isValid}
+                            data-testid={UG_SAVE_BTN_ID}
+                        >
+                            Save
+                        </Button>
+                    </div>
+                </Tooltip>
             </GroupForm>
         </FormTemplate>
     );

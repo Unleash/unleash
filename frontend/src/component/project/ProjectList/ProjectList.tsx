@@ -36,7 +36,7 @@ import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
 /**
- * @deprecated Remove after with `projectListGridUi` flag
+ * @deprecated Remove after with `projectsListNewCards` flag
  */
 const StyledDivContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -149,7 +149,7 @@ export const ProjectListNew = () => {
     );
 
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
-    const projectListGridUi = true;
+    const projectsListNewCards = true;
     const filters = ['All projects', 'My projects'];
     const [filter, setFilter] = useState(filters[0]);
     const myProjects = new Set(useProfile().profile?.projects || []);
@@ -215,10 +215,12 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
-    const StyledItemsContainer = projectListGridUi
+    const StyledItemsContainer = projectsListNewCards
         ? StyledGridContainer
         : StyledDivContainer;
-    const ProjectCard = projectListGridUi ? NewProjectCard : LegacyProjectCard;
+    const ProjectCard = projectsListNewCards
+        ? NewProjectCard
+        : LegacyProjectCard;
 
     return (
         <PageContent

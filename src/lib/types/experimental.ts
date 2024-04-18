@@ -59,7 +59,7 @@ export type IFlagKey =
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
     | 'projectListFilterMyProjects'
-    | 'projectListGridUi'
+    | 'projectsListNewCards'
     | 'parseProjectFromSession'
     | 'createProjectWithEnvironmentConfig'
     | 'applicationOverviewNewQuery';

@@ -1,5 +1,5 @@
 import type { IProjectCard } from 'interfaces/project';
-import { splitProjectsList } from './split-projects-list';
+import { groupProjects } from './group-projects';
 
 test('should check that the project is a user project OR that it is a favorite', () => {
     const myProjectIds = new Set(['my1', 'my2', 'my3']);
@@ -23,10 +23,7 @@ test('should check that the project is a user project OR that it is a favorite',
         favorite,
     }));
 
-    const { myProjects, otherProjects } = splitProjectsList(
-        myProjectIds,
-        projects,
-    );
+    const { myProjects, otherProjects } = groupProjects(myProjectIds, projects);
 
     expect(myProjects).toMatchObject([
         { id: 'my1' },

@@ -27,7 +27,7 @@ import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
-import { splitProjectsList } from './split-projects-list';
+import { groupProjects } from './group-projects';
 
 const StyledProjectGroupContainer = styled('article')(({ theme }) => ({
     h3: {
@@ -156,11 +156,11 @@ export const ProjectListNew = () => {
         });
     }, [projects, searchValue]);
 
-    const projectsLists = useMemo(() => {
+    const groupedProjects = useMemo(() => {
         if (!splitProjectList) {
-            return { my: [], other: filteredProjects };
+            return { myProjects: [], otherProjects: filteredProjects };
         }
-        return splitProjectsList(myProjects, filteredProjects);
+        return groupProjects(myProjects, filteredProjects);
     }, [filteredProjects, myProjects, splitProjectList]);
 
     const handleHover = (projectId: string) => {
@@ -335,12 +335,12 @@ export const ProjectListNew = () => {
                     <>
                         <ProjectGroup
                             sectionTitle='My projects'
-                            projects={projectsLists.my}
+                            projects={groupedProjects.myProjects}
                         />
 
                         <ProjectGroup
                             sectionTitle='Other projects'
-                            projects={projectsLists.other}
+                            projects={groupedProjects.otherProjects}
                         />
                     </>
                 }

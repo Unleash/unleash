@@ -1,6 +1,6 @@
 import type { IProjectCard } from 'interfaces/project';
 
-export const splitProjectsList = (
+export const groupProjects = (
     myProjectIds: Set<string>,
     filteredProjects: IProjectCard[],
 ) => {

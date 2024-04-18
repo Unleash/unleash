@@ -248,27 +248,63 @@ export default class ProjectService {
         return featureNaming;
     };
 
+    async validateProjectEnvironments(environments: string[] | undefined) {
+        if (
+            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
+            environments
+        ) {
+            if (environments.length === 0) {
+                throw new BadDataError(
+                    'A project must always have at least one environment.',
+                );
+            }
+
+            const projectsAndExistence = await Promise.all(
+                environments.map(async (env) => [
+                    env,
+                    await this.environmentStore.exists(env),
+                ]),
+            );
+
+            const invalidEnvs = projectsAndExistence
+                .filter(([_, exists]) => !exists)
+                .map(([env]) => env);
+
+            if (invalidEnvs.length > 0) {
+                throw new BadDataError(
+                    `These environments do not exist and can not be selected for the project: ${invalidEnvs
+                        .map((env) => `'${env}'`)
+                        .join(', ')}.`,
+                );
+            }
+        }
+    }
+
     async createProject(
         newProject: CreateProject,
         user: IUser,
     ): Promise<IProject> {
+        await this.validateProjectEnvironments(newProject.environments);
+
         const validatedData = await projectSchema.validateAsync(newProject);
         const data = this.removeModeForNonEnterprise(validatedData);
         await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
 
-        const enabledEnvironments = await this.environmentStore.getAll({
-            enabled: true,
-        });
+        const envsToEnable =
+            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
+            newProject.environments?.length
+                ? newProject.environments
+                : (
+                      await this.environmentStore.getAll({
+                          enabled: true,
+                      })
+                  ).map((env) => env.name);
 
-        // TODO: Only if enabled!
         await Promise.all(
-            enabledEnvironments.map(async (e) => {
-                await this.featureEnvironmentStore.connectProject(
-                    e.name,
-                    data.id,
-                );
+            envsToEnable.map(async (env) => {
+                await this.featureEnvironmentStore.connectProject(env, data.id);
             }),
         );
 

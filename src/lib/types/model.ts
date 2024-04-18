@@ -471,6 +471,7 @@ export interface IImportData extends ImportCommon {
 export type CreateProject = Pick<IProject, 'id' | 'name'> & {
     mode?: ProjectMode;
     defaultStickiness?: string;
+    environments?: string[];
 };
 
 export interface IProject {

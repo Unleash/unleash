@@ -25,7 +25,7 @@ import {
     SYSTEM_USER_ID,
 } from '../../types';
 import type { User } from '../../server-impl';
-import { InvalidOperationError } from '../../error';
+import { BadDataError, InvalidOperationError } from '../../error';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -68,6 +68,11 @@ beforeAll(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
     const config = createTestConfig({
         getLogger,
+        experimental: {
+            flags: {
+                createProjectWithEnvironmentConfig: true,
+            },
+        },
     });
     eventService = new EventService(stores, config);
     accessService = createAccessService(db.rawDatabase, config);
@@ -2480,4 +2485,96 @@ test('should get project settings with mode', async () => {
     expect(foundProjectOne!.defaultStickiness).toBe('clientId');
     expect(foundProjectTwo!.mode).toBe('open');
     expect(foundProjectTwo!.defaultStickiness).toBe('default');
+});
+
+describe('create project with environments', () => {
+    const disabledEnv = { name: 'disabled', type: 'production' };
+
+    const extraEnvs = [
+        { name: 'development', type: 'development' },
+        { name: 'production', type: 'production' },
+        { name: 'staging', type: 'staging' },
+        { name: 'QA', type: 'QA' },
+        disabledEnv,
+    ];
+
+    const allEnabledEnvs = [
+        'QA',
+        'default',
+        'development',
+        'production',
+        'staging',
+    ];
+
+    beforeEach(async () => {
+        await Promise.all(
+            extraEnvs.map((env) => stores.environmentStore.create(env)),
+        );
+
+        await stores.environmentStore.disable([
+            { ...disabledEnv, enabled: true, protected: false, sortOrder: 5 },
+        ]);
+    });
+
+    afterAll(async () => {
+        await Promise.all(
+            extraEnvs.map((env) => stores.environmentStore.delete(env.name)),
+        );
+    });
+
+    const createProjectWithEnvs = async (environments) => {
+        const project = await projectService.createProject(
+            {
+                id: randomId(),
+                name: 'New name',
+                mode: 'open' as const,
+                defaultStickiness: 'default',
+                ...(environments ? { environments } : {}),
+            },
+            user,
+        );
+
+        const projectEnvs = (
+            await projectService.getProjectOverview(project.id)
+        ).environments.map(({ environment }) => environment);
+
+        projectEnvs.sort();
+        return projectEnvs;
+    };
+
+    test('no environments specified means all enabled envs are enabled', async () => {
+        const created = await createProjectWithEnvs(undefined);
+
+        expect(created).toMatchObject(allEnabledEnvs);
+    });
+
+    test('an empty list throws an error', async () => {
+        // You shouldn't be allowed to pass an empty list via the API.
+        // This test checks what happens in the event that an empty
+        // list manages to sneak in.
+        await expect(createProjectWithEnvs([])).rejects.toThrow(BadDataError);
+    });
+
+    test('it only enables the envs it is asked to enable', async () => {
+        const selectedEnvs = ['development', 'production'];
+        const created = await createProjectWithEnvs(selectedEnvs);
+
+        expect(created).toMatchObject(selectedEnvs);
+    });
+
+    test('it enables deprecated environments when asked explicitly', async () => {
+        const selectedEnvs = ['disabled'];
+        const created = await createProjectWithEnvs(selectedEnvs);
+
+        expect(created).toMatchObject(selectedEnvs);
+    });
+
+    test("envs that don't exist cause errors", async () => {
+        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
+            BadDataError,
+        );
+        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
+            /'fake-project'/,
+        );
+    });
 });

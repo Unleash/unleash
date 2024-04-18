@@ -25,7 +25,7 @@ import {
     StyledDivInfoContainer,
     StyledParagraphInfo,
     StyledIconBox,
-} from './LegacyProjectCard.styles';
+} from './ProjectCard.styles';
 import useToast from 'hooks/useToast';
 import { HiddenProjectIconWithTooltip } from '../Project/HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip';
 

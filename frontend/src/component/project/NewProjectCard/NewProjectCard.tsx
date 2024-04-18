@@ -20,7 +20,7 @@ import {
     StyledDivInfoContainer,
     StyledParagraphInfo,
     StyledProjectCardBody,
-} from './ProjectCard.styles';
+} from './NewProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectCardIcon } from './ProjectCardIcon/ProjectCardIcon';
 

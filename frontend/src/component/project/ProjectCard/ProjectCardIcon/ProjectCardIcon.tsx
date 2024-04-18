@@ -51,7 +51,7 @@ export const ProjectCardIcon: VFC<IProjectCardIconProps> = ({ mode }) => {
         return (
             <StyledIconBox data-loading>
                 <HtmlTooltip
-                    title='This projects collaboration mode is set to protected. Only admins and project members can submit requests.'
+                    title='This project's collaboration mode is set to protected. Only admins and project members can submit change requests.'
                     arrow
                 >
                     <StyledLockIcon />

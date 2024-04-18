@@ -149,7 +149,7 @@ export const ProjectListNew = () => {
     );
 
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
-    const projectsListNewCards = true;
+    const projectsListNewCards = useUiFlag('projectsListNewCards');
     const filters = ['All projects', 'My projects'];
     const [filter, setFilter] = useState(filters[0]);
     const myProjects = new Set(useProfile().profile?.projects || []);

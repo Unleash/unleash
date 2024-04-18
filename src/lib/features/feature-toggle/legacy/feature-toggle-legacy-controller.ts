@@ -447,6 +447,7 @@ class FeatureController extends Controller {
             DEFAULT_ENV,
             true,
             req.audit,
+            req.user,
         );
         await this.service.storeFeatureUpdatedEventLegacy(
             featureName,
@@ -464,6 +465,7 @@ class FeatureController extends Controller {
             DEFAULT_ENV,
             false,
             req.audit,
+            req.user,
         );
         await this.service.storeFeatureUpdatedEventLegacy(
             featureName,

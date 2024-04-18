@@ -76,9 +76,7 @@ export type IExportService = {
     ): Promise<ExportResultSchema>;
 };
 
-export default class ExportImportService
-    implements IExportService, IImportService
-{
+export class ExportImportService implements IExportService, IImportService {
     private logger: Logger;
 
     private toggleStore: IFeatureToggleStore;

@@ -1,6 +1,6 @@
 import type { Db } from '../../db/db';
 import type { IUnleashConfig } from '../../types';
-import ExportImportService from './export-import-service';
+import { ExportImportService } from './export-import-service';
 import { ImportTogglesStore } from './import-toggles-store';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import TagStore from '../../db/tag-store';

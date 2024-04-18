@@ -28,7 +28,6 @@ import {
 } from '../../types';
 import type { User } from '../../server-impl';
 import { BadDataError, InvalidOperationError } from '../../error';
-import { InvalidOperationError } from '../../error';
 import { extractAuditInfoFromUser } from '../../util';
 
 let stores: IUnleashStores;
@@ -2570,6 +2569,7 @@ describe('create project with environments', () => {
                 ...(environments ? { environments } : {}),
             },
             user,
+            auditUser,
         );
 
         const projectEnvs = (

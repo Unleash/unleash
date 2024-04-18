@@ -282,8 +282,8 @@ export default class ProjectService {
     async createProject(
         newProject: CreateProject,
         user: IUser,
-        enableChangeRequestsForSpecifiedEnvironments: () => Promise<void> = async () => {},
         auditUser: IAuditUser,
+        enableChangeRequestsForSpecifiedEnvironments: () => Promise<void> = async () => {},
     ): Promise<IProject> {
         await this.validateProjectEnvironments(newProject.environments);
 

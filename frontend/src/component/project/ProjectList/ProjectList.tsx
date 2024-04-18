@@ -202,12 +202,17 @@ export const ProjectListNew = () => {
             : projects.length;
 
     const ProjectSection: React.FC<{
-        sectionTitle: string;
+        sectionTitle?: string;
         projects: IProjectCard[];
     }> = ({ sectionTitle, projects }) => {
         return (
             <ProjectsGroup>
-                <Typography component='h3'>{sectionTitle}</Typography>
+                <ConditionallyRender
+                    condition={Boolean(sectionTitle)}
+                    show={
+                        <Typography component='h3'>{sectionTitle}</Typography>
+                    }
+                />
                 <div>
                     <ConditionallyRender
                         condition={projects.length < 1 && !loading}
@@ -336,15 +341,22 @@ export const ProjectListNew = () => {
             }
         >
             <ConditionallyRender condition={error} show={renderError()} />
+            <ConditionallyRender
+                condition={splitProjectList}
+                show={
+                    <>
+                        <ProjectSection
+                            sectionTitle='My projects'
+                            projects={projectsLists.my}
+                        />
 
-            <ProjectSection
-                sectionTitle='My projects'
-                projects={projectsLists.my}
-            />
-
-            <ProjectSection
-                sectionTitle='Other projects'
-                projects={projectsLists.other}
+                        <ProjectSection
+                            sectionTitle='Other projects'
+                            projects={projectsLists.other}
+                        />
+                    </>
+                }
+                elseShow={<ProjectSection projects={filteredProjects} />}
             />
         </PageContent>
     );

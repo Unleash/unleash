@@ -16,7 +16,7 @@ import Add from '@mui/icons-material/Add';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table';
-import { useMediaQuery, styled } from '@mui/material';
+import { useMediaQuery, styled, Typography } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
@@ -29,11 +29,21 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
-const StyledDivContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
-    [theme.breakpoints.down('sm')]: {
-        justifyContent: 'center',
+const ProjectsGroup = styled('article')(({ theme }) => ({
+    h3: {
+        marginBlockEnd: theme.spacing(2),
+    },
+
+    '& > div': {
+        display: 'flex',
+        flexWrap: 'wrap',
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: 'center',
+        },
+    },
+
+    '&+&': {
+        marginBlockStart: theme.spacing(4),
     },
 }));
 
@@ -191,6 +201,93 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
+    const ProjectSection: React.FC<{
+        sectionTitle: string;
+        projects: IProjectCard[];
+    }> = ({ sectionTitle, projects }) => {
+        return (
+            <ProjectsGroup>
+                <Typography component='h3'>{sectionTitle}</Typography>
+                <div>
+                    <ConditionallyRender
+                        condition={projects.length < 1 && !loading}
+                        show={
+                            <ConditionallyRender
+                                condition={searchValue?.length > 0}
+                                show={
+                                    <TablePlaceholder>
+                                        No projects found matching &ldquo;
+                                        {searchValue}
+                                        &rdquo;
+                                    </TablePlaceholder>
+                                }
+                                elseShow={
+                                    <TablePlaceholder>
+                                        No projects available.
+                                    </TablePlaceholder>
+                                }
+                            />
+                        }
+                        elseShow={
+                            <ConditionallyRender
+                                condition={loading}
+                                show={() =>
+                                    loadingData.map((project: IProjectCard) => (
+                                        <ProjectCard
+                                            data-loading
+                                            onHover={() => {}}
+                                            key={project.id}
+                                            name={project.name}
+                                            id={project.id}
+                                            mode={project.mode}
+                                            memberCount={2}
+                                            health={95}
+                                            featureCount={4}
+                                        />
+                                    ))
+                                }
+                                elseShow={() => (
+                                    <>
+                                        {projects.map(
+                                            (project: IProjectCard) => (
+                                                <StyledCardLink
+                                                    key={project.id}
+                                                    to={`/projects/${project.id}`}
+                                                >
+                                                    <ProjectCard
+                                                        onHover={() =>
+                                                            handleHover(
+                                                                project.id,
+                                                            )
+                                                        }
+                                                        name={project.name}
+                                                        mode={project.mode}
+                                                        memberCount={
+                                                            project.memberCount ??
+                                                            0
+                                                        }
+                                                        health={project.health}
+                                                        id={project.id}
+                                                        featureCount={
+                                                            project.featureCount
+                                                        }
+                                                        isFavorite={
+                                                            project.favorite
+                                                        }
+                                                    />
+                                                </StyledCardLink>
+                                            ),
+                                        )}
+                                    </>
+                                )}
+                            />
+                        }
+                    />
+                </div>
+            </ProjectsGroup>
+        );
+    };
+
     return (
         <PageContent
             isLoading={loading}
@@ -239,108 +336,16 @@ export const ProjectListNew = () => {
             }
         >
             <ConditionallyRender condition={error} show={renderError()} />
-            <StyledDivContainer>
-                <ConditionallyRender
-                    condition={filteredProjects.length < 1 && !loading}
-                    show={
-                        <ConditionallyRender
-                            condition={searchValue?.length > 0}
-                            show={
-                                <TablePlaceholder>
-                                    No projects found matching &ldquo;
-                                    {searchValue}
-                                    &rdquo;
-                                </TablePlaceholder>
-                            }
-                            elseShow={
-                                <TablePlaceholder>
-                                    No projects available.
-                                </TablePlaceholder>
-                            }
-                        />
-                    }
-                    elseShow={
-                        <ConditionallyRender
-                            condition={loading}
-                            show={() =>
-                                loadingData.map((project: IProjectCard) => (
-                                    <ProjectCard
-                                        data-loading
-                                        onHover={() => {}}
-                                        key={project.id}
-                                        name={project.name}
-                                        id={project.id}
-                                        mode={project.mode}
-                                        memberCount={2}
-                                        health={95}
-                                        featureCount={4}
-                                    />
-                                ))
-                            }
-                            elseShow={() => (
-                                <>
-                                    MINE
-                                    {projectsLists?.my.map(
-                                        (project: IProjectCard) => (
-                                            <StyledCardLink
-                                                key={project.id}
-                                                to={`/projects/${project.id}`}
-                                            >
-                                                <ProjectCard
-                                                    onHover={() =>
-                                                        handleHover(project.id)
-                                                    }
-                                                    name={project.name}
-                                                    mode={project.mode}
-                                                    memberCount={
-                                                        project.memberCount ?? 0
-                                                    }
-                                                    health={project.health}
-                                                    id={project.id}
-                                                    featureCount={
-                                                        project.featureCount
-                                                    }
-                                                    isFavorite={
-                                                        project.favorite
-                                                    }
-                                                />
-                                            </StyledCardLink>
-                                        ),
-                                    )}
-                                    OTHERS
-                                    {projectsLists?.other.map(
-                                        (project: IProjectCard) => (
-                                            <StyledCardLink
-                                                key={project.id}
-                                                to={`/projects/${project.id}`}
-                                            >
-                                                <ProjectCard
-                                                    onHover={() =>
-                                                        handleHover(project.id)
-                                                    }
-                                                    name={project.name}
-                                                    mode={project.mode}
-                                                    memberCount={
-                                                        project.memberCount ?? 0
-                                                    }
-                                                    health={project.health}
-                                                    id={project.id}
-                                                    featureCount={
-                                                        project.featureCount
-                                                    }
-                                                    isFavorite={
-                                                        project.favorite
-                                                    }
-                                                />
-                                            </StyledCardLink>
-                                        ),
-                                    )}
-                                </>
-                            )}
-                        />
-                    }
-                />
-            </StyledDivContainer>
+
+            <ProjectSection
+                sectionTitle='My projects'
+                projects={projectsLists.my}
+            />
+
+            <ProjectSection
+                sectionTitle='Other projects'
+                projects={projectsLists.other}
+            />
         </PageContent>
     );
 };

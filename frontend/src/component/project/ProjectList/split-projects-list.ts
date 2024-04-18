@@ -1,23 +1,18 @@
 import type { IProjectCard } from 'interfaces/project';
 
-const shouldDisplayInMyProjects =
-    (myProjectIds: Set<string>) =>
-    (project: IProjectCard): boolean =>
-        project.favorite || myProjectIds.has(project.id);
-
 export const splitProjectsList = (
-    myProjects: Set<string>,
+    myProjectIds: Set<string>,
     filteredProjects: IProjectCard[],
 ) => {
-    const my: IProjectCard[] = [];
+    const mine: IProjectCard[] = [];
     const other: IProjectCard[] = [];
 
     for (const project of filteredProjects) {
-        if (shouldDisplayInMyProjects(myProjects)(project)) {
-            my.push(project);
+        if (project.favorite || myProjectIds.has(project.id)) {
+            mine.push(project);
         } else {
             other.push(project);
         }
     }
-    return { my, other };
+    return { myProjects: mine, otherProjects: other };
 };

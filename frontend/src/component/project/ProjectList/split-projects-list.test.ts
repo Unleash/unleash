@@ -2,7 +2,7 @@ import type { IProjectCard } from 'interfaces/project';
 import { splitProjectsList } from './split-projects-list';
 
 test('should check that the project is a user project OR that it is a favorite', () => {
-    const myProjects = new Set(['my1', 'my2', 'my3']);
+    const myProjectIds = new Set(['my1', 'my2', 'my3']);
 
     const projects: IProjectCard[] = [
         { id: 'my1', favorite: true },
@@ -23,15 +23,18 @@ test('should check that the project is a user project OR that it is a favorite',
         favorite,
     }));
 
-    const { my, other } = splitProjectsList(myProjects, projects);
+    const { myProjects, otherProjects } = splitProjectsList(
+        myProjectIds,
+        projects,
+    );
 
-    expect(my).toMatchObject([
+    expect(myProjects).toMatchObject([
         { id: 'my1' },
         { id: 'my2' },
         { id: 'my3' },
         { id: 'fave-but-not-mine' },
     ]);
-    expect(other).toMatchObject([
+    expect(otherProjects).toMatchObject([
         { id: 'not-mine-not-fave' },
         { id: 'not-mine-undefined-fave' },
     ]);

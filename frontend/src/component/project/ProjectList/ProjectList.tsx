@@ -219,27 +219,27 @@ export const ProjectListNew = () => {
                         <Typography component='h3'>{sectionTitle}</Typography>
                     }
                 />
-                <StyledItemsContainer>
-                    <ConditionallyRender
-                        condition={projects.length < 1 && !loading}
-                        show={
-                            <ConditionallyRender
-                                condition={searchValue?.length > 0}
-                                show={
-                                    <TablePlaceholder>
-                                        No projects found matching &ldquo;
-                                        {searchValue}
-                                        &rdquo;
-                                    </TablePlaceholder>
-                                }
-                                elseShow={
-                                    <TablePlaceholder>
-                                        No projects available.
-                                    </TablePlaceholder>
-                                }
-                            />
-                        }
-                        elseShow={
+                <ConditionallyRender
+                    condition={projects.length < 1 && !loading}
+                    show={
+                        <ConditionallyRender
+                            condition={searchValue?.length > 0}
+                            show={
+                                <TablePlaceholder>
+                                    No projects found matching &ldquo;
+                                    {searchValue}
+                                    &rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    No projects available.
+                                </TablePlaceholder>
+                            }
+                        />
+                    }
+                    elseShow={
+                        <StyledItemsContainer>
                             <ConditionallyRender
                                 condition={loading}
                                 show={() =>
@@ -292,9 +292,9 @@ export const ProjectListNew = () => {
                                     </>
                                 )}
                             />
-                        }
-                    />
-                </StyledItemsContainer>
+                        </StyledItemsContainer>
+                    }
+                />
             </StyledProjectGroupContainer>
         );
     };

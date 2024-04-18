@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,
                         projectListFilterMyProjects: true,
+                        projectsListNewCards: true,
                         parseProjectFromSession: true,
                         createProjectWithEnvironmentConfig: true,
                         applicationOverviewNewQuery: true,

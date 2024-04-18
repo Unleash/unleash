@@ -140,6 +140,7 @@ export default class ClientApplicationsStore
     ) {
         this.db = db;
         this.logger = getLogger('client-applications-store.ts');
+        this.flagResolver = flagResolver;
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'client-applications',

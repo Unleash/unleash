@@ -11,7 +11,7 @@ export interface IAuthRequest<
     user: IUser;
     logout: (() => void) | ((callback: (err?: any) => void) => void);
     session: any;
-    audit?: IAuditUser;
+    audit: IAuditUser;
 }
 
 export interface IApiRequest<
@@ -23,7 +23,7 @@ export interface IApiRequest<
     user: IApiUser;
     logout: (() => void) | ((callback: (err?: any) => void) => void);
     session: any;
-    audit?: IAuditUser;
+    audit: IAuditUser;
 }
 
 export interface RequestBody<T> extends Express.Request {

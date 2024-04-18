@@ -538,7 +538,7 @@ export default class UserAdminController extends Controller {
                 password,
                 rootRole: normalizedRootRole,
             },
-            user,
+            req.audit,
         );
 
         const passwordAuthSettings =
@@ -621,7 +621,7 @@ export default class UserAdminController extends Controller {
                 email,
                 rootRole: normalizedRootRole,
             },
-            user,
+            req.audit,
         );
 
         this.openApiService.respondWithValidation(
@@ -641,7 +641,7 @@ export default class UserAdminController extends Controller {
 
         await this.throwIfScimUser({ id: Number(id) });
 
-        await this.userService.deleteUser(+id, user);
+        await this.userService.deleteUser(+id, req.audit);
         res.status(200).send();
     }
 

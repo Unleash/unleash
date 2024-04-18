@@ -2,6 +2,11 @@ import memoizee from 'memoizee';
 import { ValidationError } from 'joi';
 import { getAddons, type IAddonProviders } from '../addons';
 import * as events from '../types/events';
+import {
+    AddonConfigCreatedEvent,
+    AddonConfigDeletedEvent,
+    AddonConfigUpdatedEvent,
+} from '../types/events';
 import { addonSchema } from './addon-schema';
 import NameExistsError from '../error/name-exists-error';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
@@ -13,9 +18,10 @@ import type {
     IAddonStore,
 } from '../types/stores/addon-store';
 import {
-    type IUnleashStores,
+    type IAuditUser,
     type IUnleashConfig,
-    SYSTEM_USER,
+    type IUnleashStores,
+    SYSTEM_USER_AUDIT,
 } from '../types';
 import type { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
@@ -186,8 +192,7 @@ export default class AddonService {
                     await this.tagTypeService.validateUnique(tagType.name);
                     await this.tagTypeService.createTagType(
                         tagType,
-                        providerName,
-                        SYSTEM_USER.id,
+                        SYSTEM_USER_AUDIT,
                     );
                 } catch (err) {
                     if (!(err instanceof NameExistsError)) {
@@ -200,11 +205,7 @@ export default class AddonService {
         return Promise.resolve();
     }
 
-    async createAddon(
-        data: IAddonDto,
-        userName: string,
-        userId: number,
-    ): Promise<IAddon> {
+    async createAddon(data: IAddonDto, auditUser: IAuditUser): Promise<IAddon> {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
@@ -213,15 +214,15 @@ export default class AddonService {
         await this.addTagTypes(createdAddon.provider);
 
         this.logger.info(
-            `User ${userName} created addon ${addonConfig.provider}`,
+            `User ${auditUser.username} created addon ${addonConfig.provider}`,
         );
 
-        await this.eventService.storeEvent({
-            type: events.ADDON_CONFIG_CREATED,
-            createdBy: userName,
-            createdByUserId: userId,
-            data: omitKeys(createdAddon, 'parameters'),
-        });
+        await this.eventService.storeEvent(
+            new AddonConfigCreatedEvent({
+                data: omitKeys(createdAddon, 'parameters'),
+                auditUser,
+            }),
+        );
 
         return createdAddon;
     }
@@ -229,8 +230,7 @@ export default class AddonService {
     async updateAddon(
         id: number,
         data: IAddonDto,
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<IAddon> {
         const existingConfig = await this.addonStore.get(id); // because getting an early 404 here makes more sense
         const addonConfig = await addonSchema.validateAsync(data);
@@ -251,31 +251,27 @@ export default class AddonService {
             );
         }
         const result = await this.addonStore.update(id, addonConfig);
-        await this.eventService.storeEvent({
-            type: events.ADDON_CONFIG_UPDATED,
-            createdBy: userName,
-            createdByUserId: userId,
-            preData: omitKeys(existingConfig, 'parameters'),
-            data: omitKeys(result, 'parameters'),
-        });
-        this.logger.info(`User ${userName} updated addon ${id}`);
+        await this.eventService.storeEvent(
+            new AddonConfigUpdatedEvent({
+                preData: omitKeys(existingConfig, 'parameters'),
+                data: omitKeys(result, 'parameters'),
+                auditUser,
+            }),
+        );
+        this.logger.info(`User ${auditUser} updated addon ${id}`);
         return result;
     }
 
-    async removeAddon(
-        id: number,
-        userName: string,
-        removedByuserId: number,
-    ): Promise<void> {
+    async removeAddon(id: number, auditUser: IAuditUser): Promise<void> {
         const existingConfig = await this.addonStore.get(id);
         await this.addonStore.delete(id);
-        await this.eventService.storeEvent({
-            type: events.ADDON_CONFIG_DELETED,
-            createdBy: userName,
-            createdByUserId: removedByuserId,
-            preData: omitKeys(existingConfig, 'parameters'),
-        });
-        this.logger.info(`User ${userName} removed addon ${id}`);
+        await this.eventService.storeEvent(
+            new AddonConfigDeletedEvent({
+                preData: omitKeys(existingConfig, 'parameters'),
+                auditUser,
+            }),
+        );
+        this.logger.info(`User ${auditUser} removed addon ${id}`);
     }
 
     async validateKnownProvider(config: Partial<IAddonDto>): Promise<boolean> {

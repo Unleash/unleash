@@ -8,7 +8,7 @@ import {
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../util/constants';
-import type { IUserWithRootRole } from '../../../types';
+import { type IUserWithRootRole, TEST_AUDIT_USER } from '../../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -73,11 +73,14 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
-    dummyAdmin = await app.services.userService.createUser({
-        name: 'Some Name',
-        email: 'test@getunleash.io',
-        rootRole: RoleName.ADMIN,
-    });
+    dummyAdmin = await app.services.userService.createUser(
+        {
+            name: 'Some Name',
+            email: 'test@getunleash.io',
+            rootRole: RoleName.ADMIN,
+        },
+        TEST_AUDIT_USER,
+    );
 });
 
 afterEach(async () => {
@@ -137,10 +140,12 @@ test('should support filtering on project', async () => {
     await app.services.projectService.createProject(
         { name: 'projectA', id: 'projecta' },
         dummyAdmin,
+        TEST_AUDIT_USER,
     );
     await app.services.projectService.createProject(
         { name: 'projectB', id: 'projectb' },
         dummyAdmin,
+        TEST_AUDIT_USER,
     );
     await app.createFeature('ab_test1', 'projecta');
     await app.createFeature('bd_test2', 'projectb');

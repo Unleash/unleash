@@ -120,11 +120,7 @@ class ExportImportController extends Controller {
         const query = req.body;
         const userName = extractUsername(req);
 
-        const data = await this.exportService.export(
-            query,
-            userName,
-            req.user.id,
-        );
+        const data = await this.exportService.export(query, req.audit);
 
         this.openApiService.respondWithValidation(
             200,
@@ -159,7 +155,7 @@ class ExportImportController extends Controller {
         res: Response,
     ): Promise<void> {
         this.verifyExportImportEnabled();
-        const { user } = req;
+        const { user, audit } = req;
 
         if (user instanceof ApiUser && user.type === 'admin') {
             throw new BadDataError(
@@ -170,7 +166,7 @@ class ExportImportController extends Controller {
         const dto = req.body;
 
         await this.importService.transactional((service) =>
-            service.import(dto, user),
+            service.import(dto, user, audit),
         );
 
         res.status(200).end();

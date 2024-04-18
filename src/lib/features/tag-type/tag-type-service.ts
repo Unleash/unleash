@@ -4,16 +4,16 @@ import { tagTypeSchema } from '../../services/tag-type-schema';
 
 import type { IUnleashStores } from '../../types/stores';
 import {
-    TAG_TYPE_CREATED,
-    TAG_TYPE_DELETED,
-    TAG_TYPE_UPDATED,
+    TagTypeCreatedEvent,
+    TagTypeDeletedEvent,
+    TagTypeUpdatedEvent,
 } from '../../types/events';
 
 import type { Logger } from '../../logger';
 import type { ITagType, ITagTypeStore } from './tag-type-store-type';
 import type { IUnleashConfig } from '../../types/option';
 import type EventService from '../events/event-service';
-import { SYSTEM_USER } from '../../types';
+import type { IAuditUser } from '../../types';
 
 export default class TagTypeService {
     private tagTypeStore: ITagTypeStore;
@@ -42,20 +42,19 @@ export default class TagTypeService {
 
     async createTagType(
         newTagType: ITagType,
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<ITagType> {
         const data = (await tagTypeSchema.validateAsync(
             newTagType,
         )) as ITagType;
         await this.validateUnique(data.name);
         await this.tagTypeStore.createTagType(data);
-        await this.eventService.storeEvent({
-            type: TAG_TYPE_CREATED,
-            createdBy: userName || SYSTEM_USER.username,
-            createdByUserId: userId,
-            data,
-        });
+        await this.eventService.storeEvent(
+            new TagTypeCreatedEvent({
+                auditUser,
+                data,
+            }),
+        );
         return data;
     }
 
@@ -76,34 +75,29 @@ export default class TagTypeService {
         }
     }
 
-    async deleteTagType(
-        name: string,
-        userName: string,
-        userId: number,
-    ): Promise<void> {
+    async deleteTagType(name: string, auditUser: IAuditUser): Promise<void> {
         const tagType = await this.tagTypeStore.get(name);
         await this.tagTypeStore.delete(name);
-        await this.eventService.storeEvent({
-            type: TAG_TYPE_DELETED,
-            createdBy: userName || SYSTEM_USER.username,
-            createdByUserId: userId,
-            preData: tagType,
-        });
+        await this.eventService.storeEvent(
+            new TagTypeDeletedEvent({
+                preData: tagType,
+                auditUser,
+            }),
+        );
     }
 
     async updateTagType(
         updatedTagType: ITagType,
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<ITagType> {
         const data = await tagTypeSchema.validateAsync(updatedTagType);
         await this.tagTypeStore.updateTagType(data);
-        await this.eventService.storeEvent({
-            type: TAG_TYPE_UPDATED,
-            createdBy: userName || SYSTEM_USER.username,
-            createdByUserId: userId,
-            data,
-        });
+        await this.eventService.storeEvent(
+            new TagTypeUpdatedEvent({
+                data,
+                auditUser,
+            }),
+        );
         return data;
     }
 }

@@ -112,14 +112,14 @@ test('Add multiple archive feature changes to change request', async () => {
     expect(onClose).toBeCalledTimes(1);
 });
 
-test('Skip change request', async () => {
+test('Skip change request does not affect archive', async () => {
     const onClose = vi.fn();
     const onConfirm = vi.fn();
     setupHappyPathForChangeRequest();
     setupArchiveValidation([]);
     render(
         <FeatureArchiveDialog
-            featureIds={['featureA', 'featureB']}
+            featureIds={['featureA']}
             projectId={'projectId'}
             isOpen={true}
             onClose={onClose}
@@ -129,16 +129,17 @@ test('Skip change request', async () => {
         { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] },
     );
 
-    await screen.findByText('Archive feature toggles');
-    const button = await screen.findByText('Archive toggles');
+    await screen.findByText('Archive feature toggle');
+    const button = await screen.findByText('Add change to draft');
 
     await waitFor(() => expect(button).toBeEnabled());
+
     button.click();
 
     await waitFor(() => {
         expect(onClose).toBeCalledTimes(1);
     });
-    expect(onConfirm).toBeCalledTimes(0); // we didn't setup non Change Request flow so failure
+    expect(onConfirm).toBeCalledTimes(1);
 });
 
 test('Show error message when multiple parents of orphaned children are archived', async () => {

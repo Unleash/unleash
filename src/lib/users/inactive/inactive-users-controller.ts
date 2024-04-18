@@ -114,7 +114,7 @@ export class InactiveUsersController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         await this.inactiveUsersService.deleteInactiveUsers(
-            req.user,
+            req.audit,
             req.body.ids.filter((inactiveUser) => inactiveUser !== req.user.id),
         );
         res.status(200).send();

@@ -200,11 +200,7 @@ class TagController extends Controller {
         res: Response<TagWithVersionSchema>,
     ): Promise<void> {
         const userName = extractUsername(req);
-        const tag = await this.tagService.createTag(
-            req.body,
-            userName,
-            req.user.id,
-        );
+        const tag = await this.tagService.createTag(req.body, req.audit);
         res.status(201)
             .header('location', `tags/${tag.type}/${tag.value}`)
             .json({ version, tag })
@@ -217,7 +213,7 @@ class TagController extends Controller {
     ): Promise<void> {
         const { type, value } = req.params;
         const userName = extractUsername(req);
-        await this.tagService.deleteTag({ type, value }, userName, req.user.id);
+        await this.tagService.deleteTag({ type, value }, req.audit);
         res.status(200).end();
     }
 }

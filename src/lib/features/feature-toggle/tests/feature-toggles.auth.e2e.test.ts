@@ -7,7 +7,11 @@ import {
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../util';
-import { RoleName, CREATE_FEATURE_STRATEGY } from '../../../types';
+import {
+    CREATE_FEATURE_STRATEGY,
+    RoleName,
+    TEST_AUDIT_USER,
+} from '../../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -47,10 +51,13 @@ test('Should not be possible to update feature toggle without permission', async
         createdByUserId: 9999,
     });
 
-    await app.services.userService.createUser({
-        email,
-        rootRole: RoleName.VIEWER,
-    });
+    await app.services.userService.createUser(
+        {
+            email,
+            rootRole: RoleName.VIEWER,
+        },
+        TEST_AUDIT_USER,
+    );
 
     await app.request.post('/auth/demo/login').send({
         email,
@@ -72,10 +79,13 @@ test('Should be possible to update feature toggle with permission', async () => 
         createdByUserId: 9999,
     });
 
-    await app.services.userService.createUser({
-        email,
-        rootRole: RoleName.EDITOR,
-    });
+    await app.services.userService.createUser(
+        {
+            email,
+            rootRole: RoleName.EDITOR,
+        },
+        TEST_AUDIT_USER,
+    );
 
     await app.request.post('/auth/demo/login').send({
         email,
@@ -95,15 +105,17 @@ test('Should not be possible auto-enable feature toggle without CREATE_FEATURE_S
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         { name },
-        'me',
-        -9999,
+        TEST_AUDIT_USER,
         true,
     );
 
-    await app.services.userService.createUser({
-        email,
-        rootRole: RoleName.EDITOR,
-    });
+    await app.services.userService.createUser(
+        {
+            email,
+            rootRole: RoleName.EDITOR,
+        },
+        TEST_AUDIT_USER,
+    );
 
     await app.request.post('/auth/demo/login').send({
         email,

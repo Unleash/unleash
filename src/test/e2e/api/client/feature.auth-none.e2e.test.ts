@@ -7,6 +7,7 @@ import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import type User from '../../../../lib/types/user';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import { TEST_AUDIT_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -37,8 +38,7 @@ beforeAll(async () => {
             description: 'the #1 feature',
             impressionData: true,
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.createFeatureToggle(
         'default',
@@ -46,8 +46,7 @@ beforeAll(async () => {
             name: 'feature_2',
             description: 'soon to be the #1 feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
 
     await app.services.featureToggleService.createFeatureToggle(
@@ -56,8 +55,7 @@ beforeAll(async () => {
             name: 'feature_3',
             description: 'terrible feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
 
     const token = await app.services.apiTokenService.createApiTokenWithProjects(

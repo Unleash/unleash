@@ -1,5 +1,6 @@
 import {
-    DEFAULT_STRATEGY_UPDATED,
+    DefaultStrategyUpdatedEvent,
+    type IAuditUser,
     type IEnvironment,
     type IEnvironmentStore,
     type IFeatureEnvironmentStore,
@@ -8,9 +9,9 @@ import {
     type ISortOrder,
     type IUnleashConfig,
     type IUnleashStores,
-    PROJECT_ENVIRONMENT_ADDED,
-    PROJECT_ENVIRONMENT_REMOVED,
-    SYSTEM_USER,
+    ProjectEnvironmentAdded,
+    ProjectEnvironmentRemoved,
+    SYSTEM_USER_AUDIT,
 } from '../../types';
 import type { Logger } from '../../logger';
 import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../../error';
@@ -101,8 +102,7 @@ export default class EnvironmentService {
     async addEnvironmentToProject(
         environment: string,
         projectId: string,
-        username: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         try {
             await this.featureEnvironmentStore.connectProject(
@@ -113,13 +113,13 @@ export default class EnvironmentService {
                 environment,
                 projectId,
             );
-            await this.eventService.storeEvent({
-                type: PROJECT_ENVIRONMENT_ADDED,
-                project: projectId,
-                environment,
-                createdBy: username,
-                createdByUserId: userId,
-            });
+            await this.eventService.storeEvent(
+                new ProjectEnvironmentAdded({
+                    project: projectId,
+                    environment,
+                    auditUser,
+                }),
+            );
         } catch (e) {
             if (e.code === UNIQUE_CONSTRAINT_VIOLATION) {
                 throw new NameExistsError(
@@ -134,8 +134,7 @@ export default class EnvironmentService {
         environment: string,
         projectId: string,
         strategy: CreateFeatureStrategySchema,
-        username: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<CreateFeatureStrategySchema> {
         if (strategy.name !== 'flexibleRollout') {
             throw new BadDataError(
@@ -149,15 +148,15 @@ export default class EnvironmentService {
             environment,
             strategy,
         );
-        await this.eventService.storeEvent({
-            type: DEFAULT_STRATEGY_UPDATED,
-            project: projectId,
-            environment,
-            createdBy: username,
-            preData: previousDefaultStrategy,
-            data: defaultStrategy,
-            createdByUserId: userId,
-        });
+        await this.eventService.storeEvent(
+            new DefaultStrategyUpdatedEvent({
+                project: projectId,
+                environment,
+                preData: previousDefaultStrategy,
+                data: defaultStrategy,
+                auditUser,
+            }),
+        );
 
         return defaultStrategy;
     }
@@ -225,8 +224,7 @@ export default class EnvironmentService {
                 return this.addEnvironmentToProject(
                     enabledEnv.name,
                     project,
-                    SYSTEM_USER.username,
-                    SYSTEM_USER.id,
+                    SYSTEM_USER_AUDIT,
                 );
             });
         });
@@ -251,8 +249,7 @@ export default class EnvironmentService {
     async removeEnvironmentFromProject(
         environment: string,
         projectId: string,
-        username: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
@@ -262,13 +259,13 @@ export default class EnvironmentService {
                 environment,
                 projectId,
             );
-            await this.eventService.storeEvent({
-                type: PROJECT_ENVIRONMENT_REMOVED,
-                project: projectId,
-                environment,
-                createdBy: username,
-                createdByUserId: userId,
-            });
+            await this.eventService.storeEvent(
+                new ProjectEnvironmentRemoved({
+                    project: projectId,
+                    environment,
+                    auditUser,
+                }),
+            );
             return;
         }
         throw new MinimumOneEnvironmentError(

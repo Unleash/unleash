@@ -5,6 +5,7 @@ import {
 import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import type User from '../../../../lib/types/user';
+import { TEST_AUDIT_USER } from '../../../../lib/types';
 // import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
 let app: IUnleashTest;
@@ -28,8 +29,7 @@ beforeAll(async () => {
             description: 'the #1 feature',
             impressionData: true,
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.createFeatureToggle(
         'default',
@@ -37,8 +37,7 @@ beforeAll(async () => {
             name: 'featureY',
             description: 'soon to be the #1 feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.createFeatureToggle(
         'default',
@@ -46,8 +45,7 @@ beforeAll(async () => {
             name: 'featureZ',
             description: 'terrible feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.createFeatureToggle(
         'default',
@@ -55,13 +53,13 @@ beforeAll(async () => {
             name: 'featureArchivedX',
             description: 'the #1 feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
 
     await app.services.featureToggleService.archiveToggle(
         'featureArchivedX',
         testUser,
+        TEST_AUDIT_USER,
     );
 
     await app.services.featureToggleService.createFeatureToggle(
@@ -70,13 +68,13 @@ beforeAll(async () => {
             name: 'featureArchivedY',
             description: 'soon to be the #1 feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
 
     await app.services.featureToggleService.archiveToggle(
         'featureArchivedY',
         testUser,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.createFeatureToggle(
         'default',
@@ -84,12 +82,12 @@ beforeAll(async () => {
             name: 'featureArchivedZ',
             description: 'terrible feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.archiveToggle(
         'featureArchivedZ',
         testUser,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.createFeatureToggle(
         'default',
@@ -97,8 +95,7 @@ beforeAll(async () => {
             name: 'feature.with.variants',
             description: 'A feature toggle with variants',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
     await app.services.featureToggleService.saveVariants(
         'feature.with.variants',
@@ -117,8 +114,7 @@ beforeAll(async () => {
                 stickiness: 'default',
             },
         ],
-        'ivar',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
 });
 
@@ -150,8 +146,7 @@ test('returns 200 when content updates and hash does not match anymore', async (
             name: 'featureNew304',
             description: 'the #1 feature',
         },
-        'test',
-        testUser.id,
+        TEST_AUDIT_USER,
     );
     await app.services.configurationRevisionService.updateMaxRevisionId();
 

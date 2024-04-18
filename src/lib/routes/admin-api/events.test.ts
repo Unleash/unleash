@@ -11,6 +11,8 @@ import {
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
 } from '../../types/events';
+import { TEST_AUDIT_USER } from '../../types';
+
 const TEST_USER_ID = -9999;
 async function getSetup(anonymise: boolean = false) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -45,11 +47,10 @@ test('should get events list via admin', async () => {
     const { request, base, eventService } = await getSetup();
     eventService.storeEvent(
         new FeatureCreatedEvent({
-            createdBy: 'some@email.com',
             data: { name: 'test', project: 'default' },
             featureName: 'test',
             project: 'default',
-            createdByUserId: TEST_USER_ID,
+            auditUser: TEST_AUDIT_USER,
         }),
     );
     const { body } = await request
@@ -58,18 +59,17 @@ test('should get events list via admin', async () => {
         .expect(200);
 
     expect(body.events.length).toBe(1);
-    expect(body.events[0].createdBy).toBe('some@email.com');
+    expect(body.events[0].createdBy).toBe('test@example.com');
 });
 
 test('should anonymise events list via admin', async () => {
     const { request, base, eventService } = await getSetup(true);
     eventService.storeEvent(
         new FeatureCreatedEvent({
-            createdBy: 'some@email.com',
             data: { name: 'test', project: 'default' },
             featureName: 'test',
             project: 'default',
-            createdByUserId: TEST_USER_ID,
+            auditUser: TEST_AUDIT_USER,
         }),
     );
     const { body } = await request
@@ -78,7 +78,7 @@ test('should anonymise events list via admin', async () => {
         .expect(200);
 
     expect(body.events.length).toBe(1);
-    expect(body.events[0].createdBy).toBe('676212ff7@unleash.run');
+    expect(body.events[0].createdBy).toBe('973dfe463@unleash.run');
 });
 
 test('should also anonymise email fields in data and preData properties', async () => {
@@ -88,16 +88,14 @@ test('should also anonymise email fields in data and preData properties', async 
     const { request, base, eventService } = await getSetup(true);
     eventService.storeEvent(
         new ProjectUserAddedEvent({
-            createdBy: 'some@email.com',
-            createdByUserId: TEST_USER_ID,
+            auditUser: TEST_AUDIT_USER,
             data: { name: 'test', project: 'default', email: email1 },
             project: 'default',
         }),
     );
     eventService.storeEvent(
         new ProjectUserRemovedEvent({
-            createdBy: 'some@email.com',
-            createdByUserId: TEST_USER_ID,
+            auditUser: TEST_AUDIT_USER,
             preData: { name: 'test', project: 'default', email: email2 },
             project: 'default',
         }),
@@ -118,8 +116,7 @@ test('should anonymise any PII fields, no matter the depth', async () => {
     const { request, base, eventService } = await getSetup(true);
     eventService.storeEvent(
         new ProjectAccessAddedEvent({
-            createdBy: 'some@email.com',
-            createdByUserId: TEST_USER_ID,
+            auditUser: TEST_AUDIT_USER,
             data: {
                 roles: [
                     {

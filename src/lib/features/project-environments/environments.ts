@@ -4,7 +4,6 @@ import {
     type IUnleashConfig,
     type IUnleashServices,
     serializeDates,
-    SYSTEM_USER_ID,
     UPDATE_PROJECT,
 } from '../../types';
 import type { Logger } from '../../logger';
@@ -19,7 +18,6 @@ import {
     type ProjectEnvironmentSchema,
 } from '../../openapi';
 import type { OpenApiService, ProjectService } from '../../services';
-import { extractUsername } from '../../util';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import type { WithTransactional } from '../../db/transaction';
 
@@ -142,12 +140,7 @@ export default class EnvironmentsController extends Controller {
         await this.projectService.getProject(projectId); // Validates that the project exists
 
         await this.environmentService.transactional((service) =>
-            service.addEnvironmentToProject(
-                environment,
-                projectId,
-                extractUsername(req),
-                req.user.id,
-            ),
+            service.addEnvironmentToProject(environment, projectId, req.audit),
         );
 
         res.status(200).end();
@@ -163,8 +156,7 @@ export default class EnvironmentsController extends Controller {
             service.removeEnvironmentFromProject(
                 environment,
                 projectId,
-                extractUsername(req),
-                req.user.id,
+                req.audit,
             ),
         );
 
@@ -186,8 +178,7 @@ export default class EnvironmentsController extends Controller {
                 environment,
                 projectId,
                 strategy,
-                extractUsername(req),
-                req.user.id || SYSTEM_USER_ID,
+                req.audit,
             ),
         );
 

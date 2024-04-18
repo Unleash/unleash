@@ -21,7 +21,7 @@ import SettingService from '../../../../lib/services/setting-service';
 import FakeSettingStore from '../../../fixtures/fake-setting-store';
 import { GroupService } from '../../../../lib/services/group-service';
 import { EventService } from '../../../../lib/services';
-import type { IUnleashStores } from '../../../../lib/types';
+import { type IUnleashStores, TEST_AUDIT_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let stores: IUnleashStores;
@@ -86,17 +86,23 @@ beforeAll(async () => {
     });
     resetTokenService = new ResetTokenService(stores, config);
     const adminRole = (await accessService.getPredefinedRole(RoleName.ADMIN))!;
-    adminUser = await userService.createUser({
-        username: 'admin@test.com',
-        rootRole: adminRole.id,
-    })!;
+    adminUser = await userService.createUser(
+        {
+            username: 'admin@test.com',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    )!;
 
     const userRole = (await accessService.getPredefinedRole(RoleName.EDITOR))!;
-    user = await userService.createUser({
-        username: 'test@test.com',
-        email: 'test@test.com',
-        rootRole: userRole.id,
-    });
+    user = await userService.createUser(
+        {
+            username: 'test@test.com',
+            email: 'test@test.com',
+            rootRole: userRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
 });
 
 afterAll(async () => {

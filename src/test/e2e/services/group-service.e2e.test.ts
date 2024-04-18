@@ -3,7 +3,12 @@ import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import { GroupService } from '../../../lib/services/group-service';
 import { EventService } from '../../../lib/services';
-import type { IGroupStore, IUnleashStores, IUser } from '../../../lib/types';
+import {
+    type IGroupStore,
+    type IUnleashStores,
+    type IUser,
+    TEST_AUDIT_USER,
+} from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -185,8 +190,7 @@ test('adding a root role to a group with a project role should not fail', async 
             name: 'root_group',
             description: 'root_group',
         },
-        'test',
-        -9999,
+        TEST_AUDIT_USER,
     );
 
     await stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
@@ -200,8 +204,7 @@ test('adding a root role to a group with a project role should not fail', async 
             createdAt: new Date(),
             createdBy: 'test',
         },
-        'test',
-        -9999,
+        TEST_AUDIT_USER,
     );
 
     expect(updatedGroup).toMatchObject({
@@ -257,8 +260,7 @@ test('adding a nonexistent role to a group should fail', async () => {
                 createdAt: new Date(),
                 createdBy: 'test',
             },
-            'test',
-            -9999,
+            TEST_AUDIT_USER,
         );
     }).rejects.toThrow(
         'Request validation failed: your request body or params contain invalid data: Incorrect role id 100',

@@ -18,14 +18,17 @@ import {
     createProjectService,
 } from '../index';
 import {
+    type IAuditUser,
     type IGroup,
     type IUnleashStores,
     type IUser,
-    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
+    TEST_AUDIT_USER,
 } from '../../types';
 import type { User } from '../../server-impl';
-import { InvalidOperationError } from '../../error';
+import { BadDataError, InvalidOperationError } from '../../error';
+import { extractAuditInfoFromUser } from '../../util';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -36,6 +39,8 @@ let eventService: EventService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
 let user: User; // many methods in this test use User instead of IUser
+let auditUser: IAuditUser;
+
 let opsUser: IUser;
 let group: IGroup;
 
@@ -57,6 +62,11 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
+    auditUser = {
+        id: user.id,
+        username: user.email,
+        ip: '127.0.0.1',
+    };
     group = await stores.groupStore.create({
         name: 'aTestGroup',
         description: '',
@@ -68,6 +78,11 @@ beforeAll(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
     const config = createTestConfig({
         getLogger,
+        experimental: {
+            flags: {
+                createProjectWithEnvironmentConfig: true,
+            },
+        },
     });
     eventService = new EventService(stores, config);
     accessService = createAccessService(db.rawDatabase, config);
@@ -116,7 +131,7 @@ test('should list all projects', async () => {
         defaultStickiness: 'default',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     const projects = await projectService.getProjects();
     expect(projects).toHaveLength(2);
     expect(projects.find((p) => p.name === project.name)?.memberCount).toBe(1);
@@ -130,7 +145,7 @@ test('should create new project', async () => {
         defaultStickiness: 'default',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     const ret = await projectService.getProject('test');
     expect(project.id).toEqual(ret.id);
     expect(project.name).toEqual(ret.name);
@@ -146,7 +161,7 @@ test('should create new private project', async () => {
         defaultStickiness: 'default',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     const ret = await projectService.getProject('testPrivate');
     expect(project.id).toEqual(ret.id);
     expect(project.name).toEqual(ret.name);
@@ -163,8 +178,8 @@ test('should delete project', async () => {
         defaultStickiness: 'default',
     };
 
-    await projectService.createProject(project, user);
-    await projectService.deleteProject(project.id, user);
+    await projectService.createProject(project, user, auditUser);
+    await projectService.deleteProject(project.id, user, auditUser);
 
     try {
         await projectService.getProject(project.id);
@@ -181,14 +196,14 @@ test('should not be able to delete project with toggles', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     await stores.featureToggleStore.create(project.id, {
         name: 'test-project-delete',
         createdByUserId: 9999,
     });
 
     try {
-        await projectService.deleteProject(project.id, user);
+        await projectService.deleteProject(project.id, user, auditUser);
     } catch (err) {
         expect(err.message).toBe(
             'You can not delete a project with active feature toggles',
@@ -198,7 +213,7 @@ test('should not be able to delete project with toggles', async () => {
 
 test('should not delete "default" project', async () => {
     try {
-        await projectService.deleteProject('default', user);
+        await projectService.deleteProject('default', user, auditUser);
     } catch (err) {
         expect(err.message).toBe('You can not delete the default project!');
     }
@@ -218,8 +233,8 @@ test('should not be able to create existing project', async () => {
         defaultStickiness: 'default',
     };
     try {
-        await projectService.createProject(project, user);
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
+        await projectService.createProject(project, user, auditUser);
     } catch (err) {
         expect(err.message).toBe('A project with this id already exists.');
     }
@@ -258,8 +273,8 @@ test('should update project', async () => {
         defaultStickiness: 'userId',
     };
 
-    await projectService.createProject(project, user);
-    await projectService.updateProject(updatedProject, user);
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
+    await projectService.updateProject(updatedProject, TEST_AUDIT_USER);
 
     const readProject = await projectService.getProject(project.id);
 
@@ -286,12 +301,16 @@ test('should update project without existing settings', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, {
+        id: user.id,
+        username: user.email,
+        ip: '127.0.0.1',
+    });
     await db
         .rawDatabase('project_settings')
         .del()
         .where({ project: project.id });
-    await projectService.updateProject(updatedProject, user);
+    await projectService.updateProject(updatedProject, auditUser);
 
     const readProject = await projectService.getProject(project.id);
 
@@ -317,7 +336,7 @@ test('should get list of users with access to project', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     const { users } = await projectService.getAccessToProject(project.id);
 
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
@@ -340,7 +359,7 @@ test('should add a member user to the project', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectMember1 = await stores.userStore.insert({
         name: 'Some Member',
@@ -357,13 +376,13 @@ test('should add a member user to the project', async () => {
         project.id,
         memberRole.id,
         projectMember1.id,
-        'test',
+        auditUser,
     );
     await projectService.addUser(
         project.id,
         memberRole.id,
         projectMember2.id,
-        'test',
+        auditUser,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -398,7 +417,7 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
         const customRole = await stores.roleStore.create({
             name: 'my_custom_role_admin_user',
             roleType: 'custom',
@@ -411,14 +430,13 @@ describe('Managing Project access', () => {
         });
         const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
-        expect(
+        await expect(
             projectService.addAccess(
                 project.id,
                 [customRole.id, ownerRole.id],
                 [],
                 [projectUserAdmin.id],
-                opsUser.username,
-                opsUser.id,
+                auditUser,
             ),
         ).resolves.not.toThrow();
     });
@@ -430,7 +448,7 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
         const projectAdmin = await stores.userStore.insert({
             name: 'Some project admin',
             email: 'admin@example.com',
@@ -451,14 +469,13 @@ describe('Managing Project access', () => {
             description:
                 'Used to prove that you can assign a role the project owner does not have',
         });
-        expect(
+        await expect(
             projectService.addAccess(
                 project.id,
                 [customRole.id],
                 [],
                 [projectCustomer.id],
-                projectAdmin.username,
-                projectAdmin.id,
+                auditUser,
             ),
         ).resolves;
     });
@@ -470,11 +487,12 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
         const projectUser = await stores.userStore.insert({
             name: 'Some project user',
             email: 'user@example.com',
         });
+        const projectAuditUser = extractAuditInfoFromUser(projectUser);
         const secondUser = await stores.userStore.insert({
             name: 'Some other user',
             email: 'otheruser@example.com',
@@ -491,26 +509,28 @@ describe('Managing Project access', () => {
             project.id,
         );
         const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
-        expect(
+        await expect(
             projectService.addAccess(
                 project.id,
                 [customRole.id],
                 [],
                 [secondUser.id],
-                projectUser.username,
-                projectUser.id,
+                projectAuditUser,
             ),
         ).resolves.not.toThrow();
-        expect(
+        await expect(async () =>
             projectService.addAccess(
                 project.id,
                 [ownerRole.id],
                 [],
                 [secondUser.id],
-                projectUser.username,
-                projectUser.id,
+                projectAuditUser,
             ),
-        ).rejects.toThrow();
+        ).rejects.toThrow(
+            new InvalidOperationError(
+                'User tried to grant role they did not have access to',
+            ),
+        );
     });
     test('Users that are members of a group with project role should only be allowed to grant same role to others', async () => {
         const project = {
@@ -520,18 +540,19 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
         const projectUser = await stores.userStore.insert({
             name: 'Some project user',
             email: 'user_with_group_membership@example.com',
         });
+        const projectAuditUser = extractAuditInfoFromUser(projectUser);
         const group = await stores.groupStore.create({
             name: 'custom_group_for_role_access',
         });
         await stores.groupStore.addUsersToGroup(
             group.id,
             [{ user: { id: projectUser.id } }],
-            opsUser.username,
+            opsUser.username!,
         );
         const secondUser = await stores.userStore.insert({
             name: 'Some other user',
@@ -546,43 +567,44 @@ describe('Managing Project access', () => {
         await accessService.addGroupToRole(
             group.id,
             customRole.id,
-            opsUser.username,
+            opsUser.username!,
             project.id,
         );
         const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
         const otherGroup = await stores.groupStore.create({
             name: 'custom_group_to_receive_new_access',
         });
-        expect(
+        await expect(
             projectService.addAccess(
                 project.id,
                 [customRole.id],
                 [],
                 [secondUser.id],
-                projectUser.username,
-                projectUser.id,
+                projectAuditUser,
             ),
         ).resolves.not.toThrow();
-        expect(
+        await expect(
             projectService.addAccess(
                 project.id,
                 [customRole.id],
                 [otherGroup.id],
                 [],
-                projectUser.username,
-                projectUser.id,
+                projectAuditUser,
             ),
         ).resolves.not.toThrow();
-        expect(
+        await expect(
             projectService.addAccess(
                 project.id,
                 [ownerRole.id],
                 [],
                 [secondUser.id],
-                projectUser.username,
-                projectUser.id,
+                projectAuditUser,
             ),
-        ).rejects.toThrow();
+        ).rejects.toThrow(
+            new InvalidOperationError(
+                'User tried to grant role they did not have access to',
+            ),
+        );
     });
     test('Users can assign roles they have to a group', async () => {
         const project = {
@@ -592,7 +614,7 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
         const projectUser = await stores.userStore.insert({
             name: 'Some project user',
             email: 'assign_role_to_group@example.com',
@@ -611,14 +633,13 @@ describe('Managing Project access', () => {
             customRole.id,
             project.id,
         );
-        expect(
+        await expect(
             projectService.addAccess(
                 project.id,
                 [customRole.id],
                 [secondGroup.id],
                 [],
-                projectUser.username,
-                projectUser.id,
+                auditUser,
             ),
         ).resolves.not.toThrow(
             new InvalidOperationError(
@@ -634,11 +655,12 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
         const projectUser = await stores.userStore.insert({
             name: 'Some project user',
             email: 'fail_assign_role_to_user@example.com',
         });
+        const projectAuditUser = extractAuditInfoFromUser(projectUser);
         const secondUser = await stores.userStore.insert({
             name: 'Some other user',
             email: 'otheruser_no_roles@example.com',
@@ -649,15 +671,18 @@ describe('Managing Project access', () => {
             description:
                 'Used to prove that you can not assign a role you do not have via setRolesForUser',
         });
-        expect(
+        await expect(
             projectService.setRolesForUser(
                 project.id,
                 secondUser.id,
                 [customRole.id],
-                projectUser.username,
-                projectUser.id,
+                projectAuditUser,
             ),
-        ).rejects.toThrow();
+        ).rejects.toThrow(
+            new InvalidOperationError(
+                'User tried to assign a role they did not have access to',
+            ),
+        );
     });
     test('Users can not assign roles they do not have to a group through explicit roles endpoint', async () => {
         const project = {
@@ -667,11 +692,12 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
         const projectUser = await stores.userStore.insert({
             name: 'Some project user',
             email: 'fail_assign_role_to_group@example.com',
         });
+        const projectAuditUser = extractAuditInfoFromUser(projectUser);
         const group = await stores.groupStore.create({
             name: 'Some group_awaiting_role',
         });
@@ -681,13 +707,12 @@ describe('Managing Project access', () => {
             description:
                 'Used to prove that you can not assign a role you do not have via setRolesForGroup',
         });
-        expect(
+        return expect(
             projectService.setRolesForGroup(
                 project.id,
                 group.id,
                 [customRole.id],
-                projectUser.username,
-                projectUser.id,
+                projectAuditUser,
             ),
         ).rejects.toThrow(
             new InvalidOperationError(
@@ -705,7 +730,7 @@ test('should add admin users to the project', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectAdmin1 = await stores.userStore.insert({
         name: 'Some Member',
@@ -722,13 +747,13 @@ test('should add admin users to the project', async () => {
         project.id,
         ownerRole.id,
         projectAdmin1.id,
-        'test',
+        auditUser,
     );
     await projectService.addUser(
         project.id,
         ownerRole.id,
         projectAdmin2.id,
-        'test',
+        auditUser,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -753,7 +778,7 @@ test('add user should fail if user already have access', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectMember1 = await stores.userStore.insert({
         name: 'Some Member',
@@ -766,7 +791,7 @@ test('add user should fail if user already have access', async () => {
         project.id,
         memberRole.id,
         projectMember1.id,
-        'test',
+        auditUser,
     );
 
     await expect(async () =>
@@ -774,7 +799,7 @@ test('add user should fail if user already have access', async () => {
             project.id,
             memberRole.id,
             projectMember1.id,
-            'test',
+            auditUser,
         ),
     ).rejects.toThrow(
         new Error('User already has access to project=add-users-twice'),
@@ -789,7 +814,7 @@ test('should remove user from the project', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectMember1 = await stores.userStore.insert({
         name: 'Some Member',
@@ -802,14 +827,13 @@ test('should remove user from the project', async () => {
         project.id,
         memberRole.id,
         projectMember1.id,
-        'test',
+        auditUser,
     );
     await projectService.removeUser(
         project.id,
         memberRole.id,
         projectMember1.id,
-        'test',
-        opsUser.id,
+        auditUser,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -829,12 +853,11 @@ test('should not change project if feature toggle project does not match current
 
     const toggle = { name: 'test-toggle' };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     await featureToggleService.createFeatureToggle(
         project.id,
         toggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
 
     try {
@@ -843,6 +866,7 @@ test('should not change project if feature toggle project does not match current
             toggle.name,
             user,
             'wrong-project-id',
+            auditUser,
         );
     } catch (err) {
         expect(err.message.toLowerCase().includes('permission')).toBeTruthy();
@@ -861,12 +885,11 @@ test('should return 404 if no project is found with the project id', async () =>
 
     const toggle = { name: 'test-toggle-2' };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     await featureToggleService.createFeatureToggle(
         project.id,
         toggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
 
     try {
@@ -875,6 +898,7 @@ test('should return 404 if no project is found with the project id', async () =>
             toggle.name,
             user,
             project.id,
+            auditUser,
         );
     } catch (err) {
         expect(err.message).toBe(`No project found`);
@@ -904,13 +928,16 @@ test('should fail if user is not authorized', async () => {
         email: 'admin-change-project@getunleash.io',
     });
 
-    await projectService.createProject(project, user);
-    await projectService.createProject(projectDestination, projectAdmin1);
+    await projectService.createProject(project, user, auditUser);
+    await projectService.createProject(
+        projectDestination,
+        projectAdmin1,
+        auditUser,
+    );
     await featureToggleService.createFeatureToggle(
         project.id,
         toggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
 
     try {
@@ -919,6 +946,7 @@ test('should fail if user is not authorized', async () => {
             toggle.name,
             user,
             project.id,
+            auditUser,
         );
     } catch (err) {
         expect(err.message.toLowerCase().includes('permission')).toBeTruthy();
@@ -941,19 +969,19 @@ test('should change project when checks pass', async () => {
     };
     const toggle = { name: randomId() };
 
-    await projectService.createProject(projectA, user);
-    await projectService.createProject(projectB, user);
+    await projectService.createProject(projectA, user, auditUser);
+    await projectService.createProject(projectB, user, auditUser);
     await featureToggleService.createFeatureToggle(
         projectA.id,
         toggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     await projectService.changeProject(
         projectB.id,
         toggle.name,
         user,
         projectA.id,
+        auditUser,
     );
 
     const updatedFeature = await featureToggleService.getFeature({
@@ -976,13 +1004,12 @@ test('changing project should emit event even if user does not have a username s
         defaultStickiness: 'clientId',
     };
     const toggle = { name: randomId() };
-    await projectService.createProject(projectA, user);
-    await projectService.createProject(projectB, user);
+    await projectService.createProject(projectA, user, auditUser);
+    await projectService.createProject(projectB, user, auditUser);
     await featureToggleService.createFeatureToggle(
         projectA.id,
         toggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     const eventsBeforeChange = await stores.eventStore.getEvents();
     await projectService.changeProject(
@@ -990,6 +1017,7 @@ test('changing project should emit event even if user does not have a username s
         toggle.name,
         user,
         projectA.id,
+        auditUser,
     );
     const eventsAfterChange = await stores.eventStore.getEvents();
     expect(eventsAfterChange.length).toBe(eventsBeforeChange.length + 1);
@@ -1011,20 +1039,18 @@ test('should require equal project environments to move features', async () => {
     const environment = { name: randomId(), type: 'production' };
     const toggle = { name: randomId() };
 
-    await projectService.createProject(projectA, user);
-    await projectService.createProject(projectB, user);
+    await projectService.createProject(projectA, user, auditUser);
+    await projectService.createProject(projectB, user, auditUser);
     await featureToggleService.createFeatureToggle(
         projectA.id,
         toggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     await stores.environmentStore.create(environment);
     await environmentService.addEnvironmentToProject(
         environment.name,
         projectB.id,
-        'test',
-        opsUser.id,
+        auditUser,
     );
 
     await expect(() =>
@@ -1033,6 +1059,7 @@ test('should require equal project environments to move features', async () => {
             toggle.name,
             user,
             projectA.id,
+            auditUser,
         ),
     ).rejects.toThrowError(IncompatibleProjectError);
 });
@@ -1057,7 +1084,7 @@ test('A newly created project only gets connected to enabled environments', asyn
         enabled: false,
     });
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     const connectedEnvs =
         await db.stores.projectStore.getEnvironmentsForProject(project.id);
     expect(connectedEnvs).toHaveLength(2); // default, connection_test
@@ -1102,7 +1129,7 @@ test('should have environments sorted in order', async () => {
         sortOrder: 2,
     });
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     const connectedEnvs =
         await db.stores.projectStore.getEnvironmentsForProject(project.id);
 
@@ -1123,32 +1150,35 @@ test('should add a user to the project with a custom role', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectMember1 = await stores.userStore.insert({
         name: 'Custom',
         email: 'custom@getunleash.io',
     });
 
-    const customRole = await accessService.createRole({
-        name: 'Service Engineer2',
-        description: '',
-        permissions: [
-            {
-                id: 2, // CREATE_FEATURE
-            },
-            {
-                id: 8, // DELETE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
+    const customRole = await accessService.createRole(
+        {
+            name: 'Service Engineer2',
+            description: '',
+            permissions: [
+                {
+                    id: 2, // CREATE_FEATURE
+                },
+                {
+                    id: 8, // DELETE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 
     await projectService.addUser(
         project.id,
         customRole.id,
         projectMember1.id,
-        'test',
+        auditUser,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -1169,7 +1199,7 @@ test('should delete role entries when deleting project', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const user1 = await stores.userStore.insert({
         name: 'Projectuser1',
@@ -1181,27 +1211,40 @@ test('should delete role entries when deleting project', async () => {
         email: 'project2@getunleash.io',
     });
 
-    const customRole = await accessService.createRole({
-        name: 'Service Engineer',
-        description: '',
-        permissions: [
-            {
-                id: 2, // CREATE_FEATURE
-            },
-            {
-                id: 8, // DELETE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
+    const customRole = await accessService.createRole(
+        {
+            name: 'Service Engineer',
+            description: '',
+            permissions: [
+                {
+                    id: 2, // CREATE_FEATURE
+                },
+                {
+                    id: 8, // DELETE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 
-    await projectService.addUser(project.id, customRole.id, user1.id, 'test');
-    await projectService.addUser(project.id, customRole.id, user2.id, 'test');
+    await projectService.addUser(
+        project.id,
+        customRole.id,
+        user1.id,
+        auditUser,
+    );
+    await projectService.addUser(
+        project.id,
+        customRole.id,
+        user2.id,
+        auditUser,
+    );
 
     let usersForRole = await accessService.getUsersForRole(customRole.id);
     expect(usersForRole.length).toBe(2);
 
-    await projectService.deleteProject(project.id, user);
+    await projectService.deleteProject(project.id, user, auditUser);
     usersForRole = await accessService.getUsersForRole(customRole.id);
     expect(usersForRole.length).toBe(0);
 });
@@ -1215,29 +1258,37 @@ test('should change a users role in the project', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectUser = await stores.userStore.insert({
         name: 'Projectuser3',
         email: 'project3@getunleash.io',
     });
 
-    const customRole = await accessService.createRole({
-        name: 'Service Engineer3',
-        description: '',
-        permissions: [
-            {
-                id: 2, // CREATE_FEATURE
-            },
-            {
-                id: 8, // DELETE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
+    const customRole = await accessService.createRole(
+        {
+            name: 'Service Engineer3',
+            description: '',
+            permissions: [
+                {
+                    id: 2, // CREATE_FEATURE
+                },
+                {
+                    id: 8, // DELETE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(project.id, member.id, projectUser.id, 'test');
+    await projectService.addUser(
+        project.id,
+        member.id,
+        projectUser.id,
+        auditUser,
+    );
     const { users } = await projectService.getAccessToProject(project.id);
     const memberUser = users.filter((u) => u.roleId === member.id);
 
@@ -1248,14 +1299,13 @@ test('should change a users role in the project', async () => {
         project.id,
         member.id,
         projectUser.id,
-        'test',
-        opsUser.id,
+        auditUser,
     );
     await projectService.addUser(
         project.id,
         customRole.id,
         projectUser.id,
-        'test',
+        auditUser,
     );
 
     const { users: updatedUsers } = await projectService.getAccessToProject(
@@ -1276,7 +1326,7 @@ test('should update role for user on project', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectMember1 = await stores.userStore.insert({
         name: 'Some Member',
@@ -1290,14 +1340,13 @@ test('should update role for user on project', async () => {
         project.id,
         memberRole.id,
         projectMember1.id,
-        'test',
+        auditUser,
     );
     await projectService.changeRole(
         project.id,
         ownerRole.id,
         projectMember1.id,
-        'test',
-        opsUser.id,
+        auditUser,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -1316,7 +1365,7 @@ test('should able to assign role without existing members', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const projectMember1 = await stores.userStore.insert({
         name: 'Some Member',
@@ -1335,14 +1384,13 @@ test('should able to assign role without existing members', async () => {
         project.id,
         memberRole.id,
         projectMember1.id,
-        'test',
+        auditUser,
     );
     await projectService.changeRole(
         project.id,
         testRole.id,
         projectMember1.id,
-        'test',
-        opsUser.id,
+        auditUser,
     );
 
     const { users } = await projectService.getAccessToProject(project.id);
@@ -1362,7 +1410,7 @@ describe('ensure project has at least one owner', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
 
         const roles = await stores.roleStore.getRolesForProject(project.id);
         const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
@@ -1372,8 +1420,7 @@ describe('ensure project has at least one owner', () => {
                 project.id,
                 ownerRole.id,
                 user.id,
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1383,8 +1430,7 @@ describe('ensure project has at least one owner', () => {
             await projectService.removeUserAccess(
                 project.id,
                 user.id,
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1399,7 +1445,7 @@ describe('ensure project has at least one owner', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
 
         const memberRole = await stores.roleStore.getRoleByName(
             RoleName.MEMBER,
@@ -1415,16 +1461,14 @@ describe('ensure project has at least one owner', () => {
             [memberRole.id],
             [],
             [memberUser.id],
-            'test',
-            opsUser.id,
+            auditUser,
         );
 
         const usersBefore = await projectService.getProjectUsers(project.id);
         await projectService.removeUserAccess(
             project.id,
             memberUser.id,
-            'test',
-            opsUser.id,
+            auditUser,
         );
         const usersAfter = await projectService.getProjectUsers(project.id);
         expect(usersBefore).toHaveLength(2);
@@ -1439,7 +1483,7 @@ describe('ensure project has at least one owner', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
 
         const projectMember1 = await stores.userStore.insert({
             name: 'Some Member',
@@ -1454,7 +1498,7 @@ describe('ensure project has at least one owner', () => {
             project.id,
             memberRole.id,
             projectMember1.id,
-            'test',
+            auditUser,
         );
 
         await expect(async () => {
@@ -1462,8 +1506,7 @@ describe('ensure project has at least one owner', () => {
                 project.id,
                 memberRole.id,
                 user.id,
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1474,8 +1517,7 @@ describe('ensure project has at least one owner', () => {
                 project.id,
                 user.id,
                 [memberRole.id],
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1490,7 +1532,7 @@ describe('ensure project has at least one owner', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
 
         const roles = await stores.roleStore.getRolesForProject(project.id);
         const ownerRole = roles.find((r) => r.name === RoleName.OWNER)!;
@@ -1499,8 +1541,7 @@ describe('ensure project has at least one owner', () => {
             project.id,
             ownerRole.id,
             group.id,
-            'test',
-            opsUser.id,
+            auditUser,
         );
 
         // this should be fine, leaving the group as the only owner
@@ -1509,8 +1550,7 @@ describe('ensure project has at least one owner', () => {
             project.id,
             ownerRole.id,
             user.id,
-            'test',
-            opsUser.id,
+            auditUser,
         );
 
         return {
@@ -1530,8 +1570,7 @@ describe('ensure project has at least one owner', () => {
                 project.id,
                 ownerRole.id,
                 group.id,
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1541,8 +1580,7 @@ describe('ensure project has at least one owner', () => {
             await projectService.removeGroupAccess(
                 project.id,
                 group.id,
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1562,8 +1600,7 @@ describe('ensure project has at least one owner', () => {
                 project.id,
                 memberRole.id,
                 group.id,
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1574,8 +1611,7 @@ describe('ensure project has at least one owner', () => {
                 project.id,
                 group.id,
                 [memberRole.id],
-                'test',
-                opsUser.id,
+                auditUser,
             );
         }).rejects.toThrowError(
             new Error('A project must have at least one owner'),
@@ -1590,7 +1626,7 @@ test('Should allow bulk update of group permissions', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     const groupStore = stores.groupStore;
 
     const user1 = await stores.userStore.insert({
@@ -1603,16 +1639,19 @@ test('Should allow bulk update of group permissions', async () => {
         description: '',
     });
 
-    const createFeatureRole = await accessService.createRole({
-        name: 'CreateRole',
-        description: '',
-        permissions: [
-            {
-                id: 2, // CREATE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
+    const createFeatureRole = await accessService.createRole(
+        {
+            name: 'CreateRole',
+            description: '',
+            permissions: [
+                {
+                    id: 2, // CREATE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
     await stores.accessStore.addUserToRole(
         opsUser.id,
         createFeatureRole.id,
@@ -1624,8 +1663,7 @@ test('Should allow bulk update of group permissions', async () => {
         [createFeatureRole.id],
         [group1.id],
         [user1.id],
-        'some-admin-user',
-        opsUser.id,
+        auditUser,
     );
 });
 
@@ -1637,24 +1675,26 @@ test('Should bulk update of only users', async () => {
         email: 'vv@getunleash.io',
     });
 
-    const createFeatureRole = await accessService.createRole({
-        name: 'CreateRoleForUsers',
-        description: '',
-        permissions: [
-            {
-                id: 2, // CREATE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
-
+    const createFeatureRole = await accessService.createRole(
+        {
+            name: 'CreateRoleForUsers',
+            description: '',
+            permissions: [
+                {
+                    id: 2, // CREATE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+    const auditUserFromOps = extractAuditInfoFromUser(opsUser);
     await projectService.addAccess(
         project,
         [createFeatureRole.id],
         [],
         [user1.id],
-        'some-admin-user',
-        opsUser.id,
+        auditUserFromOps,
     );
 });
 
@@ -1667,31 +1707,33 @@ test('Should allow bulk update of only groups', async () => {
     };
     const groupStore = stores.groupStore;
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const group1 = await groupStore.create({
         name: 'ViewersOnly',
         description: '',
     });
 
-    const createFeatureRole = await accessService.createRole({
-        name: 'CreateRoleForGroups',
-        description: '',
-        permissions: [
-            {
-                id: 2, // CREATE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
+    const createFeatureRole = await accessService.createRole(
+        {
+            name: 'CreateRoleForGroups',
+            description: '',
+            permissions: [
+                {
+                    id: 2, // CREATE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 
     await projectService.addAccess(
         project.id,
         [createFeatureRole.id],
         [group1.id],
         [],
-        'some-admin-user',
-        opsUser.id,
+        auditUser,
     );
 });
 
@@ -1703,7 +1745,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const group1 = await stores.groupStore.create({
         name: 'permutation-group-1',
@@ -1725,35 +1767,40 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         email: 'pu2@getunleash.io',
     });
 
-    const role1 = await accessService.createRole({
-        name: 'permutation-role-1',
-        description: '',
-        permissions: [
-            {
-                id: 2, // CREATE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
+    const role1 = await accessService.createRole(
+        {
+            name: 'permutation-role-1',
+            description: '',
+            permissions: [
+                {
+                    id: 2, // CREATE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 
-    const role2 = await accessService.createRole({
-        name: 'permutation-role-2',
-        description: '',
-        permissions: [
-            {
-                id: 7, // UPDATE_FEATURE
-            },
-        ],
-        createdByUserId: SYSTEM_USER_ID,
-    });
+    const role2 = await accessService.createRole(
+        {
+            name: 'permutation-role-2',
+            description: '',
+            permissions: [
+                {
+                    id: 7, // UPDATE_FEATURE
+                },
+            ],
+            createdByUserId: SYSTEM_USER_ID,
+        },
+        SYSTEM_USER_AUDIT,
+    );
 
     await projectService.addAccess(
         project.id,
         [role1.id, role2.id],
         [group1.id, group2.id],
         [user1.id, user2.id],
-        'some-admin-user',
-        opsUser.id,
+        auditUser,
     );
 
     const { users, groups } = await projectService.getAccessToProject(
@@ -1778,7 +1825,7 @@ test('should only count active feature toggles for project', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     await stores.featureToggleStore.create(project.id, {
         name: 'only-active-t1',
@@ -1789,7 +1836,7 @@ test('should only count active feature toggles for project', async () => {
         createdByUserId: 9999,
     });
 
-    await featureToggleService.archiveToggle('only-active-t2', user);
+    await featureToggleService.archiveToggle('only-active-t2', user, auditUser);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1805,14 +1852,18 @@ test('should list projects with all features archived', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     await stores.featureToggleStore.create(project.id, {
         name: 'archived-toggle',
         createdByUserId: 9999,
     });
 
-    await featureToggleService.archiveToggle('archived-toggle', user);
+    await featureToggleService.archiveToggle(
+        'archived-toggle',
+        user,
+        auditUser,
+    );
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1841,7 +1892,7 @@ test('should calculate average time to production', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const toggles = [
         { name: 'average-prod-time' },
@@ -1856,8 +1907,7 @@ test('should calculate average time to production', async () => {
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                auditUser,
             );
         }),
     );
@@ -1870,8 +1920,7 @@ test('should calculate average time to production', async () => {
                     project: project.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser,
                 }),
             );
         }),
@@ -1905,12 +1954,11 @@ test('should calculate average time to production ignoring some items', async ()
         project: project.id,
         featureName,
         environment: 'default',
-        createdBy: 'Fredrik',
-        createdByUserId: opsUser.id,
+        auditUser,
         tags: [],
     });
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
     await stores.environmentStore.create({
         name: 'customEnv',
         type: 'development',
@@ -1918,8 +1966,7 @@ test('should calculate average time to production ignoring some items', async ()
     await environmentService.addEnvironmentToProject(
         'customEnv',
         project.id,
-        SYSTEM_USER.username,
-        SYSTEM_USER.id,
+        SYSTEM_USER_AUDIT,
     );
 
     // actual toggle we take for calculations
@@ -1927,8 +1974,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         toggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     await updateFeature(toggle.name, {
         created_at: subDays(new Date(), 20),
@@ -1947,8 +1993,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         devToggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent({
@@ -1962,8 +2007,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         'default',
         otherProjectToggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
@@ -1974,8 +2018,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         nonReleaseToggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(nonReleaseToggle.name)),
@@ -1986,8 +2029,7 @@ test('should calculate average time to production ignoring some items', async ()
     await featureToggleService.createFeatureToggle(
         project.id,
         previouslyDeleteToggle,
-        user.email,
-        opsUser.id,
+        auditUser,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent(makeEvent(previouslyDeleteToggle.name)),
@@ -2009,7 +2051,7 @@ test('should get correct amount of features created in current and past window',
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const toggles = [
         { name: 'features-created' },
@@ -2023,8 +2065,7 @@ test('should get correct amount of features created in current and past window',
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                auditUser,
             );
         }),
     );
@@ -2047,7 +2088,7 @@ test('should get correct amount of features archived in current and past window'
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const toggles = [
         { name: 'features-archived' },
@@ -2061,8 +2102,7 @@ test('should get correct amount of features archived in current and past window'
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                auditUser,
             );
         }),
     );
@@ -2095,7 +2135,7 @@ test('should get correct amount of project members for current and past window',
         defaultStickiness: 'default',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const users = [
         { name: 'memberOne', email: 'memberOne@getunleash.io' },
@@ -2116,7 +2156,7 @@ test('should get correct amount of project members for current and past window',
                 project.id,
                 memberRole.id,
                 createdUser.id,
-                'test',
+                auditUser,
             ),
         ),
     );
@@ -2135,7 +2175,7 @@ test('should return average time to production per toggle', async () => {
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const toggles = [
         { name: 'average-prod-time-pt', subdays: 7 },
@@ -2150,8 +2190,7 @@ test('should return average time to production per toggle', async () => {
             return featureToggleService.createFeatureToggle(
                 project.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                auditUser,
             );
         }),
     );
@@ -2164,8 +2203,7 @@ test('should return average time to production per toggle', async () => {
                     project: project.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser,
                 }),
             );
         }),
@@ -2201,8 +2239,8 @@ test('should return average time to production per toggle for a specific project
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project1, user);
-    await projectService.createProject(project2, user);
+    await projectService.createProject(project1, user, auditUser);
+    await projectService.createProject(project2, user, auditUser);
 
     const togglesProject1 = [
         { name: 'average-prod-time-pt-10', subdays: 7 },
@@ -2220,8 +2258,7 @@ test('should return average time to production per toggle for a specific project
             return featureToggleService.createFeatureToggle(
                 project1.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                auditUser,
             );
         }),
     );
@@ -2231,8 +2268,7 @@ test('should return average time to production per toggle for a specific project
             return featureToggleService.createFeatureToggle(
                 project2.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                auditUser,
             );
         }),
     );
@@ -2245,8 +2281,7 @@ test('should return average time to production per toggle for a specific project
                     project: project1.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser,
                 }),
             );
         }),
@@ -2260,8 +2295,7 @@ test('should return average time to production per toggle for a specific project
                     project: project2.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser,
                 }),
             );
         }),
@@ -2298,7 +2332,7 @@ test('should return average time to production per toggle and include archived t
         defaultStickiness: 'clientId',
     };
 
-    await projectService.createProject(project1, user);
+    await projectService.createProject(project1, user, auditUser);
 
     const togglesProject1 = [
         { name: 'average-prod-time-pta-10', subdays: 7 },
@@ -2311,8 +2345,7 @@ test('should return average time to production per toggle and include archived t
             return featureToggleService.createFeatureToggle(
                 project1.id,
                 toggle,
-                user.email,
-                opsUser.id,
+                auditUser,
             );
         }),
     );
@@ -2325,8 +2358,7 @@ test('should return average time to production per toggle and include archived t
                     project: project1.id,
                     featureName: toggle.name,
                     environment: 'default',
-                    createdBy: 'Fredrik',
-                    createdByUserId: opsUser.id,
+                    auditUser,
                 }),
             );
         }),
@@ -2340,7 +2372,11 @@ test('should return average time to production per toggle and include archived t
         ),
     );
 
-    await featureToggleService.archiveToggle('average-prod-time-pta-12', user);
+    await featureToggleService.archiveToggle(
+        'average-prod-time-pta-12',
+        user,
+        auditUser,
+    );
 
     const resultProject1 = await projectService.getDoraMetrics(project1.id);
 
@@ -2364,9 +2400,12 @@ describe('feature flag naming patterns', () => {
             featureNaming,
         };
 
-        await projectService.createProject(project, user);
+        await projectService.createProject(project, user, auditUser);
 
-        await projectService.updateProjectEnterpriseSettings(project, user);
+        await projectService.updateProjectEnterpriseSettings(
+            project,
+            extractAuditInfoFromUser(user),
+        );
 
         expect(
             (await projectService.getProject(project.id)).featureNaming,
@@ -2378,7 +2417,7 @@ describe('feature flag naming patterns', () => {
                 ...project,
                 featureNaming: { pattern: newPattern },
             },
-            user,
+            extractAuditInfoFromUser(user),
         );
         const { events } = await eventService.getEvents();
         expect(events[0]).toMatchObject({
@@ -2404,7 +2443,7 @@ test('deleting a project with archived toggles should result in any remaining ar
     };
     const toggleName = 'archived-and-deleted';
 
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     await stores.featureToggleStore.create(project.id, {
         name: toggleName,
@@ -2412,11 +2451,11 @@ test('deleting a project with archived toggles should result in any remaining ar
     });
 
     await stores.featureToggleStore.archive(toggleName);
-    await projectService.deleteProject(project.id, user);
+    await projectService.deleteProject(project.id, user, auditUser);
 
     // bring the project back again, previously this would allow those archived toggles to be resurrected
     // we now expect them to be deleted correctly
-    await projectService.createProject(project, user);
+    await projectService.createProject(project, user, auditUser);
 
     const toggles = await stores.featureToggleStore.getAll({
         project: project.id,
@@ -2432,8 +2471,8 @@ test('deleting a project with no archived toggles should not result in an error'
         name: 'project-with-nothing',
     };
 
-    await projectService.createProject(project, user);
-    await projectService.deleteProject(project.id, user);
+    await projectService.createProject(project, user, auditUser);
+    await projectService.deleteProject(project.id, user, auditUser);
 });
 
 test('should get project settings with mode', async () => {
@@ -2463,10 +2502,13 @@ test('should get project settings with mode', async () => {
 
     const { mode, id, ...rest } = updatedProject;
 
-    await projectService.createProject(projectOne, user);
-    await projectService.createProject(projectTwo, user);
-    await projectService.updateProject({ id, ...rest }, user);
-    await projectService.updateProjectEnterpriseSettings({ mode, id }, user);
+    await projectService.createProject(projectOne, user, auditUser);
+    await projectService.createProject(projectTwo, user, auditUser);
+    await projectService.updateProject({ id, ...rest }, auditUser);
+    await projectService.updateProjectEnterpriseSettings(
+        { mode, id },
+        extractAuditInfoFromUser(user),
+    );
 
     const projects = await projectService.getProjects();
     const foundProjectOne = projects.find(
@@ -2480,4 +2522,97 @@ test('should get project settings with mode', async () => {
     expect(foundProjectOne!.defaultStickiness).toBe('clientId');
     expect(foundProjectTwo!.mode).toBe('open');
     expect(foundProjectTwo!.defaultStickiness).toBe('default');
+});
+
+describe('create project with environments', () => {
+    const disabledEnv = { name: 'disabled', type: 'production' };
+
+    const extraEnvs = [
+        { name: 'development', type: 'development' },
+        { name: 'production', type: 'production' },
+        { name: 'staging', type: 'staging' },
+        { name: 'QA', type: 'QA' },
+        disabledEnv,
+    ];
+
+    const allEnabledEnvs = [
+        'QA',
+        'default',
+        'development',
+        'production',
+        'staging',
+    ];
+
+    beforeEach(async () => {
+        await Promise.all(
+            extraEnvs.map((env) => stores.environmentStore.create(env)),
+        );
+
+        await stores.environmentStore.disable([
+            { ...disabledEnv, enabled: true, protected: false, sortOrder: 5 },
+        ]);
+    });
+
+    afterAll(async () => {
+        await Promise.all(
+            extraEnvs.map((env) => stores.environmentStore.delete(env.name)),
+        );
+    });
+
+    const createProjectWithEnvs = async (environments) => {
+        const project = await projectService.createProject(
+            {
+                id: randomId(),
+                name: 'New name',
+                mode: 'open' as const,
+                defaultStickiness: 'default',
+                ...(environments ? { environments } : {}),
+            },
+            user,
+            auditUser,
+        );
+
+        const projectEnvs = (
+            await projectService.getProjectOverview(project.id)
+        ).environments.map(({ environment }) => environment);
+
+        projectEnvs.sort();
+        return projectEnvs;
+    };
+
+    test('no environments specified means all enabled envs are enabled', async () => {
+        const created = await createProjectWithEnvs(undefined);
+
+        expect(created).toMatchObject(allEnabledEnvs);
+    });
+
+    test('an empty list throws an error', async () => {
+        // You shouldn't be allowed to pass an empty list via the API.
+        // This test checks what happens in the event that an empty
+        // list manages to sneak in.
+        await expect(createProjectWithEnvs([])).rejects.toThrow(BadDataError);
+    });
+
+    test('it only enables the envs it is asked to enable', async () => {
+        const selectedEnvs = ['development', 'production'];
+        const created = await createProjectWithEnvs(selectedEnvs);
+
+        expect(created).toMatchObject(selectedEnvs);
+    });
+
+    test('it enables deprecated environments when asked explicitly', async () => {
+        const selectedEnvs = ['disabled'];
+        const created = await createProjectWithEnvs(selectedEnvs);
+
+        expect(created).toMatchObject(selectedEnvs);
+    });
+
+    test("envs that don't exist cause errors", async () => {
+        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
+            BadDataError,
+        );
+        await expect(createProjectWithEnvs(['fake-project'])).rejects.toThrow(
+            /'fake-project'/,
+        );
+    });
 });

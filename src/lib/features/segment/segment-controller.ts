@@ -9,13 +9,13 @@ import type {
 } from '../../server-impl';
 import {
     type AdminSegmentSchema,
-    type UpdateFeatureStrategySegmentsSchema,
-    type UpsertSegmentSchema,
     adminSegmentSchema,
     createRequestSchema,
     createResponseSchema,
     resourceCreatedResponseSchema,
     updateFeatureStrategySchema,
+    type UpdateFeatureStrategySegmentsSchema,
+    type UpsertSegmentSchema,
 } from '../../openapi';
 import {
     emptyResponse,
@@ -29,10 +29,10 @@ import {
     DELETE_SEGMENT,
     type IFlagResolver,
     NONE,
+    serializeDates,
     UPDATE_FEATURE_STRATEGY,
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
-    serializeDates,
 } from '../../types';
 import {
     segmentsSchema,
@@ -396,7 +396,7 @@ export class SegmentsController extends Controller {
         if (segmentIsInUse) {
             res.status(409).send();
         } else {
-            await this.segmentService.delete(id, req.user);
+            await this.segmentService.delete(id, req.user, req.audit);
             res.status(204).send();
         }
     }
@@ -412,7 +412,12 @@ export class SegmentsController extends Controller {
             project: req.body.project,
             constraints: req.body.constraints,
         };
-        await this.segmentService.update(id, updateRequest, req.user);
+        await this.segmentService.update(
+            id,
+            updateRequest,
+            req.user,
+            req.audit,
+        );
         res.status(204).send();
     }
 
@@ -436,7 +441,7 @@ export class SegmentsController extends Controller {
         const createRequest = req.body;
         const segment = await this.segmentService.create(
             createRequest,
-            req.user,
+            req.audit,
         );
         this.openApiService.respondWithValidation(
             201,

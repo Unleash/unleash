@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import type {
+    IAuditUser,
     IUnleashConfig,
     IUnleashServices,
     IUnleashStores,
@@ -266,8 +267,7 @@ export class FrontendApiService {
 
     async setFrontendSettings(
         value: FrontendSettings,
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const error = validateOrigins(value.frontendApiOrigins);
         if (error) {
@@ -276,8 +276,7 @@ export class FrontendApiService {
         await this.services.settingService.insert(
             frontendSettingsKey,
             value,
-            createdBy,
-            createdByUserId,
+            auditUser,
             false,
         );
     }

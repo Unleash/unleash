@@ -13,7 +13,7 @@ import SettingService from '../../../lib/services/setting-service';
 import FakeSettingStore from '../../fixtures/fake-setting-store';
 import { GroupService } from '../../../lib/services/group-service';
 import { EventService } from '../../../lib/services';
-import type { IUnleashStores } from '../../../lib/types';
+import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -57,15 +57,21 @@ beforeAll(async () => {
         settingService,
     });
 
-    adminUser = await userService.createUser({
-        username: 'admin@test.com',
-        rootRole: 1,
-    });
+    adminUser = await userService.createUser(
+        {
+            username: 'admin@test.com',
+            rootRole: 1,
+        },
+        TEST_AUDIT_USER,
+    );
 
-    userToCreateResetFor = await userService.createUser({
-        username: 'test@test.com',
-        rootRole: 2,
-    });
+    userToCreateResetFor = await userService.createUser(
+        {
+            username: 'test@test.com',
+            rootRole: 2,
+        },
+        TEST_AUDIT_USER,
+    );
     userIdToCreateResetFor = userToCreateResetFor.id;
 });
 
@@ -78,7 +84,7 @@ afterAll(async () => {
 test('Should create a reset link', async () => {
     const url = await resetTokenService.createResetPasswordUrl(
         userIdToCreateResetFor,
-        adminUser.username,
+        adminUser.username!,
     );
 
     expect(url.toString().substring(0, url.toString().indexOf('='))).toBe(

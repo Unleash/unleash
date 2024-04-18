@@ -5,7 +5,7 @@ import {
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { simpleAuthSettingsKey } from '../../../../lib/types/settings/simple-auth-settings';
-import { randomId } from '../../../../lib/util/random-id';
+import { TEST_AUDIT_USER } from '../../../../lib/types';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -59,8 +59,7 @@ test('gets ui config with frontendSettings', async () => {
     const frontendApiOrigins = ['https://example.net'];
     await app.services.frontendApiService.setFrontendSettings(
         { frontendApiOrigins },
-        randomId(),
-        -9999,
+        TEST_AUDIT_USER,
     );
     await app.request
         .get('/api/admin/ui-config')

@@ -1,5 +1,4 @@
 import { extractUsernameFromUser } from '../util';
-import type { IApiUser } from './api-user';
 import type { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import type { IApiToken } from './models/api-token';
 import type { IUser, IUserWithRootRole } from './user';
@@ -345,17 +344,6 @@ export interface IBaseEvent {
     type: IEventType;
     createdBy: string;
     createdByUserId: number;
-    project?: string;
-    environment?: string;
-    featureName?: string;
-    data?: any;
-    preData?: any;
-    tags?: ITag[];
-}
-
-export interface IUserEvent {
-    type: IEventType;
-    byUser: IUser | IApiUser;
     project?: string;
     environment?: string;
     featureName?: string;

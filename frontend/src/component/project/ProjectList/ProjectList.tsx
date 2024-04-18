@@ -158,7 +158,7 @@ export const ProjectListNew = () => {
 
     const projectsLists = useMemo(() => {
         if (!splitProjectList) {
-            return { my: [], other: projects };
+            return { my: [], other: filteredProjects };
         }
 
         const my: IProjectCard[] = [];

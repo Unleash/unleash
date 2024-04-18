@@ -1,7 +1,6 @@
-import type { IApiUser } from './api-user';
 import type { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import type { IApiToken } from './models/api-token';
-import type { IAuditUser, IUser, IUserWithRootRole } from './user';
+import type { IAuditUser, IUserWithRootRole } from './user';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -348,17 +347,6 @@ export interface IBaseEvent {
     environment?: string;
     featureName?: string;
     ip?: string;
-    data?: any;
-    preData?: any;
-    tags?: ITag[];
-}
-
-export interface IUserEvent {
-    type: IEventType;
-    byUser: IUser | IApiUser;
-    project?: string;
-    environment?: string;
-    featureName?: string;
     data?: any;
     preData?: any;
     tags?: ITag[];

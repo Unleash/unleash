@@ -283,6 +283,7 @@ export default class ProjectService {
     async createProject(
         newProject: CreateProject,
         user: IUser,
+        enableChangeRequestsForSpecifiedEnvironments: () => Promise<void> = async () => {},
     ): Promise<IProject> {
         await this.validateProjectEnvironments(newProject.environments);
 
@@ -307,6 +308,8 @@ export default class ProjectService {
                 await this.featureEnvironmentStore.connectProject(env, data.id);
             }),
         );
+
+        await enableChangeRequestsForSpecifiedEnvironments();
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 

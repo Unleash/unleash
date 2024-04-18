@@ -38,7 +38,7 @@ export const ProjectCardIcon: VFC<IProjectCardIconProps> = ({ mode }) => {
         return (
             <StyledIconBox data-loading>
                 <HtmlTooltip
-                    title='This projects collaboration mode is set to private. The project and associated feature toggles can only be seen by you and the members of the project.'
+                    title='This project's collaboration mode is set to private. The project and associated feature flags can only be seen by members of the project.'
                     arrow
                 >
                     <StyledVisibilityIcon />

@@ -54,6 +54,7 @@ process.nextTick(async () => {
                         disableShowContextFieldSelectionValues: false,
                         variantDependencies: true,
                         projectOverviewRefactorFeedback: true,
+                        applicationOverviewNewQuery: true,
                     },
                 },
                 authentication: {

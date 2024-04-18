@@ -10,6 +10,9 @@ import type { Logger, LogProvider } from '../logger';
 import type { Db } from './db';
 import type { IApplicationOverview } from '../features/metrics/instance/models';
 import { applySearchFilters } from '../features/feature-search/search-utils';
+import type { IFlagResolver } from '../types';
+import metricsHelper from '../util/metrics-helper';
+import { DB_TIME } from '../metric-events';
 
 const COLUMNS = [
     'app_name',
@@ -125,9 +128,23 @@ export default class ClientApplicationsStore
 
     private logger: Logger;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private timer: Function;
+
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('client-applications-store.ts');
+        this.timer = (action: string) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'client-applications',
+                action,
+            });
     }
 
     async upsert(details: Partial<IClientApplication>): Promise<void> {
@@ -291,6 +308,60 @@ export default class ClientApplicationsStore
     async getApplicationOverview(
         appName: string,
     ): Promise<IApplicationOverview> {
+        if (!this.flagResolver.isEnabled('applicationOverviewNewQuery')) {
+            return this.getOldApplicationOverview(appName);
+        }
+        const stopTimer = this.timer('getApplicationOverview');
+        const query = this.db
+            .with('metrics', (qb) => {
+                qb.select([
+                    'cme.app_name',
+                    'cme.environment',
+                    'f.project',
+                    this.db.raw(
+                        'array_agg(DISTINCT cme.feature_name) as features',
+                    ),
+                ])
+                    .from('client_metrics_env as cme')
+                    .leftJoin('features as f', 'f.name', 'cme.feature_name')
+                    .groupBy('cme.app_name', 'cme.environment', 'f.project');
+            })
+            .select([
+                'm.project',
+                'm.environment',
+                'm.features',
+                'ci.instance_id',
+                'ci.sdk_version',
+                'ci.last_seen',
+                'a.strategies',
+            ])
+            .from({ a: 'client_applications' })
+            .leftJoin('metrics as m', 'm.app_name', 'a.app_name')
+            .leftJoin('client_instances as ci', function () {
+                this.on('ci.app_name', '=', 'm.app_name').andOn(
+                    'ci.environment',
+                    '=',
+                    'm.environment',
+                );
+            })
+            .where('a.app_name', appName)
+            .orderBy('m.environment', 'asc');
+        const rows = await query;
+        stopTimer();
+        if (!rows.length) {
+            throw new NotFoundError(`Could not find appName=${appName}`);
+        }
+        const existingStrategies: string[] = await this.db
+            .select('name')
+            .from('strategies')
+            .pluck('name');
+        return this.mapApplicationOverviewData(rows, existingStrategies);
+    }
+
+    async getOldApplicationOverview(
+        appName: string,
+    ): Promise<IApplicationOverview> {
+        const stopTimer = this.timer('getApplicationOverviewOld');
         const query = this.db
             .with('metrics', (qb) => {
                 qb.distinct(
@@ -321,6 +392,7 @@ export default class ClientApplicationsStore
             .where('a.app_name', appName)
             .orderBy('cme.environment', 'asc');
         const rows = await query;
+        stopTimer();
         if (!rows.length) {
             throw new NotFoundError(`Could not find appName=${appName}`);
         }
@@ -332,6 +404,96 @@ export default class ClientApplicationsStore
     }
 
     mapApplicationOverviewData(
+        rows: any[],
+        existingStrategies: string[],
+    ): IApplicationOverview {
+        if (!this.flagResolver.isEnabled('applicationOverviewNewQuery')) {
+            return this.mapOldApplicationOverviewData(rows, existingStrategies);
+        }
+        const featureCount = new Set(rows.flatMap((row) => row.features)).size;
+        const missingStrategies: Set<string> = new Set();
+
+        const environments = rows.reduce((acc, row) => {
+            const {
+                environment,
+                instance_id,
+                sdk_version,
+                last_seen,
+                project,
+                features,
+                strategies,
+            } = row;
+
+            if (!environment) return acc;
+
+            strategies.forEach((strategy) => {
+                if (
+                    !DEPRECATED_STRATEGIES.includes(strategy) &&
+                    !existingStrategies.includes(strategy)
+                ) {
+                    missingStrategies.add(strategy);
+                }
+            });
+
+            const featuresNotMappedToProject = !project;
+
+            let env = acc.find((e) => e.name === environment);
+            if (!env) {
+                env = {
+                    name: environment,
+                    instanceCount: instance_id ? 1 : 0,
+                    sdks: sdk_version ? [sdk_version] : [],
+                    lastSeen: last_seen,
+                    uniqueInstanceIds: new Set(
+                        instance_id ? [instance_id] : [],
+                    ),
+                    issues: {
+                        missingFeatures: featuresNotMappedToProject
+                            ? features
+                            : [],
+                    },
+                };
+                acc.push(env);
+            } else {
+                if (instance_id) {
+                    env.uniqueInstanceIds.add(instance_id);
+                    env.instanceCount = env.uniqueInstanceIds.size;
+                }
+                if (featuresNotMappedToProject) {
+                    env.issues.missingFeatures = features;
+                }
+                if (sdk_version && !env.sdks.includes(sdk_version)) {
+                    env.sdks.push(sdk_version);
+                }
+                if (new Date(last_seen) > new Date(env.lastSeen)) {
+                    env.lastSeen = last_seen;
+                }
+            }
+
+            return acc;
+        }, []);
+        environments.forEach((env) => {
+            delete env.uniqueInstanceIds;
+            env.sdks.sort();
+        });
+
+        return {
+            projects: [
+                ...new Set(
+                    rows
+                        .filter((row) => row.project != null)
+                        .map((row) => row.project),
+                ),
+            ],
+            featureCount,
+            environments,
+            issues: {
+                missingStrategies: [...missingStrategies],
+            },
+        };
+    }
+
+    private mapOldApplicationOverviewData(
         rows: any[],
         existingStrategies: string[],
     ): IApplicationOverview {

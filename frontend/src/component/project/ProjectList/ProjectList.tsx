@@ -29,7 +29,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
-const ProjectsGroup = styled('article')(({ theme }) => ({
+const StyledProjectGroupContainer = styled('article')(({ theme }) => ({
     h3: {
         marginBlockEnd: theme.spacing(2),
     },
@@ -201,12 +201,12 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
-    const ProjectSection: React.FC<{
+    const ProjectGroup: React.FC<{
         sectionTitle?: string;
         projects: IProjectCard[];
     }> = ({ sectionTitle, projects }) => {
         return (
-            <ProjectsGroup>
+            <StyledProjectGroupContainer>
                 <ConditionallyRender
                     condition={Boolean(sectionTitle)}
                     show={
@@ -289,7 +289,7 @@ export const ProjectListNew = () => {
                         }
                     />
                 </div>
-            </ProjectsGroup>
+            </StyledProjectGroupContainer>
         );
     };
 
@@ -345,18 +345,18 @@ export const ProjectListNew = () => {
                 condition={splitProjectList}
                 show={
                     <>
-                        <ProjectSection
+                        <ProjectGroup
                             sectionTitle='My projects'
                             projects={projectsLists.my}
                         />
 
-                        <ProjectSection
+                        <ProjectGroup
                             sectionTitle='Other projects'
                             projects={projectsLists.other}
                         />
                     </>
                 }
-                elseShow={<ProjectSection projects={filteredProjects} />}
+                elseShow={<ProjectGroup projects={filteredProjects} />}
             />
         </PageContent>
     );

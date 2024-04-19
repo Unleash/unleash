@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import useToast from 'hooks/useToast';
@@ -25,7 +25,8 @@ const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
     marginLeft: 'auto',
 }));
 
-export const ProjectCardFooter: VFC<IProjectCardFooterProps> = ({
+export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
+    children,
     id,
     isFavorite = false,
 }) => {
@@ -48,6 +49,7 @@ export const ProjectCardFooter: VFC<IProjectCardFooterProps> = ({
     };
     return (
         <StyledFooter>
+            {children}
             <StyledFavoriteIconButton
                 onClick={onFavorite}
                 isFavorite={isFavorite}

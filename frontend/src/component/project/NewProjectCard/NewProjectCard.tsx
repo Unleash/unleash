@@ -23,6 +23,7 @@ import {
 } from './NewProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectCardIcon } from './ProjectCardIcon/ProjectCardIcon';
+import { ProjectOwners } from './ProjectOwners/ProjectOwners';
 
 interface IProjectCardProps {
     name: string;
@@ -33,6 +34,10 @@ interface IProjectCardProps {
     onHover: () => void;
     isFavorite?: boolean;
     mode: string;
+    owners: {
+        users: any[];
+        groups: any[];
+    };
 }
 
 export const ProjectCard = ({
@@ -44,6 +49,7 @@ export const ProjectCard = ({
     id,
     mode,
     isFavorite = false,
+    owners,
 }: IProjectCardProps) => {
     const { isOss } = useUiConfig();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -128,7 +134,9 @@ export const ProjectCard = ({
                     />
                 </StyledDivInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter id={id} isFavorite={isFavorite} />
+            <ProjectCardFooter id={id} isFavorite={isFavorite}>
+                <ProjectOwners owners={owners} />
+            </ProjectCardFooter>
             <DeleteProjectDialogue
                 project={id}
                 open={showDelDialog}

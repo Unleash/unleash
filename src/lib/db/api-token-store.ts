@@ -194,10 +194,12 @@ export class ApiTokenStore implements IApiTokenStore {
     }
 
     async get(key: string): Promise<IApiToken> {
+        const stopTimer = this.timer('get-by-secret');
         const row = await this.makeTokenProjectQuery().where(
             'tokens.secret',
             key,
         );
+        stopTimer();
         return toTokens(row)[0];
     }
 

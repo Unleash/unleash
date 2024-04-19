@@ -31,6 +31,8 @@ import {
 import { omitKeys } from '../util';
 import type EventService from '../features/events/event-service';
 import { addMinutes, isPast } from 'date-fns';
+import metricsHelper from '../util/metrics-helper';
+import { FUNCTION_TIME } from '../metric-events';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -59,13 +61,13 @@ export class ApiTokenService {
 
     private queryAfter = new Map<string, Date>();
 
-    private initialized = false;
-
     private eventService: EventService;
 
     private lastSeenSecrets: Set<string> = new Set<string>();
 
     private flagResolver: IFlagResolver;
+
+    private timer: Function;
 
     constructor(
         {
@@ -74,7 +76,7 @@ export class ApiTokenService {
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<
             IUnleashConfig,
-            'getLogger' | 'authentication' | 'flagResolver'
+            'getLogger' | 'authentication' | 'flagResolver' | 'eventBus'
         >,
         eventService: EventService,
     ) {
@@ -93,6 +95,11 @@ export class ApiTokenService {
                 this.initApiTokens(config.authentication.initApiTokens),
             );
         }
+        this.timer = (functionName: string) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'ApiTokenService',
+                functionName,
+            });
     }
 
     /**
@@ -140,10 +147,12 @@ export class ApiTokenService {
             // prevent querying the same invalid secret multiple times. Expire after 5 minutes
             this.queryAfter.set(secret, addMinutes(new Date(), 5));
 
+            const stopCacheTimer = this.timer('getTokenWithCache.query');
             token = await this.store.get(secret);
             if (token) {
                 this.activeTokens.push(token);
             }
+            stopCacheTimer();
         }
 
         return token;

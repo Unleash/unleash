@@ -49,7 +49,7 @@ export const ProjectGroup: React.FC<{
     sectionTitle?: string;
     projects: IProjectCard[];
     loading: boolean;
-    searchValue?: string;
+    searchValue: string;
     handleHover: (id: string) => void;
 }> = ({ sectionTitle, projects, loading, searchValue, handleHover }) => {
     const useNewProjectCards = useUiFlag('projectsListNewCards');

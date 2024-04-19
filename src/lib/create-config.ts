@@ -183,35 +183,15 @@ const dateHandlingCallback = (connection, callback) => {
     });
 };
 
-const databaseSslFromFile = (caFilePath: string) => {
-    try {
-        return readFileSync(caFilePath).toJSON();
-    } catch (e) {
-        return {};
-    }
-};
-
-const filesExists = (...filePath: string[]): boolean => {
-    return filePath.every((file) => fs.existsSync(file));
-};
-
 const databaseSsl = () => {
     if (process.env.DATABASE_SSL != null) {
         return JSON.parse(process.env.DATABASE_SSL);
-    } else if (
-        process.env.DATABASE_SSL_CA_CONFIG != null &&
-        filesExists(process.env.DATABASE_SSL_CA_CONFIG)
-    ) {
-        return databaseSslFromFile(process.env.DATABASE_SSL_CA_CONFIG);
+    } else if (process.env.DATABASE_SSL_CA_CONFIG != null) {
+        return readFileSync(process.env.DATABASE_SSL_CA_CONFIG).toJSON();
     } else if (
         process.env.DATABASE_SSL_CA_FILE != null &&
         process.env.DATABASE_SSL_KEY_FILE != null &&
-        process.env.DATABASE_SSL_CERT_FILE != null &&
-        filesExists(
-            process.env.DATABASE_SSL_CA_FILE,
-            process.env.DATABASE_SSL_KEY_FILE,
-            process.env.DATABASE_SSL_CERT_FILE,
-        )
+        process.env.DATABASE_SSL_CERT_FILE != null
     ) {
         return {
             rejectUnauthorized: parseEnvVarBoolean(

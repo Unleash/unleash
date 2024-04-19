@@ -19,7 +19,6 @@ import { styled } from '@mui/material';
 import { InitialRedirect } from './InitialRedirect';
 import { InternalBanners } from './banners/internalBanners/InternalBanners';
 import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
-import { EdgeUpgradeBanner } from './banners/EdgeUpgradeBanner/EdgeUpgradeBanner';
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
 import { OutdatedSdksBanner } from './banners/OutdatedSdksBanner/OutdatedSdksBanner';
@@ -70,7 +69,6 @@ export const App = () => {
                                 <LicenseBanner />
                                 <ExternalBanners />
                                 <InternalBanners />
-                                <EdgeUpgradeBanner />
                                 <ConditionallyRender
                                     condition={outdatedSdksBannerEnabled}
                                     show={<OutdatedSdksBanner />}

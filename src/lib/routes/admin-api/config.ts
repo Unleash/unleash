@@ -152,9 +152,6 @@ class ConfigController extends Controller {
         const flags = {
             ...this.config.ui.flags,
             ...expFlags,
-            displayUpgradeEdgeBanner:
-                usesOldEdge ||
-                this.config.flagResolver.isEnabled('displayEdgeBanner'),
         };
 
         const response: UiConfigSchema = {

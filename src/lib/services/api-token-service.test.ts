@@ -18,31 +18,6 @@ import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../../lib/features';
 import { extractAuditInfoFromUser } from '../util';
 
-const token: IApiTokenCreate = {
-    environment: 'default',
-    projects: ['*'],
-    secret: '*:*:some-random-string',
-    type: ApiTokenType.CLIENT,
-    tokenName: 'new-token-by-another-instance',
-    expiresAt: undefined,
-};
-
-const setup = (options?: IUnleashOptions) => {
-    const config: IUnleashConfig = createTestConfig(options);
-    const apiTokenStore = new FakeApiTokenStore();
-    const environmentStore = new FakeEnvironmentStore();
-
-    const apiTokenService = new ApiTokenService(
-        { apiTokenStore, environmentStore },
-        config,
-        createFakeEventsService(config),
-    );
-    return {
-        apiTokenService,
-        apiTokenStore,
-    };
-};
-
 test('Should init api token', async () => {
     const token = {
         environment: '*',
@@ -223,6 +198,31 @@ test('getUserForToken should get a user with admin token user id and token name'
 });
 
 describe('API token getTokenWithCache', () => {
+    const token: IApiTokenCreate = {
+        environment: 'default',
+        projects: ['*'],
+        secret: '*:*:some-random-string',
+        type: ApiTokenType.CLIENT,
+        tokenName: 'new-token-by-another-instance',
+        expiresAt: undefined,
+    };
+
+    const setup = (options?: IUnleashOptions) => {
+        const config: IUnleashConfig = createTestConfig(options);
+        const apiTokenStore = new FakeApiTokenStore();
+        const environmentStore = new FakeEnvironmentStore();
+
+        const apiTokenService = new ApiTokenService(
+            { apiTokenStore, environmentStore },
+            config,
+            createFakeEventsService(config),
+        );
+        return {
+            apiTokenService,
+            apiTokenStore,
+        };
+    };
+
     test('should return the token and perform only one db query', async () => {
         const { apiTokenService, apiTokenStore } = setup();
         const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');

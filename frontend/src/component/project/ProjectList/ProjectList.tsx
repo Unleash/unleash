@@ -1,13 +1,10 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard as LegacyProjectCard } from '../ProjectCard/ProjectCard';
-import { ProjectCard as NewProjectCard } from '../NewProjectCard/NewProjectCard';
 import type { IProjectCard } from 'interfaces/project';
-import loadingData from './loadingData';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -16,8 +13,7 @@ import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import Add from '@mui/icons-material/Add';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { TablePlaceholder } from 'component/common/Table';
-import { useMediaQuery, styled, Typography } from '@mui/material';
+import { useMediaQuery, styled } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
@@ -29,47 +25,11 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { groupProjects } from './group-projects';
-
-const StyledProjectGroupContainer = styled('article')(({ theme }) => ({
-    h3: {
-        marginBlockEnd: theme.spacing(2),
-    },
-
-    '&+&': {
-        marginBlockStart: theme.spacing(4),
-    },
-}));
-
-/**
- * @deprecated Remove after with `projectsListNewCards` flag
- */
-const StyledDivContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
-    [theme.breakpoints.down('sm')]: {
-        justifyContent: 'center',
-    },
-}));
-
-const StyledGridContainer = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-    gap: theme.spacing(2),
-}));
+import { ProjectGroup } from './ProjectGroup';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '400px',
     marginBottom: theme.spacing(2),
-}));
-
-const StyledCardLink = styled(Link)(({ theme }) => ({
-    color: 'inherit',
-    textDecoration: 'none',
-    border: 'none',
-    padding: '0',
-    background: 'transparent',
-    fontFamily: theme.typography.fontFamily,
-    pointer: 'cursor',
 }));
 
 type PageQueryType = Partial<Record<'search', string>>;
@@ -136,7 +96,6 @@ export const ProjectListNew = () => {
     );
 
     const splitProjectList = useUiFlag('projectListFilterMyProjects');
-    const projectsListNewCards = useUiFlag('projectsListNewCards');
     const myProjects = new Set(useProfile().profile?.projects || []);
 
     useEffect(() => {
@@ -200,105 +159,19 @@ export const ProjectListNew = () => {
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
 
-    const StyledItemsContainer = projectsListNewCards
-        ? StyledGridContainer
-        : StyledDivContainer;
-    const ProjectCard = projectsListNewCards
-        ? NewProjectCard
-        : LegacyProjectCard;
-
-    const ProjectGroup: React.FC<{
+    const ProjectGroupComponent = (props: {
         sectionTitle?: string;
         projects: IProjectCard[];
-    }> = ({ sectionTitle, projects }) => {
+    }) => {
         return (
-            <StyledProjectGroupContainer>
-                <ConditionallyRender
-                    condition={Boolean(sectionTitle)}
-                    show={
-                        <Typography component='h3'>{sectionTitle}</Typography>
-                    }
-                />
-                <ConditionallyRender
-                    condition={projects.length < 1 && !loading}
-                    show={
-                        <ConditionallyRender
-                            condition={searchValue?.length > 0}
-                            show={
-                                <TablePlaceholder>
-                                    No projects found matching &ldquo;
-                                    {searchValue}
-                                    &rdquo;
-                                </TablePlaceholder>
-                            }
-                            elseShow={
-                                <TablePlaceholder>
-                                    No projects available.
-                                </TablePlaceholder>
-                            }
-                        />
-                    }
-                    elseShow={
-                        <StyledItemsContainer>
-                            <ConditionallyRender
-                                condition={loading}
-                                show={() =>
-                                    loadingData.map((project: IProjectCard) => (
-                                        <ProjectCard
-                                            data-loading
-                                            onHover={() => {}}
-                                            key={project.id}
-                                            name={project.name}
-                                            id={project.id}
-                                            mode={project.mode}
-                                            memberCount={2}
-                                            health={95}
-                                            featureCount={4}
-                                        />
-                                    ))
-                                }
-                                elseShow={() => (
-                                    <>
-                                        {projects.map(
-                                            (project: IProjectCard) => (
-                                                <StyledCardLink
-                                                    key={project.id}
-                                                    to={`/projects/${project.id}`}
-                                                >
-                                                    <ProjectCard
-                                                        onHover={() =>
-                                                            handleHover(
-                                                                project.id,
-                                                            )
-                                                        }
-                                                        name={project.name}
-                                                        mode={project.mode}
-                                                        memberCount={
-                                                            project.memberCount ??
-                                                            0
-                                                        }
-                                                        health={project.health}
-                                                        id={project.id}
-                                                        featureCount={
-                                                            project.featureCount
-                                                        }
-                                                        isFavorite={
-                                                            project.favorite
-                                                        }
-                                                    />
-                                                </StyledCardLink>
-                                            ),
-                                        )}
-                                    </>
-                                )}
-                            />
-                        </StyledItemsContainer>
-                    }
-                />
-            </StyledProjectGroupContainer>
+            <ProjectGroup
+                loading={loading}
+                searchValue={searchValue}
+                handleHover={handleHover}
+                {...props}
+            />
         );
     };
-
     return (
         <PageContent
             isLoading={loading}
@@ -351,18 +224,18 @@ export const ProjectListNew = () => {
                 condition={splitProjectList}
                 show={
                     <>
-                        <ProjectGroup
+                        <ProjectGroupComponent
                             sectionTitle='My projects'
                             projects={groupedProjects.myProjects}
                         />
 
-                        <ProjectGroup
+                        <ProjectGroupComponent
                             sectionTitle='Other projects'
                             projects={groupedProjects.otherProjects}
                         />
                     </>
                 }
-                elseShow={<ProjectGroup projects={filteredProjects} />}
+                elseShow={<ProjectGroupComponent projects={filteredProjects} />}
             />
         </PageContent>
     );

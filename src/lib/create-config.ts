@@ -189,19 +189,29 @@ const databaseSsl = () => {
     } else if (process.env.DATABASE_SSL_CA_CONFIG != null) {
         return readFileSync(process.env.DATABASE_SSL_CA_CONFIG).toJSON();
     } else if (
-        process.env.DATABASE_SSL_CA_FILE != null &&
         process.env.DATABASE_SSL_KEY_FILE != null &&
         process.env.DATABASE_SSL_CERT_FILE != null
     ) {
-        return {
+        const opts = {
             rejectUnauthorized: parseEnvVarBoolean(
                 process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
                 true,
             ),
-            ca: readFileSync(process.env.DATABASE_SSL_CA_FILE).toString(),
-            key: readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString(),
-            cert: readFileSync(process.env.DATABASE_SSL_CERT_FILE).toString(),
         };
+        const key = readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString();
+        const cert = readFileSync(
+            process.env.DATABASE_SSL_CERT_FILE,
+        ).toString();
+        if (process.env.DATABASE_SSL_CA_FILE != null) {
+            return {
+                ...opts,
+                ca: readFileSync(process.env.DATABASE_SSL_CA_FILE).toString(),
+                key,
+                cert,
+            };
+        } else {
+            return { ...opts, key, cert };
+        }
     } else {
         return {
             rejectUnauthorized: parseEnvVarBoolean(

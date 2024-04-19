@@ -5,8 +5,10 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import Select from 'component/common/select';
 import Box from '@mui/system/Box';
 import Alert from '@mui/material/Alert';
+import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { flexRow } from 'themes/themeStyles';
 import {
     Chart as ChartJS,
     type ChartOptions,
@@ -46,14 +48,46 @@ type EndpointInfo = {
     order: number;
 };
 
-const StyledHeader = styled('h3')(({ theme }) => ({
+const RowContainer = styled(Box)(({ theme }) => ({
+    ...flexRow,
+}));
+
+const StyledNumbersDiv = styled('div')(({ theme }) => ({
+    marginLeft: 'auto',
     display: 'flex',
-    gap: theme.spacing(1),
+    justifyContent: 'space-between',
+    textDecoration: 'none',
+    color: theme.palette.text.primary,
+}));
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gap: theme.spacing(5),
+}));
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(3),
+    border: `2px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
+
+const StyledCardTitleRow = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    fontSize: theme.fontSizes.bodySize,
-    margin: 0,
-    marginTop: theme.spacing(1),
-    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledCardDescription = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2.5),
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallBody,
+    marginTop: theme.spacing(2),
 }));
 
 const padMonth = (month: number): string =>
@@ -156,7 +190,7 @@ const toChartData = (
 const customHighlightPlugin = {
     id: 'customLine',
     beforeDraw: (chart: Chart) => {
-        const width = 36;
+        const width = 46;
         if (chart.tooltip?.opacity && chart.tooltip.x) {
             const x = chart.tooltip.caretX;
             const yAxis = chart.scales.y;
@@ -289,7 +323,7 @@ export const NetworkTrafficUsage: VFC = () => {
             order: 3,
         },
     };
-
+    const proPlanIncludedRequests = 53000000;
     const selectablePeriods = getSelectablePeriods();
     const record = toPeriodsRecord(selectablePeriods);
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
@@ -316,12 +350,14 @@ export const NetworkTrafficUsage: VFC = () => {
 
     const [datasets, setDatasets] = useState<ChartDatasetType[]>([]);
 
+    const [usageTotal, setUsageTotal] = useState<number>(0);
+
     const data = {
         labels,
         datasets,
     };
 
-    const { isOss } = useUiConfig();
+    const { isOss, isPro } = useUiConfig();
     const flagEnabled = useUiFlag('displayTrafficDataUsage');
 
     useEffect(() => {
@@ -335,43 +371,123 @@ export const NetworkTrafficUsage: VFC = () => {
         }
     }, [period]);
 
+    useEffect(() => {
+        if (data) {
+            const usage = data.datasets.reduce(
+                (acc: number, current: ChartDatasetType) => {
+                    return (
+                        acc +
+                        current.data.reduce(
+                            (acc_inner, current_inner) =>
+                                acc_inner + current_inner,
+                            0,
+                        )
+                    );
+                },
+                0,
+            );
+            setUsageTotal(usage);
+        }
+    }, [data]);
+
     return (
         <ConditionallyRender
             condition={isOss() || !flagEnabled}
             show={<Alert severity='warning'>No data available.</Alert>}
             elseShow={
                 <>
-                    <Grid container component='header' spacing={2}>
-                        <Grid item xs={12} md={10}>
-                            <StyledHeader>
-                                Number of requests to Unleash
-                            </StyledHeader>
+                    <StyledBox>
+                        <Grid container component='header' spacing={2}>
+                            <Grid item xs={12} md={10}>
+                                <Grid item xs={7} md={5.5}>
+                                    <StyledContainer>
+                                        <Grid item>
+                                            <StyledCardTitleRow>
+                                                <b>
+                                                    Number of requests to
+                                                    Unleash
+                                                </b>
+                                            </StyledCardTitleRow>
+                                            <StyledCardDescription>
+                                                <RowContainer>
+                                                    Incoming requests for
+                                                    selection{' '}
+                                                    <StyledNumbersDiv>
+                                                        <ConditionallyRender
+                                                            condition={isPro()}
+                                                            show={
+                                                                <ConditionallyRender
+                                                                    condition={
+                                                                        usageTotal <=
+                                                                        proPlanIncludedRequests
+                                                                    }
+                                                                    show={
+                                                                        <Badge color='success'>
+                                                                            {usageTotal.toLocaleString()}{' '}
+                                                                            requests
+                                                                        </Badge>
+                                                                    }
+                                                                    elseShow={
+                                                                        <Badge color='error'>
+                                                                            {usageTotal.toLocaleString()}{' '}
+                                                                            requests
+                                                                        </Badge>
+                                                                    }
+                                                                />
+                                                            }
+                                                            elseShow={
+                                                                <Badge color='neutral'>
+                                                                    {usageTotal.toLocaleString()}{' '}
+                                                                    requests
+                                                                </Badge>
+                                                            }
+                                                        />
+                                                    </StyledNumbersDiv>
+                                                </RowContainer>
+                                            </StyledCardDescription>
+                                            <ConditionallyRender
+                                                condition={isPro()}
+                                                show={
+                                                    <StyledCardDescription>
+                                                        <RowContainer>
+                                                            Included in your
+                                                            plan monthly
+                                                            <StyledNumbersDiv>
+                                                                {proPlanIncludedRequests.toLocaleString()}{' '}
+                                                                requests
+                                                            </StyledNumbersDiv>
+                                                        </RowContainer>
+                                                    </StyledCardDescription>
+                                                }
+                                            />
+                                        </Grid>
+                                    </StyledContainer>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12} md={2}>
+                                <Select
+                                    id='dataperiod-select'
+                                    name='dataperiod'
+                                    options={selectablePeriods}
+                                    value={period}
+                                    onChange={(e) => setPeriod(e.target.value)}
+                                    style={{
+                                        minWidth: '100%',
+                                        marginBottom: theme.spacing(2),
+                                    }}
+                                    formControlStyles={{ width: '100%' }}
+                                />
+                            </Grid>
                         </Grid>
                         <Grid item xs={12} md={2}>
-                            <Select
-                                id='dataperiod-select'
-                                name='dataperiod'
-                                options={selectablePeriods}
-                                value={period}
-                                onChange={(e) => setPeriod(e.target.value)}
-                                style={{
-                                    minWidth: '100%',
-                                    marginBottom: theme.spacing(2),
-                                }}
-                                formControlStyles={{ width: '100%' }}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Box sx={{ display: 'grid', gap: 4 }}>
-                        <div>
                             <Bar
                                 data={data}
                                 plugins={[customHighlightPlugin]}
                                 options={options}
                                 aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
                             />
-                        </div>
-                    </Box>
+                        </Grid>
+                    </StyledBox>
                 </>
             }
         />

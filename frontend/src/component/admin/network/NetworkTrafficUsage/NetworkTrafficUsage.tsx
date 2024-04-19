@@ -5,10 +5,8 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import Select from 'component/common/select';
 import Box from '@mui/system/Box';
 import Alert from '@mui/material/Alert';
-import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { flexRow } from 'themes/themeStyles';
 import {
     Chart as ChartJS,
     type ChartOptions,
@@ -31,6 +29,7 @@ import {
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 
 type ChartDatasetType = ChartDataset<'bar'>;
 
@@ -48,46 +47,9 @@ type EndpointInfo = {
     order: number;
 };
 
-const RowContainer = styled(Box)(({ theme }) => ({
-    ...flexRow,
-}));
-
-const StyledNumbersDiv = styled('div')(({ theme }) => ({
-    marginLeft: 'auto',
-    display: 'flex',
-    justifyContent: 'space-between',
-    textDecoration: 'none',
-    color: theme.palette.text.primary,
-}));
-
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(5),
-}));
-
-const StyledContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(3),
-    border: `2px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusLarge,
-}));
-
-const StyledCardTitleRow = styled(Box)(() => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-}));
-
-const StyledCardDescription = styled(Box)(({ theme }) => ({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2.5),
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
-    marginTop: theme.spacing(2),
 }));
 
 const padMonth = (month: number): string =>
@@ -302,28 +264,30 @@ const createBarChartOptions = (
     },
 });
 
+const endpointsInfo: Record<string, EndpointInfo> = {
+    '/api/admin': {
+        label: 'Admin',
+        color: '#6D66D9',
+        order: 1,
+    },
+    '/api/frontend': {
+        label: 'Frontend',
+        color: '#A39EFF',
+        order: 2,
+    },
+    '/api/client': {
+        label: 'Server',
+        color: '#D8D6FF',
+        order: 3,
+    },
+};
+
+const proPlanIncludedRequests = 53000000;
+
 export const NetworkTrafficUsage: VFC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
 
-    const endpointsInfo: Record<string, EndpointInfo> = {
-        '/api/admin': {
-            label: 'Admin',
-            color: '#6D66D9',
-            order: 1,
-        },
-        '/api/frontend': {
-            label: 'Frontend',
-            color: '#A39EFF',
-            order: 2,
-        },
-        '/api/client': {
-            label: 'Server',
-            color: '#D8D6FF',
-            order: 3,
-        },
-    };
-    const proPlanIncludedRequests = 53000000;
     const selectablePeriods = getSelectablePeriods();
     const record = toPeriodsRecord(selectablePeriods);
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
@@ -357,7 +321,7 @@ export const NetworkTrafficUsage: VFC = () => {
         datasets,
     };
 
-    const { isOss, isPro } = useUiConfig();
+    const { isOss } = useUiConfig();
     const flagEnabled = useUiFlag('displayTrafficDataUsage');
 
     useEffect(() => {
@@ -400,68 +364,12 @@ export const NetworkTrafficUsage: VFC = () => {
                         <Grid container component='header' spacing={2}>
                             <Grid item xs={12} md={10}>
                                 <Grid item xs={7} md={5.5}>
-                                    <StyledContainer>
-                                        <Grid item>
-                                            <StyledCardTitleRow>
-                                                <b>
-                                                    Number of requests to
-                                                    Unleash
-                                                </b>
-                                            </StyledCardTitleRow>
-                                            <StyledCardDescription>
-                                                <RowContainer>
-                                                    Incoming requests for
-                                                    selection{' '}
-                                                    <StyledNumbersDiv>
-                                                        <ConditionallyRender
-                                                            condition={isPro()}
-                                                            show={
-                                                                <ConditionallyRender
-                                                                    condition={
-                                                                        usageTotal <=
-                                                                        proPlanIncludedRequests
-                                                                    }
-                                                                    show={
-                                                                        <Badge color='success'>
-                                                                            {usageTotal.toLocaleString()}{' '}
-                                                                            requests
-                                                                        </Badge>
-                                                                    }
-                                                                    elseShow={
-                                                                        <Badge color='error'>
-                                                                            {usageTotal.toLocaleString()}{' '}
-                                                                            requests
-                                                                        </Badge>
-                                                                    }
-                                                                />
-                                                            }
-                                                            elseShow={
-                                                                <Badge color='neutral'>
-                                                                    {usageTotal.toLocaleString()}{' '}
-                                                                    requests
-                                                                </Badge>
-                                                            }
-                                                        />
-                                                    </StyledNumbersDiv>
-                                                </RowContainer>
-                                            </StyledCardDescription>
-                                            <ConditionallyRender
-                                                condition={isPro()}
-                                                show={
-                                                    <StyledCardDescription>
-                                                        <RowContainer>
-                                                            Included in your
-                                                            plan monthly
-                                                            <StyledNumbersDiv>
-                                                                {proPlanIncludedRequests.toLocaleString()}{' '}
-                                                                requests
-                                                            </StyledNumbersDiv>
-                                                        </RowContainer>
-                                                    </StyledCardDescription>
-                                                }
-                                            />
-                                        </Grid>
-                                    </StyledContainer>
+                                    <NetworkTrafficUsagePlanSummary
+                                        usageTotal={usageTotal}
+                                        planIncludedRequests={
+                                            proPlanIncludedRequests
+                                        }
+                                    ></NetworkTrafficUsagePlanSummary>
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} md={2}>

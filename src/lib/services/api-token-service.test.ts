@@ -18,6 +18,31 @@ import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../../lib/features';
 import { extractAuditInfoFromUser } from '../util';
 
+const token: IApiTokenCreate = {
+    environment: 'default',
+    projects: ['*'],
+    secret: '*:*:some-random-string',
+    type: ApiTokenType.CLIENT,
+    tokenName: 'new-token-by-another-instance',
+    expiresAt: undefined,
+};
+
+const setup = (options?: IUnleashOptions) => {
+    const config: IUnleashConfig = createTestConfig(options);
+    const apiTokenStore = new FakeApiTokenStore();
+    const environmentStore = new FakeEnvironmentStore();
+
+    const apiTokenService = new ApiTokenService(
+        { apiTokenStore, environmentStore },
+        config,
+        createFakeEventsService(config),
+    );
+    return {
+        apiTokenService,
+        apiTokenStore,
+    };
+};
+
 test('Should init api token', async () => {
     const token = {
         environment: '*',
@@ -197,83 +222,41 @@ test('getUserForToken should get a user with admin token user id and token name'
     expect(user!.internalAdminTokenUserId).toBe(ADMIN_TOKEN_USER.id);
 });
 
-describe('When token is added by another instance', () => {
-    const setup = (options?: IUnleashOptions) => {
-        const token: IApiTokenCreate = {
-            environment: 'default',
-            projects: ['*'],
-            secret: '*:*:some-random-string',
-            type: ApiTokenType.CLIENT,
-            tokenName: 'new-token-by-another-instance',
-            expiresAt: undefined,
-        };
+describe('API token getTokenWithCache', () => {
+    test('should return the token and perform only one db query', async () => {
+        const { apiTokenService, apiTokenStore } = setup();
+        const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
 
-        const config: IUnleashConfig = createTestConfig(options);
-        const apiTokenStore = new FakeApiTokenStore();
-        const environmentStore = new FakeEnvironmentStore();
-
-        const apiTokenService = new ApiTokenService(
-            { apiTokenStore, environmentStore },
-            config,
-            createFakeEventsService(config),
-        );
-        return {
-            apiTokenService,
-            apiTokenStore,
-            token,
-        };
-    };
-    test('should not return the token when query db flag is disabled', async () => {
-        const { apiTokenService, apiTokenStore, token } = setup();
-
-        // simulate this token being inserted by another instance (apiTokenService does not know about it)
+        // valid token not present in cache (could be inserted by another instance)
         apiTokenStore.insert(token);
 
-        const found = await apiTokenService.getUserForToken(token.secret);
-        expect(found).toBeUndefined();
-    });
-
-    test('should return the token when query db flag is enabled', async () => {
-        const { apiTokenService, apiTokenStore, token } = setup({
-            experimental: {
-                flags: {
-                    queryMissingTokens: true,
-                },
-            },
-        });
-
-        // simulate this token being inserted by another instance (apiTokenService does not know about it)
-        apiTokenStore.insert(token);
-
-        const found = await apiTokenService.getUserForToken(token.secret);
-        expect(found).toBeDefined();
-        expect(found?.username).toBe(token.tokenName);
+        for (let i = 0; i < 5; i++) {
+            const found = await apiTokenService.getTokenWithCache(token.secret);
+            expect(found).toBeDefined();
+            expect(found?.tokenName).toBe(token.tokenName);
+            expect(found?.createdAt).toBeDefined();
+        }
+        expect(apiTokenStoreGet).toHaveBeenCalledTimes(1);
     });
 
     test('should query the db only once for invalid tokens', async () => {
         jest.useFakeTimers();
-        const { apiTokenService, apiTokenStore } = setup({
-            experimental: {
-                flags: {
-                    queryMissingTokens: true,
-                },
-            },
-        });
+        const { apiTokenService, apiTokenStore } = setup();
         const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
 
         const invalidToken = 'invalid-token';
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 5; i++) {
             expect(
-                await apiTokenService.getUserForToken(invalidToken),
+                await apiTokenService.getTokenWithCache(invalidToken),
             ).toBeUndefined();
         }
         expect(apiTokenStoreGet).toHaveBeenCalledTimes(1);
 
         // after more than 5 minutes we should be able to query again
         jest.advanceTimersByTime(minutesToMilliseconds(6));
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 5; i++) {
             expect(
-                await apiTokenService.getUserForToken(invalidToken),
+                await apiTokenService.getTokenWithCache(invalidToken),
             ).toBeUndefined();
         }
         expect(apiTokenStoreGet).toHaveBeenCalledTimes(2);

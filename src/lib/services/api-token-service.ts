@@ -25,7 +25,6 @@ import {
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
     type IAuditUser,
-    type IFlagContext,
     type IFlagResolver,
     SYSTEM_USER_AUDIT,
 } from '../types';
@@ -97,15 +96,13 @@ export class ApiTokenService {
     }
 
     /**
-     * Executed by a scheduler to refresh all active tokens
+     * Called by a scheduler without jitter to refresh all active tokens
      */
     async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.store.getAllActive();
-            this.initialized = true;
-        } finally {
-            // biome-ignore lint/correctness/noUnsafeFinally: We ignored this for eslint. Leaving this here for now, server-impl test fails without it
-            return;
+        } catch (e) {
+            this.logger.warn('Failed to fetch active tokens', e);
         }
     }
 
@@ -113,50 +110,7 @@ export class ApiTokenService {
         return this.store.get(secret);
     }
 
-    async updateLastSeen(): Promise<void> {
-        if (this.lastSeenSecrets.size > 0) {
-            const toStore = [...this.lastSeenSecrets];
-            this.lastSeenSecrets = new Set<string>();
-            await this.store.markSeenAt(toStore);
-        }
-    }
-
-    public async getAllTokens(): Promise<IApiToken[]> {
-        return this.store.getAll();
-    }
-
-    public async getAllActiveTokens(): Promise<IApiToken[]> {
-        if (this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
-            if (!this.initialized) {
-                // unlikely this will happen but nice to have a fail safe
-                this.logger.info('Fetching active tokens before initialized');
-                await this.fetchActiveTokens();
-            }
-            return this.activeTokens;
-        } else {
-            return this.store.getAllActive();
-        }
-    }
-
-    private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
-        const tokenCount = await this.store.count();
-        if (tokenCount > 0) {
-            return;
-        }
-        try {
-            const createAll = tokens
-                .map(mapLegacyTokenWithSecret)
-                .map((t) => this.insertNewApiToken(t, SYSTEM_USER_AUDIT));
-            await Promise.all(createAll);
-        } catch (e) {
-            this.logger.error('Unable to create initial Admin API tokens');
-        }
-    }
-
-    public async getUserForToken(
-        secret: string,
-        flagContext?: IFlagContext, // temporarily added, expected from the middleware
-    ): Promise<IApiUser | undefined> {
+    async getTokenWithCache(secret: string): Promise<IApiToken | undefined> {
         if (!secret) {
             return undefined;
         }
@@ -178,11 +132,7 @@ export class ApiTokenService {
         }
 
         const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
-        if (
-            !token &&
-            isPast(nextAllowedQuery) &&
-            this.flagResolver.isEnabled('queryMissingTokens', flagContext)
-        ) {
+        if (!token && isPast(nextAllowedQuery)) {
             if (this.queryAfter.size > 1000) {
                 // establish a max limit for queryAfter size to prevent memory leak
                 this.queryAfter.clear();
@@ -196,6 +146,44 @@ export class ApiTokenService {
             }
         }
 
+        return token;
+    }
+
+    async updateLastSeen(): Promise<void> {
+        if (this.lastSeenSecrets.size > 0) {
+            const toStore = [...this.lastSeenSecrets];
+            this.lastSeenSecrets = new Set<string>();
+            await this.store.markSeenAt(toStore);
+        }
+    }
+
+    public async getAllTokens(): Promise<IApiToken[]> {
+        return this.store.getAll();
+    }
+
+    public async getAllActiveTokens(): Promise<IApiToken[]> {
+        return this.store.getAllActive();
+    }
+
+    private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
+        const tokenCount = await this.store.count();
+        if (tokenCount > 0) {
+            return;
+        }
+        try {
+            const createAll = tokens
+                .map(mapLegacyTokenWithSecret)
+                .map((t) => this.insertNewApiToken(t, SYSTEM_USER_AUDIT));
+            await Promise.all(createAll);
+        } catch (e) {
+            this.logger.error('Unable to create initial Admin API tokens');
+        }
+    }
+
+    public async getUserForToken(
+        secret: string,
+    ): Promise<IApiUser | undefined> {
+        const token = await this.getTokenWithCache(secret);
         if (token) {
             this.lastSeenSecrets.add(token.secret);
             const apiUser: IApiUser = new ApiUser({

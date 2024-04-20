@@ -2,21 +2,21 @@ import { useState, useEffect } from 'react';
 import styles from './contributors.module.scss';
 
 const unleashTeam = new Map([
-    ['alvinometric', 'developer advocate at Unleash'],
-    ['andreas-unleash', ''],
-    ['chriswk', ''],
-    ['daveleek', ''],
-    ['FredrikOseberg', ''],
-    ['gardleopard', ''],
-    ['gastonfournier', ''],
-    ['ivarconr', ''],
-    ['kwasniew', ''],
-    ['nnennandukwe', ''],
-    ['nunogois', ''],
-    ['sighphyre', ''],
-    ['sjaanus', ''],
-    ['thomasheartman', ''],
-    ['Tymek', ''],
+    ['alvinometric', 'developer advocate, Unleash'],
+    ['andreas-unleash', 'senior software engineer, Unleash'],
+    ['chriswk', 'senior software engineer, Unleash'],
+    ['daveleek', 'senior software engineer, Unleash'],
+    ['FredrikOseberg', 'senior software engineer, Unleash'],
+    ['gardleopard', 'senior software engineer, Unleash'],
+    ['gastonfournier', 'senior software engineer, Unleash'],
+    ['ivarconr', 'senior software engineer, Unleash'],
+    ['kwasniew', 'senior software engineer, Unleash'],
+    ['nnennandukwe', 'developer advocate, Unleash'],
+    ['nunogois', 'senior software engineer, Unleash'],
+    ['sighphyre', 'senior software engineer, Unleash'],
+    ['sjaanus', 'senior software engineer, Unleash'],
+    ['thomasheartman', 'senior software engineer, Unleash'],
+    ['Tymek', 'senior software engineer, Unleash'],
 ]);
 
 const GitHubContributors = ({ filePath }) => {

@@ -5,6 +5,7 @@ import type React from 'react';
 import { useMemo, useState } from 'react';
 import { GroupPopover } from './GroupPopover/GroupPopover';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import type { IUser } from 'interfaces/user';
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -21,18 +22,38 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     },
 }));
 
+const StyledUsername = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.primary,
+    marginLeft: theme.spacing(1),
+}));
+
 interface IGroupCardAvatarsProps {
-    users: IGroupUser[];
+    users: IUser[] | IGroupUser[];
+    groups?: any[]; // FIXME: type
+    withDescription?: boolean;
 }
 
-/**
- * @deprecated Remove after with `projectsListNewCards` flag
- */
-export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
+export const GroupCardAvatars = ({
+    users = [],
+    groups = [],
+    withDescription,
+}: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>
             users
-                .sort((a, b) => b?.joinedAt!.getTime() - a?.joinedAt!.getTime())
+                .sort((a, b) => {
+                    if (
+                        Object.hasOwn(a, 'joinedAt') &&
+                        Object.hasOwn(b, 'joinedAt')
+                    ) {
+                        return (
+                            (b as IGroupUser)?.joinedAt!.getTime() -
+                            (a as IGroupUser)?.joinedAt!.getTime()
+                        );
+                    }
+                    return 0;
+                })
                 .slice(0, 9),
         [users],
     );
@@ -70,6 +91,19 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
                         +{users.length - shownUsers.length}
                     </StyledAvatar>
                 }
+            />
+
+            <ConditionallyRender
+                condition={Boolean(
+                    withDescription &&
+                        users.length === 1 &&
+                        groups?.length === 0,
+                )}
+                show={() => (
+                    <StyledUsername>
+                        {users[0].name || users[0].username}
+                    </StyledUsername>
+                )}
             />
             <GroupPopover
                 open={avatarOpen}

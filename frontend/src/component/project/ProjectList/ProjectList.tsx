@@ -172,6 +172,7 @@ export const ProjectListNew = () => {
             />
         );
     };
+
     return (
         <PageContent
             isLoading={loading}

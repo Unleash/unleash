@@ -34,7 +34,7 @@ interface IProjectCardProps {
     onHover: () => void;
     isFavorite?: boolean;
     mode: string;
-    owners: {
+    owners?: {
         users: any[];
         groups: any[];
     };

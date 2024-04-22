@@ -124,6 +124,7 @@ export const ProjectGroup: React.FC<{
                                                     project.featureCount
                                                 }
                                                 isFavorite={project.favorite}
+                                                owners={project.owners}
                                             />
                                         </StyledCardLink>
                                     ))}

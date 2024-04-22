@@ -474,6 +474,19 @@ export type CreateProject = Pick<IProject, 'id' | 'name'> & {
     environments?: string[];
 };
 
+// Create project aligns with #/components/schemas/projectCreatedSchema
+export type ProjectCreated = Pick<
+    IProject,
+    | 'id'
+    | 'name'
+    | 'mode'
+    | 'defaultStickiness'
+    | 'description'
+    | 'featureLimit'
+> & {
+    environments: string[];
+};
+
 export interface IProject {
     id: string;
     name: string;

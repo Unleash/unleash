@@ -49,6 +49,7 @@ import {
     ProjectUserUpdateRoleEvent,
     RoleName,
     SYSTEM_USER_ID,
+    type ProjectCreated,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -284,7 +285,7 @@ export default class ProjectService {
         user: IUser,
         auditUser: IAuditUser,
         enableChangeRequestsForSpecifiedEnvironments: () => Promise<void> = async () => {},
-    ): Promise<IProject> {
+    ): Promise<ProjectCreated> {
         await this.validateProjectEnvironments(newProject.environments);
 
         const validatedData = await projectSchema.validateAsync(newProject);
@@ -321,7 +322,7 @@ export default class ProjectService {
             }),
         );
 
-        return data;
+        return { ...data, environments: envsToEnable };
     }
 
     async updateProject(

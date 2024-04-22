@@ -4,7 +4,6 @@ import type { IUnleashConfig, IUnleashServices } from '../../types';
 import type { Logger } from '../../logger';
 import type AddonService from '../../services/addon-service';
 
-import { extractUsername } from '../../util/extract-user';
 import {
     CREATE_ADDON,
     DELETE_ADDON,
@@ -181,15 +180,9 @@ Note: passing \`null\` as a value for the description property will set it to an
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
-        const createdBy = extractUsername(req);
         const data = req.body;
 
-        const addon = await this.addonService.updateAddon(
-            id,
-            data,
-            createdBy,
-            req.user.id,
-        );
+        const addon = await this.addonService.updateAddon(id, data, req.audit);
 
         this.openApiService.respondWithValidation(
             200,
@@ -203,13 +196,8 @@ Note: passing \`null\` as a value for the description property will set it to an
         req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
-        const createdBy = extractUsername(req);
         const data = req.body;
-        const addon = await this.addonService.createAddon(
-            data,
-            createdBy,
-            req.user.id,
-        );
+        const addon = await this.addonService.createAddon(data, req.audit);
 
         this.openApiService.respondWithValidation(
             201,
@@ -224,8 +212,7 @@ Note: passing \`null\` as a value for the description property will set it to an
         res: Response<void>,
     ): Promise<void> {
         const { id } = req.params;
-        const username = extractUsername(req);
-        await this.addonService.removeAddon(id, username, req.user.id);
+        await this.addonService.removeAddon(id, req.audit);
 
         res.status(200).end();
     }

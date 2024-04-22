@@ -10,8 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.background.alternative,
+    backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '350px',
@@ -34,7 +33,7 @@ const StyledMetaDataHeader = styled('div')({
 });
 
 const StyledHeader = styled('h2')(({ theme }) => ({
-    fontSize: theme.fontSizes.bodySize,
+    fontSize: theme.fontSizes.mediumHeader,
     fontWeight: 'normal',
     margin: 0,
 }));
@@ -53,7 +52,6 @@ const StyledBodyItem = styled('span')(({ theme }) => ({
 const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    color: theme.palette.primary.contrastText,
 }));
 
 const StyledDescription = styled('p')({
@@ -77,7 +75,11 @@ const FeatureOverviewMetaData = () => {
                             marginRight: theme.spacing(2),
                             height: '40px',
                             width: '40px',
+                            padding: theme.spacing(0.5),
+                            backgroundColor:
+                                theme.palette.background.alternative,
                             fill: theme.palette.primary.contrastText,
+                            borderRadius: `${theme.shape.borderRadiusMedium}px`,
                         })}
                     />{' '}
                     <StyledHeader>{capitalize(type || '')} toggle</StyledHeader>
@@ -104,12 +106,7 @@ const FeatureOverviewMetaData = () => {
                                             title: 'Edit description',
                                         }}
                                     >
-                                        <Edit
-                                            sx={(theme) => ({
-                                                color: theme.palette.primary
-                                                    .contrastText,
-                                            })}
-                                        />
+                                        <Edit />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
                             </StyledBodyItem>
@@ -127,12 +124,7 @@ const FeatureOverviewMetaData = () => {
                                             title: 'Edit description',
                                         }}
                                     >
-                                        <Edit
-                                            sx={(theme) => ({
-                                                color: theme.palette.primary
-                                                    .contrastText,
-                                            })}
-                                        />
+                                        <Edit />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
                             </span>

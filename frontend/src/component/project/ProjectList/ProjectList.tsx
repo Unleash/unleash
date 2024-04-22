@@ -4,7 +4,8 @@ import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard } from '../ProjectCard/ProjectCard';
+import { ProjectCard as LegacyProjectCard } from '../ProjectCard/ProjectCard';
+import { ProjectCard as NewProjectCard } from '../NewProjectCard/NewProjectCard';
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -34,12 +35,21 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { shouldDisplayInMyProjects } from './should-display-in-my-projects';
 
+/**
+ * @deprecated Remove after with `projectsListNewCards` flag
+ */
 const StyledDivContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
+}));
+
+const StyledGridContainer = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+    gap: theme.spacing(2),
 }));
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
@@ -139,6 +149,7 @@ export const ProjectListNew = () => {
     );
 
     const showProjectFilterButtons = useUiFlag('projectListFilterMyProjects');
+    const projectsListNewCards = useUiFlag('projectsListNewCards');
     const filters = ['All projects', 'My projects'];
     const [filter, setFilter] = useState(filters[0]);
     const myProjects = new Set(useProfile().profile?.projects || []);
@@ -203,6 +214,13 @@ export const ProjectListNew = () => {
         filteredProjects.length < projects.length
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
+
+    const StyledItemsContainer = projectsListNewCards
+        ? StyledGridContainer
+        : StyledDivContainer;
+    const ProjectCard = projectsListNewCards
+        ? NewProjectCard
+        : LegacyProjectCard;
 
     return (
         <PageContent
@@ -282,7 +300,7 @@ export const ProjectListNew = () => {
             }
         >
             <ConditionallyRender condition={error} show={renderError()} />
-            <StyledDivContainer>
+            <StyledItemsContainer>
                 <ConditionallyRender
                     condition={filteredProjects.length < 1 && !loading}
                     show={
@@ -350,7 +368,7 @@ export const ProjectListNew = () => {
                         />
                     }
                 />
-            </StyledDivContainer>
+            </StyledItemsContainer>
         </PageContent>
     );
 };

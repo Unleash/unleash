@@ -16,6 +16,7 @@ import SettingService from './setting-service';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
 import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+import { extractAuditInfoFromUser } from '../util';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -58,7 +59,7 @@ test('Should create new user', async () => {
             username: 'test',
             rootRole: 1,
         },
-        systemUser,
+        extractAuditInfoFromUser(systemUser),
     );
     const storedUser = await userStore.get(user.id);
     const allUsers = await userStore.getAll();

@@ -7,7 +7,6 @@ import {
     UPDATE_FEATURE,
 } from '../../../types';
 import type { Logger } from '../../../logger';
-import { extractUsername } from '../../../util/extract-user';
 import { DELETE_FEATURE } from '../../../types/permissions';
 import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
 import type { IAuthRequest } from '../../unleash-types';
@@ -165,12 +164,10 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { features } = req.body;
-        const user = extractUsername(req);
         await this.featureService.deleteFeatures(
             features,
             projectId,
-            user,
-            req.user.id,
+            req.audit,
         );
         res.status(200).end();
     }
@@ -181,13 +178,11 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { features } = req.body;
-        const user = extractUsername(req);
         await this.startTransaction(async (tx) =>
             this.transactionalFeatureToggleService(tx).reviveFeatures(
                 features,
                 projectId,
-                user,
-                req.user.id,
+                req.audit,
             ),
         );
         res.status(200).end();
@@ -204,6 +199,7 @@ export default class ProjectArchiveController extends Controller {
             this.transactionalFeatureToggleService(tx).archiveToggles(
                 features,
                 req.user,
+                req.audit,
                 projectId,
             ),
         );

@@ -14,6 +14,7 @@ import UserService from '../../../../lib/services/user-service';
 import { ADMIN, type IUnleashStores, type IUser } from '../../../../lib/types';
 import type { InactiveUsersService } from '../../../../lib/users/inactive/inactive-users-service';
 import { createInactiveUsersService } from '../../../../lib/users';
+import { extractAuditInfoFromUser } from '../../../../lib/util';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -160,7 +161,7 @@ describe('Inactive users service', () => {
                 .getInactiveUsers()
                 .then((users) => users.map((user) => user.id));
             await inactiveUserService.deleteInactiveUsers(
-                deletionUser,
+                extractAuditInfoFromUser(deletionUser),
                 usersToDelete,
             );
             await expect(
@@ -175,7 +176,7 @@ describe('Inactive users service', () => {
                 .getInactiveUsers()
                 .then((users) => users.map((user) => user.id));
             await inactiveUserService.deleteInactiveUsers(
-                deletionUser,
+                extractAuditInfoFromUser(deletionUser),
                 usersToDelete,
             );
             await expect(
@@ -190,7 +191,7 @@ describe('Inactive users service', () => {
                 .getInactiveUsers()
                 .then((users) => users.map((user) => user.id));
             await inactiveUserService.deleteInactiveUsers(
-                deletionUser,
+                extractAuditInfoFromUser(deletionUser),
                 usersToDelete,
             );
             await expect(userService.getUser(9595)).resolves.toBeTruthy();
@@ -203,7 +204,7 @@ describe('Inactive users service', () => {
                 .getInactiveUsers()
                 .then((users) => users.map((user) => user.id));
             await inactiveUserService.deleteInactiveUsers(
-                deletionUser,
+                extractAuditInfoFromUser(deletionUser),
                 usersToDelete,
             );
             await expect(userService.getUser(9595)).resolves.toBeTruthy();
@@ -218,7 +219,7 @@ describe('Inactive users service', () => {
                 .getInactiveUsers()
                 .then((users) => users.map((user) => user.id));
             await inactiveUserService.deleteInactiveUsers(
-                deletionUser,
+                extractAuditInfoFromUser(deletionUser),
                 usersToDelete,
             );
             await expect(userService.getUser(9595)).rejects.toBeTruthy();

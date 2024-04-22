@@ -7,14 +7,18 @@ import type {
     IGroupRole,
     IGroupUser,
 } from '../types/group';
-import type { IUnleashConfig, IUnleashStores } from '../types';
+import {
+    GroupDeletedEvent,
+    GroupUpdatedEvent,
+    type IAuditUser,
+    type IUnleashConfig,
+    type IUnleashStores,
+} from '../types';
 import type { IGroupStore } from '../types/stores/group-store';
 import type { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import {
     GROUP_CREATED,
-    GROUP_DELETED,
-    GROUP_UPDATED,
     GROUP_USER_ADDED,
     GROUP_USER_REMOVED,
     type IBaseEvent,
@@ -98,8 +102,7 @@ export class GroupService {
 
     async createGroup(
         group: ICreateGroupModel,
-        userName: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<IGroup> {
         await this.validateGroup(group);
 
@@ -109,15 +112,16 @@ export class GroupService {
             await this.groupStore.addUsersToGroup(
                 newGroup.id,
                 group.users,
-                userName,
+                auditUser.username,
             );
         }
 
         const newUserIds = group.users?.map((g) => g.user.id);
         await this.eventService.storeEvent({
             type: GROUP_CREATED,
-            createdBy: userName,
-            createdByUserId,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
             data: { ...group, users: newUserIds },
         });
 
@@ -126,8 +130,7 @@ export class GroupService {
 
     async updateGroup(
         group: IGroupModel,
-        userName: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<IGroup> {
         const existingGroup = await this.groupStore.get(group.id);
 
@@ -153,17 +156,17 @@ export class GroupService {
                 (user) => !existingUserIds.includes(user.user.id),
             ),
             deletableUsers,
-            userName,
+            auditUser.username,
         );
 
         const newUserIds = group.users.map((g) => g.user.id);
-        await this.eventService.storeEvent({
-            type: GROUP_UPDATED,
-            createdBy: userName,
-            createdByUserId,
-            data: { ...newGroup, users: newUserIds },
-            preData: { ...existingGroup, users: existingUserIds },
-        });
+        await this.eventService.storeEvent(
+            new GroupUpdatedEvent({
+                data: { ...newGroup, users: newUserIds },
+                preData: { ...existingGroup, users: existingUserIds },
+                auditUser,
+            }),
+        );
 
         return newGroup;
     }
@@ -195,11 +198,7 @@ export class GroupService {
         return [];
     }
 
-    async deleteGroup(
-        id: number,
-        userName: string,
-        createdByUserId: number,
-    ): Promise<void> {
+    async deleteGroup(id: number, auditUser: IAuditUser): Promise<void> {
         const group = await this.groupStore.get(id);
 
         const existingUsers = await this.groupStore.getAllUsersByGroups([
@@ -209,12 +208,12 @@ export class GroupService {
 
         await this.groupStore.delete(id);
 
-        await this.eventService.storeEvent({
-            type: GROUP_DELETED,
-            createdBy: userName,
-            createdByUserId,
-            preData: { ...group, users: existingUserIds },
-        });
+        await this.eventService.storeEvent(
+            new GroupDeletedEvent({
+                preData: { ...group, users: existingUserIds },
+                auditUser,
+            }),
+        );
     }
 
     async validateGroup(

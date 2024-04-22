@@ -112,10 +112,13 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const { user } = req;
-        await this.favoritesService.favoriteFeature({
-            feature: featureName,
-            user,
-        });
+        await this.favoritesService.favoriteFeature(
+            {
+                feature: featureName,
+                user,
+            },
+            req.audit,
+        );
         res.status(200).end();
     }
 
@@ -125,10 +128,13 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const { user } = req;
-        await this.favoritesService.unfavoriteFeature({
-            feature: featureName,
-            user,
-        });
+        await this.favoritesService.unfavoriteFeature(
+            {
+                feature: featureName,
+                user,
+            },
+            req.audit,
+        );
         res.status(200).end();
     }
 
@@ -138,10 +144,13 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { user } = req;
-        await this.favoritesService.favoriteProject({
-            project: projectId,
-            user,
-        });
+        await this.favoritesService.favoriteProject(
+            {
+                project: projectId,
+                user,
+            },
+            req.audit,
+        );
         res.status(200).end();
     }
 
@@ -151,10 +160,13 @@ export default class FavoritesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { user } = req;
-        await this.favoritesService.unfavoriteProject({
-            project: projectId,
-            user: user,
-        });
+        await this.favoritesService.unfavoriteProject(
+            {
+                project: projectId,
+                user: user,
+            },
+            req.audit,
+        );
         res.status(200).end();
     }
 }

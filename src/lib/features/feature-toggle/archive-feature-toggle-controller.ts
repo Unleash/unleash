@@ -182,7 +182,7 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
         const user = extractUsername(req);
-        await this.featureService.deleteFeature(featureName, user, req.user.id);
+        await this.featureService.deleteFeature(featureName, req.audit);
         res.status(200).end();
     }
 
@@ -190,14 +190,12 @@ export default class ArchiveController extends Controller {
         req: IAuthRequest<{ featureName: string }>,
         res: Response<void>,
     ): Promise<void> {
-        const userName = extractUsername(req);
         const { featureName } = req.params;
 
         await this.startTransaction(async (tx) =>
             this.transactionalFeatureToggleService(tx).reviveFeature(
                 featureName,
-                userName,
-                req.user.id,
+                req.audit,
             ),
         );
         res.status(200).end();

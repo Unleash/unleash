@@ -29,6 +29,7 @@ import {
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 
 type ChartDatasetType = ChartDataset<'bar'>;
 
@@ -46,14 +47,9 @@ type EndpointInfo = {
     order: number;
 };
 
-const StyledHeader = styled('h3')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    fontSize: theme.fontSizes.bodySize,
-    margin: 0,
-    marginTop: theme.spacing(1),
-    fontWeight: theme.fontWeight.bold,
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gap: theme.spacing(5),
 }));
 
 const padMonth = (month: number): string =>
@@ -156,7 +152,7 @@ const toChartData = (
 const customHighlightPlugin = {
     id: 'customLine',
     beforeDraw: (chart: Chart) => {
-        const width = 36;
+        const width = 46;
         if (chart.tooltip?.opacity && chart.tooltip.x) {
             const x = chart.tooltip.caretX;
             const yAxis = chart.scales.y;
@@ -268,27 +264,29 @@ const createBarChartOptions = (
     },
 });
 
+const endpointsInfo: Record<string, EndpointInfo> = {
+    '/api/admin': {
+        label: 'Admin',
+        color: '#6D66D9',
+        order: 1,
+    },
+    '/api/frontend': {
+        label: 'Frontend',
+        color: '#A39EFF',
+        order: 2,
+    },
+    '/api/client': {
+        label: 'Server',
+        color: '#D8D6FF',
+        order: 3,
+    },
+};
+
+const proPlanIncludedRequests = 53000000;
+
 export const NetworkTrafficUsage: VFC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
-
-    const endpointsInfo: Record<string, EndpointInfo> = {
-        '/api/admin': {
-            label: 'Admin',
-            color: '#6D66D9',
-            order: 1,
-        },
-        '/api/frontend': {
-            label: 'Frontend',
-            color: '#A39EFF',
-            order: 2,
-        },
-        '/api/client': {
-            label: 'Server',
-            color: '#D8D6FF',
-            order: 3,
-        },
-    };
 
     const selectablePeriods = getSelectablePeriods();
     const record = toPeriodsRecord(selectablePeriods);
@@ -316,6 +314,8 @@ export const NetworkTrafficUsage: VFC = () => {
 
     const [datasets, setDatasets] = useState<ChartDatasetType[]>([]);
 
+    const [usageTotal, setUsageTotal] = useState<number>(0);
+
     const data = {
         labels,
         datasets,
@@ -335,43 +335,67 @@ export const NetworkTrafficUsage: VFC = () => {
         }
     }, [period]);
 
+    useEffect(() => {
+        if (data) {
+            const usage = data.datasets.reduce(
+                (acc: number, current: ChartDatasetType) => {
+                    return (
+                        acc +
+                        current.data.reduce(
+                            (acc_inner, current_inner) =>
+                                acc_inner + current_inner,
+                            0,
+                        )
+                    );
+                },
+                0,
+            );
+            setUsageTotal(usage);
+        }
+    }, [data]);
+
     return (
         <ConditionallyRender
             condition={isOss() || !flagEnabled}
             show={<Alert severity='warning'>No data available.</Alert>}
             elseShow={
                 <>
-                    <Grid container component='header' spacing={2}>
-                        <Grid item xs={12} md={10}>
-                            <StyledHeader>
-                                Number of requests to Unleash
-                            </StyledHeader>
+                    <StyledBox>
+                        <Grid container component='header' spacing={2}>
+                            <Grid item xs={12} md={10}>
+                                <Grid item xs={7} md={5.5}>
+                                    <NetworkTrafficUsagePlanSummary
+                                        usageTotal={usageTotal}
+                                        planIncludedRequests={
+                                            proPlanIncludedRequests
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12} md={2}>
+                                <Select
+                                    id='dataperiod-select'
+                                    name='dataperiod'
+                                    options={selectablePeriods}
+                                    value={period}
+                                    onChange={(e) => setPeriod(e.target.value)}
+                                    style={{
+                                        minWidth: '100%',
+                                        marginBottom: theme.spacing(2),
+                                    }}
+                                    formControlStyles={{ width: '100%' }}
+                                />
+                            </Grid>
                         </Grid>
                         <Grid item xs={12} md={2}>
-                            <Select
-                                id='dataperiod-select'
-                                name='dataperiod'
-                                options={selectablePeriods}
-                                value={period}
-                                onChange={(e) => setPeriod(e.target.value)}
-                                style={{
-                                    minWidth: '100%',
-                                    marginBottom: theme.spacing(2),
-                                }}
-                                formControlStyles={{ width: '100%' }}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Box sx={{ display: 'grid', gap: 4 }}>
-                        <div>
                             <Bar
                                 data={data}
                                 plugins={[customHighlightPlugin]}
                                 options={options}
                                 aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
                             />
-                        </div>
-                    </Box>
+                        </Grid>
+                    </StyledBox>
                 </>
             }
         />

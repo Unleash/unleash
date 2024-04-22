@@ -1,5 +1,5 @@
 import * as permissions from '../types/permissions';
-import type { IUser } from '../types/user';
+import type { IAuditUser, IUser } from '../types/user';
 import type {
     IAccessInfo,
     IAccessStore,
@@ -43,10 +43,9 @@ import type { GroupService } from './group-service';
 import {
     type IUnleashConfig,
     type IUserAccessOverview,
-    ROLE_CREATED,
-    ROLE_DELETED,
-    ROLE_UPDATED,
-    SYSTEM_USER,
+    RoleCreatedEvent,
+    RoleDeletedEvent,
+    RoleUpdatedEvent,
 } from '../types';
 import type EventService from '../features/events/event-service';
 
@@ -336,14 +335,14 @@ export class AccessService {
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
-        createdBy: string,
+        auditUser: IAuditUser,
     ): Promise<void> {
         return this.store.addRoleAccessToProject(
             users,
             groups,
             projectId,
             roleId,
-            createdBy,
+            auditUser.username,
         );
     }
 
@@ -707,7 +706,10 @@ export class AccessService {
         return this.roleStore.getAll();
     }
 
-    async createRole(role: IRoleCreation): Promise<ICustomRole> {
+    async createRole(
+        role: IRoleCreation,
+        auditUser: IAuditUser,
+    ): Promise<ICustomRole> {
         // CUSTOM_PROJECT_ROLE_TYPE is assumed by default for backward compatibility
         const roleType =
             role.type === CUSTOM_ROOT_ROLE_TYPE
@@ -739,19 +741,22 @@ export class AccessService {
         const addedPermissions = await this.store.getPermissionsForRole(
             newRole.id,
         );
-        this.eventService.storeEvent({
-            type: ROLE_CREATED,
-            createdBy: role.createdBy || 'unknown',
-            createdByUserId: role.createdByUserId,
-            data: {
-                ...newRole,
-                permissions: this.sanitizePermissions(addedPermissions),
-            },
-        });
+        this.eventService.storeEvent(
+            new RoleCreatedEvent({
+                data: {
+                    ...newRole,
+                    permissions: this.sanitizePermissions(addedPermissions),
+                },
+                auditUser,
+            }),
+        );
         return newRole;
     }
 
-    async updateRole(role: IRoleUpdate): Promise<ICustomRole> {
+    async updateRole(
+        role: IRoleUpdate,
+        auditUser: IAuditUser,
+    ): Promise<ICustomRole> {
         const roleType =
             role.type === CUSTOM_ROOT_ROLE_TYPE
                 ? CUSTOM_ROOT_ROLE_TYPE
@@ -787,19 +792,19 @@ export class AccessService {
         const updatedPermissions = await this.store.getPermissionsForRole(
             role.id,
         );
-        this.eventService.storeEvent({
-            type: ROLE_UPDATED,
-            createdBy: role.createdBy || SYSTEM_USER.username,
-            createdByUserId: role.createdByUserId,
-            data: {
-                ...updatedRole,
-                permissions: this.sanitizePermissions(updatedPermissions),
-            },
-            preData: {
-                ...existingRole,
-                permissions: this.sanitizePermissions(existingPermissions),
-            },
-        });
+        this.eventService.storeEvent(
+            new RoleUpdatedEvent({
+                data: {
+                    ...updatedRole,
+                    permissions: this.sanitizePermissions(updatedPermissions),
+                },
+                preData: {
+                    ...existingRole,
+                    permissions: this.sanitizePermissions(existingPermissions),
+                },
+                auditUser,
+            }),
+        );
         return updatedRole;
     }
 
@@ -815,11 +820,7 @@ export class AccessService {
         });
     }
 
-    async deleteRole(
-        id: number,
-        deletedBy: string,
-        deletedByUserId: number,
-    ): Promise<void> {
+    async deleteRole(id: number, deletedBy: IAuditUser): Promise<void> {
         await this.validateRoleIsNotBuiltIn(id);
 
         const roleUsers = await this.getUsersForRole(id);
@@ -834,15 +835,15 @@ export class AccessService {
         const existingRole = await this.roleStore.get(id);
         const existingPermissions = await this.store.getPermissionsForRole(id);
         await this.roleStore.delete(id);
-        this.eventService.storeEvent({
-            type: ROLE_DELETED,
-            createdBy: deletedBy,
-            createdByUserId: deletedByUserId,
-            preData: {
-                ...existingRole,
-                permissions: this.sanitizePermissions(existingPermissions),
-            },
-        });
+        this.eventService.storeEvent(
+            new RoleDeletedEvent({
+                preData: {
+                    ...existingRole,
+                    permissions: this.sanitizePermissions(existingPermissions),
+                },
+                auditUser: deletedBy,
+            }),
+        );
         return;
     }
 

@@ -27,7 +27,6 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi';
 import type UserService from '../../services/user-service';
-import { extractUsername } from '../../util';
 
 interface TokenParam {
     token: string;
@@ -185,12 +184,10 @@ export class PublicSignupController extends Controller {
         req: IAuthRequest<void, void, PublicSignupTokenCreateSchema>,
         res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
-        const username = extractUsername(req);
         const token =
             await this.publicSignupTokenService.createNewPublicSignupToken(
                 req.body,
-                username,
-                req.user.id,
+                req.audit,
             );
         this.openApiService.respondWithValidation(
             201,
@@ -219,8 +216,7 @@ export class PublicSignupController extends Controller {
                 ...(enabled === undefined ? {} : { enabled }),
                 ...(expiresAt ? { expiresAt: new Date(expiresAt) } : {}),
             },
-            extractUsername(req),
-            req.user.id,
+            req.audit,
         );
 
         this.openApiService.respondWithValidation(

@@ -1,16 +1,19 @@
-import type { IUnleashConfig, IUnleashStores } from '../types';
+import {
+    type IAuditUser,
+    type IUnleashConfig,
+    type IUnleashStores,
+    PatCreatedEvent,
+    PatDeletedEvent,
+} from '../types';
 import type { Logger } from '../logger';
 import type { IPatStore } from '../types/stores/pat-store';
-import { PAT_CREATED, PAT_DELETED } from '../types/events';
 import crypto from 'crypto';
-import type { IUser } from '../types/user';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import { OperationDeniedError } from '../error/operation-denied-error';
 import { PAT_LIMIT } from '../util/constants';
 import type EventService from '../features/events/event-service';
 import type { CreatePatSchema, PatSchema } from '../openapi';
-import { extractUserIdFromUser, extractUsernameFromUser } from '../util';
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -35,19 +38,19 @@ export default class PatService {
     async createPat(
         pat: CreatePatSchema,
         forUserId: number,
-        byUser: IUser,
+        auditUser: IAuditUser,
     ): Promise<PatSchema> {
         await this.validatePat(pat, forUserId);
 
         const secret = this.generateSecretKey();
         const newPat = await this.patStore.create(pat, secret, forUserId);
 
-        await this.eventService.storeEvent({
-            type: PAT_CREATED,
-            createdBy: extractUsernameFromUser(byUser),
-            createdByUserId: extractUserIdFromUser(byUser),
-            data: { ...pat, secret: '***' },
-        });
+        await this.eventService.storeEvent(
+            new PatCreatedEvent({
+                data: { ...pat, secret: '***' },
+                auditUser,
+            }),
+        );
 
         return { ...newPat, secret };
     }
@@ -59,16 +62,16 @@ export default class PatService {
     async deletePat(
         id: number,
         forUserId: number,
-        byUser: IUser,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const pat = await this.patStore.get(id);
 
-        await this.eventService.storeEvent({
-            type: PAT_DELETED,
-            createdBy: extractUsernameFromUser(byUser),
-            createdByUserId: extractUserIdFromUser(byUser),
-            data: { ...pat, secret: '***' },
-        });
+        await this.eventService.storeEvent(
+            new PatDeletedEvent({
+                data: { ...pat, secret: '***' },
+                auditUser,
+            }),
+        );
 
         return this.patStore.deleteForUser(id, forUserId);
     }

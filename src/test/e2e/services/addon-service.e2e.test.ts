@@ -2,7 +2,7 @@ import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import AddonService from '../../../lib/services/addon-service';
-import type { IUnleashStores } from '../../../lib/types';
+import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
 
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service';
@@ -78,9 +78,9 @@ test('should only return active addons', async () => {
         description: '',
     };
 
-    await addonService.createAddon(config, 'me@mail.com', TEST_USER_ID);
-    await addonService.createAddon(config2, 'me@mail.com', TEST_USER_ID);
-    await addonService.createAddon(config3, 'me@mail.com', TEST_USER_ID);
+    await addonService.createAddon(config, TEST_AUDIT_USER);
+    await addonService.createAddon(config2, TEST_AUDIT_USER);
+    await addonService.createAddon(config3, TEST_AUDIT_USER);
 
     jest.advanceTimersByTime(61_000);
 

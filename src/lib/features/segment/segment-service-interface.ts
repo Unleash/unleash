@@ -1,6 +1,11 @@
 import type { ChangeRequestStrategy } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
 import type { UpsertSegmentSchema } from '../../openapi';
-import type { IFeatureStrategy, ISegment, IUser } from '../../types';
+import type {
+    IAuditUser,
+    IFeatureStrategy,
+    ISegment,
+    IUser,
+} from '../../types';
 
 export type StrategiesUsingSegment = {
     strategies: IFeatureStrategy[];
@@ -35,26 +40,24 @@ export interface ISegmentService {
 
     getAll(): Promise<ISegment[]>;
 
-    create(
-        data: UpsertSegmentSchema,
-        user: Partial<Pick<IUser, 'username' | 'email'>>,
-    ): Promise<ISegment>;
+    create(data: UpsertSegmentSchema, auditUser: IAuditUser): Promise<ISegment>;
 
     update(
         id: number,
         data: UpsertSegmentSchema,
         user: Partial<Pick<IUser, 'username' | 'email' | 'id'>>,
+        auditUser: IAuditUser,
     ): Promise<void>;
 
     unprotectedUpdate(
         id: number,
         data: UpsertSegmentSchema,
-        user: Partial<Pick<IUser, 'username' | 'email'>>,
+        auditUser: IAuditUser,
     ): Promise<void>;
 
-    delete(id: number, user: IUser): Promise<void>;
+    delete(id: number, user: IUser, auditUser: IAuditUser): Promise<void>;
 
-    unprotectedDelete(id: number, user: IUser): Promise<void>;
+    unprotectedDelete(id: number, auditUser: IAuditUser): Promise<void>;
 
     removeFromStrategy(id: number, strategyId: string): Promise<void>;
 

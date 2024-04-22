@@ -84,6 +84,7 @@ export type UiFlags = {
     scimApi?: boolean;
     projectListFilterMyProjects?: boolean;
     createProjectWithEnvironmentConfig?: boolean;
+    projectsListNewCards?: boolean;
 };
 
 export interface IVersionInfo {

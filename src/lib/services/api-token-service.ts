@@ -24,19 +24,15 @@ import {
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
     ApiTokenUpdatedEvent,
-    type IFlagContext,
+    type IAuditUser,
     type IFlagResolver,
-    type IUser,
-    SYSTEM_USER,
-    SYSTEM_USER_ID,
+    SYSTEM_USER_AUDIT,
 } from '../types';
-import {
-    extractUserIdFromUser,
-    extractUsernameFromUser,
-    omitKeys,
-} from '../util';
+import { omitKeys } from '../util';
 import type EventService from '../features/events/event-service';
 import { addMinutes, isPast } from 'date-fns';
+import metricsHelper from '../util/metrics-helper';
+import { FUNCTION_TIME } from '../metric-events';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -65,13 +61,13 @@ export class ApiTokenService {
 
     private queryAfter = new Map<string, Date>();
 
-    private initialized = false;
-
     private eventService: EventService;
 
     private lastSeenSecrets: Set<string> = new Set<string>();
 
     private flagResolver: IFlagResolver;
+
+    private timer: Function;
 
     constructor(
         {
@@ -80,7 +76,7 @@ export class ApiTokenService {
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<
             IUnleashConfig,
-            'getLogger' | 'authentication' | 'flagResolver'
+            'getLogger' | 'authentication' | 'flagResolver' | 'eventBus'
         >,
         eventService: EventService,
     ) {
@@ -99,18 +95,21 @@ export class ApiTokenService {
                 this.initApiTokens(config.authentication.initApiTokens),
             );
         }
+        this.timer = (functionName: string) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'ApiTokenService',
+                functionName,
+            });
     }
 
     /**
-     * Executed by a scheduler to refresh all active tokens
+     * Called by a scheduler without jitter to refresh all active tokens
      */
     async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.store.getAllActive();
-            this.initialized = true;
-        } finally {
-            // biome-ignore lint/correctness/noUnsafeFinally: We ignored this for eslint. Leaving this here for now, server-impl test fails without it
-            return;
+        } catch (e) {
+            this.logger.warn('Failed to fetch active tokens', e);
         }
     }
 
@@ -118,56 +117,7 @@ export class ApiTokenService {
         return this.store.get(secret);
     }
 
-    async updateLastSeen(): Promise<void> {
-        if (this.lastSeenSecrets.size > 0) {
-            const toStore = [...this.lastSeenSecrets];
-            this.lastSeenSecrets = new Set<string>();
-            await this.store.markSeenAt(toStore);
-        }
-    }
-
-    public async getAllTokens(): Promise<IApiToken[]> {
-        return this.store.getAll();
-    }
-
-    public async getAllActiveTokens(): Promise<IApiToken[]> {
-        if (this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
-            if (!this.initialized) {
-                // unlikely this will happen but nice to have a fail safe
-                this.logger.info('Fetching active tokens before initialized');
-                await this.fetchActiveTokens();
-            }
-            return this.activeTokens;
-        } else {
-            return this.store.getAllActive();
-        }
-    }
-
-    private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
-        const tokenCount = await this.store.count();
-        if (tokenCount > 0) {
-            return;
-        }
-        try {
-            const createAll = tokens
-                .map(mapLegacyTokenWithSecret)
-                .map((t) =>
-                    this.insertNewApiToken(
-                        t,
-                        'init-api-tokens',
-                        SYSTEM_USER_ID,
-                    ),
-                );
-            await Promise.all(createAll);
-        } catch (e) {
-            this.logger.error('Unable to create initial Admin API tokens');
-        }
-    }
-
-    public async getUserForToken(
-        secret: string,
-        flagContext?: IFlagContext, // temporarily added, expected from the middleware
-    ): Promise<IApiUser | undefined> {
+    async getTokenWithCache(secret: string): Promise<IApiToken | undefined> {
         if (!secret) {
             return undefined;
         }
@@ -189,11 +139,7 @@ export class ApiTokenService {
         }
 
         const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
-        if (
-            !token &&
-            isPast(nextAllowedQuery) &&
-            this.flagResolver.isEnabled('queryMissingTokens', flagContext)
-        ) {
+        if (!token && isPast(nextAllowedQuery)) {
             if (this.queryAfter.size > 1000) {
                 // establish a max limit for queryAfter size to prevent memory leak
                 this.queryAfter.clear();
@@ -201,12 +147,52 @@ export class ApiTokenService {
             // prevent querying the same invalid secret multiple times. Expire after 5 minutes
             this.queryAfter.set(secret, addMinutes(new Date(), 5));
 
+            const stopCacheTimer = this.timer('getTokenWithCache.query');
             token = await this.store.get(secret);
             if (token) {
                 this.activeTokens.push(token);
             }
+            stopCacheTimer();
         }
 
+        return token;
+    }
+
+    async updateLastSeen(): Promise<void> {
+        if (this.lastSeenSecrets.size > 0) {
+            const toStore = [...this.lastSeenSecrets];
+            this.lastSeenSecrets = new Set<string>();
+            await this.store.markSeenAt(toStore);
+        }
+    }
+
+    public async getAllTokens(): Promise<IApiToken[]> {
+        return this.store.getAll();
+    }
+
+    public async getAllActiveTokens(): Promise<IApiToken[]> {
+        return this.store.getAllActive();
+    }
+
+    private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
+        const tokenCount = await this.store.count();
+        if (tokenCount > 0) {
+            return;
+        }
+        try {
+            const createAll = tokens
+                .map(mapLegacyTokenWithSecret)
+                .map((t) => this.insertNewApiToken(t, SYSTEM_USER_AUDIT));
+            await Promise.all(createAll);
+        } catch (e) {
+            this.logger.error('Unable to create initial Admin API tokens');
+        }
+    }
+
+    public async getUserForToken(
+        secret: string,
+    ): Promise<IApiUser | undefined> {
+        const token = await this.getTokenWithCache(secret);
         if (token) {
             this.lastSeenSecrets.add(token.secret);
             const apiUser: IApiUser = new ApiUser({
@@ -231,15 +217,13 @@ export class ApiTokenService {
     public async updateExpiry(
         secret: string,
         expiresAt: Date,
-        updatedBy: string,
-        updatedById: number,
+        auditUser: IAuditUser,
     ): Promise<IApiToken> {
         const previous = await this.store.get(secret);
         const token = await this.store.setExpiry(secret, expiresAt);
         await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({
-                createdBy: updatedBy,
-                createdByUserId: updatedById,
+                auditUser,
                 previousToken: omitKeys(previous, 'secret'),
                 apiToken: omitKeys(token, 'secret'),
             }),
@@ -247,18 +231,13 @@ export class ApiTokenService {
         return token;
     }
 
-    public async delete(
-        secret: string,
-        deletedBy: string,
-        deletedByUserId: number,
-    ): Promise<void> {
+    public async delete(secret: string, auditUser: IAuditUser): Promise<void> {
         if (await this.store.exists(secret)) {
             const token = await this.store.get(secret);
             await this.store.delete(secret);
             await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({
-                    createdBy: deletedBy,
-                    createdByUserId: deletedByUserId,
+                    auditUser,
                     apiToken: omitKeys(token, 'secret'),
                 }),
             );
@@ -270,15 +249,10 @@ export class ApiTokenService {
      */
     public async createApiToken(
         newToken: Omit<ILegacyApiTokenCreate, 'secret'>,
-        createdBy: string = SYSTEM_USER.username,
-        createdByUserId: number = SYSTEM_USER.id,
+        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IApiToken> {
         const token = mapLegacyToken(newToken);
-        return this.internalCreateApiTokenWithProjects(
-            token,
-            createdBy,
-            createdByUserId,
-        );
+        return this.internalCreateApiTokenWithProjects(token, auditUser);
     }
 
     /**
@@ -288,32 +262,14 @@ export class ApiTokenService {
      */
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
-        createdBy?: string | IApiUser | IUser,
-        createdByUserId?: number,
+        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IApiToken> {
-        // if statement to support old method signature
-        if (
-            createdBy === undefined ||
-            typeof createdBy === 'string' ||
-            createdByUserId
-        ) {
-            return this.internalCreateApiTokenWithProjects(
-                newToken,
-                (createdBy as string) || SYSTEM_USER.username,
-                createdByUserId || SYSTEM_USER.id,
-            );
-        }
-        return this.internalCreateApiTokenWithProjects(
-            newToken,
-            extractUsernameFromUser(createdBy),
-            extractUserIdFromUser(createdBy),
-        );
+        return this.internalCreateApiTokenWithProjects(newToken, auditUser);
     }
 
     private async internalCreateApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
         const environments = await this.environmentStore.getAll();
@@ -321,11 +277,7 @@ export class ApiTokenService {
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
-        return this.insertNewApiToken(
-            createNewToken,
-            createdBy,
-            createdByUserId,
-        );
+        return this.insertNewApiToken(createNewToken, auditUser);
     }
 
     // TODO: Remove this service method after embedded proxy has been released in
@@ -337,25 +289,19 @@ export class ApiTokenService {
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
-        return this.insertNewApiToken(
-            createNewToken,
-            'system-migration',
-            SYSTEM_USER_ID,
-        );
+        return this.insertNewApiToken(createNewToken, SYSTEM_USER_AUDIT);
     }
 
     private async insertNewApiToken(
         newApiToken: IApiTokenCreate,
-        createdBy: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<IApiToken> {
         try {
             const token = await this.store.insert(newApiToken);
             this.activeTokens.push(token);
             await this.eventService.storeEvent(
                 new ApiTokenCreatedEvent({
-                    createdBy,
-                    createdByUserId,
+                    auditUser,
                     apiToken: omitKeys(token, 'secret'),
                 }),
             );

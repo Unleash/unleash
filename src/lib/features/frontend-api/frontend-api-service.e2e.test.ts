@@ -1,4 +1,9 @@
-import type { IApiUser, IUnleashConfig, IUnleashStores } from '../../types';
+import {
+    type IApiUser,
+    type IUnleashConfig,
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../types';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import type { FrontendApiService } from './frontend-api-service';
 import { createFrontendApiService } from './createFrontendApiService';
@@ -74,8 +79,7 @@ const createFeature = async (project: string, featureName: string) => {
     await featureToggleService.createFeatureToggle(
         project,
         { name: featureName, description: '' },
-        'user@example.com',
-        1,
+        TEST_AUDIT_USER,
     );
 };
 
@@ -89,7 +93,7 @@ const enableFeature = async (
         featureName,
         environment,
         true,
-        'user@example.com',
+        TEST_AUDIT_USER,
     );
 };
 

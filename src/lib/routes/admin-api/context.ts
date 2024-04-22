@@ -3,11 +3,6 @@ import type { Request, Response } from 'express';
 import Controller from '../controller';
 
 import {
-    extractUserIdFromUser,
-    extractUsername,
-} from '../../util/extract-user';
-
-import {
     CREATE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
@@ -43,6 +38,7 @@ import {
 } from '../../openapi/spec/context-field-strategies-schema';
 import type { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema';
 import type { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
+import { extractUserIdFromUser } from '../../util';
 
 interface ContextParam {
     contextField: string;
@@ -246,12 +242,10 @@ export class ContextController extends Controller {
         res: Response<ContextFieldSchema>,
     ): Promise<void> {
         const value = req.body;
-        const userName = extractUsername(req);
 
         const result = await this.contextService.createContextField(
             value,
-            userName,
-            req.user.id,
+            req.audit,
         );
 
         this.openApiService.respondWithValidation(
@@ -268,13 +262,11 @@ export class ContextController extends Controller {
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
-        const userName = extractUsername(req);
         const contextField = req.body;
 
         await this.contextService.updateContextField(
             { ...contextField, name },
-            userName,
-            req.user.id,
+            req.audit,
         );
         res.status(200).end();
     }
@@ -284,13 +276,8 @@ export class ContextController extends Controller {
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
-        const userName = extractUsername(req);
 
-        await this.contextService.deleteContextField(
-            name,
-            userName,
-            req.user.id,
-        );
+        await this.contextService.deleteContextField(name, req.audit);
         res.status(200).end();
     }
 

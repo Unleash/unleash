@@ -2,6 +2,7 @@ import { SYSTEM_USER } from '../../lib/types';
 import type {
     IApiRequest,
     IApiUser,
+    IAuditUser,
     IAuthRequest,
     IUser,
 } from '../server-impl';
@@ -25,4 +26,20 @@ export const extractUserId = (req: IAuthRequest | IApiRequest) =>
 export const extractUserInfo = (req: IAuthRequest | IApiRequest) => ({
     id: extractUserId(req),
     username: extractUsername(req),
+});
+
+export const extractAuditInfoFromUser = (
+    user: IUser | IApiUser,
+    ip: string = '127.0.0.1',
+): IAuditUser => ({
+    id: extractUserIdFromUser(user),
+    username: extractUsernameFromUser(user),
+    ip,
+});
+export const extractAuditInfo = (
+    req: IAuthRequest | IApiRequest,
+): IAuditUser => ({
+    id: extractUserId(req),
+    username: extractUsername(req),
+    ip: req.ip,
 });

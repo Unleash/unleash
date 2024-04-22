@@ -1,25 +1,26 @@
 import { parse } from 'pg-connection-string';
 import merge from 'deepmerge';
 import * as fs from 'fs';
+import { readFileSync } from 'fs';
 import {
-    type IUnleashOptions,
-    type IUnleashConfig,
-    type IDBOption,
-    type ISessionOption,
-    type IServerOption,
-    type IVersionOption,
     type IAuthOption,
     IAuthType,
-    type IImportOption,
-    type IEmailOption,
-    type IListeningPipe,
-    type IListeningHost,
-    type IUIConfig,
+    type IClientCachingOption,
     type ICspDomainConfig,
     type ICspDomainOptions,
-    type IClientCachingOption,
+    type IDBOption,
+    type IEmailOption,
+    type IImportOption,
+    type IListeningHost,
+    type IListeningPipe,
     type IMetricsRateLimiting,
     type IRateLimiting,
+    type IServerOption,
+    type ISessionOption,
+    type IUIConfig,
+    type IUnleashConfig,
+    type IUnleashOptions,
+    type IVersionOption,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -182,6 +183,45 @@ const dateHandlingCallback = (connection, callback) => {
     });
 };
 
+const databaseSsl = () => {
+    if (process.env.DATABASE_SSL != null) {
+        return JSON.parse(process.env.DATABASE_SSL);
+    } else if (process.env.DATABASE_SSL_CA_CONFIG != null) {
+        return readFileSync(process.env.DATABASE_SSL_CA_CONFIG).toJSON();
+    } else if (
+        process.env.DATABASE_SSL_KEY_FILE != null &&
+        process.env.DATABASE_SSL_CERT_FILE != null
+    ) {
+        const opts = {
+            rejectUnauthorized: parseEnvVarBoolean(
+                process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+                true,
+            ),
+        };
+        const key = readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString();
+        const cert = readFileSync(
+            process.env.DATABASE_SSL_CERT_FILE,
+        ).toString();
+        if (process.env.DATABASE_SSL_CA_FILE != null) {
+            return {
+                ...opts,
+                ca: readFileSync(process.env.DATABASE_SSL_CA_FILE).toString(),
+                key,
+                cert,
+            };
+        } else {
+            return { ...opts, key, cert };
+        }
+    } else {
+        return {
+            rejectUnauthorized: parseEnvVarBoolean(
+                process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+                false,
+            ),
+        };
+    }
+};
+
 const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
     {
         user: process.env.DATABASE_USERNAME,
@@ -189,10 +229,7 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
         host: process.env.DATABASE_HOST,
         port: parseEnvVarNumber(process.env.DATABASE_PORT, 5432),
         database: process.env.DATABASE_NAME || 'unleash',
-        ssl:
-            process.env.DATABASE_SSL != null
-                ? JSON.parse(process.env.DATABASE_SSL)
-                : { rejectUnauthorized: false },
+        ssl: databaseSsl(),
         driver: 'postgres',
         version: process.env.DATABASE_VERSION,
         acquireConnectionTimeout: secondsToMilliseconds(30),

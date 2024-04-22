@@ -4,6 +4,7 @@ import SettingService from '../../services/setting-service';
 import { createTestConfig } from '../../../test/config/test-config';
 import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
 import type EventService from '../events/event-service';
+import { TEST_AUDIT_USER } from '../../types';
 
 test('Scheduler should run scheduled functions if maintenance mode is off', async () => {
     const config = createTestConfig();
@@ -41,8 +42,7 @@ test('Scheduler should not run scheduled functions if maintenance mode is on', a
 
     await maintenanceService.toggleMaintenanceMode(
         { enabled: true },
-        'irrelevant user',
-        -9999,
+        TEST_AUDIT_USER,
     );
 
     const job = jest.fn();

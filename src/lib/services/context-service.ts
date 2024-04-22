@@ -8,18 +8,19 @@ import type { IProjectStore } from '../features/project/project-store-type';
 import type { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import type { IUnleashConfig } from '../types/option';
 import type { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
-import type { IFeatureStrategy, IFlagResolver } from '../types';
+import {
+    CONTEXT_FIELD_CREATED,
+    CONTEXT_FIELD_DELETED,
+    CONTEXT_FIELD_UPDATED,
+    type IAuditUser,
+    type IFeatureStrategy,
+    type IFlagResolver,
+} from '../types';
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import type EventService from '../features/events/event-service';
-
-const { contextSchema, nameSchema } = require('./context-schema');
-const NameExistsError = require('../error/name-exists-error');
-
-const {
-    CONTEXT_FIELD_CREATED,
-    CONTEXT_FIELD_UPDATED,
-    CONTEXT_FIELD_DELETED,
-} = require('../types/events');
+import { contextSchema } from './context-schema';
+import { NameExistsError } from '../error';
+import { nameSchema } from '../schema/feature-schema';
 
 class ContextService {
     private projectStore: IProjectStore;
@@ -102,8 +103,7 @@ class ContextService {
 
     async createContextField(
         value: IContextFieldDto,
-        userName: string,
-        createdByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<IContextField> {
         // validations
         await this.validateUniqueName(value);
@@ -113,8 +113,9 @@ class ContextService {
         const createdField = await this.contextFieldStore.create(value);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_CREATED,
-            createdBy: userName,
-            createdByUserId,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
             data: contextField,
         });
 
@@ -123,8 +124,7 @@ class ContextService {
 
     async updateContextField(
         updatedContextField: IContextFieldDto,
-        userName: string,
-        updatedByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const contextField = await this.contextFieldStore.get(
             updatedContextField.name,
@@ -137,8 +137,9 @@ class ContextService {
         const { createdAt, sortOrder, ...previousContextField } = contextField;
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
-            createdBy: userName,
-            createdByUserId: updatedByUserId,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
             preData: previousContextField,
             data: value,
         });
@@ -146,8 +147,7 @@ class ContextService {
 
     async deleteContextField(
         name: string,
-        userName: string,
-        deletedByUserId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const contextField = await this.contextFieldStore.get(name);
 
@@ -155,8 +155,9 @@ class ContextService {
         await this.contextFieldStore.delete(name);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
-            createdBy: userName,
-            createdByUserId: deletedByUserId,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
             preData: contextField,
         });
     }

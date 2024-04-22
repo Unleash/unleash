@@ -49,7 +49,7 @@ export const scheduleServices = async (
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
         'fetchActiveTokens',
-        0,
+        0, // no jitter, we need tokens at startup
     );
 
     schedulerService.schedule(

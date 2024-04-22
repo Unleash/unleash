@@ -36,7 +36,7 @@ Navigate to the Gradual Rollout form in Unleash by using the "Edit strategy" but
 Adjust the percentage of users to 50% or whichever value you choose, and refresh your app in the browser to see if your user has the new feature experience.
 
 
-![A gradual rollout form can allow you to customize your flag strategy.](/img/react-ex-grad-rollout-form.png)
+![A gradual rollout form can allow you to customize your flag strategy.](/img/ex-grad-rollout-form.png)
 
 
 You can achieve this same result using our API with the following code: 

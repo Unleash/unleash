@@ -7,7 +7,6 @@ import {
     NONE,
     UPDATE_TAG_TYPE,
 } from '../../types/permissions';
-import { extractUsername } from '../../util/extract-user';
 import type { IUnleashConfig } from '../../types/option';
 import type { IUnleashServices } from '../../types/services';
 import type TagTypeService from './tag-type-service';
@@ -201,9 +200,8 @@ class TagTypeController extends Controller {
         req: IAuthRequest<unknown, unknown, TagTypeSchema>,
         res: Response,
     ): Promise<void> {
-        const userName = extractUsername(req);
         const tagType = await this.tagTypeService.transactional((service) =>
-            service.createTagType(req.body, userName, req.user.id),
+            service.createTagType(req.body, req.audit),
         );
         res.status(201)
             .header('location', `tag-types/${tagType.name}`)
@@ -216,14 +214,9 @@ class TagTypeController extends Controller {
     ): Promise<void> {
         const { description, icon } = req.body;
         const { name } = req.params;
-        const userName = extractUsername(req);
 
         await this.tagTypeService.transactional((service) =>
-            service.updateTagType(
-                { name, description, icon },
-                userName,
-                req.user.id,
-            ),
+            service.updateTagType({ name, description, icon }, req.audit),
         );
         res.status(200).end();
     }
@@ -237,9 +230,8 @@ class TagTypeController extends Controller {
 
     async deleteTagType(req: IAuthRequest, res: Response): Promise<void> {
         const { name } = req.params;
-        const userName = extractUsername(req);
         await this.tagTypeService.transactional((service) =>
-            service.deleteTagType(name, userName, req.user.id),
+            service.deleteTagType(name, req.audit),
         );
         res.status(200).end();
     }

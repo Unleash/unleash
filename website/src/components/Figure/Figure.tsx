@@ -66,8 +66,7 @@
 // biome-ignore lint/style/useImportType: <explanation>
 import React from 'react';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-
-import './styles.module.css';
+import styles from './styles.module.css';
 
 type Props = {
     // An optional alt text, if the caption does not already convey all relevant
@@ -81,7 +80,7 @@ type Props = {
 
 const Component: React.FC<Props> = ({ img, alt, caption }) => {
     return (
-        <figure>
+        <figure className={styles.figure}>
             <img alt={alt} src={useBaseUrl(img)} />
             <figcaption>{caption}</figcaption>
         </figure>

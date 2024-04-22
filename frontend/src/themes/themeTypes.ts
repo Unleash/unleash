@@ -9,6 +9,7 @@ declare module '@mui/material/styles' {
         fontSizes: {
             extraLargeHeader: string;
             largeHeader: string;
+            mediumHeader: string;
             mainHeader: string;
             bodySize: string;
             smallBody: string;

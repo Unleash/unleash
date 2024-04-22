@@ -97,7 +97,7 @@ const FeatureOverviewMetaData = () => {
                             <StyledBodyItem data-loading>
                                 Lifecycle:{' '}
                                 <FeatureLifecycleTooltip>
-                                    Initial
+                                    <span>Initial</span>
                                 </FeatureLifecycleTooltip>
                             </StyledBodyItem>
                         }

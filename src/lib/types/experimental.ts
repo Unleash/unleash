@@ -54,7 +54,6 @@ export type IFlagKey =
     | 'globalFrontendApiCache'
     | 'returnGlobalFrontendApiCache'
     | 'projectOverviewRefactor'
-    | 'variantDependencies'
     | 'disableShowContextFieldSelectionValues'
     | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
@@ -270,10 +269,6 @@ const flags: IFlags = {
     disableShowContextFieldSelectionValues: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DISABLE_SHOW_CONTEXT_FIELD_SELECTION_VALUES,
-        false,
-    ),
-    variantDependencies: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_VARIANT_DEPENDENCIES,
         false,
     ),
     bearerTokenMiddleware: parseEnvVarBoolean(

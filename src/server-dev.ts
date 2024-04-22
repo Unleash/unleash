@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         returnGlobalFrontendApiCache: false,
                         projectOverviewRefactor: true,
                         disableShowContextFieldSelectionValues: false,
-                        variantDependencies: true,
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,
                         projectListFilterMyProjects: true,

@@ -139,6 +139,7 @@ exports[`should create default config 1`] = `
       "projectListFilterMyProjects": false,
       "projectOverviewRefactor": false,
       "projectOverviewRefactorFeedback": false,
+      "projectsListNewCards": false,
       "queryMissingTokens": false,
       "responseTimeMetricsFix": false,
       "responseTimeWithAppNameKillSwitch": false,

@@ -7,6 +7,8 @@ import Edit from '@mui/icons-material/Edit';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureLifecycleTooltip } from '../FeatureLifecycleTooltip/FeatureLifecycleTooltip';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -63,6 +65,7 @@ const FeatureOverviewMetaData = () => {
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
+    const featureLifecycleEnabled = useUiFlag('featureLifecycle');
 
     const IconComponent = getFeatureTypeIcons(type);
 
@@ -88,6 +91,18 @@ const FeatureOverviewMetaData = () => {
                     <StyledBodyItem data-loading>
                         Project: {project}
                     </StyledBodyItem>
+                    <ConditionallyRender
+                        condition={featureLifecycleEnabled}
+                        show={
+                            <StyledBodyItem data-loading>
+                                Lifecycle:{' '}
+                                <FeatureLifecycleTooltip>
+                                    Initial
+                                </FeatureLifecycleTooltip>
+                            </StyledBodyItem>
+                        }
+                    />
+
                     <ConditionallyRender
                         condition={Boolean(description)}
                         show={

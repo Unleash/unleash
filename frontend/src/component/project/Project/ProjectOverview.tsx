@@ -1,8 +1,6 @@
 import { type FC, useEffect, useState } from 'react';
 import { Box, styled } from '@mui/material';
-import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ProjectStats } from './ProjectStats/ProjectStats';
 import { ProjectFeatureToggles } from './PaginatedProjectFeatureToggles/ProjectFeatureToggles';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
@@ -12,7 +10,6 @@ import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
 import { useFeedback } from '../../feedbackNew/useFeedback';
-import { OldProjectFeatureToggles } from './PaginatedProjectFeatureToggles/OldProjectFeatureToggles';
 
 const refreshInterval = 15 * 1000;
 
@@ -36,69 +33,6 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
     width: '100%',
     minWidth: 0,
 }));
-
-const ProjectOverview: FC<{
-    storageKey?: string;
-}> = ({ storageKey = 'project-overview-v2' }) => {
-    const projectOverviewRefactor = useUiFlag('projectOverviewRefactor');
-
-    if (projectOverviewRefactor) {
-        return <NewProjectOverview storageKey={storageKey} />;
-    } else {
-        return <OldProjectOverview storageKey={storageKey} />;
-    }
-};
-
-const OldProjectOverview: FC<{
-    storageKey?: string;
-}> = ({ storageKey = 'project-overview-v2' }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectOverviewNameOrId(projectId);
-    const { project } = useProjectOverview(projectId, {
-        refreshInterval,
-    });
-    usePageTitle(`Project overview – ${projectName}`);
-    const { setLastViewed } = useLastViewedProject();
-    useEffect(() => {
-        setLastViewed(projectId);
-    }, [projectId, setLastViewed]);
-
-    const {
-        members,
-        featureTypeCounts,
-        health,
-        description,
-        environments,
-        stats,
-    } = project;
-
-    return (
-        <StyledContainer key={projectId}>
-            <ProjectInfo
-                id={projectId}
-                description={description}
-                memberCount={members}
-                health={health}
-                featureTypeCounts={featureTypeCounts}
-                stats={stats}
-            />
-
-            <StyledContentContainer>
-                <ProjectStats stats={project.stats} />
-
-                <StyledProjectToggles>
-                    <OldProjectFeatureToggles
-                        environments={project.environments.map(
-                            (environment) => environment.environment,
-                        )}
-                        refreshInterval={refreshInterval}
-                        storageKey={storageKey}
-                    />
-                </StyledProjectToggles>
-            </StyledContentContainer>
-        </StyledContainer>
-    );
-};
 
 const useDelayedFeedbackPrompt = () => {
     const { openFeedback, hasSubmittedFeedback } = useFeedback(
@@ -132,7 +66,7 @@ const useDelayedFeedbackPrompt = () => {
     }, [hasSubmittedFeedback, openFeedback, seenFeedback]);
 };
 
-const NewProjectOverview: FC<{
+export const ProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
     const projectId = useRequiredPathParam('projectId');

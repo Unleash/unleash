@@ -53,7 +53,6 @@ export type IFlagKey =
     | 'displayEdgeBanner'
     | 'globalFrontendApiCache'
     | 'returnGlobalFrontendApiCache'
-    | 'projectOverviewRefactor'
     | 'variantDependencies'
     | 'disableShowContextFieldSelectionValues'
     | 'bearerTokenMiddleware'
@@ -261,10 +260,6 @@ const flags: IFlags = {
     ),
     returnGlobalFrontendApiCache: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RETURN_GLOBAL_FRONTEND_API_CACHE,
-        false,
-    ),
-    projectOverviewRefactor: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
         false,
     ),
     disableShowContextFieldSelectionValues: parseEnvVarBoolean(

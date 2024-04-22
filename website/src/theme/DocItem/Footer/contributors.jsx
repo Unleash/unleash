@@ -31,6 +31,7 @@ const GitHubContributors = ({ filePath }) => {
                 .then((response) => response.json())
                 .then((commits) => {
                     const contributorSet = new Set();
+                    // using a Set to deduplicate the list of contributors
                     for (const commit of commits) {
                         contributorSet.add(JSON.stringify(commit.author));
                     }
@@ -49,7 +50,7 @@ const GitHubContributors = ({ filePath }) => {
     }, []);
 
     if (!contributors.length) {
-        return <h1>Fetching contributors...</h1>;
+        return <h3>Fetching contributors...</h3>;
     }
 
     return (

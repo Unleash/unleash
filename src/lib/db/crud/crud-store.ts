@@ -61,11 +61,13 @@ export abstract class CRUDStore<
     }
 
     async getAll(query?: Partial<InputModel>): Promise<OutputModel[]> {
+        const endTimer = this.timer('getAll');
         let allQuery = this.db(this.tableName);
         if (query) {
             allQuery = allQuery.where(this.toRow(query) as Record<string, any>);
         }
         const items = await allQuery;
+        endTimer();
         return items.map(this.fromRow) as OutputModel[];
     }
 
@@ -80,9 +82,11 @@ export abstract class CRUDStore<
         if (!items || items.length === 0) {
             return [];
         }
+        const endTimer = this.timer('bulkInsert');
         const rows = await this.db(this.tableName)
             .insert(items.map(this.toRow))
             .returning('*');
+        endTimer();
         return rows.map(this.fromRow) as OutputModel[];
     }
 
@@ -105,15 +109,18 @@ export abstract class CRUDStore<
     destroy(): void {}
 
     async exists(id: IdType): Promise<boolean> {
+        const endTimer = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${this.tableName} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
+        endTimer();
         return present;
     }
 
     async count(query?: Partial<InputModel>): Promise<number> {
+        const endTimer = this.timer('count');
         let countQuery = this.db(this.tableName).count('*');
         if (query) {
             countQuery = countQuery.where(
@@ -121,11 +128,14 @@ export abstract class CRUDStore<
             );
         }
         const { count } = (await countQuery.first()) ?? { count: 0 };
+        endTimer();
         return Number(count);
     }
 
     async get(id: IdType): Promise<OutputModel> {
+        const endTimer = this.timer('get');
         const row = await this.db(this.tableName).where({ id }).first();
+        endTimer();
         if (!row) {
             throw new NotFoundError(`No item with id ${id}`);
         }

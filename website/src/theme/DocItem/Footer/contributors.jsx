@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// biome-ignore lint/correctness/noUnusedImports: Needs this for React to work
+import React, { useState, useEffect } from 'react';
 import styles from './contributors.module.scss';
 
 const unleashTeam = new Map([
@@ -57,12 +58,6 @@ const GitHubContributors = ({ filePath }) => {
 
             <div className={styles.wrapper}>
                 {contributors?.map((contributor) => {
-                    let description = contributor.login;
-
-                    if (unleashTeam.has(contributor.login)) {
-                        description += unleashTeam.get(contributor.login);
-                    }
-
                     return (
                         <figure className={styles.contributor}>
                             <a href={contributor.html_url}>
@@ -73,7 +68,13 @@ const GitHubContributors = ({ filePath }) => {
                                     style={{ borderRadius: '100%' }}
                                 />
                             </a>
-                            <figcaption>{description}</figcaption>
+                            <figcaption>
+                                <code>{contributor.login}</code>
+
+                                {unleashTeam.has(contributor.login) && (
+                                    <p>{unleashTeam.get(contributor.login)}</p>
+                                )}
+                            </figcaption>
                         </figure>
                     );
                 })}

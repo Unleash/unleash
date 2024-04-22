@@ -1,3 +1,5 @@
+// biome-ignore lint/correctness/noUnusedImports: Needs this for React to work
+import React from 'react';
 import Footer from '@theme-original/DocItem/Footer';
 import { useDoc } from '@docusaurus/theme-common/internal';
 import GitHubContributors from './contributors';

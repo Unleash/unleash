@@ -2,6 +2,7 @@ import { Box, styled, Typography } from '@mui/material';
 import { Badge } from '../../../../common/Badge/Badge';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import type { FC } from 'react';
+import type * as React from 'react';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -23,7 +24,9 @@ const TimeLifecycleRow = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
-export const FeatureLifecycleTooltip: FC = ({ children }) => (
+export const FeatureLifecycleTooltip: FC<{
+    children: React.ReactElement<any, any>;
+}> = ({ children }) => (
     <HtmlTooltip
         maxHeight={800}
         arrow
@@ -68,6 +71,6 @@ export const FeatureLifecycleTooltip: FC = ({ children }) => (
             </Box>
         }
     >
-        {children || 'current stage'}
+        {children}
     </HtmlTooltip>
 );

@@ -10,7 +10,7 @@ const unleashTeam = new Map([
     ['FredrikOseberg', 'senior software engineer, Unleash'],
     ['gardleopard', 'senior software engineer, Unleash'],
     ['gastonfournier', 'senior software engineer, Unleash'],
-    ['ivarconr', 'senior software engineer, Unleash'],
+    ['ivarconr', 'co-founder, Unleash'],
     ['kwasniew', 'senior software engineer, Unleash'],
     ['nnennandukwe', 'developer advocate, Unleash'],
     ['nunogois', 'senior software engineer, Unleash'],
@@ -64,7 +64,7 @@ const GitHubContributors = ({ filePath }) => {
                                 <img
                                     src={contributor.avatar_url}
                                     alt={contributor.login}
-                                    width={50}
+                                    width={70}
                                     style={{ borderRadius: '100%' }}
                                 />
                             </a>

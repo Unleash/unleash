@@ -1,5 +1,5 @@
 .contributors {
-    
+    margin-block: var(--ifm-spacing-vertical);
 }
 
 .wrapper{
@@ -7,14 +7,21 @@
 }
 
 .contributor {
-    margin: 5px;
+    margin: 5px 10px 5px 0;
     display: flex;
+    gap: 10px;
 
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    figcaption{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+}
 
-    figcaption {
-        text-align: center;
+
+@media (max-width: 600px) {
+    .wrapper {
+       display: block;
     }
 }

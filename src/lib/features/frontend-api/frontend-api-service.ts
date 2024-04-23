@@ -182,6 +182,10 @@ export class FrontendApiService {
         this.clients.forEach((promise) => promise.then((c) => c.destroy()));
     }
 
+    refreshData(): Promise<void> {
+        return this.globalFrontendApiCache.refreshData();
+    }
+
     private static assertExpectedTokenType({ type }: IApiUser) {
         if (!(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN)) {
             throw new InvalidTokenError();

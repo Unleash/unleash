@@ -77,6 +77,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
         const features = this.getTogglesByEnvironment(
             this.environmentNameForToken(token),
         );
+        console.log('get toggle');
         return features[name];
     }
 
@@ -114,6 +115,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
         try {
             this.featuresByEnvironment = await this.getAllFeatures();
             this.segments = await this.getAllSegments();
+            console.log('features updated');
             if (this.status === 'starting') {
                 this.status = 'ready';
                 this.emit('ready');

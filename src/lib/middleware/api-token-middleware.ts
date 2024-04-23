@@ -78,9 +78,7 @@ const apiAccessMiddleware = (
                     // If we're here, we know that api token middleware was enabled, otherwise we'd returned a no-op middleware
                     // We explicitly only protect client and proxy apis, since admin apis are protected by our permission checker
                     // Reject with 401
-                    logger.warn(
-                        `Client api request without valid token (${apiToken}), rejecting`,
-                    );
+                    logger.warn(`No user found for token, rejecting`);
                     res.status(401).send({
                         message: NO_TOKEN_WHERE_TOKEN_WAS_REQUIRED,
                     });

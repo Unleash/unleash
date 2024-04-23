@@ -145,36 +145,34 @@ export class ApiTokenService {
         }
 
         const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
-        this.logger.info(
-            `Token found in cache: ${Boolean(
-                token,
-            )}, next allowed query: ${nextAllowedQuery}`,
-        );
-        if (!token && isPast(nextAllowedQuery)) {
-            this.logger.info(
-                `Token not found in cache, querying database for token with secret: ${secret}`,
-            );
-            if (this.queryAfter.size > 1000) {
-                // establish a max limit for queryAfter size to prevent memory leak
+        if (!token) {
+            if (isPast(nextAllowedQuery)) {
+                this.logger.info(`Token not found in cache, querying database`);
+                if (this.queryAfter.size > 1000) {
+                    // establish a max limit for queryAfter size to prevent memory leak
+                    this.logger.info(
+                        'queryAfter size exceeded 1000, clearing cache',
+                    );
+                    this.queryAfter.clear();
+                }
+
+                const stopCacheTimer = this.timer('getTokenWithCache.query');
+                token = await this.store.get(secret);
+                if (token) {
+                    this.activeTokens.push(token);
+                } else {
+                    // prevent querying the same invalid secret multiple times. Expire after 5 minutes
+                    this.queryAfter.set(secret, addMinutes(new Date(), 5));
+                }
+                stopCacheTimer();
+            } else {
                 this.logger.info(
-                    'queryAfter size exceeded 1000, clearing cache',
+                    `Not allowed to query this token until: ${this.queryAfter.get(
+                        secret,
+                    )}`,
                 );
-                this.queryAfter.clear();
             }
-            // prevent querying the same invalid secret multiple times. Expire after 5 minutes
-            this.queryAfter.set(secret, addMinutes(new Date(), 5));
-            this.logger.info(
-                `Added ${secret} to queryAfter: ${this.queryAfter.get(secret)}`,
-            );
-
-            const stopCacheTimer = this.timer('getTokenWithCache.query');
-            token = await this.store.get(secret);
-            if (token) {
-                this.activeTokens.push(token);
-            }
-            stopCacheTimer();
         }
-
         return token;
     }
 
@@ -213,7 +211,7 @@ export class ApiTokenService {
         secret: string,
     ): Promise<IApiUser | undefined> {
         const token = await this.getTokenWithCache(secret);
-        this.logger.info(`getUserForToken ${secret} found: ${token}`);
+        this.logger.info(`Found user? ${token ? 'yes' : 'no'}`);
         if (token) {
             this.lastSeenSecrets.add(token.secret);
             const apiUser: IApiUser = new ApiUser({

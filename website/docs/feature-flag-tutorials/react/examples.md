@@ -8,14 +8,24 @@ In our [React tutorial](/feature-flag-tutorials/react), we implemented a simple 
 Applications evolve, and teams must manage all aspects of this evolution, including the flags used to control the application. We built multiple features into Unleash to address the complexities of releasing code and managing feature flags along the way:
 
 
-1. [Gradual rollouts](#gradual-rollouts-for-react-apps)
-2. [Canary deployments](#canary-deployments-in-react)
-3. [A/B testing](#ab-testing-in-react)
-4. [Feature flag metrics & reporting](#feature-flag-analytics-and-reporting-in-react)
-5. [Feature flag audit logs](#feature-flag-audit-logs-in-react)
-6. [Change management & feature flag approvals](#change-management--feature-flag-approvals-in-react)
-7. [Flag automation & workflow integration](#flag-automation--workflow-integration-for-react-apps)
-8. [Common usage examples of React feature flags](#common-usage-examples-of-react-feature-flags)
+- [Gradual Rollouts for React Apps](#gradual-rollouts-for-react-apps)
+    - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+- [A/B Testing in React](#ab-testing-in-react)
+- [Feature Flag Analytics and Reporting in React](#feature-flag-analytics-and-reporting-in-react)
+  - [Enable feature flag impression data](#enable-feature-flag-impression-data)
+  - [Capture impression data for flag analytics](#capture-impression-data-for-flag-analytics)
+  - [Application Metrics \& Monitoring](#application-metrics--monitoring)
+- [Feature Flag Audit Logs in React](#feature-flag-audit-logs-in-react)
+- [Change Management \& Feature Flag Approvals in React](#change-management--feature-flag-approvals-in-react)
+- [Flag Automation \& Workflow Integration for React Apps](#flag-automation--workflow-integration-for-react-apps)
+- [Common Usage Examples of React Feature Flags](#common-usage-examples-of-react-feature-flags)
+  - [`useFlag` example](#useflag-example)
+  - [`useVariant` example](#usevariant-example)
+  - [`useUnleashClient` example](#useunleashclient-example)
+  - [`useUnleashContext` example](#useunleashcontext-example)
+  - [`useFlags` example](#useflags-example)
+  - [`useFlagsStatus` example](#useflagsstatus-example)
+- [Additional Examples](#additional-examples)
 
 
 ## Gradual Rollouts for React Apps
@@ -61,34 +71,15 @@ curl --location --request PUT 'http://localhost:4242/api/admin/projects/default/
 
 ```
 
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies.md).
+Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
 
+There are 2 options you can use to enhance your gradual rollouts:
 
-## Canary Deployments in React
+- [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
 
+- [Strategy variants](/reference/strategy-variants) for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
 
-### What is a canary deployment?
-
-Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to.
-
-
-### Why use canary deployments?
-
-Canary deployments are a safer and more gradual way to make changes in software development. They help find any abnormalities and align with the agile process for faster releases and quick reversions.
-
-
-### How to leverage feature flags for canary deployments in React?
-
-Unleash has a few ways to help manage canary deployments for React apps at scale:
-
-
-* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in a previous section](#gradual-rollouts-for-react-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
-
-* Using either [constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
-
-* [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
-
-Let’s walk through how to utilize strategy constraints in our React app through the Unleash platform.
+Let’s walk through how to utilize **strategy constraints** in our Python app.
 
 
 #### Configure strategy constraints for canary deployments

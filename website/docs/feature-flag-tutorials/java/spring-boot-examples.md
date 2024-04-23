@@ -7,13 +7,16 @@ In our [Java Spring Boot feature flag tutorial](/feature-flag-tutorials/spring-b
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
-1. [Gradual rollouts](#gradual-rollouts-for-java-spring-boot-apps)
-2. [Canary deployments](#canary-deployments-in-java)
-3. [Server-side A/B testing](#server-side-ab-testing-in-java-spring-boot)
-4. [Feature flag metrics & reporting](#feature-flag-analytics-and-reporting-in-java)
-5. [Feature flag audit logs](#feature-flag-audit-logs-in-java)
-6. [Flag automation & workflow integration](#flag-automation--workflow-integration-for-java-apps)
-7. [Common usage examples of Spring Boot feature flags](#common-usage-examples-of-spring-boot-feature-flags)
+- [Gradual Rollouts for Java Spring Boot Apps](#gradual-rollouts-for-java-spring-boot-apps)
+  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+- [Server-side A/B Testing in Java Spring Boot](#server-side-ab-testing-in-java-spring-boot)
+- [Feature Flag Analytics and Reporting in Java](#feature-flag-analytics-and-reporting-in-java)
+- [Application Metrics \& Monitoring](#application-metrics--monitoring)
+- [Feature Flag Audit Logs in Java](#feature-flag-audit-logs-in-java)
+- [Flag Automation \& Workflow Integration for Java Apps](#flag-automation--workflow-integration-for-java-apps)
+- [Common Usage Examples of Spring Boot Feature Flags](#common-usage-examples-of-spring-boot-feature-flags)
+  - [`@Toggle` example](#toggle-example)
+  - [`@FeatureVariant` and `@FeatureVariants` example](#featurevariant-and-featurevariants-example)
 
 
 ## Gradual Rollouts for Java Spring Boot Apps
@@ -51,22 +54,13 @@ Response response = client.newCall(request).execute();
 Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
 
 
-## Canary Deployments in Java
+There are 2 options you can use to enhance your gradual rollouts:
 
+- [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
 
-### What is a canary deployment?
+- [Strategy variants](/reference/strategy-variants) for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
 
-Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to. They help find abnormalities and align with the agile process for faster releases and quick reversions.
-
-
-### How to do canary deployments with a feature flag in Java?
-
-
-Canary deployments are a safer and more gradual way to make changes in software development. They help find abnormalities and align with the agile process for faster releases and quick reversions.
-
-Unleash has a few ways to help manage canary deployments for Java apps at scale:
-
-* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in the previous section](#gradual-rollouts-for-java-spring-boot-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+Let’s walk through how to utilize **strategy constraints** in our Python app.
 
 * Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout
 

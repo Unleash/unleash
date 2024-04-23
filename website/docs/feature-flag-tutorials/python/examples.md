@@ -7,13 +7,18 @@ In our [Python feature flag tutorial](/feature-flag-tutorials/python), we implem
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
-1. [Gradual rollouts](#gradual-rollouts-for-python-apps)
-2. [Canary deployments](#canary-deployments-in-python)
-3. [Server-side A/B testing](#server-side-ab-testing-in-python)
-4. [Feature flag metrics & reporting](#feature-flag-analytics-and-reporting-in-python)
-5. [Feature flag audit logs](#feature-flag-audit-logs-in-python)
-6. [Flag automation & workflow integration](#flag-automation--workflow-integration-for-python-apps)
-7. [Common usage examples of Python feature flags](#common-usage-examples-of-python-feature-flags)
+- [Gradual Rollouts for Python Apps](#gradual-rollouts-for-python-apps)
+  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+- [Server-side A/B Testing in Python](#server-side-ab-testing-in-python)
+- [Feature Flag Analytics and Reporting in Python](#feature-flag-analytics-and-reporting-in-python)
+  - [Enable impression data events in Python](#enable-impression-data-events-in-python)
+- [Application Metrics \& Monitoring for Python](#application-metrics--monitoring-for-python)
+- [Feature Flag Audit Logs in Python](#feature-flag-audit-logs-in-python)
+- [Flag Automation \& Workflow Integration for Python Apps](#flag-automation--workflow-integration-for-python-apps)
+- [Common Usage Examples of Python Feature Flags](#common-usage-examples-of-python-feature-flags)
+  - [`is_enabled` example](#is_enabled-example)
+  - [`get_variant` example](#get_variant-example)
+  - [`initialize_client` example](#initialize_client-example)
 
 
 ## Gradual Rollouts for Python Apps
@@ -65,27 +70,11 @@ print(response.text)
 
 Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
 
+There are 2 options you can use to enhance your gradual rollouts:
 
-## Canary Deployments in Python
+- [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
 
-
-### What is a canary deployment?
-
-Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to.
-
-
-### How to do canary deployments with a Python feature flag?
-
-
-Canary deployments are a safer and more gradual way to make changes in software development. They help find abnormalities and align with the agile process for faster releases and quick reversions.
-
-Unleash has a few ways to help manage canary deployments for Python apps at scale:
-
-- Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we implemented in a [previous section](#gradual-rollouts-for-python-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
-
-- Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
-
-- [Strategy variants](/reference/strategy-variants) are for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
+- [Strategy variants](/reference/strategy-variants) for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk through how to utilize **strategy constraints** in our Python app.
 

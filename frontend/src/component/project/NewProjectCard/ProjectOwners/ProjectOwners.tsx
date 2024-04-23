@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useMemo, type FC } from 'react';
 
 interface IProjectOwnersProps {
@@ -21,6 +22,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners }) => {
             group.users.map((item: any) => item.user),
         ),
     ];
+    const { uiConfig } = useUiConfig();
 
     const users = allUsers.length
         ? allUsers
@@ -28,6 +30,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners }) => {
               {
                   id: 'no-owner',
                   name: 'System',
+                  imageUrl: `${uiConfig.unleashUrl}/logo-unleash.png`,
               },
           ];
 

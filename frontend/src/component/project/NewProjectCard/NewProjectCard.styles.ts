@@ -31,9 +31,9 @@ export const StyledDivHeader = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-export const StyledH2Title = styled('h2')(({ theme }) => ({
-    fontWeight: 'normal',
-    fontSize: theme.fontSizes.bodySize,
+export const StyledCardTitle = styled('h3')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.body1.fontSize,
     lineClamp: '2',
     WebkitLineClamp: 2,
     lineHeight: '1.2',
@@ -74,4 +74,5 @@ export const StyledDivInfoContainer = styled('div')(() => ({
 export const StyledParagraphInfo = styled('p')(({ theme }) => ({
     color: theme.palette.primary.dark,
     fontWeight: 'bold',
+    fontSize: theme.typography.body1.fontSize,
 }));

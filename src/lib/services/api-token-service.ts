@@ -108,9 +108,6 @@ export class ApiTokenService {
     async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.store.getAllActive();
-            this.logger.info(
-                `Fetched active tokens from store, size: ${this.activeTokens.length}`,
-            );
         } catch (e) {
             this.logger.warn('Failed to fetch active tokens', e);
         }
@@ -125,9 +122,6 @@ export class ApiTokenService {
             return undefined;
         }
 
-        this.logger.info(
-            `Checking for token in cache of size: ${this.activeTokens.length}`,
-        );
         let token = this.activeTokens.find(
             (activeToken) =>
                 Boolean(activeToken.secret) &&
@@ -147,12 +141,8 @@ export class ApiTokenService {
         const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
         if (!token) {
             if (isPast(nextAllowedQuery)) {
-                this.logger.info(`Token not found in cache, querying database`);
                 if (this.queryAfter.size > 1000) {
                     // establish a max limit for queryAfter size to prevent memory leak
-                    this.logger.info(
-                        'queryAfter size exceeded 1000, clearing cache',
-                    );
                     this.queryAfter.clear();
                 }
 
@@ -218,7 +208,6 @@ export class ApiTokenService {
         secret: string,
     ): Promise<IApiUser | undefined> {
         const token = await this.getTokenWithCache(secret);
-        this.logger.info(`Found user? ${token ? 'yes' : 'no'}`);
         if (token) {
             this.lastSeenSecrets.add(token.secret);
             const apiUser: IApiUser = new ApiUser({

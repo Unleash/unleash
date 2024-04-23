@@ -163,6 +163,7 @@ export class ApiTokenService {
                         this.logger.info('Token has expired');
                         // prevent querying the same invalid secret multiple times. Expire after 5 minutes
                         this.queryAfter.set(secret, addMinutes(new Date(), 5));
+                        token = undefined;
                     } else {
                         this.activeTokens.push(token);
                     }

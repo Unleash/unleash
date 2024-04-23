@@ -12,7 +12,7 @@ import {
     API_TOKEN_UPDATED,
     TEST_AUDIT_USER,
 } from '../types';
-import { addDays, minutesToMilliseconds } from 'date-fns';
+import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
 import EventService from '../features/events/event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { createFakeEventsService } from '../../lib/features';
@@ -260,5 +260,27 @@ describe('API token getTokenWithCache', () => {
             ).toBeUndefined();
         }
         expect(apiTokenStoreGet).toHaveBeenCalledTimes(2);
+    });
+
+    test('should not return the token if it has expired and shoud perform only one db query', async () => {
+        const { apiTokenService, apiTokenStore } = setup({
+            getLogger: () => ({
+                debug: console.log,
+                fatal: console.log,
+                info: console.log,
+                warn: console.log,
+                error: console.log,
+            }),
+        });
+        const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
+
+        // valid token not present in cache but expired
+        apiTokenStore.insert({ ...token, expiresAt: subDays(new Date(), 1) });
+
+        for (let i = 0; i < 5; i++) {
+            const found = await apiTokenService.getTokenWithCache(token.secret);
+            expect(found).toBeUndefined();
+        }
+        expect(apiTokenStoreGet).toHaveBeenCalledTimes(1);
     });
 });

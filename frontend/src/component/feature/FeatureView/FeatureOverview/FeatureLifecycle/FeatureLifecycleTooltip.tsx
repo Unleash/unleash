@@ -7,7 +7,12 @@ import { ReactComponent as InitialStageIcon } from 'assets/icons/stage-initial.s
 import { ReactComponent as PreLiveStageIcon } from 'assets/icons/stage-pre-live.svg';
 import { ReactComponent as LiveStageIcon } from 'assets/icons/stage-live.svg';
 import { ReactComponent as CompletedStageIcon } from 'assets/icons/stage-completed.svg';
+import { ReactComponent as CompletedDiscardedStageIcon } from 'assets/icons/stage-completed-discarded.svg';
 import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived.svg';
+import {
+    FeatureLifecycleStageIcon,
+    type LifecycleStage,
+} from './FeatureLifecycleStageIcon';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -92,7 +97,8 @@ const ColorFill = styled(Box)(({ theme }) => ({
 
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
-}> = ({ children }) => (
+    stage: LifecycleStage;
+}> = ({ children, stage }) => (
     <HtmlTooltip
         maxHeight={800}
         maxWidth={350}
@@ -109,8 +115,10 @@ export const FeatureLifecycleTooltip: FC<{
                                 gap: 1,
                             }}
                         >
-                            <Badge>Initial</Badge>
-                            <InitialStageIcon />
+                            <Badge sx={{ textTransform: 'capitalize' }}>
+                                {stage.name}
+                            </Badge>
+                            <FeatureLifecycleStageIcon stage={stage} />
                         </Box>
                     </MainLifecycleRow>
                     <TimeLifecycleRow>
@@ -122,31 +130,51 @@ export const FeatureLifecycleTooltip: FC<{
                         <span>3 days</span>
                     </TimeLifecycleRow>
                     <IconsRow>
-                        <StageBox data-after-content='Initial' active={true}>
+                        <StageBox
+                            data-after-content='Initial'
+                            active={stage.name === 'initial'}
+                        >
                             <InitialStageIcon />
                         </StageBox>
 
                         <Line />
 
-                        <StageBox data-after-content='Pre-live'>
+                        <StageBox
+                            data-after-content='Pre-live'
+                            active={stage.name === 'pre-live'}
+                        >
                             <PreLiveStageIcon />
                         </StageBox>
 
                         <Line />
 
-                        <StageBox data-after-content='Live'>
+                        <StageBox
+                            data-after-content='Live'
+                            active={stage.name === 'live'}
+                        >
                             <LiveStageIcon />
                         </StageBox>
 
                         <Line />
 
-                        <StageBox data-after-content='Completed'>
-                            <CompletedStageIcon />
+                        <StageBox
+                            data-after-content='Completed'
+                            active={stage.name === 'completed'}
+                        >
+                            {stage.name === 'completed' &&
+                            stage.status === 'discarded' ? (
+                                <CompletedDiscardedStageIcon />
+                            ) : (
+                                <CompletedStageIcon />
+                            )}
                         </StageBox>
 
                         <Line />
 
-                        <StageBox data-after-content='Archived'>
+                        <StageBox
+                            data-after-content='Archived'
+                            active={stage.name === 'archived'}
+                        >
                             <ArchivedStageIcon />
                         </StageBox>
                     </IconsRow>
@@ -168,6 +196,6 @@ export const FeatureLifecycleTooltip: FC<{
             </Box>
         }
     >
-        {children}
+        <Box>{children}</Box>
     </HtmlTooltip>
 );

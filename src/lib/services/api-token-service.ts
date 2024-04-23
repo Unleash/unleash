@@ -159,14 +159,7 @@ export class ApiTokenService {
                 const stopCacheTimer = this.timer('getTokenWithCache.query');
                 token = await this.store.get(secret);
                 if (token) {
-                    if (token?.expiresAt && isPast(token.expiresAt)) {
-                        this.logger.info('Token has expired');
-                        // prevent querying the same invalid secret multiple times. Expire after 5 minutes
-                        this.queryAfter.set(secret, addMinutes(new Date(), 5));
-                        token = undefined;
-                    } else {
-                        this.activeTokens.push(token);
-                    }
+                    this.activeTokens.push(token);
                 } else {
                     // prevent querying the same invalid secret multiple times. Expire after 5 minutes
                     this.queryAfter.set(secret, addMinutes(new Date(), 5));

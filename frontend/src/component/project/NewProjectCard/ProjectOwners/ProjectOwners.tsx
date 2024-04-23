@@ -14,7 +14,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners }) => {
-    // @ts-ignore
+    // @ts-ignore // FIXME: groups
     const allUsers = [
         ...(owners?.users || []),
         ...(owners?.groups || []).flatMap((group) =>
@@ -22,26 +22,28 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners }) => {
         ),
     ];
 
+    const users = allUsers.length
+        ? allUsers
+        : [
+              {
+                  id: 'no-owner',
+                  name: 'System',
+              },
+          ];
+
     const header = useMemo(() => {
-        if (owners?.users.length === 1 && !owners?.groups.length) {
+        if (users.length === 1 && !owners?.groups.length) {
             return 'Owner';
         }
-        if (owners?.groups.length === 1 && !owners?.users.length) {
+        if (owners?.groups.length === 1 && !users.length) {
             return 'Owner';
         }
-        if (owners?.users.length || owners?.groups.length) {
-            return 'Owners';
-        }
-        return null;
+        return 'Owners';
     }, [owners]);
 
     return (
         <StyledContainer>
-            <GroupCardAvatars
-                header={header}
-                users={allUsers}
-                withDescription
-            />
+            <GroupCardAvatars header={header} users={users} withDescription />
         </StyledContainer>
     );
 };

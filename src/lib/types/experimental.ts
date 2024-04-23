@@ -304,6 +304,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_APPLICATION_OVERVIEW_NEW_QUERY,
         false,
     ),
+    projectsListNewCards: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_NEW_CARDS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

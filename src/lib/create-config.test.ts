@@ -226,6 +226,11 @@ test('should handle cases where no env var specified for tokens', async () => {
     expect(config.authentication.initApiTokens).toHaveLength(1);
 });
 
+test('should default demo admin login to false', async () => {
+    const config = createConfig({});
+    expect(config.authentication.demoAllowAdminLogin).toBeFalsy();
+});
+
 test('should load environment overrides from env var', async () => {
     process.env.ENABLED_ENVIRONMENTS = 'default,production';
 

@@ -221,7 +221,6 @@ Next, we can examine how Unleash can track the results and provide insights with
 
 Shipping code is one thing, but monitoring your applications is another aspect of managing code to account for. Some things to monitor could be:
 
--   Security vulnerabilities
 -   Performance metrics
 -   Tracking user behavior
 

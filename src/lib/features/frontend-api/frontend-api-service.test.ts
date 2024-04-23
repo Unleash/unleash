@@ -52,7 +52,7 @@ test('frontend api service fetching features from global cache', async () => {
         globalFrontendApiCache,
     );
 
-    const features = await frontendApiService.getNewFrontendApiFeatures(
+    const features = await frontendApiService.getFrontendApiFeatures(
         {
             projects: ['irrelevant'],
             environment: 'irrelevant',

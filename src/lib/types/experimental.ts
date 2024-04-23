@@ -51,8 +51,6 @@ export type IFlagKey =
     | 'responseTimeMetricsFix'
     | 'scimApi'
     | 'displayEdgeBanner'
-    | 'globalFrontendApiCache'
-    | 'returnGlobalFrontendApiCache'
     | 'projectOverviewRefactor'
     | 'variantDependencies'
     | 'disableShowContextFieldSelectionValues'
@@ -253,14 +251,6 @@ const flags: IFlags = {
     ),
     responseTimeMetricsFix: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_METRICS_FIX,
-        false,
-    ),
-    globalFrontendApiCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_FRONTEND_API_CACHE,
-        false,
-    ),
-    returnGlobalFrontendApiCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RETURN_GLOBAL_FRONTEND_API_CACHE,
         false,
     ),
     projectOverviewRefactor: parseEnvVarBoolean(

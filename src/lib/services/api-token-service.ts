@@ -108,9 +108,6 @@ export class ApiTokenService {
     async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.store.getAllActive();
-            this.logger.info(
-                `Fetched active tokens from store, size: ${this.activeTokens.length}`,
-            );
         } catch (e) {
             this.logger.warn('Failed to fetch active tokens', e);
         }
@@ -146,9 +143,6 @@ export class ApiTokenService {
             if (isPast(nextAllowedQuery)) {
                 if (this.queryAfter.size > 1000) {
                     // establish a max limit for queryAfter size to prevent memory leak
-                    this.logger.info(
-                        'queryAfter size exceeded 1000, clearing cache',
-                    );
                     this.queryAfter.clear();
                 }
 

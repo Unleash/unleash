@@ -8,7 +8,8 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureLifecycleTooltip } from '../FeatureLifecycleTooltip/FeatureLifecycleTooltip';
+import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
+import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -94,10 +95,21 @@ const FeatureOverviewMetaData = () => {
                     <ConditionallyRender
                         condition={featureLifecycleEnabled}
                         show={
-                            <StyledBodyItem data-loading>
-                                Lifecycle:{' '}
-                                <FeatureLifecycleTooltip>
-                                    <span>Initial</span>
+                            <StyledBodyItem
+                                sx={{
+                                    display: 'flex',
+                                    gap: 1,
+                                    alignItems: 'start',
+                                }}
+                                data-loading
+                            >
+                                <span>Lifecycle:</span>
+                                <FeatureLifecycleTooltip
+                                    stage={{ name: 'initial' }}
+                                >
+                                    <FeatureLifecycleStageIcon
+                                        stage={{ name: 'initial' }}
+                                    />
                                 </FeatureLifecycleTooltip>
                             </StyledBodyItem>
                         }

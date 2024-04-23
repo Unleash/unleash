@@ -60,6 +60,8 @@ export class FrontendApiRepository
     async start(): Promise<void> {
         this.running = true;
 
+        await this.globalFrontendApiCache.refreshData();
+
         this.emit(UnleashEvents.Ready);
         this.emit(UnleashEvents.Changed);
     }

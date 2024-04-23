@@ -21,14 +21,13 @@ const unleashTeam = new Map([
     ['Tymek', 'senior software engineer, Unleash'],
 ]);
 
-const GitHubContributors = ({ filePath }) => {
+const GitHubContributors = ({ owner, repo, filePath }) => {
     const [contributors, setContributors] = useState([]);
+    const url = `https://api.github.com/repos/${owner}/${repo}/commits?path=${filePath}`;
 
     useEffect(() => {
         const fetchFileContributors = () => {
-            fetch(
-                `https://api.github.com/repos/unleash/unleash/commits?path=${filePath}`,
-            )
+            fetch(url)
                 .then((response) => response.json())
                 .then((commits) => {
                     console.log(commits);

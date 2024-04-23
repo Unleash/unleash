@@ -2,10 +2,15 @@ import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IGroupUser } from 'interfaces/group';
 import type React from 'react';
-import { useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import { GroupPopover } from './GroupPopover/GroupPopover';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { IUser } from 'interfaces/user';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+}));
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -28,16 +33,25 @@ const StyledUsername = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
+const StyledHeader = styled('h3')(({ theme }) => ({
+    margin: theme.spacing(0, 0, 1),
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
+}));
+
 interface IGroupCardAvatarsProps {
     users: IUser[] | IGroupUser[];
     groups?: any[]; // FIXME: type
+    header?: ReactNode;
     withDescription?: boolean;
 }
 
 export const GroupCardAvatars = ({
     users = [],
     groups = [],
-    withDescription,
+    header = null,
+    withDescription = false,
 }: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>
@@ -72,45 +86,52 @@ export const GroupCardAvatars = ({
     const avatarOpen = Boolean(anchorEl);
 
     return (
-        <StyledAvatars>
-            {shownUsers.map((user) => (
-                <StyledAvatar
-                    key={user.id}
-                    user={user}
-                    onMouseEnter={(event) => {
-                        onPopoverOpen(event);
-                        setPopupUser(user);
-                    }}
-                    onMouseLeave={onPopoverClose}
+        <StyledContainer>
+            <ConditionallyRender
+                condition={typeof header === 'string'}
+                show={<StyledHeader>{header}</StyledHeader>}
+                elseShow={header}
+            />
+            <StyledAvatars>
+                {shownUsers.map((user) => (
+                    <StyledAvatar
+                        key={user.id}
+                        user={user}
+                        onMouseEnter={(event) => {
+                            onPopoverOpen(event);
+                            setPopupUser(user);
+                        }}
+                        onMouseLeave={onPopoverClose}
+                    />
+                ))}
+                <ConditionallyRender
+                    condition={users.length > 9}
+                    show={
+                        <StyledAvatar>
+                            +{users.length - shownUsers.length}
+                        </StyledAvatar>
+                    }
                 />
-            ))}
-            <ConditionallyRender
-                condition={users.length > 9}
-                show={
-                    <StyledAvatar>
-                        +{users.length - shownUsers.length}
-                    </StyledAvatar>
-                }
-            />
 
-            <ConditionallyRender
-                condition={Boolean(
-                    withDescription &&
+                <ConditionallyRender
+                    condition={
+                        withDescription &&
                         users.length === 1 &&
-                        groups?.length === 0,
-                )}
-                show={() => (
-                    <StyledUsername>
-                        {users[0].name || users[0].username}
-                    </StyledUsername>
-                )}
-            />
-            <GroupPopover
-                open={avatarOpen}
-                user={popupUser}
-                anchorEl={anchorEl}
-                onPopoverClose={onPopoverClose}
-            />
-        </StyledAvatars>
+                        groups?.length === 0
+                    }
+                    show={() => (
+                        <StyledUsername>
+                            {users[0].name || users[0].username}
+                        </StyledUsername>
+                    )}
+                />
+                <GroupPopover
+                    open={avatarOpen}
+                    user={popupUser}
+                    anchorEl={anchorEl}
+                    onPopoverClose={onPopoverClose}
+                />
+            </StyledAvatars>
+        </StyledContainer>
     );
 };

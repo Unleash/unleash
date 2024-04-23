@@ -13,6 +13,11 @@ export interface IProjectCard {
     mode: string;
     memberCount?: number;
     favorite?: boolean;
+    owners?: {
+        // FIXME: type
+        users: any[];
+        groups: any[];
+    };
 }
 
 export type FeatureNamingType = {

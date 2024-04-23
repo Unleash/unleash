@@ -28,8 +28,14 @@ import { groupProjects } from './group-projects';
 import { ProjectGroup } from './ProjectGroup';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
-    maxWidth: '400px',
+    maxWidth: '500px',
     marginBottom: theme.spacing(2),
+}));
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(4),
 }));
 
 type PageQueryType = Partial<Record<'search', string>>;
@@ -148,12 +154,6 @@ export const ProjectListNew = () => {
         hasAccess(CREATE_PROJECT),
     );
 
-    const renderError = () => {
-        return (
-            <StyledApiError onClick={refetch} text='Error fetching projects' />
-        );
-    };
-
     const projectCount =
         filteredProjects.length < projects.length
             ? `${filteredProjects.length} of ${projects.length}`
@@ -220,24 +220,36 @@ export const ProjectListNew = () => {
                 </PageHeader>
             }
         >
-            <ConditionallyRender condition={error} show={renderError()} />
-            <ConditionallyRender
-                condition={splitProjectList}
-                show={
-                    <>
-                        <ProjectGroupComponent
-                            sectionTitle='My projects'
-                            projects={groupedProjects.myProjects}
+            <StyledContainer>
+                <ConditionallyRender
+                    condition={error}
+                    show={() => (
+                        <StyledApiError
+                            onClick={refetch}
+                            text='Error fetching projects'
                         />
+                    )}
+                />
+                <ConditionallyRender
+                    condition={splitProjectList}
+                    show={
+                        <>
+                            <ProjectGroupComponent
+                                sectionTitle='My projects'
+                                projects={groupedProjects.myProjects}
+                            />
 
-                        <ProjectGroupComponent
-                            sectionTitle='Other projects'
-                            projects={groupedProjects.otherProjects}
-                        />
-                    </>
-                }
-                elseShow={<ProjectGroupComponent projects={filteredProjects} />}
-            />
+                            <ProjectGroupComponent
+                                sectionTitle='Other projects'
+                                projects={groupedProjects.otherProjects}
+                            />
+                        </>
+                    }
+                    elseShow={
+                        <ProjectGroupComponent projects={filteredProjects} />
+                    }
+                />
+            </StyledContainer>
         </PageContent>
     );
 };

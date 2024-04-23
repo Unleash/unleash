@@ -36,7 +36,7 @@ const StyledMetaDataHeader = styled('div')({
 });
 
 const StyledHeader = styled('h2')(({ theme }) => ({
-    fontSize: theme.fontSizes.mediumHeader,
+    fontSize: theme.fontSizes.mainHeader,
     fontWeight: 'normal',
     margin: 0,
 }));
@@ -45,11 +45,17 @@ const StyledBody = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0),
     display: 'flex',
     flexDirection: 'column',
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledBodyItem = styled('span')(({ theme }) => ({
-    margin: theme.spacing(1, 0),
-    fontSize: theme.fontSizes.bodySize,
+    padding: theme.spacing(0.5, 0),
+}));
+
+const StyledRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(1, 0),
 }));
 
 const StyledDescriptionContainer = styled('div')(({ theme }) => ({
@@ -60,6 +66,11 @@ const StyledDescriptionContainer = styled('div')(({ theme }) => ({
 const StyledDescription = styled('p')({
     wordBreak: 'break-word',
 });
+
+export const StyledLabel = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    marginRight: theme.spacing(1),
+}));
 
 const FeatureOverviewMetaData = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -89,21 +100,15 @@ const FeatureOverviewMetaData = () => {
                     <StyledHeader>{capitalize(type || '')} toggle</StyledHeader>
                 </StyledMetaDataHeader>
                 <StyledBody>
-                    <StyledBodyItem data-loading>
-                        Project: {project}
-                    </StyledBodyItem>
+                    <StyledRow data-loading>
+                        <StyledLabel>Project:</StyledLabel>
+                        <span>{project}</span>
+                    </StyledRow>
                     <ConditionallyRender
                         condition={featureLifecycleEnabled}
                         show={
-                            <StyledBodyItem
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    alignItems: 'start',
-                                }}
-                                data-loading
-                            >
-                                <span>Lifecycle:</span>
+                            <StyledRow data-loading>
+                                <StyledLabel>Lifecycle:</StyledLabel>
                                 <FeatureLifecycleTooltip
                                     stage={{ name: 'initial' }}
                                 >
@@ -111,7 +116,7 @@ const FeatureOverviewMetaData = () => {
                                         stage={{ name: 'initial' }}
                                     />
                                 </FeatureLifecycleTooltip>
-                            </StyledBodyItem>
+                            </StyledRow>
                         }
                     />
 
@@ -119,7 +124,7 @@ const FeatureOverviewMetaData = () => {
                         condition={Boolean(description)}
                         show={
                             <StyledBodyItem data-loading>
-                                <div>Description:</div>
+                                <StyledLabel>Description:</StyledLabel>
                                 <StyledDescriptionContainer>
                                     <StyledDescription>
                                         {description}

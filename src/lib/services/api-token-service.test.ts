@@ -263,15 +263,7 @@ describe('API token getTokenWithCache', () => {
     });
 
     test('should not return the token if it has expired and shoud perform only one db query', async () => {
-        const { apiTokenService, apiTokenStore } = setup({
-            getLogger: () => ({
-                debug: console.log,
-                fatal: console.log,
-                info: console.log,
-                warn: console.log,
-                error: console.log,
-            }),
-        });
+        const { apiTokenService, apiTokenStore } = setup();
         const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
 
         // valid token not present in cache but expired

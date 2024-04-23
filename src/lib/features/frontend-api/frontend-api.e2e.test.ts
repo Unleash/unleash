@@ -591,7 +591,6 @@ test('should be able to set environment as a context variable', async () => {
     });
 
     await frontendApiService.refreshData();
-    await ms(100);
     await app.request
         .get('/api/frontend?environment=staging')
         .set('Authorization', frontendToken.secret)
@@ -611,11 +610,6 @@ test('should be able to set environment as a context variable', async () => {
             expect(res.body.toggles).toHaveLength(0);
         });
 });
-
-function ms(timeMs: number) {
-    return new Promise((resolve) => setTimeout(resolve, timeMs));
-}
-
 test('should filter features by project', async () => {
     const projectA = 'projectA';
     const projectB = 'projectB';

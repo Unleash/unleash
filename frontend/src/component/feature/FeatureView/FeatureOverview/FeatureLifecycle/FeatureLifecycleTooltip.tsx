@@ -15,7 +15,7 @@ import {
     FeatureLifecycleStageIcon,
     type LifecycleStage,
 } from './FeatureLifecycleStageIcon';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import TimeAgo from 'react-timeago';
 import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';

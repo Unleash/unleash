@@ -58,7 +58,7 @@ const StageBox = styled(Box, {
             position: 'absolute',
             display: 'block',
             borderStyle: 'solid',
-            borderColor: `${theme.palette.primary.main} transparent`,
+            borderColor: `${theme.palette.primary.light} transparent`,
             borderWidth: '0 6px 6px',
             top: theme.spacing(3.25),
             left: theme.spacing(1.75),
@@ -79,7 +79,7 @@ const StageBox = styled(Box, {
         color: theme.palette.text.secondary,
         // active wrapper for stage name text
         ...(active && {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.primary.light,
             color: theme.palette.primary.contrastText,
             fontWeight: theme.fontWeight.bold,
             borderRadius: theme.spacing(0.5),
@@ -88,7 +88,7 @@ const StageBox = styled(Box, {
 }));
 
 const ColorFill = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
     borderRadius: theme.spacing(0, 0, 1, 1), // has to match the parent tooltip container
     margin: theme.spacing(-1, -1.5), // has to match the parent tooltip container

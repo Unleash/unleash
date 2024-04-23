@@ -1,5 +1,6 @@
 // biome-ignore lint/correctness/noUnusedImports: Needs this for React to work
 import React, { useState, useEffect } from 'react';
+import { getContributors } from './contributors';
 import styles from './contributors.module.scss';
 
 const unleashTeam = new Map([
@@ -30,14 +31,15 @@ const GitHubContributors = ({ filePath }) => {
             )
                 .then((response) => response.json())
                 .then((commits) => {
-                    const contributorSet = new Set();
-                    // using a Set to deduplicate the list of contributors
-                    for (const commit of commits) {
-                        contributorSet.add(JSON.stringify(commit.author));
-                    }
-                    const contributors = Array.from(contributorSet).map((str) =>
-                        JSON.parse(str),
-                    );
+                    console.log(commits);
+                    const contributors = getContributors(commits);
+                    console.log(contributors);
+                    contributors.sort((a, b) => {
+                        if (unleashTeam.has(a.login)) {
+                            return -1;
+                        }
+                        return 1;
+                    });
                     setContributors(contributors);
                 })
                 .catch((error) => {
@@ -57,29 +59,32 @@ const GitHubContributors = ({ filePath }) => {
         <div className={styles.contributors}>
             <h3>Contributors</h3>
 
-            <div className={styles.wrapper}>
+            <ul className={styles.wrapper}>
                 {contributors?.map((contributor) => {
                     return (
-                        <figure className={styles.contributor}>
-                            <a href={contributor.html_url}>
-                                <img
-                                    src={contributor.avatar_url}
-                                    alt={contributor.login}
-                                    width={70}
-                                    style={{ borderRadius: '100%' }}
-                                />
-                            </a>
-                            <figcaption>
-                                <code>{contributor.login}</code>
+                        <li key={contributor.login}>
+                            <figure className={styles.contributor}>
+                                <a href={contributor.html_url}>
+                                    <img
+                                        src={contributor.avatar_url}
+                                        alt={contributor.login}
+                                        width={70}
+                                    />
+                                </a>
+                                <figcaption>
+                                    <code>{contributor.login}</code>
 
-                                {unleashTeam.has(contributor.login) && (
-                                    <p>{unleashTeam.get(contributor.login)}</p>
-                                )}
-                            </figcaption>
-                        </figure>
+                                    {unleashTeam.has(contributor.login) && (
+                                        <p>
+                                            {unleashTeam.get(contributor.login)}
+                                        </p>
+                                    )}
+                                </figcaption>
+                            </figure>
+                        </li>
                     );
                 })}
-            </div>
+            </ul>
         </div>
     );
 };

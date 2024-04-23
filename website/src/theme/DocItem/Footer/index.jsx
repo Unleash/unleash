@@ -2,7 +2,7 @@
 import React from 'react';
 import Footer from '@theme-original/DocItem/Footer';
 import { useDoc } from '@docusaurus/theme-common/internal';
-import GitHubContributors from './contributors';
+import GitHubContributors from './GitHubContributors';
 
 export default function FooterWrapper(props) {
     const { metadata } = useDoc();

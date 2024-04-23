@@ -2,8 +2,15 @@
     margin-block: var(--ifm-spacing-vertical);
 }
 
-.wrapper{
+.wrapper {
     display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+
+    li{
+        list-style: none;
+    }
 }
 
 .contributor {
@@ -11,7 +18,11 @@
     display: flex;
     gap: 10px;
 
-    figcaption{
+    img{
+        border-radius: 100%;
+    }
+
+    figcaption {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -19,9 +30,8 @@
     }
 }
 
-
 @media (max-width: 600px) {
     .wrapper {
-       display: block;
+        display: block;
     }
 }

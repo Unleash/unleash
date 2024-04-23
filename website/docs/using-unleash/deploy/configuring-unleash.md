@@ -82,7 +82,8 @@ unleash.start(unleashOptions);
     - `initialAdminUser`: `{ username: string, password: string} | null` — whether to create an admin user with default
       password - Defaults to using `admin` and `unleash4all` as the username and password. Can not be overridden by
       setting the `UNLEASH_DEFAULT_ADMIN_USERNAME` and `UNLEASH_DEFAULT_ADMIN_PASSWORD` environment variables.
-        - `initApiTokens` / `INIT_ADMIN_API_TOKENS`, `INIT_CLIENT_API_TOKENS`,
+    -  `demoAllowAdminLogin` / `AUTH_DEMO_ALLOW_ADMIN_LOGIN`: `boolean` — Allows you to log in as the admin user when running Unleash with the `demo` auth type. To log in as the admin user, use `admin` as your email. Defaults to `false`.
+    - `initApiTokens` / `INIT_ADMIN_API_TOKENS`, `INIT_CLIENT_API_TOKENS`,
           and `INIT_FRONTEND_API_TOKENS`: `ApiTokens[]` — Array of API tokens to create on startup. The tokens will only
           be created if the database doesn't already contain any API tokens. Example:
 

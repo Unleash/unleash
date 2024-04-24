@@ -9,10 +9,16 @@ import { ReactComponent as LiveStageIcon } from 'assets/icons/stage-live.svg';
 import { ReactComponent as CompletedStageIcon } from 'assets/icons/stage-completed.svg';
 import { ReactComponent as CompletedDiscardedStageIcon } from 'assets/icons/stage-completed-discarded.svg';
 import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived.svg';
+import CloudCircle from '@mui/icons-material/CloudCircle';
+import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import {
     FeatureLifecycleStageIcon,
     type LifecycleStage,
 } from './FeatureLifecycleStageIcon';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import TimeAgo from 'react-timeago';
+import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
+import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -95,6 +101,159 @@ const ColorFill = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
 }));
 
+const LastSeenIcon: FC<{ lastSeen: string }> = ({ lastSeen }) => {
+    const getColor = useLastSeenColors();
+
+    return (
+        <TimeAgo
+            date={lastSeen}
+            title=''
+            live={false}
+            formatter={(value: number, unit: string) => {
+                const [color, textColor] = getColor(unit);
+                return (
+                    <StyledIconWrapper style={{ background: color }}>
+                        <UsageRate stroke={textColor} />
+                    </StyledIconWrapper>
+                );
+            }}
+        />
+    );
+};
+
+const InitialStageDescription: FC = () => {
+    return (
+        <>
+            <InfoText>
+                This feature toggle is currently in the initial phase of it's
+                life cycle.
+            </InfoText>
+            <InfoText>
+                This means that the flag has been created, but it has not yet
+                been seen in any environment.
+            </InfoText>
+            <InfoText>
+                Once we detect metrics for a non-production environment it will
+                move into pre-live.
+            </InfoText>
+        </>
+    );
+};
+
+const StageTimeline: FC<{ stage: LifecycleStage }> = ({ stage }) => {
+    return (
+        <IconsRow>
+            <StageBox
+                data-after-content='Initial'
+                active={stage.name === 'initial'}
+            >
+                <InitialStageIcon />
+            </StageBox>
+
+            <Line />
+
+            <StageBox
+                data-after-content='Pre-live'
+                active={stage.name === 'pre-live'}
+            >
+                <PreLiveStageIcon />
+            </StageBox>
+
+            <Line />
+
+            <StageBox data-after-content='Live' active={stage.name === 'live'}>
+                <LiveStageIcon />
+            </StageBox>
+
+            <Line />
+
+            <StageBox
+                data-after-content='Completed'
+                active={stage.name === 'completed'}
+            >
+                {stage.name === 'completed' && stage.status === 'discarded' ? (
+                    <CompletedDiscardedStageIcon />
+                ) : (
+                    <CompletedStageIcon />
+                )}
+            </StageBox>
+
+            <Line />
+
+            <StageBox
+                data-after-content='Archived'
+                active={stage.name === 'archived'}
+            >
+                <ArchivedStageIcon />
+            </StageBox>
+        </IconsRow>
+    );
+};
+
+const EnvironmentLine = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2),
+}));
+
+const CenteredBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
+const LiveStageDescription: FC<{
+    name: 'live' | 'pre-live';
+    environments: Array<{ name: string; lastSeenAt: string }>;
+}> = ({ name, environments }) => {
+    return (
+        <>
+            <ConditionallyRender
+                condition={name === 'pre-live'}
+                show={
+                    <InfoText>
+                        We've seen the feature flag in the following
+                        non-production environments:
+                    </InfoText>
+                }
+            />
+            <ConditionallyRender
+                condition={name === 'live'}
+                show={
+                    <InfoText>
+                        Users have been exposed to this feature in the following
+                        production environments:
+                    </InfoText>
+                }
+            />
+
+            <Box>
+                {environments.map((environment) => {
+                    return (
+                        <EnvironmentLine key={environment.name}>
+                            <CenteredBox>
+                                <CloudCircle />
+                                <Box>{environment.name}</Box>
+                            </CenteredBox>
+                            <CenteredBox>
+                                <TimeAgo
+                                    minPeriod={60}
+                                    date={environment.lastSeenAt}
+                                />
+                                <LastSeenIcon
+                                    lastSeen={environment.lastSeenAt}
+                                />
+                            </CenteredBox>
+                        </EnvironmentLine>
+                    );
+                })}
+            </Box>
+        </>
+    );
+};
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
@@ -129,69 +288,16 @@ export const FeatureLifecycleTooltip: FC<{
                         <TimeLabel>Time spent in stage</TimeLabel>
                         <span>3 days</span>
                     </TimeLifecycleRow>
-                    <IconsRow>
-                        <StageBox
-                            data-after-content='Initial'
-                            active={stage.name === 'initial'}
-                        >
-                            <InitialStageIcon />
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Pre-live'
-                            active={stage.name === 'pre-live'}
-                        >
-                            <PreLiveStageIcon />
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Live'
-                            active={stage.name === 'live'}
-                        >
-                            <LiveStageIcon />
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Completed'
-                            active={stage.name === 'completed'}
-                        >
-                            {stage.name === 'completed' &&
-                            stage.status === 'discarded' ? (
-                                <CompletedDiscardedStageIcon />
-                            ) : (
-                                <CompletedStageIcon />
-                            )}
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Archived'
-                            active={stage.name === 'archived'}
-                        >
-                            <ArchivedStageIcon />
-                        </StageBox>
-                    </IconsRow>
+                    <StageTimeline stage={stage} />
                 </Box>
                 <ColorFill>
-                    <InfoText>
-                        This feature toggle is currently in the initial phase of
-                        it's life cycle.
-                    </InfoText>
-                    <InfoText>
-                        This means that the flag has been created, but it has
-                        not yet been seen in any environment.
-                    </InfoText>
-                    <InfoText>
-                        Once we detect metrics for a non-production environment
-                        it will move into pre-live.
-                    </InfoText>
+                    {stage.name === 'initial' && <InitialStageDescription />}
+                    {(stage.name === 'pre-live' || stage.name === 'live') && (
+                        <LiveStageDescription
+                            name={stage.name}
+                            environments={stage.environments}
+                        />
+                    )}
                 </ColorFill>
             </Box>
         }

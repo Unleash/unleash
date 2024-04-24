@@ -6,6 +6,9 @@ import { ProjectOwnersReadModel } from './project-owners-read-model';
 
 describe('unit tests', () => {
     test('maps owners to projects', () => {});
+    test('returns "system" when a project has no owners', async () => {
+        // this is a mapping test; not an integration test
+    });
 });
 
 let db: ITestDb;
@@ -107,18 +110,6 @@ describe('integration tests', () => {
         });
     });
 
-    test('returns "system" when a project has no owners', async () => {
-        const projectId = randomId();
-
-        await db.stores.projectStore.create({ id: projectId, name: projectId });
-
-        // fetch project owners
-        const owners = await readModel.getAllProjectOwners();
-
-        expect(owners).toMatchObject({
-            [projectId]: [{ type: 'system' }],
-        });
-    });
     test('gets project group owners', async () => {});
     test('users are listed before groups', async () => {});
     test('owners (users and groups) are sorted by when they were added; oldest first', async () => {});

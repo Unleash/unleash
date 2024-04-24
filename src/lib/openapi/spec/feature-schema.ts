@@ -134,7 +134,7 @@ export const featureSchema = {
             type: 'object',
             description: 'Current lifecycle stage of the feature',
             additionalProperties: false,
-            required: ['stage'],
+            required: ['stage', 'enteredStageAt'],
             properties: {
                 stage: {
                     description: 'The name of the current lifecycle stage',
@@ -148,7 +148,7 @@ export const featureSchema = {
                     ],
                     example: 'initial',
                 },
-                enteredAt: {
+                enteredStageAt: {
                     description: 'When the feature entered this stage',
                     type: 'string',
                     format: 'date-time',

@@ -47,8 +47,6 @@ process.nextTick(async () => {
                         executiveDashboardUI: true,
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
-                        globalFrontendApiCache: true,
-                        returnGlobalFrontendApiCache: false,
                         projectOverviewRefactor: true,
                         disableShowContextFieldSelectionValues: false,
                         variantDependencies: true,

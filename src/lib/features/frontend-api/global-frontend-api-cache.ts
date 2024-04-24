@@ -110,9 +110,8 @@ export class GlobalFrontendApiCache extends EventEmitter {
     }
 
     // TODO: fetch only relevant projects/environments based on tokens
-    private async refreshData() {
+    public async refreshData() {
         try {
-            const stopTimer = this.timer('refreshData');
             this.featuresByEnvironment = await this.getAllFeatures();
             this.segments = await this.getAllSegments();
             if (this.status === 'starting') {
@@ -122,7 +121,6 @@ export class GlobalFrontendApiCache extends EventEmitter {
                 this.status = 'updated';
                 this.emit('updated');
             }
-            stopTimer();
         } catch (e) {
             this.logger.error('Cannot load data for token', e);
         }

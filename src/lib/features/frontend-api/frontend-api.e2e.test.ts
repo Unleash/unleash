@@ -12,18 +12,16 @@ import {
 } from '../../types/models/api-token';
 import { startOfHour } from 'date-fns';
 import {
-    FEATURE_UPDATED,
     type IConstraint,
     type IStrategyConfig,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
 } from '../../types';
-import { ProxyRepository } from './index';
-import type { Logger } from '../../logger';
+import type { FrontendApiService } from './frontend-api-service';
 
 let app: IUnleashTest;
 let db: ITestDb;
-const TEST_USER_ID = -9999;
+let frontendApiService: FrontendApiService;
 beforeAll(async () => {
     db = await dbInit('frontend_api', getLogger);
     app = await setupAppWithAuth(
@@ -33,6 +31,7 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+    frontendApiService = app.services.frontendApiService;
 });
 
 afterEach(() => {
@@ -161,6 +160,7 @@ test('should allow requests with a token secret alias', async () => {
         alias: randomId(),
         environment: envB,
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .expect('Content-Type', /json/)
@@ -226,6 +226,7 @@ test('should allow requests with an admin token', async () => {
         projects: ['*'],
         environment: '*',
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', adminToken.secret)
@@ -264,6 +265,7 @@ test('should not allow requests with an invalid frontend token', async () => {
 
 test('should allow requests with a frontend token', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -441,6 +443,7 @@ test('should filter features by enabled/disabled', async () => {
         enabled: false,
         strategies: [{ name: 'default', constraints: [], parameters: {} }],
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -488,6 +491,7 @@ test('should filter features by strategies', async () => {
         enabled: true,
         strategies: [{ name: 'default', constraints: [], parameters: {} }],
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -544,6 +548,7 @@ test('should filter features by constraints', async () => {
             },
         ],
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend?appName=a')
         .set('Authorization', frontendToken.secret)
@@ -585,6 +590,7 @@ test('should be able to set environment as a context variable', async () => {
         ],
     });
 
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend?environment=staging')
         .set('Authorization', frontendToken.secret)
@@ -604,7 +610,6 @@ test('should be able to set environment as a context variable', async () => {
             expect(res.body.toggles).toHaveLength(0);
         });
 });
-
 test('should filter features by project', async () => {
     const projectA = 'projectA';
     const projectB = 'projectB';
@@ -636,6 +641,7 @@ test('should filter features by project', async () => {
         enabled: true,
         strategies: [{ name: 'default', parameters: {} }],
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendTokenDefault.secret)
@@ -768,6 +774,7 @@ test('should filter features by environment', async () => {
         enabled: true,
         strategies: [{ name: 'default', parameters: {} }],
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendTokenEnvironmentDefault.secret)
@@ -868,6 +875,7 @@ test('should filter features by segment', async () => {
     await app.services.segmentService.addToStrategy(segmentA.id, strategyA.id);
     await app.services.segmentService.addToStrategy(segmentB.id, strategyB.id);
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -900,102 +908,6 @@ test('should filter features by segment', async () => {
         .expect((res) => expect(res.body).toEqual({ toggles: [] }));
 });
 
-test('Should sync proxy for keys on an interval', async () => {
-    jest.useFakeTimers();
-
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    const user = await app.services.apiTokenService.getUserForToken(
-        frontendToken.secret,
-    );
-
-    const spy = jest.spyOn(
-        ProxyRepository.prototype as any,
-        'featuresForToken',
-    );
-    expect(user).not.toBeNull();
-    const proxyRepository = new ProxyRepository(
-        {
-            getLogger,
-            frontendApi: { refreshIntervalInMs: 5000 },
-            eventBus: <any>{ emit: jest.fn() },
-        },
-        db.stores,
-        app.services,
-        user!,
-    );
-
-    await proxyRepository.start();
-
-    jest.advanceTimersByTime(60000);
-
-    proxyRepository.stop();
-    expect(spy.mock.calls.length > 6).toBe(true);
-    jest.useRealTimers();
-});
-
-test('Should change fetch interval', async () => {
-    jest.useFakeTimers();
-
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    const user = await app.services.apiTokenService.getUserForToken(
-        frontendToken.secret,
-    );
-
-    const spy = jest.spyOn(
-        ProxyRepository.prototype as any,
-        'featuresForToken',
-    );
-    const proxyRepository = new ProxyRepository(
-        {
-            getLogger,
-            frontendApi: { refreshIntervalInMs: 1000 },
-            eventBus: <any>{ emit: jest.fn() },
-        },
-        db.stores,
-        app.services,
-        user!,
-    );
-
-    await proxyRepository.start();
-
-    jest.advanceTimersByTime(60000);
-
-    proxyRepository.stop();
-    expect(spy.mock.calls.length > 30).toBe(true);
-    jest.useRealTimers();
-});
-
-test('Should not recursively set off timers on events', async () => {
-    jest.useFakeTimers();
-
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    const user = await app.services.apiTokenService.getUserForToken(
-        frontendToken.secret,
-    );
-
-    const spy = jest.spyOn(ProxyRepository.prototype as any, 'dataPolling');
-    const proxyRepository = new ProxyRepository(
-        {
-            getLogger,
-            frontendApi: { refreshIntervalInMs: 5000 },
-            eventBus: <any>{ emit: jest.fn() },
-        },
-        db.stores,
-        app.services,
-        user!,
-    );
-
-    await proxyRepository.start();
-
-    db.stores.eventStore.emit(FEATURE_UPDATED);
-
-    jest.advanceTimersByTime(10000);
-
-    proxyRepository.stop();
-    expect(spy.mock.calls.length < 3).toBe(true);
-    jest.useRealTimers();
-});
-
 test('should return maxAge header on options call', async () => {
     await app.request
         .options('/api/frontend')
@@ -1004,51 +916,6 @@ test('should return maxAge header on options call', async () => {
         .expect((res) => {
             expect(res.headers['access-control-max-age']).toBe('86400');
         });
-});
-
-test('should terminate data polling when stop is called', async () => {
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    const user = await app.services.apiTokenService.getUserForToken(
-        frontendToken.secret,
-    );
-
-    const logTrap: any[] = [];
-    const getDebugLogger = (): Logger => {
-        return {
-            /* eslint-disable-next-line */
-            debug: (message: any, ...args: any[]) => {
-                logTrap.push(message);
-            },
-            /* eslint-disable-next-line */
-            info: (...args: any[]) => {},
-            /* eslint-disable-next-line */
-            warn: (...args: any[]) => {},
-            /* eslint-disable-next-line */
-            error: (...args: any[]) => {},
-            /* eslint-disable-next-line */
-            fatal: (...args: any[]) => {},
-        };
-    };
-
-    /* eslint-disable-next-line */
-    const proxyRepository = new ProxyRepository(
-        {
-            getLogger: getDebugLogger,
-            frontendApi: { refreshIntervalInMs: 1 },
-            eventBus: <any>{ emit: jest.fn() },
-        },
-        db.stores,
-        app.services,
-        user!,
-    );
-
-    await proxyRepository.start();
-    proxyRepository.stop();
-    // Polling here is an async recursive call, so we gotta give it a bit of time
-    await new Promise((r) => setTimeout(r, 10));
-    expect(logTrap).toContain(
-        'Shutting down data polling for proxy repository',
-    );
 });
 
 test('should evaluate strategies when returning toggles', async () => {
@@ -1084,6 +951,7 @@ test('should evaluate strategies when returning toggles', async () => {
         ],
     });
 
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -1144,6 +1012,7 @@ test('should not return all features', async () => {
             },
         ],
     });
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -1256,6 +1125,7 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
         ],
     });
 
+    await frontendApiService.refreshData();
     await app.request
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret)
@@ -1344,7 +1214,7 @@ test('should resolve variable rollout percentage consistently', async () => {
             },
         ],
     });
-
+    await frontendApiService.refreshData();
     for (let i = 0; i < 10; ++i) {
         const { body } = await app.request
             .get('/api/frontend')

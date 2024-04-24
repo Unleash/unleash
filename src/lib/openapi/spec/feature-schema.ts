@@ -132,11 +132,12 @@ export const featureSchema = {
         },
         lifecycle: {
             type: 'object',
+            description: 'Current lifecycle stage of the feature',
             additionalProperties: false,
             required: ['stage'],
             properties: {
                 stage: {
-                    description: 'Current lifecycle stage of the feature',
+                    description: 'The name of the current lifecycle stage',
                     type: 'string',
                     enum: [
                         'initial',

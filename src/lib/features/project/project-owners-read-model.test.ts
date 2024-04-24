@@ -92,7 +92,6 @@ describe('integration tests', () => {
             projectId,
         );
 
-        // fetch project owners
         const owners = await readModel.getAllProjectOwners();
 
         expect(owners).toMatchObject({
@@ -111,10 +110,6 @@ describe('integration tests', () => {
         const projectId = randomId();
         await db.stores.projectStore.create({ id: projectId, name: projectId });
 
-        const ownerRole = await db.stores.roleStore.getRoleByName(
-            RoleName.OWNER,
-        );
-
         const memberRole = await db.stores.roleStore.getRoleByName(
             RoleName.MEMBER,
         );
@@ -130,7 +125,6 @@ describe('integration tests', () => {
             projectId,
         );
 
-        // fetch project owners
         const owners = await readModel.getAllProjectOwners();
 
         expect(owners).toMatchObject({
@@ -149,7 +143,6 @@ describe('integration tests', () => {
             projectId,
         );
 
-        // fetch project owners
         const owners = await readModel.getAllProjectOwners();
 
         expect(owners).toMatchObject({

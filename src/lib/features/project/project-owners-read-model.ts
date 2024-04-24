@@ -1,7 +1,14 @@
 import type { Db } from '../../db/db';
 import { RoleName, type IProjectWithCount, type IRoleStore } from '../../types';
 
-export type SystemOwner = { ownerType: 'system' };
+const T = {
+    ROLE_USER: 'role_user',
+    GROUP_ROLE: 'group_role',
+    ROLES: 'roles',
+    USERS: 'users',
+};
+
+type SystemOwner = { ownerType: 'system' };
 type UserProjectOwner = {
     ownerType: 'user';
     name: string;
@@ -12,7 +19,6 @@ type GroupProjectOwner = {
     ownerType: 'group';
     name: string;
 };
-
 type ProjectOwners =
     | [SystemOwner]
     | Array<UserProjectOwner | GroupProjectOwner>;
@@ -43,17 +49,9 @@ export class ProjectOwnersReadModel {
         return [];
     }
 
-    async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
-        // Query both user and group owners
-        const T = {
-            ROLE_USER: 'role_user',
-            GROUP_ROLE: 'group_role',
-            ROLES: 'roles',
-            USERS: 'users',
-        };
-
-        const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
-
+    private async getAllProjectUsersByRole(
+        roleId: number,
+    ): Promise<Record<string, UserProjectOwner[]>> {
         const usersResult = await this.db
             .select(
                 'user.username',
@@ -65,19 +63,9 @@ export class ProjectOwnersReadModel {
             )
             .from(`${T.ROLE_USER} as ru`)
             .join(`${T.ROLES} as r`, 'ru.role_id', 'r.id')
-            .where('r.id', ownerRole.id)
+            .where('r.id', roleId)
             .join(`${T.USERS} as user`, 'ru.user_id', 'user.id');
-
-        const groupsResult = await this.db
-            .select('groups.name', 'gr.created_at', 'gr.project')
-            .from(`${T.GROUP_ROLE} as gr`)
-            .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
-            .where('r.id', ownerRole.id)
-            .join('groups', 'gr.group_id', 'groups.id');
-
-        // Map results into project owners format
         const usersDict: Record<string, UserProjectOwner[]> = {};
-        const groupsDict: Record<string, GroupProjectOwner[]> = {};
 
         usersResult.forEach((user) => {
             const project = user.project as string;
@@ -96,6 +84,21 @@ export class ProjectOwnersReadModel {
             }
         });
 
+        return usersDict;
+    }
+
+    private async getAllProjectGroupsByRole(
+        roleId: number,
+    ): Promise<Record<string, GroupProjectOwner[]>> {
+        const groupsResult = await this.db
+            .select('groups.name', 'gr.created_at', 'gr.project')
+            .from(`${T.GROUP_ROLE} as gr`)
+            .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
+            .where('r.id', roleId)
+            .join('groups', 'gr.group_id', 'groups.id');
+
+        const groupsDict: Record<string, GroupProjectOwner[]> = {};
+
         groupsResult.forEach((group) => {
             const project = group.project as string;
 
@@ -111,7 +114,14 @@ export class ProjectOwnersReadModel {
             }
         });
 
-        // Combine user and group owners
+        return groupsDict;
+    }
+
+    async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
+        const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
+        const usersDict = await this.getAllProjectUsersByRole(ownerRole.id);
+        const groupsDict = await this.getAllProjectGroupsByRole(ownerRole.id);
+
         const projects = [
             ...new Set([...Object.keys(usersDict), ...Object.keys(groupsDict)]),
         ];

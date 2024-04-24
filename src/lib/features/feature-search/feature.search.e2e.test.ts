@@ -941,6 +941,14 @@ test('should return environment usage metrics', async () => {
         },
         {
             featureName: `my_feature_b`,
+            appName: `web2`,
+            environment: 'development',
+            timestamp: new Date(),
+            yes: 5,
+            no: 2,
+        },
+        {
+            featureName: `my_feature_b`,
             appName: `web`,
             environment: 'production',
             timestamp: new Date(),
@@ -964,8 +972,8 @@ test('should return environment usage metrics', async () => {
                     },
                     {
                         name: 'development',
-                        yes: 5,
-                        no: 2,
+                        yes: 10,
+                        no: 4,
                     },
                     {
                         name: 'production',

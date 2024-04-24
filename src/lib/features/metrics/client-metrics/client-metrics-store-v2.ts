@@ -228,6 +228,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
                 .insert(sortedVariantRows)
                 .toQuery();
             const variantsQuery = `${insertVariants.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp, variant) DO UPDATE SET "count" = "client_metrics_env_variants"."count" + EXCLUDED.count`;
+            console.log(this.db.raw(query).toQuery());
             await this.db.raw(variantsQuery);
         }
     }

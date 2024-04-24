@@ -11,14 +11,13 @@ import { ReactComponent as CompletedDiscardedStageIcon } from 'assets/icons/stag
 import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived.svg';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
-import {
-    FeatureLifecycleStageIcon,
-    type LifecycleStage,
-} from './FeatureLifecycleStageIcon';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
 import TimeAgo from 'react-timeago';
 import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
+import type { LifecycleStage } from './LifecycleStage';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -204,52 +203,78 @@ const CenteredBox = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const LiveStageDescription: FC<{
-    name: 'live' | 'pre-live';
+const Environments: FC<{
     environments: Array<{ name: string; lastSeenAt: string }>;
-}> = ({ name, environments }) => {
+}> = ({ environments }) => {
+    return (
+        <Box>
+            {environments.map((environment) => {
+                return (
+                    <EnvironmentLine key={environment.name}>
+                        <CenteredBox>
+                            <CloudCircle />
+                            <Box>{environment.name}</Box>
+                        </CenteredBox>
+                        <CenteredBox>
+                            <TimeAgo
+                                minPeriod={60}
+                                date={environment.lastSeenAt}
+                            />
+                            <LastSeenIcon lastSeen={environment.lastSeenAt} />
+                        </CenteredBox>
+                    </EnvironmentLine>
+                );
+            })}
+        </Box>
+    );
+};
+
+const PreLiveStageDescription: FC = ({ children }) => {
     return (
         <>
-            <ConditionallyRender
-                condition={name === 'pre-live'}
-                show={
-                    <InfoText>
-                        We've seen the feature flag in the following
-                        non-production environments:
-                    </InfoText>
-                }
-            />
-            <ConditionallyRender
-                condition={name === 'live'}
-                show={
-                    <InfoText>
-                        Users have been exposed to this feature in the following
-                        production environments:
-                    </InfoText>
-                }
-            />
+            <InfoText>
+                We've seen the feature flag in the following non-production
+                environments:
+            </InfoText>
 
-            <Box>
-                {environments.map((environment) => {
-                    return (
-                        <EnvironmentLine key={environment.name}>
-                            <CenteredBox>
-                                <CloudCircle />
-                                <Box>{environment.name}</Box>
-                            </CenteredBox>
-                            <CenteredBox>
-                                <TimeAgo
-                                    minPeriod={60}
-                                    date={environment.lastSeenAt}
-                                />
-                                <LastSeenIcon
-                                    lastSeen={environment.lastSeenAt}
-                                />
-                            </CenteredBox>
-                        </EnvironmentLine>
-                    );
-                })}
-            </Box>
+            {children}
+        </>
+    );
+};
+
+const BoldTitle = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const LiveStageDescription: FC = ({ children }) => {
+    return (
+        <>
+            <BoldTitle>Is this feature complete?</BoldTitle>
+            <InfoText sx={{ mb: 1 }}>
+                Marking the feature as complete does not affect any
+                configuration, but it moves the feature into it’s next life
+                cycle stage and is an indication that you have learned what you
+                needed in order to progress with the feature. It serves as a
+                reminder to start cleaning up the flag and removing it from the
+                code.
+            </InfoText>
+            <PermissionButton
+                color='inherit'
+                variant='outlined'
+                permission={UPDATE_FEATURE}
+                size='small'
+            >
+                Mark Completed
+            </PermissionButton>
+            <InfoText sx={{ mt: 3 }}>
+                Users have been exposed to this feature in the following
+                production environments:
+            </InfoText>
+
+            {children}
         </>
     );
 };
@@ -292,11 +317,15 @@ export const FeatureLifecycleTooltip: FC<{
                 </Box>
                 <ColorFill>
                     {stage.name === 'initial' && <InitialStageDescription />}
-                    {(stage.name === 'pre-live' || stage.name === 'live') && (
-                        <LiveStageDescription
-                            name={stage.name}
-                            environments={stage.environments}
-                        />
+                    {stage.name === 'pre-live' && (
+                        <PreLiveStageDescription>
+                            <Environments environments={stage.environments} />
+                        </PreLiveStageDescription>
+                    )}
+                    {stage.name === 'live' && (
+                        <LiveStageDescription>
+                            <Environments environments={stage.environments} />
+                        </LiveStageDescription>
                     )}
                 </ColorFill>
             </Box>

@@ -197,9 +197,9 @@ export default class ProjectController extends Controller {
             user.id,
         );
 
-        if (this.flagResolver.isEnabled('projectsListNewCards')) {
-            // const projectsWithOwners = projectOwnersReadModel(projects);
-        }
+        // if (this.flagResolver.isEnabled('projectsListNewCards')) {
+        //   TODO: get project owners and add to response
+        // }
 
         this.openApiService.respondWithValidation(
             200,

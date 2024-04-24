@@ -18,10 +18,6 @@ We built many features into Unleash, our open-source feature flag platform, to a
 - [Application Metrics \& Monitoring for Ruby apps](#application-metrics--monitoring-for-ruby-apps)
 - [Feature Flag Audit Logs in Ruby](#feature-flag-audit-logs-in-ruby)
 - [Flag Automation \& Workflow Integration for Ruby Apps](#flag-automation--workflow-integration-for-ruby-apps)
-- [Common Usage Examples for Ruby Feature Flags](#common-usage-examples-for-ruby-feature-flags)
-  - [`is_enabled` example](#is_enabled-example)
-  - [`get_variant` example](#get_variant-example)
-  - [Initialization](#initialization)
 
 > Note:
 > We're using the `httpx` gem to make sending requests easier.
@@ -330,7 +326,7 @@ Read our documentation on [Event logs](/reference/event-log) and [APIs](/referen
 
 An advanced use case for leveraging feature flags at scale is automating them as part of your development workflow.
 
-It’s common for teams to have a development phase, then QA/testing, and then a production release. Our [Unleash Jira plugin](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter) can connect to your Jira server or cloud to create feature flags automatically during the project phases.
+It’s common for teams to have a development phase, then QA/testing, and then a production release. Our [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) can connect to your Jira server or cloud to create feature flags automatically during the project phases.
 
 As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing with certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or rolled out to target audiences in production.
 
@@ -397,44 +393,3 @@ Here’s how this can be done via our API:
     ```
 
     Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
-
-## Common Usage Examples for Ruby Feature Flags
-
-We’ve compiled a list of the most common functions to call with our Ruby SDK.
-
-| Method                                            | Description                                       | Parameters                 | Output                         |
-| ------------------------------------------------- | ------------------------------------------------- | -------------------------- | ------------------------------ |
-| [`is_enabled`](#is_enabled-example)               | determines whether or not the flag is enabled     | feature flag name (string) | `True`, `False` (Boolean)      |
-| [`get_variant`](#get_variant-example)             | returns the flag variant that the user falls into | feature flag name (string) | flag and variant data (object) |
-| [`initialize_client`](#initialize_client-example) | starts UnleashClient                              | none                       |                                |
-
-### `is_enabled` example
-
-```ruby
-flag = client.is_enabled?("feature_flag_name")
-return flag
-
-# output
-true
-```
-
-### `get_variant` example
-
-```ruby
-variant = client.get_variant?("feature_flag_name")
-return variant
-
-# output
-{'name': 'feature_flag_name', 'weightType': 'fix', 'enabled': true, 'feature_enabled': true}
-```
-
-### Initialization
-
-```ruby
-client = Unleash::Client.new(
-    url="<your-unleash-url>",
-    app_name="APP NAME",
-    custom_http_headers:{'Authorization': '<API_TOKEN>'})
-```
-
-Learn more about different use cases in our [Ruby SDK documentation](/reference/sdks/ruby).

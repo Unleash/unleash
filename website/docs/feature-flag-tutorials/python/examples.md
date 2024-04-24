@@ -15,10 +15,6 @@ We built multiple features into Unleash, an open-source feature flag platform, t
 - [Application Metrics \& Monitoring for Python](#application-metrics--monitoring-for-python)
 - [Feature Flag Audit Logs in Python](#feature-flag-audit-logs-in-python)
 - [Flag Automation \& Workflow Integration for Python Apps](#flag-automation--workflow-integration-for-python-apps)
-- [Common Usage Examples of Python Feature Flags](#common-usage-examples-of-python-feature-flags)
-  - [`is_enabled` example](#is_enabled-example)
-  - [`get_variant` example](#get_variant-example)
-  - [`initialize_client` example](#initialize_client-example)
 
 
 ## Gradual Rollouts for Python Apps
@@ -382,7 +378,7 @@ Read our documentation on [Event logs](/reference/event-log) and [APIs](/referen
 
 An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. [Our Jira integration](/reference/integrations/jira-server-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
-It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Python project must go through a typical development workflow. The [Unleash Jira plugin](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter) can connect to your Jira server or cloud to create feature flags automatically during the project creation phase. As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
+It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Python project must go through a typical development workflow. The [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) can connect to your Jira server or cloud to create feature flags automatically during the project creation phase. As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
 
 Here’s how this can be done via our API:
 
@@ -453,45 +449,3 @@ Here’s how this can be done via our API:
 
     Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
 
-## Common Usage Examples of Python Feature Flags
-
-To fully utilize our Python SDK, we’ve compiled a list of the most common functions to call in a Python app.
-
-| Method | Description | Parameters | Output |
-| ------ | ----------- | ---------- | ------ |
-| [`is_enabled`](#is_enabled-example) | determines whether or not the flag is enabled | feature flag name (string) | `True`, `False` (Boolean) |
-| [`get_variant`](#get_variant-example) | returns the flag variant that the user falls into | feature flag name (string) | flag and variant data (object) |
-| [`initialize_client`](#initialize_client-example) | starts UnleashClient | none | |
-
-### `is_enabled` example
-
-```py
-flag = client.is_enabled(“feature_flag_name”)
-return flag
-
-# output
-True
-```
-
-### `get_variant` example
-
-```py
-variant = client.get_variant(“feature_flag_name”)
-return variant
-
-# output
-{'name': 'feature_flag_name', 'weightType': 'fix', 'enabled': True, 'feature_enabled': True}
-```
-
-### `initialize_client` example
-
-```py
-client = UnleashClient(
-    url="SERVER-SIDE API INSTANCE URL",
-    app_name="APP NAME",
-    custom_headers={'Authorization': '<API_TOKEN'})
-
-client.initialize_client()
-```
-
-Learn more about different use cases in our [Python SDK documentation](/reference/sdks/python).

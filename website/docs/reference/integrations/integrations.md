@@ -22,7 +22,6 @@ Unleash currently supports the following integrations out of the box:
 
 - [Datadog](datadog.md) - Allows Unleash to post Updates to Datadog when a feature toggle is updated.
 - [Jira Cloud](jira-cloud-plugin-usage.md) - Allows you to create, view and manage Unleash feature flags directly from a Jira Cloud issue
-- [Jira Server](jira-server-plugin-usage.md) - Allows you to create and link Unleash feature flags directly from a Jira Server issue
 - [Microsoft Teams](teams.md) - Allows Unleash to post updates to Microsoft Teams.
 - [Slack App](slack-app.md) - The Unleash Slack App posts messages to the selected channels in your Slack workspace.
 - [Webhook](webhook.md) - A generic way to post messages from Unleash to third party services.

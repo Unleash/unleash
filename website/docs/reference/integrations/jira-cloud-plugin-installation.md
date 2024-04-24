@@ -9,8 +9,6 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 - [Jira **Cloud**](https://www.atlassian.com/software/jira)
 
-For Jira Data Center, check out the [Jira Server plugin](jira-server-plugin-installation.md)
-
 ### Unleash
 
 - Unleash v4 or higher

@@ -1,7 +1,8 @@
 import type { Db } from '../../db/db';
 import type { IProjectWithCount } from '../../types';
 
-export type ProjectOwner =
+export type SystemOwner = { ownerType: 'system' };
+export type NonSystemProjectOwner =
     | {
           ownerType: 'user';
           name: string;
@@ -13,10 +14,12 @@ export type ProjectOwner =
           name: string;
       };
 
-export type ProjectOwnersDictionary = Record<string, ProjectOwner[]>;
+type ProjectOwners = [SystemOwner] | NonSystemProjectOwner[];
+
+export type ProjectOwnersDictionary = Record<string, ProjectOwners>;
 
 type IProjectWithCountAndOwners = IProjectWithCount & {
-    owners: ProjectOwner[];
+    owners: ProjectOwners;
 };
 
 export class ProjectOwnersReadModel {

@@ -2,9 +2,9 @@ import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
     FeatureLifecycleView,
-    StageName,
 } from './feature-lifecycle-store-type';
 import type { Db } from '../../db/db';
+import type { StageName } from '../../types';
 
 type DBType = {
     feature: string;

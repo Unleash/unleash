@@ -19,6 +19,8 @@ export const ScimSettings = () => {
         useScimSettingsApi();
 
     const [enabled, setEnabled] = useState(false);
+    const [assumeControlOfExisting, setAssumeControlOfExisting] =
+        useState(false);
 
     const [tokenGenerationDialog, setTokenGenerationDialog] = useState(false);
     const [tokenDialog, setTokenDialog] = useState(false);
@@ -26,13 +28,14 @@ export const ScimSettings = () => {
 
     useEffect(() => {
         setEnabled(settings.enabled ?? false);
+        setAssumeControlOfExisting(settings.assumeControlOfExisting ?? false);
     }, [settings]);
 
     const onSubmit = async (event: React.SyntheticEvent) => {
         event.preventDefault();
 
         try {
-            await saveSettings({ enabled });
+            await saveSettings({ enabled, assumeControlOfExisting });
             if (enabled && !settings.hasToken) {
                 const token = await generateNewToken();
                 setNewToken(token);
@@ -98,6 +101,30 @@ export const ScimSettings = () => {
                                 />
                             }
                             label={enabled ? 'Enabled' : 'Disabled'}
+                        />
+                    </Grid>
+                </Grid>
+
+                <Grid container spacing={3}>
+                    <Grid item md={5} mb={2}>
+                        <strong>Assume control</strong>
+                        <p>Assumes control of users and groups</p>
+                    </Grid>
+                    <Grid item md={6}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    onChange={(_, enabled) =>
+                                        setAssumeControlOfExisting(enabled)
+                                    }
+                                    value={assumeControlOfExisting}
+                                    name='assumeControlOfExisting'
+                                    checked={assumeControlOfExisting}
+                                />
+                            }
+                            label={
+                                assumeControlOfExisting ? 'Enabled' : 'Disabled'
+                            }
                         />
                     </Grid>
                 </Grid>

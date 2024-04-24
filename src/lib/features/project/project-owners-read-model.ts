@@ -41,6 +41,7 @@ export class ProjectOwnersReadModel {
         // }));
         return [];
     }
+
     async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
         const T = {
             ROLE_USER: 'role_user',
@@ -72,9 +73,9 @@ export class ProjectOwnersReadModel {
 
             const userData = {
                 ownerType: 'user',
-                name: next.name || next.username,
-                email: next.email,
-                imageUrl: next.image_url,
+                name: next?.name || next?.username,
+                email: next?.email,
+                imageUrl: next?.image_url,
             };
 
             if (project in acc) {

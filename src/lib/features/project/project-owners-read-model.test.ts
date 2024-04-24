@@ -47,6 +47,11 @@ afterAll(async () => {
 
 afterEach(async () => {
     if (db) {
+        const projects = await db.stores.projectStore.getAll();
+        for (const project of projects) {
+            // Clean only project roles, not all roles
+            await db.stores.roleStore.removeRolesForProject(project.id);
+        }
         await db.stores.projectStore.deleteAll();
     }
 });

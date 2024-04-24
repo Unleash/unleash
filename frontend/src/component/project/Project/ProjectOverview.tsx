@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect } from 'react';
 import { Box, styled } from '@mui/material';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -11,7 +11,6 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
-import { useFeedback } from '../../feedbackNew/useFeedback';
 import { OldProjectFeatureToggles } from './PaginatedProjectFeatureToggles/OldProjectFeatureToggles';
 
 const refreshInterval = 15 * 1000;
@@ -100,38 +99,6 @@ const OldProjectOverview: FC<{
     );
 };
 
-const useDelayedFeedbackPrompt = () => {
-    const { openFeedback, hasSubmittedFeedback } = useFeedback(
-        'newProjectOverview',
-        'manual',
-    );
-    const projectOverviewRefactorFeedback = useUiFlag(
-        'projectOverviewRefactorFeedback',
-    );
-
-    const [seenFeedback, setSeenFeedback] = useState(false);
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (
-                projectOverviewRefactorFeedback &&
-                !seenFeedback &&
-                !hasSubmittedFeedback
-            ) {
-                openFeedback({
-                    title: 'How easy was it to work with the project overview in Unleash?',
-                    positiveLabel:
-                        'What do you like most about the updated project overview?',
-                    areasForImprovementsLabel:
-                        'What improvements are needed in the project overview?',
-                });
-                setSeenFeedback(true);
-            }
-        }, 30000);
-
-        return () => clearTimeout(timer);
-    }, [hasSubmittedFeedback, openFeedback, seenFeedback]);
-};
-
 const NewProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
@@ -141,7 +108,6 @@ const NewProjectOverview: FC<{
     const { project } = useProjectOverview(projectId, {
         refreshInterval,
     });
-    useDelayedFeedbackPrompt();
 
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();

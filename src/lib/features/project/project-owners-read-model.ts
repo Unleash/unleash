@@ -2,19 +2,20 @@ import type { Db } from '../../db/db';
 import { RoleName, type IProjectWithCount, type IRoleStore } from '../../types';
 
 export type SystemOwner = { ownerType: 'system' };
-export type NonSystemProjectOwner =
-    | {
-          ownerType: 'user';
-          name: string;
-          email?: string;
-          imageUrl?: string;
-      }
-    | {
-          ownerType: 'group';
-          name: string;
-      };
+type UserProjectOwner = {
+    ownerType: 'user';
+    name: string;
+    email?: string;
+    imageUrl?: string;
+};
+type GroupProjectOwner = {
+    ownerType: 'group';
+    name: string;
+};
 
-type ProjectOwners = [SystemOwner] | NonSystemProjectOwner[];
+type ProjectOwners =
+    | [SystemOwner]
+    | Array<UserProjectOwner | GroupProjectOwner>;
 
 export type ProjectOwnersDictionary = Record<string, ProjectOwners>;
 
@@ -43,6 +44,7 @@ export class ProjectOwnersReadModel {
     }
 
     async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
+        // Query both user and group owners
         const T = {
             ROLE_USER: 'role_user',
             GROUP_ROLE: 'group_role',
@@ -52,7 +54,7 @@ export class ProjectOwnersReadModel {
 
         const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
 
-        const query = this.db
+        const usersResult = await this.db
             .select(
                 'user.username',
                 'user.name',
@@ -66,25 +68,65 @@ export class ProjectOwnersReadModel {
             .where('r.id', ownerRole.id)
             .join(`${T.USERS} as user`, 'ru.user_id', 'user.id');
 
-        const result = await query;
+        const groupsResult = await this.db
+            .select('groups.name', 'gr.created_at', 'gr.project')
+            .from(`${T.GROUP_ROLE} as gr`)
+            .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
+            .where('r.id', ownerRole.id)
+            .join('groups', 'gr.group_id', 'groups.id');
 
-        const dict = result.reduce((acc, next) => {
-            const { project } = next;
+        // Map results into project owners format
+        const usersDict: Record<string, UserProjectOwner[]> = {};
+        const groupsDict: Record<string, GroupProjectOwner[]> = {};
 
-            const userData = {
+        usersResult.forEach((user) => {
+            const project = user.project as string;
+
+            const data: UserProjectOwner = {
                 ownerType: 'user',
-                name: next?.name || next?.username,
-                email: next?.email,
-                imageUrl: next?.image_url,
+                name: user?.name || user?.username,
+                email: user?.email,
+                imageUrl: user?.image_url,
             };
 
-            if (project in acc) {
-                acc[project].push(userData);
+            if (project in usersDict) {
+                usersDict[project] = [...usersDict[project], data];
             } else {
-                acc[project] = [userData];
+                usersDict[project] = [data];
             }
-            return acc;
-        }, {});
+        });
+
+        groupsResult.forEach((group) => {
+            const project = group.project as string;
+
+            const data: GroupProjectOwner = {
+                ownerType: 'group',
+                name: group?.name,
+            };
+
+            if (project in groupsDict) {
+                groupsDict[project] = [...groupsDict[project], data];
+            } else {
+                groupsDict[project] = [data];
+            }
+        });
+
+        // Combine user and group owners
+        const projects = [
+            ...new Set([...Object.keys(usersDict), ...Object.keys(groupsDict)]),
+        ];
+
+        const dict = Object.fromEntries(
+            projects.map((project) => {
+                return [
+                    project,
+                    [
+                        ...(usersDict[project] || []),
+                        ...(groupsDict[project] || []),
+                    ],
+                ];
+            }),
+        );
 
         return dict;
     }

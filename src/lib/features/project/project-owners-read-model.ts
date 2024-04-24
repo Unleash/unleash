@@ -1,3 +1,5 @@
+import type { IProjectWithCount } from '../../types';
+
 export type ProjectOwner =
     | {
           ownerType: 'user';
@@ -35,3 +37,20 @@ export type ProjectOwnersDictionary = Record<string, ProjectOwner[]>;
 // async getAllProjectsGroupsForRole(roleId: number): Promise<any[]> {
 //     throw new Error('Method not implemented');
 // }
+
+type IProjectWithCountAndOwners = IProjectWithCount & {
+    owners: ProjectOwner[];
+};
+
+const enrichWithOwners = (
+    projects: IProjectWithCount[],
+): IProjectWithCountAndOwners[] => {
+    const projectOwners: ProjectOwnersDictionary = getAllProjectOwners();
+
+    const projectsWithOwners = projects.map((p) => ({
+        ...p,
+        owners: projectOwners[p.id] || [],
+    }));
+
+    return [];
+};

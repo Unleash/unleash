@@ -1,6 +1,5 @@
 import type { Db } from '../../db/db';
 import { RoleName, type IProjectWithCount, type IRoleStore } from '../../types';
-import { extractUsernameFromUser } from '../../util';
 
 export type SystemOwner = { ownerType: 'system' };
 export type NonSystemProjectOwner =
@@ -68,22 +67,12 @@ export class ProjectOwnersReadModel {
 
         const result = await query;
 
-        console.log(result);
-
         const dict = result.reduce((acc, next) => {
             const { project } = next;
-            const userCanonicalName = extractUsernameFromUser({
-                id: next.id,
-                name: next.name,
-                email: next.email,
-                username: next.username,
-                permissions: [],
-                isAPI: false,
-            });
 
             const userData = {
                 ownerType: 'user',
-                name: userCanonicalName,
+                name: next.name || next.username,
                 email: next.email,
                 imageUrl: next.image_url,
             };
@@ -91,7 +80,7 @@ export class ProjectOwnersReadModel {
             if (project in acc) {
                 acc[project].push(userData);
             } else {
-                acc[project] = { userData };
+                acc[project] = [userData];
             }
             return acc;
         }, {});

@@ -103,8 +103,7 @@ export interface FeatureToggleWithEnvironment extends FeatureToggle {
     environments: IEnvironmentDetail[];
 }
 
-export interface FeatureToggleWithDependencies
-    extends FeatureToggleWithEnvironment {
+export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     dependencies: IDependency[];
     children: string[];
     lifecycle: IFeatureLifecycleStage | undefined;

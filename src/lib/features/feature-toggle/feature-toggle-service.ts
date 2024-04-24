@@ -15,7 +15,7 @@ import {
     type FeatureToggle,
     type FeatureToggleDTO,
     type FeatureToggleLegacy,
-    type FeatureToggleWithDependencies,
+    type FeatureToggleView,
     type FeatureToggleWithEnvironment,
     FeatureUpdatedEvent,
     FeatureVariantEvent,
@@ -986,7 +986,7 @@ class FeatureToggleService {
         projectId,
         environmentVariants,
         userId,
-    }: IGetFeatureParams): Promise<FeatureToggleWithDependencies> {
+    }: IGetFeatureParams): Promise<FeatureToggleView> {
         if (projectId) {
             await this.validateFeatureBelongsToProject({
                 featureName,

@@ -10,6 +10,7 @@ export type LifecycleStage =
       }
     | {
           name: 'completed';
+          environments: Array<{ name: string; lastSeenAt: string }>;
           status: 'kept' | 'discarded';
       }
     | { name: 'archived' };

@@ -53,6 +53,7 @@ export const NetworkTrafficUsagePlanSummary = ({
     planIncludedRequests,
 }: INetworkTrafficUsagePlanSummary) => {
     const { isPro } = useUiConfig();
+    const overages = usageTotal - planIncludedRequests;
     return (
         <StyledContainer>
             <Grid item>
@@ -61,7 +62,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                 </StyledCardTitleRow>
                 <StyledCardDescription>
                     <RowContainer>
-                        Incoming requests for selection{' '}
+                        Incoming requests selected month{' '}
                         <StyledNumbersDiv>
                             <ConditionallyRender
                                 condition={isPro()}
@@ -102,6 +103,19 @@ export const NetworkTrafficUsagePlanSummary = ({
                                 <StyledNumbersDiv>
                                     {planIncludedRequests.toLocaleString()}{' '}
                                     requests
+                                </StyledNumbersDiv>
+                            </RowContainer>
+                        </StyledCardDescription>
+                    }
+                />
+                <ConditionallyRender
+                    condition={isPro() && overages > 0}
+                    show={
+                        <StyledCardDescription>
+                            <RowContainer>
+                                Requests overages this month
+                                <StyledNumbersDiv>
+                                    {overages.toLocaleString()} requests
                                 </StyledNumbersDiv>
                             </RowContainer>
                         </StyledCardDescription>

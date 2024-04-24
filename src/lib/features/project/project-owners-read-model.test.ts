@@ -21,7 +21,10 @@ afterAll(async () => {
 });
 
 describe('integration tests', () => {
-    test('gets project owners', () => {});
+    test('gets project user owners', () => {});
+    test('gets project group owners', () => {});
+    test('users are listed before groups', () => {});
+    test('owners (users and groups) are sorted by when they were added; oldest first', () => {});
     test('returns the system owner for the default project', () => {});
     test('returns an empty list if there are no projects', async () => {
         const owners = await readModel.getAllProjectOwners();

@@ -42,15 +42,17 @@ type IProjectWithCountAndOwners = IProjectWithCount & {
     owners: ProjectOwner[];
 };
 
+const getAllProjectOwners = () => {};
+
 const enrichWithOwners = (
     projects: IProjectWithCount[],
 ): IProjectWithCountAndOwners[] => {
-    const projectOwners: ProjectOwnersDictionary = getAllProjectOwners();
+    // const projectOwners: ProjectOwnersDictionary = getAllProjectOwners();
 
-    const projectsWithOwners = projects.map((p) => ({
-        ...p,
-        owners: projectOwners[p.id] || [],
-    }));
+    // const projectsWithOwners = projects.map((p) => ({
+    //     ...p,
+    //     owners: projectOwners[p.id] || [],
+    // }));
 
     return [];
 };

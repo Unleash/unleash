@@ -9,13 +9,13 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     type IEventStore,
+    type StageName,
 } from '../../types';
 import type EventEmitter from 'events';
 import {
     type FeatureLifecycleService,
     STAGE_ENTERED,
 } from './feature-lifecycle-service';
-import type { StageName } from './feature-lifecycle-store-type';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -69,10 +69,22 @@ function reachedStage(name: StageName) {
     );
 }
 
+const expectFeatureStage = async (stage: StageName) => {
+    const { body: feature } = await app.getProjectFeatures(
+        'default',
+        'my_feature_a',
+    );
+    expect(feature.lifecycle).toMatchObject({
+        stage,
+        enteredStageAt: expect.any(String),
+    });
+};
+
 test('should return lifecycle stages', async () => {
     await app.createFeature('my_feature_a');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
     await reachedStage('initial');
+    await expectFeatureStage('initial');
     eventBus.emit(CLIENT_METRICS, {
         featureName: 'my_feature_a',
         environment: 'default',
@@ -87,6 +99,7 @@ test('should return lifecycle stages', async () => {
         environment: 'non-existent',
     });
     await reachedStage('live');
+    await expectFeatureStage('live');
     eventStore.emit(FEATURE_ARCHIVED, { featureName: 'my_feature_a' });
     await reachedStage('archived');
 
@@ -97,4 +110,6 @@ test('should return lifecycle stages', async () => {
         { stage: 'live', enteredStageAt: expect.any(String) },
         { stage: 'archived', enteredStageAt: expect.any(String) },
     ]);
+
+    await expectFeatureStage('archived');
 });

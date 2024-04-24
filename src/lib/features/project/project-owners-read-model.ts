@@ -1,5 +1,6 @@
 import type { Db } from '../../db/db';
-import type { IProjectWithCount } from '../../types';
+import { RoleName, type IProjectWithCount, type IRoleStore } from '../../types';
+import { extractUsernameFromUser } from '../../util';
 
 export type SystemOwner = { ownerType: 'system' };
 export type NonSystemProjectOwner =
@@ -24,9 +25,11 @@ type IProjectWithCountAndOwners = IProjectWithCount & {
 
 export class ProjectOwnersReadModel {
     private db: Db;
+    roleStore: IRoleStore;
 
-    constructor(db: Db) {
+    constructor(db: Db, roleStore: IRoleStore) {
         this.db = db;
+        this.roleStore = roleStore;
     }
 
     addOwnerData(
@@ -40,31 +43,60 @@ export class ProjectOwnersReadModel {
         return [];
     }
     async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
-        //   const ownerRole = await this.accessService.getRoleByName(
-        //     RoleName.OWNER,
-        //    );
-        //   const ownerRoleId = ownerRole.id;
+        const T = {
+            ROLE_USER: 'role_user',
+            GROUP_ROLE: 'group_role',
+            ROLES: 'roles',
+            USERS: 'users',
+        };
 
-        // async getAllProjectsUsersForRole(roleId: number): Promise<IUserWithProjectRoles[]> {
-        //     const rows = await this.db
-        //         .select(['user_id', 'ru.created_at', 'ru.project'])
-        //         .from<IRole>(`${T.ROLE_USER} AS ru`)
-        //         .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
-        //         .where('r.id', roleId);
+        const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
 
-        //     return rows.map((r) => ({
-        //         id: r.user_id,
-        //         addedAt: r.created_at,
-        //         projectId: r.project,
-        //         roleId,
-        //     }));
-        // }
+        const query = this.db
+            .select(
+                'user.username',
+                'user.name',
+                'user.email',
+                'user.image_url',
+                'ru.created_at',
+                'ru.project',
+            )
+            .from(`${T.ROLE_USER} as ru`)
+            .join(`${T.ROLES} as r`, 'ru.role_id', 'r.id')
+            .where('r.id', ownerRole.id)
+            .join(`${T.USERS} as user`, 'ru.user_id', 'user.id');
 
-        // async getAllProjectsGroupsForRole(roleId: number): Promise<any[]> {
-        //     throw new Error('Method not implemented');
-        // }
+        const result = await query;
 
-        return {};
+        console.log(result);
+
+        const dict = result.reduce((acc, next) => {
+            const { project } = next;
+            const userCanonicalName = extractUsernameFromUser({
+                id: next.id,
+                name: next.name,
+                email: next.email,
+                username: next.username,
+                permissions: [],
+                isAPI: false,
+            });
+
+            const userData = {
+                ownerType: 'user',
+                name: userCanonicalName,
+                email: next.email,
+                imageUrl: next.image_url,
+            };
+
+            if (project in acc) {
+                acc[project].push(userData);
+            } else {
+                acc[project] = { userData };
+            }
+            return acc;
+        }, {});
+
+        return dict;
     }
 
     async enrichWithOwners(

@@ -16,7 +16,7 @@ let member: IUser;
 
 beforeAll(async () => {
     db = await dbInit('project_owners_read_model_serial', getLogger);
-    readModel = new ProjectOwnersReadModel(db.rawDatabase);
+    readModel = new ProjectOwnersReadModel(db.rawDatabase, db.stores.roleStore);
 
     const ownerData = {
         name: 'owner',

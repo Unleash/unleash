@@ -10,6 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
 import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
+import type { LifecycleStage } from '../FeatureLifecycle/LifecycleStage';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -81,6 +82,17 @@ const FeatureOverviewMetaData = () => {
 
     const IconComponent = getFeatureTypeIcons(type);
 
+    const currentStage: LifecycleStage = {
+        name: 'live',
+        environments: [
+            { name: 'production', lastSeenAt: new Date().toISOString() },
+            {
+                name: 'staging',
+                lastSeenAt: new Date().toISOString(),
+            },
+        ],
+    };
+
     return (
         <StyledContainer>
             <StyledPaddingContainerTop>
@@ -109,11 +121,9 @@ const FeatureOverviewMetaData = () => {
                         show={
                             <StyledRow data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
-                                <FeatureLifecycleTooltip
-                                    stage={{ name: 'initial' }}
-                                >
+                                <FeatureLifecycleTooltip stage={currentStage}>
                                     <FeatureLifecycleStageIcon
-                                        stage={{ name: 'initial' }}
+                                        stage={currentStage}
                                     />
                                 </FeatureLifecycleTooltip>
                             </StyledRow>

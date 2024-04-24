@@ -83,7 +83,8 @@ const FeatureOverviewMetaData = () => {
     const IconComponent = getFeatureTypeIcons(type);
 
     const currentStage: LifecycleStage = {
-        name: 'live',
+        name: 'completed',
+        status: 'kept',
         environments: [
             { name: 'production', lastSeenAt: new Date().toISOString() },
             {

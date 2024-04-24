@@ -17,7 +17,12 @@ import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironme
 import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
 import type { LifecycleStage } from './LifecycleStage';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { isSafeToArchive } from './isSafeToArchive';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -279,6 +284,52 @@ const LiveStageDescription: FC = ({ children }) => {
     );
 };
 
+const SafeToArchive: FC = () => {
+    return (
+        <>
+            <BoldTitle>Safe to archive</BoldTitle>
+            <InfoText sx={{ mt: 2, mb: 1 }}>
+                We haven’t seen this feature flag in production for at least two
+                days. It’s likely that it’s safe to archive this flag.
+            </InfoText>
+            <PermissionButton
+                color='inherit'
+                variant='outlined'
+                permission={DELETE_FEATURE}
+                size='small'
+                sx={{ mb: 2 }}
+            >
+                Archive feature
+            </PermissionButton>
+        </>
+    );
+};
+
+const ActivelyUsed: FC = ({ children }) => {
+    return (
+        <>
+            <InfoText sx={{ mt: 1, mb: 1 }}>
+                This feature has been successfully completed, but we are still
+                seeing usage in production. Clean up the feature flag from your
+                code before archiving it:
+            </InfoText>
+            {children}
+        </>
+    );
+};
+
+const CompletedStageDescription: FC<{
+    environments: Array<{ name: string; lastSeenAt: string }>;
+}> = ({ children, environments }) => {
+    return (
+        <ConditionallyRender
+            condition={isSafeToArchive(environments)}
+            show={<SafeToArchive />}
+            elseShow={<ActivelyUsed>{children}</ActivelyUsed>}
+        />
+    );
+};
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
@@ -326,6 +377,13 @@ export const FeatureLifecycleTooltip: FC<{
                         <LiveStageDescription>
                             <Environments environments={stage.environments} />
                         </LiveStageDescription>
+                    )}
+                    {stage.name === 'completed' && (
+                        <CompletedStageDescription
+                            environments={stage.environments}
+                        >
+                            <Environments environments={stage.environments} />
+                        </CompletedStageDescription>
                     )}
                 </ColorFill>
             </Box>

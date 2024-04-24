@@ -60,26 +60,28 @@ const GitHubContributors = ({ owner, repo, filePath }) => {
 
             <ul className={styles.wrapper}>
                 {contributors?.map((contributor) => {
+                    const isUnleashTeam = unleashTeam.has(contributor.login);
+                    const name = isUnleashTeam
+                        ? `${contributor.login}, ${unleashTeam.get(
+                              contributor.login,
+                          )}`
+                        : contributor.login;
                     return (
-                        <li key={contributor.login}>
-                            <figure className={styles.contributor}>
-                                <a href={contributor.html_url}>
-                                    <img
-                                        src={contributor.avatar_url}
-                                        alt={contributor.login}
-                                        width={70}
-                                    />
-                                </a>
-                                <figcaption>
-                                    <code>{contributor.login}</code>
-
-                                    {unleashTeam.has(contributor.login) && (
-                                        <p>
-                                            {unleashTeam.get(contributor.login)}
-                                        </p>
-                                    )}
-                                </figcaption>
-                            </figure>
+                        <li
+                            key={contributor.login}
+                            className={styles.contributor}
+                        >
+                            <a
+                                href={contributor.html_url}
+                                className={isUnleashTeam ? styles.unleash : ''}
+                                title={`@${name}`}
+                            >
+                                <img
+                                    src={contributor.avatar_url}
+                                    alt={contributor.login}
+                                    width={70}
+                                />
+                            </a>
                         </li>
                     );
                 })}

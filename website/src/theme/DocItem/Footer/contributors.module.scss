@@ -13,6 +13,23 @@
     }
 }
 
+.unleash{
+    position: relative;
+    display: block;
+}
+
+.unleash:before{
+    display: block;
+    position: absolute;
+    z-index: 2;
+    content: '';
+    top: -5px;
+    right: -5px;
+    width: 30px;
+    height: 30px;
+    background-image: url(/img/logo.svg);
+}
+
 .contributor {
     margin: 5px 10px 5px 0;
     display: flex;
@@ -20,6 +37,10 @@
 
     img{
         border-radius: 100%;
+        border: 2px solid var(--ifm-color-emphasis-300);
+        transition: border-color var(--ifm-transition-fast) var(--ifm-transition-timing-default),
+        scale var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+
     }
 
     figcaption {
@@ -28,6 +49,11 @@
         justify-content: center;
         align-items: flex-start;
     }
+}
+
+.contributor img:hover{
+    border-color: var(--ifm-pagination-nav-color-hover);
+    scale: 1.1;
 }
 
 @media (max-width: 600px) {

@@ -197,6 +197,8 @@ export default class ProjectController extends Controller {
             user.id,
         );
 
+        // const projectsWithOwners = projectOwnersReadModel(projects);
+
         this.openApiService.respondWithValidation(
             200,
             res,

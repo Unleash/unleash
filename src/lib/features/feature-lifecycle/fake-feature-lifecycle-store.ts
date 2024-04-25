@@ -15,7 +15,7 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
         );
     }
 
-    async insertOne(
+    private async insertOne(
         featureLifecycleStage: FeatureLifecycleStage,
     ): Promise<void> {
         if (await this.stageExists(featureLifecycleStage)) {

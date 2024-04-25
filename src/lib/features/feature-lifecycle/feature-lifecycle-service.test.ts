@@ -23,7 +23,10 @@ test('can insert and read lifecycle stages', async () => {
     const featureName = 'testFeature';
 
     function emitMetricsEvent(environment: string) {
-        eventBus.emit(CLIENT_METRICS, { featureName, environment });
+        eventBus.emit(CLIENT_METRICS, {
+            bucket: { toggles: { [featureName]: 'irrelevant' } },
+            environment,
+        });
     }
     function reachedStage(name: StageName) {
         return new Promise((resolve) =>
@@ -100,7 +103,7 @@ test('ignores lifecycle state updates when flag disabled', async () => {
     await eventStore.emit(FEATURE_CREATED, { featureName });
     await eventStore.emit(FEATURE_COMPLETED, { featureName });
     await eventBus.emit(CLIENT_METRICS, {
-        featureName,
+        bucket: { toggles: { [featureName]: 'irrelevant' } },
         environment: 'development',
     });
     await eventStore.emit(FEATURE_ARCHIVED, { featureName });

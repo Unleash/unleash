@@ -86,16 +86,21 @@ test('should return lifecycle stages', async () => {
     await reachedStage('initial');
     await expectFeatureStage('initial');
     eventBus.emit(CLIENT_METRICS, {
-        featureName: 'my_feature_a',
+        bucket: { toggles: { my_feature_a: 'irrelevant' } },
         environment: 'default',
     });
     // missing feature
     eventBus.emit(CLIENT_METRICS, {
         environment: 'default',
+        bucket: { toggles: {} },
     });
     // non existent env
     eventBus.emit(CLIENT_METRICS, {
-        featureName: 'my_feature_a',
+        bucket: {
+            toggles: {
+                my_feature_a: 'irrelevant',
+            },
+        },
         environment: 'non-existent',
     });
     await reachedStage('live');

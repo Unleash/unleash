@@ -14,6 +14,7 @@ import type {
 } from './feature-lifecycle-store-type';
 import EventEmitter from 'events';
 import type { Logger } from '../../logger';
+import type { ValidatedClientMetrics } from '../metrics/shared/schema';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
 
@@ -70,15 +71,18 @@ export class FeatureLifecycleService extends EventEmitter {
                 this.featureInitialized(event.featureName),
             );
         });
-        this.eventBus.on(CLIENT_METRICS, async (event) => {
-            if (!event.featureName || !event.environment) return;
-            await this.checkEnabled(() =>
-                this.featureReceivedMetrics(
-                    event.featureName,
-                    event.environment,
-                ),
-            );
-        });
+        this.eventBus.on(
+            CLIENT_METRICS,
+            async (event: ValidatedClientMetrics) => {
+                if (event.environment) {
+                    const features = Object.keys(event.bucket.toggles);
+                    const environment = event.environment;
+                    await this.checkEnabled(() =>
+                        this.featuresReceivedMetrics(features, environment),
+                    );
+                }
+            },
+        );
         this.eventStore.on(FEATURE_COMPLETED, async (event) => {
             await this.checkEnabled(() =>
                 this.featureCompleted(event.featureName),
@@ -96,25 +100,26 @@ export class FeatureLifecycleService extends EventEmitter {
     }
 
     private async featureInitialized(feature: string) {
-        await this.featureLifecycleStore.insert({ feature, stage: 'initial' });
+        await this.featureLifecycleStore.insert([
+            { feature, stage: 'initial' },
+        ]);
         this.emit(STAGE_ENTERED, { stage: 'initial' });
     }
 
     private async stageReceivedMetrics(
-        feature: string,
+        features: string[],
         stage: 'live' | 'pre-live',
     ) {
-        const stageExists = await this.featureLifecycleStore.stageExists({
-            stage,
-            feature,
-        });
-        if (!stageExists) {
-            await this.featureLifecycleStore.insert({ feature, stage });
-            this.emit(STAGE_ENTERED, { stage });
-        }
+        await this.featureLifecycleStore.insert(
+            features.map((feature) => ({ feature, stage })),
+        );
+        this.emit(STAGE_ENTERED, { stage });
     }
 
-    private async featureReceivedMetrics(feature: string, environment: string) {
+    private async featuresReceivedMetrics(
+        features: string[],
+        environment: string,
+    ) {
         try {
             const env = await this.environmentStore.get(environment);
 
@@ -122,28 +127,32 @@ export class FeatureLifecycleService extends EventEmitter {
                 return;
             }
             if (env.type === 'production') {
-                await this.stageReceivedMetrics(feature, 'live');
+                await this.stageReceivedMetrics(features, 'live');
             } else if (env.type === 'development') {
-                await this.stageReceivedMetrics(feature, 'pre-live');
+                await this.stageReceivedMetrics(features, 'pre-live');
             }
         } catch (e) {
             this.logger.warn(
-                `Error handling metrics for ${feature} in ${environment}`,
+                `Error handling ${features.length} metrics in ${environment}`,
                 e,
             );
         }
     }
 
     private async featureCompleted(feature: string) {
-        await this.featureLifecycleStore.insert({
-            feature,
-            stage: 'completed',
-        });
+        await this.featureLifecycleStore.insert([
+            {
+                feature,
+                stage: 'completed',
+            },
+        ]);
         this.emit(STAGE_ENTERED, { stage: 'completed' });
     }
 
     private async featureArchived(feature: string) {
-        await this.featureLifecycleStore.insert({ feature, stage: 'archived' });
+        await this.featureLifecycleStore.insert([
+            { feature, stage: 'archived' },
+        ]);
         this.emit(STAGE_ENTERED, { stage: 'archived' });
     }
 }

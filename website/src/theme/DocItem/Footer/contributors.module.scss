@@ -5,6 +5,7 @@
 .wrapper {
     display: flex;
     flex-wrap: wrap;
+    gap: 20px;
     margin: 0;
     padding: 0;
 
@@ -31,23 +32,15 @@
 }
 
 .contributor {
-    margin: 5px 10px 5px 0;
-    display: flex;
-    gap: 10px;
+    margin-top: 10px;
 
     img{
         border-radius: 100%;
-        border: 2px solid var(--ifm-color-emphasis-300);
+        margin:0;
+        padding: 0;
+        border: 2px solid var(--unleash-color-gray);
         transition: border-color var(--ifm-transition-fast) var(--ifm-transition-timing-default),
         scale var(--ifm-transition-fast) var(--ifm-transition-timing-default);
-
-    }
-
-    figcaption {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
     }
 }
 

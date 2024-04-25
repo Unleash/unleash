@@ -16,11 +16,6 @@ describe('bearerTokenMiddleware', () => {
     beforeEach(() => {
         config = createTestConfig({
             getLogger,
-            experimental: {
-                flags: {
-                    bearerTokenMiddleware: true,
-                },
-            },
         });
     });
 
@@ -64,14 +59,9 @@ describe('bearerTokenMiddleware', () => {
         expect(req.headers.authorization).toBe(exampleSignalToken);
     });
 
-    it('should always run for signal endpoint, regardless of the flag', () => {
+    it('should always run for signal endpoint, without base path', () => {
         const configWithBearerTokenMiddlewareFlagDisabled = createTestConfig({
             getLogger,
-            experimental: {
-                flags: {
-                    bearerTokenMiddleware: false,
-                },
-            },
         });
 
         const middleware = bearerTokenMiddleware(
@@ -88,16 +78,11 @@ describe('bearerTokenMiddleware', () => {
         expect(req.headers.authorization).toBe(exampleSignalToken);
     });
 
-    it('should always run for signal endpoint, regardless of the flag, supporting instance path', () => {
+    it('should always run for signal endpoint, regardless of the flag, with base path', () => {
         const configWithBearerTokenMiddlewareFlagDisabled = createTestConfig({
             getLogger,
             server: {
                 baseUriPath: '/some-test-instance',
-            },
-            experimental: {
-                flags: {
-                    bearerTokenMiddleware: false,
-                },
             },
         });
 

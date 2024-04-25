@@ -7,7 +7,17 @@ import type {
 export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
     private lifecycles: Record<string, FeatureLifecycleView> = {};
 
-    async insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void> {
+    async insert(
+        featureLifecycleStages: FeatureLifecycleStage[],
+    ): Promise<void> {
+        await Promise.all(
+            featureLifecycleStages.map((stage) => this.insertOne(stage)),
+        );
+    }
+
+    private async insertOne(
+        featureLifecycleStage: FeatureLifecycleStage,
+    ): Promise<void> {
         if (await this.stageExists(featureLifecycleStage)) {
             return;
         }

@@ -60,6 +60,21 @@ const getFeatureLifecycle = async (featureName: string, expectedCode = 200) => {
         .get(`/api/admin/projects/default/features/${featureName}/lifecycle`)
         .expect(expectedCode);
 };
+const completeFeature = async (featureName: string, expectedCode = 200) => {
+    return app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/lifecycle/complete`,
+        )
+        .expect(expectedCode);
+};
+
+const unCompleteFeature = async (featureName: string, expectedCode = 200) => {
+    return app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/lifecycle/uncomplete`,
+        )
+        .expect(expectedCode);
+};
 
 function reachedStage(name: StageName) {
     return new Promise((resolve) =>
@@ -69,10 +84,10 @@ function reachedStage(name: StageName) {
     );
 }
 
-const expectFeatureStage = async (stage: StageName) => {
+const expectFeatureStage = async (featureName: string, stage: StageName) => {
     const { body: feature } = await app.getProjectFeatures(
         'default',
-        'my_feature_a',
+        featureName,
     );
     expect(feature.lifecycle).toMatchObject({
         stage,
@@ -84,7 +99,7 @@ test('should return lifecycle stages', async () => {
     await app.createFeature('my_feature_a');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
     await reachedStage('initial');
-    await expectFeatureStage('initial');
+    await expectFeatureStage('my_feature_a', 'initial');
     eventBus.emit(CLIENT_METRICS, {
         featureName: 'my_feature_a',
         environment: 'default',
@@ -99,17 +114,40 @@ test('should return lifecycle stages', async () => {
         environment: 'non-existent',
     });
     await reachedStage('live');
-    await expectFeatureStage('live');
+    await expectFeatureStage('my_feature_a', 'live');
     eventStore.emit(FEATURE_ARCHIVED, { featureName: 'my_feature_a' });
     await reachedStage('archived');
 
     const { body } = await getFeatureLifecycle('my_feature_a');
 
     expect(body).toEqual([
-        { stage: 'initial', enteredStageAt: expect.any(String) },
-        { stage: 'live', enteredStageAt: expect.any(String) },
-        { stage: 'archived', enteredStageAt: expect.any(String) },
+        {
+            stage: 'initial',
+            enteredStageAt: expect.any(String),
+        },
+        {
+            stage: 'live',
+            enteredStageAt: expect.any(String),
+        },
+        {
+            stage: 'archived',
+            enteredStageAt: expect.any(String),
+        },
     ]);
 
-    await expectFeatureStage('archived');
+    await expectFeatureStage('my_feature_a', 'archived');
+});
+
+test('should be able to toggle between completed/uncompleted', async () => {
+    await app.createFeature('my_feature_b');
+
+    await completeFeature('my_feature_b');
+
+    await expectFeatureStage('my_feature_b', 'completed');
+
+    await unCompleteFeature('my_feature_b');
+
+    const { body } = await getFeatureLifecycle('my_feature_b');
+
+    expect(body).toEqual([]);
 });

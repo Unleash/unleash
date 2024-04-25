@@ -248,6 +248,27 @@ export default class ProjectService {
         return featureNaming;
     };
 
+    private async validateEnvironmentsExist(environments: string[]) {
+        const projectsAndExistence = await Promise.all(
+            environments.map(async (env) => [
+                env,
+                await this.environmentStore.exists(env),
+            ]),
+        );
+
+        const invalidEnvs = projectsAndExistence
+            .filter(([_, exists]) => !exists)
+            .map(([env]) => env);
+
+        if (invalidEnvs.length > 0) {
+            throw new BadDataError(
+                `These environments do not exist and can not be selected for the project: ${invalidEnvs
+                    .map((env) => `'${env}'`)
+                    .join(', ')}.`,
+            );
+        }
+    }
+
     async validateProjectEnvironments(environments: string[] | undefined) {
         if (
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
@@ -259,24 +280,7 @@ export default class ProjectService {
                 );
             }
 
-            const projectsAndExistence = await Promise.all(
-                environments.map(async (env) => [
-                    env,
-                    await this.environmentStore.exists(env),
-                ]),
-            );
-
-            const invalidEnvs = projectsAndExistence
-                .filter(([_, exists]) => !exists)
-                .map(([env]) => env);
-
-            if (invalidEnvs.length > 0) {
-                throw new BadDataError(
-                    `These environments do not exist and can not be selected for the project: ${invalidEnvs
-                        .map((env) => `'${env}'`)
-                        .join(', ')}.`,
-                );
-            }
+            this.validateEnvironmentsExist(environments);
         }
     }
 
@@ -284,7 +288,9 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
         auditUser: IAuditUser,
-        enableChangeRequestsForSpecifiedEnvironments: () => Promise<void> = async () => {},
+        enableChangeRequestsForSpecifiedEnvironments: (args: {
+            validateEnvironments: (environments: string[]) => Promise<void>;
+        }) => Promise<void> = async () => {},
     ): Promise<ProjectCreated> {
         await this.validateProjectEnvironments(newProject.environments);
 
@@ -310,7 +316,9 @@ export default class ProjectService {
             }),
         );
 
-        await enableChangeRequestsForSpecifiedEnvironments();
+        await enableChangeRequestsForSpecifiedEnvironments({
+            validateEnvironments: this.validateEnvironmentsExist,
+        });
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 

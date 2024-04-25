@@ -306,8 +306,8 @@ export default class ProjectService {
 
         const envsToEnable =
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
-            data.environments?.length
-                ? data.environments
+            newProject.environments?.length
+                ? newProject.environments
                 : (
                       await this.environmentStore.getAll({
                           enabled: true,
@@ -324,13 +324,13 @@ export default class ProjectService {
             this.isEnterprise &&
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
         ) {
-            if (data.changeRequestEnvironments) {
+            if (newProject.changeRequestEnvironments) {
                 await this.validateEnvironmentsExist(
-                    data.changeRequestEnvironments,
+                    newProject.changeRequestEnvironments.map((env) => env.name),
                 );
                 const changeRequestEnvironments =
                     await enableChangeRequestsForSpecifiedEnvironments(
-                        data.changeRequestEnvironments,
+                        newProject.changeRequestEnvironments,
                     );
 
                 data.changeRequestEnvironments =

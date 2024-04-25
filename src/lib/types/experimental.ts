@@ -53,7 +53,6 @@ export type IFlagKey =
     | 'displayEdgeBanner'
     | 'projectOverviewRefactor'
     | 'disableShowContextFieldSelectionValues'
-    | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
     | 'projectListFilterMyProjects'
@@ -259,10 +258,6 @@ const flags: IFlags = {
     disableShowContextFieldSelectionValues: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DISABLE_SHOW_CONTEXT_FIELD_SELECTION_VALUES,
-        false,
-    ),
-    bearerTokenMiddleware: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_BEARER_TOKEN_MIDDLEWARE,
         false,
     ),
     projectOverviewRefactorFeedback: parseEnvVarBoolean(

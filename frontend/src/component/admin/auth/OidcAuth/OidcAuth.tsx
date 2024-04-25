@@ -21,10 +21,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
 import type { IRole } from 'interfaces/role';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useScim } from 'hooks/useScim';
-import { ScimConfigSettings } from '../ScimSettings/ScimSettings';
 
 const initialState = {
     enabled: false,
@@ -89,24 +85,6 @@ export const OidcAuth = () => {
         });
     };
 
-    const scimEnabled = useUiFlag('scimApi');
-
-    const {
-        settings,
-        enabled,
-        setEnabled,
-        assumeControlOfExisting,
-        setAssumeControlOfExisting,
-        newToken,
-        tokenGenerationDialog,
-        setTokenGenerationDialog,
-        tokenDialog,
-        setTokenDialog,
-        loading: scimLoading,
-        saveScimSettings,
-        onGenerateNewTokenConfirm,
-    } = useScim();
-
     const onSubmit = async (event: React.SyntheticEvent) => {
         event.preventDefault();
 
@@ -116,9 +94,6 @@ export const OidcAuth = () => {
                 title: 'Settings stored',
                 type: 'success',
             });
-            if (scimEnabled) {
-                saveScimSettings();
-            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -279,31 +254,6 @@ export const OidcAuth = () => {
                     ssoType='OIDC'
                     data={data}
                     setValue={setValue}
-                />
-
-                <ConditionallyRender
-                    condition={scimEnabled}
-                    show={
-                        <ScimConfigSettings
-                            disabled={!data.enabled}
-                            settings={settings}
-                            enabled={enabled}
-                            setEnabled={setEnabled}
-                            assumeControlOfExisting={assumeControlOfExisting}
-                            setAssumeControlOfExisting={
-                                setAssumeControlOfExisting
-                            }
-                            newToken={newToken}
-                            tokenGenerationDialog={tokenGenerationDialog}
-                            setTokenGenerationDialog={setTokenGenerationDialog}
-                            tokenDialog={tokenDialog}
-                            setTokenDialog={setTokenDialog}
-                            loading={scimLoading}
-                            onGenerateNewTokenConfirm={
-                                onGenerateNewTokenConfirm
-                            }
-                        />
-                    }
                 />
 
                 <AutoCreateForm

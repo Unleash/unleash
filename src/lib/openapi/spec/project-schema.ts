@@ -107,7 +107,7 @@ export const projectSchema = {
                 {
                     type: 'array',
                     items: {
-                        oneOf: [
+                        anyOf: [
                             {
                                 type: 'object',
                                 required: ['ownerType', 'name'],
@@ -121,12 +121,12 @@ export const projectSchema = {
                                         example: 'User Name',
                                     },
                                     imageUrl: {
-                                        type: 'string',
+                                        type: ['string', 'null'],
                                         example:
                                             'https://example.com/image.jpg',
                                     },
                                     email: {
-                                        type: 'string',
+                                        type: ['string', 'null'],
                                         example: 'user@example.com',
                                     },
                                 },
@@ -140,7 +140,7 @@ export const projectSchema = {
                                         enum: ['group'],
                                     },
                                     name: {
-                                        type: 'string',
+                                        type: ['string', 'null'],
                                         example: 'Group Name',
                                     },
                                 },
@@ -160,7 +160,6 @@ export const projectSchema = {
                             },
                         },
                     },
-                    maxItems: 1,
                 },
             ],
         },

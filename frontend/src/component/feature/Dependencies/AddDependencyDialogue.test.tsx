@@ -14,9 +14,6 @@ const setupApi = () => {
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },
-        flags: {
-            variantDependencies: true,
-        },
     });
 
     testServerRoute(

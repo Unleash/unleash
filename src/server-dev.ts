@@ -49,7 +49,6 @@ process.nextTick(async () => {
                         outdatedSdksBanner: true,
                         projectOverviewRefactor: true,
                         disableShowContextFieldSelectionValues: false,
-                        variantDependencies: true,
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,
                         projectListFilterMyProjects: true,

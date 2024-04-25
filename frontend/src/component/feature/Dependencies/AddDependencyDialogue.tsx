@@ -4,7 +4,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
-import { useUiFlag } from 'hooks/useUiFlag';
 import type { IDependency } from '../../../interfaces/featureToggle';
 import { ParentVariantOptions } from './ParentVariantOptions';
 import { type ParentValue, REMOVE_DEPENDENCY_OPTION } from './constants';
@@ -64,12 +63,9 @@ export const AddDependencyDialogue = ({
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(project);
 
-    const variantDependenciesEnabled = useUiFlag('variantDependencies');
-    const showStatus =
-        parent !== REMOVE_DEPENDENCY_OPTION.key && variantDependenciesEnabled;
+    const showStatus = parent !== REMOVE_DEPENDENCY_OPTION.key;
     const showVariants =
         parent !== REMOVE_DEPENDENCY_OPTION.key &&
-        variantDependenciesEnabled &&
         parentValue.status === 'enabled_with_variants';
 
     const selectStatus = (value: string) => {

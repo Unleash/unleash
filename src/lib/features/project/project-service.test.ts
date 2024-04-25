@@ -167,9 +167,7 @@ describe('enterprise extension: enable change requests', () => {
                 isAPI: false,
             },
             TEST_AUDIT_USER,
-            async () => {
-                crEnvs;
-            },
+            async () => crEnvs,
         );
     });
 
@@ -196,9 +194,7 @@ describe('enterprise extension: enable change requests', () => {
                 isAPI: false,
             },
             TEST_AUDIT_USER,
-            async () => {
-                crEnvs;
-            },
+            async () => crEnvs,
         );
 
         expect(result.changeRequestEnvironments).toStrictEqual(crEnvs);

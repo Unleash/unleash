@@ -262,7 +262,7 @@ export default class ProjectService {
 
         if (invalidEnvs.length > 0) {
             throw new BadDataError(
-                `These environments do not exist and can not be selected for the project: ${invalidEnvs
+                `These environments do not exist: ${invalidEnvs
                     .map((env) => `'${env}'`)
                     .join(', ')}.`,
             );
@@ -288,10 +288,9 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
         auditUser: IAuditUser,
-        enableChangeRequestsForSpecifiedEnvironments: (args: {
-            environments: CreateProject['changeRequestEnvironments'];
-            validateEnvironments: (environments: string[]) => Promise<void>;
-        }) => Promise<
+        enableChangeRequestsForSpecifiedEnvironments: (
+            environments: CreateProject['changeRequestEnvironments'],
+        ) => Promise<
             void | ProjectCreated['changeRequestEnvironments']
         > = async () => {
             return;
@@ -325,14 +324,19 @@ export default class ProjectService {
             this.isEnterprise &&
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
         ) {
-            const changeRequestEnvironments =
-                await enableChangeRequestsForSpecifiedEnvironments({
-                    environments: data.changeRequestEnvironments,
-                    validateEnvironments: this.validateEnvironmentsExist,
-                });
+            if (data.changeRequestEnvironments) {
+                await this.validateEnvironmentsExist(
+                    data.changeRequestEnvironments,
+                );
+                const changeRequestEnvironments =
+                    await enableChangeRequestsForSpecifiedEnvironments(
+                        data.changeRequestEnvironments,
+                    );
 
-            if (changeRequestEnvironments) {
-                data.changeRequestEnvironments = changeRequestEnvironments;
+                data.changeRequestEnvironments =
+                    changeRequestEnvironments ?? [];
+            } else {
+                data.changeRequestEnvironments = [];
             }
         }
 

@@ -78,7 +78,6 @@ exports[`should create default config 1`] = `
       "anonymiseEventLog": false,
       "applicationOverviewNewQuery": false,
       "automatedActions": false,
-      "bearerTokenMiddleware": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
       "collectTrafficDataUsage": false,

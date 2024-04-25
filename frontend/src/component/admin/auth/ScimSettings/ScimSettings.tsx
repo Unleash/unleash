@@ -1,4 +1,3 @@
-import type React from 'react';
 import { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
@@ -7,11 +6,19 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 import { useScimSettingsApi } from 'hooks/api/actions/useScimSettingsApi/useScimSettingsApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog';
 import { ScimTokenDialog } from './ScimTokenDialog';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-export const ScimSettings = () => {
+export interface IScimSettingsParameters {
+    disabled: boolean;
+    registerSaveHook: (callback: () => Promise<void>) => void;
+}
+
+export const ScimSettings = ({
+    disabled,
+    registerSaveHook,
+}: IScimSettingsParameters) => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { settings, refetch } = useScimSettings();
@@ -31,9 +38,7 @@ export const ScimSettings = () => {
         setAssumeControlOfExisting(settings.assumeControlOfExisting ?? false);
     }, [settings]);
 
-    const onSubmit = async (event: React.SyntheticEvent) => {
-        event.preventDefault();
-
+    registerSaveHook(async () => {
         try {
             await saveSettings({ enabled, assumeControlOfExisting });
             if (enabled && !settings.hasToken) {
@@ -50,7 +55,7 @@ export const ScimSettings = () => {
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
-    };
+    });
 
     const onGenerateNewToken = async () => {
         setTokenGenerationDialog(true);
@@ -65,6 +70,7 @@ export const ScimSettings = () => {
 
     return (
         <>
+            <h3>SCIM Provisioning</h3>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
                     <Alert severity='info'>
@@ -82,80 +88,68 @@ export const ScimSettings = () => {
                     </Alert>
                 </Grid>
             </Grid>
-            <form onSubmit={onSubmit}>
-                <Grid container spacing={3}>
-                    <Grid item md={5} mb={2}>
-                        <strong>Enable</strong>
-                        <p>Enable SCIM provisioning.</p>
-                    </Grid>
-                    <Grid item md={6}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    onChange={(_, enabled) =>
-                                        setEnabled(enabled)
-                                    }
-                                    value={enabled}
-                                    name='enabled'
-                                    checked={enabled}
-                                />
-                            }
-                            label={enabled ? 'Enabled' : 'Disabled'}
-                        />
-                    </Grid>
+            <Grid container spacing={3}>
+                <Grid item md={5} mb={2}>
+                    <strong>Enable</strong>
+                    <p>Enable SCIM provisioning.</p>
                 </Grid>
+                <Grid item md={6}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                onChange={(_, enabled) => setEnabled(enabled)}
+                                value={enabled}
+                                name='enabled'
+                                checked={enabled}
+                                disabled={disabled}
+                            />
+                        }
+                        label={enabled ? 'Enabled' : 'Disabled'}
+                    />
+                </Grid>
+            </Grid>
 
-                <Grid container spacing={3}>
-                    <Grid item md={5} mb={2}>
-                        <strong>Assume control</strong>
-                        <p>Assumes control of users and groups</p>
-                    </Grid>
-                    <Grid item md={6}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    onChange={(_, enabled) =>
-                                        setAssumeControlOfExisting(enabled)
-                                    }
-                                    value={assumeControlOfExisting}
-                                    name='assumeControlOfExisting'
-                                    checked={assumeControlOfExisting}
-                                />
-                            }
-                            label={
-                                assumeControlOfExisting ? 'Enabled' : 'Disabled'
-                            }
-                        />
-                    </Grid>
+            <Grid container spacing={3}>
+                <Grid item md={5} mb={2}>
+                    <strong>Assume control</strong>
+                    <p>Assumes control of users and groups</p>
                 </Grid>
+                <Grid item md={6}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                onChange={(_, enabled) =>
+                                    setAssumeControlOfExisting(enabled)
+                                }
+                                value={assumeControlOfExisting}
+                                name='assumeControlOfExisting'
+                                checked={assumeControlOfExisting}
+                                disabled={disabled}
+                            />
+                        }
+                        label={assumeControlOfExisting ? 'Enabled' : 'Disabled'}
+                    />
+                </Grid>
+            </Grid>
 
-                <Grid container spacing={3}>
-                    <Grid item md={5}>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            type='submit'
-                            disabled={loading}
-                        >
-                            Save
-                        </Button>
-                        <ConditionallyRender
-                            condition={Boolean(settings.hasToken)}
-                            show={
-                                <Button
-                                    variant='outlined'
-                                    color='error'
-                                    disabled={loading}
-                                    onClick={onGenerateNewToken}
-                                    sx={{ ml: 1 }}
-                                >
-                                    Generate new token
-                                </Button>
-                            }
-                        />
-                    </Grid>
+            <Grid container spacing={3}>
+                <Grid item md={5}>
+                    <ConditionallyRender
+                        condition={Boolean(settings.hasToken)}
+                        show={
+                            <Button
+                                variant='outlined'
+                                color='error'
+                                disabled={loading}
+                                onClick={onGenerateNewToken}
+                                sx={{ ml: 1 }}
+                            >
+                                Generate new token
+                            </Button>
+                        }
+                    />
                 </Grid>
-            </form>
+            </Grid>
             <ScimTokenGenerationDialog
                 open={tokenGenerationDialog}
                 setOpen={setTokenGenerationDialog}

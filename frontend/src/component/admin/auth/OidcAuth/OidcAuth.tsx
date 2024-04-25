@@ -21,6 +21,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
 import type { IRole } from 'interfaces/role';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ScimSettings } from '../ScimSettings/ScimSettings';
 
 const initialState = {
     enabled: false,
@@ -48,6 +51,10 @@ export const OidcAuth = () => {
     const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
+    let saveHook: (() => Promise<void>) | undefined;
+    const registerSaveHook = (callback: () => Promise<void>) => {
+        saveHook = callback;
+    };
 
     useEffect(() => {
         if (config.discoverUrl) {
@@ -94,10 +101,15 @@ export const OidcAuth = () => {
                 title: 'Settings stored',
                 type: 'success',
             });
+            if (saveHook) {
+                await saveHook();
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
+
+    const scimEnabled = useUiFlag('scimApi');
 
     return (
         <>
@@ -255,6 +267,17 @@ export const OidcAuth = () => {
                     data={data}
                     setValue={setValue}
                 />
+
+                <ConditionallyRender
+                    condition={scimEnabled}
+                    show={
+                        <ScimSettings
+                            disabled={!data.enabled}
+                            registerSaveHook={registerSaveHook}
+                        />
+                    }
+                />
+
                 <AutoCreateForm
                     data={data}
                     setValue={setValue}
@@ -296,6 +319,7 @@ export const OidcAuth = () => {
                         </FormControl>
                     </Grid>
                 </Grid>
+
                 <Grid container spacing={3}>
                     <Grid item md={12}>
                         <Button

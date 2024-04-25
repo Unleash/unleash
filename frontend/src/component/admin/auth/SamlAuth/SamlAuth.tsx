@@ -17,6 +17,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
 import type { IRole } from 'interfaces/role';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ScimSettings } from '../ScimSettings/ScimSettings';
 
 const initialState = {
     enabled: false,
@@ -43,6 +46,10 @@ export const SamlAuth = () => {
     const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('saml');
     const { updateSettings, errors, loading } = useAuthSettingsApi('saml');
+    let saveHook: (() => Promise<void>) | undefined;
+    const registerSaveHook = (callback: () => Promise<void>) => {
+        saveHook = callback;
+    };
 
     useEffect(() => {
         if (config.entityId) {
@@ -85,10 +92,15 @@ export const SamlAuth = () => {
                 title: 'Settings stored',
                 type: 'success',
             });
+            if (saveHook) {
+                await saveHook();
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
+
+    const scimEnabled = useUiFlag('scimApi');
 
     return (
         <>
@@ -261,6 +273,16 @@ export const SamlAuth = () => {
                     ssoType='SAML'
                     data={data}
                     setValue={setValue}
+                />
+
+                <ConditionallyRender
+                    condition={scimEnabled}
+                    show={
+                        <ScimSettings
+                            disabled={!data.enabled}
+                            registerSaveHook={registerSaveHook}
+                        />
+                    }
                 />
 
                 <AutoCreateForm

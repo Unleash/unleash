@@ -1,5 +1,5 @@
 import type { Db } from '../../db/db';
-import { RoleName, type IProjectWithCount, type IRoleStore } from '../../types';
+import { RoleName, type IProjectWithCount } from '../../types';
 import type {
     GroupProjectOwner,
     IProjectOwnersReadModel,
@@ -17,11 +17,9 @@ const T = {
 
 export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     private db: Db;
-    roleStore: IRoleStore;
 
-    constructor(db: Db, roleStore: IRoleStore) {
+    constructor(db: Db) {
         this.db = db;
-        this.roleStore = roleStore;
     }
 
     static addOwnerData(
@@ -105,7 +103,9 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     }
 
     async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
-        const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
+        const ownerRole = await this.db(T.ROLES)
+            .where({ name: RoleName.OWNER })
+            .first();
         const usersDict = await this.getAllProjectUsersByRole(ownerRole.id);
         const groupsDict = await this.getAllProjectGroupsByRole(ownerRole.id);
 

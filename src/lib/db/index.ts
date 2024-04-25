@@ -51,7 +51,6 @@ export const createStores = (
 ): IUnleashStores => {
     const { getLogger, eventBus } = config;
     const eventStore = new EventStore(db, getLogger);
-    const roleStore = new RoleStore(db, eventBus, getLogger);
 
     return {
         eventStore,
@@ -117,7 +116,7 @@ export const createStores = (
             getLogger,
         ),
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
-        roleStore,
+        roleStore: new RoleStore(db, eventBus, getLogger),
         segmentStore: new SegmentStore(
             db,
             eventBus,
@@ -150,7 +149,7 @@ export const createStores = (
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
-        projectOwnersReadModel: new ProjectOwnersReadModel(db, roleStore),
+        projectOwnersReadModel: new ProjectOwnersReadModel(db),
     };
 };
 

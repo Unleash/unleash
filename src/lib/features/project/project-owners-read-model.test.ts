@@ -66,7 +66,7 @@ let group2: IGroup;
 
 beforeAll(async () => {
     db = await dbInit('project_owners_read_model_serial', getLogger);
-    readModel = new ProjectOwnersReadModel(db.rawDatabase, db.stores.roleStore);
+    readModel = new ProjectOwnersReadModel(db.rawDatabase);
     ownerRoleId = (await db.stores.roleStore.getRoleByName(RoleName.OWNER)).id;
 
     const ownerData = {
@@ -107,14 +107,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-    if (db) {
-        const projects = await db.stores.projectStore.getAll();
-        for (const project of projects) {
-            // Clean only project roles, not all roles
-            await db.stores.roleStore.removeRolesForProject(project.id);
-        }
-        await db.stores.projectStore.deleteAll();
-    }
+    db.stores.roleStore;
 });
 
 describe('integration tests', () => {

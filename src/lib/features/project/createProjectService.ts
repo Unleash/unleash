@@ -1,7 +1,6 @@
 import type { Db, IUnleashConfig } from '../../server-impl';
 import EventStore from '../events/event-store';
 import GroupStore from '../../db/group-store';
-import RoleStore from '../../db/role-store';
 import { AccountStore } from '../../db/account-store';
 import EnvironmentStore from '../project-environments/environment-store';
 import {
@@ -57,8 +56,7 @@ export const createProjectService = (
         getLogger,
         flagResolver,
     );
-    const roleStore = new RoleStore(db, eventBus, getLogger);
-    const projectOwnersReadModel = new ProjectOwnersReadModel(db, roleStore);
+    const projectOwnersReadModel = new ProjectOwnersReadModel(db);
     const groupStore = new GroupStore(db);
     const featureToggleStore = new FeatureToggleStore(
         db,

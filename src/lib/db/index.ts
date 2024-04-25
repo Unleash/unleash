@@ -43,6 +43,7 @@ import FeatureSearchStore from '../features/feature-search/feature-search-store'
 import { InactiveUsersStore } from '../users/inactive/inactive-users-store';
 import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store';
 import { SegmentReadModel } from '../features/segment/segment-read-model';
+import { ProjectOwnersReadModel } from '../features/project/project-owners-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -50,6 +51,7 @@ export const createStores = (
 ): IUnleashStores => {
     const { getLogger, eventBus } = config;
     const eventStore = new EventStore(db, getLogger);
+    const roleStore = new RoleStore(db, eventBus, getLogger);
 
     return {
         eventStore,
@@ -115,7 +117,7 @@ export const createStores = (
             getLogger,
         ),
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
-        roleStore: new RoleStore(db, eventBus, getLogger),
+        roleStore,
         segmentStore: new SegmentStore(
             db,
             eventBus,
@@ -148,6 +150,7 @@ export const createStores = (
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
+        projectOwnersReadModel: new ProjectOwnersReadModel(db, roleStore),
     };
 };
 

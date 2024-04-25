@@ -1,6 +1,7 @@
 import type { Db, IUnleashConfig } from '../../server-impl';
 import EventStore from '../events/event-store';
 import GroupStore from '../../db/group-store';
+import RoleStore from '../../db/role-store';
 import { AccountStore } from '../../db/account-store';
 import EnvironmentStore from '../project-environments/environment-store';
 import {
@@ -41,6 +42,8 @@ import {
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import FeatureTypeStore from '../../db/feature-type-store';
 import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
+import { ProjectOwnersReadModel } from './project-owners-read-model';
+import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model';
 
 export const createProjectService = (
     db: Db,
@@ -54,6 +57,8 @@ export const createProjectService = (
         getLogger,
         flagResolver,
     );
+    const roleStore = new RoleStore(db, eventBus, getLogger);
+    const projectOwnersReadModel = new ProjectOwnersReadModel(db, roleStore);
     const groupStore = new GroupStore(db);
     const featureToggleStore = new FeatureToggleStore(
         db,
@@ -115,6 +120,7 @@ export const createProjectService = (
             featureTypeStore,
             accountStore,
             projectStatsStore,
+            projectOwnersReadModel,
         },
         config,
         accessService,
@@ -131,6 +137,7 @@ export const createFakeProjectService = (
 ): ProjectService => {
     const { getLogger } = config;
     const eventStore = new FakeEventStore();
+    const projectOwnersReadModel = new FakeProjectOwnersReadModel();
     const projectStore = new FakeProjectStore();
     const groupStore = new FakeGroupStore();
     const featureToggleStore = new FakeFeatureToggleStore();
@@ -169,6 +176,7 @@ export const createFakeProjectService = (
     return new ProjectService(
         {
             projectStore,
+            projectOwnersReadModel,
             eventStore,
             featureToggleStore,
             environmentStore,

@@ -1,5 +1,12 @@
 import type { Db } from '../../db/db';
 import { RoleName, type IProjectWithCount, type IRoleStore } from '../../types';
+import type {
+    GroupProjectOwner,
+    IProjectOwnersReadModel,
+    IProjectWithCountAndOwners,
+    ProjectOwnersDictionary,
+    UserProjectOwner,
+} from './project-owners-read-model.type';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -8,28 +15,7 @@ const T = {
     USERS: 'users',
 };
 
-type SystemOwner = { ownerType: 'system' };
-type UserProjectOwner = {
-    ownerType: 'user';
-    name: string;
-    email?: string;
-    imageUrl?: string;
-};
-type GroupProjectOwner = {
-    ownerType: 'group';
-    name: string;
-};
-type ProjectOwners =
-    | [SystemOwner]
-    | Array<UserProjectOwner | GroupProjectOwner>;
-
-export type ProjectOwnersDictionary = Record<string, ProjectOwners>;
-
-type IProjectWithCountAndOwners = IProjectWithCount & {
-    owners: ProjectOwners;
-};
-
-export class ProjectOwnersReadModel {
+export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     private db: Db;
     roleStore: IRoleStore;
 

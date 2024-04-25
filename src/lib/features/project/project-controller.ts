@@ -197,9 +197,19 @@ export default class ProjectController extends Controller {
             user.id,
         );
 
-        // if (this.flagResolver.isEnabled('projectsListNewCards')) {
-        //   TODO: get project owners and add to response
-        // }
+        if (this.flagResolver.isEnabled('projectsListNewCards')) {
+            const projectsWithOwners =
+                await this.projectService.addOwnersToProjects(projects);
+
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectsSchema.$id,
+                { version: 1, projects: serializeDates(projectsWithOwners) },
+            );
+
+            return;
+        }
 
         this.openApiService.respondWithValidation(
             200,

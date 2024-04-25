@@ -15,15 +15,18 @@ export const populateCurrentStage = (
             }));
     };
 
+    const enteredStageAt = feature.lifecycle.enteredStageAt;
+
     switch (feature.lifecycle.stage) {
         case 'initial':
-            return { name: 'initial' };
+            return { name: 'initial', enteredStageAt };
         case 'pre-live':
             return {
                 name: 'pre-live',
                 environments: getFilteredEnvironments(
                     (type) => type !== 'production',
                 ),
+                enteredStageAt,
             };
         case 'live':
             return {
@@ -31,6 +34,7 @@ export const populateCurrentStage = (
                 environments: getFilteredEnvironments(
                     (type) => type === 'production',
                 ),
+                enteredStageAt,
             };
         case 'completed':
             return {
@@ -39,9 +43,10 @@ export const populateCurrentStage = (
                 environments: getFilteredEnvironments(
                     (type) => type === 'production',
                 ),
+                enteredStageAt,
             };
         case 'archived':
-            return { name: 'archived' };
+            return { name: 'archived', enteredStageAt };
         default:
             return undefined;
     }

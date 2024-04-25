@@ -289,8 +289,13 @@ export default class ProjectService {
         user: IUser,
         auditUser: IAuditUser,
         enableChangeRequestsForSpecifiedEnvironments: (args: {
+            environments: CreateProject['changeRequestEnvironments'];
             validateEnvironments: (environments: string[]) => Promise<void>;
-        }) => Promise<void> = async () => {},
+        }) => Promise<
+            void | ProjectCreated['changeRequestEnvironments']
+        > = async () => {
+            return;
+        },
     ): Promise<ProjectCreated> {
         await this.validateProjectEnvironments(newProject.environments);
 
@@ -302,8 +307,8 @@ export default class ProjectService {
 
         const envsToEnable =
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
-            newProject.environments?.length
-                ? newProject.environments
+            data.environments?.length
+                ? data.environments
                 : (
                       await this.environmentStore.getAll({
                           enabled: true,
@@ -316,9 +321,20 @@ export default class ProjectService {
             }),
         );
 
-        await enableChangeRequestsForSpecifiedEnvironments({
-            validateEnvironments: this.validateEnvironmentsExist,
-        });
+        if (
+            this.isEnterprise &&
+            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
+        ) {
+            const changeRequestEnvironments =
+                await enableChangeRequestsForSpecifiedEnvironments({
+                    environments: data.changeRequestEnvironments,
+                    validateEnvironments: this.validateEnvironmentsExist,
+                });
+
+            if (changeRequestEnvironments) {
+                data.changeRequestEnvironments = changeRequestEnvironments;
+            }
+        }
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 

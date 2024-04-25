@@ -4,10 +4,53 @@ import { type IUser, RoleName, type IGroup } from '../../types';
 import { randomId } from '../../util';
 import { ProjectOwnersReadModel } from './project-owners-read-model';
 
+const mockProjectWithCounts = (name: string) => ({
+    name,
+    id: name,
+    description: '',
+    featureCount: 0,
+    memberCount: 0,
+    mode: 'open' as const,
+    defaultStickiness: 'default' as const,
+    staleFeatureCount: 0,
+    potentiallyStaleFeatureCount: 0,
+    avgTimeToProduction: 0,
+});
+
 describe('unit tests', () => {
-    test('maps owners to projects', () => {});
+    test('maps owners to projects', () => {
+        const projects = [{ name: 'project1' }, { name: 'project2' }] as any;
+
+        const owners = {
+            project1: [{ ownerType: 'user' as const, name: 'Owner Name' }],
+            project2: [{ ownerType: 'user' as const, name: 'Owner Name' }],
+        };
+
+        const projectsWithOwners = ProjectOwnersReadModel.addOwnerData(
+            projects,
+            owners,
+        );
+
+        expect(projectsWithOwners).toMatchObject([
+            { name: 'project1', owners: [{ name: 'Owner Name' }] },
+            { name: 'project2', owners: [{ name: 'Owner Name' }] },
+        ]);
+    });
+
     test('returns "system" when a project has no owners', async () => {
-        // this is a mapping test; not an integration test
+        const projects = [{ name: 'project1' }, { name: 'project2' }] as any;
+
+        const owners = {};
+
+        const projectsWithOwners = ProjectOwnersReadModel.addOwnerData(
+            projects,
+            owners,
+        );
+
+        expect(projectsWithOwners).toMatchObject([
+            { name: 'project1', owners: [{ ownerType: 'system' }] },
+            { name: 'project2', owners: [{ ownerType: 'system' }] },
+        ]);
     });
 });
 
@@ -16,8 +59,10 @@ let readModel: ProjectOwnersReadModel;
 
 let ownerRoleId: number;
 let owner: IUser;
+let owner2: IUser;
 let member: IUser;
 let group: IGroup;
+let group2: IGroup;
 
 beforeAll(async () => {
     db = await dbInit('project_owners_read_model_serial', getLogger);
@@ -25,10 +70,16 @@ beforeAll(async () => {
     ownerRoleId = (await db.stores.roleStore.getRoleByName(RoleName.OWNER)).id;
 
     const ownerData = {
-        name: 'Owner User',
+        name: 'Owner Name',
         username: 'owner',
         email: 'owner@email.com',
         imageUrl: 'image-url-1',
+    };
+    const ownerData2 = {
+        name: 'Second Owner Name',
+        username: 'owner2',
+        email: 'owner2@email.com',
+        imageUrl: 'image-url-3',
     };
     const memberData = {
         name: 'Member Name',
@@ -40,10 +91,13 @@ beforeAll(async () => {
     // create users
     owner = await db.stores.userStore.insert(ownerData);
     member = await db.stores.userStore.insert(memberData);
+    owner2 = await db.stores.userStore.insert(ownerData2);
 
     // create groups
     group = await db.stores.groupStore.create({ name: 'Group Name' });
     await db.stores.groupStore.addUserToGroups(owner.id, [group.id]);
+    group2 = await db.stores.groupStore.create({ name: 'Second Group Name' });
+    await db.stores.groupStore.addUserToGroups(member.id, [group.id]);
 });
 
 afterAll(async () => {
@@ -64,6 +118,12 @@ afterEach(async () => {
 });
 
 describe('integration tests', () => {
+    test('returns an empty list if there are no projects', async () => {
+        const owners = await readModel.getAllProjectOwners();
+
+        expect(owners).toStrictEqual({});
+    });
+
     test('name takes precedence over username', async () => {
         const projectId = randomId();
         await db.stores.projectStore.create({ id: projectId, name: projectId });
@@ -77,7 +137,7 @@ describe('integration tests', () => {
         const owners = await readModel.getAllProjectOwners();
         expect(owners).toMatchObject({
             [projectId]: expect.arrayContaining([
-                expect.objectContaining({ name: 'Owner User' }),
+                expect.objectContaining({ name: 'Owner Name' }),
             ]),
         });
     });
@@ -98,7 +158,7 @@ describe('integration tests', () => {
             [projectId]: [
                 {
                     ownerType: 'user',
-                    name: 'Owner User',
+                    name: 'Owner Name',
                     email: 'owner@email.com',
                     imageUrl: 'image-url-1',
                 },
@@ -128,7 +188,7 @@ describe('integration tests', () => {
         const owners = await readModel.getAllProjectOwners();
 
         expect(owners).toMatchObject({
-            [projectId]: [{ name: 'Owner User' }],
+            [projectId]: [{ name: 'Owner Name' }],
         });
     });
 
@@ -155,21 +215,132 @@ describe('integration tests', () => {
         });
     });
 
-    test('users are listed before groups', async () => {});
+    test('users are listed before groups', async () => {
+        const projectId = randomId();
+        await db.stores.projectStore.create({ id: projectId, name: projectId });
 
-    test('owners (users and groups) are sorted by when they were added; oldest first', async () => {});
+        await db.stores.accessStore.addGroupToRole(
+            group.id,
+            ownerRoleId,
+            '',
+            projectId,
+        );
 
-    test('returns the system owner for the default project', async () => {});
+        await db.stores.accessStore.addUserToRole(
+            owner.id,
+            ownerRoleId,
+            projectId,
+        );
 
-    test('returns an empty list if there are no projects', async () => {
         const owners = await readModel.getAllProjectOwners();
 
-        expect(owners).toStrictEqual({});
+        expect(owners).toMatchObject({
+            [projectId]: [
+                {
+                    email: 'owner@email.com',
+                    imageUrl: 'image-url-1',
+                    name: 'Owner Name',
+                    ownerType: 'user',
+                },
+                {
+                    name: 'Group Name',
+                    ownerType: 'group',
+                },
+            ],
+        });
+    });
+
+    test('owners (users and groups) are sorted by when they were added; oldest first', async () => {
+        const projectId = randomId();
+        await db.stores.projectStore.create({ id: projectId, name: projectId });
+
+        await db.rawDatabase('role_user').insert({
+            user_id: owner2.id,
+            role_id: ownerRoleId,
+            project: projectId,
+            created_at: new Date('2024-01-01T00:00:00.000Z'),
+        });
+
+        await db.rawDatabase('group_role').insert({
+            group_id: group2.id,
+            role_id: ownerRoleId,
+            project: projectId,
+            created_at: new Date('2024-01-01T00:00:00.000Z'),
+        });
+
+        await db.stores.accessStore.addGroupToRole(
+            group.id,
+            ownerRoleId,
+            '',
+            projectId,
+        );
+
+        await db.stores.accessStore.addUserToRole(
+            owner.id,
+            ownerRoleId,
+            projectId,
+        );
+
+        const owners = await readModel.getAllProjectOwners();
+
+        expect(owners).toMatchObject({
+            [projectId]: [
+                {
+                    email: 'owner2@email.com',
+                    imageUrl: 'image-url-3',
+                    name: 'Second Owner Name',
+                    ownerType: 'user',
+                },
+                {
+                    email: 'owner@email.com',
+                    imageUrl: 'image-url-1',
+                    name: 'Owner Name',
+                    ownerType: 'user',
+                },
+                {
+                    name: 'Second Group Name',
+                    ownerType: 'group',
+                },
+                {
+                    name: 'Group Name',
+                    ownerType: 'group',
+                },
+            ],
+        });
     });
 
     test('enriches fully', async () => {
-        const owners = await readModel.enrichWithOwners([]);
+        const projectsWithOwners = await readModel.addOwners([]);
 
-        expect(owners).toStrictEqual([]);
+        expect(projectsWithOwners).toStrictEqual([]);
+    });
+
+    test('adds system owner when no owners are found', async () => {
+        const projectIdA = randomId();
+        const projectIdB = randomId();
+        await db.stores.projectStore.create({
+            id: projectIdA,
+            name: projectIdA,
+        });
+        await db.stores.projectStore.create({
+            id: projectIdB,
+            name: projectIdB,
+        });
+
+        await db.stores.accessStore.addUserToRole(
+            owner.id,
+            ownerRoleId,
+            projectIdB,
+        );
+
+        const projectsWithOwners = await readModel.addOwners([
+            mockProjectWithCounts(projectIdA),
+            mockProjectWithCounts(projectIdB),
+        ]);
+
+        expect(projectsWithOwners).toMatchObject([
+            { name: projectIdA, owners: [{ ownerType: 'system' }] },
+            { name: projectIdB, owners: [{ ownerType: 'user' }] },
+        ]);
     });
 });

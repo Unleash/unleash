@@ -38,15 +38,20 @@ export class ProjectOwnersReadModel {
         this.roleStore = roleStore;
     }
 
-    addOwnerData(
+    static addOwnerData(
         projects: IProjectWithCount[],
         owners: ProjectOwnersDictionary,
     ): IProjectWithCountAndOwners[] {
-        // const projectsWithOwners = projects.map((p) => ({
-        //     ...p,
-        //     owners: projectOwners[p.id] || [],
-        // }));
-        return [];
+        return projects.map((project) => {
+            const ownersForProject = owners[project.name] || [
+                { ownerType: 'system' },
+            ];
+
+            return {
+                ...project,
+                owners: ownersForProject,
+            };
+        });
     }
 
     private async getAllProjectUsersByRole(
@@ -62,6 +67,7 @@ export class ProjectOwnersReadModel {
                 'ru.project',
             )
             .from(`${T.ROLE_USER} as ru`)
+            .orderBy('ru.created_at', 'asc')
             .join(`${T.ROLES} as r`, 'ru.role_id', 'r.id')
             .where('r.id', roleId)
             .join(`${T.USERS} as user`, 'ru.user_id', 'user.id');
@@ -93,6 +99,7 @@ export class ProjectOwnersReadModel {
         const groupsResult = await this.db
             .select('groups.name', 'gr.created_at', 'gr.project')
             .from(`${T.GROUP_ROLE} as gr`)
+            .orderBy('gr.created_at', 'asc')
             .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
             .where('r.id', roleId)
             .join('groups', 'gr.group_id', 'groups.id');
@@ -122,30 +129,31 @@ export class ProjectOwnersReadModel {
         const usersDict = await this.getAllProjectUsersByRole(ownerRole.id);
         const groupsDict = await this.getAllProjectGroupsByRole(ownerRole.id);
 
-        const projects = [
-            ...new Set([...Object.keys(usersDict), ...Object.keys(groupsDict)]),
-        ];
+        const dict: Record<
+            string,
+            Array<UserProjectOwner | GroupProjectOwner>
+        > = {};
 
-        const dict = Object.fromEntries(
-            projects.map((project) => {
-                return [
-                    project,
-                    [
-                        ...(usersDict[project] || []),
-                        ...(groupsDict[project] || []),
-                    ],
-                ];
-            }),
-        );
+        Object.keys(usersDict).forEach((project) => {
+            dict[project] = usersDict[project];
+        });
+
+        Object.keys(groupsDict).forEach((project) => {
+            if (project in dict) {
+                dict[project] = [...dict[project], ...groupsDict[project]];
+            } else {
+                dict[project] = groupsDict[project];
+            }
+        });
 
         return dict;
     }
 
-    async enrichWithOwners(
+    async addOwners(
         projects: IProjectWithCount[],
     ): Promise<IProjectWithCountAndOwners[]> {
         const owners = await this.getAllProjectOwners();
 
-        return this.addOwnerData(projects, owners);
+        return ProjectOwnersReadModel.addOwnerData(projects, owners);
     }
 }

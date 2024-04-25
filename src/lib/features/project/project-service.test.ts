@@ -277,4 +277,31 @@ describe('enterprise extension: enable change requests', () => {
             ),
         ).rejects.toThrow(BadDataError);
     });
+
+    test("it does not throw if an error if you provide it with environments that don't exist but aren't on enterprise", async () => {
+        const service = createService();
+        // @ts-expect-error
+        service.isEnterprise = false;
+        // @ts-expect-error
+        service.environmentStore.exists = () => false;
+
+        const projectId = 'fake-project-id';
+        expect(
+            service.createProject(
+                {
+                    id: projectId,
+                    name: 'fake-project-name',
+                    changeRequestEnvironments: [
+                        { name: 'dev', requiredApprovals: 1 },
+                    ],
+                },
+                {
+                    id: 5,
+                    permissions: [],
+                    isAPI: false,
+                },
+                TEST_AUDIT_USER,
+            ),
+        ).resolves.toBeTruthy();
+    });
 });

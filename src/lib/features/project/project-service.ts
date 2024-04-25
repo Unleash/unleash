@@ -324,20 +324,17 @@ export default class ProjectService {
             this.isEnterprise &&
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
         ) {
-            if (newProject.changeRequestEnvironments) {
-                await this.validateEnvironmentsExist(
-                    newProject.changeRequestEnvironments.map((env) => env.name),
-                );
-                const changeRequestEnvironments =
-                    await enableChangeRequestsForSpecifiedEnvironments(
-                        newProject.changeRequestEnvironments,
-                    );
+            // todo: this is a workaround for backwards compatibility
+            // (i.e. not breaking enterprise tests) that we can change
+            // once these changes have been merged and enterprise
+            // updated. Instead, we can exit early if there are no cr
+            // envs
+            const crEnvs = newProject.changeRequestEnvironments || [];
+            await this.validateEnvironmentsExist(crEnvs.map((env) => env.name));
+            const changeRequestEnvironments =
+                await enableChangeRequestsForSpecifiedEnvironments(crEnvs);
 
-                data.changeRequestEnvironments =
-                    changeRequestEnvironments ?? [];
-            } else {
-                data.changeRequestEnvironments = [];
-            }
+            data.changeRequestEnvironments = changeRequestEnvironments ?? [];
         }
 
         await this.accessService.createDefaultProjectRoles(user, data.id);

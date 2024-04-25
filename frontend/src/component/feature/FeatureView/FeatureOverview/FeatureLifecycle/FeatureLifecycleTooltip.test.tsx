@@ -4,17 +4,19 @@ import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import type { LifecycleStage } from './LifecycleStage';
+import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const twoMinutesAgo = '2024-04-25T08:03:00.000Z';
 const oneHourAgo = '2024-04-25T07:05:00.000Z';
 const twoHoursAgo = '2024-04-25T06:05:00.000Z';
 
-const renderOpenTooltip = (stage: LifecycleStage) => {
+const renderOpenTooltip = (stage: LifecycleStage, onArchive = () => {}) => {
     render(
-        <FeatureLifecycleTooltip stage={stage}>
+        <FeatureLifecycleTooltip stage={stage} onArchive={onArchive}>
             <span>child</span>
         </FeatureLifecycleTooltip>,
+        { permissions: [{ permission: DELETE_FEATURE }] },
     );
 
     const child = screen.getByText('child');
@@ -89,14 +91,25 @@ test('render completed stage with still active', async () => {
 test('render completed stage safe to archive', async () => {
     vi.setSystemTime(currentTime);
     const enteredStageAt = twoMinutesAgo;
+    let onArchiveInvoked = false;
+    const onArchive = () => {
+        onArchiveInvoked = true;
+    };
 
-    renderOpenTooltip({
-        name: 'completed',
-        status: 'kept',
-        environments: [],
-        enteredStageAt,
-    });
+    renderOpenTooltip(
+        {
+            name: 'completed',
+            status: 'kept',
+            environments: [],
+            enteredStageAt,
+        },
+        onArchive,
+    );
 
     await screen.findByText('completed');
-    await screen.findByText('Archive feature');
+    const button = await screen.findByText('Archive feature');
+
+    button.click();
+
+    expect(onArchiveInvoked).toBe(true);
 });

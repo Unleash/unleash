@@ -56,7 +56,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    applicationOverviewNewQuery: true,
                 },
             },
         },
@@ -140,12 +139,6 @@ test('should show correct application metrics', async () => {
 
     expect(body).toMatchObject(expected);
 
-    const { body: instancesBody } = await app.request
-        .get(
-            `/api/admin/metrics/instances/${metrics.appName}/environment/default`,
-        )
-        .expect(200);
-
     expect(
         instancesBody.instances.sort((a, b) =>
             a.instanceId.localeCompare(b.instanceId),
@@ -157,10 +150,6 @@ test('should show correct application metrics', async () => {
         },
         { instanceId: 'instanceId', sdkVersion: 'unleash-client-node:3.2.1' },
     ]);
-
-    const { body: outdatedSdks } = await app.request
-        .get(`/api/admin/metrics/sdks/outdated`)
-        .expect(200);
 
     expect(outdatedSdks).toMatchObject({
         sdks: [

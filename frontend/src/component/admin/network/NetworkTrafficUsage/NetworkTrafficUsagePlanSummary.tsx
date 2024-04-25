@@ -4,7 +4,6 @@ import Grid from '@mui/material/Grid';
 import { flexRow } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -45,15 +44,14 @@ const StyledNumbersDiv = styled('div')(({ theme }) => ({
 
 interface INetworkTrafficUsagePlanSummary {
     usageTotal: number;
-    planIncludedRequests: number;
+    includedTraffic: number;
 }
 
 export const NetworkTrafficUsagePlanSummary = ({
     usageTotal,
-    planIncludedRequests,
+    includedTraffic,
 }: INetworkTrafficUsagePlanSummary) => {
-    const { isPro } = useUiConfig();
-    const overages = usageTotal - planIncludedRequests;
+    const overages = usageTotal - includedTraffic;
     return (
         <StyledContainer>
             <Grid item>
@@ -65,11 +63,11 @@ export const NetworkTrafficUsagePlanSummary = ({
                         Incoming requests selected month{' '}
                         <StyledNumbersDiv>
                             <ConditionallyRender
-                                condition={isPro()}
+                                condition={includedTraffic > 0}
                                 show={
                                     <ConditionallyRender
                                         condition={
-                                            usageTotal <= planIncludedRequests
+                                            usageTotal <= includedTraffic
                                         }
                                         show={
                                             <Badge color='success'>
@@ -95,21 +93,20 @@ export const NetworkTrafficUsagePlanSummary = ({
                     </RowContainer>
                 </StyledCardDescription>
                 <ConditionallyRender
-                    condition={isPro()}
+                    condition={includedTraffic > 0}
                     show={
                         <StyledCardDescription>
                             <RowContainer>
                                 Included in your plan monthly
                                 <StyledNumbersDiv>
-                                    {planIncludedRequests.toLocaleString()}{' '}
-                                    requests
+                                    {includedTraffic.toLocaleString()} requests
                                 </StyledNumbersDiv>
                             </RowContainer>
                         </StyledCardDescription>
                     }
                 />
                 <ConditionallyRender
-                    condition={isPro() && overages > 0}
+                    condition={includedTraffic > 0 && overages > 0}
                     show={
                         <StyledCardDescription>
                             <RowContainer>

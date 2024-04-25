@@ -42,16 +42,10 @@ export class ProjectOwnersReadModel {
         projects: IProjectWithCount[],
         owners: ProjectOwnersDictionary,
     ): IProjectWithCountAndOwners[] {
-        return projects.map((project) => {
-            const ownersForProject = owners[project.name] || [
-                { ownerType: 'system' },
-            ];
-
-            return {
-                ...project,
-                owners: ownersForProject,
-            };
-        });
+        return projects.map((project) => ({
+            ...project,
+            owners: owners[project.name] || [{ ownerType: 'system' }],
+        }));
     }
 
     private async getAllProjectUsersByRole(
@@ -132,15 +126,11 @@ export class ProjectOwnersReadModel {
         const dict: Record<
             string,
             Array<UserProjectOwner | GroupProjectOwner>
-        > = {};
-
-        Object.keys(usersDict).forEach((project) => {
-            dict[project] = usersDict[project];
-        });
+        > = usersDict;
 
         Object.keys(groupsDict).forEach((project) => {
             if (project in dict) {
-                dict[project] = [...dict[project], ...groupsDict[project]];
+                dict[project] = dict[project].concat(groupsDict[project]);
             } else {
                 dict[project] = groupsDict[project];
             }

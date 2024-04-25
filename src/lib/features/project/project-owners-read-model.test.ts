@@ -118,7 +118,7 @@ afterEach(async () => {
 });
 
 describe('integration tests', () => {
-    test('returns an empty list if there are no projects', async () => {
+    test('returns an empty object if there are no projects', async () => {
         const owners = await readModel.getAllProjectOwners();
 
         expect(owners).toStrictEqual({});
@@ -254,6 +254,7 @@ describe('integration tests', () => {
         const projectId = randomId();
         await db.stores.projectStore.create({ id: projectId, name: projectId });
 
+        // Raw query in order to set the created_at date
         await db.rawDatabase('role_user').insert({
             user_id: owner2.id,
             role_id: ownerRoleId,
@@ -261,6 +262,7 @@ describe('integration tests', () => {
             created_at: new Date('2024-01-01T00:00:00.000Z'),
         });
 
+        // Raw query in order to set the created_at date
         await db.rawDatabase('group_role').insert({
             group_id: group2.id,
             role_id: ownerRoleId,
@@ -309,7 +311,7 @@ describe('integration tests', () => {
         });
     });
 
-    test('enriches fully', async () => {
+    test('does not modify an empty array', async () => {
         const projectsWithOwners = await readModel.addOwners([]);
 
         expect(projectsWithOwners).toStrictEqual([]);

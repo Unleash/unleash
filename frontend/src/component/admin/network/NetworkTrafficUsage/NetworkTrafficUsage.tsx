@@ -85,7 +85,9 @@ const getSelectablePeriods = (): SelectablePeriod[] => {
             current.getMonth() - subtractMonthCount,
             1,
         );
-        selectablePeriods.push(toSelectablePeriod(date));
+        if (date > new Date('2024-03-31')) {
+            selectablePeriods.push(toSelectablePeriod(date));
+        }
     }
     return selectablePeriods;
 };
@@ -357,7 +359,7 @@ export const NetworkTrafficUsage: VFC = () => {
     return (
         <ConditionallyRender
             condition={isOss() || !flagEnabled}
-            show={<Alert severity='warning'>No data available.</Alert>}
+            show={<Alert severity='warning'>Not enabled.</Alert>}
             elseShow={
                 <>
                     <StyledBox>

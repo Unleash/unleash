@@ -280,7 +280,7 @@ export default class ProjectService {
                 );
             }
 
-            this.validateEnvironmentsExist(environments);
+            await this.validateEnvironmentsExist(environments);
         }
     }
 

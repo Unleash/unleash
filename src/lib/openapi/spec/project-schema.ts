@@ -89,6 +89,68 @@ export const projectSchema = {
             description:
                 'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
         },
+        owners: {
+            oneOf: [
+                {
+                    type: 'array',
+                    items: {
+                        oneOf: [
+                            {
+                                type: 'object',
+                                required: ['ownerType', 'name'],
+                                properties: {
+                                    ownerType: {
+                                        type: 'string',
+                                        enum: ['user'],
+                                    },
+                                    name: {
+                                        type: 'string',
+                                        example: 'User Name',
+                                    },
+                                    imageUrl: {
+                                        type: 'string',
+                                        example:
+                                            'https://example.com/image.jpg',
+                                    },
+                                    email: {
+                                        type: 'string',
+                                        example: '',
+                                    },
+                                },
+                            },
+                            {
+                                type: 'object',
+                                required: ['ownerType', 'name'],
+                                properties: {
+                                    ownerType: {
+                                        type: 'string',
+                                        enum: ['group'],
+                                    },
+                                    name: {
+                                        type: 'string',
+                                        example: '123',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        required: ['ownerType'],
+                        properties: {
+                            ownerType: {
+                                type: 'string',
+                                enum: ['system'],
+                            },
+                        },
+                    },
+                    maxItems: 1,
+                },
+            ],
+        },
     },
     components: {},
 } as const;

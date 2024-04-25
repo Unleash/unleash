@@ -70,7 +70,9 @@ export function responseTimeMetrics(
             time,
             appName,
         };
-
-        eventBus.emit(REQUEST_TIME, timingInfo);
+        if (!res.locals.responseTimeEmitted) {
+            res.locals.responseTimeEmitted = true;
+            eventBus.emit(REQUEST_TIME, timingInfo);
+        }
     });
 }

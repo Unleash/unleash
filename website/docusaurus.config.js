@@ -68,6 +68,7 @@ module.exports = {
             logo: {
                 alt: 'Unleash logo',
                 src: 'img/unleash_logo_white.svg',
+                href: 'https://www.getunleash.io',
             },
             items: [
                 {
@@ -81,6 +82,60 @@ module.exports = {
                     position: 'right',
                     docId: 'welcome',
                     html: '<span class="hide-when-active">Docs</span>',
+                },
+                {
+                    type: 'dropdown',
+                    position: 'right',
+                    html: 'Product',
+                    items: [
+                        {
+                            label: 'Feature Management',
+                            to: 'https://www.getunleash.io/feature-management',
+                        },
+                        {
+                            label: 'Unique Architecture',
+                            to: 'https://www.getunleash.io/flexible-platform',
+                        },
+                        {
+                            label: 'Canary release',
+                            to: 'https://www.getunleash.io/segmentation',
+                        },
+                        {
+                            label: 'Security and Performance',
+                            to: 'https://www.getunleash.io/security-and-performance',
+                        },
+                        {
+                            label: 'Simplicity',
+                            to: 'https://www.getunleash.io/simplicity',
+                        },
+                        {
+                            label: 'Flexibility',
+                            to: 'https://www.getunleash.io/flexibility',
+                        },
+                        {
+                            label: 'Transparency',
+                            to: 'https://www.getunleash.io/transparency',
+                        },
+                        {
+                            label: 'Open-Source',
+                            to: 'https://www.getunleash.io/open-source',
+                        },
+                    ],
+                },
+                {
+                    type: 'html',
+                    value: '<a href="https://www.getunleash.io/plans" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Plans</a>',
+                    position: 'right',
+                },
+                {
+                    type: 'html',
+                    value: '<a href="https://www.getunleash.io/blog" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Blog</a>',
+                    position: 'right',
+                },
+                {
+                    type: 'html',
+                    position: 'right',
+                    value: '<span class="navbar-separator"></span>',
                 },
                 {
                     type: 'dropdown',
@@ -131,13 +186,8 @@ module.exports = {
                     value: '<span class="navbar-separator"></span>',
                 },
                 {
-                    href: 'https://www.getunleash.io/plans',
-                    label: 'Plans',
-                    position: 'right',
-                },
-                {
-                    href: 'https://app.unleash-hosted.com/sign-in',
-                    label: 'Sign in',
+                    type: 'html',
+                    value: '<a href="https://app.unleash-hosted.com/sign-in" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Sign in</a>',
                     position: 'right',
                 },
                 {

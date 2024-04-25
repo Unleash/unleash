@@ -299,7 +299,7 @@ export default class ProjectService {
         await this.validateProjectEnvironments(newProject.environments);
 
         const validatedData = await projectSchema.validateAsync(newProject);
-        const data = this.removeModeForNonEnterprise(validatedData);
+        const data = this.removePropertiesForNonEnterprise(validatedData);
         await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
@@ -1385,11 +1385,12 @@ export default class ProjectService {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    removeModeForNonEnterprise(data): any {
+    removePropertiesForNonEnterprise(data): any {
         if (this.isEnterprise) {
             return data;
         }
-        const { mode, ...proData } = data;
+
+        const { mode, changeRequestEnvironments, ...proData } = data;
         return proData;
     }
 }

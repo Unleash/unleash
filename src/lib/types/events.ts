@@ -645,7 +645,7 @@ export class FeatureCompletedEvent extends BaseEvent {
     }
 }
 
-export class FeatureUnCompletedEvent extends BaseEvent {
+export class FeatureUncompletedEvent extends BaseEvent {
     readonly featureName: string;
 
     constructor(p: {

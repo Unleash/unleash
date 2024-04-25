@@ -3,7 +3,7 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FeatureCompletedEvent,
-    FeatureUnCompletedEvent,
+    FeatureUncompletedEvent,
     type IAuditUser,
     type IEnvironmentStore,
     type IEventStore,
@@ -166,7 +166,7 @@ export class FeatureLifecycleService extends EventEmitter {
             stage: 'completed',
         });
         await this.eventService.storeEvent(
-            new FeatureUnCompletedEvent({
+            new FeatureUncompletedEvent({
                 featureName: feature,
                 auditUser,
             }),

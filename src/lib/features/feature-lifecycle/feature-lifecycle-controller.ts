@@ -89,7 +89,7 @@ export default class FeatureLifecycleController extends Controller {
         this.route({
             method: 'post',
             path: `${PATH}/uncomplete`,
-            handler: this.unComplete,
+            handler: this.uncomplete,
             permission: UPDATE_FEATURE,
             acceptAnyContentType: true,
             middleware: [
@@ -144,7 +144,7 @@ export default class FeatureLifecycleController extends Controller {
         res.status(200).end();
     }
 
-    async unComplete(
+    async uncomplete(
         req: IAuthRequest<FeatureLifecycleParams>,
         res: Response,
     ): Promise<void> {

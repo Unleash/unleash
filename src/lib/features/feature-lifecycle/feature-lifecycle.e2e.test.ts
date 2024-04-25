@@ -68,7 +68,7 @@ const completeFeature = async (featureName: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
-const unCompleteFeature = async (featureName: string, expectedCode = 200) => {
+const uncompleteFeature = async (featureName: string, expectedCode = 200) => {
     return app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/lifecycle/uncomplete`,
@@ -150,7 +150,7 @@ test('should be able to toggle between completed/uncompleted', async () => {
 
     await expectFeatureStage('my_feature_b', 'completed');
 
-    await unCompleteFeature('my_feature_b');
+    await uncompleteFeature('my_feature_b');
 
     const { body } = await getFeatureLifecycle('my_feature_b');
 

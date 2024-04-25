@@ -23,7 +23,8 @@ import { SsoGroupSettings } from '../SsoGroupSettings';
 import type { IRole } from 'interfaces/role';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ScimSettings } from '../ScimSettings/ScimSettings';
+import { useScim } from 'hooks/useScim';
+import { ScimConfigSettings } from '../ScimSettings/ScimSettings';
 
 const initialState = {
     enabled: false,
@@ -51,10 +52,6 @@ export const OidcAuth = () => {
     const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
-    let saveHook: (() => Promise<void>) | undefined;
-    const registerSaveHook = (callback: () => Promise<void>) => {
-        saveHook = callback;
-    };
 
     useEffect(() => {
         if (config.discoverUrl) {
@@ -92,6 +89,22 @@ export const OidcAuth = () => {
         });
     };
 
+    const {
+        settings,
+        enabled,
+        setEnabled,
+        assumeControlOfExisting,
+        setAssumeControlOfExisting,
+        newToken,
+        tokenGenerationDialog,
+        setTokenGenerationDialog,
+        tokenDialog,
+        setTokenDialog,
+        loading: scimLoading,
+        saveScimSettings,
+        onGenerateNewTokenConfirm,
+    } = useScim();
+
     const onSubmit = async (event: React.SyntheticEvent) => {
         event.preventDefault();
 
@@ -101,9 +114,7 @@ export const OidcAuth = () => {
                 title: 'Settings stored',
                 type: 'success',
             });
-            if (saveHook) {
-                await saveHook();
-            }
+            saveScimSettings();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -271,9 +282,24 @@ export const OidcAuth = () => {
                 <ConditionallyRender
                     condition={scimEnabled}
                     show={
-                        <ScimSettings
+                        <ScimConfigSettings
                             disabled={!data.enabled}
-                            registerSaveHook={registerSaveHook}
+                            settings={settings}
+                            enabled={enabled}
+                            setEnabled={setEnabled}
+                            assumeControlOfExisting={assumeControlOfExisting}
+                            setAssumeControlOfExisting={
+                                setAssumeControlOfExisting
+                            }
+                            newToken={newToken}
+                            tokenGenerationDialog={tokenGenerationDialog}
+                            setTokenGenerationDialog={setTokenGenerationDialog}
+                            tokenDialog={tokenDialog}
+                            setTokenDialog={setTokenDialog}
+                            loading={scimLoading}
+                            onGenerateNewTokenConfirm={
+                                onGenerateNewTokenConfirm
+                            }
                         />
                     }
                 />

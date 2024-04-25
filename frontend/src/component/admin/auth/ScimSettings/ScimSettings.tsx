@@ -1,71 +1,46 @@
-import { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
-import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
-import { useScimSettingsApi } from 'hooks/api/actions/useScimSettingsApi/useScimSettingsApi';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog';
 import { ScimTokenDialog } from './ScimTokenDialog';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import type { ScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 
 export interface IScimSettingsParameters {
     disabled: boolean;
-    registerSaveHook: (callback: () => Promise<void>) => void;
+    loading: boolean;
+    enabled: boolean;
+    setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+    assumeControlOfExisting: boolean;
+    setAssumeControlOfExisting: React.Dispatch<React.SetStateAction<boolean>>;
+    newToken: string;
+    settings: ScimSettings;
+    tokenGenerationDialog: boolean;
+    setTokenGenerationDialog: React.Dispatch<React.SetStateAction<boolean>>;
+    onGenerateNewTokenConfirm: () => void;
+    tokenDialog: boolean;
+    setTokenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const ScimSettings = ({
+export const ScimConfigSettings = ({
     disabled,
-    registerSaveHook,
+    loading,
+    enabled,
+    setEnabled,
+    assumeControlOfExisting,
+    setAssumeControlOfExisting,
+    newToken,
+    settings,
+    tokenGenerationDialog,
+    setTokenGenerationDialog,
+    onGenerateNewTokenConfirm,
+    tokenDialog,
+    setTokenDialog,
 }: IScimSettingsParameters) => {
-    const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const { settings, refetch } = useScimSettings();
-    const { saveSettings, generateNewToken, errors, loading } =
-        useScimSettingsApi();
-
-    const [enabled, setEnabled] = useState(false);
-    const [assumeControlOfExisting, setAssumeControlOfExisting] =
-        useState(false);
-
-    const [tokenGenerationDialog, setTokenGenerationDialog] = useState(false);
-    const [tokenDialog, setTokenDialog] = useState(false);
-    const [newToken, setNewToken] = useState('');
-
-    useEffect(() => {
-        setEnabled(settings.enabled ?? false);
-        setAssumeControlOfExisting(settings.assumeControlOfExisting ?? false);
-    }, [settings]);
-
-    registerSaveHook(async () => {
-        try {
-            await saveSettings({ enabled, assumeControlOfExisting });
-            if (enabled && !settings.hasToken) {
-                const token = await generateNewToken();
-                setNewToken(token);
-                setTokenDialog(true);
-            }
-
-            setToastData({
-                title: 'Settings stored',
-                type: 'success',
-            });
-            refetch();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    });
 
     const onGenerateNewToken = async () => {
         setTokenGenerationDialog(true);
-    };
-
-    const onGenerateNewTokenConfirm = async () => {
-        setTokenGenerationDialog(false);
-        const token = await generateNewToken();
-        setNewToken(token);
-        setTokenDialog(true);
     };
 
     return (
@@ -118,8 +93,8 @@ export const ScimSettings = ({
                     <FormControlLabel
                         control={
                             <Switch
-                                onChange={(_, enabled) =>
-                                    setAssumeControlOfExisting(enabled)
+                                onChange={(_, set_enabled) =>
+                                    setAssumeControlOfExisting(set_enabled)
                                 }
                                 value={assumeControlOfExisting}
                                 name='assumeControlOfExisting'

@@ -90,6 +90,19 @@ export const projectSchema = {
                 'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
         },
         owners: {
+            description: 'The owners of this project, both users and groups.',
+            example: [
+                {
+                    ownerType: 'user',
+                    name: 'User Name',
+                    imageUrl: 'https://example.com/image.jpg',
+                    example: 'user@example.com',
+                },
+                {
+                    ownerType: 'group',
+                    name: 'Group Name',
+                },
+            ],
             oneOf: [
                 {
                     type: 'array',
@@ -114,7 +127,7 @@ export const projectSchema = {
                                     },
                                     email: {
                                         type: 'string',
-                                        example: '',
+                                        example: 'user@example.com',
                                     },
                                 },
                             },
@@ -128,7 +141,7 @@ export const projectSchema = {
                                     },
                                     name: {
                                         type: 'string',
-                                        example: '123',
+                                        example: 'Group Name',
                                     },
                                 },
                             },

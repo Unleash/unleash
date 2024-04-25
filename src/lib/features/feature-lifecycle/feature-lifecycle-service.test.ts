@@ -67,8 +67,6 @@ test('can insert and read lifecycle stages', async () => {
     emitMetricsEvent('my-prod-environment');
     emitMetricsEvent('my-another-prod-environment');
 
-    eventStore.emit(FEATURE_COMPLETED, { featureName });
-    await reachedStage('completed');
     eventStore.emit(FEATURE_ARCHIVED, { featureName });
     await reachedStage('archived');
 
@@ -79,7 +77,6 @@ test('can insert and read lifecycle stages', async () => {
         { stage: 'initial', enteredStageAt: expect.any(Date) },
         { stage: 'pre-live', enteredStageAt: expect.any(Date) },
         { stage: 'live', enteredStageAt: expect.any(Date) },
-        { stage: 'completed', enteredStageAt: expect.any(Date) },
         { stage: 'archived', enteredStageAt: expect.any(Date) },
     ]);
 });

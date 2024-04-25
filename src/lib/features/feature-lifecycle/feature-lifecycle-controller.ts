@@ -77,7 +77,7 @@ export default class FeatureLifecycleController extends Controller {
                     tags: ['Unstable'],
                     summary: 'Set feature completed',
                     description: 'This will set the feature as completed.',
-                    operationId: 'toggleCompleted',
+                    operationId: 'complete',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
@@ -97,7 +97,7 @@ export default class FeatureLifecycleController extends Controller {
                     tags: ['Unstable'],
                     summary: 'Set feature uncompleted',
                     description: 'This will set the feature as uncompleted.',
-                    operationId: 'toggleCompleted',
+                    operationId: 'uncomplete',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),

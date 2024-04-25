@@ -10,9 +10,9 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
 import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
-import { FeatureArchiveDialog } from '../../../../common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
-import { FeatureArchiveNotAllowedDialog } from '../../../../common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
+import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
 
 const StyledContainer = styled('div')(({ theme }) => ({

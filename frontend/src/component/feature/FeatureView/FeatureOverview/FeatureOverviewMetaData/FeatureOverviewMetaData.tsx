@@ -1,5 +1,5 @@
 import { capitalize, styled } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -10,6 +10,9 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
 import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { useState } from 'react';
+import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -79,6 +82,8 @@ const FeatureOverviewMetaData = () => {
     const { feature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
+    const navigate = useNavigate();
+    const [showDelDialog, setShowDelDialog] = useState(false);
 
     const IconComponent = getFeatureTypeIcons(type);
 
@@ -108,20 +113,20 @@ const FeatureOverviewMetaData = () => {
                         <span>{project}</span>
                     </StyledRow>
                     <ConditionallyRender
-                        condition={featureLifecycleEnabled}
+                        condition={
+                            featureLifecycleEnabled && Boolean(currentStage)
+                        }
                         show={
                             <StyledRow data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
-
-                                {currentStage && (
-                                    <FeatureLifecycleTooltip
-                                        stage={currentStage}
-                                    >
-                                        <FeatureLifecycleStageIcon
-                                            stage={currentStage}
-                                        />
-                                    </FeatureLifecycleTooltip>
-                                )}
+                                <FeatureLifecycleTooltip
+                                    stage={currentStage!}
+                                    onArchive={() => setShowDelDialog(true)}
+                                >
+                                    <FeatureLifecycleStageIcon
+                                        stage={currentStage!}
+                                    />
+                                </FeatureLifecycleTooltip>
                             </StyledRow>
                         }
                     />
@@ -170,6 +175,28 @@ const FeatureOverviewMetaData = () => {
                     />
                 </StyledBody>
             </StyledPaddingContainerTop>
+            <ConditionallyRender
+                condition={feature.children.length > 0}
+                show={
+                    <FeatureArchiveNotAllowedDialog
+                        features={feature.children}
+                        project={projectId}
+                        isOpen={showDelDialog}
+                        onClose={() => setShowDelDialog(false)}
+                    />
+                }
+                elseShow={
+                    <FeatureArchiveDialog
+                        isOpen={showDelDialog}
+                        onConfirm={() => {
+                            navigate(`/projects/${projectId}`);
+                        }}
+                        onClose={() => setShowDelDialog(false)}
+                        projectId={projectId}
+                        featureIds={[featureId]}
+                    />
+                }
+            />
         </StyledContainer>
     );
 };

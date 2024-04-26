@@ -287,7 +287,7 @@ const LiveStageDescription: FC = ({ children }) => {
     );
 };
 
-const SafeToArchive: FC = () => {
+const SafeToArchive: FC<{ onArchive: () => void }> = ({ onArchive }) => {
     return (
         <>
             <BoldTitle>Safe to archive</BoldTitle>
@@ -301,6 +301,7 @@ const SafeToArchive: FC = () => {
                 permission={DELETE_FEATURE}
                 size='small'
                 sx={{ mb: 2 }}
+                onClick={onArchive}
             >
                 Archive feature
             </PermissionButton>
@@ -322,12 +323,13 @@ const ActivelyUsed: FC = ({ children }) => {
 };
 
 const CompletedStageDescription: FC<{
+    onArchive: () => void;
     environments: Array<{ name: string; lastSeenAt: string }>;
-}> = ({ children, environments }) => {
+}> = ({ children, environments, onArchive }) => {
     return (
         <ConditionallyRender
             condition={isSafeToArchive(environments)}
-            show={<SafeToArchive />}
+            show={<SafeToArchive onArchive={onArchive} />}
             elseShow={<ActivelyUsed>{children}</ActivelyUsed>}
         />
     );
@@ -348,7 +350,8 @@ const FormatElapsedTime: FC<{ time: string }> = ({ time }) => {
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
-}> = ({ children, stage }) => (
+    onArchive: () => void;
+}> = ({ children, stage, onArchive }) => (
     <HtmlTooltip
         maxHeight={800}
         maxWidth={350}
@@ -397,6 +400,7 @@ export const FeatureLifecycleTooltip: FC<{
                     {stage.name === 'completed' && (
                         <CompletedStageDescription
                             environments={stage.environments}
+                            onArchive={onArchive}
                         >
                             <Environments environments={stage.environments} />
                         </CompletedStageDescription>

@@ -132,7 +132,6 @@ export const projectSchema = {
                                     },
                                     name: {
                                         type: 'string',
-                                        nullable: true,
                                         example: 'Group Name',
                                     },
                                 },

@@ -113,6 +113,7 @@ test('should return lifecycle stages', async () => {
 
     expect(body).toEqual([
         { stage: 'initial', enteredStageAt: expect.any(String) },
+        { stage: 'pre-live', enteredStageAt: expect.any(String) },
         { stage: 'live', enteredStageAt: expect.any(String) },
         { stage: 'archived', enteredStageAt: expect.any(String) },
     ]);

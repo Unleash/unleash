@@ -11,9 +11,19 @@ const twoMinutesAgo = '2024-04-25T08:03:00.000Z';
 const oneHourAgo = '2024-04-25T07:05:00.000Z';
 const twoHoursAgo = '2024-04-25T06:05:00.000Z';
 
-const renderOpenTooltip = (stage: LifecycleStage, onArchive = () => {}) => {
+const renderOpenTooltip = (
+    stage: LifecycleStage,
+    onArchive = () => {},
+    onComplete = () => {},
+    loading = true,
+) => {
     render(
-        <FeatureLifecycleTooltip stage={stage} onArchive={onArchive}>
+        <FeatureLifecycleTooltip
+            stage={stage}
+            onArchive={onArchive}
+            onComplete={onComplete}
+            loading={loading}
+        >
             <span>child</span>
         </FeatureLifecycleTooltip>,
         { permissions: [{ permission: DELETE_FEATURE }] },

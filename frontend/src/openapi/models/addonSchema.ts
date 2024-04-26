@@ -9,7 +9,10 @@ import type { AddonSchemaParameters } from './addonSchemaParameters';
  * An [addon](https://docs.getunleash.io/reference/addons) instance description. Contains data about what kind of provider it uses, whether it's enabled or not, what events it listens for, and more.
  */
 export interface AddonSchema {
-    /** A description of the addon. `null` if no description exists. */
+    /**
+     * A description of the addon. `null` if no description exists.
+     * @nullable
+     */
     description: string | null;
     /** Whether the addon is enabled or not. */
     enabled: boolean;
@@ -17,7 +20,10 @@ export interface AddonSchema {
     environments?: string[];
     /** The event types that trigger this specific addon. */
     events: string[];
-    /** The addon's unique identifier. */
+    /**
+     * The addon's unique identifier.
+     * @minimum 1
+     */
     id: number;
     /** Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose. */
     parameters: AddonSchemaParameters;

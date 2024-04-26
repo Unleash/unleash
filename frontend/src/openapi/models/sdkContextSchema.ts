@@ -9,7 +9,10 @@ import type { SdkContextSchemaProperties } from './sdkContextSchemaProperties';
  * The Unleash context as modeled in client SDKs
  */
 export interface SdkContextSchema {
-    /** The name of the application. */
+    /**
+     * The name of the application.
+     * @minLength 1
+     */
     appName: string;
     /** A DateTime (or similar) data class instance or a string in an RFC3339-compatible format. Defaults to the current time if not set by the user. */
     currentTime?: string;

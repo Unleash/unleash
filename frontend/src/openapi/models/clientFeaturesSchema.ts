@@ -17,6 +17,9 @@ export interface ClientFeaturesSchema {
     query?: ClientFeaturesQuerySchema;
     /** A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance */
     segments?: ClientSegmentSchema[];
-    /** A version number for the format used in the response. Most Unleash instances now return version 2, which includes segments as a separate array */
+    /**
+     * A version number for the format used in the response. Most Unleash instances now return version 2, which includes segments as a separate array
+     * @minimum 0
+     */
     version: number;
 }

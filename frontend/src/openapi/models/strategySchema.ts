@@ -10,9 +10,15 @@ import type { StrategySchemaParametersItem } from './strategySchemaParametersIte
  */
 export interface StrategySchema {
     deprecated: boolean;
-    /** A short description of the strategy */
+    /**
+     * A short description of the strategy
+     * @nullable
+     */
     description: string | null;
-    /** A human friendly name for the strategy */
+    /**
+     * A human friendly name for the strategy
+     * @nullable
+     */
     displayName: string | null;
     /** Whether the strategy can be edited or not. Strategies bundled with Unleash cannot be edited. */
     editable: boolean;
@@ -20,6 +26,9 @@ export interface StrategySchema {
     name: string;
     /** A list of relevant parameters for each strategy */
     parameters: StrategySchemaParametersItem[];
-    /** An optional title for the strategy */
+    /**
+     * An optional title for the strategy
+     * @nullable
+     */
     title?: string | null;
 }

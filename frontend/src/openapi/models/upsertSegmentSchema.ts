@@ -11,10 +11,16 @@ import type { ConstraintSchema } from './constraintSchema';
 export interface UpsertSegmentSchema {
     /** The list of constraints that make up this segment */
     constraints: ConstraintSchema[];
-    /** A description of what the segment is for */
+    /**
+     * A description of what the segment is for
+     * @nullable
+     */
     description?: string | null;
     /** The name of the segment */
     name: string;
-    /** The project the segment belongs to if any. */
+    /**
+     * The project the segment belongs to if any.
+     * @nullable
+     */
     project?: string | null;
 }

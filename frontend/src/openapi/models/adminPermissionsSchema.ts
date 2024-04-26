@@ -12,6 +12,9 @@ import type { AdminPermissionsSchemaVersion } from './adminPermissionsSchemaVers
 export interface AdminPermissionsSchema {
     /** Returns permissions available at all three levels (root|project|environment) */
     permissions: AdminPermissionsSchemaPermissions;
-    /** The api version of this response. A natural increasing number. Only increases if format changes */
+    /**
+     * The api version of this response. A natural increasing number. Only increases if format changes
+     * @minimum 1
+     */
     version: AdminPermissionsSchemaVersion;
 }

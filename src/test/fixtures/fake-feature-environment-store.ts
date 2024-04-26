@@ -233,12 +233,16 @@ export default class FakeFeatureEnvironmentStore
         throw new Error('Method not implemented.');
     }
 
-    getAllByFeatures(
+    async getAllByFeatures(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         features: string[],
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment?: string,
     ): Promise<IFeatureEnvironment[]> {
-        throw new Error('Method not implemented.');
+        return this.featureEnvironments.filter(
+            (featureEnv) =>
+                (environment ? featureEnv.environment === environment : true) &&
+                features.includes(featureEnv.featureName),
+        );
     }
 }

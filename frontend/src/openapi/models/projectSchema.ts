@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectSchemaMode } from './projectSchemaMode';
+import type { ProjectSchemaOwners } from './projectSchemaOwners';
 
 /**
  * A definition of the project used for projects listing purposes
@@ -15,7 +16,10 @@ export interface ProjectSchema {
     createdAt?: string;
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
     defaultStickiness?: string;
-    /** Additional information about the project */
+    /**
+     * Additional information about the project
+     * @nullable
+     */
     description?: string | null;
     /** `true` if the project was favorited, otherwise `false`. */
     favorite?: boolean;
@@ -31,10 +35,15 @@ export interface ProjectSchema {
     mode?: ProjectSchemaMode;
     /** The name of this project */
     name: string;
+    /** The owners of this project, both users and groups. */
+    owners?: ProjectSchemaOwners;
     /** The number of potentially stale features this project has */
     potentiallyStaleFeatureCount?: number;
     /** The number of stale features this project has */
     staleFeatureCount?: number;
-    /** When this project was last updated. */
+    /**
+     * When this project was last updated.
+     * @nullable
+     */
     updatedAt?: string | null;
 }

@@ -8,15 +8,27 @@
  * A definition of the project environment
  */
 export interface EnvironmentSchema {
-    /** The number of API tokens for the project environment */
+    /**
+     * The number of API tokens for the project environment
+     * @minimum 0
+     * @nullable
+     */
     apiTokenCount?: number | null;
     /** `true` if the environment is enabled for the project, otherwise `false`. */
     enabled: boolean;
-    /** The number of enabled toggles for the project environment */
+    /**
+     * The number of enabled toggles for the project environment
+     * @minimum 0
+     * @nullable
+     */
     enabledToggleCount?: number | null;
     /** The name of the environment */
     name: string;
-    /** The number of projects with this environment */
+    /**
+     * The number of projects with this environment
+     * @minimum 0
+     * @nullable
+     */
     projectCount?: number | null;
     /** `true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted. */
     protected: boolean;

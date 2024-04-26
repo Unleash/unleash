@@ -10,16 +10,22 @@
 export interface CreateEnvironmentSchema {
     /** Newly created environments are enabled by default. Set this property to `false` to create the environment in a disabled state. */
     enabled?: boolean;
-    /** The name of the environment. Must be a URL-friendly string according to [RFC 3968, section 2.3](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) */
+    /**
+     * The name of the environment. Must be a URL-friendly string according to [RFC 3968, section 2.3](https://www.rfc-editor.org/rfc/rfc3986#section-2.3)
+     * @pattern ^[a-zA-Z0-9~_.-]+$
+     */
     name: string;
     /** Defines where in the list of environments to place this environment. The list uses an ascending sort, so lower numbers are shown first. You can change this value later. */
     sortOrder?: number;
-    /** The [type of environment](https://docs.getunleash.io/reference/environments#environment-types) you would like to create. Unleash officially recognizes the following values:
+    /**
+   * The [type of environment](https://docs.getunleash.io/reference/environments#environment-types) you would like to create. Unleash officially recognizes the following values:
 - `development`
 - `test`
 - `preproduction`
 - `production`
 
-If you pass a string that is not one of the recognized values, Unleash will accept it, but it will carry no special semantics. */
+If you pass a string that is not one of the recognized values, Unleash will accept it, but it will carry no special semantics.
+   * @minLength 1
+   */
     type: string;
 }

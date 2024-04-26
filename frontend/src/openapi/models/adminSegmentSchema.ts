@@ -13,18 +13,38 @@ export interface AdminSegmentSchema {
     constraints: ConstraintSchema[];
     /** When the segment was created */
     createdAt: string;
-    /** The creator's email or username */
+    /**
+     * The creator's email or username
+     * @nullable
+     */
     createdBy?: string | null;
-    /** The description for this segment */
+    /**
+     * The description for this segment
+     * @nullable
+     */
     description?: string | null;
-    /** The ID of this segment */
+    /**
+     * The ID of this segment
+     * @minimum 0
+     */
     id: number;
     /** The name of this segment */
     name: string;
-    /** The project the segment belongs to. Only present if the segment is a project-specific segment. */
+    /**
+     * The project the segment belongs to. Only present if the segment is a project-specific segment.
+     * @nullable
+     */
     project?: string | null;
-    /** The number of feature flags that use this segment. The number also includes the any flags with pending change requests that would add this segment. */
+    /**
+     * The number of feature flags that use this segment. The number also includes the any flags with pending change requests that would add this segment.
+     * @minimum 0
+     * @nullable
+     */
     usedInFeatures?: number | null;
-    /** The number of projects that use this segment. The number includes any projects with pending change requests that would add this segment. */
+    /**
+     * The number of projects that use this segment. The number includes any projects with pending change requests that would add this segment.
+     * @minimum 0
+     * @nullable
+     */
     usedInProjects?: number | null;
 }

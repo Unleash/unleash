@@ -6,6 +6,7 @@
 
 /**
  * An API versioning number
+ * @minimum 1
  */
 export type FeatureEventsSchemaVersion =
     (typeof FeatureEventsSchemaVersion)[keyof typeof FeatureEventsSchemaVersion];

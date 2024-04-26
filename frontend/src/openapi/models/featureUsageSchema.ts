@@ -17,6 +17,9 @@ export interface FeatureUsageSchema {
     maturity: string;
     /** A list of applications seen using this feature */
     seenApplications: string[];
-    /** The version of this schema */
+    /**
+     * The version of this schema
+     * @minimum 1
+     */
     version: number;
 }

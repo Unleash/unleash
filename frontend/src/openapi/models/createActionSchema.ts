@@ -13,6 +13,9 @@ export interface CreateActionSchema {
     action: string;
     /** A map of parameters to pass to the action */
     executionParams?: CreateActionSchemaExecutionParams;
-    /** The order in which the action should be executed */
+    /**
+     * The order in which the action should be executed
+     * @minimum 1
+     */
     sortOrder: number;
 }

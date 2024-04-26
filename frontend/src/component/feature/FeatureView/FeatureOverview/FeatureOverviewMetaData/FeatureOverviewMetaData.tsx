@@ -14,6 +14,7 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
+import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -79,15 +80,21 @@ export const StyledLabel = styled('span')(({ theme }) => ({
 const FeatureOverviewMetaData = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { feature } = useFeature(projectId, featureId);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
+    const { markFeatureCompleted, loading } = useFeatureLifecycleApi();
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
 
     const IconComponent = getFeatureTypeIcons(type);
 
     const currentStage = populateCurrentStage(feature);
+
+    const onComplete = async () => {
+        await markFeatureCompleted(featureId, projectId);
+        refetchFeature();
+    };
 
     return (
         <StyledContainer>
@@ -122,6 +129,8 @@ const FeatureOverviewMetaData = () => {
                                 <FeatureLifecycleTooltip
                                     stage={currentStage!}
                                     onArchive={() => setShowDelDialog(true)}
+                                    onComplete={onComplete}
+                                    loading={loading}
                                 >
                                     <FeatureLifecycleStageIcon
                                         stage={currentStage!}

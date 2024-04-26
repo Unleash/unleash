@@ -257,7 +257,10 @@ const BoldTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-const LiveStageDescription: FC = ({ children }) => {
+const LiveStageDescription: FC<{
+    onComplete: () => void;
+    loading: boolean;
+}> = ({ children, onComplete, loading }) => {
     return (
         <>
             <BoldTitle>Is this feature complete?</BoldTitle>
@@ -274,6 +277,8 @@ const LiveStageDescription: FC = ({ children }) => {
                 variant='outlined'
                 permission={UPDATE_FEATURE}
                 size='small'
+                onClick={onComplete}
+                disabled={loading}
             >
                 Mark Completed
             </PermissionButton>
@@ -351,7 +356,9 @@ export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
     onArchive: () => void;
-}> = ({ children, stage, onArchive }) => (
+    onComplete: () => void;
+    loading: boolean;
+}> = ({ children, stage, onArchive, onComplete, loading }) => (
     <HtmlTooltip
         maxHeight={800}
         maxWidth={350}
@@ -393,7 +400,10 @@ export const FeatureLifecycleTooltip: FC<{
                         </PreLiveStageDescription>
                     )}
                     {stage.name === 'live' && (
-                        <LiveStageDescription>
+                        <LiveStageDescription
+                            onComplete={onComplete}
+                            loading={loading}
+                        >
                             <Environments environments={stage.environments} />
                         </LiveStageDescription>
                     )}

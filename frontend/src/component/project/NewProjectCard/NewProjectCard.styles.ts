@@ -70,7 +70,7 @@ export const StyledDivInfo = styled('div')(({ theme }) => ({
 }));
 
 export const StyledDivInfoContainer = styled('div')(() => ({
-    textAlign: 'center',
+    // textAlign: 'center',
 }));
 
 export const StyledParagraphInfo = styled('p')(({ theme }) => ({

@@ -58,13 +58,6 @@ export const ProjectCard = ({
                     </StyledParagraphInfo>
                     <p data-loading>{featureCount === 1 ? 'flag' : 'flags'}</p>
                 </StyledDivInfoContainer>
-                <StyledDivInfoContainer>
-                    <StyledParagraphInfo data-loading>
-                        {health}%
-                    </StyledParagraphInfo>
-                    <p data-loading>health</p>
-                </StyledDivInfoContainer>
-
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={
@@ -78,6 +71,12 @@ export const ProjectCard = ({
                         </StyledDivInfoContainer>
                     }
                 />
+                <StyledDivInfoContainer>
+                    <StyledParagraphInfo data-loading>
+                        {health}%
+                    </StyledParagraphInfo>
+                    <p data-loading>health</p>
+                </StyledDivInfoContainer>
             </StyledDivInfo>
         </StyledProjectCardBody>
         <ProjectCardFooter id={id} isFavorite={isFavorite}>

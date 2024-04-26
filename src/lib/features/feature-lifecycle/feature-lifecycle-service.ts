@@ -1,9 +1,11 @@
 import {
     CLIENT_METRICS,
     FEATURE_ARCHIVED,
-    FEATURE_COMPLETED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
+    FeatureCompletedEvent,
+    FeatureUncompletedEvent,
+    type IAuditUser,
     type IEnvironmentStore,
     type IEventStore,
     type IFlagResolver,
@@ -15,6 +17,7 @@ import type {
 } from './feature-lifecycle-store-type';
 import EventEmitter from 'events';
 import type { Logger } from '../../logger';
+import type EventService from '../events/event-service';
 import type { ValidatedClientMetrics } from '../metrics/shared/schema';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
@@ -30,6 +33,8 @@ export class FeatureLifecycleService extends EventEmitter {
 
     private eventBus: EventEmitter;
 
+    private eventService: EventService;
+
     private logger: Logger;
 
     constructor(
@@ -43,6 +48,11 @@ export class FeatureLifecycleService extends EventEmitter {
             featureLifecycleStore: IFeatureLifecycleStore;
         },
         {
+            eventService,
+        }: {
+            eventService: EventService;
+        },
+        {
             flagResolver,
             eventBus,
             getLogger,
@@ -54,6 +64,7 @@ export class FeatureLifecycleService extends EventEmitter {
         this.environmentStore = environmentStore;
         this.flagResolver = flagResolver;
         this.eventBus = eventBus;
+        this.eventService = eventService;
         this.logger = getLogger(
             'feature-lifecycle/feature-lifecycle-service.ts',
         );
@@ -84,11 +95,6 @@ export class FeatureLifecycleService extends EventEmitter {
                 }
             },
         );
-        this.eventStore.on(FEATURE_COMPLETED, async (event) => {
-            await this.checkEnabled(() =>
-                this.featureCompleted(event.featureName),
-            );
-        });
         this.eventStore.on(FEATURE_ARCHIVED, async (event) => {
             await this.checkEnabled(() =>
                 this.featureArchived(event.featureName),
@@ -144,14 +150,32 @@ export class FeatureLifecycleService extends EventEmitter {
         }
     }
 
-    private async featureCompleted(feature: string) {
+    public async featureCompleted(feature: string, auditUser: IAuditUser) {
         await this.featureLifecycleStore.insert([
             {
                 feature,
                 stage: 'completed',
             },
         ]);
-        this.emit(STAGE_ENTERED, { stage: 'completed' });
+        await this.eventService.storeEvent(
+            new FeatureCompletedEvent({
+                featureName: feature,
+                auditUser,
+            }),
+        );
+    }
+
+    public async featureUnCompleted(feature: string, auditUser: IAuditUser) {
+        await this.featureLifecycleStore.deleteStage({
+            feature,
+            stage: 'completed',
+        });
+        await this.eventService.storeEvent(
+            new FeatureUncompletedEvent({
+                featureName: feature,
+                auditUser,
+            }),
+        );
     }
 
     private async featureArchived(feature: string) {

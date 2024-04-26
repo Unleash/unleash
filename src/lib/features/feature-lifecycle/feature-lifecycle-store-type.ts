@@ -12,4 +12,5 @@ export interface IFeatureLifecycleStore {
     get(feature: string): Promise<FeatureLifecycleView>;
     stageExists(stage: FeatureLifecycleStage): Promise<boolean>;
     delete(feature: string): Promise<void>;
+    deleteStage(stage: FeatureLifecycleStage): Promise<void>;
 }

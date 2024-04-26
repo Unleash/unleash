@@ -1,5 +1,12 @@
 import type { Db } from '../../db/db';
-import { RoleName, type IProjectWithCount, type IRoleStore } from '../../types';
+import { RoleName, type IProjectWithCount } from '../../types';
+import type {
+    GroupProjectOwner,
+    IProjectOwnersReadModel,
+    IProjectWithCountAndOwners,
+    ProjectOwnersDictionary,
+    UserProjectOwner,
+} from './project-owners-read-model.type';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -8,34 +15,11 @@ const T = {
     USERS: 'users',
 };
 
-type SystemOwner = { ownerType: 'system' };
-type UserProjectOwner = {
-    ownerType: 'user';
-    name: string;
-    email?: string;
-    imageUrl?: string;
-};
-type GroupProjectOwner = {
-    ownerType: 'group';
-    name: string;
-};
-type ProjectOwners =
-    | [SystemOwner]
-    | Array<UserProjectOwner | GroupProjectOwner>;
-
-export type ProjectOwnersDictionary = Record<string, ProjectOwners>;
-
-type IProjectWithCountAndOwners = IProjectWithCount & {
-    owners: ProjectOwners;
-};
-
-export class ProjectOwnersReadModel {
+export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     private db: Db;
-    roleStore: IRoleStore;
 
-    constructor(db: Db, roleStore: IRoleStore) {
+    constructor(db: Db) {
         this.db = db;
-        this.roleStore = roleStore;
     }
 
     static addOwnerData(
@@ -44,7 +28,7 @@ export class ProjectOwnersReadModel {
     ): IProjectWithCountAndOwners[] {
         return projects.map((project) => ({
             ...project,
-            owners: owners[project.name] || [{ ownerType: 'system' }],
+            owners: owners[project.id] || [{ ownerType: 'system' }],
         }));
     }
 
@@ -119,7 +103,9 @@ export class ProjectOwnersReadModel {
     }
 
     async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
-        const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
+        const ownerRole = await this.db(T.ROLES)
+            .where({ name: RoleName.OWNER })
+            .first();
         const usersDict = await this.getAllProjectUsersByRole(ownerRole.id);
         const groupsDict = await this.getAllProjectGroupsByRole(ownerRole.id);
 

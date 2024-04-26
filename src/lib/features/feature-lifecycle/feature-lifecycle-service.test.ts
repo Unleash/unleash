@@ -15,13 +15,22 @@ import noLoggerProvider from '../../../test/fixtures/no-logger';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();
-    const { featureLifecycleService, eventStore, environmentStore } =
-        createFakeFeatureLifecycleService({
-            flagResolver: { isEnabled: () => true },
-            eventBus,
-            getLogger: noLoggerProvider,
-        } as unknown as IUnleashConfig);
+    const {
+        featureLifecycleService,
+        eventStore,
+        environmentStore,
+        featureEnvironmentStore,
+    } = createFakeFeatureLifecycleService({
+        flagResolver: { isEnabled: () => true },
+        eventBus,
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
     const featureName = 'testFeature';
+    await featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        'my-prod-environment',
+        true,
+    );
 
     function emitMetricsEvent(environment: string) {
         eventBus.emit(CLIENT_METRICS, {
@@ -39,7 +48,7 @@ test('can insert and read lifecycle stages', async () => {
 
     await environmentStore.create({
         name: 'my-dev-environment',
-        type: 'development',
+        type: 'test',
     } as IEnvironment);
     await environmentStore.create({
         name: 'my-prod-environment',

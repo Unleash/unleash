@@ -14,8 +14,14 @@ export interface FeatureEventsSchema {
     events: EventSchema[];
     /** The name of the feature toggle these events relate to */
     toggleName?: string;
-    /** How many events are there for this feature toggle */
+    /**
+     * How many events are there for this feature toggle
+     * @minimum 0
+     */
     totalEvents?: number;
-    /** An API versioning number */
+    /**
+     * An API versioning number
+     * @minimum 1
+     */
     version?: FeatureEventsSchemaVersion;
 }

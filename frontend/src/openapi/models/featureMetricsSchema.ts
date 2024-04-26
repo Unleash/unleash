@@ -13,6 +13,9 @@ export interface FeatureMetricsSchema {
     data: FeatureEnvironmentMetricsSchema[];
     /** The maturity level of this API (alpha, beta, stable, deprecated) */
     maturity: string;
-    /** The version of this schema */
+    /**
+     * The version of this schema
+     * @minimum 1
+     */
     version: number;
 }

@@ -15,8 +15,18 @@ const useFeatureLifecycleApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const markFeatureUncompleted = async (name: string, project: string) => {
+        const path = `api/admin/projects/${project}/features/${name}/lifecycle/uncomplete`;
+        const req = createRequest(path, {
+            method: 'POST',
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         markFeatureCompleted,
+        markFeatureUncompleted,
         errors,
         loading,
     };

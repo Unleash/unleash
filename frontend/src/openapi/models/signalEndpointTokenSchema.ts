@@ -12,7 +12,10 @@ export interface SignalEndpointTokenSchema {
     createdAt: string;
     /** The ID of the user that created this signal endpoint token. */
     createdByUserId: number;
-    /** The signal endpoint token's ID. Signal endpoint token IDs are incrementing integers. In other words, a more recently created signal endpoint token will always have a higher ID than an older one. */
+    /**
+     * The signal endpoint token's ID. Signal endpoint token IDs are incrementing integers. In other words, a more recently created signal endpoint token will always have a higher ID than an older one.
+     * @minimum 1
+     */
     id: number;
     /** The signal endpoint token name. */
     name: string;

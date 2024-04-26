@@ -12,7 +12,10 @@ import type { UserSchema } from './userSchema';
 export interface PublicSignupTokenSchema {
     /** When the token was created. */
     createdAt: string;
-    /** The creator's email or username */
+    /**
+     * The creator's email or username
+     * @nullable
+     */
     createdBy: string | null;
     /** Whether the token is active. This property will always be `false` for a token that has expired. */
     enabled: boolean;
@@ -24,8 +27,14 @@ export interface PublicSignupTokenSchema {
     role: RoleSchema;
     /** The actual value of the token. This is the part that is used by Unleash to create an invite link */
     secret: string;
-    /** The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user. */
+    /**
+     * The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user.
+     * @nullable
+     */
     url: string | null;
-    /** Array of users that have signed up using the token. */
+    /**
+     * Array of users that have signed up using the token.
+     * @nullable
+     */
     users?: UserSchema[] | null;
 }

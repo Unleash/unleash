@@ -40,6 +40,7 @@ import { IFeatureSearchStore } from '../features/feature-search/feature-search-s
 import type { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type';
 import { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type';
 import { ISegmentReadModel } from '../features/segment/segment-read-model-type';
+import { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -84,6 +85,7 @@ export interface IUnleashStores {
     inactiveUsersStore: IInactiveUsersStore;
     trafficDataUsageStore: ITrafficDataUsageStore;
     segmentReadModel: ISegmentReadModel;
+    projectOwnersReadModel: IProjectOwnersReadModel;
 }
 
 export {
@@ -127,4 +129,5 @@ export {
     IFeatureSearchStore,
     ITrafficDataUsageStore,
     ISegmentReadModel,
+    IProjectOwnersReadModel,
 };

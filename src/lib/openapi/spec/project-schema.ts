@@ -141,6 +141,9 @@ export const projectSchema = {
                 },
                 {
                     type: 'array',
+                    minItems: 1,
+                    maxItems: 1,
+                    enum: ['{ownerType: 'system'}]
                     items: {
                         type: 'object',
                         required: ['ownerType'],

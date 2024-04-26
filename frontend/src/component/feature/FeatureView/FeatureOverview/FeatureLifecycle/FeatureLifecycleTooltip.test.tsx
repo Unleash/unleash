@@ -148,6 +148,7 @@ test('mark completed button gets activated', async () => {
             environments: [{ name: 'production', lastSeenAt }],
             enteredStageAt,
         },
+        () => {},
         onComplete,
     );
 

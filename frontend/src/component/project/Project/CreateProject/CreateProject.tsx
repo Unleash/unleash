@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
+import { NewProjectForm } from './NewProjectForm';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../hooks/useProjectForm';
@@ -88,6 +89,10 @@ const CreateProject = () => {
     const handleCancel = () => {
         navigate(GO_BACK);
     };
+
+    if(true) {
+        return <NewProjectForm></NewProjectForm>
+    }
 
     return (
         <FormTemplate

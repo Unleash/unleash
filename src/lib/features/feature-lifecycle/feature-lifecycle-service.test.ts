@@ -3,6 +3,7 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_COMPLETED,
     FEATURE_CREATED,
+    FEATURE_REVIVED,
     type IEnvironment,
     type IUnleashConfig,
     type StageName,
@@ -78,6 +79,14 @@ test('can insert and read lifecycle stages', async () => {
         { stage: 'pre-live', enteredStageAt: expect.any(Date) },
         { stage: 'live', enteredStageAt: expect.any(Date) },
         { stage: 'archived', enteredStageAt: expect.any(Date) },
+    ]);
+
+    eventStore.emit(FEATURE_REVIVED, { featureName });
+    await reachedStage('initial');
+    const initialLifecycle =
+        await featureLifecycleService.getFeatureLifecycle(featureName);
+    expect(initialLifecycle).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(Date) },
     ]);
 });
 

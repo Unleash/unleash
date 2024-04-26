@@ -8,6 +8,7 @@ import {
     CLIENT_METRICS,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
+    FEATURE_REVIVED,
     type IEventStore,
     type StageName,
 } from '../../types';
@@ -139,8 +140,10 @@ test('should return lifecycle stages', async () => {
             enteredStageAt: expect.any(String),
         },
     ]);
-
     await expectFeatureStage('my_feature_a', 'archived');
+
+    eventStore.emit(FEATURE_REVIVED, { featureName: 'my_feature_a' });
+    await reachedStage('initial');
 });
 
 test('should be able to toggle between completed/uncompleted', async () => {

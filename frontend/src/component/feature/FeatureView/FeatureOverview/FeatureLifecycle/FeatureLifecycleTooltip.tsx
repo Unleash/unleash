@@ -23,6 +23,9 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { isSafeToArchive } from './isSafeToArchive';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateYMDHMS } from 'utils/formatDate';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -284,7 +287,7 @@ const LiveStageDescription: FC = ({ children }) => {
     );
 };
 
-const SafeToArchive: FC = () => {
+const SafeToArchive: FC<{ onArchive: () => void }> = ({ onArchive }) => {
     return (
         <>
             <BoldTitle>Safe to archive</BoldTitle>
@@ -298,6 +301,7 @@ const SafeToArchive: FC = () => {
                 permission={DELETE_FEATURE}
                 size='small'
                 sx={{ mb: 2 }}
+                onClick={onArchive}
             >
                 Archive feature
             </PermissionButton>
@@ -319,21 +323,35 @@ const ActivelyUsed: FC = ({ children }) => {
 };
 
 const CompletedStageDescription: FC<{
+    onArchive: () => void;
     environments: Array<{ name: string; lastSeenAt: string }>;
-}> = ({ children, environments }) => {
+}> = ({ children, environments, onArchive }) => {
     return (
         <ConditionallyRender
             condition={isSafeToArchive(environments)}
-            show={<SafeToArchive />}
+            show={<SafeToArchive onArchive={onArchive} />}
             elseShow={<ActivelyUsed>{children}</ActivelyUsed>}
         />
     );
 };
 
+const FormatTime: FC<{ time: string }> = ({ time }) => {
+    const { locationSettings } = useLocationSettings();
+
+    return <span>{formatDateYMDHMS(time, locationSettings.locale)}</span>;
+};
+
+const FormatElapsedTime: FC<{ time: string }> = ({ time }) => {
+    const pastTime = parseISO(time);
+    const elapsedTime = formatDistanceToNow(pastTime, { addSuffix: false });
+    return <span>{elapsedTime}</span>;
+};
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
-}> = ({ children, stage }) => (
+    onArchive: () => void;
+}> = ({ children, stage, onArchive }) => (
     <HtmlTooltip
         maxHeight={800}
         maxWidth={350}
@@ -358,11 +376,12 @@ export const FeatureLifecycleTooltip: FC<{
                     </MainLifecycleRow>
                     <TimeLifecycleRow>
                         <TimeLabel>Stage entered at</TimeLabel>
-                        <span>14/01/2024</span>
+
+                        <FormatTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                     <TimeLifecycleRow>
                         <TimeLabel>Time spent in stage</TimeLabel>
-                        <span>3 days</span>
+                        <FormatElapsedTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                     <StageTimeline stage={stage} />
                 </Box>
@@ -381,6 +400,7 @@ export const FeatureLifecycleTooltip: FC<{
                     {stage.name === 'completed' && (
                         <CompletedStageDescription
                             environments={stage.environments}
+                            onArchive={onArchive}
                         >
                             <Environments environments={stage.environments} />
                         </CompletedStageDescription>

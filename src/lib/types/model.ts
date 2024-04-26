@@ -483,6 +483,7 @@ export type CreateProject = Pick<IProject, 'id' | 'name'> & {
     mode?: ProjectMode;
     defaultStickiness?: string;
     environments?: string[];
+    changeRequestEnvironments?: { name: string; requiredApprovals?: number }[];
 };
 
 // Create project aligns with #/components/schemas/projectCreatedSchema
@@ -496,6 +497,7 @@ export type ProjectCreated = Pick<
     | 'featureLimit'
 > & {
     environments: string[];
+    changeRequestEnvironments?: { name: string; requiredApprovals: number }[];
 };
 
 export interface IProject {

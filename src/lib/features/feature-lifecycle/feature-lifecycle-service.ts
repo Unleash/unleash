@@ -2,6 +2,7 @@ import {
     CLIENT_METRICS,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
+    FEATURE_REVIVED,
     FeatureCompletedEvent,
     FeatureUncompletedEvent,
     type IAuditUser,
@@ -99,6 +100,11 @@ export class FeatureLifecycleService extends EventEmitter {
                 this.featureArchived(event.featureName),
             );
         });
+        this.eventStore.on(FEATURE_REVIVED, async (event) => {
+            await this.checkEnabled(() =>
+                this.featureRevived(event.featureName),
+            );
+        });
     }
 
     async getFeatureLifecycle(feature: string): Promise<FeatureLifecycleView> {
@@ -178,5 +184,10 @@ export class FeatureLifecycleService extends EventEmitter {
             { feature, stage: 'archived' },
         ]);
         this.emit(STAGE_ENTERED, { stage: 'archived' });
+    }
+
+    private async featureRevived(feature: string) {
+        await this.featureLifecycleStore.delete(feature);
+        await this.featureInitialized(feature);
     }
 }

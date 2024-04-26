@@ -98,6 +98,7 @@ const expectFeatureStage = async (featureName: string, stage: StageName) => {
 
 test('should return lifecycle stages', async () => {
     await app.createFeature('my_feature_a');
+    await app.enableFeature('my_feature_a', 'default');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
     await reachedStage('initial');
     await expectFeatureStage('my_feature_a', 'initial');

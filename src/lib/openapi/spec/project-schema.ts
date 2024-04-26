@@ -91,18 +91,6 @@ export const projectSchema = {
         },
         owners: {
             description: 'The owners of this project, both users and groups.',
-            example: [
-                {
-                    ownerType: 'user',
-                    name: 'User Name',
-                    imageUrl: 'https://example.com/image.jpg',
-                    example: 'user@example.com',
-                },
-                {
-                    ownerType: 'group',
-                    name: 'Group Name',
-                },
-            ],
             oneOf: [
                 {
                     type: 'array',
@@ -121,12 +109,14 @@ export const projectSchema = {
                                         example: 'User Name',
                                     },
                                     imageUrl: {
-                                        type: ['string', 'null'],
+                                        type: 'string',
+                                        nullable: true,
                                         example:
                                             'https://example.com/image.jpg',
                                     },
                                     email: {
-                                        type: ['string', 'null'],
+                                        type: 'string',
+                                        nullable: true,
                                         example: 'user@example.com',
                                     },
                                 },
@@ -140,7 +130,8 @@ export const projectSchema = {
                                         enum: ['group'],
                                     },
                                     name: {
-                                        type: ['string', 'null'],
+                                        type: 'string',
+                                        nullable: true,
                                         example: 'Group Name',
                                     },
                                 },

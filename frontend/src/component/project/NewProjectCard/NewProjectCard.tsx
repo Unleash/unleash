@@ -1,4 +1,3 @@
-import { Box, styled } from '@mui/material';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
@@ -10,11 +9,13 @@ import {
     StyledDivInfoContainer,
     StyledParagraphInfo,
     StyledProjectCardBody,
+    StyledIconBox,
+    StyledProjectIcon,
 } from './NewProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
 import { ProjectOwners } from './ProjectOwners/ProjectOwners';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
+import type { ProjectSchemaOwners } from 'openapi';
 
 interface IProjectCardProps {
     name: string;
@@ -25,22 +26,8 @@ interface IProjectCardProps {
     onHover: () => void;
     isFavorite?: boolean;
     mode: string;
-    owners?: {
-        users: any[];
-        groups: any[];
-    };
+    owners?: ProjectSchemaOwners;
 }
-
-const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-}));
-
-export const StyledIconBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    padding: theme.spacing(0.5),
-    marginRight: theme.spacing(2),
-}));
 
 export const ProjectCard = ({
     name,

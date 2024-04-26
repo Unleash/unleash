@@ -120,11 +120,11 @@ const FeatureOverviewMetaData = () => {
                             <StyledRow data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
                                 <FeatureLifecycleTooltip
-                                    stage={currentStage}
+                                    stage={currentStage!}
                                     onArchive={() => setShowDelDialog(true)}
                                 >
                                     <FeatureLifecycleStageIcon
-                                        stage={currentStage}
+                                        stage={currentStage!}
                                     />
                                 </FeatureLifecycleTooltip>
                             </StyledRow>

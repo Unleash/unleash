@@ -12,14 +12,29 @@ export interface InactiveUserSchema {
     createdAt?: string;
     /** Email of the user */
     email?: string;
-    /** The user id */
+    /**
+     * The user id
+     * @minimum 0
+     */
     id: number;
-    /** Name of the user */
+    /**
+     * Name of the user
+     * @nullable
+     */
     name?: string | null;
-    /** The last time this user's PAT token (if any) was used */
+    /**
+     * The last time this user's PAT token (if any) was used
+     * @nullable
+     */
     patSeenAt?: string | null;
-    /** The last time this user logged in */
+    /**
+     * The last time this user logged in
+     * @nullable
+     */
     seenAt?: string | null;
-    /** A unique username for the user */
+    /**
+     * A unique username for the user
+     * @nullable
+     */
     username?: string | null;
 }

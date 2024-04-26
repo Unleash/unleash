@@ -8,17 +8,32 @@
  * Describes the properties required to create or update a banner.
  */
 export interface CreateBannerSchema {
-    /** The markdown to display on the dialog. If not specified, no dialog will be displayed. */
+    /**
+     * The markdown to display on the dialog. If not specified, no dialog will be displayed.
+     * @nullable
+     */
     dialog?: string | null;
-    /** The title to display on the dialog. If not specified, this will be the same as `linkText`. */
+    /**
+     * The title to display on the dialog. If not specified, this will be the same as `linkText`.
+     * @nullable
+     */
     dialogTitle?: string | null;
     /** Whether the banner should be displayed currently. If not specified, defaults to true. */
     enabled?: boolean;
-    /** The icon to display on the banner. Can be one of https://fonts.google.com/icons. If not specified, this will be the default icon for the variant. If "none", no icon will be displayed. */
+    /**
+     * The icon to display on the banner. Can be one of https://fonts.google.com/icons. If not specified, this will be the default icon for the variant. If "none", no icon will be displayed.
+     * @nullable
+     */
     icon?: string | null;
-    /** The link to display on the banner. Can either be an absolute or a relative link (e.g. absolute: "https://example.com" or relative: "/admin/service-accounts"). If "dialog", will display a dialog when clicked. If not specified, no link will be displayed. */
+    /**
+     * The link to display on the banner. Can either be an absolute or a relative link (e.g. absolute: "https://example.com" or relative: "/admin/service-accounts"). If "dialog", will display a dialog when clicked. If not specified, no link will be displayed.
+     * @nullable
+     */
     link?: string | null;
-    /** The text to display on the link. If not specified, will be displayed as "More info". */
+    /**
+     * The text to display on the link. If not specified, will be displayed as "More info".
+     * @nullable
+     */
     linkText?: string | null;
     /** The message to display to all users. Supports markdown. */
     message: string;

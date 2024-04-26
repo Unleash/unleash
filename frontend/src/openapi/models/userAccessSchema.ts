@@ -10,11 +10,17 @@
 export interface UserAccessSchema {
     /** A list of project ids that this user has access to */
     accessibleProjects: string[];
-    /** When the user was created */
+    /**
+     * When the user was created
+     * @nullable
+     */
     createdAt?: string | null;
     /** A list of group names that this user is a member of */
     groups: string[];
-    /** The last time the user logged in */
+    /**
+     * The last time the user logged in
+     * @nullable
+     */
     lastSeen?: string | null;
     /** The name of the root role that this user has */
     rootRole: string;
@@ -22,6 +28,9 @@ export interface UserAccessSchema {
     userEmail: string;
     /** The identifier for the user */
     userId: number;
-    /** The name of the user */
+    /**
+     * The name of the user
+     * @nullable
+     */
     userName?: string | null;
 }

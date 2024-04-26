@@ -9,7 +9,10 @@ import type { RoleSchema } from './roleSchema';
  * A user identified by a token
  */
 export interface TokenUserSchema {
-    /** A username or email identifying which user created this token */
+    /**
+     * A username or email identifying which user created this token
+     * @nullable
+     */
     createdBy: string | null;
     /** The email of the user */
     email: string;

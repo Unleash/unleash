@@ -12,9 +12,15 @@ import type { SignalSchemaSource } from './signalSchemaSource';
 export interface SignalSchema {
     /** The date and time of when the signal was created. */
     createdAt: string;
-    /** The ID of the source token that created this signal. Only present if the signal was created by a signal endpoint. */
+    /**
+     * The ID of the source token that created this signal. Only present if the signal was created by a signal endpoint.
+     * @nullable
+     */
     createdBySourceTokenId?: number | null;
-    /** The signal's ID. Signal IDs are incrementing integers. In other words, a more recently created signal will always have a higher ID than an older one. */
+    /**
+     * The signal's ID. Signal IDs are incrementing integers. In other words, a more recently created signal will always have a higher ID than an older one.
+     * @minimum 1
+     */
     id: number;
     /** The payload of the signal. */
     payload?: SignalSchemaPayload;

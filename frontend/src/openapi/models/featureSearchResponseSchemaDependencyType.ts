@@ -6,6 +6,7 @@
 
 /**
  * The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.
+ * @nullable
  */
 export type FeatureSearchResponseSchemaDependencyType =
     | (typeof FeatureSearchResponseSchemaDependencyType)[keyof typeof FeatureSearchResponseSchemaDependencyType]

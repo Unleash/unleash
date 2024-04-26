@@ -6,5 +6,6 @@
 
 /**
  * Data relating to the previous state of the event's subject.
+ * @nullable
  */
 export type EventSchemaPreData = { [key: string]: any } | null;

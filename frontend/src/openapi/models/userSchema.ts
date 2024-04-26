@@ -27,18 +27,36 @@ export interface UserSchema {
      * @deprecated
      */
     isAPI?: boolean;
-    /** How many unsuccessful attempts at logging in has the user made */
+    /**
+     * How many unsuccessful attempts at logging in has the user made
+     * @minimum 0
+     */
     loginAttempts?: number;
-    /** Name of the user */
+    /**
+     * Name of the user
+     * @nullable
+     */
     name?: string | null;
     /** Deprecated */
     permissions?: string[];
-    /** Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned */
+    /**
+     * Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned
+     * @minimum 0
+     */
     rootRole?: number;
-    /** The SCIM ID of the user, only present if managed by SCIM */
+    /**
+     * The SCIM ID of the user, only present if managed by SCIM
+     * @nullable
+     */
     scimId?: string | null;
-    /** The last time this user logged in */
+    /**
+     * The last time this user logged in
+     * @nullable
+     */
     seenAt?: string | null;
-    /** A unique username for the user */
+    /**
+     * A unique username for the user
+     * @nullable
+     */
     username?: string | null;
 }

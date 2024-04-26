@@ -9,6 +9,9 @@ export type CreateApiTokenSchemaOneOf = {
     expiresAt?: string;
     /** The name of the token. */
     tokenName: string;
-    /** An admin token. Must be the string "admin" (not case sensitive). */
+    /**
+     * An admin token. Must be the string "admin" (not case sensitive).
+     * @pattern ^[Aa][Dd][Mm][Ii][Nn]$
+     */
     type: string;
 };

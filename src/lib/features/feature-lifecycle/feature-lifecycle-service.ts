@@ -8,6 +8,7 @@ import {
     type IAuditUser,
     type IEnvironmentStore,
     type IEventStore,
+    type IFeatureEnvironmentStore,
     type IFlagResolver,
     type IUnleashConfig,
 } from '../../types';
@@ -29,6 +30,8 @@ export class FeatureLifecycleService extends EventEmitter {
 
     private environmentStore: IEnvironmentStore;
 
+    private featureEnvironmentStore: IFeatureEnvironmentStore;
+
     private flagResolver: IFlagResolver;
 
     private eventBus: EventEmitter;
@@ -42,10 +45,12 @@ export class FeatureLifecycleService extends EventEmitter {
             eventStore,
             featureLifecycleStore,
             environmentStore,
+            featureEnvironmentStore,
         }: {
             eventStore: IEventStore;
             environmentStore: IEnvironmentStore;
             featureLifecycleStore: IFeatureLifecycleStore;
+            featureEnvironmentStore: IFeatureEnvironmentStore;
         },
         {
             eventService,
@@ -62,6 +67,7 @@ export class FeatureLifecycleService extends EventEmitter {
         this.eventStore = eventStore;
         this.featureLifecycleStore = featureLifecycleStore;
         this.environmentStore = environmentStore;
+        this.featureEnvironmentStore = featureEnvironmentStore;
         this.flagResolver = flagResolver;
         this.eventBus = eventBus;
         this.eventService = eventService;
@@ -140,7 +146,15 @@ export class FeatureLifecycleService extends EventEmitter {
             }
             await this.stageReceivedMetrics(features, 'pre-live');
             if (env.type === 'production') {
-                await this.stageReceivedMetrics(features, 'live');
+                const envFeatures =
+                    await this.featureEnvironmentStore.getAllByFeatures(
+                        features,
+                        env.name,
+                    );
+                const enabledFeatures = envFeatures
+                    .filter((envFeature) => envFeature.enabled)
+                    .map((envFeature) => envFeature.featureName);
+                await this.stageReceivedMetrics(enabledFeatures, 'live');
             }
         } catch (e) {
             this.logger.warn(

@@ -90,7 +90,8 @@ export const projectSchema = {
                 'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
         },
         owners: {
-            description: 'The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.',
+            description:
+                'The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.',
             oneOf: [
                 {
                     type: 'array',
@@ -143,7 +144,6 @@ export const projectSchema = {
                     type: 'array',
                     minItems: 1,
                     maxItems: 1,
-                    enum: ['{ownerType: 'system'}]
                     items: {
                         type: 'object',
                         required: ['ownerType'],

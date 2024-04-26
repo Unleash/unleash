@@ -4,7 +4,10 @@ import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import type { LifecycleStage } from './LifecycleStage';
-import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const twoMinutesAgo = '2024-04-25T08:03:00.000Z';
@@ -16,7 +19,7 @@ const renderOpenTooltip = (
     onArchive = () => {},
     onComplete = () => {},
     onUncomplete = () => {},
-    loading = true,
+    loading = false,
 ) => {
     render(
         <FeatureLifecycleTooltip
@@ -28,7 +31,12 @@ const renderOpenTooltip = (
         >
             <span>child</span>
         </FeatureLifecycleTooltip>,
-        { permissions: [{ permission: DELETE_FEATURE }] },
+        {
+            permissions: [
+                { permission: DELETE_FEATURE },
+                { permission: UPDATE_FEATURE },
+            ],
+        },
     );
 
     const child = screen.getByText('child');
@@ -120,8 +128,33 @@ test('render completed stage safe to archive', async () => {
 
     await screen.findByText('completed');
     const button = await screen.findByText('Archive feature');
-
     button.click();
 
     expect(onArchiveInvoked).toBe(true);
+});
+
+test('mark completed button gets activated', async () => {
+    vi.setSystemTime(currentTime);
+    const enteredStageAt = twoMinutesAgo;
+    const lastSeenAt = twoHoursAgo;
+    let onCompleteInvoked = false;
+    const onComplete = () => {
+        onCompleteInvoked = true;
+    };
+
+    renderOpenTooltip(
+        {
+            name: 'live',
+            environments: [{ name: 'production', lastSeenAt }],
+            enteredStageAt,
+        },
+        () => {},
+        onComplete,
+    );
+
+    await screen.findByText('live');
+    const button = await screen.findByText('Mark completed');
+    button.click();
+
+    expect(onCompleteInvoked).toBe(true);
 });

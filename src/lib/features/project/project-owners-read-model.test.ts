@@ -19,7 +19,10 @@ const mockProjectWithCounts = (name: string) => ({
 
 describe('unit tests', () => {
     test('maps owners to projects', () => {
-        const projects = [{ name: 'project1' }, { name: 'project2' }] as any;
+        const projects = [
+            { id: 'project1', name: 'Project one' },
+            { id: 'project2', name: 'Project two' },
+        ] as any;
 
         const owners = {
             project1: [{ ownerType: 'user' as const, name: 'Owner Name' }],
@@ -32,13 +35,21 @@ describe('unit tests', () => {
         );
 
         expect(projectsWithOwners).toMatchObject([
-            { name: 'project1', owners: [{ name: 'Owner Name' }] },
-            { name: 'project2', owners: [{ name: 'Owner Name' }] },
+            {
+                id: 'project1',
+                name: 'Project one',
+                owners: [{ name: 'Owner Name' }],
+            },
+            {
+                id: 'project2',
+                name: 'Project two',
+                owners: [{ name: 'Owner Name' }],
+            },
         ]);
     });
 
     test('returns "system" when a project has no owners', async () => {
-        const projects = [{ name: 'project1' }, { name: 'project2' }] as any;
+        const projects = [{ id: 'project1' }, { id: 'project2' }] as any;
 
         const owners = {};
 
@@ -48,8 +59,14 @@ describe('unit tests', () => {
         );
 
         expect(projectsWithOwners).toMatchObject([
-            { name: 'project1', owners: [{ ownerType: 'system' }] },
-            { name: 'project2', owners: [{ ownerType: 'system' }] },
+            {
+                id: 'project1',
+                owners: [{ ownerType: 'system' }],
+            },
+            {
+                id: 'project2',
+                owners: [{ ownerType: 'system' }],
+            },
         ]);
     });
 });

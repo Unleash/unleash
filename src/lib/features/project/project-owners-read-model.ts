@@ -28,7 +28,7 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     ): IProjectWithCountAndOwners[] {
         return projects.map((project) => ({
             ...project,
-            owners: owners[project.name] || [{ ownerType: 'system' }],
+            owners: owners[project.id] || [{ ownerType: 'system' }],
         }));
     }
 

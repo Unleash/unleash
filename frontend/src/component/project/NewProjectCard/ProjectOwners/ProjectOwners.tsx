@@ -66,7 +66,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
                 condition={owners.length === 1}
                 show={
                     <StyledUserName>
-                        {users[0].name || users[0].description}
+                        {users[0]?.name || users[0]?.description}
                     </StyledUserName>
                 }
             />

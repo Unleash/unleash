@@ -45,6 +45,10 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
         }));
     }
 
+    async delete(feature: string): Promise<void> {
+        await this.db('feature_lifecycles').where({ feature }).del();
+    }
+
     async stageExists(stage: FeatureLifecycleStage): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM feature_lifecycles WHERE stage = ? and feature = ?) AS present`,

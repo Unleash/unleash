@@ -8,12 +8,24 @@
  * The number of active users in the last 7, 30 and 90 days
  */
 export type InstanceAdminStatsSchemaActiveUsers = {
-    /** The number of active users in the last 30 days */
+    /**
+     * The number of active users in the last 30 days
+     * @minimum 0
+     */
     last30?: number;
-    /** The number of active users in the last 60 days */
+    /**
+     * The number of active users in the last 60 days
+     * @minimum 0
+     */
     last60?: number;
-    /** The number of active users in the last 7 days */
+    /**
+     * The number of active users in the last 7 days
+     * @minimum 0
+     */
     last7?: number;
-    /** The number of active users in the last 90 days */
+    /**
+     * The number of active users in the last 90 days
+     * @minimum 0
+     */
     last90?: number;
 };

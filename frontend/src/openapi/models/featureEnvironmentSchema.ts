@@ -20,7 +20,10 @@ export interface FeatureEnvironmentSchema {
     hasEnabledStrategies?: boolean;
     /** Whether the feature has any strategies defined. */
     hasStrategies?: boolean;
-    /** The date when metrics where last collected for the feature environment */
+    /**
+     * The date when metrics where last collected for the feature environment
+     * @nullable
+     */
     lastSeenAt?: string | null;
     /** The name of the environment */
     name: string;

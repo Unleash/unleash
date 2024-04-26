@@ -9,7 +9,10 @@ import type { UserSchema } from './userSchema';
  * Details for a single user belonging to a group
  */
 export interface GroupUserModelSchema {
-    /** The username of the user who added this user to this group */
+    /**
+     * The username of the user who added this user to this group
+     * @nullable
+     */
     createdBy?: string | null;
     /** The date when the user joined the group */
     joinedAt?: string;

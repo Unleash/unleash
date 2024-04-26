@@ -10,6 +10,7 @@ import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload } from '.
                           variant_. If a feature is disabled or doesn't have any
                           variants, you would get the _disabled variant_.
                           Otherwise, you'll get one of the feature's defined variants.
+ * @nullable
  */
 export type AdvancedPlaygroundEnvironmentFeatureSchemaVariant = {
     /** Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be `false` */

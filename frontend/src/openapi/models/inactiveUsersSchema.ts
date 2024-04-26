@@ -11,6 +11,9 @@ import type { InactiveUserSchema } from './inactiveUserSchema';
 export interface InactiveUsersSchema {
     /** The list of users that are flagged as inactive */
     inactiveUsers: InactiveUserSchema[];
-    /** The version of this schema. Used to keep track of compatibility */
+    /**
+     * The version of this schema. Used to keep track of compatibility
+     * @minimum 1
+     */
     version: number;
 }

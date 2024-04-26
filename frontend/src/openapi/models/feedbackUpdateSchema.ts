@@ -8,7 +8,10 @@
  * User feedback information to be updated.
  */
 export interface FeedbackUpdateSchema {
-    /** When this feedback was given */
+    /**
+     * When this feedback was given
+     * @nullable
+     */
     given?: string | null;
     /** `true` if the user has asked never to see this feedback questionnaire again. */
     neverShow?: boolean;

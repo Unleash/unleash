@@ -123,7 +123,6 @@ export const ScimConfigSettings = ({
                         }
                     />
                 </Grid>
-                <Grid item md={6}></Grid>
             </Grid>
             <ScimTokenGenerationDialog
                 open={tokenGenerationDialog}

@@ -49,6 +49,10 @@ export interface IFeatureToggle {
     impressionData: boolean;
     strategies?: IFeatureStrategy[];
     dependencies: Array<IDependency>;
+    lifecycle?: {
+        stage: 'initial' | 'pre-live' | 'live' | 'completed' | 'archived';
+        enteredStageAt: string;
+    };
     children: Array<string>;
 }
 

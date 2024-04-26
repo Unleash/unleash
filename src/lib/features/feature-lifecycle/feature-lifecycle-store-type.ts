@@ -8,7 +8,7 @@ export type FeatureLifecycleStage = {
 export type FeatureLifecycleView = IFeatureLifecycleStage[];
 
 export interface IFeatureLifecycleStore {
-    insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void>;
+    insert(featureLifecycleStages: FeatureLifecycleStage[]): Promise<void>;
     get(feature: string): Promise<FeatureLifecycleView>;
     stageExists(stage: FeatureLifecycleStage): Promise<boolean>;
 }

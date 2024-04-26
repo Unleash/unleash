@@ -10,7 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
 import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
-import type { LifecycleStage } from '../FeatureLifecycle/LifecycleStage';
+import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -82,17 +82,7 @@ const FeatureOverviewMetaData = () => {
 
     const IconComponent = getFeatureTypeIcons(type);
 
-    const currentStage: LifecycleStage = {
-        name: 'completed',
-        status: 'kept',
-        environments: [
-            { name: 'production', lastSeenAt: new Date().toISOString() },
-            {
-                name: 'staging',
-                lastSeenAt: new Date().toISOString(),
-            },
-        ],
-    };
+    const currentStage = populateCurrentStage(feature);
 
     return (
         <StyledContainer>
@@ -122,11 +112,16 @@ const FeatureOverviewMetaData = () => {
                         show={
                             <StyledRow data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
-                                <FeatureLifecycleTooltip stage={currentStage}>
-                                    <FeatureLifecycleStageIcon
+
+                                {currentStage && (
+                                    <FeatureLifecycleTooltip
                                         stage={currentStage}
-                                    />
-                                </FeatureLifecycleTooltip>
+                                    >
+                                        <FeatureLifecycleStageIcon
+                                            stage={currentStage}
+                                        />
+                                    </FeatureLifecycleTooltip>
+                                )}
                             </StyledRow>
                         }
                     />

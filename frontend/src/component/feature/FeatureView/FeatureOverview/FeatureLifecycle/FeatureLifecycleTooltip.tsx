@@ -23,6 +23,9 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { isSafeToArchive } from './isSafeToArchive';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateYMDHMS } from 'utils/formatDate';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -330,6 +333,18 @@ const CompletedStageDescription: FC<{
     );
 };
 
+const FormatTime: FC<{ time: string }> = ({ time }) => {
+    const { locationSettings } = useLocationSettings();
+
+    return <span>{formatDateYMDHMS(time, locationSettings.locale)}</span>;
+};
+
+const FormatElapsedTime: FC<{ time: string }> = ({ time }) => {
+    const pastTime = parseISO(time);
+    const elapsedTime = formatDistanceToNow(pastTime, { addSuffix: false });
+    return <span>{elapsedTime}</span>;
+};
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
@@ -358,11 +373,12 @@ export const FeatureLifecycleTooltip: FC<{
                     </MainLifecycleRow>
                     <TimeLifecycleRow>
                         <TimeLabel>Stage entered at</TimeLabel>
-                        <span>14/01/2024</span>
+
+                        <FormatTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                     <TimeLifecycleRow>
                         <TimeLabel>Time spent in stage</TimeLabel>
-                        <span>3 days</span>
+                        <FormatElapsedTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                     <StageTimeline stage={stage} />
                 </Box>

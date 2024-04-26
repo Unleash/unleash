@@ -19,12 +19,16 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
         this.db = db;
     }
 
-    async insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void> {
+    async insert(
+        featureLifecycleStages: FeatureLifecycleStage[],
+    ): Promise<void> {
         await this.db('feature_lifecycles')
-            .insert({
-                feature: featureLifecycleStage.feature,
-                stage: featureLifecycleStage.stage,
-            })
+            .insert(
+                featureLifecycleStages.map((stage) => ({
+                    feature: stage.feature,
+                    stage: stage.stage,
+                })),
+            )
             .returning('*')
             .onConflict(['feature', 'stage'])
             .ignore();

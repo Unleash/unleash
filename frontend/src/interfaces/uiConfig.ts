@@ -78,7 +78,6 @@ export type UiFlags = {
     projectOverviewRefactor?: string;
     displayTrafficDataUsage?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
-    variantDependencies?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     scimApi?: boolean;

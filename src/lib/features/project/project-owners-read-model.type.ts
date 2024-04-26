@@ -22,7 +22,6 @@ export type IProjectWithCountAndOwners = IProjectWithCount & {
 };
 
 export interface IProjectOwnersReadModel {
-    getAllProjectOwners(): Promise<ProjectOwnersDictionary>;
     addOwners(
         projects: IProjectWithCount[],
     ): Promise<IProjectWithCountAndOwners[]>;

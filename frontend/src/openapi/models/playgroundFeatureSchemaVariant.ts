@@ -10,6 +10,7 @@ import type { PlaygroundFeatureSchemaVariantPayload } from './playgroundFeatureS
                           variant_. If a feature is disabled or doesn't have any
                           variants, you would get the _disabled variant_.
                           Otherwise, you'll get one of thefeature's defined variants.
+ * @nullable
  */
 export type PlaygroundFeatureSchemaVariant = {
     /** Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be `false` */

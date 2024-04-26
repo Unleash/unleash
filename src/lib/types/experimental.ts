@@ -51,12 +51,8 @@ export type IFlagKey =
     | 'responseTimeMetricsFix'
     | 'scimApi'
     | 'displayEdgeBanner'
-    | 'globalFrontendApiCache'
-    | 'returnGlobalFrontendApiCache'
     | 'projectOverviewRefactor'
-    | 'variantDependencies'
     | 'disableShowContextFieldSelectionValues'
-    | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
     | 'projectListFilterMyProjects'
@@ -255,14 +251,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_METRICS_FIX,
         false,
     ),
-    globalFrontendApiCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_FRONTEND_API_CACHE,
-        false,
-    ),
-    returnGlobalFrontendApiCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RETURN_GLOBAL_FRONTEND_API_CACHE,
-        false,
-    ),
     projectOverviewRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
         false,
@@ -270,14 +258,6 @@ const flags: IFlags = {
     disableShowContextFieldSelectionValues: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DISABLE_SHOW_CONTEXT_FIELD_SELECTION_VALUES,
-        false,
-    ),
-    variantDependencies: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_VARIANT_DEPENDENCIES,
-        false,
-    ),
-    bearerTokenMiddleware: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_BEARER_TOKEN_MIDDLEWARE,
         false,
     ),
     projectOverviewRefactorFeedback: parseEnvVarBoolean(

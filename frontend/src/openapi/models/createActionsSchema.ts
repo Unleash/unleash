@@ -12,9 +12,15 @@ import type { CreateActionsSchemaMatch } from './createActionsSchemaMatch';
 export interface CreateActionsSchema {
     /** The list of actions to execute in sequential order when the action set is triggered */
     actions: CreateActionSchema[];
-    /** The id of the service account that will execute the action */
+    /**
+     * The id of the service account that will execute the action
+     * @minimum 1
+     */
     actorId: number;
-    /** The description of the action set */
+    /**
+     * The description of the action set
+     * @nullable
+     */
     description?: string | null;
     /** Whether this action set is enabled or not */
     enabled?: boolean;

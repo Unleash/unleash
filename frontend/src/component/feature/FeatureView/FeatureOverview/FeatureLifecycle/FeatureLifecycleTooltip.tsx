@@ -9,10 +9,23 @@ import { ReactComponent as LiveStageIcon } from 'assets/icons/stage-live.svg';
 import { ReactComponent as CompletedStageIcon } from 'assets/icons/stage-completed.svg';
 import { ReactComponent as CompletedDiscardedStageIcon } from 'assets/icons/stage-completed-discarded.svg';
 import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived.svg';
+import CloudCircle from '@mui/icons-material/CloudCircle';
+import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
+import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
+import TimeAgo from 'react-timeago';
+import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
+import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
+import type { LifecycleStage } from './LifecycleStage';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
-    FeatureLifecycleStageIcon,
-    type LifecycleStage,
-} from './FeatureLifecycleStageIcon';
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { isSafeToArchive } from './isSafeToArchive';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateYMDHMS } from 'utils/formatDate';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -49,7 +62,9 @@ const Line = styled(Box)(({ theme }) => ({
 
 const StageBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'active',
-})<{ active?: boolean }>(({ theme, active }) => ({
+})<{
+    active?: boolean;
+}>(({ theme, active }) => ({
     position: 'relative',
     // speech bubble triangle for active stage
     ...(active && {
@@ -95,10 +110,328 @@ const ColorFill = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
 }));
 
+const LastSeenIcon: FC<{
+    lastSeen: string;
+}> = ({ lastSeen }) => {
+    const getColor = useLastSeenColors();
+
+    return (
+        <TimeAgo
+            date={lastSeen}
+            title=''
+            live={false}
+            formatter={(value: number, unit: string) => {
+                const [color, textColor] = getColor(unit);
+                return (
+                    <StyledIconWrapper style={{ background: color }}>
+                        <UsageRate stroke={textColor} />
+                    </StyledIconWrapper>
+                );
+            }}
+        />
+    );
+};
+
+const InitialStageDescription: FC = () => {
+    return (
+        <>
+            <InfoText>
+                This feature toggle is currently in the initial phase of it's
+                life cycle.
+            </InfoText>
+            <InfoText>
+                This means that the flag has been created, but it has not yet
+                been seen in any environment.
+            </InfoText>
+            <InfoText>
+                Once we detect metrics for a non-production environment it will
+                move into pre-live.
+            </InfoText>
+        </>
+    );
+};
+
+const StageTimeline: FC<{
+    stage: LifecycleStage;
+}> = ({ stage }) => {
+    return (
+        <IconsRow>
+            <StageBox
+                data-after-content='Initial'
+                active={stage.name === 'initial'}
+            >
+                <InitialStageIcon />
+            </StageBox>
+
+            <Line />
+
+            <StageBox
+                data-after-content='Pre-live'
+                active={stage.name === 'pre-live'}
+            >
+                <PreLiveStageIcon />
+            </StageBox>
+
+            <Line />
+
+            <StageBox data-after-content='Live' active={stage.name === 'live'}>
+                <LiveStageIcon />
+            </StageBox>
+
+            <Line />
+
+            <StageBox
+                data-after-content='Completed'
+                active={stage.name === 'completed'}
+            >
+                {stage.name === 'completed' && stage.status === 'discarded' ? (
+                    <CompletedDiscardedStageIcon />
+                ) : (
+                    <CompletedStageIcon />
+                )}
+            </StageBox>
+
+            <Line />
+
+            <StageBox
+                data-after-content='Archived'
+                active={stage.name === 'archived'}
+            >
+                <ArchivedStageIcon />
+            </StageBox>
+        </IconsRow>
+    );
+};
+
+const EnvironmentLine = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2),
+}));
+
+const CenteredBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
+const Environments: FC<{
+    environments: Array<{
+        name: string;
+        lastSeenAt: string;
+    }>;
+}> = ({ environments }) => {
+    return (
+        <Box>
+            {environments.map((environment) => {
+                return (
+                    <EnvironmentLine key={environment.name}>
+                        <CenteredBox>
+                            <CloudCircle />
+                            <Box>{environment.name}</Box>
+                        </CenteredBox>
+                        <CenteredBox>
+                            <TimeAgo
+                                minPeriod={60}
+                                date={environment.lastSeenAt}
+                            />
+                            <LastSeenIcon lastSeen={environment.lastSeenAt} />
+                        </CenteredBox>
+                    </EnvironmentLine>
+                );
+            })}
+        </Box>
+    );
+};
+
+const PreLiveStageDescription: FC = ({ children }) => {
+    return (
+        <>
+            <InfoText>
+                We've seen the feature flag in the following non-production
+                environments:
+            </InfoText>
+
+            {children}
+        </>
+    );
+};
+
+const BoldTitle = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const LiveStageDescription: FC<{
+    onComplete: () => void;
+    loading: boolean;
+}> = ({ children, onComplete, loading }) => {
+    return (
+        <>
+            <BoldTitle>Is this feature complete?</BoldTitle>
+            <InfoText sx={{ mb: 1 }}>
+                Marking the feature as complete does not affect any
+                configuration, but it moves the feature into it’s next life
+                cycle stage and is an indication that you have learned what you
+                needed in order to progress with the feature. It serves as a
+                reminder to start cleaning up the flag and removing it from the
+                code.
+            </InfoText>
+            <PermissionButton
+                color='inherit'
+                variant='outlined'
+                permission={UPDATE_FEATURE}
+                size='small'
+                onClick={onComplete}
+                disabled={loading}
+            >
+                Mark completed
+            </PermissionButton>
+            <InfoText sx={{ mt: 3 }}>
+                Users have been exposed to this feature in the following
+                production environments:
+            </InfoText>
+
+            {children}
+        </>
+    );
+};
+
+const SafeToArchive: FC<{
+    onArchive: () => void;
+    onUncomplete: () => void;
+    loading: boolean;
+}> = ({ onArchive, onUncomplete, loading }) => {
+    return (
+        <>
+            <BoldTitle>Safe to archive</BoldTitle>
+            <InfoText
+                sx={{
+                    mt: 2,
+                    mb: 1,
+                }}
+            >
+                We haven’t seen this feature flag in production for at least two
+                days. It’s likely that it’s safe to archive this flag.
+            </InfoText>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 2,
+                }}
+            >
+                <PermissionButton
+                    color='inherit'
+                    variant='outlined'
+                    permission={UPDATE_FEATURE}
+                    size='small'
+                    onClick={onUncomplete}
+                    disabled={loading}
+                >
+                    Revert to live
+                </PermissionButton>
+                <PermissionButton
+                    color='inherit'
+                    variant='outlined'
+                    permission={DELETE_FEATURE}
+                    size='small'
+                    sx={{ mb: 2 }}
+                    onClick={onArchive}
+                >
+                    Archive feature
+                </PermissionButton>
+            </Box>
+        </>
+    );
+};
+
+const ActivelyUsed: FC<{
+    onUncomplete: () => void;
+    loading: boolean;
+}> = ({ children, onUncomplete, loading }) => (
+    <>
+        <InfoText
+            sx={{
+                mt: 1,
+                mb: 1,
+            }}
+        >
+            This feature has been successfully completed, but we are still
+            seeing usage in production. Clean up the feature flag from your code
+            before archiving it:
+        </InfoText>
+        <PermissionButton
+            color='inherit'
+            variant='outlined'
+            permission={UPDATE_FEATURE}
+            size='small'
+            sx={{ mb: 2 }}
+            onClick={onUncomplete}
+            disabled={loading}
+        >
+            Revert to live
+        </PermissionButton>
+        {children}
+    </>
+);
+
+const CompletedStageDescription: FC<{
+    onArchive: () => void;
+    onUncomplete: () => void;
+    loading: boolean;
+    environments: Array<{
+        name: string;
+        lastSeenAt: string;
+    }>;
+}> = ({ children, environments, onArchive, onUncomplete, loading }) => {
+    return (
+        <ConditionallyRender
+            condition={isSafeToArchive(environments)}
+            show={
+                <SafeToArchive
+                    onArchive={onArchive}
+                    onUncomplete={onUncomplete}
+                    loading={loading}
+                />
+            }
+            elseShow={
+                <ActivelyUsed onUncomplete={onUncomplete} loading={loading}>
+                    {children}
+                </ActivelyUsed>
+            }
+        />
+    );
+};
+
+const FormatTime: FC<{
+    time: string;
+}> = ({ time }) => {
+    const { locationSettings } = useLocationSettings();
+
+    return <span>{formatDateYMDHMS(time, locationSettings.locale)}</span>;
+};
+
+const FormatElapsedTime: FC<{
+    time: string;
+}> = ({ time }) => {
+    const pastTime = parseISO(time);
+    const elapsedTime = formatDistanceToNow(pastTime, { addSuffix: false });
+    return <span>{elapsedTime}</span>;
+};
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
-}> = ({ children, stage }) => (
+    onArchive: () => void;
+    onComplete: () => void;
+    onUncomplete: () => void;
+    loading: boolean;
+}> = ({ children, stage, onArchive, onComplete, onUncomplete, loading }) => (
     <HtmlTooltip
         maxHeight={800}
         maxWidth={350}
@@ -123,75 +456,40 @@ export const FeatureLifecycleTooltip: FC<{
                     </MainLifecycleRow>
                     <TimeLifecycleRow>
                         <TimeLabel>Stage entered at</TimeLabel>
-                        <span>14/01/2024</span>
+
+                        <FormatTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                     <TimeLifecycleRow>
                         <TimeLabel>Time spent in stage</TimeLabel>
-                        <span>3 days</span>
+                        <FormatElapsedTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
-                    <IconsRow>
-                        <StageBox
-                            data-after-content='Initial'
-                            active={stage.name === 'initial'}
-                        >
-                            <InitialStageIcon />
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Pre-live'
-                            active={stage.name === 'pre-live'}
-                        >
-                            <PreLiveStageIcon />
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Live'
-                            active={stage.name === 'live'}
-                        >
-                            <LiveStageIcon />
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Completed'
-                            active={stage.name === 'completed'}
-                        >
-                            {stage.name === 'completed' &&
-                            stage.status === 'discarded' ? (
-                                <CompletedDiscardedStageIcon />
-                            ) : (
-                                <CompletedStageIcon />
-                            )}
-                        </StageBox>
-
-                        <Line />
-
-                        <StageBox
-                            data-after-content='Archived'
-                            active={stage.name === 'archived'}
-                        >
-                            <ArchivedStageIcon />
-                        </StageBox>
-                    </IconsRow>
+                    <StageTimeline stage={stage} />
                 </Box>
                 <ColorFill>
-                    <InfoText>
-                        This feature toggle is currently in the initial phase of
-                        it's life cycle.
-                    </InfoText>
-                    <InfoText>
-                        This means that the flag has been created, but it has
-                        not yet been seen in any environment.
-                    </InfoText>
-                    <InfoText>
-                        Once we detect metrics for a non-production environment
-                        it will move into pre-live.
-                    </InfoText>
+                    {stage.name === 'initial' && <InitialStageDescription />}
+                    {stage.name === 'pre-live' && (
+                        <PreLiveStageDescription>
+                            <Environments environments={stage.environments} />
+                        </PreLiveStageDescription>
+                    )}
+                    {stage.name === 'live' && (
+                        <LiveStageDescription
+                            onComplete={onComplete}
+                            loading={loading}
+                        >
+                            <Environments environments={stage.environments} />
+                        </LiveStageDescription>
+                    )}
+                    {stage.name === 'completed' && (
+                        <CompletedStageDescription
+                            environments={stage.environments}
+                            onArchive={onArchive}
+                            onUncomplete={onUncomplete}
+                            loading={loading}
+                        >
+                            <Environments environments={stage.environments} />
+                        </CompletedStageDescription>
+                    )}
                 </ColorFill>
             </Box>
         }

@@ -15,12 +15,18 @@ export interface SegmentSchema {
     createdAt?: string;
     /** Which user created this segment */
     createdBy?: string;
-    /** The description of the segment. */
+    /**
+     * The description of the segment.
+     * @nullable
+     */
     description?: string | null;
     /** The segment's id. */
     id: number;
     /** The name of the segment. */
     name?: string;
-    /** The project the segment relates to, if applicable. */
+    /**
+     * The project the segment relates to, if applicable.
+     * @nullable
+     */
     project?: string | null;
 }

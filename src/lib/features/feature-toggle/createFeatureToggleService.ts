@@ -53,6 +53,8 @@ import {
 } from '../dependent-features/createDependentFeaturesService';
 import { createEventsService } from '../events/createEventsService';
 import { EventEmitter } from 'stream';
+import { FeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model';
+import { FakeFeatureLifecycleReadModel } from '../feature-lifecycle/fake-feature-lifecycle-read-model';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -122,6 +124,8 @@ export const createFeatureToggleService = (
 
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
+    const featureLifecycleReadModel = new FeatureLifecycleReadModel(db);
+
     const dependentFeaturesService = createDependentFeaturesService(config)(db);
 
     const featureToggleService = new FeatureToggleService(
@@ -143,6 +147,7 @@ export const createFeatureToggleService = (
         privateProjectChecker,
         dependentFeaturesReadModel,
         dependentFeaturesService,
+        featureLifecycleReadModel,
     );
     return featureToggleService;
 };
@@ -185,6 +190,8 @@ export const createFakeFeatureToggleService = (
     const fakePrivateProjectChecker = createFakePrivateProjectChecker();
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
     const dependentFeaturesService = createFakeDependentFeaturesService(config);
+    const featureLifecycleReadModel = new FakeFeatureLifecycleReadModel();
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -204,6 +211,7 @@ export const createFakeFeatureToggleService = (
         fakePrivateProjectChecker,
         dependentFeaturesReadModel,
         dependentFeaturesService,
+        featureLifecycleReadModel,
     );
     return featureToggleService;
 };

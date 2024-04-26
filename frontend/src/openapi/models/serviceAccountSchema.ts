@@ -47,6 +47,7 @@ export interface ServiceAccountSchema {
     /**
      * Deprecated. This property is always `null`. To find out when a service account was last seen, check its `tokens` list and refer to each token's `lastSeen` property instead.
      * @deprecated
+     * @nullable
      */
     seenAt?: string | null;
     /** The list of tokens associated with the service account */

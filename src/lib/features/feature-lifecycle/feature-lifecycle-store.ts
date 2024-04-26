@@ -2,9 +2,9 @@ import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
     FeatureLifecycleView,
-    StageName,
 } from './feature-lifecycle-store-type';
 import type { Db } from '../../db/db';
+import type { StageName } from '../../types';
 
 type DBType = {
     feature: string;
@@ -19,12 +19,29 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
         this.db = db;
     }
 
-    async insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void> {
+    async insert(
+        featureLifecycleStages: FeatureLifecycleStage[],
+    ): Promise<void> {
+        const existingFeatures = await this.db('features')
+            .select('name')
+            .whereIn(
+                'name',
+                featureLifecycleStages.map((stage) => stage.feature),
+            );
+        const existingFeaturesSet = new Set(
+            existingFeatures.map((item) => item.name),
+        );
+        const validStages = featureLifecycleStages.filter((stage) =>
+            existingFeaturesSet.has(stage.feature),
+        );
+
         await this.db('feature_lifecycles')
-            .insert({
-                feature: featureLifecycleStage.feature,
-                stage: featureLifecycleStage.stage,
-            })
+            .insert(
+                validStages.map((stage) => ({
+                    feature: stage.feature,
+                    stage: stage.stage,
+                })),
+            )
             .returning('*')
             .onConflict(['feature', 'stage'])
             .ignore();
@@ -39,6 +56,19 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
             stage,
             enteredStageAt: created_at,
         }));
+    }
+
+    async delete(feature: string): Promise<void> {
+        await this.db('feature_lifecycles').where({ feature }).del();
+    }
+
+    async deleteStage(stage: FeatureLifecycleStage): Promise<void> {
+        await this.db('feature_lifecycles')
+            .where({
+                stage: stage.stage,
+                feature: stage.feature,
+            })
+            .del();
     }
 
     async stageExists(stage: FeatureLifecycleStage): Promise<boolean> {

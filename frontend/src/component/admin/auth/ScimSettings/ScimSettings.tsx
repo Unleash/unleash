@@ -1,67 +1,51 @@
-import type React from 'react';
-import { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
-import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
-import { useScimSettingsApi } from 'hooks/api/actions/useScimSettingsApi/useScimSettingsApi';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog';
 import { ScimTokenDialog } from './ScimTokenDialog';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import type { ScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 
-export const ScimSettings = () => {
-    const { setToastData, setToastApiError } = useToast();
+export interface IScimSettingsParameters {
+    disabled: boolean;
+    loading: boolean;
+    enabled: boolean;
+    setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+    assumeControlOfExisting: boolean;
+    setAssumeControlOfExisting: React.Dispatch<React.SetStateAction<boolean>>;
+    newToken: string;
+    settings: ScimSettings;
+    tokenGenerationDialog: boolean;
+    setTokenGenerationDialog: React.Dispatch<React.SetStateAction<boolean>>;
+    onGenerateNewTokenConfirm: () => void;
+    tokenDialog: boolean;
+    setTokenDialog: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const ScimConfigSettings = ({
+    disabled,
+    loading,
+    enabled,
+    setEnabled,
+    assumeControlOfExisting,
+    setAssumeControlOfExisting,
+    newToken,
+    settings,
+    tokenGenerationDialog,
+    setTokenGenerationDialog,
+    onGenerateNewTokenConfirm,
+    tokenDialog,
+    setTokenDialog,
+}: IScimSettingsParameters) => {
     const { uiConfig } = useUiConfig();
-    const { settings, refetch } = useScimSettings();
-    const { saveSettings, generateNewToken, errors, loading } =
-        useScimSettingsApi();
-
-    const [enabled, setEnabled] = useState(false);
-
-    const [tokenGenerationDialog, setTokenGenerationDialog] = useState(false);
-    const [tokenDialog, setTokenDialog] = useState(false);
-    const [newToken, setNewToken] = useState('');
-
-    useEffect(() => {
-        setEnabled(settings.enabled ?? false);
-    }, [settings]);
-
-    const onSubmit = async (event: React.SyntheticEvent) => {
-        event.preventDefault();
-
-        try {
-            await saveSettings({ enabled });
-            if (enabled && !settings.hasToken) {
-                const token = await generateNewToken();
-                setNewToken(token);
-                setTokenDialog(true);
-            }
-
-            setToastData({
-                title: 'Settings stored',
-                type: 'success',
-            });
-            refetch();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
 
     const onGenerateNewToken = async () => {
         setTokenGenerationDialog(true);
     };
 
-    const onGenerateNewTokenConfirm = async () => {
-        setTokenGenerationDialog(false);
-        const token = await generateNewToken();
-        setNewToken(token);
-        setTokenDialog(true);
-    };
-
     return (
         <>
+            <h3>SCIM Provisioning</h3>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
                     <Alert severity='info'>
@@ -79,56 +63,67 @@ export const ScimSettings = () => {
                     </Alert>
                 </Grid>
             </Grid>
-            <form onSubmit={onSubmit}>
-                <Grid container spacing={3}>
-                    <Grid item md={5} mb={2}>
-                        <strong>Enable</strong>
-                        <p>Enable SCIM provisioning.</p>
-                    </Grid>
-                    <Grid item md={6}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    onChange={(_, enabled) =>
-                                        setEnabled(enabled)
-                                    }
-                                    value={enabled}
-                                    name='enabled'
-                                    checked={enabled}
-                                />
-                            }
-                            label={enabled ? 'Enabled' : 'Disabled'}
-                        />
-                    </Grid>
+            <Grid container spacing={3}>
+                <Grid item md={5} mb={2}>
+                    <strong>Enable</strong>
+                    <p>Enable SCIM provisioning.</p>
                 </Grid>
+                <Grid item md={6}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                onChange={(_, enabled) => setEnabled(enabled)}
+                                value={enabled}
+                                name='enabled'
+                                checked={enabled}
+                                disabled={disabled}
+                            />
+                        }
+                        label={enabled ? 'Enabled' : 'Disabled'}
+                    />
+                </Grid>
+            </Grid>
 
-                <Grid container spacing={3}>
-                    <Grid item md={5}>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            type='submit'
-                            disabled={loading}
-                        >
-                            Save
-                        </Button>
-                        <ConditionallyRender
-                            condition={Boolean(settings.hasToken)}
-                            show={
-                                <Button
-                                    variant='outlined'
-                                    color='error'
-                                    disabled={loading}
-                                    onClick={onGenerateNewToken}
-                                    sx={{ ml: 1 }}
-                                >
-                                    Generate new token
-                                </Button>
-                            }
-                        />
-                    </Grid>
+            <Grid container spacing={3}>
+                <Grid item md={5} mb={2}>
+                    <strong>Assume control</strong>
+                    <p>Assumes control of users and groups</p>
                 </Grid>
-            </form>
+                <Grid item md={6}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                onChange={(_, set_enabled) =>
+                                    setAssumeControlOfExisting(set_enabled)
+                                }
+                                value={assumeControlOfExisting}
+                                name='assumeControlOfExisting'
+                                checked={assumeControlOfExisting}
+                                disabled={disabled}
+                            />
+                        }
+                        label={assumeControlOfExisting ? 'Enabled' : 'Disabled'}
+                    />
+                </Grid>
+            </Grid>
+
+            <Grid container spacing={3}>
+                <Grid item md={5} mb={2}>
+                    <ConditionallyRender
+                        condition={Boolean(settings.hasToken)}
+                        show={
+                            <Button
+                                variant='outlined'
+                                color='error'
+                                disabled={loading}
+                                onClick={onGenerateNewToken}
+                            >
+                                Generate new token
+                            </Button>
+                        }
+                    />
+                </Grid>
+            </Grid>
             <ScimTokenGenerationDialog
                 open={tokenGenerationDialog}
                 setOpen={setTokenGenerationDialog}

@@ -1,5 +1,5 @@
 import { capitalize, styled } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -10,6 +10,11 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
 import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { useState } from 'react';
+import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
+import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
+import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -75,11 +80,27 @@ export const StyledLabel = styled('span')(({ theme }) => ({
 const FeatureOverviewMetaData = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { feature } = useFeature(projectId, featureId);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
+    const { markFeatureCompleted, markFeatureUncompleted, loading } =
+        useFeatureLifecycleApi();
+    const navigate = useNavigate();
+    const [showDelDialog, setShowDelDialog] = useState(false);
 
     const IconComponent = getFeatureTypeIcons(type);
+
+    const currentStage = populateCurrentStage(feature);
+
+    const onComplete = async () => {
+        await markFeatureCompleted(featureId, projectId);
+        refetchFeature();
+    };
+
+    const onUncomplete = async () => {
+        await markFeatureUncompleted(featureId, projectId);
+        refetchFeature();
+    };
 
     return (
         <StyledContainer>
@@ -105,15 +126,21 @@ const FeatureOverviewMetaData = () => {
                         <span>{project}</span>
                     </StyledRow>
                     <ConditionallyRender
-                        condition={featureLifecycleEnabled}
+                        condition={
+                            featureLifecycleEnabled && Boolean(currentStage)
+                        }
                         show={
                             <StyledRow data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
                                 <FeatureLifecycleTooltip
-                                    stage={{ name: 'initial' }}
+                                    stage={currentStage!}
+                                    onArchive={() => setShowDelDialog(true)}
+                                    onComplete={onComplete}
+                                    onUncomplete={onUncomplete}
+                                    loading={loading}
                                 >
                                     <FeatureLifecycleStageIcon
-                                        stage={{ name: 'initial' }}
+                                        stage={currentStage!}
                                     />
                                 </FeatureLifecycleTooltip>
                             </StyledRow>
@@ -164,6 +191,28 @@ const FeatureOverviewMetaData = () => {
                     />
                 </StyledBody>
             </StyledPaddingContainerTop>
+            <ConditionallyRender
+                condition={feature.children.length > 0}
+                show={
+                    <FeatureArchiveNotAllowedDialog
+                        features={feature.children}
+                        project={projectId}
+                        isOpen={showDelDialog}
+                        onClose={() => setShowDelDialog(false)}
+                    />
+                }
+                elseShow={
+                    <FeatureArchiveDialog
+                        isOpen={showDelDialog}
+                        onConfirm={() => {
+                            navigate(`/projects/${projectId}`);
+                        }}
+                        onClose={() => setShowDelDialog(false)}
+                        projectId={projectId}
+                        featureIds={[featureId]}
+                    />
+                }
+            />
         </StyledContainer>
     );
 };

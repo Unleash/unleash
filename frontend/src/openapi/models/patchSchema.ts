@@ -4,7 +4,6 @@
  * See `gen:api` script in package.json
  */
 import type { PatchSchemaOp } from './patchSchemaOp';
-import type { PatchSchemaValue } from './patchSchemaValue';
 
 /**
  * A [JSON patch](https://www.rfc-editor.org/rfc/rfc6902) operation description
@@ -17,5 +16,5 @@ export interface PatchSchema {
     /** The path to the property to operate on */
     path: string;
     /** The value to add or replace, if performing one of those operations */
-    value?: PatchSchemaValue;
+    value?: unknown;
 }

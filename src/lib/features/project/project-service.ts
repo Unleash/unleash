@@ -50,6 +50,7 @@ import {
     RoleName,
     SYSTEM_USER_ID,
     type ProjectCreated,
+    type IProjectOwnersReadModel,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -76,8 +77,6 @@ import type {
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
 } from './project-store-type';
-
-const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
 type Days = number;
 type Count = number;
@@ -111,6 +110,8 @@ function includes(
 
 export default class ProjectService {
     private projectStore: IProjectStore;
+
+    private projectOwnersReadModel: IProjectOwnersReadModel;
 
     private accessService: AccessService;
 
@@ -147,6 +148,7 @@ export default class ProjectService {
     constructor(
         {
             projectStore,
+            projectOwnersReadModel,
             eventStore,
             featureToggleStore,
             environmentStore,
@@ -157,6 +159,7 @@ export default class ProjectService {
         }: Pick<
             IUnleashStores,
             | 'projectStore'
+            | 'projectOwnersReadModel'
             | 'eventStore'
             | 'featureToggleStore'
             | 'environmentStore'
@@ -174,6 +177,7 @@ export default class ProjectService {
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.projectStore = projectStore;
+        this.projectOwnersReadModel = projectOwnersReadModel;
         this.environmentStore = environmentStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.accessService = accessService;
@@ -218,6 +222,12 @@ export default class ProjectService {
         return projects;
     }
 
+    async addOwnersToProjects(
+        projects: IProjectWithCount[],
+    ): Promise<IProjectWithCount[]> {
+        return this.projectOwnersReadModel.addOwners(projects);
+    }
+
     async getProject(id: string): Promise<IProject> {
         return this.projectStore.get(id);
     }
@@ -248,6 +258,27 @@ export default class ProjectService {
         return featureNaming;
     };
 
+    private async validateEnvironmentsExist(environments: string[]) {
+        const projectsAndExistence = await Promise.all(
+            environments.map(async (env) => [
+                env,
+                await this.environmentStore.exists(env),
+            ]),
+        );
+
+        const invalidEnvs = projectsAndExistence
+            .filter(([_, exists]) => !exists)
+            .map(([env]) => env);
+
+        if (invalidEnvs.length > 0) {
+            throw new BadDataError(
+                `These environments do not exist: ${invalidEnvs
+                    .map((env) => `'${env}'`)
+                    .join(', ')}.`,
+            );
+        }
+    }
+
     async validateProjectEnvironments(environments: string[] | undefined) {
         if (
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
@@ -259,24 +290,7 @@ export default class ProjectService {
                 );
             }
 
-            const projectsAndExistence = await Promise.all(
-                environments.map(async (env) => [
-                    env,
-                    await this.environmentStore.exists(env),
-                ]),
-            );
-
-            const invalidEnvs = projectsAndExistence
-                .filter(([_, exists]) => !exists)
-                .map(([env]) => env);
-
-            if (invalidEnvs.length > 0) {
-                throw new BadDataError(
-                    `These environments do not exist and can not be selected for the project: ${invalidEnvs
-                        .map((env) => `'${env}'`)
-                        .join(', ')}.`,
-                );
-            }
+            await this.validateEnvironmentsExist(environments);
         }
     }
 
@@ -284,12 +298,18 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
         auditUser: IAuditUser,
-        enableChangeRequestsForSpecifiedEnvironments: () => Promise<void> = async () => {},
+        enableChangeRequestsForSpecifiedEnvironments: (
+            environments: CreateProject['changeRequestEnvironments'],
+        ) => Promise<
+            void | ProjectCreated['changeRequestEnvironments']
+        > = async () => {
+            return;
+        },
     ): Promise<ProjectCreated> {
         await this.validateProjectEnvironments(newProject.environments);
 
         const validatedData = await projectSchema.validateAsync(newProject);
-        const data = this.removeModeForNonEnterprise(validatedData);
+        const data = this.removePropertiesForNonEnterprise(validatedData);
         await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
@@ -310,7 +330,22 @@ export default class ProjectService {
             }),
         );
 
-        await enableChangeRequestsForSpecifiedEnvironments();
+        if (
+            this.isEnterprise &&
+            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
+        ) {
+            // todo: this is a workaround for backwards compatibility
+            // (i.e. not breaking enterprise tests) that we can change
+            // once these changes have been merged and enterprise
+            // updated. Instead, we can exit early if there are no cr
+            // envs
+            const crEnvs = newProject.changeRequestEnvironments || [];
+            await this.validateEnvironmentsExist(crEnvs.map((env) => env.name));
+            const changeRequestEnvironments =
+                await enableChangeRequestsForSpecifiedEnvironments(crEnvs);
+
+            data.changeRequestEnvironments = changeRequestEnvironments ?? [];
+        }
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 
@@ -1357,11 +1392,11 @@ export default class ProjectService {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    removeModeForNonEnterprise(data): any {
+    removePropertiesForNonEnterprise(data): any {
         if (this.isEnterprise) {
             return data;
         }
-        const { mode, ...proData } = data;
+        const { mode, changeRequestEnvironments, ...proData } = data;
         return proData;
     }
 }

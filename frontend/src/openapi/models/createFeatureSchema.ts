@@ -8,7 +8,10 @@
  * Data used to create a new feature toggle.
  */
 export interface CreateFeatureSchema {
-    /** Detailed description of the feature */
+    /**
+     * Detailed description of the feature
+     * @nullable
+     */
     description?: string | null;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;

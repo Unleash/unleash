@@ -18,7 +18,10 @@ export interface ClientApplicationSchema {
     environment?: string;
     /** A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds */
     instanceId?: string;
-    /** How often (in seconds) does the client refresh its toggles */
+    /**
+     * How often (in seconds) does the client refresh its toggles
+     * @minimum 0
+     */
     interval: number;
     /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
     sdkVersion?: string;

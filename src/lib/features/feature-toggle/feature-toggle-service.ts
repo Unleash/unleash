@@ -15,7 +15,7 @@ import {
     type FeatureToggle,
     type FeatureToggleDTO,
     type FeatureToggleLegacy,
-    type FeatureToggleWithDependencies,
+    type FeatureToggleView,
     type FeatureToggleWithEnvironment,
     FeatureUpdatedEvent,
     FeatureVariantEvent,
@@ -24,6 +24,7 @@ import {
     type IDependency,
     type IFeatureEnvironmentInfo,
     type IFeatureEnvironmentStore,
+    type IFeatureLifecycleStage,
     type IFeatureNaming,
     type IFeatureOverview,
     type IFeatureStrategy,
@@ -108,6 +109,7 @@ import ArchivedFeatureError from '../../error/archivedfeature-error';
 import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events';
 import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type EventEmitter from 'node:events';
+import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type';
 
 interface IFeatureContext {
     featureName: string;
@@ -173,6 +175,8 @@ class FeatureToggleService {
 
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
+    private featureLifecycleReadModel: IFeatureLifecycleReadModel;
+
     private dependentFeaturesService: DependentFeaturesService;
 
     private eventBus: EventEmitter;
@@ -210,6 +214,7 @@ class FeatureToggleService {
         privateProjectChecker: IPrivateProjectChecker,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
         dependentFeaturesService: DependentFeaturesService,
+        featureLifecycleReadModel: IFeatureLifecycleReadModel,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -228,6 +233,7 @@ class FeatureToggleService {
         this.privateProjectChecker = privateProjectChecker;
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.dependentFeaturesService = dependentFeaturesService;
+        this.featureLifecycleReadModel = featureLifecycleReadModel;
         this.eventBus = eventBus;
     }
 
@@ -980,7 +986,7 @@ class FeatureToggleService {
         projectId,
         environmentVariants,
         userId,
-    }: IGetFeatureParams): Promise<FeatureToggleWithDependencies> {
+    }: IGetFeatureParams): Promise<FeatureToggleView> {
         if (projectId) {
             await this.validateFeatureBelongsToProject({
                 featureName,
@@ -990,9 +996,11 @@ class FeatureToggleService {
 
         let dependencies: IDependency[] = [];
         let children: string[] = [];
-        [dependencies, children] = await Promise.all([
+        let lifecycle: IFeatureLifecycleStage | undefined = undefined;
+        [dependencies, children, lifecycle] = await Promise.all([
             this.dependentFeaturesReadModel.getParents(featureName),
             this.dependentFeaturesReadModel.getChildren([featureName]),
+            this.featureLifecycleReadModel.findCurrentStage(featureName),
         ]);
 
         if (environmentVariants) {
@@ -1006,6 +1014,7 @@ class FeatureToggleService {
                 ...result,
                 dependencies,
                 children,
+                lifecycle,
             };
         } else {
             const result =
@@ -1018,6 +1027,7 @@ class FeatureToggleService {
                 ...result,
                 dependencies,
                 children,
+                lifecycle,
             };
         }
     }

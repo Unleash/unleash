@@ -9,9 +9,15 @@ import type { LegalValueSchema } from './legalValueSchema';
  * A representation of a [context field](https://docs.getunleash.io/reference/unleash-context).
  */
 export interface ContextFieldSchema {
-    /** When this context field was created */
+    /**
+     * When this context field was created
+     * @nullable
+     */
     createdAt?: string | null;
-    /** The description of the context field. */
+    /**
+     * The description of the context field.
+     * @nullable
+     */
     description?: string | null;
     /** Allowed values for this context field schema. Can be used to narrow down accepted input */
     legalValues?: LegalValueSchema[];
@@ -21,8 +27,16 @@ export interface ContextFieldSchema {
     sortOrder?: number;
     /** Does this context field support being used for [stickiness](https://docs.getunleash.io/reference/stickiness) calculations */
     stickiness?: boolean;
-    /** Number of projects where this context field is used in */
+    /**
+     * Number of projects where this context field is used in
+     * @minimum 0
+     * @nullable
+     */
     usedInFeatures?: number | null;
-    /** Number of projects where this context field is used in */
+    /**
+     * Number of projects where this context field is used in
+     * @minimum 0
+     * @nullable
+     */
     usedInProjects?: number | null;
 }

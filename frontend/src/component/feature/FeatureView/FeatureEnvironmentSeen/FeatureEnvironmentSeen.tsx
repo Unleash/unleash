@@ -33,7 +33,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     margin: '0 auto',
 }));
 
-const StyledIconWrapper = styled('div')(({ theme }) => ({
+export const StyledIconWrapper = styled('div')(({ theme }) => ({
     width: '20px',
     height: '20px',
     background: theme.palette.background.paper,

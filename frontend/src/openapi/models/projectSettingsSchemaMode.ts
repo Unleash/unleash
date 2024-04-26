@@ -6,6 +6,7 @@
 
 /**
  * The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode).
+ * @nullable
  */
 export type ProjectSettingsSchemaMode =
     | (typeof ProjectSettingsSchemaMode)[keyof typeof ProjectSettingsSchemaMode]

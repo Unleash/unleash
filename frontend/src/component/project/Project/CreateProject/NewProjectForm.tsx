@@ -1,7 +1,6 @@
 import { Input, TextField, styled } from '@mui/material';
-import React from 'react';
 
-const StyledContainer = styled('article')(({ theme }) => ({
+const StyledContainer = styled('section')(({ theme }) => ({
     background: theme.palette.background.default,
 
     '> * + *' : {

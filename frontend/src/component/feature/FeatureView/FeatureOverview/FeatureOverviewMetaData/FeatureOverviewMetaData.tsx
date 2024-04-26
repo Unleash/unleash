@@ -83,7 +83,8 @@ const FeatureOverviewMetaData = () => {
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
-    const { markFeatureCompleted, loading } = useFeatureLifecycleApi();
+    const { markFeatureCompleted, markFeatureUncompleted, loading } =
+        useFeatureLifecycleApi();
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -93,6 +94,11 @@ const FeatureOverviewMetaData = () => {
 
     const onComplete = async () => {
         await markFeatureCompleted(featureId, projectId);
+        refetchFeature();
+    };
+
+    const onUncomplete = async () => {
+        await markFeatureUncompleted(featureId, projectId);
         refetchFeature();
     };
 
@@ -130,6 +136,7 @@ const FeatureOverviewMetaData = () => {
                                     stage={currentStage!}
                                     onArchive={() => setShowDelDialog(true)}
                                     onComplete={onComplete}
+                                    onUncomplete={onUncomplete}
                                     loading={loading}
                                 >
                                     <FeatureLifecycleStageIcon

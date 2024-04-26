@@ -62,7 +62,9 @@ const Line = styled(Box)(({ theme }) => ({
 
 const StageBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'active',
-})<{ active?: boolean }>(({ theme, active }) => ({
+})<{
+    active?: boolean;
+}>(({ theme, active }) => ({
     position: 'relative',
     // speech bubble triangle for active stage
     ...(active && {
@@ -108,7 +110,9 @@ const ColorFill = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
 }));
 
-const LastSeenIcon: FC<{ lastSeen: string }> = ({ lastSeen }) => {
+const LastSeenIcon: FC<{
+    lastSeen: string;
+}> = ({ lastSeen }) => {
     const getColor = useLastSeenColors();
 
     return (
@@ -147,7 +151,9 @@ const InitialStageDescription: FC = () => {
     );
 };
 
-const StageTimeline: FC<{ stage: LifecycleStage }> = ({ stage }) => {
+const StageTimeline: FC<{
+    stage: LifecycleStage;
+}> = ({ stage }) => {
     return (
         <IconsRow>
             <StageBox
@@ -212,7 +218,10 @@ const CenteredBox = styled(Box)(({ theme }) => ({
 }));
 
 const Environments: FC<{
-    environments: Array<{ name: string; lastSeenAt: string }>;
+    environments: Array<{
+        name: string;
+        lastSeenAt: string;
+    }>;
 }> = ({ environments }) => {
     return (
         <Box>
@@ -292,61 +301,124 @@ const LiveStageDescription: FC<{
     );
 };
 
-const SafeToArchive: FC<{ onArchive: () => void }> = ({ onArchive }) => {
+const SafeToArchive: FC<{
+    onArchive: () => void;
+    onUncomplete: () => void;
+    loading: boolean;
+}> = ({ onArchive, onUncomplete, loading }) => {
     return (
         <>
             <BoldTitle>Safe to archive</BoldTitle>
-            <InfoText sx={{ mt: 2, mb: 1 }}>
+            <InfoText
+                sx={{
+                    mt: 2,
+                    mb: 1,
+                }}
+            >
                 We haven’t seen this feature flag in production for at least two
                 days. It’s likely that it’s safe to archive this flag.
             </InfoText>
-            <PermissionButton
-                color='inherit'
-                variant='outlined'
-                permission={DELETE_FEATURE}
-                size='small'
-                sx={{ mb: 2 }}
-                onClick={onArchive}
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 2,
+                }}
             >
-                Archive feature
-            </PermissionButton>
+                <PermissionButton
+                    color='inherit'
+                    variant='outlined'
+                    permission={UPDATE_FEATURE}
+                    size='small'
+                    onClick={onUncomplete}
+                    disabled={loading}
+                >
+                    Revert to Live
+                </PermissionButton>
+                <PermissionButton
+                    color='inherit'
+                    variant='outlined'
+                    permission={DELETE_FEATURE}
+                    size='small'
+                    sx={{ mb: 2 }}
+                    onClick={onArchive}
+                >
+                    Archive feature
+                </PermissionButton>
+            </Box>
         </>
     );
 };
 
-const ActivelyUsed: FC = ({ children }) => {
-    return (
-        <>
-            <InfoText sx={{ mt: 1, mb: 1 }}>
-                This feature has been successfully completed, but we are still
-                seeing usage in production. Clean up the feature flag from your
-                code before archiving it:
-            </InfoText>
-            {children}
-        </>
-    );
-};
+const ActivelyUsed: FC<{
+    onUncomplete: () => void;
+    loading: boolean;
+}> = ({ children, onUncomplete, loading }) => (
+    <>
+        <InfoText
+            sx={{
+                mt: 1,
+                mb: 1,
+            }}
+        >
+            This feature has been successfully completed, but we are still
+            seeing usage in production. Clean up the feature flag from your code
+            before archiving it:
+        </InfoText>
+        <PermissionButton
+            color='inherit'
+            variant='outlined'
+            permission={UPDATE_FEATURE}
+            size='small'
+            sx={{ mb: 2 }}
+            onClick={onUncomplete}
+            disabled={loading}
+        >
+            Revert to Live
+        </PermissionButton>
+        {children}
+    </>
+);
 
 const CompletedStageDescription: FC<{
     onArchive: () => void;
-    environments: Array<{ name: string; lastSeenAt: string }>;
-}> = ({ children, environments, onArchive }) => {
+    onUncomplete: () => void;
+    loading: boolean;
+    environments: Array<{
+        name: string;
+        lastSeenAt: string;
+    }>;
+}> = ({ children, environments, onArchive, onUncomplete, loading }) => {
     return (
         <ConditionallyRender
             condition={isSafeToArchive(environments)}
-            show={<SafeToArchive onArchive={onArchive} />}
-            elseShow={<ActivelyUsed>{children}</ActivelyUsed>}
+            show={
+                <SafeToArchive
+                    onArchive={onArchive}
+                    onUncomplete={onUncomplete}
+                    loading={loading}
+                />
+            }
+            elseShow={
+                <ActivelyUsed onUncomplete={onUncomplete} loading={loading}>
+                    {children}
+                </ActivelyUsed>
+            }
         />
     );
 };
 
-const FormatTime: FC<{ time: string }> = ({ time }) => {
+const FormatTime: FC<{
+    time: string;
+}> = ({ time }) => {
     const { locationSettings } = useLocationSettings();
 
     return <span>{formatDateYMDHMS(time, locationSettings.locale)}</span>;
 };
 
-const FormatElapsedTime: FC<{ time: string }> = ({ time }) => {
+const FormatElapsedTime: FC<{
+    time: string;
+}> = ({ time }) => {
     const pastTime = parseISO(time);
     const elapsedTime = formatDistanceToNow(pastTime, { addSuffix: false });
     return <span>{elapsedTime}</span>;
@@ -357,8 +429,9 @@ export const FeatureLifecycleTooltip: FC<{
     stage: LifecycleStage;
     onArchive: () => void;
     onComplete: () => void;
+    onUncomplete: () => void;
     loading: boolean;
-}> = ({ children, stage, onArchive, onComplete, loading }) => (
+}> = ({ children, stage, onArchive, onComplete, onUncomplete, loading }) => (
     <HtmlTooltip
         maxHeight={800}
         maxWidth={350}
@@ -411,6 +484,8 @@ export const FeatureLifecycleTooltip: FC<{
                         <CompletedStageDescription
                             environments={stage.environments}
                             onArchive={onArchive}
+                            onUncomplete={onUncomplete}
+                            loading={loading}
                         >
                             <Environments environments={stage.environments} />
                         </CompletedStageDescription>

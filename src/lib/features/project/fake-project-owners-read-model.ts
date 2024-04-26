@@ -5,13 +5,6 @@ import type {
     ProjectOwnersDictionary,
 } from './project-owners-read-model.type';
 
-const T = {
-    ROLE_USER: 'role_user',
-    GROUP_ROLE: 'group_role',
-    ROLES: 'roles',
-    USERS: 'users',
-};
-
 export class FakeProjectOwnersReadModel implements IProjectOwnersReadModel {
     static addOwnerData(
         projects: IProjectWithCount[],

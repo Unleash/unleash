@@ -1,10 +1,11 @@
 import { Input, TextField, styled } from '@mui/material';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 
-const StyledContainer = styled('section')(({ theme }) => ({
+const StyledContainer = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
 
     '> * + *' : {
-        borderBlockStart: '1px solid black',
+        borderBlockStart: `1px solid ${theme.palette.divider}`,
     },
 
     '> *' : {
@@ -72,7 +73,14 @@ const StyledInput = styled(TextField)(({ theme }) => ({
 
 export const NewProjectForm = () => {
   return (
-      <StyledContainer>
+      <FormTemplate
+
+    description="Create a new project"
+    documentationLink='docs link'
+    documentationLinkLabel='docs label'
+    disablePadding
+
+          >      <StyledContainer>
           <TopGrid>
             <span className="icon">icon</span>
           <typography variant='h2'>New project</typography><span className="input">no template</span>
@@ -99,5 +107,5 @@ export const NewProjectForm = () => {
           <div><button>cancel/create</button>
           <button>cancel/create</button></div>
           </StyledContainer>
-  );
+</FormTemplate>  );
 };

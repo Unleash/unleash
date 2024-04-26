@@ -138,10 +138,9 @@ export class FeatureLifecycleService extends EventEmitter {
             if (!env) {
                 return;
             }
+            await this.stageReceivedMetrics(features, 'pre-live');
             if (env.type === 'production') {
                 await this.stageReceivedMetrics(features, 'live');
-            } else if (env.type === 'development') {
-                await this.stageReceivedMetrics(features, 'pre-live');
             }
         } catch (e) {
             this.logger.warn(

@@ -39,7 +39,7 @@ test('can insert and read lifecycle stages', async () => {
 
     await environmentStore.create({
         name: 'my-dev-environment',
-        type: 'development',
+        type: 'test',
     } as IEnvironment);
     await environmentStore.create({
         name: 'my-prod-environment',

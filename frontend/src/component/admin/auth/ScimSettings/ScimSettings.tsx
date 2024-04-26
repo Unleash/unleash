@@ -108,7 +108,7 @@ export const ScimConfigSettings = ({
             </Grid>
 
             <Grid container spacing={3}>
-                <Grid item md={5}>
+                <Grid item md={5} mb={2}>
                     <ConditionallyRender
                         condition={Boolean(settings.hasToken)}
                         show={
@@ -117,13 +117,13 @@ export const ScimConfigSettings = ({
                                 color='error'
                                 disabled={loading}
                                 onClick={onGenerateNewToken}
-                                sx={{ ml: 1 }}
                             >
                                 Generate new token
                             </Button>
                         }
                     />
                 </Grid>
+                <Grid item md={6}></Grid>
             </Grid>
             <ScimTokenGenerationDialog
                 open={tokenGenerationDialog}

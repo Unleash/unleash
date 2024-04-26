@@ -94,6 +94,7 @@ export const projectSchema = {
             oneOf: [
                 {
                     type: 'array',
+                    minItems: 1,
                     items: {
                         anyOf: [
                             {

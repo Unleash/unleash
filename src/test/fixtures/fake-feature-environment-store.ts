@@ -241,8 +241,7 @@ export default class FakeFeatureEnvironmentStore
     ): Promise<IFeatureEnvironment[]> {
         return this.featureEnvironments.filter(
             (featureEnv) =>
-                environment &&
-                featureEnv.environment === environment &&
+                (environment ? featureEnv.environment === environment : true) &&
                 features.includes(featureEnv.featureName),
         );
     }

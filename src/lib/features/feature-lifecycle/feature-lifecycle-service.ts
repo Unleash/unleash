@@ -146,14 +146,14 @@ export class FeatureLifecycleService extends EventEmitter {
             }
             await this.stageReceivedMetrics(features, 'pre-live');
             if (env.type === 'production') {
-                const envFeatures =
+                const featureEnv =
                     await this.featureEnvironmentStore.getAllByFeatures(
                         features,
                         env.name,
                     );
-                const enabledFeatures = envFeatures
-                    .filter((envFeature) => envFeature.enabled)
-                    .map((envFeature) => envFeature.featureName);
+                const enabledFeatures = featureEnv
+                    .filter((feature) => feature.enabled)
+                    .map((feature) => feature.featureName);
                 await this.stageReceivedMetrics(enabledFeatures, 'live');
             }
         } catch (e) {

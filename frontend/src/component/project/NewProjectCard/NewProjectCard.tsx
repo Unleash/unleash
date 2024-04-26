@@ -6,7 +6,6 @@ import {
     StyledBox,
     StyledCardTitle,
     StyledDivInfo,
-    StyledDivInfoContainer,
     StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
@@ -52,31 +51,31 @@ export const ProjectCard = ({
                 <ProjectModeBadge mode={mode} />
             </StyledDivHeader>
             <StyledDivInfo>
-                <StyledDivInfoContainer>
+                <div>
                     <StyledParagraphInfo data-loading>
                         {featureCount}
                     </StyledParagraphInfo>
                     <p data-loading>{featureCount === 1 ? 'flag' : 'flags'}</p>
-                </StyledDivInfoContainer>
+                </div>
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={
-                        <StyledDivInfoContainer>
+                        <div>
                             <StyledParagraphInfo data-loading>
                                 {memberCount}
                             </StyledParagraphInfo>
                             <p data-loading>
                                 {memberCount === 1 ? 'member' : 'members'}
                             </p>
-                        </StyledDivInfoContainer>
+                        </div>
                     }
                 />
-                <StyledDivInfoContainer>
+                <div>
                     <StyledParagraphInfo data-loading>
                         {health}%
                     </StyledParagraphInfo>
                     <p data-loading>health</p>
-                </StyledDivInfoContainer>
+                </div>
             </StyledDivInfo>
         </StyledProjectCardBody>
         <ProjectCardFooter id={id} isFavorite={isFavorite}>

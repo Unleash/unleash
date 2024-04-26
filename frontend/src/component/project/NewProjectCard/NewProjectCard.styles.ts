@@ -69,10 +69,6 @@ export const StyledDivInfo = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 1),
 }));
 
-export const StyledDivInfoContainer = styled('div')(() => ({
-    // textAlign: 'center',
-}));
-
 export const StyledParagraphInfo = styled('p')(({ theme }) => ({
     color: theme.palette.primary.dark,
     fontWeight: 'bold',

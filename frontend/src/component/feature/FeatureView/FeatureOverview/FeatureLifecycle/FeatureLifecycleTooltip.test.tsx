@@ -128,7 +128,6 @@ test('render completed stage safe to archive', async () => {
 
     await screen.findByText('completed');
     const button = await screen.findByText('Archive feature');
-    console.log(button.innerHTML);
     button.click();
 
     expect(onArchiveInvoked).toBe(true);
@@ -154,7 +153,6 @@ test('mark completed button gets activated', async () => {
 
     await screen.findByText('live');
     const button = await screen.findByText('Mark completed');
-    console.log(button.outerHTML);
     button.click();
 
     expect(onCompleteInvoked).toBe(true);

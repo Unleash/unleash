@@ -8,6 +8,7 @@ import {
     CLIENT_METRICS,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
+    FEATURE_REVIVED,
     type IEventStore,
     type StageName,
 } from '../../types';
@@ -117,4 +118,7 @@ test('should return lifecycle stages', async () => {
     ]);
 
     await expectFeatureStage('archived');
+
+    eventStore.emit(FEATURE_REVIVED, { featureName: 'my_feature_a' });
+    await reachedStage('initial');
 });

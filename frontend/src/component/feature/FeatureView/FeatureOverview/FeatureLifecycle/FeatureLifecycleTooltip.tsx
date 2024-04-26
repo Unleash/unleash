@@ -289,7 +289,7 @@ const LiveStageDescription: FC<{
                 onClick={onComplete}
                 disabled={loading}
             >
-                Mark Completed
+                Mark completed
             </PermissionButton>
             <InfoText sx={{ mt: 3 }}>
                 Users have been exposed to this feature in the following
@@ -333,7 +333,7 @@ const SafeToArchive: FC<{
                     onClick={onUncomplete}
                     disabled={loading}
                 >
-                    Revert to Live
+                    Revert to live
                 </PermissionButton>
                 <PermissionButton
                     color='inherit'
@@ -374,7 +374,7 @@ const ActivelyUsed: FC<{
             onClick={onUncomplete}
             disabled={loading}
         >
-            Revert to Live
+            Revert to live
         </PermissionButton>
         {children}
     </>

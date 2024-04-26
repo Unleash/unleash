@@ -15,6 +15,7 @@ const renderOpenTooltip = (
     stage: LifecycleStage,
     onArchive = () => {},
     onComplete = () => {},
+    onUncomplete = () => {},
     loading = true,
 ) => {
     render(
@@ -22,6 +23,7 @@ const renderOpenTooltip = (
             stage={stage}
             onArchive={onArchive}
             onComplete={onComplete}
+            onUncomplete={onUncomplete}
             loading={loading}
         >
             <span>child</span>

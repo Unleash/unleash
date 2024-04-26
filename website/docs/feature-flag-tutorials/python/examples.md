@@ -8,6 +8,9 @@ In our [Python feature flag tutorial](/feature-flag-tutorials/python), we implem
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
 - [Gradual Rollouts for Python Apps](#gradual-rollouts-for-python-apps)
+- [Canary Deployments in Python](#canary-deployments-in-python)
+  - [What is a canary deployment?](#what-is-a-canary-deployment)
+  - [How to do canary deployments with a Python feature flag?](#how-to-do-canary-deployments-with-a-python-feature-flag)
   - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
 - [Server-side A/B Testing in Python](#server-side-ab-testing-in-python)
 - [Feature Flag Analytics and Reporting in Python](#feature-flag-analytics-and-reporting-in-python)
@@ -66,11 +69,27 @@ print(response.text)
 
 Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
 
-There are 2 options you can use to enhance your gradual rollouts:
 
-- [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
+## Canary Deployments in Python
 
-- [Strategy variants](/reference/strategy-variants) for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
+
+### What is a canary deployment?
+
+Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to.
+
+
+### How to do canary deployments with a Python feature flag?
+
+
+Canary deployments are a safer and more gradual way to make changes in software development. They help find abnormalities and align with the agile process for faster releases and quick reversions.
+
+Unleash has a few ways to help manage canary deployments for Python apps at scale:
+
+- Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we implemented in a [previous section](#gradual-rollouts-for-python-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+
+- Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
+
+- [Strategy variants](/reference/strategy-variants) are for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk through how to utilize **strategy constraints** in our Python app.
 
@@ -376,9 +395,11 @@ Read our documentation on [Event logs](/reference/event-log) and [APIs](/referen
 
 ## Flag Automation & Workflow Integration for Python Apps
 
-An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. [Our Jira integration](/reference/integrations/jira-server-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
+An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
-It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Python project must go through a typical development workflow. The [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) can connect to your Jira server or cloud to create feature flags automatically during the project creation phase. As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
+It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Python project must go through a typical development workflow. 
+
+As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
 
 Here’s how this can be done via our API:
 
@@ -448,4 +469,3 @@ Here’s how this can be done via our API:
     ```
 
     Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
-

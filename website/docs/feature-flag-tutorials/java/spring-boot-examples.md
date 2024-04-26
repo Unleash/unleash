@@ -8,6 +8,9 @@ In our [Java Spring Boot feature flag tutorial](/feature-flag-tutorials/spring-b
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
 - [Gradual Rollouts for Java Spring Boot Apps](#gradual-rollouts-for-java-spring-boot-apps)
+- [Canary Deployments in Java](#canary-deployments-in-java)
+  - [What is a canary deployment?](#what-is-a-canary-deployment)
+  - [How to do canary deployments with a feature flag in Java?](#how-to-do-canary-deployments-with-a-feature-flag-in-java)
   - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
 - [Server-side A/B Testing in Java Spring Boot](#server-side-ab-testing-in-java-spring-boot)
 - [Feature Flag Analytics and Reporting in Java](#feature-flag-analytics-and-reporting-in-java)
@@ -54,13 +57,22 @@ Response response = client.newCall(request).execute();
 Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
 
 
-There are 2 options you can use to enhance your gradual rollouts:
+## Canary Deployments in Java
 
-- [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
 
-- [Strategy variants](/reference/strategy-variants) for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
+### What is a canary deployment?
 
-Let’s walk through how to utilize **strategy constraints** in our Python app.
+Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to. They help find abnormalities and align with the agile process for faster releases and quick reversions.
+
+
+### How to do canary deployments with a feature flag in Java?
+
+
+Canary deployments are a safer and more gradual way to make changes in software development. They help find abnormalities and align with the agile process for faster releases and quick reversions.
+
+Unleash has a few ways to help manage canary deployments for Java apps at scale:
+
+* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in the previous section](#gradual-rollouts-for-java-spring-boot-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
 * Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout
 
@@ -224,9 +236,11 @@ You can also retrieve event log data by using an API command. Read our documenta
 ## Flag Automation & Workflow Integration for Java Apps
 
 
-An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. [Our Jira integration](/reference/integrations/jira-server-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
+An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
-It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Java project must go through a typical development workflow. The [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) can connect to your Jira server or cloud to create feature flags automatically during the project creation phase. As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be enabling your feature in subsequent environments for certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
+It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Java project must go through a typical development workflow.
+
+As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
 
 Here’s how this can be done via our API:
 
@@ -290,11 +304,11 @@ Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
 
 We’ve compiled a list of the most common functions to call in a Spring Boot app.
 
-| Annotation | Description | Parameters |
-| ---------- | ----------- | ---------- |
-| [`@Toggle`](#toggle-example) | determines whether or not the flag is enabled | feature flag name (string), alterBean (string), variants |
-| [`@FeatureVariant`](#featurevariant-and-featurevariants-example) | targets specific variant to reference | variant name (string), variantBean (string) |
-| [`@FeatureVariants`](#featurevariant-and-featurevariants-example) | targets specific | Array of feature variants |
+| Annotation                                                        | Description                                   | Parameters                                               |
+| ----------------------------------------------------------------- | --------------------------------------------- | -------------------------------------------------------- |
+| [`@Toggle`](#toggle-example)                                      | determines whether or not the flag is enabled | feature flag name (string), alterBean (string), variants |
+| [`@FeatureVariant`](#featurevariant-and-featurevariants-example)  | targets specific variant to reference         | variant name (string), variantBean (string)              |
+| [`@FeatureVariants`](#featurevariant-and-featurevariants-example) | targets specific                              | Array of feature variants                                |
 
 
 ### `@Toggle` example

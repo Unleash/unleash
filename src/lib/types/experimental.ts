@@ -272,10 +272,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_MY_PROJECTS,
         false,
     ),
-    projectsListNewCards: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_NEW_CARDS,
-        false,
-    ),
     parseProjectFromSession: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PARSE_PROJECT_FROM_SESSION,
         false,

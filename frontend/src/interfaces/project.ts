@@ -1,4 +1,4 @@
-import type { ProjectStatsSchema } from 'openapi';
+import type { ProjectSchema, ProjectStatsSchema } from 'openapi';
 import type { IFeatureToggleListItem } from './featureToggle';
 import type { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
@@ -13,11 +13,7 @@ export interface IProjectCard {
     mode: string;
     memberCount?: number;
     favorite?: boolean;
-    owners?: {
-        // FIXME: type
-        users: any[];
-        groups: any[];
-    };
+    owners?: ProjectSchema['owners'];
 }
 
 export type FeatureNamingType = {

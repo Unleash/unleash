@@ -205,31 +205,6 @@ export default class ProjectService {
             userId,
         );
 
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-        const ownerRoleId = ownerRole.id;
-
-        const projectsWithOwners = await Promise.all(
-            projects.map(async (project) => {
-                const users = await this.accessService.getProjectUsersForRole(
-                    ownerRoleId,
-                    project.id,
-                );
-                const groups = (
-                    await this.groupService.getProjectGroups(project.id)
-                ).filter((group) => group.roleId === ownerRoleId);
-
-                return {
-                    ...project,
-                    owners: {
-                        users,
-                        groups,
-                    },
-                };
-            }),
-        );
-
         if (userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -237,14 +212,14 @@ export default class ProjectService {
                 );
 
             if (projectAccess.mode === 'all') {
-                return projectsWithOwners;
+                return projects;
             } else {
-                return projectsWithOwners.filter((project) =>
+                return projects.filter((project) =>
                     projectAccess.projects.includes(project.id),
                 );
             }
         }
-        return projectsWithOwners;
+        return projects;
     }
 
     async addOwnersToProjects(

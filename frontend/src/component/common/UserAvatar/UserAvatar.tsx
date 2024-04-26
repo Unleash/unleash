@@ -20,7 +20,9 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 interface IUserAvatarProps extends AvatarProps {
-    user?: IUser;
+    user?: Partial<
+        Pick<IUser, 'id' | 'name' | 'email' | 'username' | 'imageUrl'>
+    >;
     src?: string;
     title?: string;
     onMouseEnter?: (event: any) => void;

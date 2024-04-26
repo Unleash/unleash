@@ -5,9 +5,9 @@ import type React from 'react';
 import { type ReactNode, useMemo, useState } from 'react';
 import { GroupPopover } from './GroupPopover/GroupPopover';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import type { IUser } from 'interfaces/user';
+import { objectId } from 'utils/objectId';
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
 }));
@@ -41,17 +41,17 @@ const StyledHeader = styled('h3')(({ theme }) => ({
 }));
 
 interface IGroupCardAvatarsProps {
-    users: IUser[] | IGroupUser[];
-    groups?: any[]; // FIXME: type
+    users: {
+        name: string;
+        description?: string;
+        imageUrl?: string;
+    }[];
     header?: ReactNode;
-    withDescription?: boolean;
 }
 
 export const GroupCardAvatars = ({
     users = [],
-    groups = [],
     header = null,
-    withDescription = false,
 }: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>
@@ -73,7 +73,11 @@ export const GroupCardAvatars = ({
     );
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [popupUser, setPopupUser] = useState<IGroupUser>();
+    const [popupUser, setPopupUser] = useState<{
+        name: string;
+        description?: string;
+        imageUrl?: string;
+    }>();
 
     const onPopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -95,8 +99,8 @@ export const GroupCardAvatars = ({
             <StyledAvatars>
                 {shownUsers.map((user) => (
                     <StyledAvatar
-                        key={user.id}
-                        user={user}
+                        key={objectId(user)}
+                        user={{ ...user, id: objectId(user) }}
                         onMouseEnter={(event) => {
                             onPopoverOpen(event);
                             setPopupUser(user);
@@ -111,19 +115,6 @@ export const GroupCardAvatars = ({
                             +{users.length - shownUsers.length}
                         </StyledAvatar>
                     }
-                />
-
-                <ConditionallyRender
-                    condition={
-                        withDescription &&
-                        users.length === 1 &&
-                        groups?.length === 0
-                    }
-                    show={() => (
-                        <StyledUsername>
-                            {users[0].name || users[0].username}
-                        </StyledUsername>
-                    )}
                 />
                 <GroupPopover
                     open={avatarOpen}

@@ -7,13 +7,16 @@ In our [Java Spring Boot feature flag tutorial](/feature-flag-tutorials/spring-b
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
-1. [Gradual rollouts](#gradual-rollouts-for-java-spring-boot-apps)
-2. [Canary deployments](#canary-deployments-in-java)
-3. [Server-side A/B testing](#server-side-ab-testing-in-java-spring-boot)
-4. [Feature flag metrics & reporting](#feature-flag-analytics-and-reporting-in-java)
-5. [Feature flag audit logs](#feature-flag-audit-logs-in-java)
-6. [Flag automation & workflow integration](#flag-automation--workflow-integration-for-java-apps)
-7. [Common usage examples of Spring Boot feature flags](#common-usage-examples-of-spring-boot-feature-flags)
+- [Gradual Rollouts for Java Spring Boot Apps](#gradual-rollouts-for-java-spring-boot-apps)
+- [Canary Deployments in Java](#canary-deployments-in-java)
+  - [What is a canary deployment?](#what-is-a-canary-deployment)
+  - [How to do canary deployments with a feature flag in Java?](#how-to-do-canary-deployments-with-a-feature-flag-in-java)
+  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+- [Server-side A/B Testing in Java Spring Boot](#server-side-ab-testing-in-java-spring-boot)
+- [Feature Flag Analytics and Reporting in Java](#feature-flag-analytics-and-reporting-in-java)
+- [Application Metrics \& Monitoring](#application-metrics--monitoring)
+- [Feature Flag Audit Logs in Java](#feature-flag-audit-logs-in-java)
+- [Flag Automation \& Workflow Integration for Java Apps](#flag-automation--workflow-integration-for-java-apps)
 
 
 ## Gradual Rollouts for Java Spring Boot Apps
@@ -230,9 +233,11 @@ You can also retrieve event log data by using an API command. Read our documenta
 ## Flag Automation & Workflow Integration for Java Apps
 
 
-An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. [Our Jira integration](/reference/integrations/jira-server-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
+An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
-It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Java project must go through a typical development workflow. The [Unleash Jira plugin](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter) can connect to your Jira server or cloud to create feature flags automatically during the project creation phase. As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
+It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Java project must go through a typical development workflow.
+
+As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing code quality in subsequent environments to certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or roll out to target audiences in production.
 
 Here’s how this can be done via our API:
 
@@ -289,38 +294,5 @@ Response response = client.newCall(request).execute();
 ```
 
 Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
-
-
-## Common Usage Examples of Spring Boot Feature Flags
-
-
-We’ve compiled a list of the most common functions to call in a Spring Boot app.
-
-| Annotation | Description | Parameters |
-| ---------- | ----------- | ---------- |
-| [`@Toggle`](#toggle-example) | determines whether or not the flag is enabled | feature flag name (string), alterBean (string), variants |
-| [`@FeatureVariant`](#featurevariant-and-featurevariants-example) | targets specific variant to reference | variant name (string), variantBean (string) |
-| [`@FeatureVariants`](#featurevariant-and-featurevariants-example) | targets specific | Array of feature variants |
-
-
-### `@Toggle` example
-
-```java
-@Toggle(name="demo-toggle", alterBean="featureNewService")
-```
-
-### `@FeatureVariant` and `@FeatureVariants` example
-
-```java
- @Toggle(name = "background-color-feature",
-    variants = @FeatureVariants(
-        fallbackBean = "noBackgroundColorService",
-        variants = {
-            @FeatureVariant(name = "green-background-variant", variantBean = "greenBackgroundColorService"),
-            @FeatureVariant(name = "red-background-variant", variantBean = "redBackgroundColorService")
-        }
-    )
-)
-```
 
 Learn more about different use cases in our [Spring Boot Starter Kit](https://github.com/Unleash/unleash-spring-boot-starter) and [Java SDK](/reference/sdks/java).

@@ -2,7 +2,11 @@
 title: Jira Server Integration - Usage
 ---
 
-> The Jira Server Plugin is part of Unleash Enterprise.
+:::info Deprecated
+
+The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) instead
+
+:::
 
 With the Unleash Jira server plugin you can create new feature toggles in Unleash from a Jira issue as well as link
 existing toggles to Jira issues.

@@ -17,9 +17,6 @@ We built multiple features into Unleash, an open-source feature flag platform, t
 - [Application Metrics \& Monitoring](#application-metrics--monitoring)
 - [Feature Flag Audit Logs in Java](#feature-flag-audit-logs-in-java)
 - [Flag Automation \& Workflow Integration for Java Apps](#flag-automation--workflow-integration-for-java-apps)
-- [Common Usage Examples of Spring Boot Feature Flags](#common-usage-examples-of-spring-boot-feature-flags)
-  - [`@Toggle` example](#toggle-example)
-  - [`@FeatureVariant` and `@FeatureVariants` example](#featurevariant-and-featurevariants-example)
 
 
 ## Gradual Rollouts for Java Spring Boot Apps
@@ -297,38 +294,5 @@ Response response = client.newCall(request).execute();
 ```
 
 Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
-
-
-## Common Usage Examples of Spring Boot Feature Flags
-
-
-We’ve compiled a list of the most common functions to call in a Spring Boot app.
-
-| Annotation                                                        | Description                                   | Parameters                                               |
-| ----------------------------------------------------------------- | --------------------------------------------- | -------------------------------------------------------- |
-| [`@Toggle`](#toggle-example)                                      | determines whether or not the flag is enabled | feature flag name (string), alterBean (string), variants |
-| [`@FeatureVariant`](#featurevariant-and-featurevariants-example)  | targets specific variant to reference         | variant name (string), variantBean (string)              |
-| [`@FeatureVariants`](#featurevariant-and-featurevariants-example) | targets specific                              | Array of feature variants                                |
-
-
-### `@Toggle` example
-
-```java
-@Toggle(name="demo-toggle", alterBean="featureNewService")
-```
-
-### `@FeatureVariant` and `@FeatureVariants` example
-
-```java
- @Toggle(name = "background-color-feature",
-    variants = @FeatureVariants(
-        fallbackBean = "noBackgroundColorService",
-        variants = {
-            @FeatureVariant(name = "green-background-variant", variantBean = "greenBackgroundColorService"),
-            @FeatureVariant(name = "red-background-variant", variantBean = "redBackgroundColorService")
-        }
-    )
-)
-```
 
 Learn more about different use cases in our [Spring Boot Starter Kit](https://github.com/Unleash/unleash-spring-boot-starter) and [Java SDK](/reference/sdks/java).

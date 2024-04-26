@@ -393,3 +393,5 @@ Here’s how this can be done via our API:
     ```
 
     Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
+
+Learn more about different use cases in our [Ruby SDK documentation](/reference/sdks/ruby).

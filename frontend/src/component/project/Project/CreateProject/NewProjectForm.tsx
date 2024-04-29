@@ -93,7 +93,6 @@ export const NewProjectForm = () => {
             documentationLinkLabel='docs label'
             disablePadding
         >
-            {' '}
             <StyledContainer>
                 <TopGrid>
                     <span className='icon'>icon</span>

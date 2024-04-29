@@ -84,6 +84,7 @@ export type UiFlags = {
     projectListFilterMyProjects?: boolean;
     createProjectWithEnvironmentConfig?: boolean;
     projectsListNewCards?: boolean;
+    newCreateProjectUI?: boolean;
 };
 
 export interface IVersionInfo {

@@ -301,9 +301,6 @@ export default class ClientApplicationsStore
     async getApplicationOverview(
         appName: string,
     ): Promise<IApplicationOverview> {
-        if (!this.flagResolver.isEnabled('applicationOverviewNewQuery')) {
-            return this.getOldApplicationOverview(appName);
-        }
         const stopTimer = this.timer('getApplicationOverview');
         const query = this.db
             .with('metrics', (qb) => {
@@ -400,9 +397,6 @@ export default class ClientApplicationsStore
         rows: any[],
         existingStrategies: string[],
     ): IApplicationOverview {
-        if (!this.flagResolver.isEnabled('applicationOverviewNewQuery')) {
-            return this.mapOldApplicationOverviewData(rows, existingStrategies);
-        }
         const featureCount = new Set(rows.flatMap((row) => row.features)).size;
         const missingStrategies: Set<string> = new Set();
 

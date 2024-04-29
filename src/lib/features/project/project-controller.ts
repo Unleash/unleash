@@ -207,16 +207,14 @@ export default class ProjectController extends Controller {
                 projectsSchema.$id,
                 { version: 1, projects: serializeDates(projectsWithOwners) },
             );
-
-            return;
+        } else {
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectsSchema.$id,
+                { version: 1, projects: serializeDates(projects) },
+            );
         }
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            projectsSchema.$id,
-            { version: 1, projects: serializeDates(projects) },
-        );
     }
 
     async getDeprecatedProjectOverview(

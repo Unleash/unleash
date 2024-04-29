@@ -4,6 +4,11 @@ import { type IUser, RoleName, type IGroup } from '../../types';
 import { randomId } from '../../util';
 import { ProjectOwnersReadModel } from './project-owners-read-model';
 
+jest.mock('../../util', () => ({
+    ...jest.requireActual('../../util'),
+    generateImageUrl: jest.fn((input) => `https://${input.image_url}`),
+}));
+
 const mockProjectWithCounts = (name: string) => ({
     name,
     id: name,
@@ -170,7 +175,7 @@ describe('integration tests', () => {
                     ownerType: 'user',
                     name: 'Owner Name',
                     email: 'owner@email.com',
-                    imageUrl: 'image-url-1',
+                    imageUrl: 'https://image-url-1',
                 },
             ],
         });
@@ -248,7 +253,7 @@ describe('integration tests', () => {
             [projectId]: [
                 {
                     email: 'owner@email.com',
-                    imageUrl: 'image-url-1',
+                    imageUrl: 'https://image-url-1',
                     name: 'Owner Name',
                     ownerType: 'user',
                 },
@@ -299,13 +304,13 @@ describe('integration tests', () => {
             [projectId]: [
                 {
                     email: 'owner2@email.com',
-                    imageUrl: 'image-url-3',
+                    imageUrl: 'https://image-url-3',
                     name: 'Second Owner Name',
                     ownerType: 'user',
                 },
                 {
                     email: 'owner@email.com',
-                    imageUrl: 'image-url-1',
+                    imageUrl: 'https://image-url-1',
                     name: 'Owner Name',
                     ownerType: 'user',
                 },

@@ -25,6 +25,9 @@ interface IGroupCardAvatarsProps {
     users: IGroupUser[];
 }
 
+/**
+ * @deprecated Remove after with `projectsListNewCards` flag
+ */
 export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>

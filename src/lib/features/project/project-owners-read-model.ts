@@ -1,5 +1,6 @@
 import type { Db } from '../../db/db';
 import { RoleName, type IProjectWithCount } from '../../types';
+import { generateImageUrl } from '../../util';
 import type {
     GroupProjectOwner,
     IProjectOwnersReadModel,
@@ -37,6 +38,7 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     ): Promise<Record<string, UserProjectOwner[]>> {
         const usersResult = await this.db
             .select(
+                'user.id',
                 'user.username',
                 'user.name',
                 'user.email',
@@ -58,7 +60,7 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
                 ownerType: 'user',
                 name: user?.name || user?.username,
                 email: user?.email,
-                imageUrl: user?.image_url,
+                imageUrl: generateImageUrl(user),
             };
 
             if (project in usersDict) {

@@ -132,6 +132,6 @@ export const ProjectGroup: React.FC<{
                     </StyledItemsContainer>
                 }
             />
-        </div>
+        </article>
     );
 };

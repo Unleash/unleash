@@ -43,6 +43,7 @@ import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-featu
 import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inactive-users-store';
 import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage/fake-traffic-data-usage-store';
 import { FakeSegmentReadModel } from '../../lib/features/segment/fake-segment-read-model';
+import { FakeProjectOwnersReadModel } from '../../lib/features/project/fake-project-owners-read-model';
 
 const db = {
     select: () => ({
@@ -95,6 +96,7 @@ const createStores: () => IUnleashStores = () => {
         inactiveUsersStore: new FakeInactiveUsersStore(),
         trafficDataUsageStore: new FakeTrafficDataUsageStore(),
         segmentReadModel: new FakeSegmentReadModel(),
+        projectOwnersReadModel: new FakeProjectOwnersReadModel(),
     };
 };
 

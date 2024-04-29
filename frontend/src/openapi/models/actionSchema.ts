@@ -17,8 +17,14 @@ export interface ActionSchema {
     createdByUserId: number;
     /** A map of parameters to pass to the action */
     executionParams?: ActionSchemaExecutionParams;
-    /** The id of the action set */
+    /**
+     * The id of the action set
+     * @minimum 1
+     */
     id: number;
-    /** The order in which the action should be executed */
+    /**
+     * The order in which the action should be executed
+     * @minimum 1
+     */
     sortOrder: number;
 }

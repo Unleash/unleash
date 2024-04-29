@@ -13,7 +13,10 @@ export interface ApplicationOverviewEnvironmentSchema {
     instanceCount: number;
     /** This list of issues that might be wrong with the application */
     issues: ApplicationEnvironmentIssuesSchema;
-    /** The last time the application environment was seen */
+    /**
+     * The last time the application environment was seen
+     * @nullable
+     */
     lastSeen: string | null;
     /** Name of the application environment */
     name: string;

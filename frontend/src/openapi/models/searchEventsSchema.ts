@@ -14,9 +14,16 @@ import type { SearchEventsSchemaType } from './searchEventsSchemaType';
 export interface SearchEventsSchema {
     /** Find events by feature toggle name (case-sensitive). */
     feature?: string;
-    /** The maximum amount of events to return in the search result */
+    /**
+     * The maximum amount of events to return in the search result
+     * @minimum 1
+     * @maximum 100
+     */
     limit?: number;
-    /** Which event id to start listing from */
+    /**
+     * Which event id to start listing from
+     * @minimum 0
+     */
     offset?: number;
     /** Find events by project ID (case-sensitive). */
     project?: string;

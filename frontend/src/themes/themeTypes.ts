@@ -34,6 +34,7 @@ declare module '@mui/material/styles' {
             popup: string;
             primaryHeader: string;
             separator: string;
+            accordionFooter: string;
         };
     }
 

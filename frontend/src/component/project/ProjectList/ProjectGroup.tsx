@@ -8,16 +8,6 @@ import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const StyledProjectGroupContainer = styled('article')(({ theme }) => ({
-    h3: {
-        marginBlockEnd: theme.spacing(2),
-    },
-
-    '&+&': {
-        marginBlockStart: theme.spacing(4),
-    },
-}));
-
 /**
  * @deprecated Remove after with `projectsListNewCards` flag
  */
@@ -31,7 +21,7 @@ const StyledDivContainer = styled('div')(({ theme }) => ({
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
     gap: theme.spacing(2),
 }));
 
@@ -59,10 +49,18 @@ export const ProjectGroup: React.FC<{
         : [StyledDivContainer, LegacyProjectCard];
 
     return (
-        <StyledProjectGroupContainer>
+        <article>
             <ConditionallyRender
                 condition={Boolean(sectionTitle)}
-                show={<Typography component='h3'>{sectionTitle}</Typography>}
+                show={
+                    <Typography
+                        component='h2'
+                        variant='h3'
+                        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+                    >
+                        {sectionTitle}
+                    </Typography>
+                }
             />
             <ConditionallyRender
                 condition={projects.length < 1 && !loading}
@@ -124,6 +122,7 @@ export const ProjectGroup: React.FC<{
                                                     project.featureCount
                                                 }
                                                 isFavorite={project.favorite}
+                                                owners={project.owners}
                                             />
                                         </StyledCardLink>
                                     ))}
@@ -133,6 +132,6 @@ export const ProjectGroup: React.FC<{
                     </StyledItemsContainer>
                 }
             />
-        </StyledProjectGroupContainer>
+        </article>
     );
 };

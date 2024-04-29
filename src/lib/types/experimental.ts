@@ -59,7 +59,7 @@ export type IFlagKey =
     | 'projectsListNewCards'
     | 'parseProjectFromSession'
     | 'createProjectWithEnvironmentConfig'
-    | 'applicationOverviewNewQuery';
+    | 'newCreateProjectUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -280,12 +280,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CREATE_PROJECT_WITH_ENVIRONMENT_CONFIG,
         false,
     ),
-    applicationOverviewNewQuery: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_APPLICATION_OVERVIEW_NEW_QUERY,
-        false,
-    ),
     projectsListNewCards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_NEW_CARDS,
+        false,
+    ),
+    newCreateProjectUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_CREATE_PROJECT_UI,
         false,
     ),
 };

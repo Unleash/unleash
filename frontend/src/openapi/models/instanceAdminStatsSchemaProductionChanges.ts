@@ -8,10 +8,19 @@
  * The number of changes to the production environment in the last 30, 60 and 90 days
  */
 export type InstanceAdminStatsSchemaProductionChanges = {
-    /** The number of changes in production in the last 30 days */
+    /**
+     * The number of changes in production in the last 30 days
+     * @minimum 0
+     */
     last30?: number;
-    /** The number of changes in production in the last 60 days */
+    /**
+     * The number of changes in production in the last 60 days
+     * @minimum 0
+     */
     last60?: number;
-    /** The number of changes in production in the last 90 days */
+    /**
+     * The number of changes in production in the last 90 days
+     * @minimum 0
+     */
     last90?: number;
 };

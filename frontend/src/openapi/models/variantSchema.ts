@@ -19,7 +19,11 @@ export interface VariantSchema {
     payload?: VariantSchemaPayload;
     /** [Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time */
     stickiness?: string;
-    /** The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information */
+    /**
+     * The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information
+     * @minimum 0
+     * @maximum 1000
+     */
     weight: number;
     /** Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000 */
     weightType?: VariantSchemaWeightType;

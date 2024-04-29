@@ -59,21 +59,30 @@ const StyledBadge = styled('span')<IBadgeProps>(
     }),
 );
 
-const StyledBadgeIcon = styled('span')<IBadgeIconProps>(
-    ({ theme, color = 'neutral', iconRight = false }) => ({
-        display: 'flex',
-        color:
-            color === 'disabled'
-                ? theme.palette.action.disabled
-                : theme.palette[color].main,
-        margin: iconRight
-            ? theme.spacing(0, 0, 0, 0.5)
-            : theme.spacing(0, 0.5, 0, 0),
-    }),
-);
+const StyledBadgeIcon = styled('span')<
+    IBadgeIconProps & { hasChildren?: boolean }
+>(({ theme, color = 'neutral', iconRight = false, hasChildren }) => ({
+    display: 'flex',
+    color:
+        color === 'disabled'
+            ? theme.palette.action.disabled
+            : theme.palette[color].main,
+    margin: iconRight
+        ? theme.spacing(0, 0, 0, hasChildren ? 0.5 : 0)
+        : theme.spacing(0, hasChildren ? 0.5 : 0, 0, 0),
+}));
 
-const BadgeIcon = (color: Color, icon: ReactElement, iconRight = false) => (
-    <StyledBadgeIcon color={color} iconRight={iconRight}>
+const BadgeIcon = (
+    color: Color,
+    icon: ReactElement,
+    iconRight = false,
+    hasChildren = false,
+) => (
+    <StyledBadgeIcon
+        color={color}
+        iconRight={iconRight}
+        hasChildren={hasChildren}
+    >
         <ConditionallyRender
             condition={Boolean(icon?.props.sx)}
             show={icon}
@@ -112,12 +121,12 @@ export const Badge: FC<IBadgeProps> = forwardRef(
         >
             <ConditionallyRender
                 condition={Boolean(icon) && !iconRight}
-                show={BadgeIcon(color, icon!)}
+                show={BadgeIcon(color, icon!, false, Boolean(children))}
             />
             {children}
             <ConditionallyRender
                 condition={Boolean(icon) && Boolean(iconRight)}
-                show={BadgeIcon(color, icon!, true)}
+                show={BadgeIcon(color, icon!, true, Boolean(children))}
             />
         </StyledBadge>
     ),

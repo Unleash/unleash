@@ -76,7 +76,6 @@ exports[`should create default config 1`] = `
     "experiments": {
       "adminTokenKillSwitch": false,
       "anonymiseEventLog": false,
-      "applicationOverviewNewQuery": false,
       "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
@@ -132,6 +131,7 @@ exports[`should create default config 1`] = `
         },
       },
       "migrationLock": true,
+      "newCreateProjectUI": false,
       "outdatedSdksBanner": false,
       "parseProjectFromSession": false,
       "personalAccessTokensKillSwitch": false,

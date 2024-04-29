@@ -11,6 +11,9 @@ import type { RoleSchema } from './roleSchema';
 export interface RolesSchema {
     /** A list of roles */
     roles: RoleSchema[];
-    /** The version of the role schema used */
+    /**
+     * The version of the role schema used
+     * @minimum 1
+     */
     version: number;
 }

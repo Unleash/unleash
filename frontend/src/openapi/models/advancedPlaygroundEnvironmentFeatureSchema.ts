@@ -28,10 +28,13 @@ export interface AdvancedPlaygroundEnvironmentFeatureSchema {
     projectId: string;
     /** Feature's applicable strategies and cumulative results of the strategies */
     strategies: AdvancedPlaygroundEnvironmentFeatureSchemaStrategies;
-    /** The feature variant you receive based on the provided context or the _disabled
+    /**
+   * The feature variant you receive based on the provided context or the _disabled
                           variant_. If a feature is disabled or doesn't have any
                           variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of the feature's defined variants. */
+                          Otherwise, you'll get one of the feature's defined variants.
+   * @nullable
+   */
     variant: AdvancedPlaygroundEnvironmentFeatureSchemaVariant;
     /** The feature variants. */
     variants: VariantSchema[];

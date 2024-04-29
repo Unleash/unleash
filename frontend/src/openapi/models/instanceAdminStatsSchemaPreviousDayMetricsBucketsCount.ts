@@ -8,8 +8,14 @@
  * The number client metrics buckets records recorded in the previous day. # features * # apps * # envs * # hours with metrics
  */
 export type InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount = {
-    /** The number of enabled/disabled metrics buckets recorded in the previous day */
+    /**
+     * The number of enabled/disabled metrics buckets recorded in the previous day
+     * @minimum 0
+     */
     enabledCount?: number;
-    /** The number of variant metrics buckets recorded in the previous day */
+    /**
+     * The number of variant metrics buckets recorded in the previous day
+     * @minimum 0
+     */
     variantCount?: number;
 };

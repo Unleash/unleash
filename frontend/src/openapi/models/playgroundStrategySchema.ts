@@ -15,7 +15,10 @@ import type { PlaygroundSegmentSchema } from './playgroundSegmentSchema';
 export interface PlaygroundStrategySchema {
     /** The strategy's constraints and their evaluation results. */
     constraints: PlaygroundConstraintSchema[];
-    /** The strategy's status. Disabled strategies are not evaluated */
+    /**
+     * The strategy's status. Disabled strategies are not evaluated
+     * @nullable
+     */
     disabled: boolean | null;
     /** The strategy's id. */
     id: string;

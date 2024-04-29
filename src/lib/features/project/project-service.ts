@@ -50,6 +50,7 @@ import {
     RoleName,
     SYSTEM_USER_ID,
     type ProjectCreated,
+    type IProjectOwnersReadModel,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -76,8 +77,6 @@ import type {
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
 } from './project-store-type';
-
-const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
 type Days = number;
 type Count = number;
@@ -111,6 +110,8 @@ function includes(
 
 export default class ProjectService {
     private projectStore: IProjectStore;
+
+    private projectOwnersReadModel: IProjectOwnersReadModel;
 
     private accessService: AccessService;
 
@@ -147,6 +148,7 @@ export default class ProjectService {
     constructor(
         {
             projectStore,
+            projectOwnersReadModel,
             eventStore,
             featureToggleStore,
             environmentStore,
@@ -157,6 +159,7 @@ export default class ProjectService {
         }: Pick<
             IUnleashStores,
             | 'projectStore'
+            | 'projectOwnersReadModel'
             | 'eventStore'
             | 'featureToggleStore'
             | 'environmentStore'
@@ -174,6 +177,7 @@ export default class ProjectService {
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.projectStore = projectStore;
+        this.projectOwnersReadModel = projectOwnersReadModel;
         this.environmentStore = environmentStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.accessService = accessService;
@@ -216,6 +220,12 @@ export default class ProjectService {
             }
         }
         return projects;
+    }
+
+    async addOwnersToProjects(
+        projects: IProjectWithCount[],
+    ): Promise<IProjectWithCount[]> {
+        return this.projectOwnersReadModel.addOwners(projects);
     }
 
     async getProject(id: string): Promise<IProject> {
@@ -291,9 +301,9 @@ export default class ProjectService {
         enableChangeRequestsForSpecifiedEnvironments: (
             environments: CreateProject['changeRequestEnvironments'],
         ) => Promise<
-            void | ProjectCreated['changeRequestEnvironments']
+            ProjectCreated['changeRequestEnvironments']
         > = async () => {
-            return;
+            return [];
         },
     ): Promise<ProjectCreated> {
         await this.validateProjectEnvironments(newProject.environments);
@@ -324,17 +334,19 @@ export default class ProjectService {
             this.isEnterprise &&
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
         ) {
-            // todo: this is a workaround for backwards compatibility
-            // (i.e. not breaking enterprise tests) that we can change
-            // once these changes have been merged and enterprise
-            // updated. Instead, we can exit early if there are no cr
-            // envs
-            const crEnvs = newProject.changeRequestEnvironments || [];
-            await this.validateEnvironmentsExist(crEnvs.map((env) => env.name));
-            const changeRequestEnvironments =
-                await enableChangeRequestsForSpecifiedEnvironments(crEnvs);
+            if (newProject.changeRequestEnvironments) {
+                await this.validateEnvironmentsExist(
+                    newProject.changeRequestEnvironments.map((env) => env.name),
+                );
+                const changeRequestEnvironments =
+                    await enableChangeRequestsForSpecifiedEnvironments(
+                        newProject.changeRequestEnvironments,
+                    );
 
-            data.changeRequestEnvironments = changeRequestEnvironments ?? [];
+                data.changeRequestEnvironments = changeRequestEnvironments;
+            } else {
+                data.changeRequestEnvironments = [];
+            }
         }
 
         await this.accessService.createDefaultProjectRoles(user, data.id);

@@ -80,6 +80,8 @@ export const SamlAuth = () => {
         });
     };
 
+    const scimEnabled = useUiFlag('scimApi');
+
     const {
         settings,
         enabled,
@@ -105,13 +107,13 @@ export const SamlAuth = () => {
                 title: 'Settings stored',
                 type: 'success',
             });
-            saveScimSettings();
+            if (scimEnabled) {
+                saveScimSettings();
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
-
-    const scimEnabled = useUiFlag('scimApi');
 
     return (
         <>

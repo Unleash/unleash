@@ -15,24 +15,36 @@ import type { ProjectStatsSchema } from './projectStatsSchema';
 export interface HealthReportSchema {
     /** The number of active feature toggles. */
     activeCount: number;
-    /** When the project was last updated. */
+    /**
+     * When the project was last updated.
+     * @nullable
+     */
     createdAt?: string | null;
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
     defaultStickiness: string;
-    /** The project's description */
+    /**
+     * The project's description
+     * @nullable
+     */
     description?: string | null;
     /** An array containing the names of all the environments configured for the project. */
     environments: ProjectEnvironmentSchema[];
     /** Indicates if the project has been marked as a favorite by the current user requesting the project health overview. */
     favorite?: boolean;
-    /** A limit on the number of features allowed in the project. Null if no limit. */
+    /**
+     * A limit on the number of features allowed in the project. Null if no limit.
+     * @nullable
+     */
     featureLimit?: number | null;
     featureNaming?: CreateFeatureNamingPatternSchema;
     /** An array containing an overview of all the features of the project and their individual status */
     features: FeatureSchema[];
     /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project. */
     health: number;
-    /** The number of users/members in the project. */
+    /**
+     * The number of users/members in the project.
+     * @minimum 0
+     */
     members: number;
     /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode: HealthReportSchemaMode;
@@ -44,7 +56,10 @@ export interface HealthReportSchema {
     staleCount: number;
     /** Project statistics */
     stats?: ProjectStatsSchema;
-    /** When the project was last updated. */
+    /**
+     * When the project was last updated.
+     * @nullable
+     */
     updatedAt?: string | null;
     /** The project overview version. */
     version: number;

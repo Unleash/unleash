@@ -27,19 +27,6 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     },
 }));
 
-const StyledUsername = styled('div')(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    color: theme.palette.text.primary,
-    marginLeft: theme.spacing(1),
-}));
-
-const StyledHeader = styled('h3')(({ theme }) => ({
-    margin: theme.spacing(0, 0, 1),
-    fontSize: theme.typography.caption.fontSize,
-    color: theme.palette.text.primary,
-    fontWeight: theme.typography.fontWeightRegular,
-}));
-
 interface IGroupCardAvatarsProps {
     users: {
         name: string;
@@ -49,10 +36,7 @@ interface IGroupCardAvatarsProps {
     header?: ReactNode;
 }
 
-export const GroupCardAvatars = ({
-    users = [],
-    header = null,
-}: IGroupCardAvatarsProps) => {
+export const GroupCardAvatars = ({ users = [] }: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>
             users
@@ -91,11 +75,6 @@ export const GroupCardAvatars = ({
 
     return (
         <StyledContainer>
-            <ConditionallyRender
-                condition={typeof header === 'string'}
-                show={<StyledHeader>{header}</StyledHeader>}
-                elseShow={header}
-            />
             <StyledAvatars>
                 {shownUsers.map((user) => (
                     <StyledAvatar

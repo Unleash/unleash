@@ -44,12 +44,33 @@ const useOwnersMap = () => {
 const StyledContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     display: 'flex',
-    alignItems: 'flex-end',
+    flexDirection: 'column',
+}));
+
+const StyledContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    height: theme.spacing(3.5),
 }));
 
 const StyledUserName = styled('p')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
-    margin: theme.spacing(0, 0, 0.5, 0),
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-word',
+    lineHeight: '1.2',
+}));
+
+const StyledHeader = styled('h3')(({ theme }) => ({
+    width: '100%',
+    margin: theme.spacing(0, 0, 1),
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
 }));
 
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
@@ -58,18 +79,20 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
 
     return (
         <StyledContainer>
-            <GroupCardAvatars
-                header={owners.length === 1 ? 'Owner' : 'Owners'}
-                users={users}
-            />
-            <ConditionallyRender
-                condition={owners.length === 1}
-                show={
-                    <StyledUserName>
-                        {users[0]?.name || users[0]?.description}
-                    </StyledUserName>
-                }
-            />
+            <StyledHeader>
+                {owners.length === 1 ? 'Owner' : 'Owners'}
+            </StyledHeader>
+            <StyledContent>
+                <GroupCardAvatars users={users} />
+                <ConditionallyRender
+                    condition={owners.length === 1}
+                    show={
+                        <StyledUserName>
+                            {users[0]?.name || users[0]?.description}
+                        </StyledUserName>
+                    }
+                />
+            </StyledContent>
         </StyledContainer>
     );
 };

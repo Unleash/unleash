@@ -103,7 +103,30 @@ const CreateProject = () => {
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatApiCode}
             >
-                <NewProjectForm />
+                <NewProjectForm
+                    errors={errors}
+                    handleSubmit={handleSubmit}
+                    projectId={projectId}
+                    setProjectId={setProjectId}
+                    projectName={projectName}
+                    projectStickiness={projectStickiness}
+                    projectMode={projectMode}
+                    setProjectMode={setProjectMode}
+                    setProjectStickiness={setProjectStickiness}
+                    setProjectName={setProjectName}
+                    projectDesc={projectDesc}
+                    setProjectDesc={setProjectDesc}
+                    mode='Create'
+                    clearErrors={clearErrors}
+                    validateProjectId={validateProjectId}
+                >
+                    <StyledButton onClick={handleCancel}>Cancel</StyledButton>
+                    <CreateButton
+                        name='project'
+                        permission={CREATE_PROJECT}
+                        data-testid={CREATE_PROJECT_BTN}
+                    />
+                </NewProjectForm>
             </FormTemplate>
         );
     }

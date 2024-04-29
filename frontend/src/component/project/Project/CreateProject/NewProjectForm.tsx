@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
     Button,
     MenuItem,
@@ -6,10 +7,6 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { GO_BACK } from 'constants/navigate';
-import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -85,15 +82,66 @@ const FormActions = styled('div')(({ theme }) => ({
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
-export const NewProjectForm = () => {
-    const navigate = useNavigate();
+type FormProps = {
+    projectId: string;
+    projectName: string;
+    projectDesc: string;
+    projectStickiness?: string;
+    featureLimit?: string;
+    featureCount?: number;
+    projectMode?: string;
+    setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectId: React.Dispatch<React.SetStateAction<string>>;
+    setProjectName: React.Dispatch<React.SetStateAction<string>>;
+    setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    handleSubmit: (e: any) => void;
+    errors: { [key: string]: string };
+    mode: 'Create' | 'Edit';
+    clearErrors: () => void;
+    validateProjectId: () => void;
+};
 
-    const handleCancel = () => {
-        navigate(GO_BACK);
+const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
+const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
+
+export const NewProjectForm: React.FC<FormProps> = ({
+    children,
+    handleSubmit,
+    projectName,
+    projectDesc,
+    projectStickiness,
+    featureLimit,
+    featureCount,
+    projectMode,
+    setProjectMode,
+    setProjectId,
+    setProjectName,
+    setProjectDesc,
+    setProjectStickiness,
+    setFeatureLimit,
+    errors,
+    mode,
+    clearErrors,
+}) => {
+    const handleProjectNameUpdate = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const input = e.target.value;
+        setProjectName(input);
+        const maybeProjectId = input
+            ? `${encodeURIComponent(input.trim())}-${uuidv4().slice(-12)}`
+            : '';
+        setProjectId(maybeProjectId);
     };
 
     return (
-        <StyledContainer>
+        <StyledContainer
+            onSubmit={(submitEvent) => {
+                handleSubmit(submitEvent);
+            }}
+        >
             <TopGrid>
                 <span className='icon'>icon</span>
                 <Typography variant='h2'>New project</Typography>
@@ -109,7 +157,16 @@ export const NewProjectForm = () => {
                 <StyledInput
                     className='project-name'
                     label='Project name'
+                    value={projectName}
+                    onChange={handleProjectNameUpdate}
+                    error={Boolean(errors.name)}
+                    errorText={errors.name}
+                    onFocus={() => {
+                        delete errors.name;
+                    }}
+                    data-testid={PROJECT_NAME_INPUT}
                     required
+                    autoFocus
                     InputProps={{
                         classes: {
                             input: 'project-name-input',
@@ -120,6 +177,10 @@ export const NewProjectForm = () => {
                     className='description'
                     label='Description (optional)'
                     multiline
+                    maxRows={20}
+                    value={projectDesc}
+                    onChange={(e) => setProjectDesc(e.target.value)}
+                    data-testid={PROJECT_DESCRIPTION_INPUT}
                 />
             </TopGrid>
             <OptionButtons>
@@ -128,15 +189,7 @@ export const NewProjectForm = () => {
                 <Button variant='outlined'>Open</Button>
                 <Button variant='outlined'>1 environment configured</Button>
             </OptionButtons>
-            <FormActions>
-                <Button onClick={handleCancel}>Cancel</Button>
-
-                <CreateButton
-                    name='project'
-                    permission={CREATE_PROJECT}
-                    data-testid={CREATE_PROJECT_BTN}
-                />
-            </FormActions>
+            <FormActions>{children}</FormActions>
         </StyledContainer>
     );
 };

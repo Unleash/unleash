@@ -49,7 +49,7 @@ export const ProjectGroup: React.FC<{
         : [StyledDivContainer, LegacyProjectCard];
 
     return (
-        <div>
+        <article>
             <ConditionallyRender
                 condition={Boolean(sectionTitle)}
                 show={

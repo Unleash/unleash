@@ -15,6 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Button, styled } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
@@ -45,6 +46,8 @@ const CreateProject = () => {
         projectStickiness,
         errors,
     } = useProjectForm();
+
+    const useNewProjectForm = useUiFlag('newCreateProjectUI');
 
     const { createProject, loading } = useProjectApi();
 
@@ -90,7 +93,7 @@ const CreateProject = () => {
         navigate(GO_BACK);
     };
 
-    if (false) {
+    if (useNewProjectForm) {
         return (
             <FormTemplate
                 disablePadding
@@ -100,7 +103,7 @@ const CreateProject = () => {
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatApiCode}
             >
-                <NewProjectForm></NewProjectForm>
+                <NewProjectForm />
             </FormTemplate>
         );
     }

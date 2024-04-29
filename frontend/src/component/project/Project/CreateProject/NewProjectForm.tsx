@@ -1,4 +1,11 @@
-import { Button, Select, TextField, styled } from '@mui/material';
+import {
+    Button,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+    styled,
+} from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -87,58 +94,61 @@ export const NewProjectForm = () => {
     };
 
     return (
-        <FormTemplate
-            description='Create a new project'
-            documentationLink='docs link'
-            documentationLinkLabel='docs label'
-            disablePadding
-        >
-            <StyledContainer>
-                <TopGrid>
-                    <span className='icon'>icon</span>
-                    <typography variant='h2'>New project</typography>
-                    <Select
-                        className='input'
-                        id='template-selector'
-                        value='none'
-                        label='Project creation template'
-                        name='Project creation template'
-                        options={[{ key: 'none', label: 'No template' }]}
-                    />
-                    <StyledInput
-                        className='project-name'
-                        label='Project name'
-                        // autoFocus
-                        required
-                        InputProps={{
-                            classes: {
-                                input: 'project-name-input',
-                                label: 'project-name-input',
-                            },
-                        }}
-                    />
-                    <StyledInput
-                        className='description'
-                        label='Description (optional)'
-                        multiline
-                        // autoFocus
-                    />
-                </TopGrid>
-                <OptionButtons>
-                    <Button variant='outlined'>4 selected</Button>
-                    <Button variant='outlined'>clientId</Button>
-                    <Button variant='outlined'>Open</Button>
-                    <Button variant='outlined'>1 environment configured</Button>
-                </OptionButtons>
-                <FormActions>
-                    <Button onClick={handleCancel}>Cancel</Button>
+        <form>
+            <FormTemplate
+                description='Create a new project'
+                documentationLink='docs link'
+                documentationLinkLabel='docs label'
+                disablePadding
+            >
+                <StyledContainer>
+                    <TopGrid>
+                        <span className='icon'>icon</span>
+                        <Typography variant='h2'>New project</Typography>
+                        <Select
+                            className='input'
+                            id='template-selector'
+                            value={'none'}
+                            label='Project creation template'
+                            name='Project creation template'
+                        >
+                            <MenuItem value={'none'}>No template</MenuItem>
+                        </Select>
+                        <StyledInput
+                            className='project-name'
+                            label='Project name'
+                            required
+                            InputProps={{
+                                classes: {
+                                    input: 'project-name-input',
+                                },
+                            }}
+                        />
+                        <StyledInput
+                            className='description'
+                            label='Description (optional)'
+                            multiline
+                        />
+                    </TopGrid>
+                    <OptionButtons>
+                        <Button variant='outlined'>4 selected</Button>
+                        <Button variant='outlined'>clientId</Button>
+                        <Button variant='outlined'>Open</Button>
+                        <Button variant='outlined'>
+                            1 environment configured
+                        </Button>
+                    </OptionButtons>
+                    <FormActions>
+                        <Button onClick={handleCancel}>Cancel</Button>
 
-                    <CreateButton
-                        permission={CREATE_PROJECT}
-                        data-testid={CREATE_PROJECT_BTN}
-                    />
-                </FormActions>
-            </StyledContainer>
-        </FormTemplate>
+                        <CreateButton
+                            name='project'
+                            permission={CREATE_PROJECT}
+                            data-testid={CREATE_PROJECT_BTN}
+                        />
+                    </FormActions>
+                </StyledContainer>
+            </FormTemplate>
+        </form>
     );
 };

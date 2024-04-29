@@ -38,7 +38,7 @@ export type IFlagKey =
     | 'executiveDashboardUI'
     | 'feedbackComments'
     | 'showInactiveUsers'
-    | 'inMemoryScheduledChangeRequests'
+    | 'killScheduledChangeRequestCache'
     | 'collectTrafficDataUsage'
     | 'displayTrafficDataUsage'
     | 'useMemoizedActiveTokens'
@@ -210,8 +210,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
         false,
     ),
-    inMemoryScheduledChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
+    killScheduledChangeRequestCache: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
         false,
     ),
     collectTrafficDataUsage: parseEnvVarBoolean(

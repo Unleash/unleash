@@ -30,6 +30,7 @@ import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 type ChartDatasetType = ChartDataset<'bar'>;
 
@@ -185,8 +186,36 @@ const customHighlightPlugin = {
 const createBarChartOptions = (
     theme: Theme,
     tooltipTitleCallback: (tooltipItems: any) => string,
+    includedTraffic?: number,
 ): ChartOptions<'bar'> => ({
     plugins: {
+        annotation: {
+            clip: false,
+            annotations: {
+                line: {
+                    type: 'line',
+                    borderDash: [5, 5],
+                    yMin: includedTraffic ? includedTraffic / 30 : 0,
+                    yMax: includedTraffic ? includedTraffic / 30 : 0,
+                    borderColor: 'gray',
+                    borderWidth: 1,
+                    display: !!includedTraffic,
+
+                    label: {
+                        backgroundColor: 'rgba(192, 192, 192,  0.8)',
+                        color: 'black',
+                        padding: {
+                            top: 10,
+                            bottom: 10,
+                            left: 10,
+                            right: 10,
+                        },
+                        content: 'Average daily requests included in your plan',
+                        display: !!includedTraffic,
+                    },
+                },
+            },
+        },
         legend: {
             position: 'bottom',
             labels: {
@@ -284,7 +313,7 @@ const endpointsInfo: Record<string, EndpointInfo> = {
     },
 };
 
-const proPlanIncludedRequests = 53000000;
+const proPlanIncludedRequests = 53_000_000;
 
 export const NetworkTrafficUsage: VFC = () => {
     usePageTitle('Network - Data Usage');
@@ -294,20 +323,28 @@ export const NetworkTrafficUsage: VFC = () => {
     const record = toPeriodsRecord(selectablePeriods);
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
 
+    const { isOss, isPro } = useUiConfig();
+
+    const includedTraffic = isPro() ? proPlanIncludedRequests : 0;
+
     const options = useMemo(() => {
-        return createBarChartOptions(theme, (tooltipItems: any) => {
-            const periodItem = record[period];
-            const tooltipDate = new Date(
-                periodItem.year,
-                periodItem.month,
-                Number.parseInt(tooltipItems[0].label),
-            );
-            return tooltipDate.toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-            });
-        });
+        return createBarChartOptions(
+            theme,
+            (tooltipItems: any) => {
+                const periodItem = record[period];
+                const tooltipDate = new Date(
+                    periodItem.year,
+                    periodItem.month,
+                    Number.parseInt(tooltipItems[0].label),
+                );
+                return tooltipDate.toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                });
+            },
+            includedTraffic,
+        );
     }, [theme, period]);
 
     const traffic = useInstanceTrafficMetrics(period);
@@ -323,7 +360,6 @@ export const NetworkTrafficUsage: VFC = () => {
         datasets,
     };
 
-    const { isOss } = useUiConfig();
     const flagEnabled = useUiFlag('displayTrafficDataUsage');
 
     useEffect(() => {
@@ -368,9 +404,7 @@ export const NetworkTrafficUsage: VFC = () => {
                                 <Grid item xs={7} md={5.5}>
                                     <NetworkTrafficUsagePlanSummary
                                         usageTotal={usageTotal}
-                                        planIncludedRequests={
-                                            proPlanIncludedRequests
-                                        }
+                                        includedTraffic={includedTraffic}
                                     />
                                 </Grid>
                             </Grid>
@@ -406,6 +440,7 @@ export const NetworkTrafficUsage: VFC = () => {
 
 // Register dependencies that we need to draw the chart.
 ChartJS.register(
+    annotationPlugin,
     CategoryScale,
     LinearScale,
     BarElement,

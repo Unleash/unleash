@@ -1,4 +1,4 @@
-import { Button, Input, TextField, styled } from '@mui/material';
+import { Button, Select, TextField, styled } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -8,21 +8,19 @@ import { useNavigate } from 'react-router-dom';
 const StyledContainer = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
 
-    '> * + *' : {
+    '> * + *': {
         borderBlockStart: `1px solid ${theme.palette.divider}`,
     },
 
-    '> *' : {
-    padding: theme.spacing(7),
+    '> *': {
+        padding: theme.spacing(7),
     },
-
-
 }));
-
 
 const TopGrid = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateAreas: '"icon header template" "icon project-name project-name" "icon description description"',
+    gridTemplateAreas:
+        '"icon header template" "icon project-name project-name" "icon description description"',
     gridTemplateColumns: 'minmax(auto, 50px) 1fr auto',
     gap: theme.spacing(2),
 
@@ -33,33 +31,31 @@ const TopGrid = styled('div')(({ theme }) => ({
         borderRadius: theme.shape.borderRadius,
     },
 
-    '> h2' : {
+    '> h2': {
         gridArea: 'header',
     },
 
-    '> span.input' : {
+    '> span.input': {
         gridArea: 'template',
-
     },
 
-    '.project-name' : {
+    '.project-name': {
         gridArea: 'project-name',
         margin: 0,
     },
 
-    '.project-name *' : {
+    '.project-name *': {
         fontSize: theme.typography.h1.fontSize,
     },
 
-    '.description' : {
+    '.description': {
         gridArea: 'description',
         margin: 0,
     },
 
-    '.description *' : {
+    '.description *': {
         fontSize: theme.typography.h2.fontSize,
     },
-
 }));
 
 const OptionButtons = styled('div')(({ theme }) => ({
@@ -72,7 +68,7 @@ const StyledInput = styled(TextField)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     paddingRight: theme.spacing(1),
 
-    fieldset: {border: 'none'},
+    fieldset: { border: 'none' },
 }));
 
 const FormActions = styled('div')(({ theme }) => ({
@@ -81,9 +77,7 @@ const FormActions = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
-
 
 export const NewProjectForm = () => {
     const navigate = useNavigate();
@@ -92,48 +86,60 @@ export const NewProjectForm = () => {
         navigate(GO_BACK);
     };
 
-  return (
-      <FormTemplate
+    return (
+        <FormTemplate
+            description='Create a new project'
+            documentationLink='docs link'
+            documentationLinkLabel='docs label'
+            disablePadding
+        >
+            {' '}
+            <StyledContainer>
+                <TopGrid>
+                    <span className='icon'>icon</span>
+                    <typography variant='h2'>New project</typography>
+                    <Select
+                        className='input'
+                        id='template-selector'
+                        value='none'
+                        label='Project creation template'
+                        name='Project creation template'
+                        options={[{ key: 'none', label: 'No template' }]}
+                    />
+                    <StyledInput
+                        className='project-name'
+                        label='Project name'
+                        // autoFocus
+                        required
+                        InputProps={{
+                            classes: {
+                                input: 'project-name-input',
+                                label: 'project-name-input',
+                            },
+                        }}
+                    />
+                    <StyledInput
+                        className='description'
+                        label='Description (optional)'
+                        multiline
+                        // autoFocus
+                    />
+                </TopGrid>
+                <OptionButtons>
+                    <Button variant='outlined'>4 selected</Button>
+                    <Button variant='outlined'>clientId</Button>
+                    <Button variant='outlined'>Open</Button>
+                    <Button variant='outlined'>1 environment configured</Button>
+                </OptionButtons>
+                <FormActions>
+                    <Button onClick={handleCancel}>Cancel</Button>
 
-    description="Create a new project"
-    documentationLink='docs link'
-    documentationLinkLabel='docs label'
-    disablePadding
-
-          >      <StyledContainer>
-          <TopGrid>
-            <span className="icon">icon</span>
-          <typography variant='h2'>New project</typography><span className="input">no template</span>
-          <StyledInput
-      className='project-name'
-      label="Project name"
-      // autoFocus
-      required
-      InputProps= {{
-          classes: {input: 'project-name-input', label: 'project-name-input'},
-      }}
-          />
-          <StyledInput
-      className='description'
-      label="Description (optional)"
-      multiline
-      // autoFocus
-          />
-          </TopGrid>
-          <OptionButtons><button>option</button>
-          <button>option</button>
-          <button>option</button>
-          <button>option</button></OptionButtons>
-         <FormActions>
-
-                <Button onClick={handleCancel}>Cancel</Button>
-
-                <CreateButton
-                    permission={CREATE_PROJECT}
-                    data-testid={CREATE_PROJECT_BTN}
-                />
-          </FormActions>
-
-          </StyledContainer>
-</FormTemplate>  );
+                    <CreateButton
+                        permission={CREATE_PROJECT}
+                        data-testid={CREATE_PROJECT_BTN}
+                    />
+                </FormActions>
+            </StyledContainer>
+        </FormTemplate>
+    );
 };

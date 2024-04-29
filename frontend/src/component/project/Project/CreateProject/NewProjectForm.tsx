@@ -9,7 +9,6 @@ import {
 import { GO_BACK } from 'constants/navigate';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled('form')(({ theme }) => ({
@@ -94,61 +93,50 @@ export const NewProjectForm = () => {
     };
 
     return (
-        <form>
-            <FormTemplate
-                description='Create a new project'
-                documentationLink='docs link'
-                documentationLinkLabel='docs label'
-                disablePadding
-            >
-                <StyledContainer>
-                    <TopGrid>
-                        <span className='icon'>icon</span>
-                        <Typography variant='h2'>New project</Typography>
-                        <Select
-                            className='input'
-                            id='template-selector'
-                            value={'none'}
-                            label='Project creation template'
-                            name='Project creation template'
-                        >
-                            <MenuItem value={'none'}>No template</MenuItem>
-                        </Select>
-                        <StyledInput
-                            className='project-name'
-                            label='Project name'
-                            required
-                            InputProps={{
-                                classes: {
-                                    input: 'project-name-input',
-                                },
-                            }}
-                        />
-                        <StyledInput
-                            className='description'
-                            label='Description (optional)'
-                            multiline
-                        />
-                    </TopGrid>
-                    <OptionButtons>
-                        <Button variant='outlined'>4 selected</Button>
-                        <Button variant='outlined'>clientId</Button>
-                        <Button variant='outlined'>Open</Button>
-                        <Button variant='outlined'>
-                            1 environment configured
-                        </Button>
-                    </OptionButtons>
-                    <FormActions>
-                        <Button onClick={handleCancel}>Cancel</Button>
+        <StyledContainer>
+            <TopGrid>
+                <span className='icon'>icon</span>
+                <Typography variant='h2'>New project</Typography>
+                <Select
+                    className='input'
+                    id='template-selector'
+                    value={'none'}
+                    label='Project creation template'
+                    name='Project creation template'
+                >
+                    <MenuItem value={'none'}>No template</MenuItem>
+                </Select>
+                <StyledInput
+                    className='project-name'
+                    label='Project name'
+                    required
+                    InputProps={{
+                        classes: {
+                            input: 'project-name-input',
+                        },
+                    }}
+                />
+                <StyledInput
+                    className='description'
+                    label='Description (optional)'
+                    multiline
+                />
+            </TopGrid>
+            <OptionButtons>
+                <Button variant='outlined'>4 selected</Button>
+                <Button variant='outlined'>clientId</Button>
+                <Button variant='outlined'>Open</Button>
+                <Button variant='outlined'>1 environment configured</Button>
+            </OptionButtons>
+            <FormActions>
+                <Button onClick={handleCancel}>Cancel</Button>
 
-                        <CreateButton
-                            name='project'
-                            permission={CREATE_PROJECT}
-                            data-testid={CREATE_PROJECT_BTN}
-                        />
-                    </FormActions>
-                </StyledContainer>
-            </FormTemplate>
-        </form>
+                <CreateButton
+                    name='project'
+                    permission={CREATE_PROJECT}
+                    data-testid={CREATE_PROJECT_BTN}
+                />
+            </FormActions>
+        </StyledContainer>
     );
 };

@@ -90,8 +90,19 @@ const CreateProject = () => {
         navigate(GO_BACK);
     };
 
-    if(true) {
-        return <NewProjectForm></NewProjectForm>
+    if (false) {
+        return (
+            <FormTemplate
+                disablePadding
+                loading={loading}
+                description='Projects allows you to group feature toggles together in the management UI.'
+                documentationLink='https://docs.getunleash.io/reference/projects'
+                documentationLinkLabel='Projects documentation'
+                formatApiCode={formatApiCode}
+            >
+                <NewProjectForm></NewProjectForm>
+            </FormTemplate>
+        );
     }
 
     return (

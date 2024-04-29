@@ -74,7 +74,7 @@ export const ProjectCard = ({
                     <StyledParagraphInfo data-loading>
                         {health}%
                     </StyledParagraphInfo>
-                    <p data-loading>health</p>
+                    <p data-loading>healthy</p>
                 </div>
             </StyledDivInfo>
         </StyledProjectCardBody>

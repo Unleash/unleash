@@ -1,5 +1,9 @@
-import { Input, TextField, styled } from '@mui/material';
+import { Button, Input, TextField, styled } from '@mui/material';
+import { GO_BACK } from 'constants/navigate';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -71,7 +75,23 @@ const StyledInput = styled(TextField)(({ theme }) => ({
     fieldset: {border: 'none'},
 }));
 
+const FormActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(5),
+    justifyContent: 'flex-end',
+}));
+
+
+const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
+
+
 export const NewProjectForm = () => {
+    const navigate = useNavigate();
+
+    const handleCancel = () => {
+        navigate(GO_BACK);
+    };
+
   return (
       <FormTemplate
 
@@ -104,8 +124,16 @@ export const NewProjectForm = () => {
           <button>option</button>
           <button>option</button>
           <button>option</button></OptionButtons>
-          <div><button>cancel/create</button>
-          <button>cancel/create</button></div>
+         <FormActions>
+
+                <Button onClick={handleCancel}>Cancel</Button>
+
+                <CreateButton
+                    permission={CREATE_PROJECT}
+                    data-testid={CREATE_PROJECT_BTN}
+                />
+          </FormActions>
+
           </StyledContainer>
 </FormTemplate>  );
 };

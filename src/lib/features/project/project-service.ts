@@ -301,9 +301,9 @@ export default class ProjectService {
         enableChangeRequestsForSpecifiedEnvironments: (
             environments: CreateProject['changeRequestEnvironments'],
         ) => Promise<
-            void | ProjectCreated['changeRequestEnvironments']
+            ProjectCreated['changeRequestEnvironments']
         > = async () => {
-            return;
+            return [];
         },
     ): Promise<ProjectCreated> {
         await this.validateProjectEnvironments(newProject.environments);
@@ -334,17 +334,19 @@ export default class ProjectService {
             this.isEnterprise &&
             this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
         ) {
-            // todo: this is a workaround for backwards compatibility
-            // (i.e. not breaking enterprise tests) that we can change
-            // once these changes have been merged and enterprise
-            // updated. Instead, we can exit early if there are no cr
-            // envs
-            const crEnvs = newProject.changeRequestEnvironments || [];
-            await this.validateEnvironmentsExist(crEnvs.map((env) => env.name));
-            const changeRequestEnvironments =
-                await enableChangeRequestsForSpecifiedEnvironments(crEnvs);
+            if (newProject.changeRequestEnvironments) {
+                await this.validateEnvironmentsExist(
+                    newProject.changeRequestEnvironments.map((env) => env.name),
+                );
+                const changeRequestEnvironments =
+                    await enableChangeRequestsForSpecifiedEnvironments(
+                        newProject.changeRequestEnvironments,
+                    );
 
-            data.changeRequestEnvironments = changeRequestEnvironments ?? [];
+                data.changeRequestEnvironments = changeRequestEnvironments;
+            } else {
+                data.changeRequestEnvironments = [];
+            }
         }
 
         await this.accessService.createDefaultProjectRoles(user, data.id);

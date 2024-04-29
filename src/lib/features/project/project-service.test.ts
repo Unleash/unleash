@@ -50,6 +50,8 @@ describe('enterprise extension: enable change requests', () => {
                 const project = await service.projectStore.get(projectId);
 
                 expect(project).toBeTruthy();
+
+                return [];
             },
         );
     });
@@ -130,9 +132,7 @@ describe('enterprise extension: enable change requests', () => {
                 isAPI: false,
             },
             TEST_AUDIT_USER,
-            async () => {
-                [];
-            },
+            async () => [],
         );
     });
 
@@ -215,9 +215,7 @@ describe('enterprise extension: enable change requests', () => {
                 isAPI: false,
             },
             TEST_AUDIT_USER,
-            async () => {
-                return;
-            },
+            async () => [],
         );
 
         expect(result.changeRequestEnvironments).toStrictEqual([]);
@@ -245,9 +243,7 @@ describe('enterprise extension: enable change requests', () => {
                 isAPI: false,
             },
             TEST_AUDIT_USER,
-            async () => {
-                crEnvs;
-            },
+            async () => crEnvs,
         );
 
         expect('changeRequestEnvironments' in result).toBeFalsy();

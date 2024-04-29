@@ -43,7 +43,6 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
             .into('feature_lifecycles')
             .onConflict(['feature', 'stage'])
             .ignore();
-        console.log(query.toQuery());
         await query;
     }
 

@@ -16,7 +16,8 @@ const StyledFormSection = styled('div')(({ theme }) => ({
 
 const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
-    gridTemplateAreas: '"icon header" "icon project-name" "icon description"',
+    gridTemplateAreas:
+        '"icon header" "icon project-name" "icon project-description"',
     gridTemplateColumns: 'minmax(auto, 50px) 1fr',
     gap: theme.spacing(2),
 }));
@@ -32,18 +33,24 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
 }));
 
+const ProjectNameContainer = styled('div')(({ theme }) => ({
+    gridArea: 'project-name',
+}));
+
+const ProjectDescriptionContainer = styled('div')(({ theme }) => ({
+    gridArea: 'project-description',
+}));
+
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     fieldset: { border: 'none' },
 }));
 
 const StyledProjectName = styled(StyledInput)(({ theme }) => ({
-    gridArea: 'project-name',
     '*': { fontSize: theme.typography.h1.fontSize },
 }));
 
 const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
-    gridArea: 'description',
     '*': { fontSize: theme.typography.h2.fontSize },
 }));
 
@@ -123,28 +130,32 @@ export const NewProjectForm: React.FC<FormProps> = ({
             <TopGrid>
                 <StyledIcon>icon</StyledIcon>
                 <StyledHeader variant='h2'>New project</StyledHeader>
-                <StyledProjectName
-                    label='Project name'
-                    required
-                    value={projectName}
-                    onChange={handleProjectNameUpdate}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={() => {
-                        delete errors.name;
-                    }}
-                    data-testid={PROJECT_NAME_INPUT}
-                    autoFocus
-                />
-                <StyledProjectDescription
-                    className='description'
-                    label='Description (optional)'
-                    multiline
-                    maxRows={20}
-                    value={projectDesc}
-                    onChange={(e) => setProjectDesc(e.target.value)}
-                    data-testid={PROJECT_DESCRIPTION_INPUT}
-                />
+                <ProjectNameContainer>
+                    <StyledProjectName
+                        label='Project name'
+                        required
+                        value={projectName}
+                        onChange={handleProjectNameUpdate}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        onFocus={() => {
+                            delete errors.name;
+                        }}
+                        data-testid={PROJECT_NAME_INPUT}
+                        autoFocus
+                    />
+                </ProjectNameContainer>
+                <ProjectDescriptionContainer>
+                    <StyledProjectDescription
+                        className='description'
+                        label='Description (optional)'
+                        multiline
+                        maxRows={20}
+                        value={projectDesc}
+                        onChange={(e) => setProjectDesc(e.target.value)}
+                        data-testid={PROJECT_DESCRIPTION_INPUT}
+                    />
+                </ProjectDescriptionContainer>
             </TopGrid>
             <OptionButtons>
                 <Button variant='outlined'>4 selected</Button>

@@ -93,8 +93,6 @@ export const FilterItem: FC<IFilterItemProps> = ({
         handleToggle,
     });
 
-    // todo: find out why it doesn't update selection during a search
-
     const buttonText =
         selectedOptions.size > 0
             ? `${selectedOptions.size} selected`

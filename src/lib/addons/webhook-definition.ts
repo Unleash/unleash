@@ -29,6 +29,7 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
+    FEATURE_COMPLETED,
 } from '../types/events';
 import type { IAddonDefinition } from '../types/model';
 
@@ -103,6 +104,7 @@ const webhookDefinition: IAddonDefinition = {
         FEATURE_REVIVED,
         FEATURE_STALE_ON,
         FEATURE_STALE_OFF,
+        FEATURE_COMPLETED,
         FEATURE_ENVIRONMENT_ENABLED,
         FEATURE_ENVIRONMENT_DISABLED,
         FEATURE_STRATEGY_REMOVE,

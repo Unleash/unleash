@@ -1,5 +1,6 @@
-import { Button, TextField, Typography, styled } from '@mui/material';
+import { Button, Typography, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import Input from 'component/common/Input/Input';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -32,9 +33,8 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
 }));
 
-const StyledInput = styled(TextField)(({ theme }) => ({
+const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    margin: 0,
     fieldset: { border: 'none' },
 }));
 

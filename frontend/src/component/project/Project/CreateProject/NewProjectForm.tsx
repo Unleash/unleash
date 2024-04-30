@@ -2,6 +2,7 @@ import { Button, Typography, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -19,19 +20,18 @@ const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas:
         '"icon header" "icon project-name" "icon project-description"',
-    gridTemplateColumns: 'minmax(auto, 50px) 1fr',
+    gridTemplateColumns: 'auto 1fr',
     gap: theme.spacing(2),
 }));
 
-const StyledIcon = styled('span')(({ theme }) => ({
-    border: `1px solid ${theme.palette.primary.main}`,
-    width: `100%`,
-    aspectRatio: '1',
-    borderRadius: theme.shape.borderRadius,
+const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
+    color: theme.palette.primary.main,
 }));
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
+    alignSelf: 'center',
+    fontWeight: 'lighter',
 }));
 
 const ProjectNameContainer = styled('div')(({ theme }) => ({
@@ -129,7 +129,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
             }}
         >
             <TopGrid>
-                <StyledIcon>icon</StyledIcon>
+                <StyledIcon aria-hidden='true' />
                 <StyledHeader variant='h2'>New project</StyledHeader>
                 <ProjectNameContainer>
                     <StyledProjectName

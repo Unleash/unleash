@@ -11,19 +11,19 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 
-const StyledContainer = styled('form')(({ theme }) => ({
+const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
+}));
 
-    '> * + *': {
+const StyledFormSection = styled('div')(({ theme }) => ({
+    '& + *': {
         borderBlockStart: `1px solid ${theme.palette.divider}`,
     },
 
-    '> *': {
-        padding: theme.spacing(7),
-    },
+    padding: theme.spacing(7),
 }));
 
-const TopGrid = styled('div')(({ theme }) => ({
+const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas:
         '"icon header template" "icon project-name project-name" "icon description description"',
@@ -64,7 +64,7 @@ const TopGrid = styled('div')(({ theme }) => ({
     },
 }));
 
-const OptionButtons = styled('div')(({ theme }) => ({
+const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(2),
 }));
@@ -77,7 +77,7 @@ const StyledInput = styled(TextField)(({ theme }) => ({
     fieldset: { border: 'none' },
 }));
 
-const FormActions = styled('div')(({ theme }) => ({
+const FormActions = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(5),
     justifyContent: 'flex-end',
@@ -93,7 +93,7 @@ export const NewProjectForm = () => {
     };
 
     return (
-        <StyledContainer>
+        <StyledForm>
             <TopGrid>
                 <span className='icon'>icon</span>
                 <Typography variant='h2'>New project</Typography>
@@ -137,6 +137,6 @@ export const NewProjectForm = () => {
                     data-testid={CREATE_PROJECT_BTN}
                 />
             </FormActions>
-        </StyledContainer>
+        </StyledForm>
     );
 };

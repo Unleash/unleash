@@ -76,6 +76,12 @@ const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const StyledDetailsContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+}));
+
 const StyledDescription = styled('p')({
     wordBreak: 'break-word',
 });
@@ -207,21 +213,23 @@ const FeatureOverviewMetaData = () => {
                         }
                     />
                     <StyledBodyItem>
-                        <StyledDetail>
-                            <StyledLabel>Created at:</StyledLabel>
-                            <span>
-                                {formatDateYMD(
-                                    parseISO(feature.createdAt),
-                                    locationSettings.locale,
-                                )}
-                            </span>
-                        </StyledDetail>
+                        <StyledDetailsContainer>
+                            <StyledDetail>
+                                <StyledLabel>Created at:</StyledLabel>
+                                <span>
+                                    {formatDateYMD(
+                                        parseISO(feature.createdAt),
+                                        locationSettings.locale,
+                                    )}
+                                </span>
+                            </StyledDetail>
 
-                        <FeatureEnvironmentSeen
-                            featureLastSeen={feature.lastSeenAt}
-                            environments={lastSeenEnvironments}
-                            sx={{ p: 0 }}
-                        />
+                            <FeatureEnvironmentSeen
+                                featureLastSeen={feature.lastSeenAt}
+                                environments={lastSeenEnvironments}
+                                sx={{ p: 0 }}
+                            />
+                        </StyledDetailsContainer>
                     </StyledBodyItem>
                     <ConditionallyRender
                         condition={showDependentFeatures}

@@ -48,21 +48,17 @@ const StyledTemplateSelector = styled(Select)(({ theme }) => ({
 
 const StyledInput = styled(TextField)(({ theme }) => ({
     width: '100%',
-    marginBottom: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-
+    margin: 0,
     fieldset: { border: 'none' },
 }));
 
 const StyledProjectName = styled(StyledInput)(({ theme }) => ({
     gridArea: 'project-name',
-    margin: 0,
     '*': { fontSize: theme.typography.h1.fontSize },
 }));
 
 const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
     gridArea: 'description',
-    margin: 0,
     '*': { fontSize: theme.typography.h2.fontSize },
 }));
 

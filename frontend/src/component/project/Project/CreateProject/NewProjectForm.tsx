@@ -1,15 +1,7 @@
-import {
-    Button,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    styled,
-} from '@mui/material';
-import { GO_BACK } from 'constants/navigate';
-import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
+import { Button, Typography, styled } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
+import Input from 'component/common/Input/Input';
+import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -26,8 +18,8 @@ const StyledFormSection = styled('div')(({ theme }) => ({
 const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas:
-        '"icon header template" "icon project-name project-name" "icon description description"',
-    gridTemplateColumns: 'minmax(auto, 50px) 1fr auto',
+        '"icon header" "icon project-name" "icon project-description"',
+    gridTemplateColumns: 'minmax(auto, 50px) 1fr',
     gap: theme.spacing(2),
 }));
 
@@ -42,23 +34,24 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
 }));
 
-const StyledTemplateSelector = styled(Select)(({ theme }) => ({
-    gridArea: 'template',
+const ProjectNameContainer = styled('div')(({ theme }) => ({
+    gridArea: 'project-name',
 }));
 
-const StyledInput = styled(TextField)(({ theme }) => ({
+const ProjectDescriptionContainer = styled('div')(({ theme }) => ({
+    gridArea: 'project-description',
+}));
+
+const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    margin: 0,
     fieldset: { border: 'none' },
 }));
 
 const StyledProjectName = styled(StyledInput)(({ theme }) => ({
-    gridArea: 'project-name',
     '*': { fontSize: theme.typography.h1.fontSize },
 }));
 
 const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
-    gridArea: 'description',
     '*': { fontSize: theme.typography.h2.fontSize },
 }));
 
@@ -73,33 +66,97 @@ const FormActions = styled(StyledFormSection)(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
+type FormProps = {
+    projectId: string;
+    projectName: string;
+    projectDesc: string;
+    projectStickiness?: string;
+    featureLimit?: string;
+    featureCount?: number;
+    projectMode?: string;
+    setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectId: React.Dispatch<React.SetStateAction<string>>;
+    setProjectName: React.Dispatch<React.SetStateAction<string>>;
+    setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    handleSubmit: (e: any) => void;
+    errors: { [key: string]: string };
+    mode: 'Create' | 'Edit';
+    clearErrors: () => void;
+    validateProjectId: () => void;
+};
 
-export const NewProjectForm = () => {
-    const navigate = useNavigate();
+const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
+const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
-    const handleCancel = () => {
-        navigate(GO_BACK);
+export const NewProjectForm: React.FC<FormProps> = ({
+    children,
+    handleSubmit,
+    projectName,
+    projectDesc,
+    projectStickiness,
+    featureLimit,
+    featureCount,
+    projectMode,
+    setProjectMode,
+    setProjectId,
+    setProjectName,
+    setProjectDesc,
+    setProjectStickiness,
+    setFeatureLimit,
+    errors,
+    mode,
+    clearErrors,
+}) => {
+    const handleProjectNameUpdate = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const input = e.target.value;
+        setProjectName(input);
+
+        // todo: handle this in a real manner. This is a hack for now.
+        const maybeProjectId = input
+            ? `${encodeURIComponent(input.trim())}-${uuidv4().slice(-12)}`
+            : '';
+        setProjectId(maybeProjectId);
     };
 
     return (
-        <StyledForm>
+        <StyledForm
+            onSubmit={(submitEvent) => {
+                handleSubmit(submitEvent);
+            }}
+        >
             <TopGrid>
                 <StyledIcon>icon</StyledIcon>
                 <StyledHeader variant='h2'>New project</StyledHeader>
-                <StyledTemplateSelector
-                    id='template-selector'
-                    value={'none'}
-                    label='Project creation template'
-                    name='Project creation template'
-                >
-                    <MenuItem value={'none'}>No template</MenuItem>
-                </StyledTemplateSelector>
-                <StyledProjectName label='Project name' required />
-                <StyledProjectDescription
-                    label='Description (optional)'
-                    multiline
-                />
+                <ProjectNameContainer>
+                    <StyledProjectName
+                        label='Project name'
+                        required
+                        value={projectName}
+                        onChange={handleProjectNameUpdate}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        onFocus={() => {
+                            delete errors.name;
+                        }}
+                        data-testid={PROJECT_NAME_INPUT}
+                        autoFocus
+                    />
+                </ProjectNameContainer>
+                <ProjectDescriptionContainer>
+                    <StyledProjectDescription
+                        className='description'
+                        label='Description (optional)'
+                        multiline
+                        maxRows={20}
+                        value={projectDesc}
+                        onChange={(e) => setProjectDesc(e.target.value)}
+                        data-testid={PROJECT_DESCRIPTION_INPUT}
+                    />
+                </ProjectDescriptionContainer>
             </TopGrid>
             <OptionButtons>
                 <Button variant='outlined'>4 selected</Button>
@@ -107,15 +164,7 @@ export const NewProjectForm = () => {
                 <Button variant='outlined'>Open</Button>
                 <Button variant='outlined'>1 environment configured</Button>
             </OptionButtons>
-            <FormActions>
-                <Button onClick={handleCancel}>Cancel</Button>
-
-                <CreateButton
-                    name='project'
-                    permission={CREATE_PROJECT}
-                    data-testid={CREATE_PROJECT_BTN}
-                />
-            </FormActions>
+            <FormActions>{children}</FormActions>
         </StyledForm>
     );
 };

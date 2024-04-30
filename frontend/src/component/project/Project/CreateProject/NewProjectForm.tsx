@@ -59,8 +59,6 @@ const FormActions = styled(StyledFormSection)(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
-
 type FormProps = {
     projectId: string;
     projectName: string;

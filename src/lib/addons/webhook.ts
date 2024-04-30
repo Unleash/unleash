@@ -54,6 +54,7 @@ export default class Webhook extends Addon {
             body,
         };
         const res = await this.fetchRetry(url, requestOpts);
+
         this.logger.info(
             `Handled event "${event.type}". Status code: ${res.status}`,
         );

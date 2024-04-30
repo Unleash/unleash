@@ -1,22 +1,27 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { AddDependencyDialogue } from '../../../Dependencies/AddDependencyDialogue';
+import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 import { type FC, useState } from 'react';
-import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
+import {
+    FlexRow,
+    StyledDetail,
+    StyledLabel,
+    StyledLink,
+} from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
 import { DependencyActions } from './DependencyActions';
-import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useDependentFeaturesApi } from '../../../../../hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
+import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { ChildrenTooltip } from './ChildrenTooltip';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
-import { useCheckProjectAccess } from 'hooks/useHasAccess';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import useToast from 'hooks/useToast';
-import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
+import { UPDATE_FEATURE_DEPENDENCY } from '../../../../providers/AccessProvider/permissions';
+import { useCheckProjectAccess } from '../../../../../hooks/useHasAccess';
+import { useChangeRequestApi } from '../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from '../../../../../hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useToast from '../../../../../hooks/useToast';
+import { useHighestPermissionChangeRequestEnvironment } from '../../../../../hooks/useHighestPermissionChangeRequestEnvironment';
+import { useChangeRequestsEnabled } from '../../../../../hooks/useChangeRequestsEnabled';
+import { formatUnknownError } from '../../../../../utils/formatUnknownError';
+import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 import { VariantsTooltip } from './VariantsTooltip';
 
 const useDeleteDependency = (project: string, featureId: string) => {

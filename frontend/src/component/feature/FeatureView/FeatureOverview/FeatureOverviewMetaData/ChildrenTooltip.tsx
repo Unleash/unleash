@@ -1,5 +1,5 @@
-import { StyledLink } from './StyledRow';
-import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
+import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
+import { TooltipLink } from '../../../../common/TooltipLink/TooltipLink';
 import type { FC } from 'react';
 
 export const ChildrenTooltip: FC<{

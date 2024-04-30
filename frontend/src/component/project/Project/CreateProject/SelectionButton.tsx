@@ -1,6 +1,6 @@
 import Search from '@mui/icons-material/Search';
-import { Box, InputAdornment, List, ListItemText } from '@mui/material';
-import { type FC, type ReactNode, useEffect, useRef, useState } from 'react';
+import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
+import { type FC, type ReactNode, useRef, useState } from 'react';
 import {
     StyledCheckbox,
     StyledDropdown,
@@ -8,13 +8,13 @@ import {
     StyledPopover,
     StyledTextField,
 } from './FilterItem.styles';
-import { FilterItemChip } from './FilterItemChip/FilterItemChip';
+import CloudCircle from '@mui/icons-material/CloudCircle';
 
 export interface IFilterItemProps {
-    name: string;
     label: ReactNode;
     options: Array<{ label: string; value: string }>;
-    onChange: (value: FilterItemParams) => void;
+    selectedOptions: Set<string>;
+    onChange: (vs: { values: Set<string> }) => void;
     onChipClose: () => void;
     state: FilterItemParams | null | undefined;
     singularOperators: [string, ...string[]];
@@ -58,68 +58,34 @@ const useSelectionManagement = ({
 };
 
 export const FilterItem: FC<IFilterItemProps> = ({
-    name,
     label,
     options,
     onChange,
-    onChipClose,
     state,
     singularOperators,
     pluralOperators,
+    selectedOptions,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
 
-    const currentOperators =
-        state && state.values.length > 1 ? pluralOperators : singularOperators;
-
     const open = () => {
         setAnchorEl(ref.current);
     };
-
-    useEffect(() => {
-        if (!state) {
-            open();
-        }
-    }, []);
 
     const onClose = () => {
         setAnchorEl(null);
     };
 
-    const selectedOptions = state ? state.values : [];
-    const selectedDisplayOptions = selectedOptions
-        .map((value) => options.find((option) => option.value === value)?.label)
-        .filter((label): label is string => label !== undefined);
-    const currentOperator = state ? state.operator : currentOperators[0];
-
-    const onDelete = () => {
-        onChange({ operator: singularOperators[0], values: [] });
-        onClose();
-        onChipClose();
-    };
-
     const handleToggle = (value: string) => () => {
-        if (
-            selectedOptions?.some((selectedOption) => selectedOption === value)
-        ) {
-            const newOptions = selectedOptions?.filter(
-                (selectedOption) => selectedOption !== value,
-            );
-            onChange({ operator: currentOperator, values: newOptions });
+        if (selectedOptions.has(value)) {
+            selectedOptions.delete(value);
         } else {
-            const newOptions = [
-                ...(selectedOptions ?? []),
-                (
-                    options.find((option) => option.value === value) ?? {
-                        label: '',
-                        value: '',
-                    }
-                ).value,
-            ];
-            onChange({ operator: currentOperator, values: newOptions });
+            selectedOptions.add(value);
         }
+
+        onChange({ values: new Set(selectedOptions) });
     };
 
     const { listRefs, handleSelection } = useSelectionManagement({
@@ -127,22 +93,24 @@ export const FilterItem: FC<IFilterItemProps> = ({
         handleToggle,
     });
 
-    useEffect(() => {
-        if (state && !currentOperators.includes(state.operator)) {
-            onChange({
-                operator: currentOperators[0],
-                values: state.values,
-            });
-        }
-    }, [state]);
+    // todo: find out why it doesn't update selection during a search
+
+    const buttonText =
+        selectedOptions.size > 0
+            ? `${selectedOptions.size} selected`
+            : 'Select environments';
+
     return (
         <>
             <Box ref={ref}>
-                <FilterItemChip
-                    label={label}
-                    selectedDisplayOptions={selectedDisplayOptions}
+                <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={<CloudCircle />}
                     onClick={open}
-                />
+                >
+                    {buttonText}
+                </Button>
             </Box>
             <StyledPopover
                 open={Boolean(anchorEl)}
@@ -203,13 +171,9 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                     >
                                         <StyledCheckbox
                                             edge='start'
-                                            checked={
-                                                selectedOptions?.some(
-                                                    (selectedOption) =>
-                                                        selectedOption ===
-                                                        option.value,
-                                                ) ?? false
-                                            }
+                                            checked={selectedOptions.has(
+                                                option.value,
+                                            )}
                                             tabIndex={-1}
                                             inputProps={{
                                                 'aria-labelledby': labelId,

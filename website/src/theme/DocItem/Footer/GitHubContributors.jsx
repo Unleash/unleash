@@ -5,20 +5,20 @@ import styles from './contributors.module.scss';
 
 const unleashTeam = new Map([
     ['alvinometric', 'developer advocate, Unleash'],
-    ['andreas-unleash', 'senior software engineer, Unleash'],
-    ['chriswk', 'senior software engineer, Unleash'],
-    ['daveleek', 'senior software engineer, Unleash'],
-    ['FredrikOseberg', 'senior software engineer, Unleash'],
-    ['gardleopard', 'senior software engineer, Unleash'],
-    ['gastonfournier', 'senior software engineer, Unleash'],
+    ['andreas-unleash', 'developer, Unleash'],
+    ['chriswk', 'principal developer, Unleash'],
+    ['daveleek', 'developer, Unleash'],
+    ['FredrikOseberg', 'principal developer, Unleash'],
+    ['gardleopard', 'platform lead, Unleash'],
+    ['gastonfournier', 'senior developer, Unleash'],
     ['ivarconr', 'co-founder, Unleash'],
-    ['kwasniew', 'senior software engineer, Unleash'],
+    ['kwasniew', 'senior developer, Unleash'],
     ['nnennandukwe', 'developer advocate, Unleash'],
-    ['nunogois', 'senior software engineer, Unleash'],
-    ['sighphyre', 'senior software engineer, Unleash'],
-    ['sjaanus', 'senior software engineer, Unleash'],
-    ['thomasheartman', 'senior software engineer, Unleash'],
-    ['Tymek', 'senior software engineer, Unleash'],
+    ['nunogois', 'senior developer, Unleash'],
+    ['sighphyre', 'senior developer, Unleash'],
+    ['sjaanus', 'senior developer, Unleash'],
+    ['thomasheartman', 'developer, Unleash'],
+    ['Tymek', 'developer, Unleash'],
 ]);
 
 const GitHubContributors = ({ owner, repo, filePath }) => {
@@ -30,9 +30,8 @@ const GitHubContributors = ({ owner, repo, filePath }) => {
             fetch(url)
                 .then((response) => response.json())
                 .then((commits) => {
-                    console.log(commits);
                     const contributors = getContributors(commits);
-                    console.log(contributors);
+
                     contributors.sort((a, b) => {
                         if (unleashTeam.has(a.login)) {
                             return -1;
@@ -51,7 +50,7 @@ const GitHubContributors = ({ owner, repo, filePath }) => {
     }, []);
 
     if (!contributors.length) {
-        return <h3>Fetching contributors...</h3>;
+        return null;
     }
 
     return (

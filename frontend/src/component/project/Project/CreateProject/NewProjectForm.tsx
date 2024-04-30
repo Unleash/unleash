@@ -30,6 +30,7 @@ const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
+    alignSelf: 'center',
     fontWeight: 'lighter',
 }));
 

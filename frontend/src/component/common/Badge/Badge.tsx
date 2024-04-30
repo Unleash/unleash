@@ -40,6 +40,7 @@ const StyledBadge = styled('span')<IBadgeProps>(
     ({ theme, color = 'neutral', icon }) => ({
         display: 'inline-flex',
         alignItems: 'center',
+        gap: theme.spacing(0.5),
         padding: theme.spacing(icon ? 0.375 : 0.625, 1),
         borderRadius: theme.shape.borderRadius,
         fontSize: theme.fontSizes.smallerBody,
@@ -61,28 +62,16 @@ const StyledBadge = styled('span')<IBadgeProps>(
 
 const StyledBadgeIcon = styled('span')<
     IBadgeIconProps & { hasChildren?: boolean }
->(({ theme, color = 'neutral', iconRight = false, hasChildren }) => ({
+>(({ theme, color = 'neutral' }) => ({
     display: 'flex',
     color:
         color === 'disabled'
             ? theme.palette.action.disabled
             : theme.palette[color].main,
-    margin: iconRight
-        ? theme.spacing(0, 0, 0, hasChildren ? 0.5 : 0)
-        : theme.spacing(0, hasChildren ? 0.5 : 0, 0, 0),
 }));
 
-const BadgeIcon = (
-    color: Color,
-    icon: ReactElement,
-    iconRight = false,
-    hasChildren = false,
-) => (
-    <StyledBadgeIcon
-        color={color}
-        iconRight={iconRight}
-        hasChildren={hasChildren}
-    >
+const BadgeIcon = (color: Color, icon: ReactElement) => (
+    <StyledBadgeIcon color={color}>
         <ConditionallyRender
             condition={Boolean(icon?.props.sx)}
             show={icon}
@@ -121,12 +110,15 @@ export const Badge: FC<IBadgeProps> = forwardRef(
         >
             <ConditionallyRender
                 condition={Boolean(icon) && !iconRight}
-                show={BadgeIcon(color, icon!, false, Boolean(children))}
+                show={BadgeIcon(color, icon!)}
             />
-            {children}
+            <ConditionallyRender
+                condition={Boolean(children)}
+                show={<div>{children}</div>}
+            />
             <ConditionallyRender
                 condition={Boolean(icon) && Boolean(iconRight)}
-                show={BadgeIcon(color, icon!, true, Boolean(children))}
+                show={BadgeIcon(color, icon!)}
             />
         </StyledBadge>
     ),

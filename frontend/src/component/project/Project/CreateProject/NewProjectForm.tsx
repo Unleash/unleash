@@ -120,6 +120,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
     ) => {
         const input = e.target.value;
         setProjectName(input);
+
+        // todo: handle this in a real manner. This is a hack for now.
         const maybeProjectId = input
             ? `${encodeURIComponent(input.trim())}-${uuidv4().slice(-12)}`
             : '';

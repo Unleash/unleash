@@ -41,6 +41,7 @@ const StyledIcon = styled('span')(({ theme }) => ({
 const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
 }));
+
 const StyledTemplateSelector = styled(Select)(({ theme }) => ({
     gridArea: 'template',
 }));

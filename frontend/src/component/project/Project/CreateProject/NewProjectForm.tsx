@@ -29,44 +29,20 @@ const TopGrid = styled(StyledFormSection)(({ theme }) => ({
         '"icon header template" "icon project-name project-name" "icon description description"',
     gridTemplateColumns: 'minmax(auto, 50px) 1fr auto',
     gap: theme.spacing(2),
-
-    '> span.icon': {
-        border: `1px solid ${theme.palette.primary.main}`,
-        width: `100%`,
-        aspectRatio: '1',
-        borderRadius: theme.shape.borderRadius,
-    },
-
-    '> h2': {
-        gridArea: 'header',
-    },
-
-    '> span.input': {
-        gridArea: 'template',
-    },
-
-    '.project-name': {
-        gridArea: 'project-name',
-        margin: 0,
-    },
-
-    '.project-name *': {
-        fontSize: theme.typography.h1.fontSize,
-    },
-
-    '.description': {
-        gridArea: 'description',
-        margin: 0,
-    },
-
-    '.description *': {
-        fontSize: theme.typography.h2.fontSize,
-    },
 }));
 
-const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(2),
+const StyledIcon = styled('span')(({ theme }) => ({
+    border: `1px solid ${theme.palette.primary.main}`,
+    width: `100%`,
+    aspectRatio: '1',
+    borderRadius: theme.shape.borderRadius,
+}));
+
+const StyledHeader = styled(Typography)(({ theme }) => ({
+    gridArea: 'header',
+}));
+const StyledTemplateSelector = styled(Select)(({ theme }) => ({
+    gridArea: 'template',
 }));
 
 const StyledInput = styled(TextField)(({ theme }) => ({
@@ -75,6 +51,23 @@ const StyledInput = styled(TextField)(({ theme }) => ({
     paddingRight: theme.spacing(1),
 
     fieldset: { border: 'none' },
+}));
+
+const StyledProjectName = styled(StyledInput)(({ theme }) => ({
+    gridArea: 'project-name',
+    margin: 0,
+    '*': { fontSize: theme.typography.h1.fontSize },
+}));
+
+const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
+    gridArea: 'description',
+    margin: 0,
+    '*': { fontSize: theme.typography.h2.fontSize },
+}));
+
+const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
 }));
 
 const FormActions = styled(StyledFormSection)(({ theme }) => ({
@@ -95,19 +88,17 @@ export const NewProjectForm = () => {
     return (
         <StyledForm>
             <TopGrid>
-                <span className='icon'>icon</span>
-                <Typography variant='h2'>New project</Typography>
-                <Select
-                    className='input'
+                <StyledIcon>icon</StyledIcon>
+                <StyledHeader variant='h2'>New project</StyledHeader>
+                <StyledTemplateSelector
                     id='template-selector'
                     value={'none'}
                     label='Project creation template'
                     name='Project creation template'
                 >
                     <MenuItem value={'none'}>No template</MenuItem>
-                </Select>
-                <StyledInput
-                    className='project-name'
+                </StyledTemplateSelector>
+                <StyledProjectName
                     label='Project name'
                     required
                     InputProps={{
@@ -116,8 +107,7 @@ export const NewProjectForm = () => {
                         },
                     }}
                 />
-                <StyledInput
-                    className='description'
+                <StyledProjectDescription
                     label='Description (optional)'
                     multiline
                 />

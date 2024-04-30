@@ -10,6 +10,7 @@ import { GO_BACK } from 'constants/navigate';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -31,15 +32,13 @@ const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledIcon = styled('span')(({ theme }) => ({
-    border: `1px solid ${theme.palette.primary.main}`,
-    width: `100%`,
-    aspectRatio: '1',
-    borderRadius: theme.shape.borderRadius,
+const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
+    color: theme.palette.primary.main,
 }));
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
+    fontWeight: 'lighter',
 }));
 
 const StyledTemplateSelector = styled(Select)(({ theme }) => ({
@@ -85,7 +84,7 @@ export const NewProjectForm = () => {
     return (
         <StyledForm>
             <TopGrid>
-                <StyledIcon>icon</StyledIcon>
+                <StyledIcon aria-hidden='true' />
                 <StyledHeader variant='h2'>New project</StyledHeader>
                 <StyledTemplateSelector
                     id='template-selector'

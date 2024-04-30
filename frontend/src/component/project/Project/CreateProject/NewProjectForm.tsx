@@ -28,7 +28,7 @@ const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas:
         '"icon header template" "icon project-name project-name" "icon description description"',
-    gridTemplateColumns: 'minmax(auto, 50px) 1fr auto',
+    gridTemplateColumns: 'auto 1fr auto',
     gap: theme.spacing(2),
 }));
 

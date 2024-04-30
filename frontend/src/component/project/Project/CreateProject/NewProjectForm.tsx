@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
+import { useState } from 'react';
+import { FilterItem } from './SelectionButton';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -122,6 +124,15 @@ export const NewProjectForm: React.FC<FormProps> = ({
         setProjectId(maybeProjectId);
     };
 
+    const [filterState, setFilterState] = useState({
+        tag: null,
+    });
+
+    const handleFilterChange = (v: any) => {
+        console.log(v);
+        setFilterState(v);
+    };
+
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -159,6 +170,21 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 </ProjectDescriptionContainer>
             </TopGrid>
             <OptionButtons>
+                <FilterItem
+                    name='Tags'
+                    label='Tags'
+                    options={[
+                        { label: 'tag1', value: 'tag1' },
+                        { label: 'tag2', value: 'tag2' },
+                    ]}
+                    onChange={handleFilterChange}
+                    onChipClose={() => {
+                        console.log('close');
+                    }}
+                    state={null}
+                    singularOperators={['one']}
+                    pluralOperators={['two']}
+                />
                 <Button variant='outlined'>4 selected</Button>
                 <Button variant='outlined'>clientId</Button>
                 <Button variant='outlined'>Open</Button>

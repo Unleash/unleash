@@ -45,7 +45,7 @@ const useSelectionManagement = ({
         } else if (event.key === 'ArrowUp' && index > 0) {
             event.preventDefault();
             listRefs.current[index - 1]?.focus();
-        } else if (event.key === 'Enter') {
+        } else if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             if (index > 0) {
                 const listItemIndex = index - 1;

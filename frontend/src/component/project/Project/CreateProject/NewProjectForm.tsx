@@ -1,11 +1,4 @@
-import {
-    Button,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    styled,
-} from '@mui/material';
+import { Button, TextField, Typography, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -23,8 +16,8 @@ const StyledFormSection = styled('div')(({ theme }) => ({
 const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas:
-        '"icon header template" "icon project-name project-name" "icon description description"',
-    gridTemplateColumns: 'minmax(auto, 50px) 1fr auto',
+        '"icon header " "icon project-name " "icon description "',
+    gridTemplateColumns: 'minmax(auto, 50px) 1fr',
     gap: theme.spacing(2),
 }));
 
@@ -37,10 +30,6 @@ const StyledIcon = styled('span')(({ theme }) => ({
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     gridArea: 'header',
-}));
-
-const StyledTemplateSelector = styled(Select)(({ theme }) => ({
-    gridArea: 'template',
 }));
 
 const StyledInput = styled(TextField)(({ theme }) => ({
@@ -137,14 +126,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
             <TopGrid>
                 <StyledIcon>icon</StyledIcon>
                 <StyledHeader variant='h2'>New project</StyledHeader>
-                <StyledTemplateSelector
-                    id='template-selector'
-                    value={'none'}
-                    label='Project creation template'
-                    name='Project creation template'
-                >
-                    <MenuItem value={'none'}>No template</MenuItem>
-                </StyledTemplateSelector>
                 <StyledProjectName
                     label='Project name'
                     required

@@ -13,9 +13,6 @@ const setupApi = () => {
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },
-        flags: {
-            variantDependencies: true,
-        },
     });
     testServerRoute(server, '/api/admin/projects/default/features/feature', {});
     testServerRoute(

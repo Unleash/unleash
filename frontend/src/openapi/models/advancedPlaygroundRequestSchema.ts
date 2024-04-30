@@ -11,7 +11,10 @@ import type { AdvancedPlaygroundRequestSchemaProjects } from './advancedPlaygrou
  */
 export interface AdvancedPlaygroundRequestSchema {
     context: SdkContextSchema;
-    /** The environments to evaluate toggles in. */
+    /**
+     * The environments to evaluate toggles in.
+     * @minItems 1
+     */
     environments: string[];
     /** A list of projects to check for toggles in. */
     projects?: AdvancedPlaygroundRequestSchemaProjects;

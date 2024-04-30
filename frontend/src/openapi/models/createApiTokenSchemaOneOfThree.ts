@@ -15,6 +15,9 @@ export type CreateApiTokenSchemaOneOfThree = {
     projects?: string[];
     /** The name of the token. */
     tokenName: string;
-    /** A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive). */
+    /**
+     * A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).
+     * @pattern ^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$
+     */
     type: string;
 };

@@ -12,11 +12,20 @@ export interface LoginEventSchema {
     auth_type?: string;
     /** The date and time of when the login was attempted. */
     created_at?: string;
-    /** The reason for the login failure. This property is only present if the login was unsuccessful. */
+    /**
+     * The reason for the login failure. This property is only present if the login was unsuccessful.
+     * @nullable
+     */
     failure_reason?: string | null;
-    /** The event's ID. Event IDs are incrementing integers. In other words, a more recent event will always have a higher ID than an older event. */
+    /**
+     * The event's ID. Event IDs are incrementing integers. In other words, a more recent event will always have a higher ID than an older event.
+     * @minimum 1
+     */
     id: number;
-    /** The IP address of the client that attempted to log in. */
+    /**
+     * The IP address of the client that attempted to log in.
+     * @nullable
+     */
     ip?: string | null;
     /** Whether the login was successful or not. */
     successful?: boolean;

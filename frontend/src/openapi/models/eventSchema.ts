@@ -16,21 +16,45 @@ export interface EventSchema {
     createdAt: string;
     /** Which user created this event */
     createdBy: string;
-    /** The is of the user that created this event */
+    /**
+     * The is of the user that created this event
+     * @nullable
+     */
     createdByUserId?: number | null;
-    /** Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable. */
+    /**
+     * Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable.
+     * @nullable
+     */
     data?: EventSchemaData;
-    /** The feature toggle environment the event relates to, if applicable. */
+    /**
+     * The feature toggle environment the event relates to, if applicable.
+     * @nullable
+     */
     environment?: string | null;
-    /** The name of the feature toggle the event relates to, if applicable. */
+    /**
+     * The name of the feature toggle the event relates to, if applicable.
+     * @nullable
+     */
     featureName?: string | null;
-    /** The ID of the event. An increasing natural number. */
+    /**
+     * The ID of the event. An increasing natural number.
+     * @minimum 1
+     */
     id: number;
-    /** Data relating to the previous state of the event's subject. */
+    /**
+     * Data relating to the previous state of the event's subject.
+     * @nullable
+     */
     preData?: EventSchemaPreData;
-    /** The project the event relates to, if applicable. */
+    /**
+     * The project the event relates to, if applicable.
+     * @nullable
+     */
     project?: string | null;
-    /** Any tags related to the event, if applicable. */
+    /**
+     * Any tags related to the event, if applicable.
+     * @nullable
+     */
     tags?: TagSchema[] | null;
     /** What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is */
     type: EventSchemaType;

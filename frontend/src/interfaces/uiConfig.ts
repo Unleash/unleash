@@ -78,13 +78,13 @@ export type UiFlags = {
     projectOverviewRefactor?: string;
     displayTrafficDataUsage?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
-    variantDependencies?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     scimApi?: boolean;
     projectListFilterMyProjects?: boolean;
     createProjectWithEnvironmentConfig?: boolean;
     projectsListNewCards?: boolean;
+    newCreateProjectUI?: boolean;
 };
 
 export interface IVersionInfo {

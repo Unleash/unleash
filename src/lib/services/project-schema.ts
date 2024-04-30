@@ -18,5 +18,12 @@ export const projectSchema = joi
             example: joi.string().allow(null).allow('').optional(),
             description: joi.string().allow(null).allow('').optional(),
         }),
+        environments: joi.array().items(joi.string()),
+        changeRequestEnvironments: joi.array().items(
+            joi.object({
+                name: joi.string(),
+                requiredApprovals: joi.number(),
+            }),
+        ),
     })
     .options({ allowUnknown: false, stripUnknown: true });

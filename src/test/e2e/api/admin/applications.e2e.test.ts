@@ -56,7 +56,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    applicationOverviewNewQuery: true,
                 },
             },
         },

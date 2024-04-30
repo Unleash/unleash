@@ -6,6 +6,7 @@
 
 /**
  * The [default stickiness for this project](https://docs.getunleash.io/reference/stickiness#project-default-stickiness)
+ * @nullable
  */
 export type ProjectSettingsSchemaDefaultStickiness =
     | (typeof ProjectSettingsSchemaDefaultStickiness)[keyof typeof ProjectSettingsSchemaDefaultStickiness]

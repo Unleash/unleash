@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import useToast from 'hooks/useToast';
@@ -14,10 +14,9 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(1, 2),
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
-    backgroundColor: theme.palette.grey[100],
-    boxShadow: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)', // FIXME: replace with variable
+    padding: theme.spacing(1.5, 3),
+    background: theme.palette.envAccordion.expanded,
+    boxShadow: theme.boxShadows.accordionFooter,
 }));
 
 const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
@@ -25,7 +24,8 @@ const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
     marginLeft: 'auto',
 }));
 
-export const ProjectCardFooter: VFC<IProjectCardFooterProps> = ({
+export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
+    children,
     id,
     isFavorite = false,
 }) => {
@@ -48,6 +48,7 @@ export const ProjectCardFooter: VFC<IProjectCardFooterProps> = ({
     };
     return (
         <StyledFooter>
+            {children}
             <StyledFavoriteIconButton
                 onClick={onFavorite}
                 isFavorite={isFavorite}

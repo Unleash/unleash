@@ -8,7 +8,10 @@
  * The Unleash context with flattened properties
  */
 export interface SdkFlatContextSchema {
-    /** The name of the application. */
+    /**
+     * The name of the application.
+     * @minLength 1
+     */
     appName: string;
     /** A DateTime (or similar) data class instance or a string in an RFC3339-compatible format. Defaults to the current time if not set by the user. */
     currentTime?: string;

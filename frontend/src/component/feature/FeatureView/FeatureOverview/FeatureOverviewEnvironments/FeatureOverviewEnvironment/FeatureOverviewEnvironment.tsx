@@ -57,7 +57,7 @@ const StyledAccordionDetails = styled(AccordionDetails, {
     background: theme.palette.envAccordion.expanded,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
-    boxShadow: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)', // replace this with variable
+    boxShadow: theme.boxShadows.accordionFooter,
 
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(2, 1),

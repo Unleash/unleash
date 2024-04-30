@@ -7,4 +7,4 @@
 /**
  * Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose. Consult the documentation for details.
  */
-export type AddonCreateUpdateSchemaParameters = { [key: string]: {} };
+export type AddonCreateUpdateSchemaParameters = { [key: string]: unknown };

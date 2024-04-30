@@ -40,6 +40,7 @@ const StyledBadge = styled('span')<IBadgeProps>(
     ({ theme, color = 'neutral', icon }) => ({
         display: 'inline-flex',
         alignItems: 'center',
+        gap: theme.spacing(0.5),
         padding: theme.spacing(icon ? 0.375 : 0.625, 1),
         borderRadius: theme.shape.borderRadius,
         fontSize: theme.fontSizes.smallerBody,
@@ -59,21 +60,18 @@ const StyledBadge = styled('span')<IBadgeProps>(
     }),
 );
 
-const StyledBadgeIcon = styled('span')<IBadgeIconProps>(
-    ({ theme, color = 'neutral', iconRight = false }) => ({
-        display: 'flex',
-        color:
-            color === 'disabled'
-                ? theme.palette.action.disabled
-                : theme.palette[color].main,
-        margin: iconRight
-            ? theme.spacing(0, 0, 0, 0.5)
-            : theme.spacing(0, 0.5, 0, 0),
-    }),
-);
+const StyledBadgeIcon = styled('span')<
+    IBadgeIconProps & { hasChildren?: boolean }
+>(({ theme, color = 'neutral' }) => ({
+    display: 'flex',
+    color:
+        color === 'disabled'
+            ? theme.palette.action.disabled
+            : theme.palette[color].main,
+}));
 
-const BadgeIcon = (color: Color, icon: ReactElement, iconRight = false) => (
-    <StyledBadgeIcon color={color} iconRight={iconRight}>
+const BadgeIcon = (color: Color, icon: ReactElement) => (
+    <StyledBadgeIcon color={color}>
         <ConditionallyRender
             condition={Boolean(icon?.props.sx)}
             show={icon}
@@ -114,10 +112,13 @@ export const Badge: FC<IBadgeProps> = forwardRef(
                 condition={Boolean(icon) && !iconRight}
                 show={BadgeIcon(color, icon!)}
             />
-            {children}
+            <ConditionallyRender
+                condition={Boolean(children)}
+                show={<div>{children}</div>}
+            />
             <ConditionallyRender
                 condition={Boolean(icon) && Boolean(iconRight)}
-                show={BadgeIcon(color, icon!, true)}
+                show={BadgeIcon(color, icon!)}
             />
         </StyledBadge>
     ),

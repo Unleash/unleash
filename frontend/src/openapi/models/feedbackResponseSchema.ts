@@ -10,7 +10,10 @@
 export interface FeedbackResponseSchema {
     /** The name of the feedback session */
     feedbackId?: string;
-    /** When this feedback was given */
+    /**
+     * When this feedback was given
+     * @nullable
+     */
     given?: string | null;
     /** `true` if the user has asked never to see this feedback questionnaire again. */
     neverShow?: boolean;

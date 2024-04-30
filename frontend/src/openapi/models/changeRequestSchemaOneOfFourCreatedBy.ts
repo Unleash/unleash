@@ -8,7 +8,11 @@
  * The user who created this change request.
  */
 export type ChangeRequestSchemaOneOfFourCreatedBy = {
-    /** The URL of the user's profile image. */
+    /**
+     * The URL of the user's profile image.
+     * @nullable
+     */
     imageUrl?: string | null;
+    /** @nullable */
     username?: string | null;
 };

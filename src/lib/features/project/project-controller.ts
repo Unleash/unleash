@@ -197,12 +197,24 @@ export default class ProjectController extends Controller {
             user.id,
         );
 
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            projectsSchema.$id,
-            { version: 1, projects: serializeDates(projects) },
-        );
+        if (this.flagResolver.isEnabled('projectsListNewCards')) {
+            const projectsWithOwners =
+                await this.projectService.addOwnersToProjects(projects);
+
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectsSchema.$id,
+                { version: 1, projects: serializeDates(projectsWithOwners) },
+            );
+        } else {
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectsSchema.$id,
+                { version: 1, projects: serializeDates(projects) },
+            );
+        }
     }
 
     async getDeprecatedProjectOverview(

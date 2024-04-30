@@ -12,6 +12,7 @@ export type ChangeRequestScheduleSchemaOneOfThree = {
     /**
      * The reason the scheduled failed to apply. Deprecated in favor of the `reason` property.
      * @deprecated
+     * @nullable
      */
     failureReason?: string | null;
     /** The reason the scheduled failed to apply. */

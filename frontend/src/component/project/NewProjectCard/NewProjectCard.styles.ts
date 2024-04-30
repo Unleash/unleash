@@ -3,6 +3,7 @@ import { Card, Box } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import { flexRow } from 'themes/themeStyles';
+import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
 export const StyledProjectCard = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -31,9 +32,9 @@ export const StyledDivHeader = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-export const StyledH2Title = styled('h2')(({ theme }) => ({
-    fontWeight: 'normal',
-    fontSize: theme.fontSizes.bodySize,
+export const StyledCardTitle = styled('h3')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.body1.fontSize,
     lineClamp: '2',
     WebkitLineClamp: 2,
     lineHeight: '1.2',
@@ -65,13 +66,22 @@ export const StyledDivInfo = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: theme.fontSizes.smallerBody,
-}));
-
-export const StyledDivInfoContainer = styled('div')(() => ({
-    textAlign: 'center',
+    padding: theme.spacing(0, 1),
 }));
 
 export const StyledParagraphInfo = styled('p')(({ theme }) => ({
     color: theme.palette.primary.dark,
     fontWeight: 'bold',
+    fontSize: theme.typography.body1.fontSize,
+}));
+
+export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
+    color: theme.palette.primary.main,
+}));
+
+export const StyledIconBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing(0.5, 0.5, 0.5, 0),
+    marginRight: theme.spacing(2),
 }));

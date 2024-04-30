@@ -12,7 +12,10 @@ export interface ChangeRequestEnvironmentConfigSchema {
     changeRequestEnabled: boolean;
     /** The environment that this configuration applies to. */
     environment: string;
-    /** The number of approvals that are required for a change request to be fully approved and ready to be applied in this environment. */
+    /**
+     * The number of approvals that are required for a change request to be fully approved and ready to be applied in this environment.
+     * @nullable
+     */
     requiredApprovals: number | null;
     /** The [type of the environment](https://docs.getunleash.io/reference/environments#environment-types) listed in `environment`. */
     type: string;

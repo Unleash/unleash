@@ -15,7 +15,7 @@ const StyledName = styled('div')(({ theme }) => ({
 }));
 
 interface IGroupPopoverProps {
-    user: IGroupUser | undefined;
+    user: Partial<IGroupUser & { description?: string }> | undefined;
 
     open: boolean;
     anchorEl: HTMLElement | null;
@@ -44,7 +44,7 @@ export const GroupPopover = ({
             }}
         >
             <StyledName>{user?.name || user?.username}</StyledName>
-            <div>{user?.email}</div>
+            <div>{user?.description || user?.email}</div>
         </StyledPopover>
     );
 };

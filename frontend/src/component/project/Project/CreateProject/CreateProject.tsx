@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
+import { NewProjectForm } from './NewProjectForm';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../hooks/useProjectForm';
@@ -14,6 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Button, styled } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
@@ -44,6 +46,8 @@ const CreateProject = () => {
         projectStickiness,
         errors,
     } = useProjectForm();
+
+    const useNewProjectForm = useUiFlag('newCreateProjectUI');
 
     const { createProject, loading } = useProjectApi();
 
@@ -88,6 +92,44 @@ const CreateProject = () => {
     const handleCancel = () => {
         navigate(GO_BACK);
     };
+
+    if (useNewProjectForm) {
+        return (
+            <FormTemplate
+                disablePadding
+                loading={loading}
+                description='Projects allows you to group feature toggles together in the management UI.'
+                documentationLink='https://docs.getunleash.io/reference/projects'
+                documentationLinkLabel='Projects documentation'
+                formatApiCode={formatApiCode}
+            >
+                <NewProjectForm
+                    errors={errors}
+                    handleSubmit={handleSubmit}
+                    projectId={projectId}
+                    setProjectId={setProjectId}
+                    projectName={projectName}
+                    projectStickiness={projectStickiness}
+                    projectMode={projectMode}
+                    setProjectMode={setProjectMode}
+                    setProjectStickiness={setProjectStickiness}
+                    setProjectName={setProjectName}
+                    projectDesc={projectDesc}
+                    setProjectDesc={setProjectDesc}
+                    mode='Create'
+                    clearErrors={clearErrors}
+                    validateProjectId={validateProjectId}
+                >
+                    <StyledButton onClick={handleCancel}>Cancel</StyledButton>
+                    <CreateButton
+                        name='project'
+                        permission={CREATE_PROJECT}
+                        data-testid={CREATE_PROJECT_BTN}
+                    />
+                </NewProjectForm>
+            </FormTemplate>
+        );
+    }
 
     return (
         <FormTemplate

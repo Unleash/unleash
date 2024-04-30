@@ -17,7 +17,10 @@ export interface ActionSetEventSchema {
     actionSetId: number;
     /** The date and time of when the action set event was created. In other words, the date and time of when the action set started executing. */
     createdAt: string;
-    /** The action set event's ID. Action set event IDs are incrementing integers. In other words, a more recently created action set event will always have a higher ID than an older one. */
+    /**
+     * The action set event's ID. Action set event IDs are incrementing integers. In other words, a more recently created action set event will always have a higher ID than an older one.
+     * @minimum 1
+     */
     id: number;
     /** The signal that triggered this action set event. */
     signal: SignalSchema;

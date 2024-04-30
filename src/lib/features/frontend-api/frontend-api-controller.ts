@@ -10,7 +10,6 @@ import {
     emptyResponse,
     getStandardResponses,
     type FrontendApiClientSchema,
-    type FrontendApiFeatureSchema,
     frontendApiFeaturesSchema,
     type FrontendApiFeaturesSchema,
 } from '../../openapi';
@@ -21,8 +20,6 @@ import NotImplementedError from '../../error/not-implemented-error';
 import NotFoundError from '../../error/notfound-error';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import isEqual from 'lodash.isequal';
-import { diff } from 'json-diff';
 import metricsHelper from '../../util/metrics-helper';
 import { FUNCTION_TIME } from '../../metric-events';
 
@@ -186,48 +183,11 @@ export default class FrontendAPIController extends Controller {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {
             throw new NotFoundError();
         }
-        let toggles: FrontendApiFeatureSchema[];
-        let newToggles: FrontendApiFeatureSchema[] = [];
-        if (this.config.flagResolver.isEnabled('globalFrontendApiCache')) {
-            const context = FrontendAPIController.createContext(req);
-            [toggles, newToggles] = await Promise.all([
-                this.getTimedFrontendApiFeatures(req, context),
-                this.getTimedNewFrontendApiFeatures(req, context),
-            ]);
-            const sortedToggles = toggles.sort((a, b) =>
-                a.name.localeCompare(b.name),
+        const toggles =
+            await this.services.frontendApiService.getFrontendApiFeatures(
+                req.user,
+                FrontendAPIController.createContext(req),
             );
-            const sortedNewToggles = newToggles.sort((a, b) =>
-                a.name.localeCompare(b.name),
-            );
-            if (!isEqual(sortedToggles, sortedNewToggles)) {
-                this.logger.warn(
-                    `old features and new features are different. Old count ${
-                        toggles.length
-                    }, new count ${newToggles.length}, projects ${
-                        req.user.projects
-                    }, environment ${
-                        req.user.environment
-                    }, diff ${JSON.stringify(
-                        diff(sortedToggles, sortedNewToggles),
-                    )}`,
-                );
-            }
-        } else if (
-            this.config.flagResolver.isEnabled('returnGlobalFrontendApiCache')
-        ) {
-            toggles =
-                await this.services.frontendApiService.getNewFrontendApiFeatures(
-                    req.user,
-                    FrontendAPIController.createContext(req),
-                );
-        } else {
-            toggles =
-                await this.services.frontendApiService.getFrontendApiFeatures(
-                    req.user,
-                    FrontendAPIController.createContext(req),
-                );
-        }
 
         res.set('Cache-control', 'no-cache');
 
@@ -237,28 +197,6 @@ export default class FrontendAPIController extends Controller {
             frontendApiFeaturesSchema.$id,
             { toggles },
         );
-    }
-
-    private async getTimedFrontendApiFeatures(req, context) {
-        const stopTimer = this.timer('getFrontendApiFeatures');
-        const features =
-            await this.services.frontendApiService.getFrontendApiFeatures(
-                req.user,
-                context,
-            );
-        stopTimer();
-        return features;
-    }
-
-    private async getTimedNewFrontendApiFeatures(req, context) {
-        const stopTimer = this.timer('getNewFrontendApiFeatures');
-        const features =
-            await this.services.frontendApiService.getNewFrontendApiFeatures(
-                req.user,
-                context,
-            );
-        stopTimer();
-        return features;
     }
 
     private async registerFrontendApiMetrics(

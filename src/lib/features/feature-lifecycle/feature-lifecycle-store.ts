@@ -22,16 +22,16 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
     async insert(
         featureLifecycleStages: FeatureLifecycleStage[],
     ): Promise<void> {
+        const joinedLifecycleStages = featureLifecycleStages
+            .map((stage) => `('${stage.feature}', '${stage.stage}')`)
+            .join(', ');
+
         const query = this.db
             .with(
                 'new_stages',
                 this.db.raw(`
                     SELECT v.feature, v.stage
-                    FROM (VALUES ${featureLifecycleStages
-                        .map(
-                            (stage) => `('${stage.feature}', '${stage.stage}')`,
-                        )
-                        .join(', ')}) AS v(feature, stage)
+                    FROM (VALUES ${joinedLifecycleStages}) AS v(feature, stage)
                     JOIN features ON features.name = v.feature
                     LEFT JOIN feature_lifecycles ON feature_lifecycles.feature = v.feature AND feature_lifecycles.stage = v.stage
                     WHERE feature_lifecycles.feature IS NULL AND feature_lifecycles.stage IS NULL

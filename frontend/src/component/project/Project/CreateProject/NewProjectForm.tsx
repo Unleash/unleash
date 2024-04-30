@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
     Button,
     MenuItem,
@@ -7,74 +6,65 @@ import {
     Typography,
     styled,
 } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 
-const StyledContainer = styled('form')(({ theme }) => ({
+const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
+}));
 
-    '> * + *': {
+const StyledFormSection = styled('div')(({ theme }) => ({
+    '& + *': {
         borderBlockStart: `1px solid ${theme.palette.divider}`,
     },
 
-    '> *': {
-        padding: theme.spacing(7),
-    },
+    padding: theme.spacing(7),
 }));
 
-const TopGrid = styled('div')(({ theme }) => ({
+const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas:
         '"icon header template" "icon project-name project-name" "icon description description"',
     gridTemplateColumns: 'minmax(auto, 50px) 1fr auto',
     gap: theme.spacing(2),
-
-    '> span.icon': {
-        border: `1px solid ${theme.palette.primary.main}`,
-        width: `100%`,
-        aspectRatio: '1',
-        borderRadius: theme.shape.borderRadius,
-    },
-
-    '> h2': {
-        gridArea: 'header',
-    },
-
-    '> span.input': {
-        gridArea: 'template',
-    },
-
-    '.project-name': {
-        gridArea: 'project-name',
-        margin: 0,
-    },
-
-    '.project-name *': {
-        fontSize: theme.typography.h1.fontSize,
-    },
-
-    '.description': {
-        gridArea: 'description',
-        margin: 0,
-    },
-
-    '.description *': {
-        fontSize: theme.typography.h2.fontSize,
-    },
 }));
 
-const OptionButtons = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(2),
+const StyledIcon = styled('span')(({ theme }) => ({
+    border: `1px solid ${theme.palette.primary.main}`,
+    width: `100%`,
+    aspectRatio: '1',
+    borderRadius: theme.shape.borderRadius,
+}));
+
+const StyledHeader = styled(Typography)(({ theme }) => ({
+    gridArea: 'header',
+}));
+
+const StyledTemplateSelector = styled(Select)(({ theme }) => ({
+    gridArea: 'template',
 }));
 
 const StyledInput = styled(TextField)(({ theme }) => ({
     width: '100%',
-    marginBottom: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-
+    margin: 0,
     fieldset: { border: 'none' },
 }));
 
-const FormActions = styled('div')(({ theme }) => ({
+const StyledProjectName = styled(StyledInput)(({ theme }) => ({
+    gridArea: 'project-name',
+    '*': { fontSize: theme.typography.h1.fontSize },
+}));
+
+const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
+    gridArea: 'description',
+    '*': { fontSize: theme.typography.h2.fontSize },
+}));
+
+const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+}));
+
+const FormActions = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(5),
     justifyContent: 'flex-end',
@@ -137,26 +127,25 @@ export const NewProjectForm: React.FC<FormProps> = ({
     };
 
     return (
-        <StyledContainer
+        <StyledForm
             onSubmit={(submitEvent) => {
                 handleSubmit(submitEvent);
             }}
         >
             <TopGrid>
-                <span className='icon'>icon</span>
-                <Typography variant='h2'>New project</Typography>
-                <Select
-                    className='input'
+                <StyledIcon>icon</StyledIcon>
+                <StyledHeader variant='h2'>New project</StyledHeader>
+                <StyledTemplateSelector
                     id='template-selector'
                     value={'none'}
                     label='Project creation template'
                     name='Project creation template'
                 >
                     <MenuItem value={'none'}>No template</MenuItem>
-                </Select>
-                <StyledInput
-                    className='project-name'
+                </StyledTemplateSelector>
+                <StyledProjectName
                     label='Project name'
+                    required
                     value={projectName}
                     onChange={handleProjectNameUpdate}
                     error={Boolean(errors.name)}
@@ -165,15 +154,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         delete errors.name;
                     }}
                     data-testid={PROJECT_NAME_INPUT}
-                    required
                     autoFocus
-                    InputProps={{
-                        classes: {
-                            input: 'project-name-input',
-                        },
-                    }}
                 />
-                <StyledInput
+                <StyledProjectDescription
                     className='description'
                     label='Description (optional)'
                     multiline
@@ -190,6 +173,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <Button variant='outlined'>1 environment configured</Button>
             </OptionButtons>
             <FormActions>{children}</FormActions>
-        </StyledContainer>
+        </StyledForm>
     );
 };

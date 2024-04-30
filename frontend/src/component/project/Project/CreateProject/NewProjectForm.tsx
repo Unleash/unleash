@@ -1,6 +1,7 @@
 import { Button, Typography, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
+import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,

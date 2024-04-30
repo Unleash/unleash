@@ -5,6 +5,7 @@ import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import { useState } from 'react';
 import { FilterItem } from './SelectionButton';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -111,6 +112,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
     mode,
     clearErrors,
 }) => {
+    const { environments: allEnvironments } = useEnvironments();
+    const activeEnvironments = allEnvironments.filter((env) => env.enabled);
+
+    const [selectedEnvironments, setSelectedEnvironments] = useState<
+        Set<string>
+    >(new Set());
+
     const handleProjectNameUpdate = (
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
@@ -124,13 +132,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
         setProjectId(maybeProjectId);
     };
 
-    const [filterState, setFilterState] = useState({
-        tag: null,
-    });
-
     const handleFilterChange = (v: any) => {
-        console.log(v);
-        setFilterState(v);
+        setSelectedEnvironments(v.values);
     };
 
     return (
@@ -171,12 +174,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
             </TopGrid>
             <OptionButtons>
                 <FilterItem
-                    name='Tags'
-                    label='Tags'
-                    options={[
-                        { label: 'tag1', value: 'tag1' },
-                        { label: 'tag2', value: 'tag2' },
-                    ]}
+                    label='Environments'
+                    selectedOptions={selectedEnvironments}
+                    options={activeEnvironments.map((env) => ({
+                        label: env.name,
+                        value: env.name,
+                    }))}
                     onChange={handleFilterChange}
                     onChipClose={() => {
                         console.log('close');
@@ -185,7 +188,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     singularOperators={['one']}
                     pluralOperators={['two']}
                 />
-                <Button variant='outlined'>4 selected</Button>
                 <Button variant='outlined'>clientId</Button>
                 <Button variant='outlined'>Open</Button>
                 <Button variant='outlined'>1 environment configured</Button>

@@ -95,15 +95,7 @@ export const NewProjectForm = () => {
                 >
                     <MenuItem value={'none'}>No template</MenuItem>
                 </StyledTemplateSelector>
-                <StyledProjectName
-                    label='Project name'
-                    required
-                    InputProps={{
-                        classes: {
-                            input: 'project-name-input',
-                        },
-                    }}
-                />
+                <StyledProjectName label='Project name' required />
                 <StyledProjectDescription
                     label='Description (optional)'
                     multiline

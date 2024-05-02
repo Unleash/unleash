@@ -206,7 +206,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     }}
                 />
 
-                <Button variant='outlined'>clientId</Button>
                 <Button variant='outlined'>Open</Button>
                 <Button variant='outlined'>1 environment configured</Button>
             </OptionButtons>

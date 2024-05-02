@@ -63,7 +63,7 @@ const useSelectionManagement = ({
             event.preventDefault();
             if (index > 0) {
                 const listItemIndex = index - 1;
-                handleToggle(options[listItemIndex].value)();
+                handleToggle(filteredOptions[listItemIndex].value)();
             }
         }
     };

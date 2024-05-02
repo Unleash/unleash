@@ -33,6 +33,7 @@ import {
     createHistogram,
 } from './util/metrics';
 import type { SchedulerService } from './services';
+import type { FeatureLifecycleFullItem } from './features/feature-lifecycle/feature-lifecycle-store-type';
 
 export default class MetricsMonitor {
     constructor() {}
@@ -259,6 +260,12 @@ export default class MetricsMonitor {
             help: 'Duration of mapFeaturesForClient function',
         });
 
+        const featureLifecycleStageDuration = createHistogram({
+            name: 'feature_lifecycle_stage_duration',
+            labelNames: ['feature_id', 'stage'],
+            help: 'Duration of feature lifecycle stages',
+        });
+
         const projectEnvironmentsDisabled = createCounter({
             name: 'project_environments_disabled',
             help: 'How many "environment disabled" events we have received for each project',
@@ -282,6 +289,15 @@ export default class MetricsMonitor {
 
                 serviceAccounts.reset();
                 serviceAccounts.set(stats.serviceAccounts);
+
+                stats.featureLifeCycles.forEach((stage) => {
+                    featureLifecycleStageDuration
+                        .labels({
+                            feature_id: stage.feature,
+                            stage: stage.stage,
+                        })
+                        .observe(stage.duration);
+                });
 
                 apiTokens.reset();
 
@@ -358,7 +374,10 @@ export default class MetricsMonitor {
 
                 rateLimits.reset();
                 rateLimits
-                    .labels({ endpoint: '/api/client/metrics', method: 'POST' })
+                    .labels({
+                        endpoint: '/api/client/metrics',
+                        method: 'POST',
+                    })
                     .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
                 rateLimits
                     .labels({
@@ -389,7 +408,10 @@ export default class MetricsMonitor {
                     })
                     .set(config.rateLimiting.createUserMaxPerMinute);
                 rateLimits
-                    .labels({ endpoint: '/auth/simple', method: 'POST' })
+                    .labels({
+                        endpoint: '/auth/simple',
+                        method: 'POST',
+                    })
                     .set(config.rateLimiting.simpleLoginMaxPerMinute);
                 rateLimits
                     .labels({
@@ -408,6 +430,44 @@ export default class MetricsMonitor {
             } catch (e) {}
         }
 
+        async function collectLifecycleMetrics(
+            featureLifeCycles: FeatureLifecycleFullItem[],
+        ) {
+            const groupedByFeature = featureLifeCycles.reduce<{
+                [feature: string]: FeatureLifecycleFullItem[];
+            }>((acc, curr) => {
+                if (!acc[curr.feature]) {
+                    acc[curr.feature] = [];
+                }
+                acc[curr.feature].push(curr);
+                return acc;
+            }, {});
+
+            Object.values(groupedByFeature).forEach((stages) => {
+                stages.sort(
+                    (a, b) =>
+                        a.enteredStageAt.getTime() - b.enteredStageAt.getTime(),
+                );
+
+                stages.forEach((stage, index) => {
+                    const nextStage = stages[index + 1];
+                    const endTime = nextStage
+                        ? nextStage.enteredStageAt
+                        : new Date();
+                    const duration =
+                        (endTime.getTime() - stage.enteredStageAt.getTime()) /
+                        1000;
+
+                    featureLifecycleStageDuration
+                        .labels({
+                            feature_id: stage.feature,
+                            stage: stage.stage,
+                        })
+                        .observe(duration);
+                });
+            });
+        }
+
         await schedulerService.schedule(
             collectStaticCounters.bind(this),
             hoursToMilliseconds(2),
@@ -419,7 +479,12 @@ export default class MetricsMonitor {
             events.REQUEST_TIME,
             ({ path, method, time, statusCode, appName }) => {
                 requestDuration
-                    .labels({ path, method, status: statusCode, appName })
+                    .labels({
+                        path,
+                        method,
+                        status: statusCode,
+                        appName,
+                    })
                     .observe(time);
             },
         );
@@ -432,7 +497,10 @@ export default class MetricsMonitor {
             events.FUNCTION_TIME,
             ({ functionName, className, time }) => {
                 functionDuration
-                    .labels({ functionName, className })
+                    .labels({
+                        functionName,
+                        className,
+                    })
                     .observe(time);
             },
         );
@@ -446,7 +514,12 @@ export default class MetricsMonitor {
         });
 
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {
-            dbDuration.labels({ store, action }).observe(time);
+            dbDuration
+                .labels({
+                    store,
+                    action,
+                })
+                .observe(time);
         });
 
         eventBus.on(events.PROXY_REPOSITORY_CREATED, () => {
@@ -704,6 +777,7 @@ export default class MetricsMonitor {
         }
     }
 }
+
 export function createMetricsMonitor(): MetricsMonitor {
     return new MetricsMonitor();
 }

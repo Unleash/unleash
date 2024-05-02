@@ -22,11 +22,13 @@ import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
     type IApiTokenStore,
+    type IFeatureLifecycleStageDuration,
 } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import type { GetActiveUsers } from './getActiveUsers';
 import type { ProjectModeCount } from '../project/project-store';
 import type { GetProductionChanges } from './getProductionChanges';
+import type { FeatureLifecycleService } from '../feature-lifecycle/feature-lifecycle-service';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -60,6 +62,7 @@ export interface InstanceStats {
         enabledCount: number;
         variantCount: number;
     };
+    featureLifeCycles: IFeatureLifecycleStageDuration[];
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -89,6 +92,8 @@ export class InstanceStatsService {
     private roleStore: IRoleStore;
 
     private eventStore: IEventStore;
+
+    private featureLifecycleService: FeatureLifecycleService;
 
     private apiTokenStore: IApiTokenStore;
 
@@ -143,6 +148,7 @@ export class InstanceStatsService {
         versionService: VersionService,
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
+        featureLifecycleService: FeatureLifecycleService,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -157,6 +163,7 @@ export class InstanceStatsService {
         this.settingStore = settingStore;
         this.eventStore = eventStore;
         this.clientInstanceStore = clientInstanceStore;
+        this.featureLifecycleService = featureLifecycleService;
         this.logger = getLogger('services/stats-service.js');
         this.getActiveUsers = getActiveUsers;
         this.getProductionChanges = getProductionChanges;
@@ -243,6 +250,7 @@ export class InstanceStatsService {
             featureImports,
             productionChanges,
             previousDayMetricsBucketsCount,
+            featureLifeCycles,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -266,6 +274,7 @@ export class InstanceStatsService {
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
             this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
+            this.featureLifecycleService.getAllWithStageDuration(),
         ]);
 
         return {
@@ -298,6 +307,7 @@ export class InstanceStatsService {
             featureImports,
             productionChanges,
             previousDayMetricsBucketsCount,
+            featureLifeCycles,
         };
     }
 

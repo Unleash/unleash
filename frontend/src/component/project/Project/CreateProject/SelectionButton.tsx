@@ -81,6 +81,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     const [searchText, setSearchText] = useState('');
 
     const open = () => {
+        setSearchText('');
         setAnchorEl(ref.current);
     };
 
@@ -224,6 +225,7 @@ export const FilterItemSingleSelect: FC<FilterItemSingleSelectProps> = ({
     const [searchText, setSearchText] = useState('');
 
     const open = () => {
+        setSearchText('');
         setAnchorEl(ref.current);
     };
 

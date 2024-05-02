@@ -58,6 +58,11 @@ const useProjectForm = (
     }, [initialProjectMode]);
 
     const getCreateProjectPayload = () => {
+        const environmentsPayload =
+            projectEnvironments.size > 0
+                ? { environments: [...projectEnvironments] }
+                : {};
+
         return isEnterprise()
             ? {
                   id: projectId,
@@ -65,12 +70,14 @@ const useProjectForm = (
                   description: projectDesc,
                   defaultStickiness: projectStickiness,
                   mode: projectMode,
+                  ...environmentsPayload,
               }
             : {
                   id: projectId,
                   name: projectName,
                   description: projectDesc,
                   defaultStickiness: projectStickiness,
+                  ...environmentsPayload,
               };
     };
 

@@ -5,12 +5,12 @@ import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import { MultiselectList, SingleSelectList } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { useStickinessOptions } from '../hooks/useStickinessOptions';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
+import { useStickinessOptions } from 'hooks/useStickinessOptions';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,

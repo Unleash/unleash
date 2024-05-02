@@ -1,6 +1,6 @@
 import Select from 'component/common/select';
 import { type SelectChangeEvent, useTheme } from '@mui/material';
-import { useStickinessOptions } from 'component/project/Project/hooks/useStickinessOptions';
+import { useStickinessOptions } from 'hooks/useStickinessOptions';
 
 interface IStickinessSelectProps {
     label: string;

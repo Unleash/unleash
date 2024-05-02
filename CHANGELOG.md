@@ -2,6 +2,291 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.0] - 2024-05-02
+
+### Bug Fixes
+
+- Dark mode background ([#6803](https://github.com/Unleash/unleash/issues/6803))
+
+- NotEnoughData hiding the header ([#6798](https://github.com/Unleash/unleash/issues/6798))
+
+- Total flags and flags per user when all projects ([#6787](https://github.com/Unleash/unleash/issues/6787))
+
+- Fill the datasets with 0s when not enough data points ([#6793](https://github.com/Unleash/unleash/issues/6793))
+
+- Axis rendering after placeholder ([#6805](https://github.com/Unleash/unleash/issues/6805))
+
+- Environment_type_trends table data ([#6796](https://github.com/Unleash/unleash/issues/6796))
+
+- Health tooltip when all projects should show % ([#6809](https://github.com/Unleash/unleash/issues/6809))
+
+- Do not show the MetricsChartTooltip InfoSummary when all projects ([#6810](https://github.com/Unleash/unleash/issues/6810))
+
+- Project select should not expand when selecting multiple projects ([#6811](https://github.com/Unleash/unleash/issues/6811))
+
+- Show loading features only when loading is happening ([#6817](https://github.com/Unleash/unleash/issues/6817))
+
+- Show all envs in project tables unless you've explicitly hidden some ([#6812](https://github.com/Unleash/unleash/issues/6812))
+
+- Replace true on important create screens ([#6822](https://github.com/Unleash/unleash/issues/6822))
+
+- Update dependency joi to v17.12.3 ([#6840](https://github.com/Unleash/unleash/issues/6840))
+
+- Update dependency pg-connection-string to v2.6.4 ([#6841](https://github.com/Unleash/unleash/issues/6841))
+
+- Don't add project flag table state config to browser history ([#6824](https://github.com/Unleash/unleash/issues/6824))
+
+- Insights placement in drawer nav ([#6846](https://github.com/Unleash/unleash/issues/6846))
+
+- Insights menu point alignment ([#6847](https://github.com/Unleash/unleash/issues/6847))
+
+- Archive toggle no longer respects change request ([#6882](https://github.com/Unleash/unleash/issues/6882))
+
+- Now metrics in search will be aggregated across applications ([#6915](https://github.com/Unleash/unleash/issues/6915))
+
+- Improve traffic messaging summary ([#6922](https://github.com/Unleash/unleash/issues/6922))
+
+- Client metrics structure lifecycle ([#6924](https://github.com/Unleash/unleash/issues/6924))
+
+- Added a check to avoid double counting ([#6925](https://github.com/Unleash/unleash/issues/6925))
+
+- Flag trends should support bigint for yes and no evaluations ([#6930](https://github.com/Unleash/unleash/issues/6930))
+
+- Don't apply bearer token middleware to root ([#6939](https://github.com/Unleash/unleash/issues/6939))
+
+- Ignore metrics for non-existent features ([#6945](https://github.com/Unleash/unleash/issues/6945))
+
+- Fix UI issues with SCIM new token button ([#6948](https://github.com/Unleash/unleash/issues/6948))
+
+- Data usage metrics chart included per day annotion ([#6941](https://github.com/Unleash/unleash/issues/6941))
+
+- Disable SCIM for OIDC, nothing to test it on ([#6937](https://github.com/Unleash/unleash/issues/6937))
+
+
+### Docs
+
+- Fixed missing values in webhooks ([#6833](https://github.com/Unleash/unleash/issues/6833))
+
+
+### Documentation
+
+- Update min versions for node and postsgres ([#6778](https://github.com/Unleash/unleash/issues/6778))
+
+- Indicate that scheduled config changes are GA ([#6843](https://github.com/Unleash/unleash/issues/6843))
+
+- Added Ruby examples ([#6865](https://github.com/Unleash/unleash/issues/6865))
+
+- Spring Boot Examples ([#6884](https://github.com/Unleash/unleash/issues/6884))
+
+- Document the new `demoAllowAdminLogin` option ([#6902](https://github.com/Unleash/unleash/issues/6902))
+
+- Adjust global menu with more links ([#6936](https://github.com/Unleash/unleash/issues/6936))
+
+
+### Feat
+
+- New projects list ([#6873](https://github.com/Unleash/unleash/issues/6873))
+
+
+### Features
+
+- Initial design for feature lifecycle service ([#6777](https://github.com/Unleash/unleash/issues/6777))
+
+- Feature lifecycle usage behind a flag ([#6786](https://github.com/Unleash/unleash/issues/6786))
+
+- Feature lifecycle controller ([#6788](https://github.com/Unleash/unleash/issues/6788))
+
+- Feature lifecycle metrics from event bus ([#6789](https://github.com/Unleash/unleash/issues/6789))
+
+- Playground api returns removed context values under a new `warnings` property ([#6784](https://github.com/Unleash/unleash/issues/6784))
+
+- Feature lifecycle sql store ([#6790](https://github.com/Unleash/unleash/issues/6790))
+
+- Handle invalid metrics ([#6795](https://github.com/Unleash/unleash/issues/6795))
+
+- Allow schedulers to run in a single node ([#6794](https://github.com/Unleash/unleash/issues/6794))
+
+- Fill metrics summary missing datapoints with 0 ([#6820](https://github.com/Unleash/unleash/issues/6820))
+
+- Ttp stat should show No data when exactly 0 ([#6823](https://github.com/Unleash/unleash/issues/6823))
+
+- Display removed context props in the UI ([#6844](https://github.com/Unleash/unleash/issues/6844))
+
+- Add "my projects" filter to projects list ([#6831](https://github.com/Unleash/unleash/issues/6831))
+
+- Change time based feedback to button ([#6837](https://github.com/Unleash/unleash/issues/6837))
+
+- Allow you to filter for "my projects" ([#6855](https://github.com/Unleash/unleash/issues/6855))
+
+- Start extracting project from session object ([#6856](https://github.com/Unleash/unleash/issues/6856))
+
+- Validate that id is number or we throw our our source code ([#6860](https://github.com/Unleash/unleash/issues/6860))
+
+- Feature lifecycle getter hook ([#6876](https://github.com/Unleash/unleash/issues/6876))
+
+- Optimize applications overview query ([#6883](https://github.com/Unleash/unleash/issues/6883))
+
+- Added IAuditUser to request with middleware ([#6857](https://github.com/Unleash/unleash/issues/6857))
+
+- Restyle the project meta box ([#6880](https://github.com/Unleash/unleash/issues/6880))
+
+- Use audit info in events ([#6872](https://github.com/Unleash/unleash/issues/6872))
+
+- Add selected month summary card for data usage ([#6891](https://github.com/Unleash/unleash/issues/6891))
+
+- Make Database SSL Configurable through files ([#6892](https://github.com/Unleash/unleash/issues/6892))
+
+- Make edge use token's cache ([#6893](https://github.com/Unleash/unleash/issues/6893))
+
+- Crud time queries ([#6895](https://github.com/Unleash/unleash/issues/6895))
+
+- Split projects view into "my projects" and "other projects" ([#6886](https://github.com/Unleash/unleash/issues/6886))
+
+- Add environments to project created payload ([#6901](https://github.com/Unleash/unleash/issues/6901))
+
+- Allow admin login using demo auth ([#6808](https://github.com/Unleash/unleash/issues/6808))
+
+- Initial sketch for the lifecycle tooltip ([#6899](https://github.com/Unleash/unleash/issues/6899))
+
+- Stage timeline styling ([#6903](https://github.com/Unleash/unleash/issues/6903))
+
+- Pass lifecycle stage to tooltip ([#6904](https://github.com/Unleash/unleash/issues/6904))
+
+- Improve feature overview styling ([#6910](https://github.com/Unleash/unleash/issues/6910))
+
+- Live and pre-live stages UI ([#6913](https://github.com/Unleash/unleash/issues/6913))
+
+- Completed stage button ([#6914](https://github.com/Unleash/unleash/issues/6914))
+
+- Completed stage UI ([#6917](https://github.com/Unleash/unleash/issues/6917))
+
+- Return lifecycle state in feature overview ([#6920](https://github.com/Unleash/unleash/issues/6920))
+
+- Connect feature lifecycle to real API ([#6921](https://github.com/Unleash/unleash/issues/6921))
+
+- Map project owners to projects list ([#6928](https://github.com/Unleash/unleash/issues/6928))
+
+- Lifecycle stage dates ([#6926](https://github.com/Unleash/unleash/issues/6926))
+
+- Scim assume control UI - move scim into sso configs ([#6929](https://github.com/Unleash/unleash/issues/6929))
+
+- Remove bearer token middleware flag ([#6934](https://github.com/Unleash/unleash/issues/6934))
+
+- Include CR envs enabled on creation in event and update validation ([#6931](https://github.com/Unleash/unleash/issues/6931))
+
+- Archive feature from lifecycle ([#6938](https://github.com/Unleash/unleash/issues/6938))
+
+- Revived feature goes to initial lifecycle stage ([#6944](https://github.com/Unleash/unleash/issues/6944))
+
+- Feature lifecycle complete and uncomplete ([#6927](https://github.com/Unleash/unleash/issues/6927))
+
+- Feature completed connected to backend ([#6947](https://github.com/Unleash/unleash/issues/6947))
+
+- Project owners in project service ([#6935](https://github.com/Unleash/unleash/issues/6935))
+
+- Pre-live is non production not just dev ([#6946](https://github.com/Unleash/unleash/issues/6946))
+
+- Rever to live connected to backend ([#6951](https://github.com/Unleash/unleash/issues/6951))
+
+- Check production enabled live stage ([#6952](https://github.com/Unleash/unleash/issues/6952))
+
+- Add ui test for mark completed button ([#6953](https://github.com/Unleash/unleash/issues/6953))
+
+- Project owners UI ([#6949](https://github.com/Unleash/unleash/issues/6949))
+
+- Do not insert into database stages that already exist ([#6964](https://github.com/Unleash/unleash/issues/6964))
+
+- Enable project creation through new form ([#6961](https://github.com/Unleash/unleash/issues/6961))
+
+
+### Fix
+
+- Time to production showing  NaN when no data ([#6799](https://github.com/Unleash/unleash/issues/6799))
+
+- Insights loading ([#6834](https://github.com/Unleash/unleash/issues/6834))
+
+
+### Miscellaneous Tasks
+
+- Bump indicated main version in package.json ([#6797](https://github.com/Unleash/unleash/issues/6797))
+
+- SCIM settings UI ([#6800](https://github.com/Unleash/unleash/issues/6800))
+
+- Establish a baseline for the number of envs disabled per project ([#6807](https://github.com/Unleash/unleash/issues/6807))
+
+- Remove response time metrics fix ([#6779](https://github.com/Unleash/unleash/issues/6779))
+
+- Fix duplicate use of placeholder name ([#6814](https://github.com/Unleash/unleash/issues/6814))
+
+- Job-service handle exceptions ([#6818](https://github.com/Unleash/unleash/issues/6818))
+
+- Add flag for project list filter updates ([#6825](https://github.com/Unleash/unleash/issues/6825))
+
+- Add new keywords to package json ([#6813](https://github.com/Unleash/unleash/issues/6813))
+
+- Add a separate feature flag for traffic visibility UI ([#6832](https://github.com/Unleash/unleash/issues/6832))
+
+- SCIM guard for users ([#6836](https://github.com/Unleash/unleash/issues/6836))
+
+- Update orval ([#6842](https://github.com/Unleash/unleash/issues/6842))
+
+- SCIM guard for groups ([#6845](https://github.com/Unleash/unleash/issues/6845))
+
+- Improve documentation with note about initial version and not needing flag ([#6848](https://github.com/Unleash/unleash/issues/6848))
+
+- UI SCIM guard for users ([#6859](https://github.com/Unleash/unleash/issues/6859))
+
+- Add flag for improved project creation ([#6870](https://github.com/Unleash/unleash/issues/6870))
+
+- Generate orval types ([#6871](https://github.com/Unleash/unleash/issues/6871))
+
+- UI SCIM guard for groups ([#6866](https://github.com/Unleash/unleash/issues/6866))
+
+- Select enabled environments on project creation ([#6869](https://github.com/Unleash/unleash/issues/6869))
+
+- Add enterprise extension point to enable change requests on project creation ([#6881](https://github.com/Unleash/unleash/issues/6881))
+
+- Remove unused type ([#6887](https://github.com/Unleash/unleash/issues/6887))
+
+- Add the `projectListNewCards` flag ([#6898](https://github.com/Unleash/unleash/issues/6898))
+
+- Add a bunch of logs to validate api token validation behavior ([#6905](https://github.com/Unleash/unleash/issues/6905))
+
+- Remove logs for secret and change invalid token query logic ([#6907](https://github.com/Unleash/unleash/issues/6907))
+
+- Remove unnecessary logs ([#6909](https://github.com/Unleash/unleash/issues/6909))
+
+- Remove log ([#6911](https://github.com/Unleash/unleash/issues/6911))
+
+- Remove new frontend api feature flag ([#6906](https://github.com/Unleash/unleash/issues/6906))
+
+- Clean up feedback component ([#6918](https://github.com/Unleash/unleash/issues/6918))
+
+- Remove variant dependencies flag ([#6896](https://github.com/Unleash/unleash/issues/6896))
+
+- Remove workaround ([#6942](https://github.com/Unleash/unleash/issues/6942))
+
+- Add flag for the new project creation form layout ([#6959](https://github.com/Unleash/unleash/issues/6959))
+
+- Scheduled change request cache kill switch ([#6957](https://github.com/Unleash/unleash/issues/6957))
+
+- Added migration for scim_external_id ([#6966](https://github.com/Unleash/unleash/issues/6966))
+
+- Add project icon to new form ([#6965](https://github.com/Unleash/unleash/issues/6965))
+
+
+### Refactor
+
+- Remove unused chart property ([#6806](https://github.com/Unleash/unleash/issues/6806))
+
+- Badge icon spacing ([#6962](https://github.com/Unleash/unleash/issues/6962))
+
+
+### Testing
+
+- Lifecycle tooltip ([#6932](https://github.com/Unleash/unleash/issues/6932))
+
+
 ## [5.6.0] - 2023-10-26
 
 ### Bug Fixes

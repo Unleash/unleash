@@ -132,8 +132,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
         setProjectId(maybeProjectId);
     };
 
-    const handleFilterChange = (v: any) => {
-        setSelectedEnvironments(v.values);
+    const handleFilterChange = (envs: Set<string>) => {
+        setSelectedEnvironments(envs);
     };
 
     return (
@@ -181,12 +181,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         value: env.name,
                     }))}
                     onChange={handleFilterChange}
-                    onChipClose={() => {
-                        console.log('close');
-                    }}
-                    state={null}
-                    singularOperators={['one']}
-                    pluralOperators={['two']}
                 />
                 <Button variant='outlined'>clientId</Button>
                 <Button variant='outlined'>Open</Button>

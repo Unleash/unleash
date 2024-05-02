@@ -14,11 +14,7 @@ export interface IFilterItemProps {
     label: ReactNode;
     options: Array<{ label: string; value: string }>;
     selectedOptions: Set<string>;
-    onChange: (vs: { values: Set<string> }) => void;
-    onChipClose: () => void;
-    state: FilterItemParams | null | undefined;
-    singularOperators: [string, ...string[]];
-    pluralOperators: [string, ...string[]];
+    onChange: (values: Set<string>) => void;
 }
 
 export type FilterItemParams = {
@@ -58,12 +54,8 @@ const useSelectionManagement = ({
 };
 
 export const FilterItem: FC<IFilterItemProps> = ({
-    label,
     options,
     onChange,
-    state,
-    singularOperators,
-    pluralOperators,
     selectedOptions,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
@@ -85,7 +77,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
             selectedOptions.add(value);
         }
 
-        onChange({ values: new Set(selectedOptions) });
+        onChange(new Set(selectedOptions));
     };
 
     const { listRefs, handleSelection } = useSelectionManagement({

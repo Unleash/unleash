@@ -4,7 +4,7 @@ title: Actions
 
 :::info Availability
 
-Actions were introduced as a beta feature in **Unleash 5.11** and are only available in Unleash Enterprise. We plan to make this feature generally available to all Enterprise users in **Unleash 5.12**.
+Actions were introduced as a beta feature in **Unleash 5.11** and are only available in Unleash Enterprise.
 
 :::
 ## Overview

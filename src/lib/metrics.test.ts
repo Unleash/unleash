@@ -21,7 +21,6 @@ import FakeEnvironmentStore from './features/project-environments/fake-environme
 import { SchedulerService } from './services';
 import noLogger from '../test/fixtures/no-logger';
 import { createFakeFeatureLifecycleService } from './features';
-import type { IFeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store-type';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -31,7 +30,6 @@ let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
 let stores: IUnleashStores;
 let schedulerService: SchedulerService;
-let featureLifecycleStore: IFeatureLifecycleStore;
 beforeAll(async () => {
     const config = createTestConfig({
         server: {
@@ -48,11 +46,8 @@ beforeAll(async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    const {
-        featureLifecycleService,
-        featureLifecycleStore: featureLifeCycleStore,
-    } = createFakeFeatureLifecycleService(config);
-    featureLifecycleStore = featureLifeCycleStore;
+    const { featureLifecycleService } =
+        createFakeFeatureLifecycleService(config);
     statsService = new InstanceStatsService(
         stores,
         config,

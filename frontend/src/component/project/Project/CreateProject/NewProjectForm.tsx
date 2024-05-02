@@ -6,8 +6,10 @@ import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg
 import { FilterItem, FilterItemSingleSelect } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useStickinessOptions } from '../hooks/useStickinessOptions';
-import FormatPaint from '@mui/icons-material/FormatPaint';
-import Adjust from '@mui/icons-material/Adjust';
+import StickinessIcon from '@mui/icons-material/FormatPaint';
+import ProjectModeIcon from '@mui/icons-material/Adjust';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -118,6 +120,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
     mode,
     clearErrors,
 }) => {
+    const { isEnterprise } = useUiConfig();
     const { environments: allEnvironments } = useEnvironments();
     const activeEnvironments = allEnvironments.filter((env) => env.enabled);
 
@@ -203,19 +206,24 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     }}
                     button={{
                         label: projectStickiness,
-                        icon: <FormatPaint />,
+                        icon: <StickinessIcon />,
                     }}
                 />
 
-                <FilterItemSingleSelect
-                    options={projectModeOptions}
-                    onChange={(value: any) => {
-                        setProjectMode(value);
-                    }}
-                    button={{
-                        label: projectMode,
-                        icon: <Adjust />,
-                    }}
+                <ConditionallyRender
+                    condition={isEnterprise()}
+                    show={
+                        <FilterItemSingleSelect
+                            options={projectModeOptions}
+                            onChange={(value: any) => {
+                                setProjectMode(value);
+                            }}
+                            button={{
+                                label: projectMode,
+                                icon: <ProjectModeIcon />,
+                            }}
+                        />
+                    }
                 />
                 <Button variant='outlined'>1 environment configured</Button>
             </OptionButtons>

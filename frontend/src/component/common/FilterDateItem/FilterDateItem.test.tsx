@@ -55,6 +55,8 @@ describe('FilterDateItem Component', () => {
     it('renders initial popover when no existing value', async () => {
         const mockState = null;
 
+        // does this fail now too?
+
         const recordedChanges = setup(mockState);
 
         await screen.findByText('21');

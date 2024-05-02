@@ -122,8 +122,8 @@ export const CombinedSelect: FC<CombinedSelectProps> = ({
                     startIcon={button.icon}
                     onClick={() => {
                         // todo: find out why this is clicked when you
-                        // press enter in the search bar (because it
-                        // doesn't on the multiselect version)
+                        // press enter in the search bar (only in
+                        // single-select mode)
                         open();
                     }}
                 >

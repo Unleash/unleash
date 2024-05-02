@@ -22,12 +22,10 @@ export type FilterItemParams = {
 };
 
 interface UseSelectionManagementProps {
-    options: Array<{ label: string; value: string }>;
     handleToggle: (value: string) => () => void;
 }
 
 const useSelectionManagement = ({
-    options,
     handleToggle,
 }: UseSelectionManagementProps) => {
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
@@ -109,7 +107,6 @@ export const CombinedSelect: FC<CombinedSelectProps> = ({
     };
 
     const { listRefs, handleSelection } = useSelectionManagement({
-        options,
         handleToggle: (selected: string) => () => onSelection(selected),
     });
 

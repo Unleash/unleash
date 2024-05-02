@@ -231,6 +231,8 @@ export const MultiselectList: FC<MultiselectListProps> = ({
     onChange,
     ...rest
 }) => {
+    // todo: add "select all" and "deselect all"
+
     const handleToggle = (value: string) => {
         if (selectedOptions.has(value)) {
             selectedOptions.delete(value);

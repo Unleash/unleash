@@ -300,7 +300,10 @@ export const FilterItemSingleSelect: FC<FilterItemSingleSelectProps> = ({
                                     dense
                                     disablePadding
                                     tabIndex={0}
-                                    onClick={() => onChange(option.value)}
+                                    onClick={() => {
+                                        onChange(option.value);
+                                        onClose();
+                                    }}
                                     ref={(el) => {
                                         listRefs.current[index + 1] = el;
                                     }}

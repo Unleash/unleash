@@ -249,7 +249,12 @@ export const FilterItemSingleSelect: FC<FilterItemSingleSelectProps> = ({
                     variant='outlined'
                     color='primary'
                     startIcon={button.icon}
-                    onClick={open}
+                    onClick={() => {
+                        // todo: find out why this is clicked when you
+                        // press enter in the search bar (because it
+                        // doesn't on the multiselect version)
+                        open();
+                    }}
                 >
                     {button.label}
                 </Button>

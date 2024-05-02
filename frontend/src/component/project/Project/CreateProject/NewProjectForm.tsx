@@ -7,6 +7,7 @@ import { FilterItem, FilterItemSingleSelect } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useStickinessOptions } from '../hooks/useStickinessOptions';
 import FormatPaint from '@mui/icons-material/FormatPaint';
+import Adjust from '@mui/icons-material/Adjust';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -77,7 +78,7 @@ type FormProps = {
     projectStickiness: string;
     featureLimit?: string;
     featureCount?: number;
-    projectMode?: string;
+    projectMode: string;
     projectEnvironments: Set<string>;
     setProjectStickiness: React.Dispatch<React.SetStateAction<string>>;
     setProjectEnvironments: React.Dispatch<React.SetStateAction<Set<string>>>;
@@ -85,7 +86,7 @@ type FormProps = {
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
     setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
-    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    setProjectMode: React.Dispatch<React.SetStateAction<ProjectMode>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
@@ -138,9 +139,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
     };
 
     const projectModeOptions = [
-        { key: 'open', label: 'open' },
-        { key: 'protected', label: 'protected' },
-        { key: 'private', label: 'private' },
+        { value: 'open', label: 'open' },
+        { value: 'protected', label: 'protected' },
+        { value: 'private', label: 'private' },
     ];
 
     const stickinessOptions = useStickinessOptions(projectStickiness);
@@ -206,7 +207,16 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     }}
                 />
 
-                <Button variant='outlined'>Open</Button>
+                <FilterItemSingleSelect
+                    options={projectModeOptions}
+                    onChange={(value: any) => {
+                        setProjectMode(value);
+                    }}
+                    button={{
+                        label: projectMode,
+                        icon: <Adjust />,
+                    }}
+                />
                 <Button variant='outlined'>1 environment configured</Button>
             </OptionButtons>
             <FormActions>{children}</FormActions>

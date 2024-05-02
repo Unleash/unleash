@@ -17,6 +17,7 @@
     --navbar-link-color: #122d33;
 
     --unleash-font-size-smaller: 90%;
+    --ifm-footer-logo-max-width: 250px;
 
     /* navbar is independent of the theme in general */
     --ifm-navbar-background-color: var(--unleash-color-green);

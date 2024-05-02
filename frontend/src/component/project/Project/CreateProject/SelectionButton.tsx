@@ -33,7 +33,11 @@ const useSelectionManagement = ({
 }: UseSelectionManagementProps) => {
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
 
-    const handleSelection = (event: React.KeyboardEvent, index: number) => {
+    const handleSelection = (
+        event: React.KeyboardEvent,
+        index: number,
+        filteredOptions: { label: string; value: string }[],
+    ) => {
         // we have to be careful not to prevent other keys e.g tab
         if (event.key === 'ArrowDown' && index < listRefs.current.length - 1) {
             event.preventDefault();
@@ -41,16 +45,26 @@ const useSelectionManagement = ({
         } else if (event.key === 'ArrowUp' && index > 0) {
             event.preventDefault();
             listRefs.current[index - 1]?.focus();
-        } else if (event.key === 'Enter' || event.key === ' ') {
+        } else if (
+            event.key === 'Enter' &&
+            index === 0 &&
+            listRefs.current[0]?.value &&
+            filteredOptions.length > 0
+        ) {
+            // if the search field is not empty and the user presses
+            // enter from the search field, toggle the topmost item in
+            // the filtered list event.preventDefault();
+            handleToggle(filteredOptions[0].value)();
+        } else if (
+            event.key === 'Enter' ||
+            // allow selection with space when not in the search field
+            (index !== 0 && event.key === ' ')
+        ) {
             event.preventDefault();
             if (index > 0) {
                 const listItemIndex = index - 1;
                 handleToggle(options[listItemIndex].value)();
             }
-
-            // todo: if the search field is not empty and the user
-            // presses enter, we should toggle the topmost item in the
-            // list
         }
     };
 
@@ -93,6 +107,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
         selectedOptions.size > 0
             ? `${selectedOptions.size} selected`
             : 'Select environments';
+
+    const filteredOptions = options?.filter((option) =>
+        option.label.toLowerCase().includes(searchText.toLowerCase()),
+    );
 
     return (
         <>
@@ -138,51 +156,51 @@ export const FilterItem: FC<IFilterItemProps> = ({
                         inputRef={(el) => {
                             listRefs.current[0] = el;
                         }}
-                        onKeyDown={(event) => handleSelection(event, 0)}
+                        onKeyDown={(event) =>
+                            handleSelection(event, 0, filteredOptions)
+                        }
                     />
                     <List sx={{ overflowY: 'auto' }} disablePadding>
-                        {options
-                            ?.filter((option) =>
-                                option.label
-                                    .toLowerCase()
-                                    .includes(searchText.toLowerCase()),
-                            )
-                            .map((option, index) => {
-                                const labelId = `checkbox-list-label-${option.value}`;
+                        {filteredOptions.map((option, index) => {
+                            const labelId = `checkbox-list-label-${option.value}`;
 
-                                return (
-                                    <StyledListItem
-                                        key={option.value}
-                                        dense
-                                        disablePadding
-                                        tabIndex={0}
-                                        onClick={handleToggle(option.value)}
-                                        ref={(el) => {
-                                            listRefs.current[index + 1] = el;
+                            return (
+                                <StyledListItem
+                                    key={option.value}
+                                    dense
+                                    disablePadding
+                                    tabIndex={0}
+                                    onClick={handleToggle(option.value)}
+                                    ref={(el) => {
+                                        listRefs.current[index + 1] = el;
+                                    }}
+                                    onKeyDown={(event) =>
+                                        handleSelection(
+                                            event,
+                                            index + 1,
+                                            filteredOptions,
+                                        )
+                                    }
+                                >
+                                    <StyledCheckbox
+                                        edge='start'
+                                        checked={selectedOptions.has(
+                                            option.value,
+                                        )}
+                                        tabIndex={-1}
+                                        inputProps={{
+                                            'aria-labelledby': labelId,
                                         }}
-                                        onKeyDown={(event) =>
-                                            handleSelection(event, index + 1)
-                                        }
-                                    >
-                                        <StyledCheckbox
-                                            edge='start'
-                                            checked={selectedOptions.has(
-                                                option.value,
-                                            )}
-                                            tabIndex={-1}
-                                            inputProps={{
-                                                'aria-labelledby': labelId,
-                                            }}
-                                            size='small'
-                                            disableRipple
-                                        />
-                                        <ListItemText
-                                            id={labelId}
-                                            primary={option.label}
-                                        />
-                                    </StyledListItem>
-                                );
-                            })}
+                                        size='small'
+                                        disableRipple
+                                    />
+                                    <ListItemText
+                                        id={labelId}
+                                        primary={option.label}
+                                    />
+                                </StyledListItem>
+                            );
+                        })}
                     </List>
                 </StyledDropdown>
             </StyledPopover>
@@ -221,6 +239,9 @@ export const FilterItemSingleSelect: FC<FilterItemSingleSelectProps> = ({
         },
     });
 
+    const filteredOptions = options?.filter((option) =>
+        option.label.toLowerCase().includes(searchText.toLowerCase()),
+    );
     return (
         <>
             <Box ref={ref}>
@@ -265,39 +286,39 @@ export const FilterItemSingleSelect: FC<FilterItemSingleSelectProps> = ({
                         inputRef={(el) => {
                             listRefs.current[0] = el;
                         }}
-                        onKeyDown={(event) => handleSelection(event, 0)}
+                        onKeyDown={(event) =>
+                            handleSelection(event, 0, filteredOptions)
+                        }
                     />
                     <List sx={{ overflowY: 'auto' }} disablePadding>
-                        {options
-                            ?.filter((option) =>
-                                option.label
-                                    .toLowerCase()
-                                    .includes(searchText.toLowerCase()),
-                            )
-                            .map((option, index) => {
-                                const labelId = `checkbox-list-label-${option.value}`;
+                        {filteredOptions.map((option, index) => {
+                            const labelId = `checkbox-list-label-${option.value}`;
 
-                                return (
-                                    <StyledListItem
-                                        key={option.value}
-                                        dense
-                                        disablePadding
-                                        tabIndex={0}
-                                        onClick={() => onChange(option.value)}
-                                        ref={(el) => {
-                                            listRefs.current[index + 1] = el;
-                                        }}
-                                        onKeyDown={(event) =>
-                                            handleSelection(event, index + 1)
-                                        }
-                                    >
-                                        <ListItemText
-                                            id={labelId}
-                                            primary={option.label}
-                                        />
-                                    </StyledListItem>
-                                );
-                            })}
+                            return (
+                                <StyledListItem
+                                    key={option.value}
+                                    dense
+                                    disablePadding
+                                    tabIndex={0}
+                                    onClick={() => onChange(option.value)}
+                                    ref={(el) => {
+                                        listRefs.current[index + 1] = el;
+                                    }}
+                                    onKeyDown={(event) =>
+                                        handleSelection(
+                                            event,
+                                            index + 1,
+                                            filteredOptions,
+                                        )
+                                    }
+                                >
+                                    <ListItemText
+                                        id={labelId}
+                                        primary={option.label}
+                                    />
+                                </StyledListItem>
+                            );
+                        })}
                     </List>
                 </StyledDropdown>
             </StyledPopover>

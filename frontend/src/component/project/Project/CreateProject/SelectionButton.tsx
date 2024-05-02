@@ -335,3 +335,197 @@ export const FilterItemSingleSelect: FC<FilterItemSingleSelectProps> = ({
         </>
     );
 };
+
+type CombinedSelectProps = {
+    options: Array<{ label: string; value: string }>;
+    onChange: (value: string) => void;
+    button: { label: string; icon: ReactNode };
+    search: {
+        label: string;
+        placeholder: string;
+    };
+    multiselect?: { selectedOptions: Set<string> };
+};
+
+export const CombinedSelect: FC<CombinedSelectProps> = ({
+    options,
+    onChange,
+    button,
+    search,
+    multiselect,
+}) => {
+    const ref = useRef<HTMLDivElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+    const [searchText, setSearchText] = useState('');
+
+    const open = () => {
+        setSearchText('');
+        setAnchorEl(ref.current);
+    };
+
+    const onClose = () => {
+        setAnchorEl(null);
+    };
+
+    const onSelection = (selected: string) => {
+        onChange(selected);
+        if (!multiselect) {
+            onClose();
+        }
+    };
+
+    const { listRefs, handleSelection } = useSelectionManagement({
+        options,
+        handleToggle: (selected: string) => () => onSelection(selected),
+    });
+
+    const filteredOptions = options?.filter((option) =>
+        option.label.toLowerCase().includes(searchText.toLowerCase()),
+    );
+    return (
+        <>
+            <Box ref={ref}>
+                <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={button.icon}
+                    onClick={() => {
+                        // todo: find out why this is clicked when you
+                        // press enter in the search bar (because it
+                        // doesn't on the multiselect version)
+                        open();
+                    }}
+                >
+                    {button.label}
+                </Button>
+            </Box>
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <StyledDropdown>
+                    <StyledTextField
+                        variant='outlined'
+                        size='small'
+                        value={searchText}
+                        onChange={(event) => setSearchText(event.target.value)}
+                        label={search.label}
+                        placeholder={search.placeholder}
+                        autoFocus
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    <Search fontSize='small' />
+                                </InputAdornment>
+                            ),
+                        }}
+                        inputRef={(el) => {
+                            listRefs.current[0] = el;
+                        }}
+                        onKeyDown={(event) =>
+                            handleSelection(event, 0, filteredOptions)
+                        }
+                    />
+                    <List sx={{ overflowY: 'auto' }} disablePadding>
+                        {filteredOptions.map((option, index) => {
+                            const labelId = `checkbox-list-label-${option.value}`;
+
+                            return (
+                                <StyledListItem
+                                    key={option.value}
+                                    dense
+                                    disablePadding
+                                    tabIndex={0}
+                                    onClick={() => {
+                                        onSelection(option.value);
+                                    }}
+                                    ref={(el) => {
+                                        listRefs.current[index + 1] = el;
+                                    }}
+                                    onKeyDown={(event) =>
+                                        handleSelection(
+                                            event,
+                                            index + 1,
+                                            filteredOptions,
+                                        )
+                                    }
+                                >
+                                    {multiselect ? (
+                                        <StyledCheckbox
+                                            edge='start'
+                                            checked={multiselect.selectedOptions.has(
+                                                option.value,
+                                            )}
+                                            tabIndex={-1}
+                                            inputProps={{
+                                                'aria-labelledby': labelId,
+                                            }}
+                                            size='small'
+                                            disableRipple
+                                        />
+                                    ) : null}
+                                    <ListItemText
+                                        id={labelId}
+                                        primary={option.label}
+                                    />
+                                </StyledListItem>
+                            );
+                        })}
+                    </List>
+                </StyledDropdown>
+            </StyledPopover>
+        </>
+    );
+};
+
+type MultiselectListProps = Pick<
+    CombinedSelectProps,
+    'options' | 'button' | 'search'
+> & {
+    selectedOptions: Set<string>;
+    onChange: (values: Set<string>) => void;
+};
+
+export const MultiselectList: FC<MultiselectListProps> = ({
+    selectedOptions,
+    onChange,
+    ...rest
+}) => {
+    const handleToggle = (value: string) => {
+        if (selectedOptions.has(value)) {
+            selectedOptions.delete(value);
+        } else {
+            selectedOptions.add(value);
+        }
+
+        onChange(new Set(selectedOptions));
+    };
+
+    return (
+        <CombinedSelect
+            {...rest}
+            onChange={handleToggle}
+            multiselect={{
+                selectedOptions,
+            }}
+        />
+    );
+};
+
+type SingleSelectListProps = Pick<
+    CombinedSelectProps,
+    'options' | 'button' | 'search' | 'onChange'
+>;
+
+export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
+    return <CombinedSelect {...props} />;
+};

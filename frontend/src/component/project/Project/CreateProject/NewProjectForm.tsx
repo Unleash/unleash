@@ -3,13 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import { FilterItem, FilterItemSingleSelect } from './SelectionButton';
+import { MultiselectList, SingleSelectList } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useStickinessOptions } from '../hooks/useStickinessOptions';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -185,18 +186,29 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     />
                 </ProjectDescriptionContainer>
             </TopGrid>
+
             <OptionButtons>
-                <FilterItem
-                    label='Environments'
+                <MultiselectList
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
                         label: env.name,
                         value: env.name,
                     }))}
                     onChange={handleFilterChange}
+                    button={{
+                        label:
+                            projectEnvironments.size > 0
+                                ? `${projectEnvironments.size} selected`
+                                : 'Select environments',
+                        icon: <EnvironmentsIcon />,
+                    }}
+                    search={{
+                        label: 'Filter project environments',
+                        placeholder: 'Select project environments',
+                    }}
                 />
 
-                <FilterItemSingleSelect
+                <SingleSelectList
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
                         ...rest,
@@ -208,12 +220,16 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         label: projectStickiness,
                         icon: <StickinessIcon />,
                     }}
+                    search={{
+                        label: 'Filter stickiness options',
+                        placeholder: 'Select default stickiness',
+                    }}
                 />
 
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
-                        <FilterItemSingleSelect
+                        <SingleSelectList
                             options={projectModeOptions}
                             onChange={(value: any) => {
                                 setProjectMode(value);
@@ -221,6 +237,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             button={{
                                 label: projectMode,
                                 icon: <ProjectModeIcon />,
+                            }}
+                            search={{
+                                label: 'Filter project mode options',
+                                placeholder: 'Select project mode',
                             }}
                         />
                     }

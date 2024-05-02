@@ -36,4 +36,16 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
         padding: theme.spacing(0.75, 0),
         fontSize: theme.typography.body2.fontSize,
     },
+
+    '& label': {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 'auto',
+        margin: 0,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        width: '1px',
+        whiteSpace: 'nowrap',
+    },
 }));

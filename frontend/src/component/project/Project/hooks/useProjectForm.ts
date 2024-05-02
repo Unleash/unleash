@@ -12,6 +12,7 @@ const useProjectForm = (
     initialProjectStickiness = DEFAULT_PROJECT_STICKINESS,
     initialFeatureLimit = '',
     initialProjectMode: ProjectMode = 'open',
+    initialProjectEnvironments: Set<string> = new Set(),
 ) => {
     const { isEnterprise } = useUiConfig();
     const [projectId, setProjectId] = useState(initialProjectId);
@@ -24,6 +25,9 @@ const useProjectForm = (
     );
     const [featureLimit, setFeatureLimit] =
         useState<string>(initialFeatureLimit);
+    const [projectEnvironments, setProjectEnvironments] = useState<Set<string>>(
+        initialProjectEnvironments,
+    );
 
     const [errors, setErrors] = useState({});
 
@@ -121,12 +125,14 @@ const useProjectForm = (
         projectMode,
         projectStickiness,
         featureLimit,
+        projectEnvironments,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         setFeatureLimit,
         setProjectMode,
+        setProjectEnvironments,
         getCreateProjectPayload,
         getEditProjectPayload,
         validateName,

@@ -4,7 +4,7 @@ title: How to create and display banners
 
 :::info Availability
 
-Banners were introduced as a beta feature in **Unleash 5.6** and are only available in Unleash Enterprise. We plan to make this feature generally available to all Enterprise users in **Unleash 5.7**.
+Banners were introduced as an Enterprise feature in **Unleash 5.7**.
 
 :::
 

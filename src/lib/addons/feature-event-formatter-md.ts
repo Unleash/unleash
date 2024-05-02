@@ -59,6 +59,7 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
+    FEATURE_COMPLETED,
 } from '../types';
 
 interface IEventData {
@@ -198,6 +199,10 @@ const EVENT_MAP: Record<string, IEventData> = {
     },
     [FEATURE_METADATA_UPDATED]: {
         action: '*{{user}}* updated *{{feature}}* metadata in project *{{project}}*',
+        path: '/projects/{{event.project}}/features/{{event.featureName}}',
+    },
+    [FEATURE_COMPLETED]: {
+        action: '*{{feature}}* was marked as completed in project *{{project}}*',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
     [FEATURE_POTENTIALLY_STALE_ON]: {

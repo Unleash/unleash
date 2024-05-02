@@ -2,6 +2,7 @@ import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
     FeatureLifecycleView,
+    FeatureLifecycleFullItem,
 } from './feature-lifecycle-store-type';
 import type { Db } from '../../db/db';
 import type { StageName } from '../../types';

@@ -79,7 +79,7 @@ type CombinedSelectProps = {
     multiselect?: { selectedOptions: Set<string> };
 };
 
-export const CombinedSelect: FC<CombinedSelectProps> = ({
+const CombinedSelect: FC<CombinedSelectProps> = ({
     options,
     onChange,
     button,

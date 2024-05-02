@@ -7,7 +7,7 @@ import {
     StyledListItem,
     StyledPopover,
     StyledTextField,
-} from './FilterItem.styles';
+} from './SelectionButton.styles';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 
 export interface IFilterItemProps {

@@ -47,6 +47,10 @@ const useSelectionManagement = ({
                 const listItemIndex = index - 1;
                 handleToggle(options[listItemIndex].value)();
             }
+
+            // todo: if the search field is not empty and the user
+            // presses enter, we should toggle the topmost item in the
+            // list
         }
     };
 
@@ -121,7 +125,8 @@ export const FilterItem: FC<IFilterItemProps> = ({
                         size='small'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
-                        placeholder='Search'
+                        label='Filter project environments'
+                        placeholder='Select project environments'
                         autoFocus
                         InputProps={{
                             startAdornment: (
@@ -171,6 +176,121 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                             size='small'
                                             disableRipple
                                         />
+                                        <ListItemText
+                                            id={labelId}
+                                            primary={option.label}
+                                        />
+                                    </StyledListItem>
+                                );
+                            })}
+                    </List>
+                </StyledDropdown>
+            </StyledPopover>
+        </>
+    );
+};
+
+type FilterItemSingleSelectProps = {
+    options: Array<{ label: string; value: string }>;
+    onChange: (value: string) => void;
+    button: { label: string; icon: ReactNode };
+};
+
+export const FilterItemSingleSelect: FC<FilterItemSingleSelectProps> = ({
+    options,
+    onChange,
+    button,
+}) => {
+    const ref = useRef<HTMLDivElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+    const [searchText, setSearchText] = useState('');
+
+    const open = () => {
+        setAnchorEl(ref.current);
+    };
+
+    const onClose = () => {
+        setAnchorEl(null);
+    };
+
+    const { listRefs, handleSelection } = useSelectionManagement({
+        options,
+        handleToggle: (selected: string) => () => {
+            onChange(selected);
+            onClose();
+        },
+    });
+
+    return (
+        <>
+            <Box ref={ref}>
+                <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={button.icon}
+                    onClick={open}
+                >
+                    {button.label}
+                </Button>
+            </Box>
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <StyledDropdown>
+                    <StyledTextField
+                        variant='outlined'
+                        size='small'
+                        value={searchText}
+                        onChange={(event) => setSearchText(event.target.value)}
+                        label='Filter stickiness options'
+                        placeholder='Select default stickiness'
+                        autoFocus
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    <Search fontSize='small' />
+                                </InputAdornment>
+                            ),
+                        }}
+                        inputRef={(el) => {
+                            listRefs.current[0] = el;
+                        }}
+                        onKeyDown={(event) => handleSelection(event, 0)}
+                    />
+                    <List sx={{ overflowY: 'auto' }} disablePadding>
+                        {options
+                            ?.filter((option) =>
+                                option.label
+                                    .toLowerCase()
+                                    .includes(searchText.toLowerCase()),
+                            )
+                            .map((option, index) => {
+                                const labelId = `checkbox-list-label-${option.value}`;
+
+                                return (
+                                    <StyledListItem
+                                        key={option.value}
+                                        dense
+                                        disablePadding
+                                        tabIndex={0}
+                                        onClick={() => onChange(option.value)}
+                                        ref={(el) => {
+                                            listRefs.current[index + 1] = el;
+                                        }}
+                                        onKeyDown={(event) =>
+                                            handleSelection(event, index + 1)
+                                        }
+                                    >
                                         <ListItemText
                                             id={labelId}
                                             primary={option.label}

@@ -3,8 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import { FilterItem } from './SelectionButton';
+import { FilterItem, FilterItemSingleSelect } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { useStickinessOptions } from '../hooks/useStickinessOptions';
+import FormatPaint from '@mui/icons-material/FormatPaint';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -72,12 +74,12 @@ type FormProps = {
     projectId: string;
     projectName: string;
     projectDesc: string;
-    projectStickiness?: string;
+    projectStickiness: string;
     featureLimit?: string;
     featureCount?: number;
     projectMode?: string;
     projectEnvironments: Set<string>;
-    setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectStickiness: React.Dispatch<React.SetStateAction<string>>;
     setProjectEnvironments: React.Dispatch<React.SetStateAction<Set<string>>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
@@ -135,6 +137,14 @@ export const NewProjectForm: React.FC<FormProps> = ({
         setProjectEnvironments(envs);
     };
 
+    const projectModeOptions = [
+        { key: 'open', label: 'open' },
+        { key: 'protected', label: 'protected' },
+        { key: 'private', label: 'private' },
+    ];
+
+    const stickinessOptions = useStickinessOptions(projectStickiness);
+
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -181,6 +191,21 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     }))}
                     onChange={handleFilterChange}
                 />
+
+                <FilterItemSingleSelect
+                    options={stickinessOptions.map(({ key, ...rest }) => ({
+                        value: key,
+                        ...rest,
+                    }))}
+                    onChange={(value: any) => {
+                        setProjectStickiness(value);
+                    }}
+                    button={{
+                        label: projectStickiness,
+                        icon: <FormatPaint />,
+                    }}
+                />
+
                 <Button variant='outlined'>clientId</Button>
                 <Button variant='outlined'>Open</Button>
                 <Button variant='outlined'>1 environment configured</Button>

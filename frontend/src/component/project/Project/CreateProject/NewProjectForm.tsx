@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import { useState } from 'react';
 import { FilterItem } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
@@ -77,7 +76,9 @@ type FormProps = {
     featureLimit?: string;
     featureCount?: number;
     projectMode?: string;
+    projectEnvironments: Set<string>;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
+    setProjectEnvironments: React.Dispatch<React.SetStateAction<Set<string>>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
@@ -99,10 +100,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
     projectName,
     projectDesc,
     projectStickiness,
+    projectEnvironments,
     featureLimit,
     featureCount,
     projectMode,
     setProjectMode,
+    setProjectEnvironments,
     setProjectId,
     setProjectName,
     setProjectDesc,
@@ -114,10 +117,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
 }) => {
     const { environments: allEnvironments } = useEnvironments();
     const activeEnvironments = allEnvironments.filter((env) => env.enabled);
-
-    const [selectedEnvironments, setSelectedEnvironments] = useState<
-        Set<string>
-    >(new Set());
 
     const handleProjectNameUpdate = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -133,7 +132,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
     };
 
     const handleFilterChange = (envs: Set<string>) => {
-        setSelectedEnvironments(envs);
+        setProjectEnvironments(envs);
     };
 
     return (
@@ -175,7 +174,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
             <OptionButtons>
                 <FilterItem
                     label='Environments'
-                    selectedOptions={selectedEnvironments}
+                    selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
                         label: env.name,
                         value: env.name,

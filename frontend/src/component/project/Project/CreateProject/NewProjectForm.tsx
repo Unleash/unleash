@@ -3,7 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import { MultiselectList, SingleSelectList } from './SelectionButton';
+import {
+    MultiselectList,
+    SingleSelectList,
+    TableSelect,
+} from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';
@@ -251,15 +255,16 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         />
                     }
                 />
-                <MultiselectList
-                    selectedOptions={projectEnvironments}
+                <TableSelect
                     options={activeEnvironments
                         .filter((env) => projectEnvironments.has(env.name))
                         .map((env) => ({
                             label: env.name,
                             value: env.name,
+                            // name: env.name,
+                            // type: env.type,
                         }))}
-                    onChange={handleFilterChange}
+                    onChange={setProjectChangeRequestConfiguration}
                     button={{
                         label:
                             Object.keys(projectChangeRequestConfiguration)

@@ -8,6 +8,7 @@ import {
     StyledPopover,
     StyledTextField,
 } from './SelectionButton.styles';
+import { ChangeRequestTable } from './ChangeRequestTable';
 
 export interface IFilterItemProps {
     label: ReactNode;
@@ -261,4 +262,94 @@ type SingleSelectListProps = Pick<
 
 export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
     return <CombinedSelect {...props} />;
+};
+
+type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'>;
+export const TableSelect: FC<TableSelectProps> = ({ button, search }) => {
+    const ref = useRef<HTMLDivElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+    const [searchText, setSearchText] = useState('');
+
+    const open = () => {
+        setSearchText('');
+        setAnchorEl(ref.current);
+    };
+
+    const onClose = () => {
+        setAnchorEl(null);
+    };
+
+    const onSelection = (selected: string) => {
+        // onChange(selected);
+    };
+
+    const { listRefs, handleSelection } = useSelectionManagement({
+        handleToggle: (selected: string) => () => onSelection(selected),
+    });
+
+    // const filteredOptions = options?.filter((option) =>
+    //     option.label.toLowerCase().includes(searchText.toLowerCase()),
+    // );
+
+    // const filteredOptions = [];
+    return (
+        <>
+            <Box ref={ref}>
+                <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={button.icon}
+                    onClick={() => {
+                        // todo: find out why this is clicked when you
+                        // press enter in the search bar (only in
+                        // single-select mode)
+                        open();
+                    }}
+                >
+                    {button.label}
+                </Button>
+            </Box>
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <StyledDropdown>
+                    <StyledTextField
+                        variant='outlined'
+                        size='small'
+                        value={searchText}
+                        onChange={(event) => setSearchText(event.target.value)}
+                        label={search.label}
+                        placeholder={search.placeholder}
+                        autoFocus
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    <Search fontSize='small' />
+                                </InputAdornment>
+                            ),
+                        }}
+                        inputRef={(el) => {
+                            listRefs.current[0] = el;
+                        }}
+                        onKeyDown={(event) => handleSelection(event, 0, [])}
+                    />
+                    <ChangeRequestTable
+                        environments={[]}
+                        enableEnvironment={(args) => {}}
+                        disableEnvironment={(s) => {}}
+                    />
+                </StyledDropdown>
+            </StyledPopover>
+        </>
+    );
 };

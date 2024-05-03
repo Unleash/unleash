@@ -59,6 +59,8 @@ export const ChangeRequestTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading, refetchChangeRequestConfig } =
         useChangeRequestConfig(projectId);
+    console.log('cr table data is', data);
+
     const { updateChangeRequestEnvironmentConfig } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
 

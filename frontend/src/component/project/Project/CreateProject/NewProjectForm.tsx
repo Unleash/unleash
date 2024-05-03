@@ -1,4 +1,4 @@
-import { Button, Typography, styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
@@ -11,6 +11,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
+import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -245,7 +246,25 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         />
                     }
                 />
-                <Button variant='outlined'>1 environment configured</Button>
+                <MultiselectList
+                    selectedOptions={projectEnvironments}
+                    options={activeEnvironments.map((env) => ({
+                        label: env.name,
+                        value: env.name,
+                    }))}
+                    onChange={handleFilterChange}
+                    button={{
+                        label:
+                            projectEnvironments.size > 0
+                                ? `${projectEnvironments.size} selected`
+                                : 'Select environments',
+                        icon: <ChangeRequestIcon />,
+                    }}
+                    search={{
+                        label: 'Filter environments',
+                        placeholder: 'Filter environments',
+                    }}
+                />
             </OptionButtons>
             <FormActions>{children}</FormActions>
         </StyledForm>

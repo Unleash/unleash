@@ -13,6 +13,10 @@ const useProjectForm = (
     initialFeatureLimit = '',
     initialProjectMode: ProjectMode = 'open',
     initialProjectEnvironments: Set<string> = new Set(),
+    initialProjectChangeRequestConfiguration: Record<
+        string,
+        { requiredApprovals: number }
+    > = {},
 ) => {
     const { isEnterprise } = useUiConfig();
     const [projectId, setProjectId] = useState(initialProjectId);
@@ -28,6 +32,10 @@ const useProjectForm = (
     const [projectEnvironments, setProjectEnvironments] = useState<Set<string>>(
         initialProjectEnvironments,
     );
+    const [
+        projectChangeRequestConfiguration,
+        setProjectChangeRequestConfiguration,
+    ] = useState(initialProjectChangeRequestConfiguration);
 
     const [errors, setErrors] = useState({});
 
@@ -63,6 +71,13 @@ const useProjectForm = (
                 ? { environments: [...projectEnvironments] }
                 : {};
 
+        const changeRequestEnvironments = Object.entries(
+            projectChangeRequestConfiguration,
+        ).map(([env, { requiredApprovals }]) => ({
+            name: env,
+            requiredApprovals,
+        }));
+
         return isEnterprise()
             ? {
                   id: projectId,
@@ -70,6 +85,7 @@ const useProjectForm = (
                   description: projectDesc,
                   defaultStickiness: projectStickiness,
                   mode: projectMode,
+                  changeRequestEnvironments,
                   ...environmentsPayload,
               }
             : {
@@ -133,6 +149,7 @@ const useProjectForm = (
         projectStickiness,
         featureLimit,
         projectEnvironments,
+        projectChangeRequestConfiguration,
         setProjectId,
         setProjectName,
         setProjectDesc,
@@ -140,6 +157,7 @@ const useProjectForm = (
         setFeatureLimit,
         setProjectMode,
         setProjectEnvironments,
+        setProjectChangeRequestConfiguration,
         getCreateProjectPayload,
         getEditProjectPayload,
         validateName,

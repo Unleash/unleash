@@ -288,14 +288,17 @@ export const TableSelect: FC<TableSelectProps> = ({
         Record<
             string,
             {
-                enabled: boolean;
+                changeRequestEnabled: boolean;
                 requiredApprovals: number;
             }
         >
     >(
         Object.fromEntries(
             Object.entries(projectChangeRequestConfiguration).map(
-                ([name, config]) => [name, { ...config, enabled: true }],
+                ([name, config]) => [
+                    name,
+                    { ...config, changeRequestEnabled: true },
+                ],
             ),
         ),
     );
@@ -307,9 +310,18 @@ export const TableSelect: FC<TableSelectProps> = ({
         ...(configured[name] ?? {}),
     }));
 
-    const propagateChanges = () => {
+    const propagateChanges = (
+        newState: Record<
+            string,
+            {
+                changeRequestEnabled: boolean;
+                requiredApprovals: number;
+            }
+        >,
+    ) => {
+        setConfigured(newState);
         const configuredEnvs = Object.fromEntries(
-            Object.entries(configured).map(([name, { requiredApprovals }]) => [
+            Object.entries(newState).map(([name, { requiredApprovals }]) => [
                 name,
                 { requiredApprovals },
             ]),
@@ -317,16 +329,21 @@ export const TableSelect: FC<TableSelectProps> = ({
         onChange(configuredEnvs);
     };
 
+    console.log('Configured is', configured);
+
     const onEnable = (name: string, requiredApprovals: number) => {
-        setConfigured({
+        console.log('Got called!', name, requiredApprovals);
+
+        propagateChanges({
             ...configured,
-            name: { enabled: true, requiredApprovals },
+            [name]: { changeRequestEnabled: true, requiredApprovals },
         });
     };
 
     const onDisable = (name: string) => {
         const { [name]: _, ...rest } = configured;
-        setConfigured(rest);
+
+        propagateChanges(rest);
     };
 
     const ref = useRef<HTMLDivElement>(null);

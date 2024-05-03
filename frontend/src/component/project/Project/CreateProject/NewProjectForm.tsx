@@ -264,7 +264,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             name: env.name,
                             type: env.type,
                         }))}
-                    onChange={setProjectChangeRequestConfiguration}
+                    onChange={(args) => {
+                        console.log('calling on change', args);
+                        setProjectChangeRequestConfiguration(args);
+                    }}
                     button={{
                         label:
                             Object.keys(projectChangeRequestConfiguration)

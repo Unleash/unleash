@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
-import { Box, styled } from '@mui/material';
+import { Box, Switch, styled } from '@mui/material';
 import {
     SortableTableHeader,
     Table,
@@ -10,7 +10,6 @@ import {
 } from 'component/common/Table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IChangeRequestConfig } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -41,19 +40,26 @@ type TableProps = {
 export const ChangeRequestTable = (props: TableProps) => {
     const theme = useTheme();
 
-    const onRowChange =
+    const onToggleEnvironment =
         (
-            enableEnvironment: string,
-            isEnabled: boolean,
+            environmentName: string,
+            previousState: boolean,
             requiredApprovals: number,
         ) =>
         () => {
             console.log(
                 'onRowChange',
-                enableEnvironment,
-                isEnabled,
+                environmentName,
+                previousState,
                 requiredApprovals,
             );
+            const newState = !previousState;
+            if (newState) {
+                console.log('Calling enable env from table');
+                props.enableEnvironment(environmentName, requiredApprovals);
+            } else {
+                props.disableEnvironment(environmentName);
+            }
         };
 
     async function updateConfiguration(config?: IChangeRequestConfig) {
@@ -76,6 +82,7 @@ export const ChangeRequestTable = (props: TableProps) => {
         });
 
     function onRequiredApprovalsChange(original: any, approvals: string) {
+        props.enableEnvironment(original.environment, Number(approvals));
         console.log('onRequiredApprovalsChange', original, approvals);
         // onEnableEnvironment(original.environment, Number(approvals));
         // updateConfiguration({
@@ -137,20 +144,29 @@ export const ChangeRequestTable = (props: TableProps) => {
                 id: 'changeRequestEnabled',
                 align: 'center',
 
-                Cell: ({ value, row: { original } }: any) => (
-                    <StyledBox data-loading>
-                        <PermissionSwitch
-                            checked={value}
-                            permission={[]}
-                            inputProps={{ 'aria-label': original.environment }}
-                            onClick={onRowChange(
-                                original.environment,
-                                original.changeRequestEnabled,
-                                original.requiredApprovals,
-                            )}
-                        />
-                    </StyledBox>
-                ),
+                Cell: ({ value, row: { original } }: any) => {
+                    console.log('Rendering a cell', value, original);
+
+                    return (
+                        <StyledBox data-loading>
+                            <Switch
+                                checked={value}
+                                inputProps={{
+                                    'aria-label': `${
+                                        value ? 'Disable' : 'Enable'
+                                    } change requests for ${
+                                        original.environment
+                                    }`,
+                                }}
+                                onClick={onToggleEnvironment(
+                                    original.environment,
+                                    original.changeRequestEnabled,
+                                    original.requiredApprovals,
+                                )}
+                            />
+                        </StyledBox>
+                    );
+                },
                 width: 100,
                 disableGlobalFilter: true,
                 disableSortBy: true,
@@ -164,13 +180,16 @@ export const ChangeRequestTable = (props: TableProps) => {
             {
                 // @ts-ignore
                 columns,
-                data: props.environments.map((env) => ({
-                    environment: env.name,
-                    type: env.type,
-                    changeRequestEnabled: env.changeRequestEnabled,
-                    // @ts-ignore
-                    requiredApprovals: env.requiredApprovals ?? 1,
-                })),
+                data: props.environments.map((env) => {
+                    console.log('Mapping env', env);
+                    return {
+                        environment: env.name,
+                        type: env.type,
+                        changeRequestEnabled: env.changeRequestEnabled,
+                        // @ts-ignore
+                        requiredApprovals: env.requiredApprovals ?? 1,
+                    };
+                }),
 
                 sortTypes,
                 autoResetGlobalFilter: false,

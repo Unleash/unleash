@@ -264,13 +264,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                     projectEnvironments.has(env.name),
                                 )
                                 .map((env) => ({
-                                    // label: env.name,
-                                    // value: env.name,
                                     name: env.name,
                                     type: env.type,
                                 }))}
                             onChange={(args) => {
-                                console.log('calling on change', args);
                                 setProjectChangeRequestConfiguration(args);
                             }}
                             button={{

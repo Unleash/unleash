@@ -329,11 +329,7 @@ export const TableSelect: FC<TableSelectProps> = ({
         onChange(configuredEnvs);
     };
 
-    console.log('Configured is', configured);
-
     const onEnable = (name: string, requiredApprovals: number) => {
-        console.log('Got called!', name, requiredApprovals);
-
         propagateChanges({
             ...configured,
             [name]: { changeRequestEnabled: true, requiredApprovals },

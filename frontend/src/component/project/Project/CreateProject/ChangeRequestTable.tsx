@@ -46,15 +46,8 @@ export const ChangeRequestTable = (props: TableProps) => {
             requiredApprovals: number,
         ) =>
         () => {
-            console.log(
-                'onRowChange',
-                environmentName,
-                previousState,
-                requiredApprovals,
-            );
             const newState = !previousState;
             if (newState) {
-                console.log('Calling enable env from table');
                 props.enableEnvironment(environmentName, requiredApprovals);
             } else {
                 props.disableEnvironment(environmentName);
@@ -128,8 +121,6 @@ export const ChangeRequestTable = (props: TableProps) => {
                 align: 'center',
 
                 Cell: ({ value, row: { original } }: any) => {
-                    console.log('Rendering a cell', value, original);
-
                     return (
                         <StyledBox data-loading>
                             <Switch
@@ -164,7 +155,6 @@ export const ChangeRequestTable = (props: TableProps) => {
                 // @ts-ignore
                 columns,
                 data: props.environments.map((env) => {
-                    console.log('Mapping env', env);
                     return {
                         environment: env.name,
                         type: env.type,

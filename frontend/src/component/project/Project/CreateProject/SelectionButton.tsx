@@ -290,19 +290,6 @@ export const TableSelect: FC<TableSelectProps> = ({
     activeEnvironments,
 }) => {
     const configured = useMemo(() => {
-        console.log(
-            'updating configured from',
-            projectChangeRequestConfiguration,
-            Object.fromEntries(
-                Object.entries(projectChangeRequestConfiguration).map(
-                    ([name, config]) => [
-                        name,
-                        { ...config, changeRequestEnabled: true },
-                    ],
-                ),
-            ),
-        );
-
         return Object.fromEntries(
             Object.entries(projectChangeRequestConfiguration).map(
                 ([name, config]) => [
@@ -324,69 +311,16 @@ export const TableSelect: FC<TableSelectProps> = ({
         [configured, activeEnvironments],
     );
 
-    console.log(
-        'Configured is',
-        configured,
-        'project is',
-        projectChangeRequestConfiguration,
-        'table envs are',
-        tableEnvs,
-    );
-
-    const propagateChanges = (
-        newState: Record<
-            string,
-            {
-                changeRequestEnabled: boolean;
-                requiredApprovals: number;
-            }
-        >,
-    ) => {
-        console.log('Setting new state', newState);
-
-        // setConfigured(newState);
-        const configuredEnvs = Object.fromEntries(
-            Object.entries(newState).map(([name, { requiredApprovals }]) => [
-                name,
-                { requiredApprovals },
-            ]),
-        );
-        onChange(configuredEnvs);
-    };
-
-    // bug behavior: when the table renders, it has the correct envs selected.
-    // if you enable one env, that works as you'd expect.
-    // if you try to enable a second env, it enables the second one, but disables the first one
-    // if you disable one of the originally selected envs after enabling another env, both the originally selected and the recently enabled env are disabled
-    // updating number of approvers works the same. if you update the number of approvers or an orig toggle, it resets any other changes you've made since opening
-
     const onEnable = (name: string, requiredApprovals: number) => {
-        console.log(
-            'On enable. Configured is',
-            configured,
-            'project cr config',
-            projectChangeRequestConfiguration,
-            'tableState',
-            tableEnvs,
-        );
-
-        // propagateChanges({
-        //     ...configured,
-        //     [name]: { changeRequestEnabled: true, requiredApprovals },
-        // });
         updateProjectChangeRequestConfiguration.enableChangeRequests(
             name,
             requiredApprovals,
         );
-        // onChange.enableCrs(name, requiredApprovals);
     };
-
-    console.log('cr config update', updateProjectChangeRequestConfiguration);
 
     const onDisable = (name: string) => {
         const { [name]: _, ...rest } = configured;
 
-        // propagateChanges(rest);
         updateProjectChangeRequestConfiguration.disableChangeRequests(name);
     };
 

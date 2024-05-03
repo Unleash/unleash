@@ -16,13 +16,13 @@ import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveD
 import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { StyledDetail } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
-import { formatDateYMD } from '../../../../../utils/formatDate';
+import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
 import { FeatureEnvironmentSeen } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { DependencyRow } from './DependencyRow';
-import { useLocationSettings } from '../../../../../hooks/useLocationSettings';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
-import type { ILastSeenEnvironments } from '../../../../../interfaces/featureToggle';
+import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,

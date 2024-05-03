@@ -1,5 +1,5 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { AddDependencyDialogue } from '../../../Dependencies/AddDependencyDialogue';
+import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { type FC, useState } from 'react';
 import {

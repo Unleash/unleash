@@ -256,13 +256,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     }
                 />
                 <TableSelect
-                    options={activeEnvironments
+                    activeEnvironments={activeEnvironments
                         .filter((env) => projectEnvironments.has(env.name))
                         .map((env) => ({
-                            label: env.name,
-                            value: env.name,
-                            // name: env.name,
-                            // type: env.type,
+                            // label: env.name,
+                            // value: env.name,
+                            name: env.name,
+                            type: env.type,
                         }))}
                     onChange={setProjectChangeRequestConfiguration}
                     button={{
@@ -281,6 +281,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         label: 'Filter environments',
                         placeholder: 'Filter environments',
                     }}
+                    projectChangeRequestConfiguration={
+                        projectChangeRequestConfiguration
+                    }
                 />
             </OptionButtons>
             <FormActions>{children}</FormActions>

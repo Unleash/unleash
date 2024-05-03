@@ -264,8 +264,71 @@ export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
     return <CombinedSelect {...props} />;
 };
 
-type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'>;
-export const TableSelect: FC<TableSelectProps> = ({ button, search }) => {
+type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'> & {
+    onChange: (
+        changeRequestConfig: Record<string, { requiredApprovals: number }>,
+    ) => void;
+    activeEnvironments: {
+        name: string;
+        type: string;
+    }[];
+    projectChangeRequestConfiguration: Record<
+        string,
+        { requiredApprovals: number }
+    >;
+};
+export const TableSelect: FC<TableSelectProps> = ({
+    button,
+    search,
+    onChange,
+    projectChangeRequestConfiguration,
+    activeEnvironments,
+}) => {
+    const [configured, setConfigured] = useState<
+        Record<
+            string,
+            {
+                enabled: boolean;
+                requiredApprovals: number;
+            }
+        >
+    >(
+        Object.fromEntries(
+            Object.entries(projectChangeRequestConfiguration).map(
+                ([name, config]) => [name, { ...config, enabled: true }],
+            ),
+        ),
+    );
+
+    const tableEnvs = activeEnvironments.map(({ name, type }) => ({
+        name,
+        type,
+        changeRequestEnabled: false,
+        ...(configured[name] ?? {}),
+    }));
+
+    const propagateChanges = () => {
+        const configuredEnvs = Object.fromEntries(
+            Object.entries(configured).map(([name, { requiredApprovals }]) => [
+                name,
+                { requiredApprovals },
+            ]),
+        );
+        onChange(configuredEnvs);
+    };
+
+    const onEnable = (name: string, requiredApprovals: number) => {
+        setConfigured({
+            ...configured,
+            name: { enabled: true, requiredApprovals },
+        });
+    };
+
+    const onDisable = (name: string) => {
+        const { [name]: _, ...rest } = configured;
+        setConfigured(rest);
+    };
+
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
@@ -344,9 +407,9 @@ export const TableSelect: FC<TableSelectProps> = ({ button, search }) => {
                         onKeyDown={(event) => handleSelection(event, 0, [])}
                     />
                     <ChangeRequestTable
-                        environments={[]}
-                        enableEnvironment={(args) => {}}
-                        disableEnvironment={(s) => {}}
+                        environments={tableEnvs}
+                        enableEnvironment={onEnable}
+                        disableEnvironment={onDisable}
                     />
                 </StyledDropdown>
             </StyledPopover>

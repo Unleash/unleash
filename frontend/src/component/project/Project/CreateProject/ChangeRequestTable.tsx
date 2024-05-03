@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Box, styled } from '@mui/material';
 import {
@@ -16,7 +16,6 @@ import type { IChangeRequestConfig } from 'hooks/api/actions/useChangeRequestApi
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useTheme } from '@mui/material/styles';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 // import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -29,40 +28,17 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 type TableProps = {
-    environments: (
-        | {
-              name: string;
-              type: string;
-              changeRequestEnabled: false;
-          }
-        | {
-              name: string;
-              type: string;
-              requiredApprovals: number;
-              changeRequestEnabled: boolean;
-          }
-    )[];
-    enableEnvironment: (args: {
+    environments: {
         name: string;
+        type: string;
         requiredApprovals: number;
-    }) => void;
+        changeRequestEnabled: boolean;
+    }[];
+    enableEnvironment: (name: string, requiredApprovals: number) => void;
     disableEnvironment: (name: string) => void;
 };
 
 export const ChangeRequestTable = (props: TableProps) => {
-    const { trackEvent } = usePlausibleTracker();
-    const [dialogState, setDialogState] = useState<{
-        isOpen: boolean;
-        enableEnvironment: string;
-        isEnabled: boolean;
-        requiredApprovals: number;
-    }>({
-        isOpen: false,
-        enableEnvironment: '',
-        isEnabled: false,
-        requiredApprovals: 1,
-    });
-
     const theme = useTheme();
 
     const onRowChange =
@@ -72,20 +48,13 @@ export const ChangeRequestTable = (props: TableProps) => {
             requiredApprovals: number,
         ) =>
         () => {
-            setDialogState({
-                isOpen: true,
+            console.log(
+                'onRowChange',
                 enableEnvironment,
                 isEnabled,
                 requiredApprovals,
-            });
+            );
         };
-
-    const onConfirm = async () => {
-        if (dialogState.enableEnvironment) {
-            await updateConfiguration();
-        }
-        setDialogState((state) => ({ ...state, isOpen: false }));
-    };
 
     async function updateConfiguration(config?: IChangeRequestConfig) {
         try {
@@ -107,12 +76,14 @@ export const ChangeRequestTable = (props: TableProps) => {
         });
 
     function onRequiredApprovalsChange(original: any, approvals: string) {
-        updateConfiguration({
-            project: projectId,
-            environment: original.environment,
-            enabled: original.changeRequestEnabled,
-            requiredApprovals: Number(approvals),
-        });
+        console.log('onRequiredApprovalsChange', original, approvals);
+        // onEnableEnvironment(original.environment, Number(approvals));
+        // updateConfiguration({
+        //     project: projectId,
+        //     environment: original.environment,
+        //     enabled: original.changeRequestEnabled,
+        //     requiredApprovals: Number(approvals),
+        // });
     }
 
     const columns = useMemo(

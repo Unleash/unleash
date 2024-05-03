@@ -37,6 +37,8 @@ const useProjectForm = (
         setProjectChangeRequestConfiguration,
     ] = useState(initialProjectChangeRequestConfiguration);
 
+    // todo: write tests for this
+    // also: disallow adding a project to cr config that isn't in envs
     const updateProjectEnvironments = (newState: Set<string>) => {
         const filteredChangeRequestEnvs = Object.fromEntries(
             Object.entries(projectChangeRequestConfiguration).filter(([env]) =>

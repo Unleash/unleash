@@ -3,6 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
+import { MultiselectList, SingleSelectList } from './SelectionButton';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import StickinessIcon from '@mui/icons-material/FormatPaint';
+import ProjectModeIcon from '@mui/icons-material/Adjust';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
+import { useStickinessOptions } from 'hooks/useStickinessOptions';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -70,16 +78,18 @@ type FormProps = {
     projectId: string;
     projectName: string;
     projectDesc: string;
-    projectStickiness?: string;
+    projectStickiness: string;
     featureLimit?: string;
     featureCount?: number;
-    projectMode?: string;
-    setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
+    projectMode: string;
+    projectEnvironments: Set<string>;
+    setProjectStickiness: React.Dispatch<React.SetStateAction<string>>;
+    setProjectEnvironments: React.Dispatch<React.SetStateAction<Set<string>>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
     setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
-    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    setProjectMode: React.Dispatch<React.SetStateAction<ProjectMode>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
@@ -96,10 +106,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
     projectName,
     projectDesc,
     projectStickiness,
+    projectEnvironments,
     featureLimit,
     featureCount,
     projectMode,
     setProjectMode,
+    setProjectEnvironments,
     setProjectId,
     setProjectName,
     setProjectDesc,
@@ -109,6 +121,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
     mode,
     clearErrors,
 }) => {
+    const { isEnterprise } = useUiConfig();
+    const { environments: allEnvironments } = useEnvironments();
+    const activeEnvironments = allEnvironments.filter((env) => env.enabled);
+
     const handleProjectNameUpdate = (
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
@@ -121,6 +137,18 @@ export const NewProjectForm: React.FC<FormProps> = ({
             : '';
         setProjectId(maybeProjectId);
     };
+
+    const handleFilterChange = (envs: Set<string>) => {
+        setProjectEnvironments(envs);
+    };
+
+    const projectModeOptions = [
+        { value: 'open', label: 'open' },
+        { value: 'protected', label: 'protected' },
+        { value: 'private', label: 'private' },
+    ];
+
+    const stickinessOptions = useStickinessOptions(projectStickiness);
 
     return (
         <StyledForm
@@ -158,10 +186,65 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     />
                 </ProjectDescriptionContainer>
             </TopGrid>
+
             <OptionButtons>
-                <Button variant='outlined'>4 selected</Button>
-                <Button variant='outlined'>clientId</Button>
-                <Button variant='outlined'>Open</Button>
+                <MultiselectList
+                    selectedOptions={projectEnvironments}
+                    options={activeEnvironments.map((env) => ({
+                        label: env.name,
+                        value: env.name,
+                    }))}
+                    onChange={handleFilterChange}
+                    button={{
+                        label:
+                            projectEnvironments.size > 0
+                                ? `${projectEnvironments.size} selected`
+                                : 'Select environments',
+                        icon: <EnvironmentsIcon />,
+                    }}
+                    search={{
+                        label: 'Filter project environments',
+                        placeholder: 'Select project environments',
+                    }}
+                />
+
+                <SingleSelectList
+                    options={stickinessOptions.map(({ key, ...rest }) => ({
+                        value: key,
+                        ...rest,
+                    }))}
+                    onChange={(value: any) => {
+                        setProjectStickiness(value);
+                    }}
+                    button={{
+                        label: projectStickiness,
+                        icon: <StickinessIcon />,
+                    }}
+                    search={{
+                        label: 'Filter stickiness options',
+                        placeholder: 'Select default stickiness',
+                    }}
+                />
+
+                <ConditionallyRender
+                    condition={isEnterprise()}
+                    show={
+                        <SingleSelectList
+                            options={projectModeOptions}
+                            onChange={(value: any) => {
+                                setProjectMode(value);
+                            }}
+                            button={{
+                                label: projectMode,
+                                icon: <ProjectModeIcon />,
+                            }}
+                            search={{
+                                label: 'Filter project mode options',
+                                placeholder: 'Select project mode',
+                            }}
+                        />
+                    }
+                />
                 <Button variant='outlined'>1 environment configured</Button>
             </OptionButtons>
             <FormActions>{children}</FormActions>

@@ -34,10 +34,12 @@ const CreateProject = () => {
         projectName,
         projectDesc,
         projectMode,
+        projectEnvironments,
         setProjectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
+        setProjectEnvironments,
         getCreateProjectPayload,
         clearErrors,
         validateProjectId,
@@ -107,6 +109,8 @@ const CreateProject = () => {
                     errors={errors}
                     handleSubmit={handleSubmit}
                     projectId={projectId}
+                    projectEnvironments={projectEnvironments}
+                    setProjectEnvironments={setProjectEnvironments}
                     setProjectId={setProjectId}
                     projectName={projectName}
                     projectStickiness={projectStickiness}

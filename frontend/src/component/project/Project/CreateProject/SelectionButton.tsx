@@ -1,6 +1,6 @@
 import Search from '@mui/icons-material/Search';
 import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
-import { type FC, type ReactNode, useRef, useState } from 'react';
+import { type FC, type ReactNode, useRef, useState, useMemo } from 'react';
 import {
     StyledCheckbox,
     StyledDropdown,
@@ -284,24 +284,35 @@ export const TableSelect: FC<TableSelectProps> = ({
     projectChangeRequestConfiguration,
     activeEnvironments,
 }) => {
-    const [configured, setConfigured] = useState<
-        Record<
-            string,
-            {
-                changeRequestEnabled: boolean;
-                requiredApprovals: number;
-            }
-        >
-    >(
-        Object.fromEntries(
+    // const [configured, setConfigured] = useState<
+    //     Record<
+    //         string,
+    //         {
+    //             changeRequestEnabled: boolean;
+    //             requiredApprovals: number;
+    //         }
+    //     >
+    // >(
+    //     Object.fromEntries(
+    //         Object.entries(projectChangeRequestConfiguration).map(
+    //             ([name, config]) => [
+    //                 name,
+    //                 { ...config, changeRequestEnabled: true },
+    //             ],
+    //         ),
+    //     ),
+    // );
+
+    const configured = useMemo(() => {
+        return Object.fromEntries(
             Object.entries(projectChangeRequestConfiguration).map(
                 ([name, config]) => [
                     name,
                     { ...config, changeRequestEnabled: true },
                 ],
             ),
-        ),
-    );
+        );
+    }, [projectChangeRequestConfiguration]);
 
     const tableEnvs = activeEnvironments.map(({ name, type }) => ({
         name,
@@ -309,6 +320,13 @@ export const TableSelect: FC<TableSelectProps> = ({
         changeRequestEnabled: false,
         ...(configured[name] ?? {}),
     }));
+
+    console.log(
+        'Configured is',
+        configured,
+        'project is',
+        projectChangeRequestConfiguration,
+    );
 
     const propagateChanges = (
         newState: Record<
@@ -319,7 +337,9 @@ export const TableSelect: FC<TableSelectProps> = ({
             }
         >,
     ) => {
-        setConfigured(newState);
+        console.log('Setting new state', newState);
+
+        // setConfigured(newState);
         const configuredEnvs = Object.fromEntries(
             Object.entries(newState).map(([name, { requiredApprovals }]) => [
                 name,
@@ -329,7 +349,22 @@ export const TableSelect: FC<TableSelectProps> = ({
         onChange(configuredEnvs);
     };
 
+    // bug behavior: when the table renders, it has the correct envs selected.
+    // if you enable one env, that works as you'd expect.
+    // if you try to enable a second env, it enables the second one, but disables the first one
+    // if you disable one of the originally selected envs after enabling another env, both the originally selected and the recently enabled env are disabled
+    // updating number of approvers works the same. if you update the number of approvers or an orig toggle, it resets any other changes you've made since opening
+
     const onEnable = (name: string, requiredApprovals: number) => {
+        console.log(
+            'On enable. Configured is',
+            configured,
+            'project cr config',
+            projectChangeRequestConfiguration,
+            'tableState',
+            tableEnvs,
+        );
+
         propagateChanges({
             ...configured,
             [name]: { changeRequestEnabled: true, requiredApprovals },

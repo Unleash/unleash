@@ -93,15 +93,16 @@ type FormProps = {
         { requiredApprovals: number }
     >;
     setProjectStickiness: React.Dispatch<React.SetStateAction<string>>;
-    setProjectEnvironments: React.Dispatch<React.SetStateAction<Set<string>>>;
+    setProjectEnvironments: (envs: Set<string>) => void;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
     setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode: React.Dispatch<React.SetStateAction<ProjectMode>>;
-    setProjectChangeRequestConfiguration: React.Dispatch<
-        React.SetStateAction<Record<string, { requiredApprovals: number }>>
-    >;
+    updateProjectChangeRequestConfig: {
+        disableChangeRequests: (env: string) => void;
+        enableChangeRequests: (env: string, requiredApprovals: number) => void;
+    };
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
@@ -129,7 +130,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
-    setProjectChangeRequestConfiguration,
+    // setProjectChangeRequestConfiguration,
+    updateProjectChangeRequestConfig,
     setFeatureLimit,
     errors,
     mode,
@@ -267,9 +269,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                     name: env.name,
                                     type: env.type,
                                 }))}
-                            onChange={(args) => {
-                                setProjectChangeRequestConfiguration(args);
-                            }}
+                            updateProjectChangeRequestConfiguration={
+                                updateProjectChangeRequestConfig
+                            }
                             button={{
                                 label:
                                     Object.keys(

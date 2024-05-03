@@ -41,7 +41,7 @@ const CreateProject = () => {
         setProjectName,
         setProjectDesc,
         setProjectEnvironments,
-        setProjectChangeRequestConfiguration,
+        updateProjectChangeRequestConfig,
         getCreateProjectPayload,
         clearErrors,
         validateProjectId,
@@ -119,8 +119,8 @@ const CreateProject = () => {
                     projectChangeRequestConfiguration={
                         projectChangeRequestConfiguration
                     }
-                    setProjectChangeRequestConfiguration={
-                        setProjectChangeRequestConfiguration
+                    updateProjectChangeRequestConfig={
+                        updateProjectChangeRequestConfig
                     }
                     projectMode={projectMode}
                     setProjectMode={setProjectMode}

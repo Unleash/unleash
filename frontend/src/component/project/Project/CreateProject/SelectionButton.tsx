@@ -268,6 +268,10 @@ type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'> & {
     onChange: (
         changeRequestConfig: Record<string, { requiredApprovals: number }>,
     ) => void;
+    updateProjectChangeRequestConfiguration: {
+        disableChangeRequests: (env: string) => void;
+        enableChangeRequests: (env: string, requiredApprovals: number) => void;
+    };
     activeEnvironments: {
         name: string;
         type: string;
@@ -282,28 +286,23 @@ export const TableSelect: FC<TableSelectProps> = ({
     search,
     onChange,
     projectChangeRequestConfiguration,
+    updateProjectChangeRequestConfiguration,
     activeEnvironments,
 }) => {
-    // const [configured, setConfigured] = useState<
-    //     Record<
-    //         string,
-    //         {
-    //             changeRequestEnabled: boolean;
-    //             requiredApprovals: number;
-    //         }
-    //     >
-    // >(
-    //     Object.fromEntries(
-    //         Object.entries(projectChangeRequestConfiguration).map(
-    //             ([name, config]) => [
-    //                 name,
-    //                 { ...config, changeRequestEnabled: true },
-    //             ],
-    //         ),
-    //     ),
-    // );
-
     const configured = useMemo(() => {
+        console.log(
+            'updating configured from',
+            projectChangeRequestConfiguration,
+            Object.fromEntries(
+                Object.entries(projectChangeRequestConfiguration).map(
+                    ([name, config]) => [
+                        name,
+                        { ...config, changeRequestEnabled: true },
+                    ],
+                ),
+            ),
+        );
+
         return Object.fromEntries(
             Object.entries(projectChangeRequestConfiguration).map(
                 ([name, config]) => [
@@ -314,18 +313,24 @@ export const TableSelect: FC<TableSelectProps> = ({
         );
     }, [projectChangeRequestConfiguration]);
 
-    const tableEnvs = activeEnvironments.map(({ name, type }) => ({
-        name,
-        type,
-        changeRequestEnabled: false,
-        ...(configured[name] ?? {}),
-    }));
+    const tableEnvs = useMemo(
+        () =>
+            activeEnvironments.map(({ name, type }) => ({
+                name,
+                type,
+                changeRequestEnabled: false,
+                ...(configured[name] ?? {}),
+            })),
+        [configured, activeEnvironments],
+    );
 
     console.log(
         'Configured is',
         configured,
         'project is',
         projectChangeRequestConfiguration,
+        'table envs are',
+        tableEnvs,
     );
 
     const propagateChanges = (
@@ -365,16 +370,24 @@ export const TableSelect: FC<TableSelectProps> = ({
             tableEnvs,
         );
 
-        propagateChanges({
-            ...configured,
-            [name]: { changeRequestEnabled: true, requiredApprovals },
-        });
+        // propagateChanges({
+        //     ...configured,
+        //     [name]: { changeRequestEnabled: true, requiredApprovals },
+        // });
+        updateProjectChangeRequestConfiguration.enableChangeRequests(
+            name,
+            requiredApprovals,
+        );
+        // onChange.enableCrs(name, requiredApprovals);
     };
+
+    console.log('cr config update', updateProjectChangeRequestConfiguration);
 
     const onDisable = (name: string) => {
         const { [name]: _, ...rest } = configured;
 
-        propagateChanges(rest);
+        // propagateChanges(rest);
+        updateProjectChangeRequestConfiguration.disableChangeRequests(name);
     };
 
     const ref = useRef<HTMLDivElement>(null);

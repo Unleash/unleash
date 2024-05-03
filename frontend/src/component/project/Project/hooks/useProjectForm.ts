@@ -50,6 +50,22 @@ const useProjectForm = (
         setProjectEnvironments(newState);
     };
 
+    const crConfig = {
+        disableChangeRequests: (env: string) => {
+            setProjectChangeRequestConfiguration((previousState) => {
+                const { [env]: _, ...rest } = previousState;
+                return rest;
+            });
+        },
+
+        enableChangeRequests: (env: string, approvals: number) => {
+            setProjectChangeRequestConfiguration((previousState) => ({
+                ...previousState,
+                [env]: { requiredApprovals: approvals },
+            }));
+        },
+    };
+
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();
@@ -170,7 +186,7 @@ const useProjectForm = (
         setFeatureLimit,
         setProjectMode,
         setProjectEnvironments: updateProjectEnvironments,
-        setProjectChangeRequestConfiguration,
+        updateProjectChangeRequestConfig: crConfig,
         getCreateProjectPayload,
         getEditProjectPayload,
         validateName,

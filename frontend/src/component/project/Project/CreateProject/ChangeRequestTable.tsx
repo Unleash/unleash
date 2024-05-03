@@ -11,7 +11,6 @@ import {
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { IChangeRequestConfig } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useTheme } from '@mui/material/styles';
@@ -62,14 +61,6 @@ export const ChangeRequestTable = (props: TableProps) => {
             }
         };
 
-    async function updateConfiguration(config?: IChangeRequestConfig) {
-        try {
-            // update state here
-        } catch (error) {
-            // probably not gonna happen because it's not an api call
-        }
-    }
-
     const approvalOptions = Array.from(Array(10).keys())
         .map((key) => String(key + 1))
         .map((key) => {
@@ -83,14 +74,6 @@ export const ChangeRequestTable = (props: TableProps) => {
 
     function onRequiredApprovalsChange(original: any, approvals: string) {
         props.enableEnvironment(original.environment, Number(approvals));
-        console.log('onRequiredApprovalsChange', original, approvals);
-        // onEnableEnvironment(original.environment, Number(approvals));
-        // updateConfiguration({
-        //     project: projectId,
-        //     environment: original.environment,
-        //     enabled: original.changeRequestEnabled,
-        //     requiredApprovals: Number(approvals),
-        // });
     }
 
     const columns = useMemo(
@@ -186,7 +169,6 @@ export const ChangeRequestTable = (props: TableProps) => {
                         environment: env.name,
                         type: env.type,
                         changeRequestEnabled: env.changeRequestEnabled,
-                        // @ts-ignore
                         requiredApprovals: env.requiredApprovals ?? 1,
                     };
                 }),

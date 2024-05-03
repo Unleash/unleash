@@ -115,6 +115,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
     projectDesc,
     projectStickiness,
     projectEnvironments,
+    projectChangeRequestConfiguration,
     featureLimit,
     featureCount,
     projectMode,
@@ -124,6 +125,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
+    setProjectChangeRequestConfiguration,
     setFeatureLimit,
     errors,
     mode,
@@ -255,16 +257,23 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 />
                 <MultiselectList
                     selectedOptions={projectEnvironments}
-                    options={activeEnvironments.map((env) => ({
-                        label: env.name,
-                        value: env.name,
-                    }))}
+                    options={activeEnvironments
+                        .filter((env) => projectEnvironments.has(env.name))
+                        .map((env) => ({
+                            label: env.name,
+                            value: env.name,
+                        }))}
                     onChange={handleFilterChange}
                     button={{
                         label:
-                            projectEnvironments.size > 0
-                                ? `${projectEnvironments.size} selected`
-                                : 'Select environments',
+                            Object.keys(projectChangeRequestConfiguration)
+                                .length > 0
+                                ? `${
+                                      Object.keys(
+                                          projectChangeRequestConfiguration,
+                                      ).length
+                                  } selected`
+                                : 'Configure change requests',
                         icon: <ChangeRequestIcon />,
                     }}
                     search={{

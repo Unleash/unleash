@@ -84,6 +84,10 @@ type FormProps = {
     featureCount?: number;
     projectMode: string;
     projectEnvironments: Set<string>;
+    projectChangeRequestConfiguration: Record<
+        string,
+        { requiredApprovals: number }
+    >;
     setProjectStickiness: React.Dispatch<React.SetStateAction<string>>;
     setProjectEnvironments: React.Dispatch<React.SetStateAction<Set<string>>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
@@ -91,6 +95,9 @@ type FormProps = {
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
     setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    setProjectChangeRequestConfiguration: React.Dispatch<
+        React.SetStateAction<Record<string, { requiredApprovals: number }>>
+    >;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';

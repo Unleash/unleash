@@ -148,10 +148,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
         setProjectId(maybeProjectId);
     };
 
-    const handleFilterChange = (envs: Set<string>) => {
-        setProjectEnvironments(envs);
-    };
-
     const projectModeOptions = [
         { value: 'open', label: 'open' },
         { value: 'protected', label: 'protected' },
@@ -204,7 +200,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         label: env.name,
                         value: env.name,
                     }))}
-                    onChange={handleFilterChange}
+                    onChange={setProjectEnvironments}
                     button={{
                         label:
                             projectEnvironments.size > 0

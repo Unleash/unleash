@@ -26,6 +26,7 @@ You can choose to trigger updates for the following events (we might add more ev
 - feature-strategy-remove
 - feature-stale-on
 - feature-stale-off
+- feature-completed
 - feature-environment-enabled
 - feature-environment-disabled
 - feature-variants-updated

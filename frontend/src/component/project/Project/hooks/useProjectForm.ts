@@ -37,6 +37,17 @@ const useProjectForm = (
         setProjectChangeRequestConfiguration,
     ] = useState(initialProjectChangeRequestConfiguration);
 
+    const updateProjectEnvironments = (newState: Set<string>) => {
+        const filteredChangeRequestEnvs = Object.fromEntries(
+            Object.entries(projectChangeRequestConfiguration).filter(([env]) =>
+                newState.has(env),
+            ),
+        );
+
+        setProjectChangeRequestConfiguration(filteredChangeRequestEnvs);
+        setProjectEnvironments(newState);
+    };
+
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();
@@ -156,7 +167,7 @@ const useProjectForm = (
         setProjectStickiness,
         setFeatureLimit,
         setProjectMode,
-        setProjectEnvironments,
+        setProjectEnvironments: updateProjectEnvironments,
         setProjectChangeRequestConfiguration,
         getCreateProjectPayload,
         getEditProjectPayload,

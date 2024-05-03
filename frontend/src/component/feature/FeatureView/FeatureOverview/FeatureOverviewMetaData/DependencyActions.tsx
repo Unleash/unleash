@@ -1,6 +1,6 @@
 import type React from 'react';
 import { type FC, useState } from 'react';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     IconButton,
     ListItemIcon,

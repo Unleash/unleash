@@ -288,7 +288,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 );
             })
             .joinRaw('CROSS JOIN total_features')
-            .whereBetween('final_rank', [offset + 1, offset + limit]);
+            .whereBetween('final_rank', [offset + 1, offset + limit])
+            .orderBy('final_rank');
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {

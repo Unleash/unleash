@@ -96,8 +96,8 @@ const useProjectForm = (
                   description: projectDesc,
                   defaultStickiness: projectStickiness,
                   mode: projectMode,
-                  changeRequestEnvironments,
                   ...environmentsPayload,
+                  changeRequestEnvironments,
               }
             : {
                   id: projectId,

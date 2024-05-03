@@ -255,37 +255,45 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         />
                     }
                 />
-                <TableSelect
-                    activeEnvironments={activeEnvironments
-                        .filter((env) => projectEnvironments.has(env.name))
-                        .map((env) => ({
-                            // label: env.name,
-                            // value: env.name,
-                            name: env.name,
-                            type: env.type,
-                        }))}
-                    onChange={(args) => {
-                        console.log('calling on change', args);
-                        setProjectChangeRequestConfiguration(args);
-                    }}
-                    button={{
-                        label:
-                            Object.keys(projectChangeRequestConfiguration)
-                                .length > 0
-                                ? `${
-                                      Object.keys(
-                                          projectChangeRequestConfiguration,
-                                      ).length
-                                  } selected`
-                                : 'Configure change requests',
-                        icon: <ChangeRequestIcon />,
-                    }}
-                    search={{
-                        label: 'Filter environments',
-                        placeholder: 'Filter environments',
-                    }}
-                    projectChangeRequestConfiguration={
-                        projectChangeRequestConfiguration
+                <ConditionallyRender
+                    condition={isEnterprise()}
+                    show={
+                        <TableSelect
+                            activeEnvironments={activeEnvironments
+                                .filter((env) =>
+                                    projectEnvironments.has(env.name),
+                                )
+                                .map((env) => ({
+                                    // label: env.name,
+                                    // value: env.name,
+                                    name: env.name,
+                                    type: env.type,
+                                }))}
+                            onChange={(args) => {
+                                console.log('calling on change', args);
+                                setProjectChangeRequestConfiguration(args);
+                            }}
+                            button={{
+                                label:
+                                    Object.keys(
+                                        projectChangeRequestConfiguration,
+                                    ).length > 0
+                                        ? `${
+                                              Object.keys(
+                                                  projectChangeRequestConfiguration,
+                                              ).length
+                                          } selected`
+                                        : 'Configure change requests',
+                                icon: <ChangeRequestIcon />,
+                            }}
+                            search={{
+                                label: 'Filter environments',
+                                placeholder: 'Filter environments',
+                            }}
+                            projectChangeRequestConfiguration={
+                                projectChangeRequestConfiguration
+                            }
+                        />
                     }
                 />
             </OptionButtons>

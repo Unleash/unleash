@@ -7,6 +7,7 @@ import {
     StyledListItem,
     StyledPopover,
     StyledTextField,
+    TableSearchInput,
 } from './SelectionButton.styles';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
@@ -380,7 +381,7 @@ export const TableSelect: FC<TableSelectProps> = ({
                 }}
             >
                 <StyledDropdown>
-                    <StyledTextField
+                    <TableSearchInput
                         variant='outlined'
                         size='small'
                         value={searchText}

@@ -316,8 +316,6 @@ export const TableSelect: FC<TableSelectProps> = ({
     };
 
     const onDisable = (name: string) => {
-        const { [name]: _, ...rest } = configured;
-
         updateProjectChangeRequestConfiguration.disableChangeRequests(name);
     };
 

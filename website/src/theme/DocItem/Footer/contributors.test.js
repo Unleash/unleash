@@ -1,4 +1,4 @@
-import { getContributors } from './contributors';
+const { getContributors } = require('./contributors');
 
 const commits = [
     {

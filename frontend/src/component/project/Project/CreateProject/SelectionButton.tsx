@@ -332,17 +332,6 @@ export const TableSelect: FC<TableSelectProps> = ({
         setAnchorEl(null);
     };
 
-    const onSelection = (selected: string) => {
-        // onChange(selected);
-    };
-
-    // const { listRefs, handleSelection } = useSelectionManagement({
-    //     handleToggle: (selected: string) => () =>
-    //         selected in configured
-    //             ? onDisable(selected)
-    //             : onEnable(selected, 1),
-    // });
-
     const filteredEnvs = tableEnvs.filter((env) =>
         env.name.toLowerCase().includes(searchText.toLowerCase()),
     );
@@ -362,7 +351,6 @@ export const TableSelect: FC<TableSelectProps> = ({
         }
     };
 
-    // const filteredOptions = [];
     return (
         <>
             <Box ref={ref}>
@@ -371,9 +359,6 @@ export const TableSelect: FC<TableSelectProps> = ({
                     color='primary'
                     startIcon={button.icon}
                     onClick={() => {
-                        // todo: find out why this is clicked when you
-                        // press enter in the search bar (only in
-                        // single-select mode)
                         open();
                     }}
                     disabled={disabled}
@@ -410,9 +395,6 @@ export const TableSelect: FC<TableSelectProps> = ({
                                 </InputAdornment>
                             ),
                         }}
-                        // inputRef={(el) => {
-                        //     listRefs.current[0] = el;
-                        // }}
                         onKeyDown={handleSelection}
                     />
                     <ChangeRequestTable

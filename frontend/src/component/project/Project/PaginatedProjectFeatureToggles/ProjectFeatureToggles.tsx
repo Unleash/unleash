@@ -10,7 +10,6 @@ import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell';
 import { ExperimentalColumnsMenu as ColumnsMenu } from './ExperimentalColumnsMenu/ExperimentalColumnsMenu';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
@@ -44,7 +43,6 @@ import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useSelectedData } from './hooks/useSelectedData';
 import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 
@@ -66,8 +64,6 @@ export const ProjectFeatureToggles = ({
     storageKey = 'project-feature-toggles-v2',
 }: IPaginatedProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
-
-    const featuresExportImport = useUiFlag('featuresExportImport');
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
@@ -439,18 +435,6 @@ export const ProjectFeatureToggles = ({
                     />
                     {rowActionsDialogs}
 
-                    <ConditionallyRender
-                        condition={featuresExportImport && !loading}
-                        show={
-                            // TODO: `export all` backend
-                            <ExportDialog
-                                showExportDialog={showExportDialog}
-                                data={data}
-                                onClose={() => setShowExportDialog(false)}
-                                environments={environments}
-                            />
-                        }
-                    />
                     {featureToggleModals}
                 </div>
             </PageContent>

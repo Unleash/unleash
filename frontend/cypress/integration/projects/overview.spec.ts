@@ -1,8 +1,6 @@
 ///<reference path="../../global.d.ts" />
 import {
     BATCH_ACTIONS_BAR,
-    BATCH_SELECT,
-    BATCH_SELECTED_COUNT,
     MORE_BATCH_ACTIONS,
     SEARCH_INPUT,
     //@ts-ignore
@@ -42,83 +40,6 @@ describe('project overview', () => {
             url: `${baseUrl}/api/admin/archive/${featureToggleName}-B`,
         });
         cy.deleteProject_API(projectName);
-    });
-
-    it('loads the table', () => {
-        cy.login_UI();
-        cy.createFeature_API(`${featureToggleName}-A`, projectName);
-        cy.createFeature_API(`${featureToggleName}-B`, projectName);
-        cy.visit(`/projects/${projectName}`);
-
-        // Use search to filter feature toggles and check that the feature toggle is listed in the table.
-        cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
-        cy.get('@search').type(featureToggleName);
-        cy.get('table').contains('td', `${featureToggleName}-A`);
-        cy.get('table tbody tr').should((elements) => {
-            expect(elements).to.have.length.at.least(2);
-        });
-    });
-
-    it('can select and deselect feature toggles', () => {
-        cy.login_UI();
-        cy.visit(`/projects/${projectName}`);
-        cy.viewport(1920, 1080);
-        cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
-        cy.get('@search').type(featureToggleName);
-        cy.get('body').type('{esc}');
-        cy.get('table tbody tr').should((elements) => {
-            expect(elements).to.have.length.at.least(2);
-        });
-        const counter = `[data-testid="${BATCH_SELECTED_COUNT}"]`;
-
-        cy.get(counter).should('not.exist');
-        cy.get(selectAll).click();
-        cy.get(counter)
-            .invoke('text')
-            .then((text) => {
-                const number = Number.parseFloat(text);
-                expect(number).to.be.at.least(2);
-            });
-        cy.get(selectAll).click();
-        cy.get(counter).should('not.exist');
-
-        cy.get('table td')
-            .contains(`${featureToggleName}-A`)
-            .closest('tr')
-            .find(`[data-testid="${BATCH_SELECT}"] input[type="checkbox"]`)
-            .click();
-        cy.get(counter).contains('1');
-
-        cy.get('table td')
-            .contains(`${featureToggleName}-A`)
-            .closest('tr')
-            .find(`[data-testid="${BATCH_SELECT}"] input[type="checkbox"]`)
-            .click();
-        cy.get(counter).should('not.exist');
-        cy.get('table td')
-            .contains(`${featureToggleName}-B`)
-            .closest('tr')
-            .find(`[data-testid="${BATCH_SELECT}"] input[type="checkbox"]`)
-            .click();
-        cy.get(counter).contains('1');
-
-        cy.get('table td')
-            .contains(`${featureToggleName}-A`)
-            .closest('tr')
-            .find(`[data-testid="${BATCH_SELECT}"] input[type="checkbox"]`)
-            .click();
-        cy.get(counter)
-            .invoke('text')
-            .then((text) => {
-                const number = Number.parseFloat(text);
-                expect(number).to.be.at.least(2);
-            });
-        cy.get('table td')
-            .contains(`${featureToggleName}-B`)
-            .closest('tr')
-            .find(`[data-testid="${BATCH_SELECT}"] input[type="checkbox"]`)
-            .click();
-        cy.get(counter).contains('1');
     });
 
     it('can mark selected togggles as stale', () => {

@@ -336,7 +336,7 @@ export const TableSelect: FC<TableSelectProps> = ({
         env.name.toLowerCase().includes(searchText.toLowerCase()),
     );
 
-    const handleSelection = (event: React.KeyboardEvent) => {
+    const toggleTopItem = (event: React.KeyboardEvent) => {
         if (
             event.key === 'Enter' &&
             searchText.trim().length > 0 &&
@@ -395,7 +395,7 @@ export const TableSelect: FC<TableSelectProps> = ({
                                 </InputAdornment>
                             ),
                         }}
-                        onKeyDown={handleSelection}
+                        onKeyDown={toggleTopItem}
                     />
                     <ChangeRequestTable
                         environments={filteredEnvs}

@@ -250,8 +250,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     .sum('yes as yes')
                     .sum('no as no')
                     .select([
-                        'client_metrics_env.environment',
-                        'client_metrics_env.feature_name',
+                        'client_metrics_env.environment as metric_environment',
+                        'client_metrics_env.feature_name as metric_feature_name',
                     ])
                     .from('client_metrics_env')
                     .innerJoin(
@@ -278,11 +278,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
             )
             .leftJoin('metrics', (qb) => {
                 qb.on(
-                    'metrics.environment',
+                    'metric_environment',
                     '=',
                     'ranked_features.environment',
                 ).andOn(
-                    'metrics.feature_name',
+                    'metric_feature_name',
                     '=',
                     'ranked_features.feature_name',
                 );

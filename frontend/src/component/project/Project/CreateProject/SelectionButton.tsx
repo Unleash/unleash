@@ -280,9 +280,11 @@ type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'> & {
         string,
         { requiredApprovals: number }
     >;
+    disabled: boolean;
 };
 export const TableSelect: FC<TableSelectProps> = ({
     button,
+    disabled,
     search,
     onChange,
     projectChangeRequestConfiguration,
@@ -363,6 +365,7 @@ export const TableSelect: FC<TableSelectProps> = ({
                         // single-select mode)
                         open();
                     }}
+                    disabled={disabled}
                 >
                     {button.label}
                 </Button>

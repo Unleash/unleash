@@ -261,6 +261,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <TableSelect
+                            disabled={projectEnvironments.size === 0}
                             activeEnvironments={activeEnvironments
                                 .filter((env) =>
                                     projectEnvironments.has(env.name),

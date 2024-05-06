@@ -33,7 +33,6 @@ import {
     createHistogram,
 } from './util/metrics';
 import type { SchedulerService } from './services';
-import type { FeatureLifecycleFullItem } from './features/feature-lifecycle/feature-lifecycle-store-type';
 
 export default class MetricsMonitor {
     constructor() {}
@@ -429,45 +428,6 @@ export default class MetricsMonitor {
                     );
             } catch (e) {}
         }
-
-        async function collectLifecycleMetrics(
-            featureLifeCycles: FeatureLifecycleFullItem[],
-        ) {
-            const groupedByFeature = featureLifeCycles.reduce<{
-                [feature: string]: FeatureLifecycleFullItem[];
-            }>((acc, curr) => {
-                if (!acc[curr.feature]) {
-                    acc[curr.feature] = [];
-                }
-                acc[curr.feature].push(curr);
-                return acc;
-            }, {});
-
-            Object.values(groupedByFeature).forEach((stages) => {
-                stages.sort(
-                    (a, b) =>
-                        a.enteredStageAt.getTime() - b.enteredStageAt.getTime(),
-                );
-
-                stages.forEach((stage, index) => {
-                    const nextStage = stages[index + 1];
-                    const endTime = nextStage
-                        ? nextStage.enteredStageAt
-                        : new Date();
-                    const duration =
-                        (endTime.getTime() - stage.enteredStageAt.getTime()) /
-                        1000;
-
-                    featureLifecycleStageDuration
-                        .labels({
-                            feature_id: stage.feature,
-                            stage: stage.stage,
-                        })
-                        .observe(duration);
-                });
-            });
-        }
-
         await schedulerService.schedule(
             collectStaticCounters.bind(this),
             hoursToMilliseconds(2),

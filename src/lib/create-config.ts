@@ -194,9 +194,9 @@ const databaseSsl = (): IDBOption['ssl'] => {
     }
 
     if (
-        process.env.DATABASE_SSL_CA_FILE === null ||
-        process.env.DATABASE_SSL_CERT_FILE === null ||
-        process.env.DATABASE_SSL_KEY_FILE === null
+        process.env.DATABASE_SSL_CA_FILE == null ||
+        process.env.DATABASE_SSL_CERT_FILE == null ||
+        process.env.DATABASE_SSL_KEY_FILE == null
     ) {
         return {
             rejectUnauthorized: parseEnvVarBoolean(

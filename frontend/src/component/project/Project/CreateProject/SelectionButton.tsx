@@ -304,20 +304,11 @@ export const TableSelect: FC<TableSelectProps> = ({
 
     const tableEnvs = useMemo(
         () =>
-            activeEnvironments.map(({ name, type }) => {
-                if (name in configured) {
-                    return {
-                        name,
-                        type,
-                        ...configured[name],
-                    };
-                } else
-                    return {
-                        name,
-                        type,
-                        changeRequestEnabled: false,
-                    };
-            }),
+            activeEnvironments.map(({ name, type }) => ({
+                name,
+                type,
+                ...(configured[name] ?? { changeRequestEnabled: false }),
+            })),
         [configured, activeEnvironments],
     );
 

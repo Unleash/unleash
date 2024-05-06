@@ -97,7 +97,7 @@ export const ChangeRequestTable = (props: TableProps) => {
                                     <GeneralSelect
                                         label={`Set required approvals for ${original.environment}`}
                                         id={`cr-approvals-${original.environment}`}
-                                        sx={{ width: '140px', marginLeft: 1 }}
+                                        sx={{ width: '140px' }}
                                         options={approvalOptions}
                                         value={original.requiredApprovals || 1}
                                         onChange={(approvals) => {
@@ -179,7 +179,7 @@ export const ChangeRequestTable = (props: TableProps) => {
             useGlobalFilter,
         );
     return (
-        <Table {...getTableProps()}>
+        <StyledTable {...getTableProps()}>
             <SortableTableHeader
                 headerGroups={headerGroups as HeaderGroup<object>[]}
             />
@@ -197,6 +197,6 @@ export const ChangeRequestTable = (props: TableProps) => {
                     );
                 })}
             </TableBody>
-        </Table>
+        </StyledTable>
     );
 };

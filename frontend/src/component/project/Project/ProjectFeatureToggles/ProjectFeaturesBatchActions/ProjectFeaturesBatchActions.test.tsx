@@ -9,9 +9,16 @@ const server = testServerSetup();
 const setupApi = () => {
     testServerRoute(server, '/api/admin/projects/default/stale', {}, 'post');
     testServerRoute(server, '/api/admin/ui-config', {});
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/archive/validate',
+        { hasDeletedDependencies: false, parentsWithChildFeatures: [] },
+        'post',
+    );
 };
 
 test('batch archive', async () => {
+    setupApi();
     render(
         <ProjectFeaturesBatchActions
             projectId='default'

@@ -28,6 +28,7 @@ interface IBadgeProps {
     sx?: SxProps<Theme>;
     children?: ReactNode;
     title?: string;
+    showZero?: boolean;
     onClick?: (event: React.SyntheticEvent) => void;
 }
 
@@ -113,7 +114,11 @@ export const Badge: FC<IBadgeProps> = forwardRef(
                 show={BadgeIcon(color, icon!)}
             />
             <ConditionallyRender
-                condition={Boolean(children)}
+                condition={
+                    children !== null &&
+                    children !== undefined &&
+                    children !== ''
+                }
                 show={<div>{children}</div>}
             />
             <ConditionallyRender

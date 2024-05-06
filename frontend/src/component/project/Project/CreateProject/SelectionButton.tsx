@@ -340,9 +340,9 @@ export const TableSelect: FC<TableSelectProps> = ({
         handleToggle: (selected: string) => () => onSelection(selected),
     });
 
-    // const filteredOptions = options?.filter((option) =>
-    //     option.label.toLowerCase().includes(searchText.toLowerCase()),
-    // );
+    const filteredEnvs = tableEnvs.filter((env) =>
+        env.name.toLowerCase().includes(searchText.toLowerCase()),
+    );
 
     // const filteredOptions = [];
     return (
@@ -398,7 +398,7 @@ export const TableSelect: FC<TableSelectProps> = ({
                         onKeyDown={(event) => handleSelection(event, 0, [])}
                     />
                     <ChangeRequestTable
-                        environments={tableEnvs}
+                        environments={filteredEnvs}
                         enableEnvironment={onEnable}
                         disableEnvironment={onDisable}
                     />

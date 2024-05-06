@@ -52,7 +52,7 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
 
     return (
         <Box {...getRootProps()} {...props}>
-            <input {...getInputProps()} />
+            <input data-testid='import-file' {...getInputProps()} />
             {children}
         </Box>
     );

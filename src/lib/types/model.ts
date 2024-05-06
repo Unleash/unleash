@@ -214,6 +214,8 @@ export interface IEnvironmentOverview extends IEnvironmentBase {
     variantCount: number;
     hasStrategies?: boolean;
     hasEnabledStrategies?: boolean;
+    yes?: number;
+    no?: number;
 }
 
 export interface IFeatureOverview {

@@ -92,6 +92,7 @@ export const ChangeRequestTable = (props: TableProps) => {
                                 <StyledBox data-loading>
                                     <GeneralSelect
                                         label={`Set required approvals for ${original.environment}`}
+                                        id={`cr-approvals-${original.environment}`}
                                         sx={{ width: '140px', marginLeft: 1 }}
                                         options={approvalOptions}
                                         value={original.requiredApprovals || 1}

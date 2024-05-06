@@ -265,9 +265,6 @@ export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
 };
 
 type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'> & {
-    onChange: (
-        changeRequestConfig: Record<string, { requiredApprovals: number }>,
-    ) => void;
     updateProjectChangeRequestConfiguration: {
         disableChangeRequests: (env: string) => void;
         enableChangeRequests: (env: string, requiredApprovals: number) => void;
@@ -286,7 +283,6 @@ export const TableSelect: FC<TableSelectProps> = ({
     button,
     disabled,
     search,
-    onChange,
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
     activeEnvironments,

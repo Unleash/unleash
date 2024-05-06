@@ -336,13 +336,31 @@ export const TableSelect: FC<TableSelectProps> = ({
         // onChange(selected);
     };
 
-    const { listRefs, handleSelection } = useSelectionManagement({
-        handleToggle: (selected: string) => () => onSelection(selected),
-    });
+    // const { listRefs, handleSelection } = useSelectionManagement({
+    //     handleToggle: (selected: string) => () =>
+    //         selected in configured
+    //             ? onDisable(selected)
+    //             : onEnable(selected, 1),
+    // });
 
     const filteredEnvs = tableEnvs.filter((env) =>
         env.name.toLowerCase().includes(searchText.toLowerCase()),
     );
+
+    const handleSelection = (event: React.KeyboardEvent) => {
+        if (
+            event.key === 'Enter' &&
+            searchText.trim().length > 0 &&
+            filteredEnvs.length > 0
+        ) {
+            const firstEnv = filteredEnvs[0];
+            if (firstEnv.name in configured) {
+                onDisable(firstEnv.name);
+            } else {
+                onEnable(firstEnv.name, 1);
+            }
+        }
+    };
 
     // const filteredOptions = [];
     return (
@@ -392,10 +410,10 @@ export const TableSelect: FC<TableSelectProps> = ({
                                 </InputAdornment>
                             ),
                         }}
-                        inputRef={(el) => {
-                            listRefs.current[0] = el;
-                        }}
-                        onKeyDown={(event) => handleSelection(event, 0, [])}
+                        // inputRef={(el) => {
+                        //     listRefs.current[0] = el;
+                        // }}
+                        onKeyDown={handleSelection}
                     />
                     <ChangeRequestTable
                         environments={filteredEnvs}

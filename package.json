@@ -165,7 +165,7 @@
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.24.4",
     "@biomejs/biome": "1.6.4",
-    "@swc/core": "1.4.13",
+    "@swc/core": "1.4.17",
     "@swc/jest": "0.2.36",
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",

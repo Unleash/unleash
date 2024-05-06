@@ -25,6 +25,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }));
 
+const StyledTable = styled(Table)(({ theme }) => ({
+    th: { whiteSpace: 'nowrap' },
+}));
+
 type TableProps = {
     environments: {
         name: string;

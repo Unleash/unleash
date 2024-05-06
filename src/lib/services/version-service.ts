@@ -65,6 +65,7 @@ export interface IFeatureUsageInfo {
     productionChanges30: number;
     productionChanges60: number;
     productionChanges90: number;
+    postgresVersion: string;
 }
 
 export default class VersionService {
@@ -260,6 +261,7 @@ export default class VersionService {
             featureImports,
             userActive,
             productionChanges,
+            postgresVersion,
         ] = await Promise.all([
             this.featureToggleStore.count({
                 archived: false,
@@ -282,6 +284,7 @@ export default class VersionService {
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.userStats(),
             this.productionChanges(),
+            this.postgresVersion(),
         ]);
         const versionInfo = await this.getVersionInfo();
         const customStrategies =
@@ -315,6 +318,7 @@ export default class VersionService {
             productionChanges30: productionChanges.last30,
             productionChanges60: productionChanges.last60,
             productionChanges90: productionChanges.last90,
+            postgresVersion,
         };
         return featureInfo;
     }
@@ -334,6 +338,10 @@ export default class VersionService {
         last90: number;
     }> {
         return this.getProductionChanges();
+    }
+
+    async postgresVersion(): Promise<string> {
+        return this.settingStore.postgresVersion();
     }
 
     async hasOIDC(): Promise<boolean> {

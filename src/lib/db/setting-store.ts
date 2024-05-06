@@ -14,6 +14,11 @@ export default class SettingStore implements ISettingStore {
         this.logger = getLogger('settings-store.ts');
     }
 
+    async postgresVersion(): Promise<string> {
+        const showResult = await this.db.raw('SHOW server_version');
+        return showResult?.rows[0]?.server_version || '';
+    }
+
     async updateRow(name: string, content: any): Promise<void> {
         return this.db(TABLE)
             .where('name', name)

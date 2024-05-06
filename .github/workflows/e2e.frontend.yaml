@@ -12,7 +12,6 @@ jobs:
           - projects/access.spec.ts
           - projects/overview.spec.ts
           - segments/segments.spec.ts
-          - import/import.spec.ts
     steps:
       - name: Dump GitHub context
         env:

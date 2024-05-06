@@ -183,11 +183,14 @@ const dateHandlingCallback = (connection, callback) => {
     });
 };
 
-const addSSLOption = (
+const readAndAddOption = (
     name: keyof ISSLOption,
     value: string | undefined,
     options: ISSLOption,
-): ISSLOption => (value != null ? { ...options, [name]: value } : options);
+): ISSLOption =>
+    value != null
+        ? { ...options, [name]: readFileSync(value).toString() }
+        : options;
 
 const databaseSSL = (): IDBOption['ssl'] => {
     if (process.env.DATABASE_SSL != null) {
@@ -212,9 +215,17 @@ const databaseSSL = (): IDBOption['ssl'] => {
         ),
     };
 
-    options = addSSLOption('key', process.env.DATABASE_SSL_KEY_FILE, options);
-    options = addSSLOption('cert', process.env.DATABASE_SSL_CERT_FILE, options);
-    options = addSSLOption('ca', process.env.DATABASE_SSL_CA_FILE, options);
+    options = readAndAddOption(
+        'key',
+        process.env.DATABASE_SSL_KEY_FILE,
+        options,
+    );
+    options = readAndAddOption(
+        'cert',
+        process.env.DATABASE_SSL_CERT_FILE,
+        options,
+    );
+    options = readAndAddOption('ca', process.env.DATABASE_SSL_CA_FILE, options);
 
     return options;
 };

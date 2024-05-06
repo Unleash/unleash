@@ -54,12 +54,12 @@ const setupChangeRequestApi = () => {
     );
     testServerRoute(
         server,
-        'api/admin/projects/default/change-requests/pending',
+        '/api/admin/projects/default/change-requests/pending',
         [],
     );
     testServerRoute(
         server,
-        'api/admin/projects/default/environments/development/change-requests',
+        '/api/admin/projects/default/environments/development/change-requests',
         {},
         'post',
         200,

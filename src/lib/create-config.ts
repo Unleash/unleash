@@ -189,7 +189,7 @@ const addSSLOption = (
     options: ISSLOption,
 ): ISSLOption => (value != null ? { ...options, [name]: value } : options);
 
-const databaseSsl = (): IDBOption['ssl'] => {
+const databaseSSL = (): IDBOption['ssl'] => {
     if (process.env.DATABASE_SSL != null) {
         return JSON.parse(process.env.DATABASE_SSL);
     }
@@ -234,7 +234,7 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
         host: process.env.DATABASE_HOST,
         port: parseEnvVarNumber(process.env.DATABASE_PORT, 5432),
         database: process.env.DATABASE_NAME || 'unleash',
-        ssl: databaseSsl(),
+        ssl: databaseSSL(),
         driver: 'postgres',
         version: process.env.DATABASE_VERSION,
         acquireConnectionTimeout: secondsToMilliseconds(30),

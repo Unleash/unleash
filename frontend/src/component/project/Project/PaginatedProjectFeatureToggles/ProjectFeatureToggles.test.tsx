@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { screen } from '@testing-library/react';
-import { BATCH_SELECTED_COUNT } from '../../../../utils/testIds';
+import { BATCH_SELECTED_COUNT } from 'utils/testIds';
 
 const server = testServerSetup();
 

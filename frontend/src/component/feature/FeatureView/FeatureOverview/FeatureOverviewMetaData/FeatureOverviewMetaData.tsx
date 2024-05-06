@@ -15,6 +15,14 @@ import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
+import { StyledDetail } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
+import { formatDateYMD } from 'utils/formatDate';
+import { parseISO } from 'date-fns';
+import { FeatureEnvironmentSeen } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
+import { DependencyRow } from './DependencyRow';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { useShowDependentFeatures } from './useShowDependentFeatures';
+import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -68,6 +76,12 @@ const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const StyledDetailsContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+}));
+
 const StyledDescription = styled('p')({
     wordBreak: 'break-word',
 });
@@ -87,6 +101,15 @@ const FeatureOverviewMetaData = () => {
         useFeatureLifecycleApi();
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
+    const { locationSettings } = useLocationSettings();
+    const showDependentFeatures = useShowDependentFeatures(feature.project);
+
+    const lastSeenEnvironments: ILastSeenEnvironments[] =
+        feature.environments?.map((env) => ({
+            name: env.name,
+            lastSeenAt: env.lastSeenAt,
+            enabled: env.enabled,
+        }));
 
     const IconComponent = getFeatureTypeIcons(type);
 
@@ -188,6 +211,29 @@ const FeatureOverviewMetaData = () => {
                                 </StyledDescriptionContainer>
                             </span>
                         }
+                    />
+                    <StyledBodyItem>
+                        <StyledDetailsContainer>
+                            <StyledDetail>
+                                <StyledLabel>Created at:</StyledLabel>
+                                <span>
+                                    {formatDateYMD(
+                                        parseISO(feature.createdAt),
+                                        locationSettings.locale,
+                                    )}
+                                </span>
+                            </StyledDetail>
+
+                            <FeatureEnvironmentSeen
+                                featureLastSeen={feature.lastSeenAt}
+                                environments={lastSeenEnvironments}
+                                sx={{ p: 0 }}
+                            />
+                        </StyledDetailsContainer>
+                    </StyledBodyItem>
+                    <ConditionallyRender
+                        condition={showDependentFeatures}
+                        show={<DependencyRow feature={feature} />}
                     />
                 </StyledBody>
             </StyledPaddingContainerTop>

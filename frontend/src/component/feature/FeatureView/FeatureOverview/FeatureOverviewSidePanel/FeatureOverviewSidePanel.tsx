@@ -2,7 +2,6 @@ import { Box, Divider, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails/FeatureOverviewSidePanelDetails';
 import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
 import { FeatureOverviewSidePanelTags } from './FeatureOverviewSidePanelTags/FeatureOverviewSidePanelTags';
 import { Sticky } from 'component/common/Sticky/Sticky';
@@ -75,15 +74,6 @@ export const FeatureOverviewSidePanel = ({
                 feature={feature}
                 hiddenEnvironments={hiddenEnvironments}
                 setHiddenEnvironments={setHiddenEnvironments}
-            />
-            <Divider />
-            <FeatureOverviewSidePanelDetails
-                header={
-                    <StyledHeader data-loading>
-                        Feature toggle details
-                    </StyledHeader>
-                }
-                feature={feature}
             />
             <Divider />
             <FeatureOverviewSidePanelTags

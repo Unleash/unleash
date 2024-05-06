@@ -1,7 +1,6 @@
 import { parse } from 'pg-connection-string';
 import merge from 'deepmerge';
-import * as fs from 'fs';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import {
     type IAuthOption,
     IAuthType,
@@ -183,43 +182,53 @@ const dateHandlingCallback = (connection, callback) => {
     });
 };
 
-const databaseSsl = () => {
+const databaseSsl = (): IDBOption['ssl'] => {
     if (process.env.DATABASE_SSL != null) {
         return JSON.parse(process.env.DATABASE_SSL);
-    } else if (process.env.DATABASE_SSL_CA_CONFIG != null) {
-        return readFileSync(process.env.DATABASE_SSL_CA_CONFIG).toJSON();
-    } else if (
+    }
+
+    if (process.env.DATABASE_SSL_CA_CONFIG != null) {
+        return readFileSync(
+            process.env.DATABASE_SSL_CA_CONFIG,
+        ).toString() as unknown as IDBOption['ssl'];
+    }
+
+    if (
         process.env.DATABASE_SSL_KEY_FILE != null &&
         process.env.DATABASE_SSL_CERT_FILE != null
     ) {
-        const opts = {
+        const opts: IDBOption['ssl'] = {
             rejectUnauthorized: parseEnvVarBoolean(
                 process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
                 true,
             ),
+            key: readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString(),
+            cert: readFileSync(process.env.DATABASE_SSL_CERT_FILE).toString(),
         };
-        const key = readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString();
-        const cert = readFileSync(
-            process.env.DATABASE_SSL_CERT_FILE,
-        ).toString();
+
         if (process.env.DATABASE_SSL_CA_FILE != null) {
-            return {
-                ...opts,
-                ca: readFileSync(process.env.DATABASE_SSL_CA_FILE).toString(),
-                key,
-                cert,
-            };
-        } else {
-            return { ...opts, key, cert };
+            opts.ca = readFileSync(process.env.DATABASE_SSL_CA_FILE).toString();
         }
-    } else {
+
+        return opts;
+    }
+
+    if (process.env.DATABASE_SSL_CA_FILE != null) {
         return {
             rejectUnauthorized: parseEnvVarBoolean(
                 process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
-                false,
+                true,
             ),
+            ca: readFileSync(process.env.DATABASE_SSL_CA_FILE).toString(),
         };
     }
+
+    return {
+        rejectUnauthorized: parseEnvVarBoolean(
+            process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+            false,
+        ),
+    };
 };
 
 const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
@@ -491,16 +500,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         extraDbOptions = parse(process.env.DATABASE_URL);
     }
     let fileDbOptions = {};
-    if (options.databaseUrlFile && fs.existsSync(options.databaseUrlFile)) {
-        fileDbOptions = parse(
-            fs.readFileSync(options.databaseUrlFile, 'utf-8'),
-        );
+    if (options.databaseUrlFile && existsSync(options.databaseUrlFile)) {
+        fileDbOptions = parse(readFileSync(options.databaseUrlFile, 'utf-8'));
     } else if (
         process.env.DATABASE_URL_FILE &&
-        fs.existsSync(process.env.DATABASE_URL_FILE)
+        existsSync(process.env.DATABASE_URL_FILE)
     ) {
         fileDbOptions = parse(
-            fs.readFileSync(process.env.DATABASE_URL_FILE, 'utf-8'),
+            readFileSync(process.env.DATABASE_URL_FILE, 'utf-8'),
         );
     }
     const db: IDBOption = mergeAll<IDBOption>([

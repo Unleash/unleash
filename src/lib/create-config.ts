@@ -20,6 +20,7 @@ import {
     type IUnleashConfig,
     type IUnleashOptions,
     type IVersionOption,
+    type ISSLOption,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -182,6 +183,12 @@ const dateHandlingCallback = (connection, callback) => {
     });
 };
 
+const addSSLOption = (
+    name: keyof ISSLOption,
+    value: string | undefined,
+    options: ISSLOption,
+): ISSLOption => (value != null ? { ...options, [name]: value } : options);
+
 const databaseSsl = (): IDBOption['ssl'] => {
     if (process.env.DATABASE_SSL != null) {
         return JSON.parse(process.env.DATABASE_SSL);
@@ -206,33 +213,16 @@ const databaseSsl = (): IDBOption['ssl'] => {
         };
     }
 
-    let options: IDBOption['ssl'] = {
+    let options: ISSLOption = {
         rejectUnauthorized: parseEnvVarBoolean(
             process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
             true,
         ),
     };
 
-    if (process.env.DATABASE_SSL_KEY_FILE != null) {
-        options = {
-            ...options,
-            key: readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString(),
-        };
-    }
-
-    if (process.env.DATABASE_SSL_CERT_FILE != null) {
-        options = {
-            ...options,
-            cert: readFileSync(process.env.DATABASE_SSL_CERT_FILE).toString(),
-        };
-    }
-
-    if (process.env.DATABASE_SSL_CA_FILE != null) {
-        options = {
-            ...options,
-            ca: readFileSync(process.env.DATABASE_SSL_CA_FILE).toString(),
-        };
-    }
+    options = addSSLOption('key', process.env.DATABASE_SSL_KEY_FILE, options);
+    options = addSSLOption('cert', process.env.DATABASE_SSL_CERT_FILE, options);
+    options = addSSLOption('ca', process.env.DATABASE_SSL_CA_FILE, options);
 
     return options;
 };

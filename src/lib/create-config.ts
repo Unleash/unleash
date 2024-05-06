@@ -200,23 +200,15 @@ const databaseSSL = (): IDBOption['ssl'] => {
         ).toString() as unknown as IDBOption['ssl'];
     }
 
-    if (
-        process.env.DATABASE_SSL_CA_FILE == null &&
-        process.env.DATABASE_SSL_CERT_FILE == null &&
-        process.env.DATABASE_SSL_KEY_FILE == null
-    ) {
-        return {
-            rejectUnauthorized: parseEnvVarBoolean(
-                process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
-                false,
-            ),
-        };
-    }
+    const rejectUnauthorizedDefault =
+        process.env.DATABASE_SSL_CA_FILE != null ||
+        process.env.DATABASE_SSL_CERT_FILE != null ||
+        process.env.DATABASE_SSL_KEY_FILE != null;
 
     let options: ISSLOption = {
         rejectUnauthorized: parseEnvVarBoolean(
             process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
-            true,
+            rejectUnauthorizedDefault,
         ),
     };
 

@@ -1,3 +1,5 @@
+import { getContributors } from './contributors';
+
 const commits = [
     {
         sha: '2754c26f2e022b623e46e08fc1108b350710ef91',

@@ -194,41 +194,47 @@ const databaseSsl = (): IDBOption['ssl'] => {
     }
 
     if (
-        process.env.DATABASE_SSL_KEY_FILE != null &&
-        process.env.DATABASE_SSL_CERT_FILE != null
+        process.env.DATABASE_SSL_CA_FILE === null ||
+        process.env.DATABASE_SSL_CERT_FILE === null ||
+        process.env.DATABASE_SSL_KEY_FILE === null
     ) {
-        const opts: IDBOption['ssl'] = {
-            rejectUnauthorized: parseEnvVarBoolean(
-                process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
-                true,
-            ),
-            key: readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString(),
-            cert: readFileSync(process.env.DATABASE_SSL_CERT_FILE).toString(),
-        };
-
-        if (process.env.DATABASE_SSL_CA_FILE != null) {
-            opts.ca = readFileSync(process.env.DATABASE_SSL_CA_FILE).toString();
-        }
-
-        return opts;
-    }
-
-    if (process.env.DATABASE_SSL_CA_FILE != null) {
         return {
             rejectUnauthorized: parseEnvVarBoolean(
                 process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
-                true,
+                false,
             ),
+        };
+    }
+
+    let options: IDBOption['ssl'] = {
+        rejectUnauthorized: parseEnvVarBoolean(
+            process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+            true,
+        ),
+    };
+
+    if (process.env.DATABASE_SSL_KEY_FILE != null) {
+        options = {
+            ...options,
+            key: readFileSync(process.env.DATABASE_SSL_KEY_FILE).toString(),
+        };
+    }
+
+    if (process.env.DATABASE_SSL_CERT_FILE != null) {
+        options = {
+            ...options,
+            cert: readFileSync(process.env.DATABASE_SSL_CERT_FILE).toString(),
+        };
+    }
+
+    if (process.env.DATABASE_SSL_CA_FILE != null) {
+        options = {
+            ...options,
             ca: readFileSync(process.env.DATABASE_SSL_CA_FILE).toString(),
         };
     }
 
-    return {
-        rejectUnauthorized: parseEnvVarBoolean(
-            process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
-            false,
-        ),
-    };
+    return options;
 };
 
 const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =

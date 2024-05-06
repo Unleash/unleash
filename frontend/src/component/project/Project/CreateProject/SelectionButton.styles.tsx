@@ -37,3 +37,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
         fontSize: theme.typography.body2.fontSize,
     },
 }));
+
+export const TableSearchInput = styled(StyledTextField)(({ theme }) => ({
+    maxWidth: '30ch',
+}));

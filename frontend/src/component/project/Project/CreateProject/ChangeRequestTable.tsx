@@ -27,7 +27,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 const StyledTable = styled(Table)(({ theme }) => ({
     th: { whiteSpace: 'nowrap' },
-    width: 'min(90vw, 50rem)',
+    width: '50rem',
+    maxWidth: '90vw',
 }));
 
 type TableProps = {

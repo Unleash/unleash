@@ -34,6 +34,11 @@ import {
 } from './util/metrics';
 import type { SchedulerService } from './services';
 
+async function getPostgresVersion(db: Knex) {
+    const rows = await db.raw('SHOW server_version');
+    return rows.rows[0].server_version || '';
+}
+
 export default class MetricsMonitor {
     constructor() {}
 
@@ -674,6 +679,13 @@ export default class MetricsMonitor {
                 'registerPoolMetrics',
                 0, // no jitter
             );
+            const postgresVersion = await getPostgresVersion(db);
+            const database_version = createGauge({
+                name: 'postgres_version',
+                help: 'Which version of postgres is running (SHOW server_version)',
+                labelNames: ['version'],
+            });
+            database_version.labels({ version: postgresVersion }).set(1);
         }
     }
 

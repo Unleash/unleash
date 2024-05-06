@@ -28,7 +28,6 @@ interface IBadgeProps {
     sx?: SxProps<Theme>;
     children?: ReactNode;
     title?: string;
-    showZero?: boolean;
     onClick?: (event: React.SyntheticEvent) => void;
 }
 

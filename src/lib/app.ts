@@ -201,6 +201,7 @@ export default async function getApp(
     }
 
     app.get(`${baseUriPath}`, (req, res) => {
+        res.set('Content-Type', 'text/html');
         res.send(indexHTML);
     });
 
@@ -214,6 +215,7 @@ export default async function getApp(
     });
 
     app.get(`${baseUriPath}/*`, (req, res) => {
+        res.set('Content-Type', 'text/html');
         res.send(indexHTML);
     });
 

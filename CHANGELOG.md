@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.1] - 2024-05-06
+
+### Bug Fixes
+
+- Duplicate column name in search query ([#6989](https://github.com/Unleash/unleash/issues/6989))
+
+
+### Features
+
+- Search order by final ([#6976](https://github.com/Unleash/unleash/issues/6976))
+
+
 ## [5.12.0] - 2024-05-02
 
 ### Bug Fixes

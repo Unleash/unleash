@@ -216,6 +216,13 @@ export default async function getApp(
 
     app.get(`${baseUriPath}/*`, (req, res) => {
         res.set('Content-Type', 'text/html');
+        const requestPath = path.parse(req.url);
+        // appropriately return 404 requests for assets with an extension (js, css, etc)
+        if (requestPath.ext !== '' && requestPath.ext !== 'html') {
+            res.set('Cache-Control', 'no-cache');
+            res.status(404).send(indexHTML);
+            return;
+        }
         res.send(indexHTML);
     });
 

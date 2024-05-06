@@ -85,7 +85,12 @@
       "^.+\\.tsx?$": ["@swc/jest"]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "testPathIgnorePatterns": ["/dist/", "/node_modules/", "/frontend/"],
+    "testPathIgnorePatterns": [
+      "/dist/",
+      "/node_modules/",
+      "/frontend/",
+      "/website/"
+    ],
     "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
     "coveragePathIgnorePatterns": [
       "/node_modules/",

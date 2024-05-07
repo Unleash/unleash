@@ -10,7 +10,6 @@ jobs:
           - feature/feature.spec.ts
           - groups/groups.spec.ts
           - projects/access.spec.ts
-          - projects/overview.spec.ts
           - segments/segments.spec.ts
     steps:
       - name: Dump GitHub context

@@ -109,6 +109,8 @@ type FormProps = {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateProjectId: () => void;
+    overrideDocumentation: (description: string) => void;
+    clearDocumentationOverride: () => void;
 };
 
 const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
@@ -137,6 +139,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
     errors,
     mode,
     clearErrors,
+    overrideDocumentation,
+    clearDocumentationOverride,
 }) => {
     const { isEnterprise } = useUiConfig();
     const { environments: allEnvironments } = useEnvironments();
@@ -219,6 +223,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         label: 'Filter project environments',
                         placeholder: 'Select project environments',
                     }}
+                    onOpen={() =>
+                        overrideDocumentation(
+                            `Each feature toggle can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+                        )
+                    }
+                    onClose={clearDocumentationOverride}
                 />
 
                 <SingleSelectList
@@ -237,6 +247,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         label: 'Filter stickiness options',
                         placeholder: 'Select default stickiness',
                     }}
+                    onOpen={() =>
+                        overrideDocumentation(
+                            'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+                        )
+                    }
+                    onClose={clearDocumentationOverride}
                 />
 
                 <ConditionallyRender
@@ -255,6 +271,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 label: 'Filter project mode options',
                                 placeholder: 'Select project mode',
                             }}
+                            onOpen={() =>
+                                overrideDocumentation(
+                                    'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+                                )
+                            }
+                            onClose={clearDocumentationOverride}
                         />
                     }
                 />
@@ -294,6 +316,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             projectChangeRequestConfiguration={
                                 projectChangeRequestConfiguration
                             }
+                            onOpen={() =>
+                                overrideDocumentation(
+                                    'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+                                )
+                            }
+                            onClose={clearDocumentationOverride}
                         />
                     }
                 />

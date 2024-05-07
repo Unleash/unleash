@@ -16,6 +16,7 @@ import { GO_BACK } from 'constants/navigate';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Button, styled } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useState } from 'react';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
@@ -50,6 +51,14 @@ const CreateProject = () => {
         projectStickiness,
         errors,
     } = useProjectForm();
+
+    const generalDocumentation =
+        'Projects allows you to group feature toggles together in the management UI.';
+
+    const [documentation, setDocumentation] = useState(generalDocumentation);
+
+    const clearDocumentationOverride = () =>
+        setDocumentation(generalDocumentation);
 
     const useNewProjectForm = useUiFlag('newCreateProjectUI');
 
@@ -102,7 +111,7 @@ const CreateProject = () => {
             <FormTemplate
                 disablePadding
                 loading={loading}
-                description='Projects allows you to group feature toggles together in the management UI.'
+                description={documentation}
                 documentationLink='https://docs.getunleash.io/reference/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatApiCode}
@@ -131,6 +140,8 @@ const CreateProject = () => {
                     mode='Create'
                     clearErrors={clearErrors}
                     validateProjectId={validateProjectId}
+                    overrideDocumentation={setDocumentation}
+                    clearDocumentationOverride={clearDocumentationOverride}
                 >
                     <StyledButton onClick={handleCancel}>Cancel</StyledButton>
                     <CreateButton

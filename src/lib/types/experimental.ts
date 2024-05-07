@@ -51,7 +51,6 @@ export type IFlagKey =
     | 'responseTimeMetricsFix'
     | 'scimApi'
     | 'displayEdgeBanner'
-    | 'projectOverviewRefactor'
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
@@ -249,10 +248,6 @@ const flags: IFlags = {
     ),
     responseTimeMetricsFix: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_METRICS_FIX,
-        false,
-    ),
-    projectOverviewRefactor: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR,
         false,
     ),
     disableShowContextFieldSelectionValues: parseEnvVarBoolean(

@@ -136,7 +136,6 @@ exports[`should create default config 1`] = `
       "parseProjectFromSession": false,
       "personalAccessTokensKillSwitch": false,
       "projectListFilterMyProjects": false,
-      "projectOverviewRefactor": false,
       "projectOverviewRefactorFeedback": false,
       "projectsListNewCards": false,
       "queryMissingTokens": false,

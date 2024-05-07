@@ -47,7 +47,6 @@ process.nextTick(async () => {
                         executiveDashboardUI: true,
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
-                        projectOverviewRefactor: true,
                         disableShowContextFieldSelectionValues: false,
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,

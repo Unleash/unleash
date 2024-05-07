@@ -1,8 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import useProjectForm from './useProjectForm';
 
-// refer to : https://www.npmjs.com/package/@testing-library/react-hooks
-
 test('setting project environments removes any change request envs that are not in the new project env list', () => {
     const { result } = renderHook(() => useProjectForm());
 

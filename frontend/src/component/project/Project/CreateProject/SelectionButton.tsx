@@ -79,6 +79,8 @@ type CombinedSelectProps = {
         placeholder: string;
     };
     multiselect?: { selectedOptions: Set<string> };
+    onOpen?: () => void;
+    onClose?: () => void;
 };
 
 const CombinedSelect: FC<CombinedSelectProps> = ({
@@ -87,6 +89,8 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
     button,
     search,
     multiselect,
+    onOpen = () => {},
+    onClose = () => {},
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
@@ -95,16 +99,18 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
     const open = () => {
         setSearchText('');
         setAnchorEl(ref.current);
+        onOpen();
     };
 
-    const onClose = () => {
+    const handleClose = () => {
         setAnchorEl(null);
+        onClose();
     };
 
     const onSelection = (selected: string) => {
         onChange(selected);
         if (!multiselect) {
-            onClose();
+            handleClose();
         }
     };
 
@@ -135,7 +141,7 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
             <StyledPopover
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                onClose={onClose}
+                onClose={handleClose}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',
@@ -222,7 +228,7 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
 
 type MultiselectListProps = Pick<
     CombinedSelectProps,
-    'options' | 'button' | 'search'
+    'options' | 'button' | 'search' | 'onOpen' | 'onClose'
 > & {
     selectedOptions: Set<string>;
     onChange: (values: Set<string>) => void;
@@ -258,14 +264,17 @@ export const MultiselectList: FC<MultiselectListProps> = ({
 
 type SingleSelectListProps = Pick<
     CombinedSelectProps,
-    'options' | 'button' | 'search' | 'onChange'
+    'options' | 'button' | 'search' | 'onChange' | 'onOpen' | 'onClose'
 >;
 
 export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
     return <CombinedSelect {...props} />;
 };
 
-type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'> & {
+type TableSelectProps = Pick<
+    CombinedSelectProps,
+    'button' | 'search' | 'onOpen' | 'onClose'
+> & {
     updateProjectChangeRequestConfiguration: {
         disableChangeRequests: (env: string) => void;
         enableChangeRequests: (env: string, requiredApprovals: number) => void;
@@ -287,6 +296,8 @@ export const TableSelect: FC<TableSelectProps> = ({
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
     activeEnvironments,
+    onOpen = () => {},
+    onClose = () => {},
 }) => {
     const configured = useMemo(() => {
         return Object.fromEntries(
@@ -327,10 +338,12 @@ export const TableSelect: FC<TableSelectProps> = ({
     const open = () => {
         setSearchText('');
         setAnchorEl(ref.current);
+        onOpen();
     };
 
-    const onClose = () => {
+    const handleClose = () => {
         setAnchorEl(null);
+        onClose();
     };
 
     const filteredEnvs = tableEnvs.filter((env) =>
@@ -370,7 +383,7 @@ export const TableSelect: FC<TableSelectProps> = ({
             <StyledPopover
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                onClose={onClose}
+                onClose={handleClose}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',

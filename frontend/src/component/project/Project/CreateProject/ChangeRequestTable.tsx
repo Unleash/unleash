@@ -29,6 +29,9 @@ const StyledTable = styled(Table)(({ theme }) => ({
     th: { whiteSpace: 'nowrap' },
     width: '50rem',
     maxWidth: '90vw',
+    'tr:last-of-type > td': {
+        borderBottom: 'none',
+    },
 }));
 
 type TableProps = {

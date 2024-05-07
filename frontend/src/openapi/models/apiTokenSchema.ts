@@ -9,13 +9,19 @@ import type { ApiTokenSchemaType } from './apiTokenSchemaType';
  * An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
  */
 export interface ApiTokenSchema {
-    /** Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working. */
+    /**
+     * Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.
+     * @nullable
+     */
     alias?: string | null;
     /** When the token was created. */
     createdAt: string;
     /** The environment the token has access to. `*` if it has access to all environments. */
     environment?: string;
-    /** The token's expiration date. NULL if the token doesn't have an expiration set. */
+    /**
+     * The token's expiration date. NULL if the token doesn't have an expiration set.
+     * @nullable
+     */
     expiresAt?: string | null;
     /** The project this token belongs to. */
     project: string;
@@ -23,7 +29,10 @@ export interface ApiTokenSchema {
     projects: string[];
     /** The token used for authentication. */
     secret: string;
-    /** When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication. */
+    /**
+     * When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication.
+     * @nullable
+     */
     seenAt?: string | null;
     /** A unique name for this particular token */
     tokenName: string;

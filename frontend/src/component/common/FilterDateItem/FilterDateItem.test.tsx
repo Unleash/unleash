@@ -55,9 +55,14 @@ describe('FilterDateItem Component', () => {
     it('renders initial popover when no existing value', async () => {
         const mockState = null;
 
-        const recordedChanges = setup(mockState);
+        setup(mockState);
 
-        await screen.findByText('21');
+        const results = await screen.findAllByText('21');
+
+        // In *most* cases, this will probably only be 1, but it *can*
+        // be more if it's the right time of year (that is: if it
+        // would also show "week 21").
+        expect(results.length).toBeGreaterThanOrEqual(1);
     });
 
     it('switches operator', async () => {

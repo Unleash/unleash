@@ -25,13 +25,9 @@ import {
 } from '../../types/settings/frontend-settings';
 import { validateOrigins } from '../../util';
 import { BadDataError, InvalidTokenError } from '../../error';
-import {
-    FRONTEND_API_REPOSITORY_CREATED,
-    PROXY_REPOSITORY_CREATED,
-} from '../../metric-events';
+import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events';
 import { FrontendApiRepository } from './frontend-api-repository';
 import type { GlobalFrontendApiCache } from './global-frontend-api-cache';
-import { ProxyRepository } from './proxy-repository';
 
 export type Config = Pick<
     IUnleashConfig,
@@ -66,8 +62,6 @@ export class FrontendApiService {
      */
     private readonly clients: Map<ApiUser['secret'], Promise<Unleash>> =
         new Map();
-    private readonly newClients: Map<ApiUser['secret'], Promise<Unleash>> =
-        new Map();
 
     private cachedFrontendSettings?: FrontendSettings;
 
@@ -89,34 +83,6 @@ export class FrontendApiService {
         context: Context,
     ): Promise<FrontendApiFeatureSchema[]> {
         const client = await this.clientForFrontendApiToken(token);
-        const definitions = client.getFeatureToggleDefinitions() || [];
-        const sessionId =
-            context.sessionId || crypto.randomBytes(18).toString('hex');
-
-        const resultDefinitions = definitions
-            .filter((feature) =>
-                client.isEnabled(feature.name, {
-                    ...context,
-                    sessionId,
-                }),
-            )
-            .map((feature) => ({
-                name: feature.name,
-                enabled: Boolean(feature.enabled),
-                variant: client.getVariant(feature.name, {
-                    ...context,
-                    sessionId,
-                }),
-                impressionData: Boolean(feature.impressionData),
-            }));
-        return resultDefinitions;
-    }
-
-    async getNewFrontendApiFeatures(
-        token: IApiUser,
-        context: Context,
-    ): Promise<FrontendApiFeatureSchema[]> {
-        const client = await this.newClientForFrontendApiToken(token);
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId =
             context.sessionId || crypto.randomBytes(18).toString('hex');
@@ -170,56 +136,13 @@ export class FrontendApiService {
         if (!client) {
             client = this.createClientForFrontendApiToken(token);
             this.clients.set(token.secret, client);
-            this.config.eventBus.emit(PROXY_REPOSITORY_CREATED);
-        }
-
-        return client;
-    }
-
-    private async newClientForFrontendApiToken(
-        token: IApiUser,
-    ): Promise<Unleash> {
-        FrontendApiService.assertExpectedTokenType(token);
-
-        let newClient = this.newClients.get(token.secret);
-        if (!newClient) {
-            newClient = this.createNewClientForFrontendApiToken(token);
-            this.newClients.set(token.secret, newClient);
             this.config.eventBus.emit(FRONTEND_API_REPOSITORY_CREATED);
         }
 
-        return newClient;
-    }
-
-    private async createClientForFrontendApiToken(
-        token: IApiUser,
-    ): Promise<Unleash> {
-        const repository = new ProxyRepository(
-            this.config,
-            this.stores,
-            this.services,
-            token,
-        );
-        const client = new Unleash({
-            appName: 'proxy',
-            url: 'unused',
-            storageProvider: new InMemStorageProvider(),
-            disableMetrics: true,
-            repository,
-            disableAutoStart: true,
-            skipInstanceCountWarning: true,
-        });
-
-        client.on(UnleashEvents.Error, (error) => {
-            this.logger.error('We found an event error', error);
-        });
-
-        await client.start();
-
         return client;
     }
 
-    private async createNewClientForFrontendApiToken(
+    private async createClientForFrontendApiToken(
         token: IApiUser,
     ): Promise<Unleash> {
         const repository = new FrontendApiRepository(
@@ -257,6 +180,10 @@ export class FrontendApiService {
 
     stopAll(): void {
         this.clients.forEach((promise) => promise.then((c) => c.destroy()));
+    }
+
+    refreshData(): Promise<void> {
+        return this.globalFrontendApiCache.refreshData();
     }
 
     private static assertExpectedTokenType({ type }: IApiUser) {

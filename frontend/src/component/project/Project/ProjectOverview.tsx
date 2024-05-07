@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect } from 'react';
 import { Box, styled } from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectFeatureToggles } from './PaginatedProjectFeatureToggles/ProjectFeatureToggles';
@@ -7,9 +7,7 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
-import { useFeedback } from '../../feedbackNew/useFeedback';
 
 const refreshInterval = 15 * 1000;
 
@@ -34,39 +32,7 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
     minWidth: 0,
 }));
 
-const useDelayedFeedbackPrompt = () => {
-    const { openFeedback, hasSubmittedFeedback } = useFeedback(
-        'newProjectOverview',
-        'manual',
-    );
-    const projectOverviewRefactorFeedback = useUiFlag(
-        'projectOverviewRefactorFeedback',
-    );
-
-    const [seenFeedback, setSeenFeedback] = useState(false);
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (
-                projectOverviewRefactorFeedback &&
-                !seenFeedback &&
-                !hasSubmittedFeedback
-            ) {
-                openFeedback({
-                    title: 'How easy was it to work with the project overview in Unleash?',
-                    positiveLabel:
-                        'What do you like most about the updated project overview?',
-                    areasForImprovementsLabel:
-                        'What improvements are needed in the project overview?',
-                });
-                setSeenFeedback(true);
-            }
-        }, 30000);
-
-        return () => clearTimeout(timer);
-    }, [hasSubmittedFeedback, openFeedback, seenFeedback]);
-};
-
-export const ProjectOverview: FC<{
+const ProjectOverview: FC<{
     storageKey?: string;
 }> = ({ storageKey = 'project-overview-v2' }) => {
     const projectId = useRequiredPathParam('projectId');
@@ -75,7 +41,6 @@ export const ProjectOverview: FC<{
     const { project } = useProjectOverview(projectId, {
         refreshInterval,
     });
-    useDelayedFeedbackPrompt();
 
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();

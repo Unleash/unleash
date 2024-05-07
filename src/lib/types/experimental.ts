@@ -38,7 +38,7 @@ export type IFlagKey =
     | 'executiveDashboardUI'
     | 'feedbackComments'
     | 'showInactiveUsers'
-    | 'inMemoryScheduledChangeRequests'
+    | 'killScheduledChangeRequestCache'
     | 'collectTrafficDataUsage'
     | 'displayTrafficDataUsage'
     | 'useMemoizedActiveTokens'
@@ -51,18 +51,14 @@ export type IFlagKey =
     | 'responseTimeMetricsFix'
     | 'scimApi'
     | 'displayEdgeBanner'
-    | 'globalFrontendApiCache'
-    | 'returnGlobalFrontendApiCache'
-    | 'variantDependencies'
     | 'disableShowContextFieldSelectionValues'
-    | 'bearerTokenMiddleware'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
     | 'projectListFilterMyProjects'
     | 'projectsListNewCards'
     | 'parseProjectFromSession'
     | 'createProjectWithEnvironmentConfig'
-    | 'applicationOverviewNewQuery';
+    | 'newCreateProjectUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -214,8 +210,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
         false,
     ),
-    inMemoryScheduledChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IN_MEMORY_SCHEDULED_CHANGE_REQUESTS,
+    killScheduledChangeRequestCache: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
         false,
     ),
     collectTrafficDataUsage: parseEnvVarBoolean(
@@ -254,25 +250,9 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_METRICS_FIX,
         false,
     ),
-    globalFrontendApiCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_FRONTEND_API_CACHE,
-        false,
-    ),
-    returnGlobalFrontendApiCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RETURN_GLOBAL_FRONTEND_API_CACHE,
-        false,
-    ),
     disableShowContextFieldSelectionValues: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_DISABLE_SHOW_CONTEXT_FIELD_SELECTION_VALUES,
-        false,
-    ),
-    variantDependencies: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_VARIANT_DEPENDENCIES,
-        false,
-    ),
-    bearerTokenMiddleware: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_BEARER_TOKEN_MIDDLEWARE,
         false,
     ),
     projectOverviewRefactorFeedback: parseEnvVarBoolean(
@@ -295,8 +275,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CREATE_PROJECT_WITH_ENVIRONMENT_CONFIG,
         false,
     ),
-    applicationOverviewNewQuery: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_APPLICATION_OVERVIEW_NEW_QUERY,
+    projectsListNewCards: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_NEW_CARDS,
+        false,
+    ),
+    newCreateProjectUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_CREATE_PROJECT_UI,
         false,
     ),
 };

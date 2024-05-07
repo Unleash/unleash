@@ -139,22 +139,37 @@ export class ApiTokenService {
         }
 
         const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
-        if (!token && isPast(nextAllowedQuery)) {
-            if (this.queryAfter.size > 1000) {
-                // establish a max limit for queryAfter size to prevent memory leak
-                this.queryAfter.clear();
-            }
-            // prevent querying the same invalid secret multiple times. Expire after 5 minutes
-            this.queryAfter.set(secret, addMinutes(new Date(), 5));
+        if (!token) {
+            if (isPast(nextAllowedQuery)) {
+                if (this.queryAfter.size > 1000) {
+                    // establish a max limit for queryAfter size to prevent memory leak
+                    this.queryAfter.clear();
+                }
 
-            const stopCacheTimer = this.timer('getTokenWithCache.query');
-            token = await this.store.get(secret);
-            if (token) {
-                this.activeTokens.push(token);
+                const stopCacheTimer = this.timer('getTokenWithCache.query');
+                token = await this.store.get(secret);
+                if (token) {
+                    if (token?.expiresAt && isPast(token.expiresAt)) {
+                        this.logger.info('Token has expired');
+                        // prevent querying the same invalid secret multiple times. Expire after 5 minutes
+                        this.queryAfter.set(secret, addMinutes(new Date(), 5));
+                        token = undefined;
+                    } else {
+                        this.activeTokens.push(token);
+                    }
+                } else {
+                    // prevent querying the same invalid secret multiple times. Expire after 5 minutes
+                    this.queryAfter.set(secret, addMinutes(new Date(), 5));
+                }
+                stopCacheTimer();
+            } else {
+                this.logger.info(
+                    `Not allowed to query this token until: ${this.queryAfter.get(
+                        secret,
+                    )}`,
+                );
             }
-            stopCacheTimer();
         }
-
         return token;
     }
 

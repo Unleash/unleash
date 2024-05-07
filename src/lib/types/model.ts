@@ -103,10 +103,10 @@ export interface FeatureToggleWithEnvironment extends FeatureToggle {
     environments: IEnvironmentDetail[];
 }
 
-export interface FeatureToggleWithDependencies
-    extends FeatureToggleWithEnvironment {
+export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     dependencies: IDependency[];
     children: string[];
+    lifecycle: IFeatureLifecycleStage | undefined;
 }
 
 // @deprecated
@@ -151,6 +151,17 @@ export interface IDependency {
     feature: string;
     variants?: string[];
     enabled?: boolean;
+}
+
+export type StageName =
+    | 'initial'
+    | 'pre-live'
+    | 'live'
+    | 'completed'
+    | 'archived';
+export interface IFeatureLifecycleStage {
+    stage: StageName;
+    enteredStageAt: Date;
 }
 
 export interface IFeatureDependency {
@@ -203,6 +214,8 @@ export interface IEnvironmentOverview extends IEnvironmentBase {
     variantCount: number;
     hasStrategies?: boolean;
     hasEnabledStrategies?: boolean;
+    yes?: number;
+    no?: number;
 }
 
 export interface IFeatureOverview {
@@ -472,6 +485,21 @@ export type CreateProject = Pick<IProject, 'id' | 'name'> & {
     mode?: ProjectMode;
     defaultStickiness?: string;
     environments?: string[];
+    changeRequestEnvironments?: { name: string; requiredApprovals?: number }[];
+};
+
+// Create project aligns with #/components/schemas/projectCreatedSchema
+export type ProjectCreated = Pick<
+    IProject,
+    | 'id'
+    | 'name'
+    | 'mode'
+    | 'defaultStickiness'
+    | 'description'
+    | 'featureLimit'
+> & {
+    environments: string[];
+    changeRequestEnvironments?: { name: string; requiredApprovals: number }[];
 };
 
 export interface IProject {

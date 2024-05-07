@@ -1,10 +1,11 @@
 import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
-import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails';
-import type { IDependency, IFeatureToggle } from 'interfaces/featureToggle';
+import FeatureOverviewMetaData from './FeatureOverviewMetaData';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { Route, Routes } from 'react-router-dom';
+import type { IDependency, IFeatureToggle } from 'interfaces/featureToggle';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
+import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();
 
@@ -13,11 +14,7 @@ const setupApi = () => {
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },
-        flags: {
-            variantDependencies: true,
-        },
     });
-    testServerRoute(server, '/api/admin/projects/default/features/feature', {});
     testServerRoute(
         server,
         '/api/admin/projects/default/features/feature/parents',
@@ -57,15 +54,23 @@ const setupChangeRequestApi = () => {
     );
     testServerRoute(
         server,
-        'api/admin/projects/default/change-requests/pending',
+        '/api/admin/projects/default/change-requests/pending',
         [],
     );
     testServerRoute(
         server,
-        'api/admin/projects/default/environments/development/change-requests',
+        '/api/admin/projects/default/environments/development/change-requests',
         {},
         'post',
         200,
+    );
+};
+
+const setupFeatureApi = (feature: IFeatureToggle) => {
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/features/feature',
+        feature,
     );
 };
 
@@ -73,20 +78,19 @@ beforeEach(() => {
     setupApi();
 });
 
+const route = '/projects/default/features/feature';
+
 test('show dependency dialogue', async () => {
+    setupFeatureApi(feature);
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={
-                {
-                    name: 'feature',
-                    project: 'default',
-                    dependencies: [] as Array<{ feature: string }>,
-                    children: [] as string[],
-                } as IFeatureToggle
-            }
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
         {
+            route,
             permissions: [
                 { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
             ],
@@ -104,19 +108,21 @@ test('show dependency dialogue', async () => {
 
 test('show dependency dialogue for OSS with dependencies', async () => {
     setupOssWithExistingDependencies();
+    setupFeatureApi({
+        name: 'feature',
+        project: 'default',
+        dependencies: [] as Array<{ feature: string }>,
+        children: [] as string[],
+    } as IFeatureToggle);
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={
-                {
-                    name: 'feature',
-                    project: 'default',
-                    dependencies: [] as Array<{ feature: string }>,
-                    children: [] as string[],
-                } as IFeatureToggle
-            }
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
         {
+            route,
             permissions: [
                 { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
             ],
@@ -133,18 +139,20 @@ test('show dependency dialogue for OSS with dependencies', async () => {
 });
 
 test('show child', async () => {
+    setupFeatureApi({
+        name: 'feature',
+        project: 'default',
+        dependencies: [] as Array<{ feature: string }>,
+        children: ['some_child'],
+    } as IFeatureToggle);
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={
-                {
-                    name: 'feature',
-                    project: 'default',
-                    dependencies: [] as Array<{ feature: string }>,
-                    children: ['some_child'],
-                } as IFeatureToggle
-            }
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
+        { route },
     );
 
     await screen.findByText('Children:');
@@ -152,18 +160,20 @@ test('show child', async () => {
 });
 
 test('show children', async () => {
+    setupFeatureApi({
+        name: 'feature',
+        project: 'default',
+        dependencies: [] as Array<{ feature: string }>,
+        children: ['some_child', 'some_other_child'],
+    } as IFeatureToggle);
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={
-                {
-                    name: 'feature',
-                    project: 'default',
-                    dependencies: [] as Array<{ feature: string }>,
-                    children: ['some_child', 'some_other_child'],
-                } as IFeatureToggle
-            }
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
+        { route },
     );
 
     await screen.findByText('Children:');
@@ -178,18 +188,22 @@ const feature = {
 } as IFeatureToggle;
 
 test('delete dependency', async () => {
+    setupFeatureApi({
+        ...feature,
+        dependencies: [{ feature: 'some_parent' }],
+    });
     render(
         <>
             <ToastRenderer />
-            <FeatureOverviewSidePanelDetails
-                feature={{
-                    ...feature,
-                    dependencies: [{ feature: 'some_parent' }],
-                }}
-                header={''}
-            />
+            <Routes>
+                <Route
+                    path={'/projects/:projectId/features/:featureId'}
+                    element={<FeatureOverviewMetaData />}
+                />
+            </Routes>
         </>,
         {
+            route,
             permissions: [
                 { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
             ],
@@ -212,18 +226,22 @@ test('delete dependency', async () => {
 
 test('delete dependency with change request', async () => {
     setupChangeRequestApi();
+    setupFeatureApi({
+        ...feature,
+        dependencies: [{ feature: 'some_parent' }],
+    });
     render(
         <>
             <ToastRenderer />
-            <FeatureOverviewSidePanelDetails
-                feature={{
-                    ...feature,
-                    dependencies: [{ feature: 'some_parent' }],
-                }}
-                header={''}
-            />
+            <Routes>
+                <Route
+                    path={'/projects/:projectId/features/:featureId'}
+                    element={<FeatureOverviewMetaData />}
+                />
+            </Routes>
         </>,
         {
+            route,
             permissions: [
                 /* deliberately no permissions */
             ],
@@ -245,15 +263,19 @@ test('delete dependency with change request', async () => {
 });
 
 test('edit dependency', async () => {
+    setupFeatureApi({
+        ...feature,
+        dependencies: [{ feature: 'some_parent', enabled: false }],
+    });
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={{
-                ...feature,
-                dependencies: [{ feature: 'some_parent', enabled: false }],
-            }}
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
         {
+            route,
             permissions: [
                 { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
             ],
@@ -277,20 +299,24 @@ test('edit dependency', async () => {
 });
 
 test('show variant dependencies', async () => {
+    setupFeatureApi({
+        ...feature,
+        dependencies: [
+            {
+                feature: 'some_parent',
+                enabled: true,
+                variants: ['variantA', 'variantB'],
+            },
+        ],
+    });
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={{
-                ...feature,
-                dependencies: [
-                    {
-                        feature: 'some_parent',
-                        enabled: true,
-                        variants: ['variantA', 'variantB'],
-                    },
-                ],
-            }}
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
+        { route },
     );
 
     const variants = await screen.findByText('2 variants');
@@ -302,39 +328,47 @@ test('show variant dependencies', async () => {
 });
 
 test('show variant dependency', async () => {
+    setupFeatureApi({
+        ...feature,
+        dependencies: [
+            {
+                feature: 'some_parent',
+                enabled: true,
+                variants: ['variantA'],
+            },
+        ],
+    });
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={{
-                ...feature,
-                dependencies: [
-                    {
-                        feature: 'some_parent',
-                        enabled: true,
-                        variants: ['variantA'],
-                    },
-                ],
-            }}
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
+        { route },
     );
 
     await screen.findByText('variantA');
 });
 
 test('show disabled dependency', async () => {
+    setupFeatureApi({
+        ...feature,
+        dependencies: [
+            {
+                feature: 'some_parent',
+                enabled: false,
+            },
+        ],
+    });
     render(
-        <FeatureOverviewSidePanelDetails
-            feature={{
-                ...feature,
-                dependencies: [
-                    {
-                        feature: 'some_parent',
-                        enabled: false,
-                    },
-                ],
-            }}
-            header={''}
-        />,
+        <Routes>
+            <Route
+                path={'/projects/:projectId/features/:featureId'}
+                element={<FeatureOverviewMetaData />}
+            />
+        </Routes>,
+        { route },
     );
 
     await screen.findByText('disabled');

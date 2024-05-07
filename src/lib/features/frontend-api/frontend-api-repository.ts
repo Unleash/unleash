@@ -49,7 +49,6 @@ export class FrontendApiRepository
     }
 
     getToggle(name: string): FeatureInterface {
-        //@ts-ignore (we must update the node SDK to allow undefined)
         return this.globalFrontendApiCache.getToggle(name, this.token);
     }
 

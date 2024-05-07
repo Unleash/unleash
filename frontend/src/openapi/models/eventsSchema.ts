@@ -12,8 +12,14 @@ import type { EventsSchemaVersion } from './eventsSchemaVersion';
 export interface EventsSchema {
     /** The list of events */
     events: EventSchema[];
-    /** The total count of events */
+    /**
+     * The total count of events
+     * @minimum 0
+     */
     totalEvents?: number;
-    /** The api version of this response. A natural increasing number. Only increases if format changes */
+    /**
+     * The api version of this response. A natural increasing number. Only increases if format changes
+     * @minimum 1
+     */
     version: EventsSchemaVersion;
 }

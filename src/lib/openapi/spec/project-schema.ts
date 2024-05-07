@@ -89,6 +89,74 @@ export const projectSchema = {
             description:
                 'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
         },
+        owners: {
+            description:
+                'The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.',
+            oneOf: [
+                {
+                    type: 'array',
+                    minItems: 1,
+                    items: {
+                        anyOf: [
+                            {
+                                type: 'object',
+                                required: ['ownerType', 'name'],
+                                properties: {
+                                    ownerType: {
+                                        type: 'string',
+                                        enum: ['user'],
+                                    },
+                                    name: {
+                                        type: 'string',
+                                        example: 'User Name',
+                                    },
+                                    imageUrl: {
+                                        type: 'string',
+                                        nullable: true,
+                                        example:
+                                            'https://example.com/image.jpg',
+                                    },
+                                    email: {
+                                        type: 'string',
+                                        nullable: true,
+                                        example: 'user@example.com',
+                                    },
+                                },
+                            },
+                            {
+                                type: 'object',
+                                required: ['ownerType', 'name'],
+                                properties: {
+                                    ownerType: {
+                                        type: 'string',
+                                        enum: ['group'],
+                                    },
+                                    name: {
+                                        type: 'string',
+                                        example: 'Group Name',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'array',
+                    minItems: 1,
+                    maxItems: 1,
+                    items: {
+                        type: 'object',
+                        required: ['ownerType'],
+                        properties: {
+                            ownerType: {
+                                type: 'string',
+                                enum: ['system'],
+                            },
+                        },
+                    },
+                },
+            ],
+        },
     },
     components: {},
 } as const;

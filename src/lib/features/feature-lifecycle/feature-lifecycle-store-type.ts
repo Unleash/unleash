@@ -1,24 +1,16 @@
-export type StageName =
-    | 'initial'
-    | 'pre-live'
-    | 'live'
-    | 'completed'
-    | 'archived';
+import type { IFeatureLifecycleStage, StageName } from '../../types';
 
 export type FeatureLifecycleStage = {
     feature: string;
     stage: StageName;
 };
 
-export type FeatureLifecycleStageView = {
-    stage: StageName;
-    enteredStageAt: Date;
-};
-
-export type FeatureLifecycleView = FeatureLifecycleStageView[];
+export type FeatureLifecycleView = IFeatureLifecycleStage[];
 
 export interface IFeatureLifecycleStore {
-    insert(featureLifecycleStage: FeatureLifecycleStage): Promise<void>;
+    insert(featureLifecycleStages: FeatureLifecycleStage[]): Promise<void>;
     get(feature: string): Promise<FeatureLifecycleView>;
     stageExists(stage: FeatureLifecycleStage): Promise<boolean>;
+    delete(feature: string): Promise<void>;
+    deleteStage(stage: FeatureLifecycleStage): Promise<void>;
 }

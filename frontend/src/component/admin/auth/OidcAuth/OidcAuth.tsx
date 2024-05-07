@@ -255,6 +255,7 @@ export const OidcAuth = () => {
                     data={data}
                     setValue={setValue}
                 />
+
                 <AutoCreateForm
                     data={data}
                     setValue={setValue}
@@ -296,6 +297,7 @@ export const OidcAuth = () => {
                         </FormControl>
                     </Grid>
                 </Grid>
+
                 <Grid container spacing={3}>
                     <Grid item md={12}>
                         <Button

@@ -10,7 +10,10 @@
 export interface TagTypeSchema {
     /** The description of the tag type. */
     description?: string;
-    /** The icon of the tag type. */
+    /**
+     * The icon of the tag type.
+     * @nullable
+     */
     icon?: string | null;
     /** The name of the tag type. */
     name: string;

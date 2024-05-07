@@ -15,9 +15,15 @@ export interface EnvironmentProjectSchema {
     enabled: boolean;
     /** The name of the environment */
     name: string;
-    /** The number of client and front-end API tokens that have access to this project */
+    /**
+     * The number of client and front-end API tokens that have access to this project
+     * @minimum 0
+     */
     projectApiTokenCount?: number;
-    /** The number of features enabled in this environment for this project */
+    /**
+     * The number of features enabled in this environment for this project
+     * @minimum 0
+     */
     projectEnabledToggleCount?: number;
     /** `true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted. */
     protected: boolean;

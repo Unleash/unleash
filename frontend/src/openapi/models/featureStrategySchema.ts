@@ -13,7 +13,10 @@ import type { StrategyVariantSchema } from './strategyVariantSchema';
 export interface FeatureStrategySchema {
     /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
     constraints?: ConstraintSchema[];
-    /** A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs */
+    /**
+     * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs
+     * @nullable
+     */
     disabled?: boolean | null;
     /** The name or feature the strategy is attached to */
     featureName?: string;
@@ -26,7 +29,10 @@ export interface FeatureStrategySchema {
     segments?: number[];
     /** The order of the strategy in the list */
     sortOrder?: number;
-    /** A descriptive title for the strategy */
+    /**
+     * A descriptive title for the strategy
+     * @nullable
+     */
     title?: string | null;
     /** Strategy level variants */
     variants?: StrategyVariantSchema[];

@@ -107,8 +107,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
                     'segments.name as segment_name',
-                    'client_metrics_env.yes as yes',
-                    'client_metrics_env.no as no',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -212,23 +210,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                             '=',
                             'features.name',
                         );
-                    })
-                    .leftJoin('client_metrics_env', (qb) => {
-                        qb.on(
-                            'client_metrics_env.environment',
-                            '=',
-                            'environments.name',
-                        )
-                            .andOn(
-                                'client_metrics_env.feature_name',
-                                '=',
-                                'features.name',
-                            )
-                            .andOn(
-                                'client_metrics_env.timestamp',
-                                '>=',
-                                this.db.raw("NOW() - INTERVAL '1 hour'"),
-                            );
                     });
 
                 query.leftJoin('last_seen_at_metrics', function () {
@@ -264,6 +245,30 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'total_features',
                 this.db.raw('select count(*) as total from final_ranks'),
             )
+            .with('metrics', (queryBuilder) => {
+                queryBuilder
+                    .sum('yes as yes')
+                    .sum('no as no')
+                    .select([
+                        'client_metrics_env.environment as metric_environment',
+                        'client_metrics_env.feature_name as metric_feature_name',
+                    ])
+                    .from('client_metrics_env')
+                    .innerJoin(
+                        'final_ranks',
+                        'client_metrics_env.feature_name',
+                        'final_ranks.feature_name',
+                    )
+                    .where(
+                        'client_metrics_env.timestamp',
+                        '>=',
+                        this.db.raw("NOW() - INTERVAL '1 hour'"),
+                    )
+                    .groupBy([
+                        'client_metrics_env.feature_name',
+                        'client_metrics_env.environment',
+                    ]);
+            })
             .select('*')
             .from('ranked_features')
             .innerJoin(
@@ -271,8 +276,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'ranked_features.feature_name',
                 'final_ranks.feature_name',
             )
+            .leftJoin('metrics', (qb) => {
+                qb.on(
+                    'metric_environment',
+                    '=',
+                    'ranked_features.environment',
+                ).andOn(
+                    'metric_feature_name',
+                    '=',
+                    'ranked_features.feature_name',
+                );
+            })
             .joinRaw('CROSS JOIN total_features')
-            .whereBetween('final_rank', [offset + 1, offset + limit]);
+            .whereBetween('final_rank', [offset + 1, offset + limit])
+            .orderBy('final_rank');
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {

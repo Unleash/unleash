@@ -15,13 +15,25 @@ import type { VariantSchema } from './variantSchema';
 export interface FeatureSearchResponseSchema {
     /** `true` if the feature is archived */
     archived?: boolean;
-    /** The date the feature was archived */
+    /**
+     * The date the feature was archived
+     * @nullable
+     */
     archivedAt?: string | null;
-    /** The date the feature was created */
+    /**
+     * The date the feature was created
+     * @nullable
+     */
     createdAt: string | null;
-    /** The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature. */
+    /**
+     * The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.
+     * @nullable
+     */
     dependencyType: FeatureSearchResponseSchemaDependencyType;
-    /** Detailed description of the feature */
+    /**
+     * Detailed description of the feature
+     * @nullable
+     */
     description?: string | null;
     /** The list of environments where the feature can be used */
     environments: FeatureSearchEnvironmentSchema[];
@@ -32,6 +44,7 @@ export interface FeatureSearchResponseSchema {
     /**
      * The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema
      * @deprecated
+     * @nullable
      */
     lastSeenAt?: string | null;
     /** Unique feature name */
@@ -47,7 +60,10 @@ export interface FeatureSearchResponseSchema {
      * @deprecated
      */
     strategies?: FeatureSearchResponseSchemaStrategiesItem[];
-    /** The list of feature tags */
+    /**
+     * The list of feature tags
+     * @nullable
+     */
     tags?: TagSchema[] | null;
     /** Type of the toggle e.g. experiment, kill-switch, release, operational, permission */
     type: string;

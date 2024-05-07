@@ -11,14 +11,31 @@ import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode';
 export interface ProjectCreatedSchema {
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
     defaultStickiness?: string;
-    /** The project's description. */
+    /**
+     * The project's description.
+     * @nullable
+     */
     description?: string | null;
-    /** A limit on the number of features allowed in the project. `null` if no limit. */
+    /**
+     * The environments enabled for the project.
+     * @minItems 1
+     */
+    environments?: string[];
+    /**
+     * A limit on the number of features allowed in the project. `null` if no limit.
+     * @nullable
+     */
     featureLimit?: number | null;
-    /** The project's identifier. */
+    /**
+     * The project's identifier.
+     * @pattern [A-Za-z0-9_~.-]+
+     */
     id: string;
     /** A mode of the project affecting what actions are possible in this project */
     mode?: ProjectCreatedSchemaMode;
-    /** The project's name. */
+    /**
+     * The project's name.
+     * @minLength 1
+     */
     name: string;
 }

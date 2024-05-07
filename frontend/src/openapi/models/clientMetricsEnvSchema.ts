@@ -16,12 +16,18 @@ export interface ClientMetricsEnvSchema {
     environment: string;
     /** Name of the feature checked by the SDK */
     featureName: string;
-    /** How many times the toggle evaluated to false */
+    /**
+     * How many times the toggle evaluated to false
+     * @minimum 0
+     */
     no?: number;
     /** The start of the time window these metrics are valid for. The window is 1 hour wide */
     timestamp?: DateSchema;
     /** How many times each variant was returned */
     variants?: ClientMetricsEnvSchemaVariants;
-    /** How many times the toggle evaluated to true */
+    /**
+     * How many times the toggle evaluated to true
+     * @minimum 0
+     */
     yes?: number;
 }

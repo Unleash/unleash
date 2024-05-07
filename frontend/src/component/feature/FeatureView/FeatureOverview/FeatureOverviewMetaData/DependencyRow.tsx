@@ -2,7 +2,12 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { type FC, useState } from 'react';
-import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
+import {
+    FlexRow,
+    StyledDetail,
+    StyledLabel,
+    StyledLink,
+} from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
 import { DependencyActions } from './DependencyActions';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';

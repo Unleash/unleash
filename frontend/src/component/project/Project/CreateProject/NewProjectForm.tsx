@@ -1,9 +1,13 @@
-import { Button, Typography, styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import { MultiselectList, SingleSelectList } from './SelectionButton';
+import {
+    MultiselectList,
+    SingleSelectList,
+    TableSelect,
+} from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';
@@ -11,6 +15,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
+import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -65,6 +70,7 @@ const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
 
 const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     gap: theme.spacing(2),
 }));
 
@@ -83,13 +89,21 @@ type FormProps = {
     featureCount?: number;
     projectMode: string;
     projectEnvironments: Set<string>;
+    projectChangeRequestConfiguration: Record<
+        string,
+        { requiredApprovals: number }
+    >;
     setProjectStickiness: React.Dispatch<React.SetStateAction<string>>;
-    setProjectEnvironments: React.Dispatch<React.SetStateAction<Set<string>>>;
+    setProjectEnvironments: (envs: Set<string>) => void;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
     setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    updateProjectChangeRequestConfig: {
+        disableChangeRequests: (env: string) => void;
+        enableChangeRequests: (env: string, requiredApprovals: number) => void;
+    };
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
@@ -107,6 +121,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
     projectDesc,
     projectStickiness,
     projectEnvironments,
+    projectChangeRequestConfiguration,
     featureLimit,
     featureCount,
     projectMode,
@@ -116,6 +131,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
+    // setProjectChangeRequestConfiguration,
+    updateProjectChangeRequestConfig,
     setFeatureLimit,
     errors,
     mode,
@@ -136,10 +153,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
             ? `${encodeURIComponent(input.trim())}-${uuidv4().slice(-12)}`
             : '';
         setProjectId(maybeProjectId);
-    };
-
-    const handleFilterChange = (envs: Set<string>) => {
-        setProjectEnvironments(envs);
     };
 
     const projectModeOptions = [
@@ -194,7 +207,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         label: env.name,
                         value: env.name,
                     }))}
-                    onChange={handleFilterChange}
+                    onChange={setProjectEnvironments}
                     button={{
                         label:
                             projectEnvironments.size > 0
@@ -245,7 +258,45 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         />
                     }
                 />
-                <Button variant='outlined'>1 environment configured</Button>
+                <ConditionallyRender
+                    condition={isEnterprise()}
+                    show={
+                        <TableSelect
+                            disabled={projectEnvironments.size === 0}
+                            activeEnvironments={activeEnvironments
+                                .filter((env) =>
+                                    projectEnvironments.has(env.name),
+                                )
+                                .map((env) => ({
+                                    name: env.name,
+                                    type: env.type,
+                                }))}
+                            updateProjectChangeRequestConfiguration={
+                                updateProjectChangeRequestConfig
+                            }
+                            button={{
+                                label:
+                                    Object.keys(
+                                        projectChangeRequestConfiguration,
+                                    ).length > 0
+                                        ? `${
+                                              Object.keys(
+                                                  projectChangeRequestConfiguration,
+                                              ).length
+                                          } selected`
+                                        : 'Configure change requests',
+                                icon: <ChangeRequestIcon />,
+                            }}
+                            search={{
+                                label: 'Filter environments',
+                                placeholder: 'Filter environments',
+                            }}
+                            projectChangeRequestConfiguration={
+                                projectChangeRequestConfiguration
+                            }
+                        />
+                    }
+                />
             </OptionButtons>
             <FormActions>{children}</FormActions>
         </StyledForm>

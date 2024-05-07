@@ -35,11 +35,13 @@ const CreateProject = () => {
         projectDesc,
         projectMode,
         projectEnvironments,
+        projectChangeRequestConfiguration,
         setProjectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectEnvironments,
+        updateProjectChangeRequestConfig,
         getCreateProjectPayload,
         clearErrors,
         validateProjectId,
@@ -114,6 +116,12 @@ const CreateProject = () => {
                     setProjectId={setProjectId}
                     projectName={projectName}
                     projectStickiness={projectStickiness}
+                    projectChangeRequestConfiguration={
+                        projectChangeRequestConfiguration
+                    }
+                    updateProjectChangeRequestConfig={
+                        updateProjectChangeRequestConfig
+                    }
                     projectMode={projectMode}
                     setProjectMode={setProjectMode}
                     setProjectStickiness={setProjectStickiness}

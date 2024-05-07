@@ -1,13 +1,15 @@
 import Search from '@mui/icons-material/Search';
 import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
-import { type FC, type ReactNode, useRef, useState } from 'react';
+import { type FC, type ReactNode, useRef, useState, useMemo } from 'react';
 import {
     StyledCheckbox,
     StyledDropdown,
     StyledListItem,
     StyledPopover,
     StyledTextField,
+    TableSearchInput,
 } from './SelectionButton.styles';
+import { ChangeRequestTable } from './ChangeRequestTable';
 
 export interface IFilterItemProps {
     label: ReactNode;
@@ -261,4 +263,148 @@ type SingleSelectListProps = Pick<
 
 export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
     return <CombinedSelect {...props} />;
+};
+
+type TableSelectProps = Pick<CombinedSelectProps, 'button' | 'search'> & {
+    updateProjectChangeRequestConfiguration: {
+        disableChangeRequests: (env: string) => void;
+        enableChangeRequests: (env: string, requiredApprovals: number) => void;
+    };
+    activeEnvironments: {
+        name: string;
+        type: string;
+    }[];
+    projectChangeRequestConfiguration: Record<
+        string,
+        { requiredApprovals: number }
+    >;
+    disabled: boolean;
+};
+export const TableSelect: FC<TableSelectProps> = ({
+    button,
+    disabled,
+    search,
+    projectChangeRequestConfiguration,
+    updateProjectChangeRequestConfiguration,
+    activeEnvironments,
+}) => {
+    const configured = useMemo(() => {
+        return Object.fromEntries(
+            Object.entries(projectChangeRequestConfiguration).map(
+                ([name, config]) => [
+                    name,
+                    { ...config, changeRequestEnabled: true },
+                ],
+            ),
+        );
+    }, [projectChangeRequestConfiguration]);
+
+    const tableEnvs = useMemo(
+        () =>
+            activeEnvironments.map(({ name, type }) => ({
+                name,
+                type,
+                ...(configured[name] ?? { changeRequestEnabled: false }),
+            })),
+        [configured, activeEnvironments],
+    );
+
+    const onEnable = (name: string, requiredApprovals: number) => {
+        updateProjectChangeRequestConfiguration.enableChangeRequests(
+            name,
+            requiredApprovals,
+        );
+    };
+
+    const onDisable = (name: string) => {
+        updateProjectChangeRequestConfiguration.disableChangeRequests(name);
+    };
+
+    const ref = useRef<HTMLDivElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+    const [searchText, setSearchText] = useState('');
+
+    const open = () => {
+        setSearchText('');
+        setAnchorEl(ref.current);
+    };
+
+    const onClose = () => {
+        setAnchorEl(null);
+    };
+
+    const filteredEnvs = tableEnvs.filter((env) =>
+        env.name.toLowerCase().includes(searchText.toLowerCase()),
+    );
+
+    const toggleTopItem = (event: React.KeyboardEvent) => {
+        if (
+            event.key === 'Enter' &&
+            searchText.trim().length > 0 &&
+            filteredEnvs.length > 0
+        ) {
+            const firstEnv = filteredEnvs[0];
+            if (firstEnv.name in configured) {
+                onDisable(firstEnv.name);
+            } else {
+                onEnable(firstEnv.name, 1);
+            }
+        }
+    };
+
+    return (
+        <>
+            <Box ref={ref}>
+                <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={button.icon}
+                    onClick={() => {
+                        open();
+                    }}
+                    disabled={disabled}
+                >
+                    {button.label}
+                </Button>
+            </Box>
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <StyledDropdown>
+                    <TableSearchInput
+                        variant='outlined'
+                        size='small'
+                        value={searchText}
+                        onChange={(event) => setSearchText(event.target.value)}
+                        label={search.label}
+                        placeholder={search.placeholder}
+                        autoFocus
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    <Search fontSize='small' />
+                                </InputAdornment>
+                            ),
+                        }}
+                        onKeyDown={toggleTopItem}
+                    />
+                    <ChangeRequestTable
+                        environments={filteredEnvs}
+                        enableEnvironment={onEnable}
+                        disableEnvironment={onDisable}
+                    />
+                </StyledDropdown>
+            </StyledPopover>
+        </>
+    );
 };

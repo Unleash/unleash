@@ -1,7 +1,7 @@
 import { Checkbox, ListItem, Popover, TextField, styled } from '@mui/material';
 
 export const StyledDropdown = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1.5),
+    padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
@@ -36,16 +36,8 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
         padding: theme.spacing(0.75, 0),
         fontSize: theme.typography.body2.fontSize,
     },
+}));
 
-    '& label': {
-        border: 0,
-        clip: 'rect(0 0 0 0)',
-        height: 'auto',
-        margin: 0,
-        overflow: 'hidden',
-        padding: 0,
-        position: 'absolute',
-        width: '1px',
-        whiteSpace: 'nowrap',
-    },
+export const TableSearchInput = styled(StyledTextField)(({ theme }) => ({
+    maxWidth: '30ch',
 }));

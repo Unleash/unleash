@@ -13,6 +13,10 @@ const useProjectForm = (
     initialFeatureLimit = '',
     initialProjectMode: ProjectMode = 'open',
     initialProjectEnvironments: Set<string> = new Set(),
+    initialProjectChangeRequestConfiguration: Record<
+        string,
+        { requiredApprovals: number }
+    > = {},
 ) => {
     const { isEnterprise } = useUiConfig();
     const [projectId, setProjectId] = useState(initialProjectId);
@@ -28,6 +32,39 @@ const useProjectForm = (
     const [projectEnvironments, setProjectEnvironments] = useState<Set<string>>(
         initialProjectEnvironments,
     );
+    const [
+        projectChangeRequestConfiguration,
+        setProjectChangeRequestConfiguration,
+    ] = useState(initialProjectChangeRequestConfiguration);
+
+    // todo: write tests for this
+    // also: disallow adding a project to cr config that isn't in envs
+    const updateProjectEnvironments = (newState: Set<string>) => {
+        const filteredChangeRequestEnvs = Object.fromEntries(
+            Object.entries(projectChangeRequestConfiguration).filter(([env]) =>
+                newState.has(env),
+            ),
+        );
+
+        setProjectChangeRequestConfiguration(filteredChangeRequestEnvs);
+        setProjectEnvironments(newState);
+    };
+
+    const crConfig = {
+        disableChangeRequests: (env: string) => {
+            setProjectChangeRequestConfiguration((previousState) => {
+                const { [env]: _, ...rest } = previousState;
+                return rest;
+            });
+        },
+
+        enableChangeRequests: (env: string, approvals: number) => {
+            setProjectChangeRequestConfiguration((previousState) => ({
+                ...previousState,
+                [env]: { requiredApprovals: approvals },
+            }));
+        },
+    };
 
     const [errors, setErrors] = useState({});
 
@@ -63,6 +100,13 @@ const useProjectForm = (
                 ? { environments: [...projectEnvironments] }
                 : {};
 
+        const changeRequestEnvironments = Object.entries(
+            projectChangeRequestConfiguration,
+        ).map(([env, { requiredApprovals }]) => ({
+            name: env,
+            requiredApprovals,
+        }));
+
         return isEnterprise()
             ? {
                   id: projectId,
@@ -71,6 +115,7 @@ const useProjectForm = (
                   defaultStickiness: projectStickiness,
                   mode: projectMode,
                   ...environmentsPayload,
+                  changeRequestEnvironments,
               }
             : {
                   id: projectId,
@@ -133,13 +178,15 @@ const useProjectForm = (
         projectStickiness,
         featureLimit,
         projectEnvironments,
+        projectChangeRequestConfiguration,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         setFeatureLimit,
         setProjectMode,
-        setProjectEnvironments,
+        setProjectEnvironments: updateProjectEnvironments,
+        updateProjectChangeRequestConfig: crConfig,
         getCreateProjectPayload,
         getEditProjectPayload,
         validateName,

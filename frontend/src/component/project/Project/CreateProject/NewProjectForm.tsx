@@ -70,6 +70,7 @@ const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
 
 const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     gap: theme.spacing(2),
 }));
 

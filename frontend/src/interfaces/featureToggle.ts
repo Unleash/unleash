@@ -69,6 +69,8 @@ export interface IFeatureEnvironment {
     strategies: IFeatureStrategy[];
     variants?: IFeatureVariant[];
     lastSeenAt?: string;
+    yes?: number;
+    no?: number;
 }
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {

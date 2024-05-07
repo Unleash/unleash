@@ -109,6 +109,8 @@ const FeatureOverviewMetaData = () => {
             name: env.name,
             lastSeenAt: env.lastSeenAt,
             enabled: env.enabled,
+            yes: env.yes,
+            no: env.no,
         }));
 
     const IconComponent = getFeatureTypeIcons(type);

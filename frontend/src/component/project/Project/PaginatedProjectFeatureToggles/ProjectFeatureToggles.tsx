@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -86,10 +86,11 @@ export const ProjectFeatureToggles = ({
         createdAt: tableState.createdAt,
     };
 
+    const { columns: _, ...apiTableState } = tableState;
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
         mapValues(
             {
-                ...encodeQueryParams(stateConfig, tableState),
+                ...encodeQueryParams(stateConfig, apiTableState),
                 project: `IS:${projectId}`,
             },
             (value) => (value ? `${value}` : undefined),
@@ -119,7 +120,6 @@ export const ProjectFeatureToggles = ({
         setFeatureArchiveState,
         setFeatureStaleDialogState,
     } = useRowActions(refetch, projectId);
-    const [showExportDialog, setShowExportDialog] = useState(false);
 
     const columns = useMemo(
         () => [

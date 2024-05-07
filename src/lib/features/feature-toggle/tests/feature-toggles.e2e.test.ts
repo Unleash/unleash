@@ -16,7 +16,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
 } from '../../../types/events';
 import ApiUser from '../../../types/api-user';
-import { ApiTokenType } from '../../../types/models/api-token';
+import { ApiTokenType, type IApiToken } from '../../../types/models/api-token';
 import IncompatibleProjectError from '../../../error/incompatible-project-error';
 import {
     type IStrategyConfig,
@@ -36,6 +36,7 @@ import { ForbiddenError } from '../../../error';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let defaultToken: IApiToken;
 const sortOrderFirst = 0;
 const sortOrderSecond = 10;
 const TESTUSERID = 3333;
@@ -103,6 +104,14 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+
+    defaultToken =
+        await app.services.apiTokenService.createApiTokenWithProjects({
+            type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            environment: 'default',
+            tokenName: 'tester',
+        });
 });
 
 afterEach(async () => {
@@ -3682,5 +3691,45 @@ test('should return correct data structure for /api/admin/features', async () =>
         favorite: false,
         createdAt: expect.anything(),
         strategies: [],
+    });
+});
+
+test('can get evaluation metrics', async () => {
+    await app.createFeature('metric-feature');
+
+    const now = new Date();
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            bucket: {
+                start: now,
+                stop: now,
+                toggles: {
+                    'metric-feature': {
+                        yes: 123,
+                        no: 321,
+                    },
+                },
+            },
+        })
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    const { body } = await app.request.get(
+        '/api/admin/projects/default/features/metric-feature',
+    );
+    expect(body).toMatchObject({
+        name: 'metric-feature',
+        environments: [
+            {
+                name: 'default',
+                yes: 123,
+                no: 321,
+            },
+        ],
     });
 });

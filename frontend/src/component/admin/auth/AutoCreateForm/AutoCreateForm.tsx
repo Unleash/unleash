@@ -97,7 +97,7 @@ export const AutoCreateForm = ({
                     </FormControl>
                 </Grid>
             </Grid>
-            <Grid container spacing={3} mb={2}>
+            <Grid container spacing={3} mb={10}>
                 <Grid item md={5}>
                     <strong>Email domains</strong>
                     <p>

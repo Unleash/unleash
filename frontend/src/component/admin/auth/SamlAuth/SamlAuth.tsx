@@ -15,7 +15,9 @@ import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
+import { SsoGroupSettingsOld } from '../SsoGroupSettingsOld';
 import { SsoGroupSettings } from '../SsoGroupSettings';
+
 import type { IRole } from 'interfaces/role';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -135,6 +137,7 @@ export const SamlAuth = () => {
                     </Alert>
                 </Grid>
             </Grid>
+            <h3>Basic Setup</h3>
             <form onSubmit={onSubmit}>
                 <Grid container spacing={3}>
                     <Grid item md={5} mb={2}>
@@ -249,7 +252,7 @@ export const SamlAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
+                <Grid container spacing={3} mb={6}>
                     <Grid item md={5}>
                         <strong>Service Provider X.509 Certificate</strong>
                         <p>
@@ -282,42 +285,82 @@ export const SamlAuth = () => {
                     </Grid>
                 </Grid>
 
-                <SsoGroupSettings
-                    ssoType='SAML'
-                    data={data}
-                    setValue={setValue}
-                />
-
-                <ConditionallyRender
-                    condition={scimEnabled}
-                    show={
-                        <ScimConfigSettings
-                            disabled={!data.enabled}
-                            settings={settings}
-                            enabled={enabled}
-                            setEnabled={setEnabled}
-                            assumeControlOfExisting={assumeControlOfExisting}
-                            setAssumeControlOfExisting={
-                                setAssumeControlOfExisting
-                            }
-                            newToken={newToken}
-                            tokenGenerationDialog={tokenGenerationDialog}
-                            setTokenGenerationDialog={setTokenGenerationDialog}
-                            tokenDialog={tokenDialog}
-                            setTokenDialog={setTokenDialog}
-                            loading={scimLoading}
-                            onGenerateNewTokenConfirm={
-                                onGenerateNewTokenConfirm
-                            }
-                        />
-                    }
-                />
-
                 <AutoCreateForm
                     data={data}
                     setValue={setValue}
                     onUpdateRole={onUpdateRole}
                 />
+
+                <h3>Group synchronization</h3>
+                <ConditionallyRender
+                    condition={scimEnabled}
+                    show={
+                        <>
+                            <Grid container sx={{ mb: 3 }}>
+                                <Grid item md={10}>
+                                    <Alert severity='info'>
+                                        <b>Heads up!</b> In Unleash there are
+                                        currently two ways to synchronize user
+                                        groups. We support the SCIM standard for
+                                        selected providers (currently Okta and
+                                        Azure AD). This will allow you to keep
+                                        your identity provider as a source of
+                                        truth and automatically synchronize with
+                                        Unleash. We recommend this approach if
+                                        your provider is available. If we don’t
+                                        support your provider you can manually
+                                        sync user groups by providing the JSON
+                                        path in the identity provider response.
+                                    </Alert>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={3} mb={6}>
+                                <Grid item md={5}>
+                                    <SsoGroupSettings
+                                        ssoType='SAML'
+                                        data={data}
+                                        setValue={setValue}
+                                    />
+                                </Grid>
+                                <Grid item md={5}>
+                                    <ScimConfigSettings
+                                        disabled={!data.enabled}
+                                        settings={settings}
+                                        enabled={enabled}
+                                        setEnabled={setEnabled}
+                                        assumeControlOfExisting={
+                                            assumeControlOfExisting
+                                        }
+                                        setAssumeControlOfExisting={
+                                            setAssumeControlOfExisting
+                                        }
+                                        newToken={newToken}
+                                        tokenGenerationDialog={
+                                            tokenGenerationDialog
+                                        }
+                                        setTokenGenerationDialog={
+                                            setTokenGenerationDialog
+                                        }
+                                        tokenDialog={tokenDialog}
+                                        setTokenDialog={setTokenDialog}
+                                        loading={scimLoading}
+                                        onGenerateNewTokenConfirm={
+                                            onGenerateNewTokenConfirm
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                        </>
+                    }
+                    elseShow={
+                        <SsoGroupSettingsOld
+                            ssoType='SAML'
+                            data={data}
+                            setValue={setValue}
+                        />
+                    }
+                />
+
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <Button

@@ -19,7 +19,7 @@ import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
-import { SsoGroupSettings } from '../SsoGroupSettings';
+import { SsoGroupSettingsOld } from '../SsoGroupSettingsOld';
 import type { IRole } from 'interfaces/role';
 
 const initialState = {
@@ -119,6 +119,7 @@ export const OidcAuth = () => {
                     </Alert>
                 </Grid>
             </Grid>
+            <h3>Basic Setup</h3>
             <form onSubmit={onSubmit}>
                 <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
@@ -250,7 +251,7 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <SsoGroupSettings
+                <SsoGroupSettingsOld
                     ssoType='OIDC'
                     data={data}
                     setValue={setValue}

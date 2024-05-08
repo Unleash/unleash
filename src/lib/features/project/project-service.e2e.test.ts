@@ -2647,7 +2647,7 @@ describe('automatic ID generation for create project', () => {
     });
 
     test.each(['', undefined, '     '])(
-        'An id with the value `%s` is treated as missing',
+        'An id with the value `%s` is treated as missing (and the id is based on the name)',
         async (id) => {
             const name = randomId();
             const project = await projectService.createProject(

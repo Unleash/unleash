@@ -122,6 +122,7 @@ exports[`should create default config 1`] = `
       "googleAuthEnabled": false,
       "killScheduledChangeRequestCache": false,
       "maintenanceMode": false,
+      "manyStrategiesPagination": false,
       "messageBanner": {
         "enabled": false,
         "name": "message-banner",

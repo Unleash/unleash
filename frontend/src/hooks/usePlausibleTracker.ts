@@ -59,6 +59,7 @@ export type CustomEvents =
     | 'search-bar'
     | 'sdk-reporting'
     | 'insights-share'
+    | 'many-strategies'
     | 'sdk-banner';
 
 export const usePlausibleTracker = () => {

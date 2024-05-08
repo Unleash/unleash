@@ -75,11 +75,16 @@ import type EventService from '../events/event-service';
 import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
+    IProjectInsert,
     IProjectQuery,
 } from './project-store-type';
 
 type Days = number;
 type Count = number;
+
+type ProjectCreationData = IProjectInsert & {
+    changeRequestEnvironments?: ProjectCreated['changeRequestEnvironments'];
+};
 
 export interface IProjectStats {
     avgTimeToProdCurrentWindow: Days;
@@ -1393,8 +1398,9 @@ export default class ProjectService {
         };
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    removePropertiesForNonEnterprise(data): any {
+    removePropertiesForNonEnterprise(
+        data: ProjectCreationData,
+    ): ProjectCreationData {
         if (this.isEnterprise) {
             return data;
         }

@@ -23,6 +23,7 @@ import {
     FEATURES_IMPORTED,
     type IApiTokenStore,
     type IFeatureLifecycleStageDuration,
+    type IFlagResolver,
 } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import type { GetActiveUsers } from './getActiveUsers';
@@ -105,6 +106,8 @@ export class InstanceStatsService {
 
     private clientMetricsStore: IClientMetricsStoreV2;
 
+    private flagResolver: IFlagResolver;
+
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
     private getActiveUsers: GetActiveUsers;
@@ -144,7 +147,10 @@ export class InstanceStatsService {
             | 'apiTokenStore'
             | 'clientMetricsStoreV2'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         versionService: VersionService,
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
@@ -169,6 +175,7 @@ export class InstanceStatsService {
         this.getProductionChanges = getProductionChanges;
         this.apiTokenStore = apiTokenStore;
         this.clientMetricsStore = clientMetricsStoreV2;
+        this.flagResolver = flagResolver;
     }
 
     async refreshAppCountSnapshot(): Promise<
@@ -274,7 +281,7 @@ export class InstanceStatsService {
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
             this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
-            this.featureLifecycleService.getAllWithStageDuration(),
+            this.getAllWithStageDuration(),
         ]);
 
         return {
@@ -340,5 +347,12 @@ export class InstanceStatsService {
             `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${totalProjects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}`,
         );
         return { ...instanceStats, sum, projects: totalProjects };
+    }
+
+    async getAllWithStageDuration(): Promise<IFeatureLifecycleStageDuration[]> {
+        if (this.flagResolver.isEnabled('featureLifecycleMetrics')) {
+            return this.featureLifecycleService.getAllWithStageDuration();
+        }
+        return [];
     }
 }

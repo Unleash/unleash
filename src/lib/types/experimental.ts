@@ -54,6 +54,7 @@ export type IFlagKey =
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
+    | 'featureLifecycleMetrics'
     | 'projectListFilterMyProjects'
     | 'projectsListNewCards'
     | 'parseProjectFromSession'

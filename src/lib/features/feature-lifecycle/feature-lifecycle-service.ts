@@ -14,7 +14,7 @@ import {
     type IUnleashConfig,
 } from '../../types';
 import type {
-    FeatureLifecycleFullItem,
+    FeatureLifecycleProjectItem,
     FeatureLifecycleView,
     IFeatureLifecycleStore,
 } from './feature-lifecycle-store-type';
@@ -215,10 +215,10 @@ export class FeatureLifecycleService extends EventEmitter {
     }
 
     public calculateStageDurations(
-        featureLifeCycles: FeatureLifecycleFullItem[],
+        featureLifeCycles: FeatureLifecycleProjectItem[],
     ) {
         const groupedByFeature = featureLifeCycles.reduce<{
-            [feature: string]: FeatureLifecycleFullItem[];
+            [feature: string]: FeatureLifecycleProjectItem[];
         }>((acc, curr) => {
             if (!acc[curr.feature]) {
                 acc[curr.feature] = [];
@@ -247,6 +247,7 @@ export class FeatureLifecycleService extends EventEmitter {
                 times.push({
                     feature: stage.feature,
                     stage: stage.stage,
+                    project: stage.project,
                     duration,
                 });
             });

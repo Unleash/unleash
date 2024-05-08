@@ -2,15 +2,19 @@ import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
     FeatureLifecycleView,
-    FeatureLifecycleFullItem,
+    FeatureLifecycleProjectItem,
 } from './feature-lifecycle-store-type';
 import type { Db } from '../../db/db';
 import type { StageName } from '../../types';
 
 type DBType = {
-    feature: string;
     stage: StageName;
     created_at: string;
+};
+
+type DBProjectType = DBType & {
+    feature: string;
+    project: string;
 };
 
 export class FeatureLifecycleStore implements IFeatureLifecycleStore {
@@ -58,17 +62,20 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
         }));
     }
 
-    async getAll(): Promise<FeatureLifecycleFullItem[]> {
-        const results = await this.db('feature_lifecycles').orderBy(
-            'created_at',
-            'asc',
-        );
+    async getAll(): Promise<FeatureLifecycleProjectItem[]> {
+        const results = await this.db('feature_lifecycles as flc')
+            .select('flc.feature', 'flc.stage', 'flc.created_at', 'f.project')
+            .leftJoin('features f', 'f.name', 'flc.feature')
+            .orderBy('created_at', 'asc');
 
-        return results.map(({ feature, stage, created_at }: DBType) => ({
-            feature,
-            stage,
-            enteredStageAt: new Date(created_at),
-        }));
+        return results.map(
+            ({ feature, stage, created_at, project }: DBProjectType) => ({
+                feature,
+                stage,
+                project,
+                enteredStageAt: new Date(created_at),
+            }),
+        );
     }
 
     async delete(feature: string): Promise<void> {

@@ -436,6 +436,7 @@ export const FeatureLifecycleTooltip: FC<{
         maxHeight={800}
         maxWidth={350}
         arrow
+        tabIndex={0}
         title={
             <Box>
                 <Box sx={(theme) => ({ padding: theme.spacing(2) })}>

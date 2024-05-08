@@ -29,7 +29,7 @@ export interface CreateProjectSchema {
      * @deprecated
      * @pattern [A-Za-z0-9_~.-]*
      */
-    id?: unknown;
+    id?: string;
     /** A mode of the project affecting what actions are possible in this project */
     mode?: CreateProjectSchemaMode;
     /**

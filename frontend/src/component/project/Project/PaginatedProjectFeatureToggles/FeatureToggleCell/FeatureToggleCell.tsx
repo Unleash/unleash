@@ -84,3 +84,9 @@ const FeatureToggleCellComponent = ({
 };
 
 export const FeatureToggleCell = React.memo(FeatureToggleCellComponent);
+
+export const PlaceholderFeatureToggleCell = () => (
+    <StyledSwitchContainer>
+        <div data-loading>toggle</div>
+    </StyledSwitchContainer>
+);

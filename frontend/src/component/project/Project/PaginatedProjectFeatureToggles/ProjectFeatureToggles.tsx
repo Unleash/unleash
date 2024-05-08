@@ -38,7 +38,10 @@ import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/Proje
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import type { FeatureSearchResponseSchema } from 'openapi';
-import { FeatureToggleCell } from './FeatureToggleCell/FeatureToggleCell';
+import {
+    FeatureToggleCell,
+    PlaceholderFeatureToggleCell,
+} from './FeatureToggleCell/FeatureToggleCell';
 import { ProjectOverviewFilters } from './ProjectOverviewFilters';
 import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
@@ -120,6 +123,8 @@ export const ProjectFeatureToggles = ({
         setFeatureArchiveState,
         setFeatureStaleDialogState,
     } = useRowActions(refetch, projectId);
+
+    const isPlaceholder = Boolean(initialLoad || (loading && total));
 
     const columns = useMemo(
         () => [
@@ -233,7 +238,9 @@ export const ProjectFeatureToggles = ({
                                 someEnabledEnvironmentHasVariants,
                             } = getValue();
 
-                            return (
+                            return isPlaceholder ? (
+                                <PlaceholderFeatureToggleCell />
+                            ) : (
                                 <FeatureToggleCell
                                     value={environment?.enabled || false}
                                     featureId={featureId}
@@ -273,7 +280,13 @@ export const ProjectFeatureToggles = ({
                 },
             }),
         ],
-        [projectId, environments, tableState.favoritesFirst, refetch],
+        [
+            projectId,
+            environments,
+            tableState.favoritesFirst,
+            refetch,
+            isPlaceholder,
+        ],
     );
 
     const placeholderData = useMemo(
@@ -305,7 +318,6 @@ export const ProjectFeatureToggles = ({
         [tableState.limit],
     );
 
-    const isPlaceholder = Boolean(initialLoad || (loading && total));
     const bodyLoadingRef = useLoading(isPlaceholder);
 
     const data = useMemo(() => {
@@ -313,7 +325,7 @@ export const ProjectFeatureToggles = ({
             return placeholderData;
         }
         return features;
-    }, [isPlaceholder, features]);
+    }, [isPlaceholder, JSON.stringify(features)]);
     const allColumnIds = useMemo(
         () => columns.map((column) => column.id).filter(Boolean) as string[],
         [columns],

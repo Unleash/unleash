@@ -20,6 +20,7 @@ import type { IEnvironmentStore, IUnleashStores } from './types';
 import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
 import { SchedulerService } from './services';
 import noLogger from '../test/fixtures/no-logger';
+import { createFakeFeatureLifecycleService } from './features';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -45,12 +46,15 @@ beforeAll(async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
+    const { featureLifecycleService } =
+        createFakeFeatureLifecycleService(config);
     statsService = new InstanceStatsService(
         stores,
         config,
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
+        featureLifecycleService,
     );
 
     schedulerService = new SchedulerService(
@@ -274,4 +278,9 @@ test('should collect metrics for project disabled numbers', async () => {
     expect(recordedMetric).toMatch(
         /project_environments_disabled{project_id=\"default\"} 1/,
     );
+});
+
+test('should collect metrics for lifecycle', async () => {
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).toMatch(/feature_lifecycle_stage_duration/);
 });

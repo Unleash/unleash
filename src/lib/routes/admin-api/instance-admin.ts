@@ -125,6 +125,13 @@ class InstanceAdminController extends Controller {
                 variantCount: 100,
                 enabledCount: 200,
             },
+            featureLifeCycles: [
+                {
+                    feature: 'feature1',
+                    stage: 'archived',
+                    duration: 2000,
+                },
+            ],
         };
     }
 

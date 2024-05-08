@@ -9,10 +9,12 @@ import {
     type IEnvironmentStore,
     type IEventStore,
     type IFeatureEnvironmentStore,
+    type IFeatureLifecycleStageDuration,
     type IFlagResolver,
     type IUnleashConfig,
 } from '../../types';
 import type {
+    FeatureLifecycleFullItem,
     FeatureLifecycleView,
     IFeatureLifecycleStore,
 } from './feature-lifecycle-store-type';
@@ -20,6 +22,7 @@ import EventEmitter from 'events';
 import type { Logger } from '../../logger';
 import type EventService from '../events/event-service';
 import type { ValidatedClientMetrics } from '../metrics/shared/schema';
+import { differenceInMinutes } from 'date-fns';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
 
@@ -202,5 +205,52 @@ export class FeatureLifecycleService extends EventEmitter {
     private async featureRevived(feature: string) {
         await this.featureLifecycleStore.delete(feature);
         await this.featureInitialized(feature);
+    }
+
+    public async getAllWithStageDuration(): Promise<
+        IFeatureLifecycleStageDuration[]
+    > {
+        const featureLifeCycles = await this.featureLifecycleStore.getAll();
+        return this.calculateStageDurations(featureLifeCycles);
+    }
+
+    public calculateStageDurations(
+        featureLifeCycles: FeatureLifecycleFullItem[],
+    ) {
+        const groupedByFeature = featureLifeCycles.reduce<{
+            [feature: string]: FeatureLifecycleFullItem[];
+        }>((acc, curr) => {
+            if (!acc[curr.feature]) {
+                acc[curr.feature] = [];
+            }
+            acc[curr.feature].push(curr);
+            return acc;
+        }, {});
+
+        const times: IFeatureLifecycleStageDuration[] = [];
+        Object.values(groupedByFeature).forEach((stages) => {
+            stages.sort(
+                (a, b) =>
+                    a.enteredStageAt.getTime() - b.enteredStageAt.getTime(),
+            );
+
+            stages.forEach((stage, index) => {
+                const nextStage = stages[index + 1];
+                const endTime = nextStage
+                    ? nextStage.enteredStageAt
+                    : new Date();
+                const duration = differenceInMinutes(
+                    endTime,
+                    stage.enteredStageAt,
+                );
+
+                times.push({
+                    feature: stage.feature,
+                    stage: stage.stage,
+                    duration,
+                });
+            });
+        });
+        return times;
     }
 }

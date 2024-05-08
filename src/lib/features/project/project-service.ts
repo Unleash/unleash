@@ -302,6 +302,15 @@ export default class ProjectService {
         return id;
     }
 
+    async generateUniqueProjectId(name: string): Promise<string> {
+        const id = this.generateProjectId(name);
+        if (await this.projectStore.hasProject(id)) {
+            return await this.generateUniqueProjectId(name);
+        } else {
+            return id;
+        }
+    }
+
     async createProject(
         newProject: CreateProject,
         user: IUser,
@@ -314,11 +323,29 @@ export default class ProjectService {
             return [];
         },
     ): Promise<ProjectCreated> {
-        await this.validateProjectEnvironments(newProject.environments);
+        const validateData = async () => {
+            await this.validateProjectEnvironments(newProject.environments);
 
-        const validatedData = await projectSchema.validateAsync(newProject);
+            if (
+                !newProject.id?.trim() &&
+                this.flagResolver.isEnabled(
+                    'createProjectWithEnvironmentConfig',
+                )
+            ) {
+                newProject.id = await this.generateUniqueProjectId(
+                    newProject.name,
+                );
+                return await projectSchema.validateAsync(newProject);
+            } else {
+                const validatedData =
+                    await projectSchema.validateAsync(newProject);
+                await this.validateUniqueId(validatedData.id);
+                return validatedData;
+            }
+        };
+
+        const validatedData = await validateData();
         const data = this.removePropertiesForNonEnterprise(validatedData);
-        await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
 
@@ -362,7 +389,7 @@ export default class ProjectService {
         await this.eventService.storeEvent(
             new ProjectCreatedEvent({
                 data,
-                project: newProject.id,
+                project: data.id,
                 auditUser,
             }),
         );

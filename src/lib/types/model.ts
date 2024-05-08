@@ -487,7 +487,8 @@ export interface IImportData extends ImportCommon {
 // Create project aligns with #/components/schemas/createProjectSchema
 // joi is providing default values when the optional inputs are not provided
 // const data = await projectSchema.validateAsync(newProject);
-export type CreateProject = Pick<IProject, 'id' | 'name'> & {
+export type CreateProject = Pick<IProject, 'name'> & {
+    id?: string;
     mode?: ProjectMode;
     defaultStickiness?: string;
     environments?: string[];

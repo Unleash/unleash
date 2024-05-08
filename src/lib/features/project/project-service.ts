@@ -76,16 +76,11 @@ import type EventService from '../events/event-service';
 import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
-    IProjectInsert,
     IProjectQuery,
 } from './project-store-type';
 
 type Days = number;
 type Count = number;
-
-type ProjectCreationData = IProjectInsert & {
-    changeRequestEnvironments?: ProjectCreated['changeRequestEnvironments'];
-};
 
 export interface IProjectStats {
     avgTimeToProdCurrentWindow: Days;
@@ -310,15 +305,6 @@ export default class ProjectService {
         return id;
     }
 
-    async generateUniqueProjectId(name: string): Promise<string> {
-        const id = this.generateProjectId(name);
-        if (await this.projectStore.hasProject(id)) {
-            return await this.generateUniqueProjectId(name);
-        } else {
-            return id;
-        }
-    }
-
     async createProject(
         newProject: CreateProject,
         user: IUser,
@@ -331,28 +317,11 @@ export default class ProjectService {
             return [];
         },
     ): Promise<ProjectCreated> {
-        const validateData = async (): Promise<ProjectCreationData> => {
-            await this.validateProjectEnvironments(newProject.environments);
+        await this.validateProjectEnvironments(newProject.environments);
 
-            if (
-                // todo: test edge cases around this
-                !newProject.id?.trim() &&
-                this.flagResolver.isEnabled(
-                    'createProjectWithEnvironmentConfig',
-                )
-            ) {
-                newProject.id = await this.generateProjectId(newProject.name);
-                return await projectSchema.validateAsync(newProject);
-            } else {
-                const validatedData =
-                    await projectSchema.validateAsync(newProject);
-                await this.validateUniqueId(validatedData.id);
-                return validatedData;
-            }
-        };
-
-        const validatedData = await validateData();
+        const validatedData = await projectSchema.validateAsync(newProject);
         const data = this.removePropertiesForNonEnterprise(validatedData);
+        await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
 
@@ -396,7 +365,7 @@ export default class ProjectService {
         await this.eventService.storeEvent(
             new ProjectCreatedEvent({
                 data,
-                project: data.id,
+                project: newProject.id,
                 auditUser,
             }),
         );
@@ -1435,9 +1404,8 @@ export default class ProjectService {
         };
     }
 
-    removePropertiesForNonEnterprise(
-        data: ProjectCreationData,
-    ): ProjectCreationData {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    removePropertiesForNonEnterprise(data): any {
         if (this.isEnterprise) {
             return data;
         }

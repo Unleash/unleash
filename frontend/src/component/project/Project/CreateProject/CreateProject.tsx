@@ -68,14 +68,15 @@ const CreateProject = () => {
         e.preventDefault();
         clearErrors();
         const validName = validateName();
-        const validId = await validateProjectId();
+        const validId = useNewProjectForm || (await validateProjectId());
 
         if (validName && validId) {
-            const payload = getCreateProjectPayload();
+            const payload = getCreateProjectPayload(useNewProjectForm);
             try {
-                await createProject(payload);
+                const createdProject = await createProject(payload);
+                console.log(createdProject);
                 refetchUser();
-                navigate(`/projects/${projectId}`, { replace: true });
+                navigate(`/projects/${createdProject.id}`, { replace: true });
                 setToastData({
                     title: 'Project created',
                     text: 'Now you can add toggles to this project',
@@ -99,7 +100,11 @@ const CreateProject = () => {
         return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getCreateProjectPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(
+            getCreateProjectPayload(useNewProjectForm),
+            undefined,
+            2,
+        )}'`;
     };
 
     const handleCancel = () => {

@@ -10,6 +10,8 @@ import type { StageName } from '../../types';
 type DBType = {
     stage: StageName;
     created_at: string;
+    status: string;
+    status_value: string;
 };
 
 type DBProjectType = DBType & {

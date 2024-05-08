@@ -58,12 +58,16 @@ describe('populateCurrentStage', () => {
             lifecycle: { stage: 'completed', enteredStageAt },
             environments: [
                 { name: 'prod', type: 'production', lastSeenAt: '2022-08-01' },
+                { name: 'dev', type: 'development', lastSeenAt: '2022-08-01' },
             ],
         } as IFeatureToggle;
         const expected = {
             name: 'completed',
             status: 'kept',
-            environments: [{ name: 'prod', lastSeenAt: '2022-08-01' }],
+            environments: [
+                { name: 'prod', lastSeenAt: '2022-08-01' },
+                { name: 'dev', lastSeenAt: '2022-08-01' },
+            ],
             enteredStageAt,
         };
         const result = populateCurrentStage(feature);

@@ -315,8 +315,8 @@ const SafeToArchive: FC<{
                     mb: 1,
                 }}
             >
-                We haven’t seen this feature flag in production for at least two
-                days. It’s likely that it’s safe to archive this flag.
+                We haven’t seen this feature flag in any environment for at
+                least two days. It’s likely that it’s safe to archive this flag.
             </InfoText>
             <Box
                 sx={{
@@ -362,8 +362,18 @@ const ActivelyUsed: FC<{
             }}
         >
             This feature has been successfully completed, but we are still
-            seeing usage in production. Clean up the feature flag from your code
-            before archiving it:
+            seeing usage. Clean up the feature flag from your code before
+            archiving it:
+        </InfoText>
+        {children}
+        <InfoText
+            sx={{
+                mt: 1,
+                mb: 1,
+            }}
+        >
+            If you think this feature was completed too early you can revert to
+            the live stage:
         </InfoText>
         <PermissionButton
             color='inherit'
@@ -376,7 +386,6 @@ const ActivelyUsed: FC<{
         >
             Revert to live
         </PermissionButton>
-        {children}
     </>
 );
 

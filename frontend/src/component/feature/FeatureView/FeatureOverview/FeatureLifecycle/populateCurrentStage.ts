@@ -40,9 +40,7 @@ export const populateCurrentStage = (
             return {
                 name: 'completed',
                 status: 'kept',
-                environments: getFilteredEnvironments(
-                    (type) => type === 'production',
-                ),
+                environments: getFilteredEnvironments(() => true),
                 enteredStageAt,
             };
         case 'archived':

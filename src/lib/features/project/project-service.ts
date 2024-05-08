@@ -52,6 +52,7 @@ import {
     SYSTEM_USER_ID,
     type ProjectCreated,
     type IProjectOwnersReadModel,
+    type ProjectMode,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -85,6 +86,8 @@ type Count = number;
 
 type ProjectCreationData = IProjectInsert & {
     changeRequestEnvironments?: ProjectCreated['changeRequestEnvironments'];
+    mode?: ProjectMode;
+    defaultStickiness: string;
 };
 
 export interface IProjectStats {
@@ -327,7 +330,7 @@ export default class ProjectService {
         > = async () => {
             return [];
         },
-    ): Promise<ProjectCreated> {
+    ): Promise<Omit<ProjectCreated, 'mode'> & { mode?: ProjectMode }> {
         const validateData = async (): Promise<ProjectCreationData> => {
             await this.validateProjectEnvironments(newProject.environments);
 
@@ -399,7 +402,10 @@ export default class ProjectService {
             }),
         );
 
-        return { ...data, environments: envsToEnable };
+        return {
+            ...data,
+            environments: envsToEnable,
+        };
     }
 
     async updateProject(

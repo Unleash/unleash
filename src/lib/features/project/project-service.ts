@@ -1,5 +1,6 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
+import slug from 'slug';
 import type { IAuditUser, IUser } from '../../types/user';
 import type {
     AccessService,
@@ -60,7 +61,7 @@ import type {
 import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
-import { arraysHaveSameItems } from '../../util';
+import { arraysHaveSameItems, randomId } from '../../util';
 import type { GroupService } from '../../services/group-service';
 import type { IGroupRole } from '../../types/group';
 import type { FavoritesService } from '../../services/favorites-service';
@@ -292,6 +293,13 @@ export default class ProjectService {
 
             await this.validateEnvironmentsExist(environments);
         }
+    }
+
+    generateProjectId(name: string): string {
+        const urlFriendly = slug(name);
+        const tail = randomId().slice(-12);
+        const id = `${urlFriendly}-${tail}`;
+        return id;
     }
 
     async createProject(

@@ -94,7 +94,7 @@ const useProjectForm = (
         setProjectMode(initialProjectMode);
     }, [initialProjectMode]);
 
-    const getCreateProjectPayload = ({ omitId }: { omitId?: boolean }) => {
+    const getCreateProjectPayload = (options?: { omitId?: boolean }) => {
         const environmentsPayload =
             projectEnvironments.size > 0
                 ? { environments: [...projectEnvironments] }
@@ -108,7 +108,7 @@ const useProjectForm = (
         }));
 
         const ossPayload = {
-            ...(omitId ? {} : { id: projectId }),
+            ...(options?.omitId ? {} : { id: projectId }),
             name: projectName,
             description: projectDesc,
             defaultStickiness: projectStickiness,

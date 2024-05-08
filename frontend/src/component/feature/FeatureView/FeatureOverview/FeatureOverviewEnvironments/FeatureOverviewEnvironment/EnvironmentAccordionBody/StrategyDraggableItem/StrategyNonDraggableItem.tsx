@@ -25,6 +25,9 @@ interface IStrategyItemProps {
     otherEnvironments?: IFeatureEnvironment['name'][];
 }
 
+/**
+ * @deprecated
+ */
 export const StrategyNonDraggableItem = ({
     strategy,
     index,

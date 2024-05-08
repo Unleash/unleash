@@ -331,17 +331,4 @@ describe('project ID generation', () => {
         const projectId = service.generateProjectId('one');
         expect(projectId).toMatch(/^one-[a-f0-9]{12}$/);
     });
-
-    // todo: move to e2e tests
-    test.each([true, false])(
-        'if the ID is present, the result is the same regardless of the flag. Flag state: %s',
-        async (flagState) => {
-            const service = createService();
-
-            // @ts-expect-error
-            service.flagResolver = {
-                isEnabled: () => flagState,
-            };
-        },
-    );
 });

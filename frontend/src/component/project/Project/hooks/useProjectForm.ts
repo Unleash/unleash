@@ -94,7 +94,7 @@ const useProjectForm = (
         setProjectMode(initialProjectMode);
     }, [initialProjectMode]);
 
-    const getCreateProjectPayload = () => {
+    const getCreateProjectPayload = (omitId?: boolean) => {
         const environmentsPayload =
             projectEnvironments.size > 0
                 ? { environments: [...projectEnvironments] }
@@ -107,23 +107,21 @@ const useProjectForm = (
             requiredApprovals,
         }));
 
+        const ossPayload = {
+            ...(omitId ? {} : { id: projectId }),
+            name: projectName,
+            description: projectDesc,
+            defaultStickiness: projectStickiness,
+            ...environmentsPayload,
+        };
+
         return isEnterprise()
             ? {
-                  id: projectId,
-                  name: projectName,
-                  description: projectDesc,
-                  defaultStickiness: projectStickiness,
+                  ...ossPayload,
                   mode: projectMode,
-                  ...environmentsPayload,
                   changeRequestEnvironments,
               }
-            : {
-                  id: projectId,
-                  name: projectName,
-                  description: projectDesc,
-                  defaultStickiness: projectStickiness,
-                  ...environmentsPayload,
-              };
+            : ossPayload;
     };
 
     const getEditProjectPayload = () => {

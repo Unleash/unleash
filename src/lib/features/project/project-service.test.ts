@@ -307,10 +307,6 @@ describe('project ID generation', () => {
     const createService = () => {
         const config = createTestConfig();
         const service = createFakeProjectService(config);
-        // @ts-expect-error: we're setting this up to test the change request
-        service.flagResolver = {
-            isEnabled: () => true,
-        };
 
         return service;
     };

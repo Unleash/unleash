@@ -294,6 +294,7 @@ export default class MetricsMonitor {
                         .labels({
                             feature_id: stage.feature,
                             stage: stage.stage,
+                            project: stage.project,
                         })
                         .observe(stage.duration);
                 });

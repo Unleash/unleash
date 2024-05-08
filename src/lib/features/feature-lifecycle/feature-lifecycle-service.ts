@@ -247,6 +247,7 @@ export class FeatureLifecycleService extends EventEmitter {
                 times.push({
                     feature: stage.feature,
                     stage: stage.stage,
+                    project: stage.project,
                     duration,
                 });
             });

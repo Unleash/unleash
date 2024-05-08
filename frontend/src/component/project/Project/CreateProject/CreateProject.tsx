@@ -71,7 +71,9 @@ const CreateProject = () => {
         const validId = useNewProjectForm || (await validateProjectId());
 
         if (validName && validId) {
-            const payload = getCreateProjectPayload(useNewProjectForm);
+            const payload = getCreateProjectPayload({
+                omitId: useNewProjectForm,
+            });
             try {
                 const createdProject = await createProject(payload);
                 refetchUser();
@@ -100,7 +102,7 @@ const CreateProject = () => {
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(
-            getCreateProjectPayload(useNewProjectForm),
+            getCreateProjectPayload({ omitId: useNewProjectForm }),
             undefined,
             2,
         )}'`;

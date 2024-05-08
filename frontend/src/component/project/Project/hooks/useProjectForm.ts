@@ -94,7 +94,7 @@ const useProjectForm = (
         setProjectMode(initialProjectMode);
     }, [initialProjectMode]);
 
-    const getCreateProjectPayload = (omitId?: boolean) => {
+    const getCreateProjectPayload = ({ omitId }: { omitId?: boolean }) => {
         const environmentsPayload =
             projectEnvironments.size > 0
                 ? { environments: [...projectEnvironments] }

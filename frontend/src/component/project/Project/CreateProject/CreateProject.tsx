@@ -74,7 +74,6 @@ const CreateProject = () => {
             const payload = getCreateProjectPayload(useNewProjectForm);
             try {
                 const createdProject = await createProject(payload);
-                console.log(createdProject);
                 refetchUser();
                 navigate(`/projects/${createdProject.id}`, { replace: true });
                 setToastData({

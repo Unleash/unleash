@@ -52,7 +52,6 @@ import {
     SYSTEM_USER_ID,
     type ProjectCreated,
     type IProjectOwnersReadModel,
-    type ProjectMode,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -77,18 +76,11 @@ import type EventService from '../events/event-service';
 import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
-    IProjectInsert,
     IProjectQuery,
 } from './project-store-type';
 
 type Days = number;
 type Count = number;
-
-type ProjectCreationData = IProjectInsert & {
-    changeRequestEnvironments?: ProjectCreated['changeRequestEnvironments'];
-    mode?: ProjectMode;
-    defaultStickiness: string;
-};
 
 export interface IProjectStats {
     avgTimeToProdCurrentWindow: Days;
@@ -330,8 +322,8 @@ export default class ProjectService {
         > = async () => {
             return [];
         },
-    ): Promise<Omit<ProjectCreated, 'mode'> & { mode?: ProjectMode }> {
-        const validateData = async (): Promise<ProjectCreationData> => {
+    ): Promise<ProjectCreated> {
+        const validateData = async () => {
             await this.validateProjectEnvironments(newProject.environments);
 
             if (
@@ -1439,9 +1431,8 @@ export default class ProjectService {
         };
     }
 
-    removePropertiesForNonEnterprise(
-        data: ProjectCreationData,
-    ): ProjectCreationData {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    removePropertiesForNonEnterprise(data): any {
         if (this.isEnterprise) {
             return data;
         }

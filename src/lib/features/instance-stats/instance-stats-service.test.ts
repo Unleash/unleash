@@ -4,6 +4,7 @@ import createStores from '../../../test/fixtures/store';
 import VersionService from '../../services/version-service';
 import { createFakeGetActiveUsers } from './getActiveUsers';
 import { createFakeGetProductionChanges } from './getProductionChanges';
+import { createFakeFeatureLifecycleService } from '../feature-lifecycle/createFeatureLifecycle';
 
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
@@ -23,6 +24,7 @@ beforeEach(() => {
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
+        createFakeFeatureLifecycleService(config).featureLifecycleService,
     );
 
     jest.spyOn(instanceStatsService, 'refreshAppCountSnapshot');

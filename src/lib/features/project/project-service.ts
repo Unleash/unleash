@@ -302,11 +302,8 @@ export default class ProjectService {
 
     generateProjectId(name: string): string {
         const urlFriendly = slug(name);
-
         const tail = randomId().slice(-12);
-
         const id = `${urlFriendly}-${tail}`;
-
         return id;
     }
 

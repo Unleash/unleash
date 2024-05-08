@@ -259,6 +259,12 @@ export default class MetricsMonitor {
             help: 'Duration of mapFeaturesForClient function',
         });
 
+        const featureLifecycleStageDuration = createHistogram({
+            name: 'feature_lifecycle_stage_duration',
+            labelNames: ['feature_id', 'stage'],
+            help: 'Duration of feature lifecycle stages',
+        });
+
         const projectEnvironmentsDisabled = createCounter({
             name: 'project_environments_disabled',
             help: 'How many "environment disabled" events we have received for each project',
@@ -282,6 +288,15 @@ export default class MetricsMonitor {
 
                 serviceAccounts.reset();
                 serviceAccounts.set(stats.serviceAccounts);
+
+                stats.featureLifeCycles.forEach((stage) => {
+                    featureLifecycleStageDuration
+                        .labels({
+                            feature_id: stage.feature,
+                            stage: stage.stage,
+                        })
+                        .observe(stage.duration);
+                });
 
                 apiTokens.reset();
 
@@ -358,7 +373,10 @@ export default class MetricsMonitor {
 
                 rateLimits.reset();
                 rateLimits
-                    .labels({ endpoint: '/api/client/metrics', method: 'POST' })
+                    .labels({
+                        endpoint: '/api/client/metrics',
+                        method: 'POST',
+                    })
                     .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
                 rateLimits
                     .labels({
@@ -389,7 +407,10 @@ export default class MetricsMonitor {
                     })
                     .set(config.rateLimiting.createUserMaxPerMinute);
                 rateLimits
-                    .labels({ endpoint: '/auth/simple', method: 'POST' })
+                    .labels({
+                        endpoint: '/auth/simple',
+                        method: 'POST',
+                    })
                     .set(config.rateLimiting.simpleLoginMaxPerMinute);
                 rateLimits
                     .labels({
@@ -407,7 +428,6 @@ export default class MetricsMonitor {
                     );
             } catch (e) {}
         }
-
         await schedulerService.schedule(
             collectStaticCounters.bind(this),
             hoursToMilliseconds(2),
@@ -419,7 +439,12 @@ export default class MetricsMonitor {
             events.REQUEST_TIME,
             ({ path, method, time, statusCode, appName }) => {
                 requestDuration
-                    .labels({ path, method, status: statusCode, appName })
+                    .labels({
+                        path,
+                        method,
+                        status: statusCode,
+                        appName,
+                    })
                     .observe(time);
             },
         );
@@ -432,7 +457,10 @@ export default class MetricsMonitor {
             events.FUNCTION_TIME,
             ({ functionName, className, time }) => {
                 functionDuration
-                    .labels({ functionName, className })
+                    .labels({
+                        functionName,
+                        className,
+                    })
                     .observe(time);
             },
         );
@@ -446,7 +474,12 @@ export default class MetricsMonitor {
         });
 
         eventBus.on(events.DB_TIME, ({ store, action, time }) => {
-            dbDuration.labels({ store, action }).observe(time);
+            dbDuration
+                .labels({
+                    store,
+                    action,
+                })
+                .observe(time);
         });
 
         eventBus.on(events.PROXY_REPOSITORY_CREATED, () => {
@@ -704,6 +737,7 @@ export default class MetricsMonitor {
         }
     }
 }
+
 export function createMetricsMonitor(): MetricsMonitor {
     return new MetricsMonitor();
 }

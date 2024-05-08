@@ -2,6 +2,7 @@ import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
     FeatureLifecycleView,
+    FeatureLifecycleFullItem,
 } from './feature-lifecycle-store-type';
 import type { Db } from '../../db/db';
 import type { StageName } from '../../types';
@@ -9,7 +10,7 @@ import type { StageName } from '../../types';
 type DBType = {
     feature: string;
     stage: StageName;
-    created_at: Date;
+    created_at: string;
 };
 
 export class FeatureLifecycleStore implements IFeatureLifecycleStore {
@@ -53,7 +54,20 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
 
         return results.map(({ stage, created_at }: DBType) => ({
             stage,
-            enteredStageAt: created_at,
+            enteredStageAt: new Date(created_at),
+        }));
+    }
+
+    async getAll(): Promise<FeatureLifecycleFullItem[]> {
+        const results = await this.db('feature_lifecycles').orderBy(
+            'created_at',
+            'asc',
+        );
+
+        return results.map(({ feature, stage, created_at }: DBType) => ({
+            feature,
+            stage,
+            enteredStageAt: new Date(created_at),
         }));
     }
 

@@ -25,10 +25,11 @@ export interface CreateProjectSchema {
      */
     environments?: string[];
     /**
-     * The project's identifier.
-     * @pattern [A-Za-z0-9_~.-]+
+     * The project's identifier. If this property is not present or is an empty string, Unleash will generate the project id automatically. This property is deprecated.
+     * @deprecated
+     * @pattern [A-Za-z0-9_~.-]*
      */
-    id: string;
+    id?: unknown;
     /** A mode of the project affecting what actions are possible in this project */
     mode?: CreateProjectSchemaMode;
     /**

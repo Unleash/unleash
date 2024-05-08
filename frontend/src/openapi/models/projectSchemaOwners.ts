@@ -4,11 +4,11 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectSchemaOwnersOneOfItem } from './projectSchemaOwnersOneOfItem';
-import type { ProjectSchemaOwnersOneOfNineItem } from './projectSchemaOwnersOneOfNineItem';
+import type { ProjectSchemaOwnersOneOfSixItem } from './projectSchemaOwnersOneOfSixItem';
 
 /**
- * The owners of this project, both users and groups.
+ * The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.
  */
 export type ProjectSchemaOwners =
     | ProjectSchemaOwnersOneOfItem[]
-    | ProjectSchemaOwnersOneOfNineItem[];
+    | ProjectSchemaOwnersOneOfSixItem[];

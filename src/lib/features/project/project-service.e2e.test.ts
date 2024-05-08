@@ -2660,23 +2660,51 @@ describe('automatic ID generation for create project', () => {
         },
     );
 
-    test.each([true, false])(
-        'if the ID is present in the input, it is used as the ID regardless of the flag. Flag state: %s',
-        async (flagState) => {
-            const id = randomId();
-            // @ts-expect-error - we're just checking that the same
-            // thing happens regardless of flag state
-            projectService.flagResolver.isEnabled = () => flagState;
-            const project = await projectService.createProject(
-                {
-                    name: id,
-                    id,
-                },
-                user,
-                auditUser,
-            );
+    describe('backwards compatibility', () => {
+        const featureFlag = 'createProjectWithEnvironmentConfig';
 
-            expect(project.id).toBe(id);
-        },
-    );
+        test.each([true, false])(
+            'if the ID is present in the input, it is used as the ID regardless of the feature flag states. Flag state: %s',
+            async (flagState) => {
+                const id = randomId();
+                // @ts-expect-error - we're just checking that the same
+                // thing happens regardless of flag state
+                projectService.flagResolver.isEnabled = (
+                    flagToCheck: string,
+                ) => {
+                    if (flagToCheck === featureFlag) {
+                        return flagState;
+                    } else {
+                        return false;
+                    }
+                };
+                const project = await projectService.createProject(
+                    {
+                        name: id,
+                        id,
+                    },
+                    user,
+                    auditUser,
+                );
+
+                expect(project.id).toBe(id);
+            },
+        );
+
+        test.each(['', undefined, '     '])(
+            'if the flag to enable auto ID generation is off, not providing a valid ID (testing `%s`) throws an error',
+            async (id) => {
+                const createProject = () =>
+                    projectService.createProject(
+                        {
+                            name: randomId(),
+                            id,
+                        },
+                        user,
+                        auditUser,
+                    );
+                expect(createProject).rejects.toThrow();
+            },
+        );
+    });
 });

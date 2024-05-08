@@ -338,7 +338,9 @@ export default class ProjectService {
                     'createProjectWithEnvironmentConfig',
                 )
             ) {
-                newProject.id = await this.generateProjectId(newProject.name);
+                newProject.id = await this.generateUniqueProjectId(
+                    newProject.name,
+                );
                 return await projectSchema.validateAsync(newProject);
             } else {
                 const validatedData =

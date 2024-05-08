@@ -1,5 +1,6 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
+import slug from 'slug';
 import type { IAuditUser, IUser } from '../../types/user';
 import type {
     AccessService,
@@ -60,7 +61,7 @@ import type {
 import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
-import { arraysHaveSameItems } from '../../util';
+import { arraysHaveSameItems, randomId } from '../../util';
 import type { GroupService } from '../../services/group-service';
 import type { IGroupRole } from '../../types/group';
 import type { FavoritesService } from '../../services/favorites-service';
@@ -299,11 +300,20 @@ export default class ProjectService {
         }
     }
 
-    async generateProjectId(name: string): Promise<string> {
-        const id = name.toLowerCase().replace(/ /g, '-');
+    generateProjectId(name: string): string {
+        const urlFriendly = slug(name);
 
+        const tail = randomId().slice(-12);
+
+        const id = `${urlFriendly}-${tail}`;
+
+        return id;
+    }
+
+    async generateUniqueProjectId(name: string): Promise<string> {
+        const id = this.generateProjectId(name);
         if (await this.projectStore.hasProject(id)) {
-            return await this.generateProjectId(name);
+            return await this.generateUniqueProjectId(name);
         } else {
             return id;
         }
@@ -325,7 +335,8 @@ export default class ProjectService {
             await this.validateProjectEnvironments(newProject.environments);
 
             if (
-                !newProject.id &&
+                // todo: test edge cases around this
+                !newProject.id?.trim() &&
                 this.flagResolver.isEnabled(
                     'createProjectWithEnvironmentConfig',
                 )

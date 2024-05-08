@@ -19,7 +19,6 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import usePagination from 'hooks/usePagination';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { StrategyNonDraggableItem } from './StrategyDraggableItem/StrategyNonDraggableItem';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -251,7 +250,7 @@ const EnvironmentAccordionBody = ({
                                     </Alert>
                                     <br />
                                     {page.map((strategy, index) => (
-                                        <StrategyNonDraggableItem
+                                        <StrategyDraggableItem
                                             key={strategy.id}
                                             strategy={strategy}
                                             index={index + pageIndex * pageSize}
@@ -261,6 +260,10 @@ const EnvironmentAccordionBody = ({
                                             otherEnvironments={
                                                 otherEnvironments
                                             }
+                                            isDragging={false}
+                                            onDragStartRef={(() => {}) as any}
+                                            onDragOver={(() => {}) as any}
+                                            onDragEnd={(() => {}) as any}
                                         />
                                     ))}
                                     <br />

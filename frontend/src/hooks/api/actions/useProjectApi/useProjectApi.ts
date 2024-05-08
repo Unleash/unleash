@@ -4,6 +4,7 @@ import type {
     CreateProjectSchema,
     UpdateProjectSchema,
     UpdateProjectEnterpriseSettingsSchema,
+    ProjectCreatedSchema,
 } from 'openapi';
 import useAPI from '../useApi/useApi';
 
@@ -18,7 +19,9 @@ const useProjectApi = () => {
         propagateErrors: true,
     });
 
-    const createProject = async (payload: CreateProjectSchema) => {
+    const createProject = async (
+        payload: CreateProjectSchema,
+    ): Promise<ProjectCreatedSchema> => {
         const path = `api/admin/projects`;
         const req = createRequest(path, {
             method: 'POST',
@@ -27,7 +30,7 @@ const useProjectApi = () => {
 
         const res = await makeRequest(req.caller, req.id);
 
-        return res;
+        return res.json();
     };
 
     const validateId = async (id: CreateProjectSchema['id']) => {

@@ -310,25 +310,71 @@ describe('project ID generation', () => {
         service.flagResolver = {
             isEnabled: () => true,
         };
-        // @ts-expect-error: we're setting this up to test the change request
-        service.isEnterprise = true;
-
-        // @ts-expect-error: if we don't set this up, the tests will fail due to a missing role.
-        service.accessService.createRole(
-            {
-                name: RoleName.OWNER,
-                description: 'Project owner',
-                createdByUserId: -1,
-            },
-            TEST_AUDIT_USER,
-        );
 
         return service;
     };
-    test('x', async () => {
+
+    test('it replaces spaces with hyphens', () => {
         const service = createService();
 
-        // @ts-expect-error
-        service.projectStore.hasProject = () => false;
+        const projectId = service.generateProjectId('this has spaces');
+        expect(projectId).toMatch(/^this-has-spaces-/);
     });
+
+    test('it removes other characters', () => {
+        const service = createService();
+
+        const projectId = service.generateProjectId('[enclose me]');
+        expect(projectId).toMatch(/^enclose-me-.{12}/);
+    });
+
+    test('it trims start and end whitespace', () => {
+        const service = createService();
+
+        const projectId = service.generateProjectId('    spacey     ');
+        expect(projectId).toMatch(/^spacey-.{12}/);
+    });
+
+    test('it trims start and end whitespace after removing other characters', () => {
+        const service = createService();
+
+        const projectId = service.generateProjectId('^ []    i start here');
+        expect(projectId).toMatch(/^i-start-here-/);
+    });
+
+    test('it lowercases the project name', () => {
+        const service = createService();
+
+        const projectId = service.generateProjectId('UPPERCASE');
+        expect(projectId).toMatch(/^uppercase-/);
+    });
+
+    test('it collapses inter-string whitespace', () => {
+        const service = createService();
+
+        const projectId = service.generateProjectId('many       spaces');
+        expect(projectId).toMatch(/^many-spaces-/);
+    });
+
+    test('the name that comes out is always url friendly', () => {});
+
+    test('it adds a 12 character hex to the end of the id', () => {
+        const service = createService();
+
+        const projectId = service.generateProjectId('one');
+        expect(projectId).toMatch(/^one-[a-f0-9]{12}$/);
+    });
+
+    // todo: move to e2e tests
+    test.each([true, false])(
+        'if the ID is present, the result is the same regardless of the flag. Flag state: %s',
+        async (flagState) => {
+            const service = createService();
+
+            // @ts-expect-error
+            service.flagResolver = {
+                isEnabled: () => flagState,
+            };
+        },
+    );
 });

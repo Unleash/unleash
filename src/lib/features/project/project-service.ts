@@ -332,7 +332,6 @@ export default class ProjectService {
             await this.validateProjectEnvironments(newProject.environments);
 
             if (
-                // todo: test edge cases around this
                 !newProject.id?.trim() &&
                 this.flagResolver.isEnabled(
                     'createProjectWithEnvironmentConfig',

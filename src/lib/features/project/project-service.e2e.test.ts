@@ -2617,16 +2617,66 @@ describe('create project with environments', () => {
     });
 });
 
-// // todo: move to e2e tests
-//     test.each([true, false])(
-//         'if the ID is present, the result is the same regardless of the flag. Flag state: %s',
-//         async (flagState) => {
-//             const service = createService();
+describe('automatic ID generation for create project', () => {
+    test('if no ID is included in the creation argument, it gets generated based on the project name', async () => {
+        const project = await projectService.createProject(
+            {
+                name: 'New name',
+            },
+            user,
+            auditUser,
+        );
 
-//             // @ts-expect-error
-//             service.flagResolver = {
-//                 isEnabled: () => flagState,
-//             };
-//         },
-//     );
-// });
+        expect(project.id).toMatch(/^new-name-/);
+    });
+
+    test('two projects with the same name get different ids', async () => {
+        const createProject = async () =>
+            projectService.createProject(
+                { name: 'some name' },
+                user,
+                auditUser,
+            );
+
+        const project1 = await createProject();
+        const project2 = await createProject();
+
+        expect(project1.id).toMatch(/^some-name-/);
+        expect(project2.id).toMatch(/^some-name-/);
+        expect(project1.id).not.toBe(project2.id);
+    });
+
+    test.each(['', undefined, '     '])(
+        'An id with the value `%s` is treated as missing',
+        async (id) => {
+            const name = randomId();
+            const project = await projectService.createProject(
+                { name, id },
+                user,
+                auditUser,
+            );
+
+            expect(project.id).toMatch(new RegExp(`^${name}-`));
+        },
+    );
+
+    test.each([true, false])(
+        'if the ID is present in the input, it is used as the ID regardless of the flag. Flag state: %s',
+        async (flagState) => {
+            const id = randomId();
+            // @ts-expect-error - we're just checking that the same
+            // thing happens regardless of flag state
+            projectService.flagResolver.isEnabled = () => flagState;
+            const project = await projectService.createProject(
+                {
+                    name: id,
+                    id,
+                },
+                user,
+                auditUser,
+            );
+
+            expect(project.id).toBe(id);
+        },
+    );
+});

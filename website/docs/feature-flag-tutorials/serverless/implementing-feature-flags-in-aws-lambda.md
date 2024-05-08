@@ -4,9 +4,9 @@ description: New to feature flags in serverless environments? This guide will wa
 slug: /feature-flag-tutorials/serverless/lambda
 ---
 
-With feature flagging capabilities in your serverless functions, you can validate new parts of your serverless functions. This gives you complete control over feature exposure and simplifies serverless function versioning management.
+Developers can add feature flagging capabilities to serverless functions and validate new parts of them. Leveraging feature flags gives you complete control over feature exposure and simplifies serverless function versioning management.
 
-For developers new to feature flags in serverless environments, this guide will walk you through practical examples using the [Unleash Node.js SDK](https://github.com/Unleash/unleash-client-node) in [AWS Lambda](https://aws.amazon.com/lambda/). These concepts can be easily adapted to other serverless solutions like [Google Cloud Functions](https://cloud.google.com/functions).
+For developers new to feature flags in serverless environments, this guide will walk you through practical examples using the [Unleash Node.js SDK](https://github.com/Unleash/unleash-client-node) in [AWS Lambda](https://aws.amazon.com/lambda/). Developers can easily adapt these concepts to other serverless solutions like [Google Cloud Functions](https://cloud.google.com/functions).
 
 ## Scenarios for AWS Lambda feature flags
 
@@ -45,7 +45,7 @@ let unleash;
 async function init() {
     if (!unleash) {
         unleash = await startUnleash({
-            url: "https://sandbox.getunleash.io/enterprise/api/",
+            url: "<YOUR_UNLEASH_URL>",
             appName: "lambda-example-app",
             customHeaders: {
                 authorization: process.env.API_TOKEN,
@@ -128,7 +128,7 @@ process.on("SIGTERM", async () => {
 
     if (unleash) {
         await destroyWithFlush();
-        unleash = undefined;
+        unleash = null;
     }
 
     process.exit(0);

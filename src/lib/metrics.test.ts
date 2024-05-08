@@ -30,10 +30,16 @@ let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
 let stores: IUnleashStores;
 let schedulerService: SchedulerService;
+
 beforeAll(async () => {
     const config = createTestConfig({
         server: {
             serverMetrics: true,
+        },
+        experimental: {
+            flags: {
+                featureLifecycleMetrics: true,
+            },
         },
     });
     stores = createStores();

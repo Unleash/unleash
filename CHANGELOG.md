@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.2] - 2024-05-08
+
+### Features
+
+- Allow to use CA certificate file path for DB ([#6985](https://github.com/Unleash/unleash/issues/6985)) ([#6998](https://github.com/Unleash/unleash/issues/6998))
+
+
 ## [5.12.1] - 2024-05-06
 
 ### Bug Fixes

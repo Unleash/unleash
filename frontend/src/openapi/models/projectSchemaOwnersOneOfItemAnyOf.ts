@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaOwnersOneOfItemAnyOfEmail } from './projectSchemaOwnersOneOfItemAnyOfEmail';
-import type { ProjectSchemaOwnersOneOfItemAnyOfImageUrl } from './projectSchemaOwnersOneOfItemAnyOfImageUrl';
 import type { ProjectSchemaOwnersOneOfItemAnyOfOwnerType } from './projectSchemaOwnersOneOfItemAnyOfOwnerType';
 
 export type ProjectSchemaOwnersOneOfItemAnyOf = {
-    email?: ProjectSchemaOwnersOneOfItemAnyOfEmail;
-    imageUrl?: ProjectSchemaOwnersOneOfItemAnyOfImageUrl;
+    /** @nullable */
+    email?: string | null;
+    /** @nullable */
+    imageUrl?: string | null;
     name: string;
     ownerType: ProjectSchemaOwnersOneOfItemAnyOfOwnerType;
 };

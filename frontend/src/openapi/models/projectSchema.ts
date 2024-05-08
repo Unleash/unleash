@@ -35,7 +35,7 @@ export interface ProjectSchema {
     mode?: ProjectSchemaMode;
     /** The name of this project */
     name: string;
-    /** The owners of this project, both users and groups. */
+    /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
     owners?: ProjectSchemaOwners;
     /** The number of potentially stale features this project has */
     potentiallyStaleFeatureCount?: number;

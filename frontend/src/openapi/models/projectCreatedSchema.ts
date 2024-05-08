@@ -3,12 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ProjectCreatedSchemaChangeRequestEnvironmentsItem } from './projectCreatedSchemaChangeRequestEnvironmentsItem';
 import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode';
 
 /**
  * Details about the newly created project.
  */
 export interface ProjectCreatedSchema {
+    /** The list of environments that have change requests enabled. This is a beta feature and may be subject to change. */
+    changeRequestEnvironments?: ProjectCreatedSchemaChangeRequestEnvironmentsItem[];
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
     defaultStickiness?: string;
     /**
@@ -17,7 +20,7 @@ export interface ProjectCreatedSchema {
      */
     description?: string | null;
     /**
-     * The environments enabled for the project.
+     * The environments enabled for the project. This is a beta feature and may be subject to change.
      * @minItems 1
      */
     environments?: string[];

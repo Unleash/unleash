@@ -310,15 +310,6 @@ export default class ProjectService {
         return id;
     }
 
-    async generateUniqueProjectId(name: string): Promise<string> {
-        const id = this.generateProjectId(name);
-        if (await this.projectStore.hasProject(id)) {
-            return await this.generateUniqueProjectId(name);
-        } else {
-            return id;
-        }
-    }
-
     async createProject(
         newProject: CreateProject,
         user: IUser,
@@ -334,22 +325,9 @@ export default class ProjectService {
         const validateData = async (): Promise<ProjectCreationData> => {
             await this.validateProjectEnvironments(newProject.environments);
 
-            if (
-                !newProject.id?.trim() &&
-                this.flagResolver.isEnabled(
-                    'createProjectWithEnvironmentConfig',
-                )
-            ) {
-                newProject.id = await this.generateUniqueProjectId(
-                    newProject.name,
-                );
-                return await projectSchema.validateAsync(newProject);
-            } else {
-                const validatedData =
-                    await projectSchema.validateAsync(newProject);
-                await this.validateUniqueId(validatedData.id);
-                return validatedData;
-            }
+            const validatedData = await projectSchema.validateAsync(newProject);
+            await this.validateUniqueId(validatedData.id);
+            return validatedData;
         };
 
         const validatedData = await validateData();

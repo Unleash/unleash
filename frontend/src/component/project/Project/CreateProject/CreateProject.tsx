@@ -61,6 +61,10 @@ const CreateProject = () => {
         setDocumentation(generalDocumentation);
 
     const useNewProjectForm = useUiFlag('newCreateProjectUI');
+    const projectPayload = getCreateProjectPayload({
+        omitId: useNewProjectForm,
+        includeChangeRequestConfig: useNewProjectForm,
+    });
 
     const { createProject, loading } = useProjectApi();
 
@@ -71,11 +75,8 @@ const CreateProject = () => {
         const validId = useNewProjectForm || (await validateProjectId());
 
         if (validName && validId) {
-            const payload = getCreateProjectPayload({
-                omitId: useNewProjectForm,
-            });
             try {
-                const createdProject = await createProject(payload);
+                const createdProject = await createProject(projectPayload);
                 refetchUser();
                 navigate(`/projects/${createdProject.id}`, { replace: true });
                 setToastData({
@@ -101,11 +102,7 @@ const CreateProject = () => {
         return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(
-            getCreateProjectPayload({ omitId: useNewProjectForm }),
-            undefined,
-            2,
-        )}'`;
+--data-raw '${JSON.stringify(projectPayload, undefined, 2)}'`;
     };
 
     const handleCancel = () => {

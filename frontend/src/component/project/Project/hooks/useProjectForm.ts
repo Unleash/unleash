@@ -94,7 +94,10 @@ const useProjectForm = (
         setProjectMode(initialProjectMode);
     }, [initialProjectMode]);
 
-    const getCreateProjectPayload = (options?: { omitId?: boolean }) => {
+    const getCreateProjectPayload = (options?: {
+        omitId?: boolean;
+        includeChangeRequestConfig?: boolean;
+    }) => {
         const environmentsPayload =
             projectEnvironments.size > 0
                 ? { environments: [...projectEnvironments] }
@@ -119,7 +122,9 @@ const useProjectForm = (
             ? {
                   ...ossPayload,
                   mode: projectMode,
-                  changeRequestEnvironments,
+                  ...(options?.includeChangeRequestConfig
+                      ? { changeRequestEnvironments }
+                      : {}),
               }
             : ossPayload;
     };

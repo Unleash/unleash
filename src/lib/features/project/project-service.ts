@@ -394,10 +394,7 @@ export default class ProjectService {
             }),
         );
 
-        return {
-            ...data,
-            environments: envsToEnable,
-        };
+        return { ...data, environments: envsToEnable };
     }
 
     async updateProject(

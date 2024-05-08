@@ -146,7 +146,12 @@ export const createStores = (
         privateProjectStore: new PrivateProjectStore(db, getLogger),
         dependentFeaturesStore: new DependentFeaturesStore(db),
         lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
-        featureSearchStore: new FeatureSearchStore(db, eventBus, getLogger),
+        featureSearchStore: new FeatureSearchStore(
+            db,
+            eventBus,
+            getLogger,
+            config.flagResolver,
+        ),
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),

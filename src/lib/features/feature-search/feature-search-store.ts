@@ -7,6 +7,7 @@ import type {
     IFeatureOverview,
     IFeatureSearchOverview,
     IFeatureSearchStore,
+    IFlagResolver,
     ITag,
 } from '../../types';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
@@ -40,9 +41,17 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
     private readonly timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-search-store.ts');
+        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-search',
@@ -86,6 +95,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
+        const featureLifecycleEnabled =
+            this.flagResolver.isEnabled('featureLifecycle');
         const latestLifecycleStageQuery = this.db
             .select([
                 'feature_lifecycles.feature',
@@ -118,12 +129,17 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
                     'segments.name as segment_name',
-                    'lifecycle.latest_stage',
-                    'lifecycle.entered_stage_at',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
                 selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
+
+                if (featureLifecycleEnabled) {
+                    selectColumns.push(
+                        'lifecycle.latest_stage',
+                        'lifecycle.entered_stage_at',
+                    );
+                }
 
                 if (userId) {
                     query.leftJoin(`favorite_features`, function () {
@@ -237,11 +253,13 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     );
                 });
 
-                query.leftJoin(
-                    latestLifecycleStageQuery,
-                    'lifecycle.feature',
-                    'features.name',
-                );
+                if (featureLifecycleEnabled) {
+                    query.leftJoin(
+                        latestLifecycleStageQuery,
+                        'lifecycle.feature',
+                        'features.name',
+                    );
+                }
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,

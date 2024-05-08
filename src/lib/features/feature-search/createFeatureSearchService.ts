@@ -13,6 +13,7 @@ export const createFeatureSearchService =
             db,
             eventBus,
             getLogger,
+            flagResolver,
         );
 
         return new FeatureSearchService(

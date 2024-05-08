@@ -301,3 +301,34 @@ describe('enterprise extension: enable change requests', () => {
         ).resolves.toBeTruthy();
     });
 });
+
+describe('project ID generation', () => {
+    const createService = () => {
+        const config = createTestConfig();
+        const service = createFakeProjectService(config);
+        // @ts-expect-error: we're setting this up to test the change request
+        service.flagResolver = {
+            isEnabled: () => true,
+        };
+        // @ts-expect-error: we're setting this up to test the change request
+        service.isEnterprise = true;
+
+        // @ts-expect-error: if we don't set this up, the tests will fail due to a missing role.
+        service.accessService.createRole(
+            {
+                name: RoleName.OWNER,
+                description: 'Project owner',
+                createdByUserId: -1,
+            },
+            TEST_AUDIT_USER,
+        );
+
+        return service;
+    };
+    test('x', async () => {
+        const service = createService();
+
+        // @ts-expect-error
+        service.projectStore.hasProject = () => false;
+    });
+});

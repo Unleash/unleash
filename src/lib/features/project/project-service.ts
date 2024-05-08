@@ -299,6 +299,16 @@ export default class ProjectService {
         }
     }
 
+    async generateProjectId(name: string): Promise<string> {
+        const id = name.toLowerCase().replace(/ /g, '-');
+
+        if (await this.projectStore.hasProject(id)) {
+            return await this.generateProjectId(name);
+        } else {
+            return id;
+        }
+    }
+
     async createProject(
         newProject: CreateProject,
         user: IUser,
@@ -311,11 +321,27 @@ export default class ProjectService {
             return [];
         },
     ): Promise<ProjectCreated> {
-        await this.validateProjectEnvironments(newProject.environments);
+        const validateData = async (): Promise<ProjectCreationData> => {
+            await this.validateProjectEnvironments(newProject.environments);
 
-        const validatedData = await projectSchema.validateAsync(newProject);
+            if (
+                !newProject.id &&
+                this.flagResolver.isEnabled(
+                    'createProjectWithEnvironmentConfig',
+                )
+            ) {
+                newProject.id = await this.generateProjectId(newProject.name);
+                return await projectSchema.validateAsync(newProject);
+            } else {
+                const validatedData =
+                    await projectSchema.validateAsync(newProject);
+                await this.validateUniqueId(validatedData.id);
+                return validatedData;
+            }
+        };
+
+        const validatedData = await validateData();
         const data = this.removePropertiesForNonEnterprise(validatedData);
-        await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);
 
@@ -359,7 +385,7 @@ export default class ProjectService {
         await this.eventService.storeEvent(
             new ProjectCreatedEvent({
                 data,
-                project: newProject.id,
+                project: data.id,
                 auditUser,
             }),
         );

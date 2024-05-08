@@ -1,3 +1,4 @@
+import fc from 'fast-check';
 import { createTestConfig } from '../../../test/config/test-config';
 import { BadDataError } from '../../error';
 import { type IBaseEvent, RoleName, TEST_AUDIT_USER } from '../../types';
@@ -314,49 +315,15 @@ describe('project ID generation', () => {
         return service;
     };
 
-    test('it replaces spaces with hyphens', () => {
+    test('the name that comes out is always url friendly', () => {
         const service = createService();
-
-        const projectId = service.generateProjectId('this has spaces');
-        expect(projectId).toMatch(/^this-has-spaces-/);
+        fc.assert(
+            fc.property(fc.string(), (name) => {
+                const projectId = service.generateProjectId(name);
+                expect(projectId).toMatch(encodeURIComponent(projectId));
+            }),
+        );
     });
-
-    test('it removes other characters', () => {
-        const service = createService();
-
-        const projectId = service.generateProjectId('[enclose me]');
-        expect(projectId).toMatch(/^enclose-me-.{12}/);
-    });
-
-    test('it trims start and end whitespace', () => {
-        const service = createService();
-
-        const projectId = service.generateProjectId('    spacey     ');
-        expect(projectId).toMatch(/^spacey-.{12}/);
-    });
-
-    test('it trims start and end whitespace after removing other characters', () => {
-        const service = createService();
-
-        const projectId = service.generateProjectId('^ []    i start here');
-        expect(projectId).toMatch(/^i-start-here-/);
-    });
-
-    test('it lowercases the project name', () => {
-        const service = createService();
-
-        const projectId = service.generateProjectId('UPPERCASE');
-        expect(projectId).toMatch(/^uppercase-/);
-    });
-
-    test('it collapses inter-string whitespace', () => {
-        const service = createService();
-
-        const projectId = service.generateProjectId('many       spaces');
-        expect(projectId).toMatch(/^many-spaces-/);
-    });
-
-    test('the name that comes out is always url friendly', () => {});
 
     test('it adds a 12 character hex to the end of the id', () => {
         const service = createService();

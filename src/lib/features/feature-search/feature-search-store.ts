@@ -86,6 +86,17 @@ class FeatureSearchStore implements IFeatureSearchStore {
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
+        const latestLifecycleStageQuery = this.db
+            .select([
+                'feature_lifecycles.feature',
+                'feature_lifecycles.stage as latest_stage',
+                this.db.raw(
+                    'MAX(feature_lifecycles.created_at) OVER (PARTITION BY feature_lifecycles.feature) as entered_stage_at',
+                ),
+            ])
+            .from('feature_lifecycles')
+            .as('lifecycle');
+
         const finalQuery = this.db
             .with('ranked_features', (query) => {
                 query.from('features');
@@ -107,6 +118,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
                     'segments.name as segment_name',
+                    'lifecycle.latest_stage',
+                    'lifecycle.entered_stage_at',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -223,6 +236,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'features.name',
                     );
                 });
+
+                query.leftJoin(
+                    latestLifecycleStageQuery,
+                    'lifecycle.feature',
+                    'features.name',
+                );
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
@@ -371,6 +390,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     dependencyType: row.dependency,
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
+                    lifecycle: row.latest_stage
+                        ? {
+                              stage: row.latest_stage,
+                              enteredStageAt: row.entered_stage_at,
+                          }
+                        : undefined,
                 };
                 entriesMap.set(row.feature_name, entry);
                 orderedEntries.push(entry);

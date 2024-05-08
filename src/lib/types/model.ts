@@ -236,6 +236,7 @@ export interface IFeatureOverview {
     createdAt: Date;
     lastSeenAt: Date;
     environments: IEnvironmentOverview[];
+    lifecycle?: IFeatureLifecycleStage;
 }
 
 export type IFeatureSearchOverview = Exclude<

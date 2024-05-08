@@ -143,6 +143,32 @@ export const featureSearchResponseSchema = {
             nullable: true,
             description: 'The list of feature tags',
         },
+        lifecycle: {
+            type: 'object',
+            description: 'Current lifecycle stage of the feature',
+            additionalProperties: false,
+            required: ['stage', 'enteredStageAt'],
+            properties: {
+                stage: {
+                    description: 'The name of the current lifecycle stage',
+                    type: 'string',
+                    enum: [
+                        'initial',
+                        'pre-live',
+                        'live',
+                        'completed',
+                        'archived',
+                    ],
+                    example: 'initial',
+                },
+                enteredStageAt: {
+                    description: 'When the feature entered this stage',
+                    type: 'string',
+                    format: 'date-time',
+                    example: '2023-01-28T15:21:39.975Z',
+                },
+            },
+        },
     },
     components: {
         schemas: {

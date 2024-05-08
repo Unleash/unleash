@@ -261,7 +261,7 @@ export default class MetricsMonitor {
 
         const featureLifecycleStageDuration = createHistogram({
             name: 'feature_lifecycle_stage_duration',
-            labelNames: ['feature_id', 'stage'],
+            labelNames: ['feature_id', 'stage', 'project_id'],
             help: 'Duration of feature lifecycle stages',
         });
 

@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
-import { NewProjectForm } from './NewProjectForm';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../hooks/useProjectForm';
@@ -107,51 +106,7 @@ const CreateProject = () => {
     };
 
     if (useNewProjectForm) {
-        return (
-            <FormTemplate
-                disablePadding
-                loading={loading}
-                description={documentation}
-                documentationLink='https://docs.getunleash.io/reference/projects'
-                documentationLinkLabel='Projects documentation'
-                formatApiCode={formatApiCode}
-            >
-                <NewProjectForm
-                    errors={errors}
-                    handleSubmit={handleSubmit}
-                    projectId={projectId}
-                    projectEnvironments={projectEnvironments}
-                    setProjectEnvironments={setProjectEnvironments}
-                    setProjectId={setProjectId}
-                    projectName={projectName}
-                    projectStickiness={projectStickiness}
-                    projectChangeRequestConfiguration={
-                        projectChangeRequestConfiguration
-                    }
-                    updateProjectChangeRequestConfig={
-                        updateProjectChangeRequestConfig
-                    }
-                    projectMode={projectMode}
-                    setProjectMode={setProjectMode}
-                    setProjectStickiness={setProjectStickiness}
-                    setProjectName={setProjectName}
-                    projectDesc={projectDesc}
-                    setProjectDesc={setProjectDesc}
-                    mode='Create'
-                    clearErrors={clearErrors}
-                    validateProjectId={validateProjectId}
-                    overrideDocumentation={setDocumentation}
-                    clearDocumentationOverride={clearDocumentationOverride}
-                >
-                    <StyledButton onClick={handleCancel}>Cancel</StyledButton>
-                    <CreateButton
-                        name='project'
-                        permission={CREATE_PROJECT}
-                        data-testid={CREATE_PROJECT_BTN}
-                    />
-                </NewProjectForm>
-            </FormTemplate>
-        );
+        navigate(`/projects?create=true`, { replace: true });
     }
 
     return (

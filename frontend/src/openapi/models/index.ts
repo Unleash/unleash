@@ -554,6 +554,8 @@ export * from './featureSchemaStrategiesItem';
 export * from './featureSearchEnvironmentSchema';
 export * from './featureSearchResponseSchema';
 export * from './featureSearchResponseSchemaDependencyType';
+export * from './featureSearchResponseSchemaLifecycle';
+export * from './featureSearchResponseSchemaLifecycleStage';
 export * from './featureSearchResponseSchemaStrategiesItem';
 export * from './featureStrategySchema';
 export * from './featureStrategySegmentSchema';

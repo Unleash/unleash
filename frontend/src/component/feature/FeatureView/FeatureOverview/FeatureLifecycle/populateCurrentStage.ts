@@ -1,13 +1,13 @@
-import type { IFeatureToggle } from 'interfaces/featureToggle';
 import type { LifecycleStage } from './LifecycleStage';
+import type { LifecycleFeature } from './FeatureLifecycle';
 
 export const populateCurrentStage = (
-    feature: Pick<IFeatureToggle, 'lifecycle' | 'environments'>,
+    feature: Pick<LifecycleFeature, 'lifecycle' | 'environments'>,
 ): LifecycleStage | undefined => {
     if (!feature.lifecycle) return undefined;
 
     const getFilteredEnvironments = (condition: (type: string) => boolean) => {
-        return feature.environments
+        return (feature.environments || [])
             .filter((env) => condition(env.type) && Boolean(env.lastSeenAt))
             .map((env) => ({
                 name: env.name,

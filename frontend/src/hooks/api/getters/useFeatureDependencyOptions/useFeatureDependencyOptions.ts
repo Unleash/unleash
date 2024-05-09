@@ -25,5 +25,5 @@ export const useParentVariantOptions = (
         fetcher(path, 'Parent Variant Options'),
     );
 
-    return { parentVariantOptions: data || [], loading, error };
+    return { variantOptions: data || [], loading, error };
 };

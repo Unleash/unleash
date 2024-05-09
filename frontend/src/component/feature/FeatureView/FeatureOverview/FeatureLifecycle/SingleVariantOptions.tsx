@@ -1,29 +1,26 @@
 import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
 import type { FC } from 'react';
-import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { useParentVariantOptions } from '../../../../../hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1.5),
 }));
 
-export const ParentVariantOptions: FC<{
+export const SingleVariantOptions: FC<{
     project: string;
     parent: string;
-    selectedValues: string[];
-    onSelect: (values: string[]) => void;
-}> = ({ project, parent, onSelect, selectedValues }) => {
+    onSelect: (value: string) => void;
+}> = ({ project, parent, onSelect }) => {
     const { variantOptions } = useParentVariantOptions(project, parent);
     const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
     const checkedIcon = <CheckBoxIcon fontSize='small' />;
     return (
         <StyledAutocomplete
-            multiple
-            id='parent-variant-options'
+            id='single-variant-options'
             options={variantOptions}
-            disableCloseOnSelect
             renderOption={(props, option, { selected }) => (
                 <li {...props}>
                     <Checkbox
@@ -36,12 +33,11 @@ export const ParentVariantOptions: FC<{
                 </li>
             )}
             renderInput={(params) => (
-                <TextField {...params} placeholder='Select values' />
+                <TextField {...params} placeholder='Select variant' />
             )}
             fullWidth
-            value={selectedValues}
-            onChange={(_, selectedValues) => {
-                onSelect(selectedValues as string[]);
+            onChange={(_, selectedValue) => {
+                onSelect(selectedValue as string);
             }}
         />
     );

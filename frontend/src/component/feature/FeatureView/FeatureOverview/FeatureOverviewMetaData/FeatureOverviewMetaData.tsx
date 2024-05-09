@@ -23,6 +23,7 @@ import { DependencyRow } from './DependencyRow';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
+import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -97,10 +98,11 @@ const FeatureOverviewMetaData = () => {
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
-    const { markFeatureCompleted, markFeatureUncompleted, loading } =
-        useFeatureLifecycleApi();
+    const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
+    const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
+        useState(false);
     const { locationSettings } = useLocationSettings();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
 
@@ -116,11 +118,6 @@ const FeatureOverviewMetaData = () => {
     const IconComponent = getFeatureTypeIcons(type);
 
     const currentStage = populateCurrentStage(feature);
-
-    const onComplete = async () => {
-        await markFeatureCompleted(featureId, projectId);
-        refetchFeature();
-    };
 
     const onUncomplete = async () => {
         await markFeatureUncompleted(featureId, projectId);
@@ -160,7 +157,9 @@ const FeatureOverviewMetaData = () => {
                                 <FeatureLifecycleTooltip
                                     stage={currentStage!}
                                     onArchive={() => setShowDelDialog(true)}
-                                    onComplete={onComplete}
+                                    onComplete={() =>
+                                        setShowMarkCompletedDialogue(true)
+                                    }
                                     onUncomplete={onUncomplete}
                                     loading={loading}
                                 >
@@ -260,6 +259,13 @@ const FeatureOverviewMetaData = () => {
                         featureIds={[featureId]}
                     />
                 }
+            />
+            <MarkCompletedDialogue
+                isOpen={showMarkCompletedDialogue}
+                setIsOpen={setShowMarkCompletedDialogue}
+                projectId={projectId}
+                featureId={featureId}
+                onComplete={refetchFeature}
             />
         </StyledContainer>
     );

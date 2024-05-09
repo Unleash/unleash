@@ -167,6 +167,8 @@ test('should be able to toggle between completed/uncompleted', async () => {
         statusValue: 'variant1',
     });
 
+    await expectFeatureStage('my_feature_b', 'completed');
+
     await uncompleteFeature('my_feature_b');
 
     const { body } = await getFeatureLifecycle('my_feature_b');

@@ -14,7 +14,10 @@ export const SingleVariantOptions: FC<{
     parent: string;
     onSelect: (value: string) => void;
 }> = ({ project, parent, onSelect }) => {
-    const { variantOptions } = useParentVariantOptions(project, parent);
+    const { parentVariantOptions: variantOptions } = useParentVariantOptions(
+        project,
+        parent,
+    );
     const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
     const checkedIcon = <CheckBoxIcon fontSize='small' />;
     return (

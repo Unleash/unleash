@@ -1,4 +1,3 @@
-import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -15,12 +14,21 @@ import { useState } from 'react';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
-import { Button, styled } from '@mui/material';
+import { Button, Dialog, styled } from '@mui/material';
 
 interface ICreateProjectDialogueProps {
     open: boolean;
     onClose: (e: React.SyntheticEvent) => void;
 }
+
+const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
+    '& .MuiDialog-paper': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        maxWidth: theme.spacing(170),
+        backgroundColor: 'transparent',
+    },
+    padding: 0,
+}));
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
@@ -107,16 +115,9 @@ export const CreateProjectDialogue = ({
     };
 
     return (
-        <Dialogue
-            open={open}
-            onClose={onClose}
-            title='Create project'
-            disabledPrimaryButton={true}
-            secondaryButtonText={' '}
-        >
+        <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
                 disablePadding
-                modal
                 loading={loading}
                 description={documentation}
                 documentationLink='https://docs.getunleash.io/reference/projects'
@@ -158,6 +159,6 @@ export const CreateProjectDialogue = ({
                     />
                 </NewProjectForm>
             </FormTemplate>
-        </Dialogue>
+        </StyledDialog>
     );
 };

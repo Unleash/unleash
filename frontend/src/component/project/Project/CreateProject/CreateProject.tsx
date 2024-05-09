@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
@@ -106,7 +106,7 @@ const CreateProject = () => {
     };
 
     if (useNewProjectForm) {
-        navigate(`/projects?create=true`, { replace: true });
+        return <Navigate to={`/projects?create=true`} replace />;
     }
 
     return (

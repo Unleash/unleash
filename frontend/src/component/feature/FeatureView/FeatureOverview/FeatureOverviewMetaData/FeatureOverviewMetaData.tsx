@@ -71,6 +71,7 @@ const StyledRow = styled('div')(({ theme }) => ({
 const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
 }));
 
 const StyledDetailsContainer = styled('div')(({ theme }) => ({
@@ -205,7 +206,6 @@ const FeatureOverviewMetaData = () => {
                             <FeatureEnvironmentSeen
                                 featureLastSeen={feature.lastSeenAt}
                                 environments={lastSeenEnvironments}
-                                sx={{ p: 0 }}
                             />
                         </StyledDetailsContainer>
                     </StyledBodyItem>

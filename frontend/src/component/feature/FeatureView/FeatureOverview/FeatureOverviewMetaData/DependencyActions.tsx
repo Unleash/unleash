@@ -11,6 +11,7 @@ import {
     styled,
     Tooltip,
     Typography,
+    Box,
 } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
@@ -40,9 +41,10 @@ export const DependencyActions: FC<{
     };
 
     return (
-        <span>
+        <Box>
             <Tooltip title='Dependency actions' arrow describeChild>
                 <IconButton
+                    sx={{ p: 2 }}
                     id={id}
                     aria-controls={open ? menuId : undefined}
                     aria-haspopup='true'
@@ -112,6 +114,6 @@ export const DependencyActions: FC<{
                     />
                 </MenuList>
             </StyledPopover>
-        </span>
+        </Box>
     );
 };

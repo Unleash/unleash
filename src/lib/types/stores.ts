@@ -41,6 +41,7 @@ import type { IInactiveUsersStore } from '../users/inactive/types/inactive-users
 import { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type';
 import { ISegmentReadModel } from '../features/segment/segment-read-model-type';
 import { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type';
+import { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -86,6 +87,7 @@ export interface IUnleashStores {
     trafficDataUsageStore: ITrafficDataUsageStore;
     segmentReadModel: ISegmentReadModel;
     projectOwnersReadModel: IProjectOwnersReadModel;
+    featureLifecycleStore: IFeatureLifecycleStore;
 }
 
 export {
@@ -130,4 +132,5 @@ export {
     ITrafficDataUsageStore,
     ISegmentReadModel,
     IProjectOwnersReadModel,
+    IFeatureLifecycleStore,
 };

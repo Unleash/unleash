@@ -7,6 +7,7 @@ import type {
     IFeatureOverview,
     IFeatureSearchOverview,
     IFeatureSearchStore,
+    IFlagResolver,
     ITag,
 } from '../../types';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
@@ -40,9 +41,17 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
     private readonly timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-search-store.ts');
+        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-search',
@@ -65,6 +74,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
+    private getLatestLifecycleStageQuery() {
+        return this.db('feature_lifecycles')
+            .select(
+                'feature as stage_feature',
+                'stage as latest_stage',
+                'created_at as entered_stage_at',
+            )
+            .distinctOn('stage_feature')
+            .orderBy([
+                'stage_feature',
+                { column: 'entered_stage_at', order: 'desc' },
+            ]);
+    }
+
     async searchFeatures(
         {
             userId,
@@ -85,6 +108,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
         const stopTimer = this.timer('searchFeatures');
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
+
+        const featureLifecycleEnabled =
+            this.flagResolver.isEnabled('featureLifecycle');
 
         const finalQuery = this.db
             .with('ranked_features', (query) => {
@@ -235,6 +261,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     .select(selectColumns)
                     .denseRank('rank', this.db.raw(rankingSql));
             })
+            .with('lifecycle', this.getLatestLifecycleStageQuery())
             .with(
                 'final_ranks',
                 this.db.raw(
@@ -290,10 +317,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
+        if (featureLifecycleEnabled) {
+            finalQuery.leftJoin(
+                'lifecycle',
+                'ranked_features.feature_name',
+                'lifecycle.stage_feature',
+            );
+        }
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {
-            const overview = this.getAggregatedSearchData(rows);
+            const overview = this.getAggregatedSearchData(
+                rows,
+                featureLifecycleEnabled,
+            );
             const features = sortEnvironments(overview);
             return {
                 features,
@@ -349,7 +386,10 @@ class FeatureSearchStore implements IFeatureSearchStore {
         return rankingSql;
     }
 
-    getAggregatedSearchData(rows): IFeatureSearchOverview[] {
+    getAggregatedSearchData(
+        rows,
+        featureLifecycleEnabled: boolean,
+    ): IFeatureSearchOverview[] {
         const entriesMap: Map<string, IFeatureSearchOverview> = new Map();
         const orderedEntries: IFeatureSearchOverview[] = [];
 
@@ -372,6 +412,14 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
                 };
+                if (featureLifecycleEnabled) {
+                    entry.lifecycle = row.latest_stage
+                        ? {
+                              stage: row.latest_stage,
+                              enteredStageAt: row.entered_stage_at,
+                          }
+                        : undefined;
+                }
                 entriesMap.set(row.feature_name, entry);
                 orderedEntries.push(entry);
             }

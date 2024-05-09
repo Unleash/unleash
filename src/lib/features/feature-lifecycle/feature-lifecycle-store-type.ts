@@ -7,14 +7,15 @@ export type FeatureLifecycleStage = {
 
 export type FeatureLifecycleView = IFeatureLifecycleStage[];
 
-export type FeatureLifecycleFullItem = FeatureLifecycleStage & {
+export type FeatureLifecycleProjectItem = FeatureLifecycleStage & {
     enteredStageAt: Date;
+    project: string;
 };
 
 export interface IFeatureLifecycleStore {
     insert(featureLifecycleStages: FeatureLifecycleStage[]): Promise<void>;
     get(feature: string): Promise<FeatureLifecycleView>;
-    getAll(): Promise<FeatureLifecycleFullItem[]>;
+    getAll(): Promise<FeatureLifecycleProjectItem[]>;
     stageExists(stage: FeatureLifecycleStage): Promise<boolean>;
     delete(feature: string): Promise<void>;
     deleteStage(stage: FeatureLifecycleStage): Promise<void>;

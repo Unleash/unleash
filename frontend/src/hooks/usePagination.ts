@@ -20,7 +20,7 @@ const usePagination = <T>(
         }
 
         const result = paginate(dataToPaginate, limit);
-        setPageIndex(0);
+        // setPageIndex(0);
         setPaginatedData(result);
         /* eslint-disable-next-line */
     }, [JSON.stringify(data), limit]);

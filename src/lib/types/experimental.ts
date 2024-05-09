@@ -54,10 +54,12 @@ export type IFlagKey =
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
+    | 'featureLifecycleMetrics'
     | 'projectListFilterMyProjects'
     | 'projectsListNewCards'
     | 'parseProjectFromSession'
     | 'createProjectWithEnvironmentConfig'
+    | 'manyStrategiesPagination'
     | 'newCreateProjectUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -281,6 +283,10 @@ const flags: IFlags = {
     ),
     newCreateProjectUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_CREATE_PROJECT_UI,
+        false,
+    ),
+    manyStrategiesPagination: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MANY_STRATEGIES_PAGINATION,
         false,
     ),
 };

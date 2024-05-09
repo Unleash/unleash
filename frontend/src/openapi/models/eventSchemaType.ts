@@ -30,6 +30,8 @@ export const EventSchemaType = {
     'feature-strategy-add': 'feature-strategy-add',
     'feature-strategy-remove': 'feature-strategy-remove',
     'feature-type-updated': 'feature-type-updated',
+    'feature-completed': 'feature-completed',
+    'feature-uncompleted': 'feature-uncompleted',
     'strategy-order-changed': 'strategy-order-changed',
     'drop-feature-tags': 'drop-feature-tags',
     'feature-untagged': 'feature-untagged',

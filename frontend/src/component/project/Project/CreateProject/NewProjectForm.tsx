@@ -1,5 +1,4 @@
 import { Typography, styled } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
@@ -133,7 +132,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
-    // setProjectChangeRequestConfiguration,
     updateProjectChangeRequestConfig,
     setFeatureLimit,
     errors,
@@ -151,12 +149,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
     ) => {
         const input = e.target.value;
         setProjectName(input);
-
-        // todo: handle this in a real manner. This is a hack for now.
-        const maybeProjectId = input
-            ? `${encodeURIComponent(input.trim())}-${uuidv4().slice(-12)}`
-            : '';
-        setProjectId(maybeProjectId);
     };
 
     const projectModeOptions = [

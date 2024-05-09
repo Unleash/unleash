@@ -168,6 +168,7 @@ export interface IFeatureLifecycleStage {
 
 export type IFeatureLifecycleStageDuration = FeatureLifecycleStage & {
     duration: number;
+    project: string;
 };
 
 export interface IFeatureDependency {

@@ -144,26 +144,31 @@ test('can find feature lifecycle stage timings', async () => {
         {
             feature: 'a',
             stage: 'initial',
+            project: 'default',
             enteredStageAt: minusTenMinutes,
         },
         {
             feature: 'b',
             stage: 'initial',
+            project: 'default',
             enteredStageAt: minusTenMinutes,
         },
         {
             feature: 'a',
             stage: 'pre-live',
+            project: 'default',
             enteredStageAt: minusOneMinute,
         },
         {
             feature: 'b',
             stage: 'live',
+            project: 'default',
             enteredStageAt: minusOneMinute,
         },
         {
             feature: 'c',
             stage: 'initial',
+            project: 'default',
             enteredStageAt: minusTenMinutes,
         },
     ]);

@@ -4,8 +4,8 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectSchemaOwnersOneOfItemAnyOf } from './projectSchemaOwnersOneOfItemAnyOf';
-import type { ProjectSchemaOwnersOneOfItemAnyOfFive } from './projectSchemaOwnersOneOfItemAnyOfFive';
+import type { ProjectSchemaOwnersOneOfItemAnyOfThree } from './projectSchemaOwnersOneOfItemAnyOfThree';
 
 export type ProjectSchemaOwnersOneOfItem =
     | ProjectSchemaOwnersOneOfItemAnyOf
-    | ProjectSchemaOwnersOneOfItemAnyOfFive;
+    | ProjectSchemaOwnersOneOfItemAnyOfThree;

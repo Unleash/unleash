@@ -29,28 +29,31 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
     async insert(
         featureLifecycleStages: FeatureLifecycleStage[],
     ): Promise<void> {
-        const joinedLifecycleStages = featureLifecycleStages
-            .map((stage) => `('${stage.feature}', '${stage.stage}')`)
-            .join(', ');
+        const existingFeatures = await this.db('features')
+            .select('name')
+            .whereIn(
+                'name',
+                featureLifecycleStages.map((stage) => stage.feature),
+            );
+        const existingFeaturesSet = new Set(
+            existingFeatures.map((item) => item.name),
+        );
+        const validStages = featureLifecycleStages.filter((stage) =>
+            existingFeaturesSet.has(stage.feature),
+        );
 
-        const query = this.db
-            .with(
-                'new_stages',
-                this.db.raw(`
-                    SELECT v.feature, v.stage
-                    FROM (VALUES ${joinedLifecycleStages}) AS v(feature, stage)
-                    JOIN features ON features.name = v.feature
-                    LEFT JOIN feature_lifecycles ON feature_lifecycles.feature = v.feature AND feature_lifecycles.stage = v.stage
-                    WHERE feature_lifecycles.feature IS NULL AND feature_lifecycles.stage IS NULL
-                `),
+        await this.db('feature_lifecycles')
+            .insert(
+                validStages.map((stage) => ({
+                    feature: stage.feature,
+                    stage: stage.stage,
+                    status: stage.status,
+                    status_value: stage.statusValue,
+                })),
             )
-            .insert((query) => {
-                query.select('feature', 'stage').from('new_stages');
-            })
-            .into('feature_lifecycles')
+            .returning('*')
             .onConflict(['feature', 'stage'])
             .ignore();
-        await query;
     }
 
     async get(feature: string): Promise<FeatureLifecycleView> {

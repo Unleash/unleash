@@ -24,13 +24,7 @@ export const FeatureLifecycle: FC<{
 }> = ({ feature, onComplete, onUncomplete, onArchive }) => {
     const currentStage = populateCurrentStage(feature);
 
-    const { markFeatureCompleted, markFeatureUncompleted, loading } =
-        useFeatureLifecycleApi();
-
-    const onCompleteHandler = async () => {
-        await markFeatureCompleted(feature.name, feature.project);
-        onComplete();
-    };
+    const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
 
     const onUncompleteHandler = async () => {
         await markFeatureUncompleted(feature.name, feature.project);
@@ -41,7 +35,7 @@ export const FeatureLifecycle: FC<{
         <FeatureLifecycleTooltip
             stage={currentStage!}
             onArchive={onArchive}
-            onComplete={onCompleteHandler}
+            onComplete={onComplete}
             onUncomplete={onUncompleteHandler}
             loading={loading}
         >

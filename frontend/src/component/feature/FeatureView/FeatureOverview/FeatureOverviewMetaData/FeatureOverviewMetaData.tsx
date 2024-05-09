@@ -20,6 +20,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
+import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -96,6 +97,9 @@ const FeatureOverviewMetaData = () => {
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
+    const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
+        useState(false);
+
     const { locationSettings } = useLocationSettings();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
 
@@ -141,7 +145,9 @@ const FeatureOverviewMetaData = () => {
                                 <FeatureLifecycle
                                     feature={feature}
                                     onArchive={() => setShowDelDialog(true)}
-                                    onComplete={refetchFeature}
+                                    onComplete={() =>
+                                        setShowMarkCompletedDialogue(true)
+                                    }
                                     onUncomplete={refetchFeature}
                                 />
                             </StyledRow>
@@ -236,6 +242,13 @@ const FeatureOverviewMetaData = () => {
                         featureIds={[featureId]}
                     />
                 }
+            />
+            <MarkCompletedDialogue
+                isOpen={showMarkCompletedDialogue}
+                setIsOpen={setShowMarkCompletedDialogue}
+                projectId={feature.project}
+                featureId={feature.name}
+                onComplete={refetchFeature}
             />
         </StyledContainer>
     );

@@ -12,17 +12,19 @@ interface ILegalValueTextProps {
     legal: ILegalValue;
     control: React.ReactElement;
     filter?: string;
+    value?: string;
 }
 
 export const LegalValueLabel = ({
     legal,
     control,
     filter,
+    value,
 }: ILegalValueTextProps) => {
     return (
         <StyledContainer>
             <FormControlLabel
-                value={legal.value}
+                value={value || legal.value}
                 control={control}
                 sx={{ width: '100%' }}
                 label={

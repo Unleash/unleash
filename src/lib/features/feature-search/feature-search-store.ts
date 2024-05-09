@@ -74,6 +74,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
+    private getLatestLifecycleStageQuery() {
+        return this.db('feature_lifecycles')
+            .select(
+                'feature as stage_feature',
+                'stage as latest_stage',
+                'created_at as entered_stage_at',
+            )
+            .distinctOn('stage_feature')
+            .orderBy([
+                'stage_feature',
+                { column: 'entered_stage_at', order: 'desc' },
+            ]);
+    }
+
     async searchFeatures(
         {
             userId,
@@ -97,16 +111,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
         const featureLifecycleEnabled =
             this.flagResolver.isEnabled('featureLifecycle');
-        const latestLifecycleStageQuery = this.db
-            .select([
-                'feature_lifecycles.feature',
-                'feature_lifecycles.stage as latest_stage',
-                this.db.raw(
-                    'MAX(feature_lifecycles.created_at) OVER (PARTITION BY feature_lifecycles.feature) as entered_stage_at',
-                ),
-            ])
-            .from('feature_lifecycles')
-            .as('lifecycle');
 
         const finalQuery = this.db
             .with('ranked_features', (query) => {
@@ -133,13 +137,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
                 selectColumns.push(`${lastSeenQuery} as env_last_seen_at`);
-
-                if (featureLifecycleEnabled) {
-                    selectColumns.push(
-                        'lifecycle.latest_stage',
-                        'lifecycle.entered_stage_at',
-                    );
-                }
 
                 if (userId) {
                     query.leftJoin(`favorite_features`, function () {
@@ -253,14 +250,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     );
                 });
 
-                if (featureLifecycleEnabled) {
-                    query.leftJoin(
-                        latestLifecycleStageQuery,
-                        'lifecycle.feature',
-                        'features.name',
-                    );
-                }
-
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
                     sortBy,
@@ -272,6 +261,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     .select(selectColumns)
                     .denseRank('rank', this.db.raw(rankingSql));
             })
+            .with('lifecycle', this.getLatestLifecycleStageQuery())
             .with(
                 'final_ranks',
                 this.db.raw(
@@ -327,10 +317,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
+        if (featureLifecycleEnabled) {
+            finalQuery.leftJoin(
+                'lifecycle',
+                'ranked_features.feature_name',
+                'lifecycle.stage_feature',
+            );
+        }
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {
-            const overview = this.getAggregatedSearchData(rows);
+            const overview = this.getAggregatedSearchData(
+                rows,
+                featureLifecycleEnabled,
+            );
             const features = sortEnvironments(overview);
             return {
                 features,
@@ -386,7 +386,10 @@ class FeatureSearchStore implements IFeatureSearchStore {
         return rankingSql;
     }
 
-    getAggregatedSearchData(rows): IFeatureSearchOverview[] {
+    getAggregatedSearchData(
+        rows,
+        featureLifecycleEnabled: boolean,
+    ): IFeatureSearchOverview[] {
         const entriesMap: Map<string, IFeatureSearchOverview> = new Map();
         const orderedEntries: IFeatureSearchOverview[] = [];
 
@@ -408,13 +411,15 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     dependencyType: row.dependency,
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
-                    lifecycle: row.latest_stage
+                };
+                if (featureLifecycleEnabled) {
+                    entry.lifecycle = row.latest_stage
                         ? {
                               stage: row.latest_stage,
                               enteredStageAt: row.entered_stage_at,
                           }
-                        : undefined,
-                };
+                        : undefined;
+                }
                 entriesMap.set(row.feature_name, entry);
                 orderedEntries.push(entry);
             }

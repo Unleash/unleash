@@ -3,6 +3,8 @@ import type { IFeatureLifecycleStage, StageName } from '../../types';
 export type FeatureLifecycleStage = {
     feature: string;
     stage: StageName;
+    status?: string;
+    statusValue?: string;
 };
 
 export type FeatureLifecycleView = IFeatureLifecycleStage[];

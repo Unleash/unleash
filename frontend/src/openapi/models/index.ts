@@ -540,6 +540,8 @@ export * from './featureEnvironmentMetricsSchemaVariants';
 export * from './featureEnvironmentSchema';
 export * from './featureEventsSchema';
 export * from './featureEventsSchemaVersion';
+export * from './featureLifecycleCompletedSchema';
+export * from './featureLifecycleCompletedSchemaStatus';
 export * from './featureLifecycleSchema';
 export * from './featureLifecycleSchemaItem';
 export * from './featureLifecycleSchemaItemStage';

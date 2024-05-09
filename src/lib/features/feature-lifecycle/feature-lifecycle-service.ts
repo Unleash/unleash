@@ -23,6 +23,7 @@ import type { Logger } from '../../logger';
 import type EventService from '../events/event-service';
 import type { ValidatedClientMetrics } from '../metrics/shared/schema';
 import { differenceInMinutes } from 'date-fns';
+import type { FeatureLifecycleCompletedSchema } from '../../openapi';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
 
@@ -167,11 +168,17 @@ export class FeatureLifecycleService extends EventEmitter {
         }
     }
 
-    public async featureCompleted(feature: string, auditUser: IAuditUser) {
+    public async featureCompleted(
+        feature: string,
+        status: FeatureLifecycleCompletedSchema,
+        auditUser: IAuditUser,
+    ) {
         await this.featureLifecycleStore.insert([
             {
                 feature,
                 stage: 'completed',
+                status: status.status,
+                statusValue: status.statusValue,
             },
         ]);
         await this.eventService.storeEvent(

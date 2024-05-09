@@ -8,13 +8,9 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
-import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
-import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
-import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { StyledDetail } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
@@ -23,6 +19,7 @@ import { DependencyRow } from './DependencyRow';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
+import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -97,8 +94,6 @@ const FeatureOverviewMetaData = () => {
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
-    const { markFeatureCompleted, markFeatureUncompleted, loading } =
-        useFeatureLifecycleApi();
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
     const { locationSettings } = useLocationSettings();
@@ -114,18 +109,6 @@ const FeatureOverviewMetaData = () => {
         }));
 
     const IconComponent = getFeatureTypeIcons(type);
-
-    const currentStage = populateCurrentStage(feature);
-
-    const onComplete = async () => {
-        await markFeatureCompleted(featureId, projectId);
-        refetchFeature();
-    };
-
-    const onUncomplete = async () => {
-        await markFeatureUncompleted(featureId, projectId);
-        refetchFeature();
-    };
 
     return (
         <StyledContainer>
@@ -151,23 +134,16 @@ const FeatureOverviewMetaData = () => {
                         <span>{project}</span>
                     </StyledRow>
                     <ConditionallyRender
-                        condition={
-                            featureLifecycleEnabled && Boolean(currentStage)
-                        }
+                        condition={featureLifecycleEnabled}
                         show={
                             <StyledRow data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
-                                <FeatureLifecycleTooltip
-                                    stage={currentStage!}
+                                <FeatureLifecycle
+                                    feature={feature}
                                     onArchive={() => setShowDelDialog(true)}
-                                    onComplete={onComplete}
-                                    onUncomplete={onUncomplete}
-                                    loading={loading}
-                                >
-                                    <FeatureLifecycleStageIcon
-                                        stage={currentStage!}
-                                    />
-                                </FeatureLifecycleTooltip>
+                                    onComplete={refetchFeature}
+                                    onUncomplete={refetchFeature}
+                                />
                             </StyledRow>
                         }
                     />

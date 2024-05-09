@@ -2,9 +2,8 @@ import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
 import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { populateCurrentStage } from './populateCurrentStage';
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
 import type { Lifecycle } from 'interfaces/featureToggle';
-import { MarkCompletedDialogue } from './MarkCompletedDialogue';
 
 export interface LifecycleFeature {
     lifecycle?: Lifecycle;
@@ -23,8 +22,6 @@ export const FeatureLifecycle: FC<{
     onUncomplete: () => void;
     feature: LifecycleFeature;
 }> = ({ feature, onComplete, onUncomplete, onArchive }) => {
-    const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
-        useState(false);
     const currentStage = populateCurrentStage(feature);
 
     const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
@@ -35,23 +32,14 @@ export const FeatureLifecycle: FC<{
     };
 
     return currentStage ? (
-        <>
-            <FeatureLifecycleTooltip
-                stage={currentStage!}
-                onArchive={onArchive}
-                onComplete={() => setShowMarkCompletedDialogue(true)}
-                onUncomplete={onUncompleteHandler}
-                loading={loading}
-            >
-                <FeatureLifecycleStageIcon stage={currentStage!} />
-            </FeatureLifecycleTooltip>
-            <MarkCompletedDialogue
-                isOpen={showMarkCompletedDialogue}
-                setIsOpen={setShowMarkCompletedDialogue}
-                projectId={feature.project}
-                featureId={feature.name}
-                onComplete={onComplete}
-            />
-        </>
+        <FeatureLifecycleTooltip
+            stage={currentStage!}
+            onArchive={onArchive}
+            onComplete={onComplete}
+            onUncomplete={onUncompleteHandler}
+            loading={loading}
+        >
+            <FeatureLifecycleStageIcon stage={currentStage!} />
+        </FeatureLifecycleTooltip>
     ) : null;
 };

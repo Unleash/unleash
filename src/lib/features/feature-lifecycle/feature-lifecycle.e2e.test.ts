@@ -17,6 +17,7 @@ import {
     type FeatureLifecycleService,
     STAGE_ENTERED,
 } from './feature-lifecycle-service';
+import type { FeatureLifecycleCompletedSchema } from '../../openapi';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -61,11 +62,16 @@ const getFeatureLifecycle = async (featureName: string, expectedCode = 200) => {
         .get(`/api/admin/projects/default/features/${featureName}/lifecycle`)
         .expect(expectedCode);
 };
-const completeFeature = async (featureName: string, expectedCode = 200) => {
+const completeFeature = async (
+    featureName: string,
+    status: FeatureLifecycleCompletedSchema,
+    expectedCode = 200,
+) => {
     return app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/lifecycle/complete`,
         )
+        .send(status)
         .expect(expectedCode);
 };
 
@@ -156,7 +162,10 @@ test('should return lifecycle stages', async () => {
 test('should be able to toggle between completed/uncompleted', async () => {
     await app.createFeature('my_feature_b');
 
-    await completeFeature('my_feature_b');
+    await completeFeature('my_feature_b', {
+        status: 'kept',
+        statusValue: 'variant1',
+    });
 
     await expectFeatureStage('my_feature_b', 'completed');
 

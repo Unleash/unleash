@@ -10,6 +10,7 @@ const useFeatureLifecycleApi = () => {
         const path = `api/admin/projects/${project}/features/${name}/lifecycle/complete`;
         const req = createRequest(path, {
             method: 'POST',
+            body: JSON.stringify({ status: 'kept' }),
         });
 
         return makeRequest(req.caller, req.id);

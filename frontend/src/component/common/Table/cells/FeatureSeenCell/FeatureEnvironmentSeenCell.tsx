@@ -35,8 +35,8 @@ interface IFeatureLifecycleProps {
         project: string;
         name: string;
     };
-    onComplete?: () => void;
-    onUncomplete?: () => void;
+    onComplete: () => void;
+    onUncomplete: () => void;
     onArchive: () => void;
 }
 

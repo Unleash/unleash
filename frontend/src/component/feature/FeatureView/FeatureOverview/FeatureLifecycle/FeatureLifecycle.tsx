@@ -18,8 +18,8 @@ export interface LifecycleFeature {
 
 export const FeatureLifecycle: FC<{
     onArchive: () => void;
-    onComplete?: () => void;
-    onUncomplete?: () => void;
+    onComplete: () => void;
+    onUncomplete: () => void;
     feature: LifecycleFeature;
 }> = ({ feature, onComplete, onUncomplete, onArchive }) => {
     const currentStage = populateCurrentStage(feature);
@@ -29,12 +29,12 @@ export const FeatureLifecycle: FC<{
 
     const onCompleteHandler = async () => {
         await markFeatureCompleted(feature.name, feature.project);
-        onComplete?.();
+        onComplete();
     };
 
     const onUncompleteHandler = async () => {
         await markFeatureUncompleted(feature.name, feature.project);
-        onUncomplete?.();
+        onUncomplete();
     };
 
     return currentStage ? (

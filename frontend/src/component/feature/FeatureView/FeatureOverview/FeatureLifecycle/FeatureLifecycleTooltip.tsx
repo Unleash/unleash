@@ -440,80 +440,70 @@ export const FeatureLifecycleTooltip: FC<{
     onComplete: () => void;
     onUncomplete: () => void;
     loading: boolean;
-}> = ({ children, stage, onArchive, onComplete, onUncomplete, loading }) => {
-    return (
-        <HtmlTooltip
-            maxHeight={800}
-            maxWidth={350}
-            arrow
-            tabIndex={0}
-            title={
-                <Box>
-                    <Box sx={(theme) => ({ padding: theme.spacing(2) })}>
-                        <MainLifecycleRow>
-                            <Typography variant='h3'>Lifecycle</Typography>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                }}
-                            >
-                                <Badge sx={{ textTransform: 'capitalize' }}>
-                                    {stage.name}
-                                </Badge>
-                                <FeatureLifecycleStageIcon stage={stage} />
-                            </Box>
-                        </MainLifecycleRow>
-                        <TimeLifecycleRow>
-                            <TimeLabel>Stage entered at</TimeLabel>
+}> = ({ children, stage, onArchive, onComplete, onUncomplete, loading }) => (
+    <HtmlTooltip
+        maxHeight={800}
+        maxWidth={350}
+        arrow
+        tabIndex={0}
+        title={
+            <Box>
+                <Box sx={(theme) => ({ padding: theme.spacing(2) })}>
+                    <MainLifecycleRow>
+                        <Typography variant='h3'>Lifecycle</Typography>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                            }}
+                        >
+                            <Badge sx={{ textTransform: 'capitalize' }}>
+                                {stage.name}
+                            </Badge>
+                            <FeatureLifecycleStageIcon stage={stage} />
+                        </Box>
+                    </MainLifecycleRow>
+                    <TimeLifecycleRow>
+                        <TimeLabel>Stage entered at</TimeLabel>
 
-                            <FormatTime time={stage.enteredStageAt} />
-                        </TimeLifecycleRow>
-                        <TimeLifecycleRow>
-                            <TimeLabel>Time spent in stage</TimeLabel>
-                            <FormatElapsedTime time={stage.enteredStageAt} />
-                        </TimeLifecycleRow>
-                        <StageTimeline stage={stage} />
-                    </Box>
-                    <ColorFill>
-                        {stage.name === 'initial' && (
-                            <InitialStageDescription />
-                        )}
-                        {stage.name === 'pre-live' && (
-                            <PreLiveStageDescription>
-                                <Environments
-                                    environments={stage.environments}
-                                />
-                            </PreLiveStageDescription>
-                        )}
-                        {stage.name === 'live' && (
-                            <LiveStageDescription
-                                onComplete={onComplete}
-                                loading={loading}
-                            >
-                                <Environments
-                                    environments={stage.environments}
-                                />
-                            </LiveStageDescription>
-                        )}
-                        {stage.name === 'completed' && (
-                            <CompletedStageDescription
-                                environments={stage.environments}
-                                onArchive={onArchive}
-                                onUncomplete={onUncomplete}
-                                loading={loading}
-                            >
-                                <Environments
-                                    environments={stage.environments}
-                                />
-                            </CompletedStageDescription>
-                        )}
-                    </ColorFill>
+                        <FormatTime time={stage.enteredStageAt} />
+                    </TimeLifecycleRow>
+                    <TimeLifecycleRow>
+                        <TimeLabel>Time spent in stage</TimeLabel>
+                        <FormatElapsedTime time={stage.enteredStageAt} />
+                    </TimeLifecycleRow>
+                    <StageTimeline stage={stage} />
                 </Box>
-            }
-        >
-            <Box>{children}</Box>
-        </HtmlTooltip>
-    );
-};
+                <ColorFill>
+                    {stage.name === 'initial' && <InitialStageDescription />}
+                    {stage.name === 'pre-live' && (
+                        <PreLiveStageDescription>
+                            <Environments environments={stage.environments} />
+                        </PreLiveStageDescription>
+                    )}
+                    {stage.name === 'live' && (
+                        <LiveStageDescription
+                            onComplete={onComplete}
+                            loading={loading}
+                        >
+                            <Environments environments={stage.environments} />
+                        </LiveStageDescription>
+                    )}
+                    {stage.name === 'completed' && (
+                        <CompletedStageDescription
+                            environments={stage.environments}
+                            onArchive={onArchive}
+                            onUncomplete={onUncomplete}
+                            loading={loading}
+                        >
+                            <Environments environments={stage.environments} />
+                        </CompletedStageDescription>
+                    )}
+                </ColorFill>
+            </Box>
+        }
+    >
+        <CenteredBox>{children}</CenteredBox>
+    </HtmlTooltip>
+);

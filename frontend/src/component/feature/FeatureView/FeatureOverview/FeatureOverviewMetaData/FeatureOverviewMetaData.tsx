@@ -8,13 +8,9 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
-import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
-import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
-import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { StyledDetail } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
@@ -23,6 +19,7 @@ import { DependencyRow } from './DependencyRow';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
+import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
 import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -148,25 +145,16 @@ const FeatureOverviewMetaData = () => {
                         <span>{project}</span>
                     </StyledRow>
                     <ConditionallyRender
-                        condition={
-                            featureLifecycleEnabled && Boolean(currentStage)
-                        }
+                        condition={featureLifecycleEnabled}
                         show={
                             <StyledRow data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
-                                <FeatureLifecycleTooltip
-                                    stage={currentStage!}
+                                <FeatureLifecycle
+                                    feature={feature}
                                     onArchive={() => setShowDelDialog(true)}
-                                    onComplete={() =>
-                                        setShowMarkCompletedDialogue(true)
-                                    }
-                                    onUncomplete={onUncomplete}
-                                    loading={loading}
-                                >
-                                    <FeatureLifecycleStageIcon
-                                        stage={currentStage!}
-                                    />
-                                </FeatureLifecycleTooltip>
+                                    onComplete={refetchFeature}
+                                    onUncomplete={refetchFeature}
+                                />
                             </StyledRow>
                         }
                     />

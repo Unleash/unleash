@@ -13,7 +13,10 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
-import { MemoizedFeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import {
+    FeatureLifecycleCell,
+    MemoizedFeatureEnvironmentSeenCell,
+} from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
@@ -48,6 +51,7 @@ import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
 import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -126,6 +130,8 @@ export const ProjectFeatureToggles = ({
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
 
+    const featureLifecycleEnabled = useUiFlag('featureLifecycle');
+
     const columns = useMemo(
         () => [
             columnHelper.display({
@@ -195,9 +201,25 @@ export const ProjectFeatureToggles = ({
                 id: 'lastSeenAt',
                 header: 'Last seen',
                 cell: ({ row: { original } }) => (
-                    <MemoizedFeatureEnvironmentSeenCell
-                        feature={original}
-                        data-loading
+                    <ConditionallyRender
+                        condition={featureLifecycleEnabled}
+                        show={
+                            <FeatureLifecycleCell
+                                feature={original}
+                                onComplete={refetch}
+                                onUncomplete={refetch}
+                                onArchive={() =>
+                                    setFeatureArchiveState(original.name)
+                                }
+                                data-loading
+                            />
+                        }
+                        elseShow={
+                            <MemoizedFeatureEnvironmentSeenCell
+                                feature={original}
+                                data-loading
+                            />
+                        }
                     />
                 ),
                 size: 50,
@@ -308,10 +330,12 @@ export const ProjectFeatureToggles = ({
                         {
                             name: 'development',
                             enabled: false,
+                            type: 'development',
                         },
                         {
                             name: 'production',
                             enabled: false,
+                            type: 'production',
                         },
                     ],
                 })),

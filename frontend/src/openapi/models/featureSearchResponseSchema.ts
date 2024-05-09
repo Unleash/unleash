@@ -5,6 +5,7 @@
  */
 import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
 import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
+import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
 import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
 import type { VariantSchema } from './variantSchema';
@@ -47,6 +48,8 @@ export interface FeatureSearchResponseSchema {
      * @nullable
      */
     lastSeenAt?: string | null;
+    /** Current lifecycle stage of the feature */
+    lifecycle?: FeatureSearchResponseSchemaLifecycle;
     /** Unique feature name */
     name: string;
     /** Name of the project the feature belongs to */

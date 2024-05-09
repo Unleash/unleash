@@ -2,7 +2,7 @@ import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
 import type { FC } from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { useParentVariantOptions } from '../../../../../hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
+import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
     marginTop: theme.spacing(2),

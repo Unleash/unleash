@@ -15,14 +15,14 @@ export const ParentVariantOptions: FC<{
     selectedValues: string[];
     onSelect: (values: string[]) => void;
 }> = ({ project, parent, onSelect, selectedValues }) => {
-    const { variantOptions } = useParentVariantOptions(project, parent);
+    const { parentVariantOptions } = useParentVariantOptions(project, parent);
     const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
     const checkedIcon = <CheckBoxIcon fontSize='small' />;
     return (
         <StyledAutocomplete
             multiple
             id='parent-variant-options'
-            options={variantOptions}
+            options={parentVariantOptions}
             disableCloseOnSelect
             renderOption={(props, option, { selected }) => (
                 <li {...props}>

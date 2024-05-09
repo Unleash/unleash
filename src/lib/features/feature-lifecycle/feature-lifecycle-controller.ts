@@ -9,6 +9,7 @@ import {
 } from '../../types';
 import type { OpenApiService } from '../../services';
 import {
+    createRequestSchema,
     createResponseSchema,
     emptyResponse,
     featureLifecycleSchema,
@@ -78,6 +79,9 @@ export default class FeatureLifecycleController extends Controller {
                     summary: 'Set feature completed',
                     description: 'This will set the feature as completed.',
                     operationId: 'complete',
+                    requestBody: createRequestSchema(
+                        'featureLifecycleCompletedSchema',
+                    ),
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),

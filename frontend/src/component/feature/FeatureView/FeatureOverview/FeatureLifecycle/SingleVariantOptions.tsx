@@ -37,7 +37,7 @@ export const SingleVariantOptions: FC<{
             )}
             fullWidth
             onChange={(_, selectedValue) => {
-                onSelect(selectedValue as string);
+                onSelect(String(selectedValue));
             }}
         />
     );

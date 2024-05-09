@@ -504,6 +504,6 @@ export const FeatureLifecycleTooltip: FC<{
             </Box>
         }
     >
-        <Box>{children}</Box>
+        <CenteredBox>{children}</CenteredBox>
     </HtmlTooltip>
 );

@@ -2,17 +2,25 @@ import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
 import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { populateCurrentStage } from './populateCurrentStage';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
 import type { FC } from 'react';
+import type { Lifecycle } from 'interfaces/featureToggle';
+
+export interface LifecycleFeature {
+    lifecycle?: Lifecycle;
+    project: string;
+    name: string;
+    environments?: Array<{
+        type: string;
+        name: string;
+        lastSeenAt?: string | null;
+    }>;
+}
 
 export const FeatureLifecycle: FC<{
     onArchive: () => void;
-    onComplete: () => void;
-    onUncomplete: () => void;
-    feature: Pick<
-        IFeatureToggle,
-        'lifecycle' | 'environments' | 'project' | 'name'
-    >;
+    onComplete?: () => void;
+    onUncomplete?: () => void;
+    feature: LifecycleFeature;
 }> = ({ feature, onComplete, onUncomplete, onArchive }) => {
     const currentStage = populateCurrentStage(feature);
 
@@ -21,12 +29,12 @@ export const FeatureLifecycle: FC<{
 
     const onCompleteHandler = async () => {
         await markFeatureCompleted(feature.name, feature.project);
-        onComplete();
+        onComplete?.();
     };
 
     const onUncompleteHandler = async () => {
         await markFeatureUncompleted(feature.name, feature.project);
-        onUncomplete();
+        onUncomplete?.();
     };
 
     return currentStage ? (

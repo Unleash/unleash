@@ -10,7 +10,7 @@ export const featureSearchEnvironmentSchema = {
     $id: '#/components/schemas/featureSearchEnvironmentSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'enabled'],
+    required: ['name', 'enabled', 'type'],
     description: 'A detailed description of the feature environment',
     properties: {
         ...featureEnvironmentSchema.properties,

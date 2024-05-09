@@ -115,7 +115,7 @@
     "sass": "1.74.1",
     "semver": "7.6.0",
     "swr": "2.2.5",
-    "tss-react": "4.9.6",
+    "tss-react": "4.9.10",
     "typescript": "5.4.2",
     "use-query-params": "^2.2.1",
     "vanilla-jsoneditor": "^0.23.0",

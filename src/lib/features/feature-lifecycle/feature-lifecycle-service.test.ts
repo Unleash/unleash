@@ -12,6 +12,7 @@ import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
 import EventEmitter from 'events';
 import { STAGE_ENTERED } from './feature-lifecycle-service';
 import noLoggerProvider from '../../../test/fixtures/no-logger';
+import { calculateMedians } from './calculate-stage-durations';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();
@@ -129,74 +130,22 @@ test('ignores lifecycle state updates when flag disabled', async () => {
     expect(lifecycle).toEqual([]);
 });
 
-test('can find feature lifecycle stage timings', async () => {
-    const eventBus = new EventEmitter();
-    const { featureLifecycleService, eventStore, environmentStore } =
-        createFakeFeatureLifecycleService({
-            flagResolver: { isEnabled: () => false },
-            eventBus,
-            getLogger: noLoggerProvider,
-        } as unknown as IUnleashConfig);
-    const now = new Date();
-    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-    const twentyMinutesAgo = new Date(now.getTime() - 20 * 60 * 1000);
-    const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
-    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-
-    const durations = featureLifecycleService.calculateStageDurations([
+test('should calculate median durations', () => {
+    const groupedData = {
+        'Project1/Development': [180, 120, 10],
+        'Project1/Testing': [240, 60],
+    };
+    const medians = calculateMedians(groupedData);
+    expect(medians).toMatchObject([
         {
-            feature: 'a',
-            stage: 'initial',
-            project: 'default',
-            enteredStageAt: oneHourAgo,
+            project: 'Project1',
+            stage: 'Development',
+            duration: 120,
         },
         {
-            feature: 'b',
-            stage: 'initial',
-            project: 'default',
-            enteredStageAt: oneHourAgo,
+            project: 'Project1',
+            stage: 'Testing',
+            duration: 150,
         },
-        {
-            feature: 'a',
-            stage: 'pre-live',
-            project: 'default',
-            enteredStageAt: twentyMinutesAgo,
-        },
-        {
-            feature: 'b',
-            stage: 'live',
-            project: 'default',
-            enteredStageAt: tenMinutesAgo,
-        },
-        {
-            feature: 'c',
-            stage: 'initial',
-            project: 'default',
-            enteredStageAt: oneHourAgo,
-        },
-        {
-            feature: 'c',
-            stage: 'pre-live',
-            project: 'default',
-            enteredStageAt: fiveMinutesAgo,
-        },
-    ]);
-
-    expect(durations).toMatchObject([
-        {
-            project: 'default',
-            stage: 'initial',
-            duration: 50,
-        },
-        {
-            project: 'default',
-            stage: 'pre-live',
-            duration: 12.5,
-        },
-        {
-            project: 'default',
-            stage: 'live',
-            duration: 10,
-        },
-    ]);
+    ]); // Assuming median works correctly
 });

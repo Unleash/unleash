@@ -12,10 +12,8 @@ import {
     type IProjectLifecycleStageDuration,
     type IFlagResolver,
     type IUnleashConfig,
-    type StageName,
 } from '../../types';
 import type {
-    FeatureLifecycleProjectItem,
     FeatureLifecycleView,
     IFeatureLifecycleStore,
 } from './feature-lifecycle-store-type';
@@ -23,9 +21,8 @@ import EventEmitter from 'events';
 import type { Logger } from '../../logger';
 import type EventService from '../events/event-service';
 import type { ValidatedClientMetrics } from '../metrics/shared/schema';
-import { differenceInMinutes } from 'date-fns';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
-import { median } from '../../util/median';
+import { calculateStageDurations } from './calculate-stage-durations';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
 
@@ -220,48 +217,6 @@ export class FeatureLifecycleService extends EventEmitter {
         IProjectLifecycleStageDuration[]
     > {
         const featureLifeCycles = await this.featureLifecycleStore.getAll();
-        return this.calculateStageDurations(featureLifeCycles);
-    }
-
-    public calculateStageDurations(
-        featureLifeCycles: FeatureLifecycleProjectItem[],
-    ) {
-        const sortedLifeCycles = featureLifeCycles.sort(
-            (a, b) => a.enteredStageAt.getTime() - b.enteredStageAt.getTime(),
-        );
-
-        const groupedByProjectAndStage = sortedLifeCycles.reduce<{
-            [key: string]: number[];
-        }>((acc, curr, index, array) => {
-            const key = `${curr.project}/${curr.stage}`;
-            if (!acc[key]) {
-                acc[key] = [];
-            }
-
-            const nextItem = array
-                .slice(index + 1)
-                .find(
-                    (item) =>
-                        item.feature === curr.feature &&
-                        item.stage !== curr.stage,
-                );
-            const endTime = nextItem ? nextItem.enteredStageAt : new Date();
-            const duration = differenceInMinutes(endTime, curr.enteredStageAt);
-            acc[key].push(duration);
-            return acc;
-        }, {});
-
-        const medians: IProjectLifecycleStageDuration[] = [];
-        Object.entries(groupedByProjectAndStage).forEach(([key, durations]) => {
-            const [project, stage] = key.split('/');
-            const duration = median(durations);
-            medians.push({
-                project,
-                stage: stage as StageName,
-                duration,
-            });
-        });
-
-        return medians;
+        return calculateStageDurations(featureLifeCycles);
     }
 }

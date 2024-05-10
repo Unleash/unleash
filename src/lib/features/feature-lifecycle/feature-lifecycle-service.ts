@@ -9,9 +9,10 @@ import {
     type IEnvironmentStore,
     type IEventStore,
     type IFeatureEnvironmentStore,
-    type IFeatureLifecycleStageDuration,
+    type IProjectLifecycleStageDuration,
     type IFlagResolver,
     type IUnleashConfig,
+    type StageName,
 } from '../../types';
 import type {
     FeatureLifecycleProjectItem,
@@ -215,7 +216,7 @@ export class FeatureLifecycleService extends EventEmitter {
     }
 
     public async getAllWithStageDuration(): Promise<
-        IFeatureLifecycleStageDuration[]
+        IProjectLifecycleStageDuration[]
     > {
         const featureLifeCycles = await this.featureLifecycleStore.getAll();
         return this.calculateStageDurations(featureLifeCycles);
@@ -224,41 +225,53 @@ export class FeatureLifecycleService extends EventEmitter {
     public calculateStageDurations(
         featureLifeCycles: FeatureLifecycleProjectItem[],
     ) {
-        const groupedByFeature = featureLifeCycles.reduce<{
-            [feature: string]: FeatureLifecycleProjectItem[];
-        }>((acc, curr) => {
-            if (!acc[curr.feature]) {
-                acc[curr.feature] = [];
+        const sortedLifeCycles = featureLifeCycles.sort(
+            (a, b) => a.enteredStageAt.getTime() - b.enteredStageAt.getTime(),
+        );
+
+        const groupedByProjectAndStage = sortedLifeCycles.reduce<{
+            [key: string]: number[];
+        }>((acc, curr, index, array) => {
+            const key = `${curr.project}/${curr.stage}`;
+            if (!acc[key]) {
+                acc[key] = [];
             }
-            acc[curr.feature].push(curr);
+
+            // Find the next different stage for the same feature
+            const nextItem = array
+                .slice(index + 1)
+                .find(
+                    (item) =>
+                        item.feature === curr.feature &&
+                        item.stage !== curr.stage,
+                );
+            const endTime = nextItem ? nextItem.enteredStageAt : new Date();
+            const duration = differenceInMinutes(endTime, curr.enteredStageAt);
+            acc[key].push(duration);
             return acc;
         }, {});
 
-        const times: IFeatureLifecycleStageDuration[] = [];
-        Object.values(groupedByFeature).forEach((stages) => {
-            stages.sort(
-                (a, b) =>
-                    a.enteredStageAt.getTime() - b.enteredStageAt.getTime(),
-            );
-
-            stages.forEach((stage, index) => {
-                const nextStage = stages[index + 1];
-                const endTime = nextStage
-                    ? nextStage.enteredStageAt
-                    : new Date();
-                const duration = differenceInMinutes(
-                    endTime,
-                    stage.enteredStageAt,
-                );
-
-                times.push({
-                    feature: stage.feature,
-                    stage: stage.stage,
-                    project: stage.project,
-                    duration,
-                });
+        const medians: IProjectLifecycleStageDuration[] = [];
+        Object.entries(groupedByProjectAndStage).forEach(([key, durations]) => {
+            const [project, stage] = key.split('/');
+            const duration = this.calculateMedian(durations);
+            medians.push({
+                project,
+                stage: stage as StageName,
+                duration,
             });
         });
-        return times;
+
+        return medians;
+    }
+
+    private calculateMedian(numbers: number[]): number {
+        numbers.sort((a, b) => a - b);
+        const midIndex = Math.floor(numbers.length / 2);
+        if (numbers.length % 2 === 0) {
+            return (numbers[midIndex - 1] + numbers[midIndex]) / 2;
+        } else {
+            return numbers[midIndex];
+        }
     }
 }

@@ -138,65 +138,64 @@ test('can find feature lifecycle stage timings', async () => {
             getLogger: noLoggerProvider,
         } as unknown as IUnleashConfig);
     const now = new Date();
-    const minusOneMinute = new Date(now.getTime() - 1 * 60 * 1000);
-    const minusTenMinutes = new Date(now.getTime() - 10 * 60 * 1000);
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+    const twentyMinutesAgo = new Date(now.getTime() - 20 * 60 * 1000);
+    const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
+    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
     const durations = featureLifecycleService.calculateStageDurations([
         {
             feature: 'a',
             stage: 'initial',
             project: 'default',
-            enteredStageAt: minusTenMinutes,
+            enteredStageAt: oneHourAgo,
         },
         {
             feature: 'b',
             stage: 'initial',
             project: 'default',
-            enteredStageAt: minusTenMinutes,
+            enteredStageAt: oneHourAgo,
         },
         {
             feature: 'a',
             stage: 'pre-live',
             project: 'default',
-            enteredStageAt: minusOneMinute,
+            enteredStageAt: twentyMinutesAgo,
         },
         {
             feature: 'b',
             stage: 'live',
             project: 'default',
-            enteredStageAt: minusOneMinute,
+            enteredStageAt: tenMinutesAgo,
         },
         {
             feature: 'c',
             stage: 'initial',
             project: 'default',
-            enteredStageAt: minusTenMinutes,
+            enteredStageAt: oneHourAgo,
+        },
+        {
+            feature: 'c',
+            stage: 'pre-live',
+            project: 'default',
+            enteredStageAt: fiveMinutesAgo,
         },
     ]);
 
     expect(durations).toMatchObject([
         {
-            feature: 'a',
+            project: 'default',
             stage: 'initial',
-            duration: 9,
+            duration: 50,
         },
         {
-            feature: 'a',
+            project: 'default',
             stage: 'pre-live',
-            duration: 1,
+            duration: 12.5,
         },
         {
-            feature: 'b',
-            stage: 'initial',
-            duration: 9,
-        },
-        {
-            feature: 'b',
+            project: 'default',
             stage: 'live',
-            duration: 1,
-        },
-        {
-            feature: 'c',
-            stage: 'initial',
             duration: 10,
         },
     ]);

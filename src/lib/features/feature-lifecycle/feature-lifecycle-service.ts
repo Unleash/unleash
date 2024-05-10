@@ -237,7 +237,6 @@ export class FeatureLifecycleService extends EventEmitter {
                 acc[key] = [];
             }
 
-            // Find the next different stage for the same feature
             const nextItem = array
                 .slice(index + 1)
                 .find(

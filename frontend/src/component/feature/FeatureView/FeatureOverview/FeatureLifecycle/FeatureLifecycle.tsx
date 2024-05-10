@@ -13,6 +13,7 @@ export interface LifecycleFeature {
         type: string;
         name: string;
         lastSeenAt?: string | null;
+        enabled: boolean;
     }>;
 }
 

@@ -136,8 +136,8 @@ const InitialStageDescription: FC = () => {
     return (
         <>
             <InfoText>
-                This feature toggle is currently in the initial phase of it's
-                life cycle.
+                This feature flag is currently in the initial phase of it's life
+                cycle.
             </InfoText>
             <InfoText>
                 This means that the flag has been created, but it has not yet
@@ -250,8 +250,7 @@ const PreLiveStageDescription: FC = ({ children }) => {
     return (
         <>
             <InfoText>
-                We've seen the feature flag in the following non-production
-                environments:
+                We've seen the feature flag in the following environments:
             </InfoText>
 
             {children}

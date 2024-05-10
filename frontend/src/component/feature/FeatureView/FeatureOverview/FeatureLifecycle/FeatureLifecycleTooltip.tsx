@@ -136,8 +136,8 @@ const InitialStageDescription: FC = () => {
     return (
         <>
             <InfoText>
-                This feature flag is currently in the initial phase of it's life
-                cycle.
+                This feature flag is currently in the initial phase of it's
+                lifecycle.
             </InfoText>
             <InfoText>
                 This means that the flag has been created, but it has not yet

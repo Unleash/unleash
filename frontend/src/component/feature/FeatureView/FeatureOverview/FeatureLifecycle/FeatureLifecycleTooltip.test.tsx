@@ -53,7 +53,7 @@ test('render initial stage', async () => {
     await screen.findByText('initial');
     await screen.findByText('2 minutes');
     await screen.findByText(
-        "This feature toggle is currently in the initial phase of it's life cycle.",
+        "This feature toggle is currently in the initial phase of it's lifecycle.",
     );
 });
 

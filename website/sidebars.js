@@ -173,6 +173,11 @@ module.exports = {
                 },
                 {
                     type: 'doc',
+                    label: '.NET',
+                    id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                },
+                {
+                    type: 'doc',
                     label: 'Flutter',
                     id: 'feature-flag-tutorials/flutter/a-b-testing',
                 },

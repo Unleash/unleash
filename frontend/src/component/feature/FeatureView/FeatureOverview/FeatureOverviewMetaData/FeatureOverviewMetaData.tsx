@@ -135,7 +135,7 @@ const FeatureOverviewMetaData = () => {
                     <ConditionallyRender
                         condition={featureLifecycleEnabled}
                         show={
-                            <SpacedBodyItem data-loading sx={{ pb: 1 }}>
+                            <SpacedBodyItem data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
                                 <FeatureLifecycle
                                     feature={feature}

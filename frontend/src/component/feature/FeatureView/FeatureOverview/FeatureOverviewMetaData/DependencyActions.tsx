@@ -44,7 +44,7 @@ export const DependencyActions: FC<{
         <Box>
             <Tooltip title='Dependency actions' arrow describeChild>
                 <IconButton
-                    sx={{ p: 2 }}
+                    sx={{ p: 1 }}
                     id={id}
                     aria-controls={open ? menuId : undefined}
                     aria-haspopup='true'

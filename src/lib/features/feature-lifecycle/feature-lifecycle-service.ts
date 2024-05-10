@@ -25,6 +25,7 @@ import type EventService from '../events/event-service';
 import type { ValidatedClientMetrics } from '../metrics/shared/schema';
 import { differenceInMinutes } from 'date-fns';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
+import { median } from '../../util/median';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
 
@@ -253,7 +254,7 @@ export class FeatureLifecycleService extends EventEmitter {
         const medians: IProjectLifecycleStageDuration[] = [];
         Object.entries(groupedByProjectAndStage).forEach(([key, durations]) => {
             const [project, stage] = key.split('/');
-            const duration = this.calculateMedian(durations);
+            const duration = median(durations);
             medians.push({
                 project,
                 stage: stage as StageName,
@@ -262,15 +263,5 @@ export class FeatureLifecycleService extends EventEmitter {
         });
 
         return medians;
-    }
-
-    private calculateMedian(numbers: number[]): number {
-        numbers.sort((a, b) => a - b);
-        const midIndex = Math.floor(numbers.length / 2);
-        if (numbers.length % 2 === 0) {
-            return (numbers[midIndex - 1] + numbers[midIndex]) / 2;
-        } else {
-            return numbers[midIndex];
-        }
     }
 }

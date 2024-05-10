@@ -42,6 +42,9 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
             existingFeaturesSet.has(stage.feature),
         );
 
+        if (validStages.length === 0) {
+            return;
+        }
         await this.db('feature_lifecycles')
             .insert(
                 validStages.map((stage) => ({
@@ -70,7 +73,7 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
     async getAll(): Promise<FeatureLifecycleProjectItem[]> {
         const results = await this.db('feature_lifecycles as flc')
             .select('flc.feature', 'flc.stage', 'flc.created_at', 'f.project')
-            .leftJoin('features f', 'f.name', 'flc.feature')
+            .leftJoin('features as f', 'f.name', 'flc.feature')
             .orderBy('created_at', 'asc');
 
         return results.map(

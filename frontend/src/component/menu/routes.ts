@@ -47,7 +47,7 @@ import { Insights } from '../insights/Insights';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
-import CreateProject from '../project/Project/CreateProject/CreateProject';
+import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 
 export const routes: IRoute[] = [
     // Splash
@@ -65,7 +65,7 @@ export const routes: IRoute[] = [
         path: '/projects/create',
         parent: '/projects',
         title: 'Create',
-        component: CreateProject,
+        component: LazyCreateProject,
         type: 'protected',
         enterprise: true,
         menu: {},

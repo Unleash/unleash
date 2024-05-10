@@ -1,4 +1,7 @@
-import { calculateStageDurations } from './calculate-stage-durations';
+import {
+    calculateMedians,
+    calculateStageDurations,
+} from './calculate-stage-durations';
 
 test('can find feature lifecycle stage timings', async () => {
     const now = new Date();
@@ -61,6 +64,26 @@ test('can find feature lifecycle stage timings', async () => {
             project: 'default',
             stage: 'live',
             duration: 10,
+        },
+    ]);
+});
+
+test('should calculate median durations', () => {
+    const groupedData = {
+        'Project1/Development': [180, 120, 10],
+        'Project1/Testing': [240, 60],
+    };
+    const medians = calculateMedians(groupedData);
+    expect(medians).toMatchObject([
+        {
+            project: 'Project1',
+            stage: 'Development',
+            duration: 120,
+        },
+        {
+            project: 'Project1',
+            stage: 'Testing',
+            duration: 150,
         },
     ]);
 });

@@ -12,7 +12,6 @@ import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
 import EventEmitter from 'events';
 import { STAGE_ENTERED } from './feature-lifecycle-service';
 import noLoggerProvider from '../../../test/fixtures/no-logger';
-import { calculateMedians } from './calculate-stage-durations';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();
@@ -128,24 +127,4 @@ test('ignores lifecycle state updates when flag disabled', async () => {
         await featureLifecycleService.getFeatureLifecycle(featureName);
 
     expect(lifecycle).toEqual([]);
-});
-
-test('should calculate median durations', () => {
-    const groupedData = {
-        'Project1/Development': [180, 120, 10],
-        'Project1/Testing': [240, 60],
-    };
-    const medians = calculateMedians(groupedData);
-    expect(medians).toMatchObject([
-        {
-            project: 'Project1',
-            stage: 'Development',
-            duration: 120,
-        },
-        {
-            project: 'Project1',
-            stage: 'Testing',
-            duration: 150,
-        },
-    ]); // Assuming median works correctly
 });

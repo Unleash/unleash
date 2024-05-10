@@ -25,7 +25,7 @@ const StyledFormSection = styled('div')(({ theme }) => ({
         borderBlockStart: `1px solid ${theme.palette.divider}`,
     },
 
-    padding: theme.spacing(7),
+    padding: theme.spacing(6),
 }));
 
 const TopGrid = styled(StyledFormSection)(({ theme }) => ({
@@ -60,11 +60,11 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 const StyledProjectName = styled(StyledInput)(({ theme }) => ({
-    '*': { fontSize: theme.typography.h1.fontSize },
+    '*': { fontSize: theme.typography.h2.fontSize },
 }));
 
 const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
-    '*': { fontSize: theme.typography.h2.fontSize },
+    '*': { fontSize: theme.typography.h3.fontSize },
 }));
 
 const OptionButtons = styled(StyledFormSection)(({ theme }) => ({

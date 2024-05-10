@@ -127,7 +127,6 @@ class InstanceAdminController extends Controller {
             },
             featureLifeCycles: [
                 {
-                    feature: 'feature1',
                     project: 'default',
                     stage: 'archived',
                     duration: 2000,

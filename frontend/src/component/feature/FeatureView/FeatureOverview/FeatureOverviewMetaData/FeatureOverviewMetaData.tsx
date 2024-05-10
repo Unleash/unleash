@@ -59,11 +59,9 @@ const StyledBody = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-const StyledBodyItem = styled('span')(({ theme }) => ({
-    padding: theme.spacing(0.5, 0),
-}));
+const BodyItemWithIcon = styled('div')(({ theme }) => ({}));
 
-const StyledRow = styled('div')(({ theme }) => ({
+const SpacedBodyItem = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     padding: theme.spacing(1, 0),
@@ -72,6 +70,7 @@ const StyledRow = styled('div')(({ theme }) => ({
 const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
 }));
 
 const StyledDetailsContainer = styled('div')(({ theme }) => ({
@@ -133,14 +132,14 @@ const FeatureOverviewMetaData = () => {
                     <StyledHeader>{capitalize(type || '')} toggle</StyledHeader>
                 </StyledMetaDataHeader>
                 <StyledBody>
-                    <StyledRow data-loading>
+                    <SpacedBodyItem data-loading>
                         <StyledLabel>Project:</StyledLabel>
                         <span>{project}</span>
-                    </StyledRow>
+                    </SpacedBodyItem>
                     <ConditionallyRender
                         condition={featureLifecycleEnabled}
                         show={
-                            <StyledRow data-loading>
+                            <SpacedBodyItem data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
                                 <FeatureLifecycle
                                     feature={feature}
@@ -150,14 +149,14 @@ const FeatureOverviewMetaData = () => {
                                     }
                                     onUncomplete={refetchFeature}
                                 />
-                            </StyledRow>
+                            </SpacedBodyItem>
                         }
                     />
 
                     <ConditionallyRender
                         condition={Boolean(description)}
                         show={
-                            <StyledBodyItem data-loading>
+                            <BodyItemWithIcon data-loading sx={{ pt: 1 }}>
                                 <StyledLabel>Description:</StyledLabel>
                                 <StyledDescriptionContainer>
                                     <StyledDescription>
@@ -175,10 +174,10 @@ const FeatureOverviewMetaData = () => {
                                         <Edit />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
-                            </StyledBodyItem>
+                            </BodyItemWithIcon>
                         }
                         elseShow={
-                            <span data-loading>
+                            <div data-loading>
                                 <StyledDescriptionContainer>
                                     No description.{' '}
                                     <PermissionIconButton
@@ -193,10 +192,10 @@ const FeatureOverviewMetaData = () => {
                                         <Edit />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
-                            </span>
+                            </div>
                         }
                     />
-                    <StyledBodyItem>
+                    <BodyItemWithIcon>
                         <StyledDetailsContainer>
                             <StyledDetail>
                                 <StyledLabel>Created at:</StyledLabel>
@@ -211,10 +210,9 @@ const FeatureOverviewMetaData = () => {
                             <FeatureEnvironmentSeen
                                 featureLastSeen={feature.lastSeenAt}
                                 environments={lastSeenEnvironments}
-                                sx={{ p: 0 }}
                             />
                         </StyledDetailsContainer>
-                    </StyledBodyItem>
+                    </BodyItemWithIcon>
                     <ConditionallyRender
                         condition={showDependentFeatures}
                         show={<DependencyRow feature={feature} />}

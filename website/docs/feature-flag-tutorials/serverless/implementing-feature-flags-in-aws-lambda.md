@@ -12,7 +12,6 @@ For developers new to feature flags in serverless environments, this guide will 
 
 -   If you make a breaking change to a serverless function (e.g., new params), you usually need to create a new version with an appropriate URL routing scheme
 -   But sometimes you may need to add a non-breaking change, signature-wise, that may still have unwanted side effects for some consumers
-    -   Give a concrete example
 -   You may also want to make the feature change optional until it’s been thoroughly tested
 -   Feature flags enable you to release a new function version in-place while controlling who gets exposed to the new feature
 -   Benefits:

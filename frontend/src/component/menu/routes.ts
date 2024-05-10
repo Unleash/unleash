@@ -35,7 +35,6 @@ import { SegmentTable } from '../segments/SegmentTable/SegmentTable';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 import { Profile } from 'component/user/Profile/Profile';
-import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyCreateProject';
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
@@ -48,6 +47,7 @@ import { Insights } from '../insights/Insights';
 import { FeedbackList } from '../feedbackNew/FeedbackList';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
+import CreateProject from '../project/Project/CreateProject/CreateProject';
 
 export const routes: IRoute[] = [
     // Splash
@@ -65,7 +65,7 @@ export const routes: IRoute[] = [
         path: '/projects/create',
         parent: '/projects',
         title: 'Create',
-        component: LazyCreateProject,
+        component: CreateProject,
         type: 'protected',
         enterprise: true,
         menu: {},

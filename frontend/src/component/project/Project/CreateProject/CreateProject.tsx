@@ -27,6 +27,7 @@ const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
+    const useNewProjectForm = useUiFlag('newCreateProjectUI');
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const {
@@ -51,6 +52,10 @@ const CreateProject = () => {
         errors,
     } = useProjectForm();
 
+    if (useNewProjectForm) {
+        return <Navigate to={`/projects?create=true`} replace />;
+    }
+
     const generalDocumentation =
         'Projects allows you to group feature toggles together in the management UI.';
 
@@ -58,8 +63,6 @@ const CreateProject = () => {
 
     const clearDocumentationOverride = () =>
         setDocumentation(generalDocumentation);
-
-    const useNewProjectForm = useUiFlag('newCreateProjectUI');
 
     const { createProject, loading } = useProjectApi();
 
@@ -110,10 +113,6 @@ const CreateProject = () => {
     const handleCancel = () => {
         navigate(GO_BACK);
     };
-
-    if (useNewProjectForm) {
-        return <Navigate to={`/projects?create=true`} replace />;
-    }
 
     return (
         <FormTemplate

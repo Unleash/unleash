@@ -3,6 +3,8 @@ title: How to Implement Feature Flags in Python
 slug: /feature-flag-tutorials/python
 ---
 
+import VideoContent from '@site/src/components/VideoContent.jsx';
+
 [Python](https://www.python.org/) is a popular programming language used for a variety of software applications and services. It is supported widely in the developer community and is known for being intuitive, readable, and friendly to new and experienced developers.
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. Feature flags play a critical role in optimizing the entire software development lifecycle. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in Python?
@@ -16,6 +18,7 @@ In this tutorial, you will learn how to set up and use Python feature flags with
 At the end of this tutorial, you will be able to turn on the feature flag and activate a route that will remove surveys from the database.
 
 Here are the steps we will cover in this tutorial:
+
 1. [Feature flag best practices for back-end applications](#1-unleash-best-practice-for-backend-apps)
 2. [Spin up a local flag provider](#2-install-a-local-feature-flag-provider)
 3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
@@ -24,16 +27,18 @@ Here are the steps we will cover in this tutorial:
 6. [Verify the toggle experience](#6-verify-the-toggle-experience)
 7. [Improve feature flag error handling](#7-improve-a-feature-flag-implementation-with-error-handling)
 
+Watch the video tutorial and follow along with the code from this documentation.
+
+<VideoContent videoUrls={["https://youtube.com/embed/-Rf0y2Gq8OA?si=udl3eIE9DdxQYGAY"]}/>
 
 ## Prerequisites
 
-
 In this tutorial, you will need the following:
-- A web browser like Chrome or Firefox
-- Git
-- Docker
-- (Optional) a code editor like Visual Studio Code
 
+-   A web browser like Chrome or Firefox
+-   Git
+-   Docker
+-   (Optional) a code editor like Visual Studio Code
 
 ![An architectural diagram of our Python app using Unleash feature flags](/img/python-flask-unleash-architecture.png)
 
@@ -47,8 +52,8 @@ Since Python is a backend language, there are special security considerations to
 
 Most importantly, you must:
 
-- Limit feature flag payloads for scalability, security, and efficiency
-- Improve architectural resiliency with graceful degradation
+-   Limit feature flag payloads for scalability, security, and efficiency
+-   Improve architectural resiliency with graceful degradation
 
 As your application scales, performance and resiliency become more critical and costly if not addressed. A feature flagging system should not be the reason your app slows down or fails. That’s why we recommend you account for this by reducing the size of your feature flag payloads. For example, instead of making one large call to retrieve flag statuses for all users as part of your configuration, group your users by specific attributes as part of your targeting rules that would be most relevant for your application.
 
@@ -56,9 +61,7 @@ Additionally, our SDKs cache your feature flag configuration to help reduce netw
 
 For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
-
 ## 2. Install a local feature flag provider
-
 
 There are many feature flag tools available. In this section, you will install Unleash, run the instance locally, log in, and create a feature flag, but you can use other tools in place of Unleash if you prefer. You’ll need to edit the code accordingly, but the basic steps will probably be the same.
 
@@ -81,12 +84,9 @@ Password: unleash4all
 
 Click the ‘New feature toggle’ button to create a new feature flag. Once you have created a flag, you will see it here.
 
-
 ![Image of the Unleash platform to create a new feature flag](/img/tutorial-create-flag.png)
 
-
 ## 3. Create and configure the feature flag
-
 
 Next, you will create a feature flag and turn it on for your Python app.
 
@@ -94,16 +94,13 @@ In the Create Toggle view, give your feature flag a unique name and click ‘Cre
 
 For the purpose of this tutorial, name the feature flag `delete_survey_flag`. Use the default values in the rest of the feature flag form.
 
-
 ![Image of a feature flag form](/img/python-tutorial-feature-flag-form.png)
-
 
 Your new feature flag has been created and is ready to be used. Enable the flag for your development environment, which makes it accessible for use in the Python app we will clone into your local environment.
 
-
 ![Image of the enabled Python flag in development environment](/img/python-tutorial-enabled-flag.png)
 
-Next, generate an API token to authenticate calls made to Unleash servers from your project. This API token will eventually be pulled into a configuration object within your Python application to toggle features. 
+Next, generate an API token to authenticate calls made to Unleash servers from your project. This API token will eventually be pulled into a configuration object within your Python application to toggle features.
 
 > **Note** We require an API token as part of your flag configuration to ensure that only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access and thus controls how they can be distributed to applications that need it, and by whom.
 
@@ -111,20 +108,15 @@ From your project view on the platform, go to "Project Settings" and then "API A
 
 Select the ‘New API token’ button.
 
-
 ![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
-
 
 Name the API token and select the “Server-side SDK” token type, since we’ll be doing our flag evaluation on the server using the Python SDK. You can read more about [Unleash API tokens in our documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens).
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
-
 ![Image of the API token creation form](/img/tutorial-create-api-token.png)
 
-
 The API token you generated can be managed in the API Access view in your project settings. It will become handy in Step 4.
-
 
 ## 4. Add Unleash to a Python app
 
@@ -140,7 +132,6 @@ Next, navigate into your repository directory and create a `.env` file.
 
 Copy this code snippet into your `.env` file:
 
-
 ```py
 FLASK_DEBUG=True
 DBHOST=db
@@ -149,25 +140,19 @@ DBUSER=app_user
 DBPASS=app_password
 ```
 
-
 Next, install the Python SDK. Open your repository in a code editor and navigate to `requirements.txt` inside the `src` folder. Reference the Python SDK for installation.
-
 
 ```py
 UnleashClient==5.11.1
 ```
 
-
 In `src/backend/__init__.py`, import `UnleashClient`:
-
 
 ```py
 from UnleashClient import UnleashClient
 ```
 
-
 In the same file, call the Unleash client for initialization when the app runs with this code snippet:
-
 
 ```py
 client = UnleashClient(
@@ -175,7 +160,7 @@ client = UnleashClient(
    app_name="flask-surveys-container-app",
    custom_headers={'Authorization': '<API token>'}
 )
- 
+
 client.initialize_client()
 ```
 
@@ -187,17 +172,13 @@ You can check our [API token and client keys documentation](https://docs.getunle
 
 Next, go to your terminal and build the app using this command:
 
-
 ```
 docker-compose up --build
 ```
 
-
 Navigate to [localhost://50505](http://localhost://50505) and the Surveys list should eventually display:
 
-
 ![Image of Surveys app loaded in browser](/img/python-tutorial-surveys-app-loaded.png)
-
 
 Create 1 or more new surveys so they’re populated in your database!
 
@@ -208,10 +189,11 @@ In a real-world use case for your feature flag, you can roll out new features to
 In this case, our app currently supports creating a survey, but once we create one, we can’t get rid of it. We want to roll out a ‘delete’ button in our list of surveys to all users so we have the option to remove them from our database.
 
 This will require us to:
-- Create a new route in our app
-- Create a method that deletes a survey based on survey ID
-- Create a delete button
-- Map the delete button to the delete method
+
+-   Create a new route in our app
+-   Create a method that deletes a survey based on survey ID
+-   Create a delete button
+-   Map the delete button to the delete method
 
 First, we need an error handler to return a simple 404 page to stop a user from being able to delete a survey when the flag is off. We will use this function in our delete method.
 
@@ -224,7 +206,6 @@ from flask import redirect, render_template, request, url_for, abort
 ```
 
 Add `client` to the `backend` import statement on line 4. The full import line will now look like this:
-
 
 ```py
 from backend import db, client
@@ -265,7 +246,13 @@ In `src/backend/templates/surveys_list.html`, add the following code to your sur
 
 ```html
 {% if client.is_enabled('delete_survey_flag') %}
-<td class="text-end"><a href="{{ url_for('surveys.delete_survey', survey_id=survey.id) }}" class="btn btn-sm btn-danger">Delete</a></td>
+<td class="text-end">
+    <a
+        href="{{ url_for('surveys.delete_survey', survey_id=survey.id) }}"
+        class="btn btn-sm btn-danger"
+        >Delete</a
+    >
+</td>
 {% endif %}
 ```
 
@@ -273,15 +260,11 @@ This code wraps a delete button in a conditional statement that checks whether o
 
 Your surveys page will now look something like this:
 
-
 ![Screenshot of app in browser with delete buttons in survey table](/img/python-tutorial-surveys-with-delete.png)
-
 
 Test the new functionality by deleting one of your surveys. The page should refresh without the survey you deleted.
 
-
 ## 6. Verify the toggle experience
-
 
 Now that we’ve added in new functionality and connected it to our feature flag, we can verify that if you disable the flag in your development environment, your Python app will no longer serve an HTML page with the option to delete surveys you’ve created.
 
@@ -295,9 +278,7 @@ Next, return to your Survey app and refresh the browser. With the flag disabled,
 
 ![Screenshot of app in browser without delete buttons for surveys](/img/python-tutorial-surveys-without-delete.png)
 
-
 ## Conclusion
-
 
 In this tutorial, we ran Unleash locally, created a new feature flag, installed the Python SDK into a Python Flask app, and toggled new functionality that altered a database with a containerized project!
 

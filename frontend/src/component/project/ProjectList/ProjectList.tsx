@@ -178,6 +178,13 @@ export const ProjectListNew = () => {
         );
     };
 
+    function handleClick() {
+        if (useNewProjectForm) {
+            return setOpenCreateDialog(true);
+        }
+        navigate('/projects/create');
+    }
+
     return (
         <PageContent
             isLoading={loading}
@@ -201,7 +208,7 @@ export const ProjectListNew = () => {
                             <ResponsiveButton
                                 Icon={Add}
                                 endIcon={createButtonData.endIcon}
-                                onClick={() => navigate('/projects/create')}
+                                onClick={handleClick}
                                 maxWidth='700px'
                                 permission={CREATE_PROJECT}
                                 disabled={createButtonData.disabled}

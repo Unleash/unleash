@@ -17,7 +17,7 @@ interface IFeatureEnvironmentSeenProps {
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    padding: theme.spacing(1.5),
+    padding: theme.spacing(1),
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({

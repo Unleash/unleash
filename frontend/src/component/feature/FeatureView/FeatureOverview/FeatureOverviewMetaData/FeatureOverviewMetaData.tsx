@@ -157,7 +157,6 @@ const FeatureOverviewMetaData = () => {
                                         {description}
                                     </StyledDescription>
                                     <PermissionIconButton
-                                        sx={{ p: 1 }}
                                         projectId={projectId}
                                         permission={UPDATE_FEATURE}
                                         component={Link}
@@ -176,7 +175,6 @@ const FeatureOverviewMetaData = () => {
                                 <StyledDescriptionContainer>
                                     No description.{' '}
                                     <PermissionIconButton
-                                        sx={{ p: 1 }}
                                         projectId={projectId}
                                         permission={UPDATE_FEATURE}
                                         component={Link}
@@ -204,7 +202,6 @@ const FeatureOverviewMetaData = () => {
                             </StyledDetail>
 
                             <FeatureEnvironmentSeen
-                                sx={{ p: 1 }}
                                 featureLastSeen={feature.lastSeenAt}
                                 environments={lastSeenEnvironments}
                             />

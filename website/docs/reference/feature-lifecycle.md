@@ -25,14 +25,13 @@ The feature flag is created but remains unseen in any environment.
 
 ### Pre-live stage
 
-The feature flag is used in non-production environment or is attempted to be used in a disabled production environment.
-Usage is derived from the SDK's last seen metrics.
+The feature flag has received metrics in non-production environment or has received metrics in a disabled production environment.
 
 **Purpose:** testing and validating the feature before it goes live. 
 
 ### Live stage
 
-The feature is used in the enabled production environment. Usage is derived from the SDK's last seen metrics.
+The feature has received metrics in the enabled production environment. 
 Once enough has been learned about the feature from production usage, you can mark the feature as completed.
 When marking a feature as complete, you decide whether to keep the feature, discard it, or keep one variant of the feature.
 This information can be used by code cleanup tools to automate feature removal from your code.

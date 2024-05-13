@@ -152,7 +152,7 @@ test('should return lifecycle stages', async () => {
             stage: 'initial',
             enteredStageAt: expect.any(String),
         },
-        { stage: 'pre-live', status: null, enteredStageAt: expect.any(String) },
+        { stage: 'pre-live', enteredStageAt: expect.any(String) },
         {
             stage: 'live',
             enteredStageAt: expect.any(String),

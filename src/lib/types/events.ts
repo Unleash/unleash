@@ -1,6 +1,7 @@
 import type { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import type { IApiToken } from './models/api-token';
 import type { IAuditUser, IUserWithRootRole } from './user';
+import type { FeatureLifecycleCompletedSchema } from '../openapi';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -634,14 +635,17 @@ export class FeatureCreatedEvent extends BaseEvent {
 
 export class FeatureCompletedEvent extends BaseEvent {
     readonly featureName: string;
+    readonly data: FeatureLifecycleCompletedSchema;
 
     constructor(p: {
         featureName: string;
+        data: FeatureLifecycleCompletedSchema;
         auditUser: IAuditUser;
     }) {
         super(FEATURE_COMPLETED, p.auditUser);
-        const { featureName } = p;
+        const { featureName, data } = p;
         this.featureName = featureName;
+        this.data = data;
     }
 }
 

@@ -183,6 +183,7 @@ export class FeatureLifecycleService extends EventEmitter {
         await this.eventService.storeEvent(
             new FeatureCompletedEvent({
                 featureName: feature,
+                data: status,
                 auditUser,
             }),
         );

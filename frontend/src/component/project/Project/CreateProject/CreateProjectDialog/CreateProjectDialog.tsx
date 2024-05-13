@@ -87,14 +87,15 @@ export const CreateProjectDialogue = ({
         e.preventDefault();
         clearErrors();
         const validName = validateName();
-        const validId = await validateProjectId();
 
-        if (validName && validId) {
-            const payload = getCreateProjectPayload();
+        if (validName) {
+            const payload = getCreateProjectPayload({
+                omitId: true,
+            });
             try {
-                await createProject(payload);
+                const createdProject = await createProject(payload);
                 refetchUser();
-                navigate(`/projects/${projectId}`, { replace: true });
+                navigate(`/projects/${createdProject.id}`, { replace: true });
                 setToastData({
                     title: 'Project created',
                     text: 'Now you can add toggles to this project',
@@ -113,7 +114,6 @@ export const CreateProjectDialogue = ({
             }
         }
     };
-
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate

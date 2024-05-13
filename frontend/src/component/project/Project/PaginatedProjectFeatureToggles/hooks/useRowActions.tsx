@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
+import { MarkCompletedDialogue } from '../../../../feature/FeatureView/FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
 
 export const useRowActions = (onChange: () => void, projectId: string) => {
     const [featureArchiveState, setFeatureArchiveState] = useState<
@@ -12,6 +13,13 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
         stale?: boolean;
     }>({});
 
+    const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] = useState<{
+        featureId: string;
+        open: boolean;
+    }>({
+        featureId: 'default',
+        open: false,
+    });
     const rowActionsDialogs = (
         <>
             <FeatureStaleDialog
@@ -34,6 +42,18 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
                 featureIds={[featureArchiveState || '']}
                 projectId={projectId}
             />
+            <MarkCompletedDialogue
+                isOpen={showMarkCompletedDialogue.open}
+                setIsOpen={(open) => {
+                    setShowMarkCompletedDialogue({
+                        ...showMarkCompletedDialogue,
+                        open,
+                    });
+                }}
+                projectId={projectId}
+                featureId={showMarkCompletedDialogue.featureId}
+                onComplete={onChange}
+            />
         </>
     );
 
@@ -41,5 +61,6 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
         rowActionsDialogs,
         setFeatureArchiveState,
         setFeatureStaleDialogState,
+        setShowMarkCompletedDialogue,
     };
 };

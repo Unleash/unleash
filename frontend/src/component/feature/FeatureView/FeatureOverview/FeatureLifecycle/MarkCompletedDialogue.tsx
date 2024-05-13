@@ -5,6 +5,7 @@ import { useState } from 'react';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SingleVariantOptions } from './SingleVariantOptions';
+import { useParentVariantOptions } from '../../../../../hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 
 interface IMarkCompletedDialogueProps {
     isOpen: boolean;
@@ -24,6 +25,10 @@ export const MarkCompletedDialogue = ({
     onComplete,
 }: IMarkCompletedDialogueProps) => {
     const { markFeatureCompleted } = useFeatureLifecycleApi();
+    const { parentVariantOptions: variantOptions } = useParentVariantOptions(
+        projectId,
+        featureId,
+    );
     const [status, setStatus] = useState<Status>('kept');
     const [variant, setVariant] = useState<string | undefined>(undefined);
     const onClick = async () => {
@@ -96,18 +101,26 @@ export const MarkCompletedDialogue = ({
                         }}
                         control={<Radio />}
                     />
-                    <LegalValueLabel
-                        key={'kept-with-variant'}
-                        value={'kept-with-variant'}
-                        legal={{
-                            value: 'We decided to keep the feature variant',
-                            description:
-                                'Choose to specify which feature variant will be kept',
-                        }}
-                        control={<Radio />}
+                    <ConditionallyRender
+                        condition={variantOptions.length > 0}
+                        show={
+                            <LegalValueLabel
+                                key={'kept-with-variant'}
+                                value={'kept-with-variant'}
+                                legal={{
+                                    value: 'We decided to keep the feature variant',
+                                    description:
+                                        'Choose to specify which feature variant will be kept',
+                                }}
+                                control={<Radio />}
+                            />
+                        }
                     />
                     <ConditionallyRender
-                        condition={status === 'kept-with-variant'}
+                        condition={
+                            variantOptions.length > 0 &&
+                            status === 'kept-with-variant'
+                        }
                         show={
                             <SingleVariantOptions
                                 parent={featureId}

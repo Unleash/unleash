@@ -229,6 +229,7 @@ module.exports = {
                         'reference/event-log',
                         'reference/event-types',
                         'reference/feature-flag-naming-patterns',
+                        'reference/feature-lifecycle',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',

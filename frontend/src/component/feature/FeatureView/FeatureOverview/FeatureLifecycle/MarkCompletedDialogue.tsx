@@ -44,7 +44,7 @@ export const MarkCompletedDialogue = ({
     return (
         <Dialogue
             open={isOpen}
-            title='Mark completed'
+            title='Mark flag completed'
             onClose={() => {
                 setIsOpen(false);
             }}

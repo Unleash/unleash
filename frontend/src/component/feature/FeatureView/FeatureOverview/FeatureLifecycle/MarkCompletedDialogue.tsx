@@ -6,6 +6,7 @@ import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/use
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SingleVariantOptions } from './SingleVariantOptions';
 import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IMarkCompletedDialogueProps {
     isOpen: boolean;
@@ -31,6 +32,9 @@ export const MarkCompletedDialogue = ({
     );
     const [status, setStatus] = useState<Status>('kept');
     const [variant, setVariant] = useState<string | undefined>(undefined);
+
+    const { trackEvent } = usePlausibleTracker();
+
     const onClick = async () => {
         const sentStatus = status === 'kept-with-variant' ? 'kept' : status;
         await markFeatureCompleted(featureId, projectId, {
@@ -39,6 +43,12 @@ export const MarkCompletedDialogue = ({
         });
         setIsOpen(false);
         onComplete();
+        trackEvent('feature-lifecycle', {
+            props: {
+                eventType: 'complete',
+                status: sentStatus,
+            },
+        });
     };
 
     return (

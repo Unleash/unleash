@@ -60,7 +60,8 @@ export type CustomEvents =
     | 'sdk-reporting'
     | 'insights-share'
     | 'many-strategies'
-    | 'sdk-banner';
+    | 'sdk-banner'
+    | 'feature-lifecycle';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

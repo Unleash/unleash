@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
-import { MarkCompletedDialogue } from '../../../../feature/FeatureView/FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
+import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
 
 export const useRowActions = (onChange: () => void, projectId: string) => {
     const [featureArchiveState, setFeatureArchiveState] = useState<

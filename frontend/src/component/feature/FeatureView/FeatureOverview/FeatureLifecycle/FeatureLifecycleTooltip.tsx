@@ -274,7 +274,7 @@ const LiveStageDescription: FC<{
             <BoldTitle>Is this feature complete?</BoldTitle>
             <InfoText sx={{ mb: 1 }}>
                 Marking the feature flag as complete does not affect any
-                configuration; however, it moves the feature toggle to its next
+                configuration; however, it moves the feature flag to its next
                 lifecycle stage and indicates that you have learned what you
                 needed in order to progress with the feature. It serves as a
                 reminder to start cleaning up the feature flag and removing it

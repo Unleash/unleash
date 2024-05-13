@@ -4,7 +4,7 @@ title: Feature Lifecycle
 
 :::info Availability
 
-Feature lifecycle was introduced in Unleash 6.0.0
+Feature lifecycle was introduced in Unleash 6.1.0
 
 :::
 

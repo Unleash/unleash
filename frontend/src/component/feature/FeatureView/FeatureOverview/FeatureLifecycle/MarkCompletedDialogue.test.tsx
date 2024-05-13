@@ -3,10 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { MarkCompletedDialogue } from './MarkCompletedDialogue';
 import { render } from 'utils/testRenderer';
-import {
-    testServerRoute,
-    testServerSetup,
-} from '../../../../../utils/testServer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const defaultProps = {
     isOpen: true,

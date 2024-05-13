@@ -13,7 +13,6 @@ import {
     CategoryScale,
     LinearScale,
     BarElement,
-    type ChartDataset,
     Title,
     Tooltip,
     Legend,
@@ -22,134 +21,24 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import {
-    type IInstanceTrafficMetricsResponse,
-    useInstanceTrafficMetrics,
-} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
-
-type ChartDatasetType = ChartDataset<'bar'>;
-
-type SelectablePeriod = {
-    key: string;
-    dayCount: number;
-    label: string;
-    year: number;
-    month: number;
-};
-
-type EndpointInfo = {
-    label: string;
-    color: string;
-    order: number;
-};
+import {
+    type ChartDatasetType,
+    useTrafficDataEstimation,
+} from 'hooks/useTrafficData';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(5),
 }));
 
-const padMonth = (month: number): string =>
-    month < 10 ? `0${month}` : `${month}`;
-
-const toSelectablePeriod = (date: Date, label?: string): SelectablePeriod => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const period = `${year}-${padMonth(month + 1)}`;
-    const dayCount = new Date(year, month + 1, 0).getDate();
-    return {
-        key: period,
-        year,
-        month,
-        dayCount,
-        label:
-            label ||
-            date.toLocaleString('en-US', { month: 'long', year: 'numeric' }),
-    };
-};
-
-const getSelectablePeriods = (): SelectablePeriod[] => {
-    const current = new Date(Date.now());
-    const selectablePeriods = [toSelectablePeriod(current, 'Current month')];
-    for (
-        let subtractMonthCount = 1;
-        subtractMonthCount < 13;
-        subtractMonthCount++
-    ) {
-        // JavaScript wraps around the year, so we don't need to handle that.
-        const date = new Date(
-            current.getFullYear(),
-            current.getMonth() - subtractMonthCount,
-            1,
-        );
-        if (date > new Date('2024-03-31')) {
-            selectablePeriods.push(toSelectablePeriod(date));
-        }
-    }
-    return selectablePeriods;
-};
-
-const toPeriodsRecord = (
-    periods: SelectablePeriod[],
-): Record<string, SelectablePeriod> => {
-    return periods.reduce(
-        (acc, period) => {
-            acc[period.key] = period;
-            return acc;
-        },
-        {} as Record<string, SelectablePeriod>,
-    );
-};
-
 const getDayLabels = (dayCount: number): number[] => {
     return [...Array(dayCount).keys()].map((i) => i + 1);
-};
-
-const toChartData = (
-    days: number[],
-    traffic: IInstanceTrafficMetricsResponse,
-    endpointsInfo: Record<string, EndpointInfo>,
-): ChartDatasetType[] => {
-    if (!traffic || !traffic.usage || !traffic.usage.apiData) {
-        return [];
-    }
-
-    const data = traffic.usage.apiData
-        .filter((item) => !!endpointsInfo[item.apiPath])
-        .sort(
-            (item1: any, item2: any) =>
-                endpointsInfo[item1.apiPath].order -
-                endpointsInfo[item2.apiPath].order,
-        )
-        .map((item: any) => {
-            const daysRec = days.reduce(
-                (acc, day: number) => {
-                    acc[`d${day}`] = 0;
-                    return acc;
-                },
-                {} as Record<string, number>,
-            );
-
-            for (const dayKey in item.days) {
-                const day = item.days[dayKey];
-                const dayNum = new Date(Date.parse(day.day)).getDate();
-                daysRec[`d${dayNum}`] = day.trafficTypes[0].count;
-            }
-            const epInfo = endpointsInfo[item.apiPath];
-
-            return {
-                label: epInfo.label,
-                data: Object.values(daysRec),
-                backgroundColor: epInfo.color,
-                hoverBackgroundColor: epInfo.color,
-            };
-        });
-
-    return data;
 };
 
 const customHighlightPlugin = {
@@ -295,35 +184,25 @@ const createBarChartOptions = (
     },
 });
 
-const endpointsInfo: Record<string, EndpointInfo> = {
-    '/api/admin': {
-        label: 'Admin',
-        color: '#6D66D9',
-        order: 1,
-    },
-    '/api/frontend': {
-        label: 'Frontend',
-        color: '#A39EFF',
-        order: 2,
-    },
-    '/api/client': {
-        label: 'Server',
-        color: '#D8D6FF',
-        order: 3,
-    },
-};
-
 const proPlanIncludedRequests = 53_000_000;
 
 export const NetworkTrafficUsage: VFC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
 
-    const selectablePeriods = getSelectablePeriods();
-    const record = toPeriodsRecord(selectablePeriods);
-    const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
-
     const { isOss, isPro } = useUiConfig();
+
+    const {
+        record,
+        period,
+        setPeriod,
+        selectablePeriods,
+        toChartData,
+        toTrafficUsageSum,
+        endpointsInfo,
+        calculateOverageCost,
+        calculateEstimatedMonthlyCost,
+    } = useTrafficDataEstimation();
 
     const includedTraffic = isPro() ? proPlanIncludedRequests : 0;
 
@@ -355,6 +234,10 @@ export const NetworkTrafficUsage: VFC = () => {
 
     const [usageTotal, setUsageTotal] = useState<number>(0);
 
+    const [overageCost, setOverageCost] = useState<number>(0);
+
+    const [estimatedMonthlyCost, setEstimatedMonthlyCost] = useState<number>(0);
+
     const data = {
         labels,
         datasets,
@@ -375,20 +258,21 @@ export const NetworkTrafficUsage: VFC = () => {
 
     useEffect(() => {
         if (data) {
-            const usage = data.datasets.reduce(
-                (acc: number, current: ChartDatasetType) => {
-                    return (
-                        acc +
-                        current.data.reduce(
-                            (acc_inner, current_inner) =>
-                                acc_inner + current_inner,
-                            0,
-                        )
-                    );
-                },
-                0,
+            const usage = toTrafficUsageSum(data.datasets);
+            const calculatedOverageCost = calculateOverageCost(
+                usage,
+                includedTraffic,
             );
             setUsageTotal(usage);
+            setOverageCost(calculatedOverageCost);
+            setEstimatedMonthlyCost(
+                calculateEstimatedMonthlyCost(
+                    period,
+                    data.datasets,
+                    includedTraffic,
+                    new Date(),
+                ),
+            );
         }
     }, [data]);
 
@@ -401,12 +285,12 @@ export const NetworkTrafficUsage: VFC = () => {
                     <StyledBox>
                         <Grid container component='header' spacing={2}>
                             <Grid item xs={12} md={10}>
-                                <Grid item xs={7} md={5.5}>
-                                    <NetworkTrafficUsagePlanSummary
-                                        usageTotal={usageTotal}
-                                        includedTraffic={includedTraffic}
-                                    />
-                                </Grid>
+                                <NetworkTrafficUsagePlanSummary
+                                    usageTotal={usageTotal}
+                                    includedTraffic={includedTraffic}
+                                    overageCost={overageCost}
+                                    estimatedMonthlyCost={estimatedMonthlyCost}
+                                />
                             </Grid>
                             <Grid item xs={12} md={2}>
                                 <Select

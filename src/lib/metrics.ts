@@ -21,7 +21,7 @@ import {
     PROJECT_ENVIRONMENT_REMOVED,
 } from './types/events';
 import type { IUnleashConfig } from './types/option';
-import type { IUnleashStores } from './types/stores';
+import type { ISettingStore, IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import type { ValidatedClientMetrics } from './features/metrics/shared/schema';
@@ -651,7 +651,12 @@ export default class MetricsMonitor {
             projectEnvironmentsDisabled.increment({ project_id: project });
         });
 
-        await this.configureDbMetrics(db, eventBus, schedulerService);
+        await this.configureDbMetrics(
+            db,
+            eventBus,
+            schedulerService,
+            stores.settingStore,
+        );
 
         return Promise.resolve();
     }
@@ -660,6 +665,7 @@ export default class MetricsMonitor {
         db: Knex,
         eventBus: EventEmitter,
         schedulerService: SchedulerService,
+        settingStore: ISettingStore,
     ): Promise<void> {
         if (db?.client) {
             const dbPoolMin = createGauge({
@@ -707,6 +713,13 @@ export default class MetricsMonitor {
                 'registerPoolMetrics',
                 0, // no jitter
             );
+            const postgresVersion = await settingStore.postgresVersion();
+            const database_version = createGauge({
+                name: 'postgres_version',
+                help: 'Which version of postgres is running (SHOW server_version)',
+                labelNames: ['version'],
+            });
+            database_version.labels({ version: postgresVersion }).set(1);
         }
     }
 

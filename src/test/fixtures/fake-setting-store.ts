@@ -38,4 +38,8 @@ export default class FakeSettingStore implements ISettingStore {
     async updateRow(name: string, content: any): Promise<void> {
         this.settings.set(name, content);
     }
+
+    async postgresVersion(): Promise<string> {
+        return Promise.resolve('fake-postgres-version');
+    }
 }

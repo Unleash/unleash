@@ -126,6 +126,7 @@ export const ProjectFeatureToggles = ({
         rowActionsDialogs,
         setFeatureArchiveState,
         setFeatureStaleDialogState,
+        setShowMarkCompletedDialogue,
     } = useRowActions(refetch, projectId);
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
@@ -206,7 +207,12 @@ export const ProjectFeatureToggles = ({
                         show={
                             <FeatureLifecycleCell
                                 feature={original}
-                                onComplete={refetch}
+                                onComplete={() => {
+                                    setShowMarkCompletedDialogue({
+                                        featureId: original.name,
+                                        open: true,
+                                    });
+                                }}
                                 onUncomplete={refetch}
                                 onArchive={() =>
                                     setFeatureArchiveState(original.name)

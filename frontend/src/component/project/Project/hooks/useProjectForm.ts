@@ -156,7 +156,7 @@ const useProjectForm = (
     };
 
     const validateName = () => {
-        if (projectName.length === 0) {
+        if (projectName.trim().length === 0) {
             setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }

@@ -171,7 +171,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <ProjectNameContainer>
                     <StyledProjectName
                         label='Project name'
-                        required
+                        aria-required
                         value={projectName}
                         onChange={handleProjectNameUpdate}
                         error={Boolean(errors.name)}
@@ -208,7 +208,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         label:
                             projectEnvironments.size > 0
                                 ? `${projectEnvironments.size} selected`
-                                : 'Select environments',
+                                : 'All environments',
                         icon: <EnvironmentsIcon />,
                     }}
                     search={{

@@ -20,7 +20,10 @@ import type { IEnvironmentStore, IUnleashStores } from './types';
 import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
 import { SchedulerService } from './services';
 import noLogger from '../test/fixtures/no-logger';
-import { createFakeFeatureLifecycleService } from './features';
+import { createFeatureLifecycleService } from './features';
+import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
+import getLogger from '../test/fixtures/no-logger';
+import type { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -30,6 +33,8 @@ let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
 let stores: IUnleashStores;
 let schedulerService: SchedulerService;
+let featureLifeCycleStore: FeatureLifecycleStore;
+let db: ITestDb;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -52,8 +57,11 @@ beforeAll(async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    const { featureLifecycleService } =
-        createFakeFeatureLifecycleService(config);
+    db = await dbInit('metrics_test', getLogger);
+
+    const { featureLifecycleService, featureLifecycleStore } =
+        createFeatureLifecycleService(db.rawDatabase, config);
+
     statsService = new InstanceStatsService(
         stores,
         config,
@@ -62,6 +70,7 @@ beforeAll(async () => {
         createFakeGetProductionChanges(),
         featureLifecycleService,
     );
+    featureLifeCycleStore = featureLifecycleStore;
 
     schedulerService = new SchedulerService(
         noLogger,
@@ -71,7 +80,7 @@ beforeAll(async () => {
         eventBus,
     );
 
-    const db = {
+    const metricsDbConf = {
         client: {
             pool: {
                 min: 0,
@@ -92,7 +101,7 @@ beforeAll(async () => {
         statsService,
         schedulerService,
         // @ts-ignore - We don't want a full knex implementation for our tests, it's enough that it actually yields the numbers we want.
-        db,
+        metricsDbConf,
     );
 });
 
@@ -287,6 +296,19 @@ test('should collect metrics for project disabled numbers', async () => {
 });
 
 test('should collect metrics for lifecycle', async () => {
+    await db.stores.featureToggleStore.create('default', {
+        name: 'my_feature_b',
+        createdByUserId: 9999,
+    });
+    await featureLifeCycleStore.insert([
+        {
+            feature: 'my_feature_b',
+            stage: 'initial',
+        },
+    ]);
+    const { featureLifeCycles } = await statsService.getStats();
+    expect(featureLifeCycles).toHaveLength(1);
+
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_lifecycle_stage_duration/);
 });

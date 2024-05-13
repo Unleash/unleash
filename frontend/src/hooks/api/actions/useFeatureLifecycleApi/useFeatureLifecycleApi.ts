@@ -1,4 +1,5 @@
 import useAPI from '../useApi/useApi';
+import type { FeatureLifecycleCompletedSchema } from 'openapi';
 
 const useFeatureLifecycleApi = () => {
     const { makeRequest, makeLightRequest, createRequest, errors, loading } =
@@ -6,10 +7,15 @@ const useFeatureLifecycleApi = () => {
             propagateErrors: true,
         });
 
-    const markFeatureCompleted = async (name: string, project: string) => {
+    const markFeatureCompleted = async (
+        name: string,
+        project: string,
+        status: FeatureLifecycleCompletedSchema,
+    ) => {
         const path = `api/admin/projects/${project}/features/${name}/lifecycle/complete`;
         const req = createRequest(path, {
             method: 'POST',
+            body: JSON.stringify(status),
         });
 
         return makeRequest(req.caller, req.id);

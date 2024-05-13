@@ -1,6 +1,5 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
-import { NewProjectForm } from './NewProjectForm';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../hooks/useProjectForm';
@@ -28,6 +27,7 @@ const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
+    const useNewProjectForm = useUiFlag('newCreateProjectUI');
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const {
@@ -52,6 +52,10 @@ const CreateProject = () => {
         errors,
     } = useProjectForm();
 
+    if (useNewProjectForm) {
+        return <Navigate to={`/projects?create=true`} replace />;
+    }
+
     const generalDocumentation =
         'Projects allows you to group feature toggles together in the management UI.';
 
@@ -60,19 +64,17 @@ const CreateProject = () => {
     const clearDocumentationOverride = () =>
         setDocumentation(generalDocumentation);
 
-    const useNewProjectForm = useUiFlag('newCreateProjectUI');
     const projectPayload = getCreateProjectPayload({
-        omitId: useNewProjectForm,
-        includeChangeRequestConfig: useNewProjectForm,
+        omitId: false,
+        includeChangeRequestConfig: false,
     });
-
     const { createProject, loading } = useProjectApi();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
         const validName = validateName();
-        const validId = useNewProjectForm || (await validateProjectId());
+        const validId = await validateProjectId();
 
         if (validName && validId) {
             try {
@@ -108,54 +110,6 @@ const CreateProject = () => {
     const handleCancel = () => {
         navigate(GO_BACK);
     };
-
-    if (useNewProjectForm) {
-        return (
-            <FormTemplate
-                disablePadding
-                loading={loading}
-                description={documentation}
-                documentationLink='https://docs.getunleash.io/reference/projects'
-                documentationLinkLabel='Projects documentation'
-                formatApiCode={formatApiCode}
-            >
-                <NewProjectForm
-                    errors={errors}
-                    handleSubmit={handleSubmit}
-                    projectId={projectId}
-                    projectEnvironments={projectEnvironments}
-                    setProjectEnvironments={setProjectEnvironments}
-                    setProjectId={setProjectId}
-                    projectName={projectName}
-                    projectStickiness={projectStickiness}
-                    projectChangeRequestConfiguration={
-                        projectChangeRequestConfiguration
-                    }
-                    updateProjectChangeRequestConfig={
-                        updateProjectChangeRequestConfig
-                    }
-                    projectMode={projectMode}
-                    setProjectMode={setProjectMode}
-                    setProjectStickiness={setProjectStickiness}
-                    setProjectName={setProjectName}
-                    projectDesc={projectDesc}
-                    setProjectDesc={setProjectDesc}
-                    mode='Create'
-                    clearErrors={clearErrors}
-                    validateProjectId={validateProjectId}
-                    overrideDocumentation={setDocumentation}
-                    clearDocumentationOverride={clearDocumentationOverride}
-                >
-                    <StyledButton onClick={handleCancel}>Cancel</StyledButton>
-                    <CreateButton
-                        name='project'
-                        permission={CREATE_PROJECT}
-                        data-testid={CREATE_PROJECT_BTN}
-                    />
-                </NewProjectForm>
-            </FormTemplate>
-        );
-    }
 
     return (
         <FormTemplate

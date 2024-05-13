@@ -21,6 +21,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    featureLifecycle: true,
                 },
             },
         },
@@ -924,7 +925,7 @@ test('should filter features by combined operators', async () => {
     });
 });
 
-test('should return environment usage metrics', async () => {
+test('should return environment usage metrics and lifecycle', async () => {
     await app.createFeature({
         name: 'my_feature_b',
         createdAt: '2023-01-29T15:21:39.975Z',
@@ -957,6 +958,13 @@ test('should return environment usage metrics', async () => {
         },
     ]);
 
+    await stores.featureLifecycleStore.insert([
+        { feature: 'my_feature_b', stage: 'initial' },
+    ]);
+    await stores.featureLifecycleStore.insert([
+        { feature: 'my_feature_b', stage: 'pre-live' },
+    ]);
+
     const { body } = await searchFeatures({
         query: 'my_feature_b',
     });
@@ -964,6 +972,7 @@ test('should return environment usage metrics', async () => {
         features: [
             {
                 name: 'my_feature_b',
+                lifecycle: { stage: 'pre-live' },
                 environments: [
                     {
                         name: 'default',

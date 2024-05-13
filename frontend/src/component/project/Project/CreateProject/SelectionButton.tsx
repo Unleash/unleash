@@ -6,7 +6,7 @@ import {
     StyledDropdown,
     StyledListItem,
     StyledPopover,
-    StyledTextField,
+    StyledDropdownSearch,
     TableSearchInput,
 } from './SelectionButton.styles';
 import { ChangeRequestTable } from './ChangeRequestTable';
@@ -152,12 +152,13 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
                 }}
             >
                 <StyledDropdown>
-                    <StyledTextField
+                    <StyledDropdownSearch
                         variant='outlined'
                         size='small'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
                         label={search.label}
+                        hideLabel
                         placeholder={search.placeholder}
                         autoFocus
                         InputProps={{
@@ -399,6 +400,7 @@ export const TableSelect: FC<TableSelectProps> = ({
                         size='small'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
+                        hideLabel
                         label={search.label}
                         placeholder={search.placeholder}
                         autoFocus

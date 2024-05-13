@@ -24,13 +24,27 @@ describe('populateCurrentStage', () => {
             lifecycle: { stage: 'pre-live', enteredStageAt },
             environments: [
                 { name: 'test', type: 'development', lastSeenAt: null },
-                { name: 'test1', type: 'production', lastSeenAt: '2022-08-01' },
+                {
+                    name: 'test1',
+                    type: 'production',
+                    lastSeenAt: '2022-08-01',
+                    enabled: true,
+                },
                 { name: 'dev', type: 'development', lastSeenAt: '2022-08-01' },
+                {
+                    name: 'prod_disabled',
+                    type: 'production',
+                    lastSeenAt: '2022-08-02',
+                    enabled: false,
+                },
             ],
         } as IFeatureToggle;
         const expected = {
             name: 'pre-live',
-            environments: [{ name: 'dev', lastSeenAt: '2022-08-01' }],
+            environments: [
+                { name: 'dev', lastSeenAt: '2022-08-01' },
+                { name: 'prod_disabled', lastSeenAt: '2022-08-02' },
+            ],
             enteredStageAt,
         };
         const result = populateCurrentStage(feature);
@@ -41,7 +55,18 @@ describe('populateCurrentStage', () => {
         const feature = {
             lifecycle: { stage: 'live', enteredStageAt },
             environments: [
-                { name: 'prod', type: 'production', lastSeenAt: '2022-08-01' },
+                {
+                    name: 'prod',
+                    type: 'production',
+                    lastSeenAt: '2022-08-01',
+                    enabled: true,
+                },
+                {
+                    name: 'prod_ignore',
+                    type: 'production',
+                    lastSeenAt: '2022-08-01',
+                    enabled: false,
+                },
             ],
         } as IFeatureToggle;
         const expected = {

@@ -37,7 +37,7 @@ export interface FeatureSearchEnvironmentSchema {
     /** A list of activation strategies for the feature environment */
     strategies?: FeatureStrategySchema[];
     /** The type of the environment */
-    type?: string;
+    type: string;
     /** The number of defined variants */
     variantCount?: number;
     /** A list of variants for the feature environment */

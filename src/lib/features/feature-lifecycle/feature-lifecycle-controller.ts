@@ -9,8 +9,10 @@ import {
 } from '../../types';
 import type { OpenApiService } from '../../services';
 import {
+    createRequestSchema,
     createResponseSchema,
     emptyResponse,
+    type FeatureLifecycleCompletedSchema,
     featureLifecycleSchema,
     type FeatureLifecycleSchema,
     getStandardResponses,
@@ -78,6 +80,9 @@ export default class FeatureLifecycleController extends Controller {
                     summary: 'Set feature completed',
                     description: 'This will set the feature as completed.',
                     operationId: 'complete',
+                    requestBody: createRequestSchema(
+                        'featureLifecycleCompletedSchema',
+                    ),
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
@@ -128,7 +133,11 @@ export default class FeatureLifecycleController extends Controller {
     }
 
     async complete(
-        req: IAuthRequest<FeatureLifecycleParams>,
+        req: IAuthRequest<
+            FeatureLifecycleParams,
+            any,
+            FeatureLifecycleCompletedSchema
+        >,
         res: Response,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('featureLifecycle')) {
@@ -136,8 +145,11 @@ export default class FeatureLifecycleController extends Controller {
         }
         const { featureName } = req.params;
 
+        const status = req.body;
+
         await this.featureLifecycleService.featureCompleted(
             featureName,
+            status,
             req.audit,
         );
 

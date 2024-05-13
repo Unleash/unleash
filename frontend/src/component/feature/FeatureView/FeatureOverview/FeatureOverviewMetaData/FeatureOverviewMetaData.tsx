@@ -8,13 +8,9 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureLifecycleTooltip } from '../FeatureLifecycle/FeatureLifecycleTooltip';
-import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
-import { populateCurrentStage } from '../FeatureLifecycle/populateCurrentStage';
-import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { StyledDetail } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
@@ -23,6 +19,8 @@ import { DependencyRow } from './DependencyRow';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
+import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
+import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -61,11 +59,9 @@ const StyledBody = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-const StyledBodyItem = styled('span')(({ theme }) => ({
-    padding: theme.spacing(0.5, 0),
-}));
+const BodyItemWithIcon = styled('div')(({ theme }) => ({}));
 
-const StyledRow = styled('div')(({ theme }) => ({
+const SpacedBodyItem = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     padding: theme.spacing(1, 0),
@@ -74,6 +70,7 @@ const StyledRow = styled('div')(({ theme }) => ({
 const StyledDescriptionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
 }));
 
 const StyledDetailsContainer = styled('div')(({ theme }) => ({
@@ -97,10 +94,11 @@ const FeatureOverviewMetaData = () => {
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
-    const { markFeatureCompleted, markFeatureUncompleted, loading } =
-        useFeatureLifecycleApi();
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
+    const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
+        useState(false);
+
     const { locationSettings } = useLocationSettings();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
 
@@ -114,18 +112,6 @@ const FeatureOverviewMetaData = () => {
         }));
 
     const IconComponent = getFeatureTypeIcons(type);
-
-    const currentStage = populateCurrentStage(feature);
-
-    const onComplete = async () => {
-        await markFeatureCompleted(featureId, projectId);
-        refetchFeature();
-    };
-
-    const onUncomplete = async () => {
-        await markFeatureUncompleted(featureId, projectId);
-        refetchFeature();
-    };
 
     return (
         <StyledContainer>
@@ -146,36 +132,31 @@ const FeatureOverviewMetaData = () => {
                     <StyledHeader>{capitalize(type || '')} toggle</StyledHeader>
                 </StyledMetaDataHeader>
                 <StyledBody>
-                    <StyledRow data-loading>
+                    <SpacedBodyItem data-loading>
                         <StyledLabel>Project:</StyledLabel>
                         <span>{project}</span>
-                    </StyledRow>
+                    </SpacedBodyItem>
                     <ConditionallyRender
-                        condition={
-                            featureLifecycleEnabled && Boolean(currentStage)
-                        }
+                        condition={featureLifecycleEnabled}
                         show={
-                            <StyledRow data-loading>
+                            <SpacedBodyItem data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
-                                <FeatureLifecycleTooltip
-                                    stage={currentStage!}
+                                <FeatureLifecycle
+                                    feature={feature}
                                     onArchive={() => setShowDelDialog(true)}
-                                    onComplete={onComplete}
-                                    onUncomplete={onUncomplete}
-                                    loading={loading}
-                                >
-                                    <FeatureLifecycleStageIcon
-                                        stage={currentStage!}
-                                    />
-                                </FeatureLifecycleTooltip>
-                            </StyledRow>
+                                    onComplete={() =>
+                                        setShowMarkCompletedDialogue(true)
+                                    }
+                                    onUncomplete={refetchFeature}
+                                />
+                            </SpacedBodyItem>
                         }
                     />
 
                     <ConditionallyRender
                         condition={Boolean(description)}
                         show={
-                            <StyledBodyItem data-loading>
+                            <BodyItemWithIcon data-loading sx={{ pt: 1 }}>
                                 <StyledLabel>Description:</StyledLabel>
                                 <StyledDescriptionContainer>
                                     <StyledDescription>
@@ -193,10 +174,10 @@ const FeatureOverviewMetaData = () => {
                                         <Edit />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
-                            </StyledBodyItem>
+                            </BodyItemWithIcon>
                         }
                         elseShow={
-                            <span data-loading>
+                            <div data-loading>
                                 <StyledDescriptionContainer>
                                     No description.{' '}
                                     <PermissionIconButton
@@ -211,10 +192,10 @@ const FeatureOverviewMetaData = () => {
                                         <Edit />
                                     </PermissionIconButton>
                                 </StyledDescriptionContainer>
-                            </span>
+                            </div>
                         }
                     />
-                    <StyledBodyItem>
+                    <BodyItemWithIcon>
                         <StyledDetailsContainer>
                             <StyledDetail>
                                 <StyledLabel>Created at:</StyledLabel>
@@ -229,10 +210,9 @@ const FeatureOverviewMetaData = () => {
                             <FeatureEnvironmentSeen
                                 featureLastSeen={feature.lastSeenAt}
                                 environments={lastSeenEnvironments}
-                                sx={{ p: 0 }}
                             />
                         </StyledDetailsContainer>
-                    </StyledBodyItem>
+                    </BodyItemWithIcon>
                     <ConditionallyRender
                         condition={showDependentFeatures}
                         show={<DependencyRow feature={feature} />}
@@ -260,6 +240,13 @@ const FeatureOverviewMetaData = () => {
                         featureIds={[featureId]}
                     />
                 }
+            />
+            <MarkCompletedDialogue
+                isOpen={showMarkCompletedDialogue}
+                setIsOpen={setShowMarkCompletedDialogue}
+                projectId={feature.project}
+                featureId={feature.name}
+                onComplete={refetchFeature}
             />
         </StyledContainer>
     );

@@ -11,6 +11,7 @@ import { SELECT_ITEM_ID } from 'utils/testIds';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import type { SxProps } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
+import { visuallyHidden } from '@mui/utils';
 
 export interface ISelectOption {
     key: string;
@@ -30,6 +31,7 @@ export interface IGeneralSelectProps extends Omit<SelectProps, 'onChange'> {
     fullWidth?: boolean;
     classes?: any;
     defaultValue?: string;
+    visuallyHideLabel?: boolean;
 }
 
 const GeneralSelect: React.FC<IGeneralSelectProps> = ({
@@ -43,6 +45,7 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
     className,
     classes,
     fullWidth,
+    visuallyHideLabel,
     ...rest
 }) => {
     const onSelectChange = (event: SelectChangeEvent) => {
@@ -57,13 +60,18 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
             classes={classes}
             fullWidth={fullWidth}
         >
-            <InputLabel htmlFor={id}>{label}</InputLabel>
+            <InputLabel
+                sx={visuallyHideLabel ? visuallyHidden : null}
+                htmlFor={id}
+            >
+                {label}
+            </InputLabel>
             <Select
                 name={name}
                 disabled={disabled}
                 onChange={onSelectChange}
                 className={className}
-                label={label}
+                label={visuallyHideLabel ? '' : label}
                 id={id}
                 value={value}
                 IconComponent={KeyboardArrowDownOutlined}

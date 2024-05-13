@@ -32,6 +32,11 @@ export type ILastSeenEnvironments = Pick<
     'name' | 'enabled' | 'lastSeenAt' | 'yes' | 'no'
 >;
 
+export type Lifecycle = {
+    stage: 'initial' | 'pre-live' | 'live' | 'completed' | 'archived';
+    enteredStageAt: string;
+};
+
 export interface IFeatureToggle {
     stale: boolean;
     archived: boolean;
@@ -49,10 +54,7 @@ export interface IFeatureToggle {
     impressionData: boolean;
     strategies?: IFeatureStrategy[];
     dependencies: Array<IDependency>;
-    lifecycle?: {
-        stage: 'initial' | 'pre-live' | 'live' | 'completed' | 'archived';
-        enteredStageAt: string;
-    };
+    lifecycle?: Lifecycle;
     children: Array<string>;
 }
 

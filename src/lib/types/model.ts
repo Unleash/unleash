@@ -7,7 +7,6 @@ import type { IProjectStats } from '../features/project/project-service';
 import type { CreateFeatureStrategySchema } from '../openapi';
 import type { ProjectEnvironment } from '../features/project/project-store-type';
 import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
-import type { FeatureLifecycleStage } from '../features/feature-lifecycle/feature-lifecycle-store-type';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -166,9 +165,10 @@ export interface IFeatureLifecycleStage {
     enteredStageAt: Date;
 }
 
-export type IFeatureLifecycleStageDuration = FeatureLifecycleStage & {
+export type IProjectLifecycleStageDuration = {
     duration: number;
     project: string;
+    stage: StageName;
 };
 
 export interface IFeatureDependency {
@@ -237,6 +237,7 @@ export interface IFeatureOverview {
     createdAt: Date;
     lastSeenAt: Date;
     environments: IEnvironmentOverview[];
+    lifecycle?: IFeatureLifecycleStage;
 }
 
 export type IFeatureSearchOverview = Exclude<

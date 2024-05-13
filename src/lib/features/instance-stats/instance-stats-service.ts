@@ -22,7 +22,7 @@ import {
     FEATURES_EXPORTED,
     FEATURES_IMPORTED,
     type IApiTokenStore,
-    type IFeatureLifecycleStageDuration,
+    type IProjectLifecycleStageDuration,
     type IFlagResolver,
 } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
@@ -63,7 +63,7 @@ export interface InstanceStats {
         enabledCount: number;
         variantCount: number;
     };
-    featureLifeCycles: IFeatureLifecycleStageDuration[];
+    featureLifeCycles: IProjectLifecycleStageDuration[];
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -349,7 +349,7 @@ export class InstanceStatsService {
         return { ...instanceStats, sum, projects: totalProjects };
     }
 
-    async getAllWithStageDuration(): Promise<IFeatureLifecycleStageDuration[]> {
+    async getAllWithStageDuration(): Promise<IProjectLifecycleStageDuration[]> {
         if (this.flagResolver.isEnabled('featureLifecycleMetrics')) {
             return this.featureLifecycleService.getAllWithStageDuration();
         }

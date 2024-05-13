@@ -68,6 +68,7 @@ const CreateProject = () => {
         omitId: false,
         includeChangeRequestConfig: false,
     });
+
     const { createProject, loading } = useProjectApi();
 
     const handleSubmit = async (e: Event) => {

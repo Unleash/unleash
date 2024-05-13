@@ -76,11 +76,16 @@ export const CreateProjectDialogue = ({
     const clearDocumentationOverride = () =>
         setDocumentation(generalDocumentation);
 
+    const projectPayload = getCreateProjectPayload({
+        omitId: true,
+        includeChangeRequestConfig: true,
+    });
+
     const formatApiCode = () => {
         return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getCreateProjectPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(projectPayload, undefined, 2)}'`;
     };
 
     const handleSubmit = async (e: Event) => {
@@ -90,7 +95,7 @@ export const CreateProjectDialogue = ({
         const validId = await validateProjectId();
 
         if (validName && validId) {
-            const payload = getCreateProjectPayload();
+            const payload = projectPayload;
             try {
                 await createProject(payload);
                 refetchUser();

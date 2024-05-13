@@ -12,6 +12,7 @@ describe('getCurrentStage', () => {
             },
             {
                 stage: 'completed',
+                status: 'kept',
                 enteredStageAt: irrelevantDate,
             },
             {

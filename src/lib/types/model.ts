@@ -163,6 +163,7 @@ export type StageName =
 export interface IFeatureLifecycleStage {
     stage: StageName;
     enteredStageAt: Date;
+    status?: string;
 }
 
 export type IProjectLifecycleStageDuration = {

@@ -43,7 +43,10 @@ export const populateCurrentStage = (
         case 'completed':
             return {
                 name: 'completed',
-                status: 'kept',
+                status:
+                    feature.lifecycle.status === 'discarded'
+                        ? 'discarded'
+                        : 'kept',
                 environments: getFilteredEnvironments(() => true),
                 enteredStageAt,
             };

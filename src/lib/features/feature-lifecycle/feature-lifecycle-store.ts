@@ -10,8 +10,8 @@ import type { StageName } from '../../types';
 type DBType = {
     stage: StageName;
     created_at: string;
-    status?: string;
-    status_value?: string;
+    status: string | null;
+    status_value: string | null;
 };
 
 type DBProjectType = DBType & {
@@ -64,8 +64,9 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
             .where({ feature })
             .orderBy('created_at', 'asc');
 
-        return results.map(({ stage, created_at }: DBType) => ({
+        return results.map(({ stage, status, created_at }: DBType) => ({
             stage,
+            ...(status ? { status } : {}),
             enteredStageAt: new Date(created_at),
         }));
     }

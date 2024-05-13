@@ -171,7 +171,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <ProjectNameContainer>
                     <StyledProjectName
                         label='Project name'
-                        required
+                        aria-required
                         value={projectName}
                         onChange={handleProjectNameUpdate}
                         error={Boolean(errors.name)}

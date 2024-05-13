@@ -277,7 +277,7 @@ const LiveStageDescription: FC<{
                 configuration; however, it moves the feature toggle to its next
                 lifecycle stage and indicates that you have learned what you
                 needed in order to progress with the feature. It serves as a
-                reminder to start cleaning up the feature toggle and removing it
+                reminder to start cleaning up the feature flag and removing it
                 from the code.
             </InfoText>
             <PermissionButton

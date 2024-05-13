@@ -5,7 +5,7 @@ import { useState } from 'react';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SingleVariantOptions } from './SingleVariantOptions';
-import { useParentVariantOptions } from '../../../../../hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
+import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 
 interface IMarkCompletedDialogueProps {
     isOpen: boolean;

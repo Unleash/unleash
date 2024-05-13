@@ -202,30 +202,9 @@ export const ProjectFeatureToggles = ({
                 id: 'lastSeenAt',
                 header: 'Last seen',
                 cell: ({ row: { original } }) => (
-                    <ConditionallyRender
-                        condition={featureLifecycleEnabled}
-                        show={
-                            <FeatureLifecycleCell
-                                feature={original}
-                                onComplete={() => {
-                                    setShowMarkCompletedDialogue({
-                                        featureId: original.name,
-                                        open: true,
-                                    });
-                                }}
-                                onUncomplete={refetch}
-                                onArchive={() =>
-                                    setFeatureArchiveState(original.name)
-                                }
-                                data-loading
-                            />
-                        }
-                        elseShow={
-                            <MemoizedFeatureEnvironmentSeenCell
-                                feature={original}
-                                data-loading
-                            />
-                        }
+                    <MemoizedFeatureEnvironmentSeenCell
+                        feature={original}
+                        data-loading
                     />
                 ),
                 size: 50,
@@ -234,6 +213,36 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
+            ...(featureLifecycleEnabled
+                ? [
+                      columnHelper.accessor('lifecycle', {
+                          id: 'lifecycle',
+                          header: 'Lifecycle',
+                          cell: ({ row: { original } }) => (
+                              <FeatureLifecycleCell
+                                  feature={original}
+                                  onComplete={() => {
+                                      setShowMarkCompletedDialogue({
+                                          featureId: original.name,
+                                          open: true,
+                                      });
+                                  }}
+                                  onUncomplete={refetch}
+                                  onArchive={() =>
+                                      setFeatureArchiveState(original.name)
+                                  }
+                                  data-loading
+                              />
+                          ),
+                          enableSorting: false,
+                          size: 50,
+                          meta: {
+                              align: 'center',
+                              width: '1%',
+                          },
+                      }),
+                  ]
+                : []),
             ...environments.map((name: string) => {
                 const isChangeRequestEnabled = isChangeRequestConfigured(name);
 
@@ -314,6 +323,7 @@ export const ProjectFeatureToggles = ({
             tableState.favoritesFirst,
             refetch,
             isPlaceholder,
+            featureLifecycleEnabled,
         ],
     );
 
@@ -430,6 +440,16 @@ export const ProjectFeatureToggles = ({
                                         id: 'lastSeenAt',
                                         isVisible: columnVisibility.lastSeenAt,
                                     },
+                                    ...(featureLifecycleEnabled
+                                        ? [
+                                              {
+                                                  header: 'Lifecycle',
+                                                  id: 'lifecycle',
+                                                  isVisible:
+                                                      columnVisibility.lifecycle,
+                                              },
+                                          ]
+                                        : []),
                                     {
                                         id: 'divider',
                                     },

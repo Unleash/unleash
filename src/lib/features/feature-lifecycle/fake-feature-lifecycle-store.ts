@@ -27,6 +27,9 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
             ...existingStages,
             {
                 stage: featureLifecycleStage.stage,
+                ...(featureLifecycleStage.status
+                    ? { status: featureLifecycleStage.status }
+                    : {}),
                 enteredStageAt: new Date(),
             },
         ];

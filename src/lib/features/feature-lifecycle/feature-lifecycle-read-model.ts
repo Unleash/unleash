@@ -6,6 +6,7 @@ import type { IFeatureLifecycleStage, StageName } from '../../types';
 type DBType = {
     feature: string;
     stage: StageName;
+    status: string | null;
     created_at: Date;
 };
 
@@ -23,8 +24,9 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
             .where({ feature })
             .orderBy('created_at', 'asc');
 
-        const stages = results.map(({ stage, created_at }: DBType) => ({
+        const stages = results.map(({ stage, status, created_at }: DBType) => ({
             stage,
+            ...(status ? { status } : {}),
             enteredStageAt: created_at,
         }));
 

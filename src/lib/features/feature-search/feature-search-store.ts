@@ -79,6 +79,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .select(
                 'feature as stage_feature',
                 'stage as latest_stage',
+                'status as stage_status',
                 'created_at as entered_stage_at',
             )
             .distinctOn('stage_feature')
@@ -416,6 +417,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     entry.lifecycle = row.latest_stage
                         ? {
                               stage: row.latest_stage,
+                              ...(row.stage_status
+                                  ? { status: row.stage_status }
+                                  : {}),
                               enteredStageAt: row.entered_stage_at,
                           }
                         : undefined;

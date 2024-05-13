@@ -18,12 +18,15 @@ import {
     STAGE_ENTERED,
 } from './feature-lifecycle-service';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
+import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model';
+import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let featureLifecycleService: FeatureLifecycleService;
 let eventStore: IEventStore;
 let eventBus: EventEmitter;
+let featureLifecycleReadModel: IFeatureLifecycleReadModel;
 
 beforeAll(async () => {
     db = await dbInit('feature_lifecycle', getLogger);
@@ -41,6 +44,7 @@ beforeAll(async () => {
     eventStore = db.stores.eventStore;
     eventBus = app.config.eventBus;
     featureLifecycleService = app.services.featureLifecycleService;
+    featureLifecycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
 
     await app.request
         .post(`/auth/demo/login`)
@@ -62,6 +66,11 @@ const getFeatureLifecycle = async (featureName: string, expectedCode = 200) => {
         .get(`/api/admin/projects/default/features/${featureName}/lifecycle`)
         .expect(expectedCode);
 };
+
+const getCurrentStage = async (featureName: string) => {
+    return featureLifecycleReadModel.findCurrentStage(featureName);
+};
+
 const completeFeature = async (
     featureName: string,
     status: FeatureLifecycleCompletedSchema,
@@ -143,7 +152,7 @@ test('should return lifecycle stages', async () => {
             stage: 'initial',
             enteredStageAt: expect.any(String),
         },
-        { stage: 'pre-live', enteredStageAt: expect.any(String) },
+        { stage: 'pre-live', status: null, enteredStageAt: expect.any(String) },
         {
             stage: 'live',
             enteredStageAt: expect.any(String),
@@ -166,6 +175,8 @@ test('should be able to toggle between completed/uncompleted', async () => {
         status: 'kept',
         statusValue: 'variant1',
     });
+    const currentStage = await getCurrentStage('my_feature_b');
+    expect(currentStage).toMatchObject({ stage: 'completed', status: 'kept' });
 
     await expectFeatureStage('my_feature_b', 'completed');
 

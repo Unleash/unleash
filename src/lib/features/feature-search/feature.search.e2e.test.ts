@@ -962,7 +962,7 @@ test('should return environment usage metrics and lifecycle', async () => {
         { feature: 'my_feature_b', stage: 'initial' },
     ]);
     await stores.featureLifecycleStore.insert([
-        { feature: 'my_feature_b', stage: 'pre-live' },
+        { feature: 'my_feature_b', stage: 'completed', status: 'discarded' },
     ]);
 
     const { body } = await searchFeatures({
@@ -972,7 +972,7 @@ test('should return environment usage metrics and lifecycle', async () => {
         features: [
             {
                 name: 'my_feature_b',
-                lifecycle: { stage: 'pre-live' },
+                lifecycle: { stage: 'completed', status: 'discarded' },
                 environments: [
                     {
                         name: 'default',

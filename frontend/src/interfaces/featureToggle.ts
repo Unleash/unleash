@@ -34,6 +34,7 @@ export type ILastSeenEnvironments = Pick<
 
 export type Lifecycle = {
     stage: 'initial' | 'pre-live' | 'live' | 'completed' | 'archived';
+    status?: string;
     enteredStageAt: string;
 };
 

@@ -213,7 +213,7 @@ require 'unleash'
 
 See additional use cases in our [Server-Side SDK with Ruby](https://docs.getunleash.io/reference/sdks/ruby) documentation.
 
-## 6. Verify the toggle experience[](https://docs.getunleash.io/feature-flag-tutorials/python#6-verify-the-toggle-experience)
+## 6. Verify the toggle experience
 
 Now that we’ve connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the `Hello GraphQL` message and only get 10 planets.
 

@@ -129,7 +129,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                         <StyledContainer>
                             <Grid item>
                                 <StyledCardTitleRow>
-                                    <b>Estimated traffic charges</b>
+                                    <b>Accrued traffic charges</b>
                                 </StyledCardTitleRow>
                                 <StyledCardDescription>
                                     <RowContainer>
@@ -143,7 +143,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                                         </StyledNumbersDiv>
                                     </RowContainer>
                                     <RowContainer>
-                                        Estimated traffic charges
+                                        Accrued traffic charges
                                         <StyledNumbersDiv>
                                             <Badge color='secondary'>
                                                 {overageCost} USD
@@ -154,7 +154,8 @@ export const NetworkTrafficUsagePlanSummary = ({
                                         condition={estimatedMonthlyCost > 0}
                                         show={
                                             <RowContainer>
-                                                Estimated traffic charges
+                                                Estimated traffic charges based
+                                                on current usage
                                                 <StyledNumbersDiv>
                                                     <Badge color='secondary'>
                                                         {estimatedMonthlyCost}{' '}

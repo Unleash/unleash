@@ -9,7 +9,7 @@ import {
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from '../../util/segments';
 import type TestAgent from 'supertest/lib/agent';
-import type { IUnleashStores } from '../../types';
+import type { IUnleashStores, IVariant } from '../../types';
 
 const uiConfig = {
     headerBackground: 'red',
@@ -109,22 +109,21 @@ describe('hideFeatureEnvironmentVariants', () => {
         expect(body.flags.hideFeatureEnvironmentVariants).toEqual(true);
     });
     test('ui config should have hideFeatureEnvironmentVariants flag disabled if env variants are used', async () => {
+        const someVariant: IVariant = {
+            name: 'a',
+            weight: 1,
+            weightType: 'fix',
+            stickiness: 'default',
+        };
         await stores.featureEnvironmentStore.addEnvironmentToFeature(
-            'test',
-            'default',
+            'feature',
+            'production',
             true,
         );
         await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
-            'test',
-            'default',
-            [
-                {
-                    name: 'a',
-                    weight: 1,
-                    weightType: 'fix',
-                    stickiness: 'default',
-                },
-            ],
+            'feature',
+            'production',
+            [someVariant],
         );
         const { body } = await request
             .get(`${base}/api/admin/ui-config`)

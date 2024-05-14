@@ -41,7 +41,7 @@ export const AuthSettings = () => {
 
     if (isEnterprise() && useUiFlag('scimApi')) {
         tabs.push({
-            label: 'SCIM Provisioning',
+            label: 'SCIM',
             component: <ScimSettings />,
         });
     }

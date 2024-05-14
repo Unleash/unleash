@@ -16,6 +16,10 @@ const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
+const StyledTitleDiv = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
 export const ScimSettings = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
@@ -85,8 +89,20 @@ export const ScimSettings = () => {
             <StyledContainer>
                 <Grid container spacing={3}>
                     <Grid item md={10.5} mb={2}>
-                        <strong>Enable</strong>
-                        <p>Enable SCIM provisioning.</p>
+                        <StyledTitleDiv>
+                            <strong>SCIM provisioning</strong>
+                        </StyledTitleDiv>
+                        <p>
+                            Enables SCIM provisioning. If SCIM provisioning has
+                            not previously been enabled here this will also set
+                            up a new auth token to use with your SCIM client,
+                            and display it to the user. After the dialog has
+                            been closed, this token will not be displayed again.
+                            If you need a new token you can click the Generate
+                            new token button below which will replace the old
+                            token with a new token, and similarly display the
+                            new token one time to the user.
+                        </p>
                     </Grid>
                     <Grid item md={1.5}>
                         <FormControlLabel

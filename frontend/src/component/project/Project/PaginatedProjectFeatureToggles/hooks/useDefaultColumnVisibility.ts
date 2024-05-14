@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import type { VisibilityState } from '@tanstack/react-table';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const staticColumns = ['select', 'actions', 'name', 'favorite'];
 
@@ -21,6 +22,7 @@ export const useDefaultColumnVisibility = (allColumnIds: string[]) => {
     const isTinyScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const featureLifecycleEnabled = useUiFlag('featureLifecycle');
 
     const showEnvironments = useCallback(
         (environmentsToShow: number = 0) =>
@@ -53,6 +55,7 @@ export const useDefaultColumnVisibility = (allColumnIds: string[]) => {
     return formatAsColumnVisibility(allColumnIds, [
         ...staticColumns,
         'lastSeenAt',
+        ...(featureLifecycleEnabled ? ['lifecycle'] : []),
         'createdAt',
         'type',
         'tags',

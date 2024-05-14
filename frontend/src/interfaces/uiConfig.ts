@@ -71,6 +71,7 @@ export type UiFlags = {
     executiveDashboardUI?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
+    hideFeatureEnvironmentVariants?: boolean;
     showInactiveUsers?: boolean;
     featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;

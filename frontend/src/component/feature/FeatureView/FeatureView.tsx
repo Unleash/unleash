@@ -48,6 +48,7 @@ import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewMetaData/ChildrenTooltip';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
+import { useUiFlag } from '../../../hooks/useUiFlag';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -145,6 +146,9 @@ export const FeatureView = () => {
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
+    const hideFeatureEnvironmentVariants = useUiFlag(
+        'hideFeatureEnvironmentVariants',
+    );
 
     const { feature, loading, error, status } = useFeature(
         projectId,
@@ -168,7 +172,15 @@ export const FeatureView = () => {
             path: `${basePath}/metrics`,
             name: 'Metrics',
         },
-        { title: 'Variants', path: `${basePath}/variants`, name: 'Variants' },
+        ...(hideFeatureEnvironmentVariants
+            ? []
+            : [
+                  {
+                      title: 'Variants',
+                      path: `${basePath}/variants`,
+                      name: 'Variants',
+                  },
+              ]),
         { title: 'Settings', path: `${basePath}/settings`, name: 'Settings' },
         {
             title: 'Event log',

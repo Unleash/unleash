@@ -7,7 +7,6 @@ import { ReactComponent as InitialStageIcon } from 'assets/icons/stage-initial.s
 import { ReactComponent as PreLiveStageIcon } from 'assets/icons/stage-pre-live.svg';
 import { ReactComponent as LiveStageIcon } from 'assets/icons/stage-live.svg';
 import { ReactComponent as CompletedStageIcon } from 'assets/icons/stage-completed.svg';
-import { ReactComponent as CompletedDiscardedStageIcon } from 'assets/icons/stage-completed-discarded.svg';
 import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived.svg';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
@@ -184,11 +183,7 @@ const StageTimeline: FC<{
                 data-after-content='Completed'
                 active={stage.name === 'completed'}
             >
-                {stage.name === 'completed' && stage.status === 'discarded' ? (
-                    <CompletedDiscardedStageIcon />
-                ) : (
-                    <CompletedStageIcon />
-                )}
+                <CompletedStageIcon />
             </StageBox>
 
             <Line />

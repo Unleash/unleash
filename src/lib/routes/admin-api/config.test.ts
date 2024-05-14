@@ -99,16 +99,16 @@ describe('displayUpgradeEdgeBanner', () => {
     });
 });
 
-describe('displayFeatureEnvironmentVariants', () => {
-    test('ui config should have displayFeatureEnvironmentVariants flag disabled if no env variants are used', async () => {
+describe('hideFeatureEnvironmentVariants', () => {
+    test('ui config should have hideFeatureEnvironmentVariants flag enabled if no env variants are used', async () => {
         const { body } = await request
             .get(`${base}/api/admin/ui-config`)
             .expect('Content-Type', /json/)
             .expect(200);
         expect(body.flags).toBeTruthy();
-        expect(body.flags.displayFeatureEnvironmentVariants).toEqual(false);
+        expect(body.flags.hideFeatureEnvironmentVariants).toEqual(true);
     });
-    test('ui config should have displayFeatureEnvironmentVariants flag enabled if env variants are used', async () => {
+    test('ui config should have hideFeatureEnvironmentVariants flag disabled if env variants are used', async () => {
         await stores.featureEnvironmentStore.addEnvironmentToFeature(
             'test',
             'default',
@@ -131,6 +131,6 @@ describe('displayFeatureEnvironmentVariants', () => {
             .expect('Content-Type', /json/)
             .expect(200);
         expect(body.flags).toBeTruthy();
-        expect(body.flags.displayFeatureEnvironmentVariants).toEqual(true);
+        expect(body.flags.hideFeatureEnvironmentVariants).toEqual(false);
     });
 });

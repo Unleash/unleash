@@ -167,7 +167,7 @@ class ConfigController extends Controller {
             displayUpgradeEdgeBanner:
                 usesOldEdge ||
                 this.config.flagResolver.isEnabled('displayEdgeBanner'),
-            displayFeatureEnvironmentVariants: usesFeatureEnvironmentVariants,
+            hideFeatureEnvironmentVariants: !usesFeatureEnvironmentVariants,
         };
 
         const response: UiConfigSchema = {

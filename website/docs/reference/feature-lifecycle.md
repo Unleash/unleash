@@ -4,14 +4,15 @@ title: Feature Lifecycle
 
 :::info Availability
 
-Feature lifecycle was introduced in Unleash 6.1.0
+Feature lifecycle is currently in beta
 
 :::
 
 ![Feature Lifecycle example](/img/feature-lifecycle.png 'Feature Lifecycle example')
 
-Feature Lifecycle facilitates tracking the progression of features through various stages in their development and operational phases. 
-This systematic approach helps in identifying potential bottlenecks and improving the overall efficiency of the software development process.
+Feature Lifecycle offers a solution for tracking and guiding the progression of software features from inception to retirement. 
+Unlike common approaches that focus only on the lifecycle within one environment, Unleash provides a holistic view of each feature throughout its entire lifecycle. 
+This facilitates the identification of bottlenecks at any stage, enhancing the efficiency of the software development process.
 
 ## Lifecycle stages
 

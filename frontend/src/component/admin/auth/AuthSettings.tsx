@@ -16,7 +16,7 @@ import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 
 export const AuthSettings = () => {
     const { authenticationType } = useUiConfig().uiConfig;
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isEnterprise } = useUiConfig();
 
     const tabs = [
         {
@@ -39,7 +39,7 @@ export const AuthSettings = () => {
         (item) => uiConfig.flags?.googleAuthEnabled || item.label !== 'Google',
     );
 
-    if (useUiFlag('scimApi')) {
+    if (isEnterprise() && useUiFlag('scimApi')) {
         tabs.push({
             label: 'SCIM Provisioning',
             component: <ScimSettings />,

@@ -30,7 +30,7 @@ test('dialog opens correctly and can be closed', async () => {
     setup();
 
     expect(screen.getByText('Mark completed')).toBeInTheDocument();
-    userEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByText('Cancel'));
     expect(setIsOpen).toHaveBeenCalledWith(false);
 });
 
@@ -38,26 +38,26 @@ test('selecting options updates state appropriately', async () => {
     setup();
 
     const radioKept = screen.getByLabelText('We decided to keep the feature');
-    userEvent.click(radioKept);
+    await userEvent.click(radioKept);
     expect(radioKept).toBeChecked();
 
     const radioDiscarded = screen.getByLabelText(
         'We decided to discard the feature',
     );
-    userEvent.click(radioDiscarded);
+    await userEvent.click(radioDiscarded);
     expect(radioDiscarded).toBeChecked();
 
     const radioVariant = screen.getByLabelText(
         'We decided to keep the feature variant',
     );
-    userEvent.click(radioVariant);
+    await userEvent.click(radioVariant);
     expect(radioVariant).toBeChecked();
 });
 
 test('variant selection is shown when appropriate', async () => {
     setup();
 
-    userEvent.click(
+    await userEvent.click(
         screen.getByLabelText('We decided to keep the feature variant'),
     );
 

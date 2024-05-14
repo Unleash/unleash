@@ -8,6 +8,7 @@ import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-stor
 import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store';
 import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';
 import type { IApplicationOverview } from './models';
+import FakeFeatureEnvironmentStore from '../../../../test/fixtures/fake-feature-environment-store';
 
 let config: IUnleashConfig;
 beforeAll(() => {
@@ -29,6 +30,7 @@ test('Multiple registrations of same appname and instanceid within same time per
             featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
+            featureEnvironmentStore: new FakeFeatureEnvironmentStore(),
             eventStore: new FakeEventStore(),
         },
         config,
@@ -79,6 +81,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
             featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
+            featureEnvironmentStore: new FakeFeatureEnvironmentStore(),
             eventStore: new FakeEventStore(),
         },
         config,
@@ -129,6 +132,7 @@ test('Same client registered outside of dedup interval will be registered twice'
             featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
+            featureEnvironmentStore: new FakeFeatureEnvironmentStore(),
             eventStore: new FakeEventStore(),
         },
         config,
@@ -179,6 +183,7 @@ test('No registrations during a time period will not call stores', async () => {
             featureToggleStore: new FakeFeatureToggleStore(),
             clientApplicationsStore,
             clientInstanceStore,
+            featureEnvironmentStore: new FakeFeatureEnvironmentStore(),
             eventStore: new FakeEventStore(),
         },
         config,

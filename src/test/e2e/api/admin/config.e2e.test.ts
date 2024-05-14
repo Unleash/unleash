@@ -98,3 +98,12 @@ test('sets ui config with frontendSettings', async () => {
             expect(res.body.frontendApiOrigins).toEqual(frontendApiOrigins),
         );
 });
+
+test('ui config should have displayFeatureEnvironmentVariants flag disabled if no env variants are used', async () => {
+    const { body } = await app.request
+        .get('/api/admin/ui-config')
+        .expect('Content-Type', /json/)
+        .expect(200);
+    expect(body.flags).toBeTruthy();
+    expect(body.flags.displayFeatureEnvironmentVariants).toEqual(false);
+});

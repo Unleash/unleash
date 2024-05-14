@@ -245,4 +245,12 @@ export default class FakeFeatureEnvironmentStore
                 features.includes(featureEnv.featureName),
         );
     }
+
+    async variantExists() {
+        return this.featureEnvironments.some(
+            (featureEnvironment) =>
+                featureEnvironment.variants &&
+                featureEnvironment.variants.length > 0,
+        );
+    }
 }

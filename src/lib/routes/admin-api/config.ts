@@ -44,6 +44,8 @@ class ConfigController extends Controller {
 
     private usesOldEdgeFunction: () => Promise<boolean>;
 
+    private usesFeatureEnvironmentVariants: () => Promise<boolean>;
+
     private readonly openApiService: OpenApiService;
 
     constructor(
@@ -81,6 +83,14 @@ class ConfigController extends Controller {
                     'unleash-edge',
                     '17.0.0',
                 ),
+            {
+                promise: true,
+                maxAge: minutesToMilliseconds(10),
+            },
+        );
+        this.usesFeatureEnvironmentVariants = memoizee(
+            async () =>
+                this.clientInstanceService.usesFeatureEnvironmentVariants(),
             {
                 promise: true,
                 maxAge: minutesToMilliseconds(10),
@@ -134,11 +144,13 @@ class ConfigController extends Controller {
             simpleAuthSettings,
             maintenanceMode,
             usesOldEdge,
+            usesFeatureEnvironmentVariants,
         ] = await Promise.all([
             this.frontendApiService.getFrontendSettings(false),
             this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
             this.maintenanceService.isMaintenanceMode(),
             this.usesOldEdgeFunction(),
+            this.usesFeatureEnvironmentVariants(),
         ]);
 
         const disablePasswordAuth =
@@ -155,6 +167,7 @@ class ConfigController extends Controller {
             displayUpgradeEdgeBanner:
                 usesOldEdge ||
                 this.config.flagResolver.isEnabled('displayEdgeBanner'),
+            displayFeatureEnvironmentVariants: usesFeatureEnvironmentVariants,
         };
 
         const response: UiConfigSchema = {

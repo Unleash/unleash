@@ -1,6 +1,9 @@
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
 import type { IApplication, IApplicationOverview } from './models';
-import type { IUnleashStores } from '../../../types/stores';
+import type {
+    IFeatureEnvironmentStore,
+    IUnleashStores,
+} from '../../../types/stores';
 import type { IUnleashConfig } from '../../../types/option';
 import type { IEventStore } from '../../../types/stores/event-store';
 import type {
@@ -46,6 +49,8 @@ export default class ClientInstanceService {
 
     private privateProjectChecker: IPrivateProjectChecker;
 
+    private featureEnvironmentStore: IFeatureEnvironmentStore;
+
     private flagResolver: IFlagResolver;
 
     constructor(
@@ -55,6 +60,7 @@ export default class ClientInstanceService {
             featureToggleStore,
             clientInstanceStore,
             clientApplicationsStore,
+            featureEnvironmentStore,
             eventStore,
         }: Pick<
             IUnleashStores,
@@ -63,6 +69,7 @@ export default class ClientInstanceService {
             | 'featureToggleStore'
             | 'clientApplicationsStore'
             | 'clientInstanceStore'
+            | 'featureEnvironmentStore'
             | 'eventStore'
         >,
         {
@@ -78,6 +85,7 @@ export default class ClientInstanceService {
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
         this.privateProjectChecker = privateProjectChecker;
+        this.featureEnvironmentStore = featureEnvironmentStore;
         this.flagResolver = flagResolver;
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
@@ -293,5 +301,9 @@ export default class ClientInstanceService {
                 );
             }
         });
+    }
+
+    async usesFeatureEnvironmentVariants() {
+        return this.featureEnvironmentStore.variantExists();
     }
 }

@@ -490,4 +490,12 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             );
         }
     }
+
+    async variantExists(): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${T.featureEnvs} WHERE variants <> '[]'::jsonb) AS present`,
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
 }

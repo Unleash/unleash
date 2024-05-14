@@ -98,3 +98,39 @@ describe('displayUpgradeEdgeBanner', () => {
         expect(body.flags.displayUpgradeEdgeBanner).toEqual(false);
     });
 });
+
+describe('displayFeatureEnvironmentVariants', () => {
+    test('ui config should have displayFeatureEnvironmentVariants flag disabled if no env variants are used', async () => {
+        const { body } = await request
+            .get(`${base}/api/admin/ui-config`)
+            .expect('Content-Type', /json/)
+            .expect(200);
+        expect(body.flags).toBeTruthy();
+        expect(body.flags.displayFeatureEnvironmentVariants).toEqual(false);
+    });
+    test('ui config should have displayFeatureEnvironmentVariants flag enabled if env variants are used', async () => {
+        await stores.featureEnvironmentStore.addEnvironmentToFeature(
+            'test',
+            'default',
+            true,
+        );
+        await stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+            'test',
+            'default',
+            [
+                {
+                    name: 'a',
+                    weight: 1,
+                    weightType: 'fix',
+                    stickiness: 'default',
+                },
+            ],
+        );
+        const { body } = await request
+            .get(`${base}/api/admin/ui-config`)
+            .expect('Content-Type', /json/)
+            .expect(200);
+        expect(body.flags).toBeTruthy();
+        expect(body.flags.displayFeatureEnvironmentVariants).toEqual(true);
+    });
+});

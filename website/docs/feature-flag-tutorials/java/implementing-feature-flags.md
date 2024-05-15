@@ -224,6 +224,9 @@ In the main function in `ExampleApp.java`, add new conditional logic on line 33.
     }
 ```
 
+> :triangular_flag_on_post: **Note:** You might receive an `InterruptedException` for use of `Thread.sleep(2000)`. To mitigate this, modify your `main` function line to catch exceptions like this:
+> `public static void main(String args[]) throws InterruptedException {`
+
 Your terminal will continuously update to show the status of the feature flag, reflecting the real-time responses from Unleash as the application operates.
 
 ## 6. Verify the toggle experience

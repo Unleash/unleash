@@ -53,11 +53,6 @@ export const FeatureLifecycleCell: VFC<IFeatureLifecycleProps> = ({
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <FeatureEnvironmentSeen
-                featureLastSeen={feature.lastSeenAt || undefined}
-                environments={environments}
-                {...rest}
-            />
             <FeatureLifecycle
                 onArchive={onArchive}
                 onComplete={onComplete}

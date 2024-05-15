@@ -103,7 +103,7 @@ unleash.on('ready', () => {
 });
 
 unleash.on('impression', (event) => {
-  // Capture the event here and pass it internal data lake or analytics provider
+  // Capture the event here and pass it to internal data lake or analytics provider
   console.log(event);
 });
 ```

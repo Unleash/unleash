@@ -87,6 +87,7 @@ export class FeatureLifecycleService extends EventEmitter {
     }
 
     listen() {
+        void this.checkEnabled(() => this.featureLifecycleStore.backfill());
         this.eventStore.on(FEATURE_CREATED, async (event) => {
             await this.checkEnabled(() =>
                 this.featureInitialized(event.featureName),

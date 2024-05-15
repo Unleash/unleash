@@ -4,17 +4,22 @@ export type DeepOmit<T, K extends keyof any> = T extends Record<string, any>
 
 export function deepOmit<T, K extends keyof any>(
     obj: T,
-    keyToOmit: K,
+    ...keysToOmit: K[]
 ): DeepOmit<T, K> {
+    const omitSet = new Set(keysToOmit);
+
     if (Array.isArray(obj)) {
         return obj.map((item) =>
-            deepOmit(item, keyToOmit),
+            deepOmit(item, ...keysToOmit),
         ) as unknown as DeepOmit<T, K>;
     } else if (typeof obj === 'object' && obj !== null) {
         const result: Partial<DeepOmit<T, K>> = {};
         for (const [key, value] of Object.entries(obj)) {
-            if (key !== keyToOmit) {
-                result[key as Exclude<keyof T, K>] = deepOmit(value, keyToOmit);
+            if (!omitSet.has(key as K)) {
+                result[key as Exclude<keyof T, K>] = deepOmit(
+                    value,
+                    ...keysToOmit,
+                );
             }
         }
         return result as DeepOmit<T, K>;

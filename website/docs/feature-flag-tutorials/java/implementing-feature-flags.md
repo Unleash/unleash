@@ -3,6 +3,8 @@ title: How to Implement Feature Flags in Java
 slug: /feature-flag-tutorials/java
 ---
 
+import VideoContent from '@site/src/components/VideoContent.jsx';
+
 [Java](https://www.java.com/en/) is an object-oriented programming language often used for mobile development and large-scale enterprise applications. [Spring Boot](https://spring.io/projects/spring-boot) is a popular Java framework used to get apps up and running with minimal configuration.
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in Java?
@@ -18,33 +20,33 @@ Here are the steps we will cover in this tutorial:
 5. [Log a feature flag status in your Java app](#5-log-feature-flag-status-in-java-app)
 6. [Verify the toggle experience](#6-verify-the-toggle-experience)
 
+Watch the video tutorial and follow along with the code from this documentation.
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/Hq1g9QyPw14?si=azduTa_lQsDBmOdm"]}/>
 
 ## Prerequisites
 
-
 In this tutorial, you will need the following:
-- A web browser like Chrome or Firefox
-- Git
-- Docker
-- (Optional) a code editor like IntelliJ IDEA
 
+-   A web browser like Chrome or Firefox
+-   Git
+-   Docker
+-   (Optional) a code editor like IntelliJ IDEA
 
 ![An architectural diagram shows how the Java SDK, application and unleash server control feature experiences.](/img/java-tutorial-architecture-diagram.png)
-
 
 This architecture diagram breaks down how the Java app works with Unleash to control feature flags. We connect the Unleash service to your Java app using the Java SDK.
 
 The Unleash Server acts as a Feature Flag Control Service, managing and storing your feature flags. It enables the retrieval of flag data and, particularly when not utilizing a user interface, supports the sending of data to and from the service. The Unleash Server has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
 
-
 ## 1. Feature Flag best practices for backend apps
-
 
 Since Java is a backend language, there are special security considerations to plan around when implementing feature flags.
 
 Most importantly, you must:
-- Limit feature flag payloads for scalability, security, and efficiency
-- Improve architectural resiliency with graceful degradation
+
+-   Limit feature flag payloads for scalability, security, and efficiency
+-   Improve architectural resiliency with graceful degradation
 
 As your application scales, performance and resiliency become more critical and costly if not addressed. A feature flagging system should not be the reason your app slows down or fails. That’s why we recommend you account for this by reducing the size of your feature flag payloads. For example, instead of making one large call to retrieve flag statuses for all users as part of your configuration, group your users by specific attributes as part of your targeting rules that would be most relevant to your application.
 
@@ -52,9 +54,7 @@ Additionally, you can cache your feature flag configuration to help reduce netwo
 
 For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
-
 ## 2. Install a local feature flag provider
-
 
 This section guides you through installing Unleash, setting up a local instance, logging in, and creating a feature flag. However, if you prefer, you can substitute Unleash with a different feature flag tool of your choice. Should you choose an alternative, you will need to modify the code to accommodate the new tool, but the fundamental steps are likely to remain similar.
 
@@ -77,12 +77,9 @@ Password: unleash4all
 
 Click the ‘New feature toggle’ button to create a new feature flag. Once you have created a flag, you will see it here.
 
-
 ![This is an image of the Unleash platform to create a new Java feature flag.](/img/tutorial-create-flag.png)
 
-
 ## 3. Create and configure the feature flag
-
 
 Next, you will create a feature flag and turn it on for your Java app.
 
@@ -90,12 +87,9 @@ For the purpose of this tutorial, name the feature flag `endpointFlag`. Use the 
 
 ![You can view the Java feature flag form in Unleash.](/img/java-tutorial-flag-form.png)
 
-
 Your new feature flag has been created and is ready to be used. Enable the flag for your development environment, which makes it accessible for use in the Java app we will clone into your local environment.
 
-
 ![Enable your new flag in the development environment in your flag view.](/img/java-tutorial-enable-flag.png)
-
 
 Next, generate an API token to authenticate calls made to Unleash servers from your project. This API token will eventually be pulled into a configuration object within your Java application to toggle features. We require an API token as part of your flag configuration to ensure that only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access and this controls how they can be distributed to applications that need it, and by whom.
 
@@ -103,11 +97,9 @@ From your project view on the platform, go to Project Settings and then API Acce
 
 Select the ‘New API token’ button.
 
-
 ![Create a new API token in the API Access view for your Java application.](/img/tutorial-create-api-token.png)
 
-
-Name the API token and select the “Server-side SDK” token type, since we’ll be doing our flag evaluation on the server using the Java SDK. You can read more about Unleash API tokens here: https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens 
+Name the API token and select the “Server-side SDK” token type, since we’ll be doing our flag evaluation on the server using the Java SDK. You can read more about Unleash API tokens here: https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
@@ -115,19 +107,15 @@ The token should have access to the “development” environment, as shown in t
 
 The API token you generated can be managed in the API Access view in your project settings. It will be handy in Step 4.
 
-
 ## 4. Add Unleash to a Java app
-
 
 In this section, you will clone an open-source Java application called [Spring Boot Java Example](https://github.com/jecklgamis/spring-boot-java-example), which we will use to expose a metrics endpoint from its server. It uses a Jetty web container, starts HTTP and HTTPs listeners, and exposes actuator endpoints that display metrics and health statuses in the browser.
 
 Use this command to clone the repository via your Terminal:
 
-
 ```
 git clone git@github.com:jecklgamis/spring-boot-java-example.git
 ```
-
 
 Next, navigate to your repository directory and check that Java 21 or later is installed. We are using [Apache Maven](https://maven.apache.org/) commands to convert your Java source code into .jar files to execute. You won’t need to have Maven installed in order to run the executable command below:
 
@@ -138,7 +126,6 @@ Next, navigate to your repository directory and check that Java 21 or later is i
 Next, you will add the Unleash Java SDK to your dependencies so that your app can initialize the Unleash Client and use the feature flag we created.
 
 In the file `pom.xml` on line 82, add the following code:
-
 
 ```xml
 <dependency>
@@ -186,7 +173,6 @@ To run the app, use the following command:
 java -jar target/spring-boot-java-example.jar
 ```
 
-
 Alternatively, to run in your Docker container, run this command:
 
 ```
@@ -195,18 +181,30 @@ make dist image run
 
 You can verify that your Java app is running by navigating to the health status endpoint in the browser:
 
-http://localhost:8080/actuator/health 
+http://localhost:8080/actuator/health
 
 You’ll see JSON data in the browser:
 
-
 ```json
-{"status":"UP","components":{"diskSpace":{"status":"UP","details":{"total":62671097856,"free":51487629312,"threshold":10485760,"path":"/app/.","exists":true}},"ping":{"status":"UP"}}}
+{
+    "status": "UP",
+    "components": {
+        "diskSpace": {
+            "status": "UP",
+            "details": {
+                "total": 62671097856,
+                "free": 51487629312,
+                "threshold": 10485760,
+                "path": "/app/.",
+                "exists": true
+            }
+        },
+        "ping": { "status": "UP" }
+    }
+}
 ```
 
-
 ## 5. Log feature flag status in Java app
-
 
 In the real world, you can incrementally introduce new features to a select group of users by adjusting the flag's deployment strategy.
 
@@ -226,8 +224,10 @@ In the main function in `ExampleApp.java`, add new conditional logic on line 33.
     }
 ```
 
-Your terminal will continuously update to show the status of the feature flag, reflecting the real-time responses from Unleash as the application operates.
+> :triangular_flag_on_post: **Note:** You might receive an `InterruptedException` for use of `Thread.sleep(2000)`. To mitigate this, modify your `main` function line to catch exceptions like this:
+> `public static void main(String args[]) throws InterruptedException {`
 
+Your terminal will continuously update to show the status of the feature flag, reflecting the real-time responses from Unleash as the application operates.
 
 ## 6. Verify the toggle experience
 
@@ -237,7 +237,6 @@ With the flag on, you should see the corresponding status in this screenshot:
 
 ![You can view the status of your flag in the Terminal from our log statements, which should read "STATUS: endpoint flag is enabled".](/img/java-tutorial-status-log.png)
 
-
 We will use Unleash to turn off the flag and view an updated status in the Terminal.
 
 In Unleash, toggle off the `endpointFlag` in the development environment.
@@ -246,11 +245,8 @@ In Unleash, toggle off the `endpointFlag` in the development environment.
 
 After a few seconds, your app will update to reflect the latest flag status, which will look like this output change in your Terminal:
 
-
 ![The status of the feature flag will now change from "enabled" to "disabled" in your Terminal.](/img/java-tutorial-status-log-change.png)
 
-
 ## Conclusion
-
 
 In this tutorial, we installed Unleash locally, created a new feature flag, installed Unleash into a Java app, and logged the feature flag status from Unleash to our Terminal.

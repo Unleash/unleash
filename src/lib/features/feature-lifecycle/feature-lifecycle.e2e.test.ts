@@ -10,6 +10,7 @@ import {
     FEATURE_CREATED,
     FEATURE_REVIVED,
     type IEventStore,
+    type IFeatureLifecycleStore,
     type StageName,
 } from '../../types';
 import type EventEmitter from 'events';
@@ -24,6 +25,7 @@ import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-
 let app: IUnleashTest;
 let db: ITestDb;
 let featureLifecycleService: FeatureLifecycleService;
+let featureLifecycleStore: IFeatureLifecycleStore;
 let eventStore: IEventStore;
 let eventBus: EventEmitter;
 let featureLifecycleReadModel: IFeatureLifecycleReadModel;
@@ -45,6 +47,7 @@ beforeAll(async () => {
     eventBus = app.config.eventBus;
     featureLifecycleService = app.services.featureLifecycleService;
     featureLifecycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
+    featureLifecycleStore = db.stores.featureLifecycleStore;
 
     await app.request
         .post(`/auth/demo/login`)
@@ -185,4 +188,21 @@ test('should be able to toggle between completed/uncompleted', async () => {
     const { body } = await getFeatureLifecycle('my_feature_b');
 
     expect(body).toEqual([]);
+});
+
+test('should backfill initial stage when no stages', async () => {
+    await app.createFeature('my_feature_c');
+
+    await featureLifecycleStore.delete('my_feature_c');
+
+    const currentStage = await getCurrentStage('my_feature_c');
+    expect(currentStage).toBe(undefined);
+
+    await featureLifecycleStore.backfill();
+
+    const backfilledCurrentStage = await getCurrentStage('my_feature_c');
+    expect(backfilledCurrentStage).toEqual({
+        stage: 'initial',
+        enteredStageAt: expect.any(Date),
+    });
 });

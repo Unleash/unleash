@@ -16,6 +16,8 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
         );
     }
 
+    async backfill() {}
+
     private async insertOne(
         featureLifecycleStage: FeatureLifecycleStage,
     ): Promise<void> {

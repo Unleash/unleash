@@ -166,7 +166,7 @@ Mastering feature flags in serverless? This guide demonstrated the surprisingly 
 
 Need to scale your AWS Lambda function to thousands of requests per second (RPS)? Consider [Unleash Edge](/understanding-unleash/proxy-hosting), which uses edge computing to scale your Unleash usage. You can scale in any matter you see fit - either hosted entirely in your infrastructure on your own edge services or fully managed by Unleash.
 
-:::note Lambda latency
+:::note Lambda Latency
 
 If you care about latency and particularly faster cold starts you should take a look at [Low Latency Runtime](https://github.com/awslabs/llrt) (LTR) an experimental, lightweight JavaScript runtime designed to address the growing demand for fast and efficient Serverless applications. The team behind Unleash is super excited about this initiative.
 

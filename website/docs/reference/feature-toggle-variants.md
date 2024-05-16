@@ -95,6 +95,9 @@ Unleash currently supports these payload types:
 - JSON
 - CSV
 - String
+- Number
+
+The variant payload type provides hints to your application about how to parse the payload. It does not enforce any specific format, so you can use any format you like. The payload is passed to the client as a string, so you will need to parse it on the client side according to the datatype expected.
 
 ### Variant stickiness
 

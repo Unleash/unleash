@@ -39,7 +39,7 @@ export const CreateProjectDialogue = ({
     open,
     onClose,
 }: ICreateProjectDialogueProps) => {
-    const { createProject } = useProjectApi();
+    const { createProject, loading } = useProjectApi();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
@@ -153,6 +153,7 @@ export const CreateProjectDialogue = ({
                     <CreateButton
                         name='project'
                         permission={CREATE_PROJECT}
+                        disabled={loading}
                         data-testid={CREATE_PROJECT_BTN}
                     />
                 </NewProjectForm>

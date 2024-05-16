@@ -2,28 +2,39 @@ import styled from '@mui/material/styles/styled';
 import Box from '@mui/system/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import { flexRow } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainerGrid = styled(Grid)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+}));
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    flex: '1 1',
+}));
+
+const StyledColumnGrid = styled(Grid)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    flex: '1 1',
+}));
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    flex: '1 1',
     padding: theme.spacing(3),
     border: `2px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledCardTitleRow = styled(Box)(() => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-}));
+const StyledCardTitleRow = styled(Box)(() => ({}));
 
 const StyledCardDescription = styled(Box)(({ theme }) => ({
-    flex: 1,
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2.5),
@@ -33,13 +44,13 @@ const StyledCardDescription = styled(Box)(({ theme }) => ({
 }));
 
 const RowContainer = styled(Box)(({ theme }) => ({
-    ...flexRow,
+    display: 'flex',
+    flexDirection: 'row',
 }));
 
 const StyledNumbersDiv = styled('div')(({ theme }) => ({
     marginLeft: 'auto',
     display: 'flex',
-    justifyContent: 'space-between',
     textDecoration: 'none',
     color: theme.palette.text.primary,
 }));
@@ -59,11 +70,12 @@ export const NetworkTrafficUsagePlanSummary = ({
 }: INetworkTrafficUsagePlanSummary) => {
     const overages = usageTotal - includedTraffic;
     const estimateFlagEnabled = useUiFlag('estimateTrafficDataCost');
+    console.log(estimateFlagEnabled);
     return (
-        <Grid container spacing={4} xs={11} md={11}>
-            <Grid item xs={6} md={6}>
+        <StyledContainerGrid container spacing={4}>
+            <StyledGrid item xs={5.5} md={5.5}>
                 <StyledContainer>
-                    <Grid item>
+                    <StyledColumnGrid item>
                         <StyledCardTitleRow>
                             <b>Number of requests to Unleash</b>
                         </StyledCardTitleRow>
@@ -117,17 +129,17 @@ export const NetworkTrafficUsagePlanSummary = ({
                                 </StyledCardDescription>
                             }
                         />
-                    </Grid>
+                    </StyledColumnGrid>
                 </StyledContainer>
-            </Grid>
+            </StyledGrid>
             <ConditionallyRender
                 condition={
                     estimateFlagEnabled && includedTraffic > 0 && overages > 0
                 }
                 show={
-                    <Grid item xs={6} md={6}>
+                    <StyledGrid item xs={5.5} md={5.5}>
                         <StyledContainer>
-                            <Grid item>
+                            <StyledColumnGrid item>
                                 <StyledCardTitleRow>
                                     <b>Accrued traffic charges</b>
                                 </StyledCardTitleRow>
@@ -166,11 +178,11 @@ export const NetworkTrafficUsagePlanSummary = ({
                                         }
                                     />
                                 </StyledCardDescription>
-                            </Grid>
+                            </StyledColumnGrid>
                         </StyledContainer>
-                    </Grid>
+                    </StyledGrid>
                 }
             />
-        </Grid>
+        </StyledContainerGrid>
     );
 };

@@ -4,7 +4,8 @@ import styled from '@mui/material/styles/styled';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Select from 'component/common/select';
 import Box from '@mui/system/Box';
-import Alert from '@mui/material/Alert';
+import { Link as RouterLink } from 'react-router-dom';
+import { Alert, Link } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
@@ -282,6 +283,31 @@ export const NetworkTrafficUsage: VFC = () => {
             show={<Alert severity='warning'>Not enabled.</Alert>}
             elseShow={
                 <>
+                    <ConditionallyRender
+                        condition={overageCost > 0}
+                        show={
+                            <Alert severity='warning' sx={{ mb: 4 }}>
+                                <b>Heads up!</b> You are currently consuming
+                                more requests than your plan includes and will
+                                be billed according to our terms. Please see{' '}
+                                <Link
+                                    component={RouterLink}
+                                    to='https://www.getunleash.io/pricing'
+                                >
+                                    this page
+                                </Link>{' '}
+                                for more information. In order to reduce your
+                                traffic consumption, you may configure an{' '}
+                                <Link
+                                    component={RouterLink}
+                                    to='https://docs.getunleash.io/reference/unleash-edge'
+                                >
+                                    Unleash Edge instance
+                                </Link>{' '}
+                                in your own datacenter.
+                            </Alert>
+                        }
+                    />
                     <StyledBox>
                         <Grid container component='header' spacing={2}>
                             <Grid item xs={12} md={10}>

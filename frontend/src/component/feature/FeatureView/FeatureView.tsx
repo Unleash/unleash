@@ -48,6 +48,8 @@ import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewMetaData/ChildrenTooltip';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
+import { useUiFlag } from 'hooks/useUiFlag';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -133,6 +135,14 @@ export const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
+const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
+    const enableLegacyVariants = useUiFlag('enableLegacyVariants');
+    const existingLegacyVariantsExist = environments.some(
+        (environment) => environment.variants?.length,
+    );
+    return enableLegacyVariants || existingLegacyVariantsExist;
+};
+
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -157,6 +167,8 @@ export const FeatureView = () => {
 
     const basePath = `/projects/${projectId}/features/${featureId}`;
 
+    const showLegacyVariants = useLegacyVariants(feature.environments);
+
     const tabData = [
         {
             title: 'Overview',
@@ -168,7 +180,15 @@ export const FeatureView = () => {
             path: `${basePath}/metrics`,
             name: 'Metrics',
         },
-        { title: 'Variants', path: `${basePath}/variants`, name: 'Variants' },
+        ...(showLegacyVariants
+            ? [
+                  {
+                      title: 'Variants',
+                      path: `${basePath}/variants`,
+                      name: 'Variants',
+                  },
+              ]
+            : []),
         { title: 'Settings', path: `${basePath}/settings`, name: 'Settings' },
         {
             title: 'Event log',

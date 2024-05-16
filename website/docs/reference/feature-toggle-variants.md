@@ -1,6 +1,14 @@
 ---
-title: Feature Toggle Variants
+title: Feature Toggle Variants (deprecated)
 ---
+:::warning
+
+Feature Toggle Variants at the environment level are deprecated in favor of the [strategy variants](./strategy-variants.md). 
+Only features that have existing feature environment variants will keep them. 
+If you'd like to keep the old variants in your hosted instance [contact us](https://slack.unleash.run) for further assistance.
+
+:::
+
 :::info Availability
 
 **Feature toggle variants** were first introduced in Unleash 3.2.

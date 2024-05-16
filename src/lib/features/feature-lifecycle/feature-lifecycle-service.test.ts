@@ -38,10 +38,11 @@ test('can insert and read lifecycle stages', async () => {
             environment,
         });
     }
-    function reachedStage(name: StageName) {
+    function reachedStage(feature: string, name: StageName) {
         return new Promise((resolve) =>
             featureLifecycleService.on(STAGE_ENTERED, (event) => {
-                if (event.stage === name) resolve(name);
+                if (event.stage === name && event.feature === feature)
+                    resolve(name);
             }),
         );
     }
@@ -65,20 +66,20 @@ test('can insert and read lifecycle stages', async () => {
     featureLifecycleService.listen();
 
     eventStore.emit(FEATURE_CREATED, { featureName });
-    await reachedStage('initial');
+    await reachedStage(featureName, 'initial');
 
     emitMetricsEvent('unknown-environment');
     emitMetricsEvent('my-dev-environment');
-    await reachedStage('pre-live');
+    await reachedStage(featureName, 'pre-live');
     emitMetricsEvent('my-dev-environment');
     emitMetricsEvent('my-another-dev-environment');
     emitMetricsEvent('my-prod-environment');
-    await reachedStage('live');
+    await reachedStage(featureName, 'live');
     emitMetricsEvent('my-prod-environment');
     emitMetricsEvent('my-another-prod-environment');
 
     eventStore.emit(FEATURE_ARCHIVED, { featureName });
-    await reachedStage('archived');
+    await reachedStage(featureName, 'archived');
 
     const lifecycle =
         await featureLifecycleService.getFeatureLifecycle(featureName);
@@ -91,7 +92,7 @@ test('can insert and read lifecycle stages', async () => {
     ]);
 
     eventStore.emit(FEATURE_REVIVED, { featureName });
-    await reachedStage('initial');
+    await reachedStage(featureName, 'initial');
     const initialLifecycle =
         await featureLifecycleService.getFeatureLifecycle(featureName);
     expect(initialLifecycle).toEqual([

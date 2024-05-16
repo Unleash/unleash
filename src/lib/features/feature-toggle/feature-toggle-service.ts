@@ -2184,6 +2184,21 @@ class FeatureToggleService {
         return featureToggle;
     }
 
+    private async verifyLegacyVariants(featureName: string) {
+        const existingLegacyVariantsExist =
+            await this.featureEnvironmentStore.variantExists(featureName);
+        const enableLegacyVariants = this.flagResolver.isEnabled(
+            'enableLegacyVariants',
+        );
+        const useLegacyVariants =
+            existingLegacyVariantsExist || enableLegacyVariants;
+        if (!useLegacyVariants) {
+            throw new InvalidOperationError(
+                `Environment variants deprecated for feature: ${featureName}. Use strategy variants instead.`,
+            );
+        }
+    }
+
     async saveVariantsOnEnv(
         projectId: string,
         featureName: string,
@@ -2194,6 +2209,7 @@ class FeatureToggleService {
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
+        await this.verifyLegacyVariants(featureName);
         const theOldVariants: IVariant[] =
             oldVariants ||
             (

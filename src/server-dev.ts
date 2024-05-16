@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         parseProjectFromSession: true,
                         createProjectWithEnvironmentConfig: true,
                         manyStrategiesPagination: true,
+                        enableLegacyVariants: false,
                     },
                 },
                 authentication: {

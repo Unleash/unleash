@@ -1,6 +1,14 @@
 ---
-title: Feature Toggle Variants
+title: Feature Toggle Variants (deprecated)
 ---
+:::warning
+
+Feature Toggle Variants at the environment level are deprecated in favor of the [strategy variants](./strategy-variants.md). 
+Only features that have existing feature environment variants will keep them. 
+If you'd like to keep the old variants in your hosted instance [contact us](https://slack.unleash.run) for further assistance.
+
+:::
+
 :::info Availability
 
 **Feature toggle variants** were first introduced in Unleash 3.2.
@@ -87,6 +95,9 @@ Unleash currently supports these payload types:
 - JSON
 - CSV
 - String
+- Number
+
+The variant payload type provides hints to your application about how to parse the payload. It does not enforce any specific format, so you can use any format you like. The payload is passed to the client as a string, so you will need to parse it on the client side according to the datatype expected.
 
 ### Variant stickiness
 

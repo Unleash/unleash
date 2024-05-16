@@ -4,6 +4,7 @@ import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/use
 import { populateCurrentStage } from './populateCurrentStage';
 import type { FC } from 'react';
 import type { Lifecycle } from 'interfaces/featureToggle';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export interface LifecycleFeature {
     lifecycle?: Lifecycle;
@@ -27,9 +28,16 @@ export const FeatureLifecycle: FC<{
 
     const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
 
+    const { trackEvent } = usePlausibleTracker();
+
     const onUncompleteHandler = async () => {
         await markFeatureUncompleted(feature.name, feature.project);
         onUncomplete();
+        trackEvent('feature-lifecycle', {
+            props: {
+                eventType: 'uncomplete',
+            },
+        });
     };
 
     return currentStage ? (

@@ -47,3 +47,33 @@ test('should omit all instances of a given field', () => {
         },
     });
 });
+
+test('should omit all instances of multiple fields', () => {
+    const input = {
+        name: 'some-name',
+        color: 'blue',
+        children: {
+            name: 'some-name',
+            color: 'blue',
+            children: {
+                name: 'some-name',
+                color: 'blue',
+                children: {
+                    name: 'some-name',
+                    color: 'blue',
+                    children: {},
+                },
+            },
+        },
+    };
+
+    expect(deepOmit(input, 'name', 'color')).toEqual({
+        children: {
+            children: {
+                children: {
+                    children: {},
+                },
+            },
+        },
+    });
+});

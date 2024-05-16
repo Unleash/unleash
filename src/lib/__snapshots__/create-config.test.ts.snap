@@ -93,6 +93,7 @@ exports[`should create default config 1`] = `
       "edgeBulkMetrics": false,
       "embedProxy": true,
       "embedProxyFrontend": true,
+      "enableLegacyVariants": false,
       "enableLicense": false,
       "enableLicenseChecker": false,
       "encryptEmails": false,

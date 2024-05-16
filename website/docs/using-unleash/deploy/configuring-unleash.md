@@ -4,8 +4,7 @@ title: Configuring Unleash
 
 import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
 
-> This is the guide on how to configure **Unleash v4 self-hosted**. If you are still using Unleash v3 you should
-> checkout [configuring Unleash v3](./configuring-unleash-v3.md)
+> This is the guide on how to configure **Unleash v5 self-hosted**.
 
 ## Must configure
 

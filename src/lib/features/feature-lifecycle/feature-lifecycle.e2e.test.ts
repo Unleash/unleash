@@ -95,10 +95,10 @@ const uncompleteFeature = async (featureName: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
-function reachedStage(name: StageName) {
+function reachedStage(feature: string, stage: StageName) {
     return new Promise((resolve) =>
         featureLifecycleService.on(STAGE_ENTERED, (event) => {
-            if (event.stage === name) resolve(name);
+            if (event.stage === stage) resolve(stage);
         }),
     );
 }
@@ -118,7 +118,7 @@ test('should return lifecycle stages', async () => {
     await app.createFeature('my_feature_a');
     await app.enableFeature('my_feature_a', 'default');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
-    await reachedStage('initial');
+    await reachedStage('my_feature_a', 'initial');
     await expectFeatureStage('my_feature_a', 'initial');
     eventBus.emit(CLIENT_METRICS, {
         bucket: {
@@ -143,10 +143,10 @@ test('should return lifecycle stages', async () => {
         },
         environment: 'non-existent',
     });
-    await reachedStage('live');
+    await reachedStage('my_feature_a', 'live');
     await expectFeatureStage('my_feature_a', 'live');
     eventStore.emit(FEATURE_ARCHIVED, { featureName: 'my_feature_a' });
-    await reachedStage('archived');
+    await reachedStage('my_feature_a', 'archived');
 
     const { body } = await getFeatureLifecycle('my_feature_a');
 
@@ -168,7 +168,7 @@ test('should return lifecycle stages', async () => {
     await expectFeatureStage('my_feature_a', 'archived');
 
     eventStore.emit(FEATURE_REVIVED, { featureName: 'my_feature_a' });
-    await reachedStage('initial');
+    await reachedStage('my_feature_a', 'initial');
 });
 
 test('should be able to toggle between completed/uncompleted', async () => {

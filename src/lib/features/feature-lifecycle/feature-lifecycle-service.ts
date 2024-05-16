@@ -125,7 +125,7 @@ export class FeatureLifecycleService extends EventEmitter {
         await this.featureLifecycleStore.insert([
             { feature, stage: 'initial' },
         ]);
-        this.emit(STAGE_ENTERED, { stage: 'initial' });
+        this.emit(STAGE_ENTERED, { stage: 'initial', feature });
     }
 
     private async stageReceivedMetrics(
@@ -135,7 +135,9 @@ export class FeatureLifecycleService extends EventEmitter {
         await this.featureLifecycleStore.insert(
             features.map((feature) => ({ feature, stage })),
         );
-        this.emit(STAGE_ENTERED, { stage });
+        features.forEach((feature) =>
+            this.emit(STAGE_ENTERED, { stage, feature }),
+        );
     }
 
     private async featuresReceivedMetrics(
@@ -207,7 +209,7 @@ export class FeatureLifecycleService extends EventEmitter {
         await this.featureLifecycleStore.insert([
             { feature, stage: 'archived' },
         ]);
-        this.emit(STAGE_ENTERED, { stage: 'archived' });
+        this.emit(STAGE_ENTERED, { stage: 'archived', feature });
     }
 
     private async featureRevived(feature: string) {

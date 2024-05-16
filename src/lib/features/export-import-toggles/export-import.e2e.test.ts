@@ -103,7 +103,7 @@ const createContext = async (context: ContextFieldSchema = defaultContext) => {
 };
 
 const createVariants = async (feature: string, variants: IVariant[]) => {
-    await app.services.featureToggleService.saveVariantsOnEnv(
+    await app.services.featureToggleService.legacySaveVariantsOnEnv(
         DEFAULT_PROJECT,
         feature,
         DEFAULT_ENV,

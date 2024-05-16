@@ -2207,9 +2207,27 @@ class FeatureToggleService {
         auditUser: IAuditUser,
         oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
+        await this.verifyLegacyVariants(featureName);
+        return this.legacySaveVariantsOnEnv(
+            projectId,
+            featureName,
+            environment,
+            newVariants,
+            auditUser,
+            oldVariants,
+        );
+    }
+
+    async legacySaveVariantsOnEnv(
+        projectId: string,
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+        auditUser: IAuditUser,
+        oldVariants?: IVariant[],
+    ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        await this.verifyLegacyVariants(featureName);
         const theOldVariants: IVariant[] =
             oldVariants ||
             (

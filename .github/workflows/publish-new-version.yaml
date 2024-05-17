@@ -6,12 +6,23 @@ concurrency:
 
 permissions:
   contents: write
+  id-token: write  
 
 on:
   workflow_dispatch:
     inputs:
       version:
         description: What version number would you like to use? The version number should be **without** a leading `v`, e.g. `5.7.1` or `6.2.4`.
+      bump-main:
+        description: Should we bump the package.json main version?
+        required: true
+        type: boolean
+        default: true
+      update-version-function:
+        description: Should we update the version function to use this version?
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   build:
@@ -27,10 +38,10 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GH_PUSH_TOKEN }}
       - name: Set up git-cliff
-        uses: kenji-miyake/setup-git-cliff@v1
+        uses: kenji-miyake/setup-git-cliff@v2
       - name: setup git config
         run: |
-          git config user.name "GitHub Actions Bot"
+          git config user.name "Github Actions Bot"
           git config user.email "<>"
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -59,3 +70,48 @@ jobs:
           git push --tags
         env:
           CI: true
+
+  update-main-version:
+    needs: build
+    if: ${{ github.event.inputs.bump-main == 'true' }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GH_PUSH_TOKEN }}
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: upgrade package version
+        run: |
+          jq --arg version "${{ github.event.inputs.version }}+main" '.version=$version' package.json > package.json.tmp
+          mv package.json.tmp package.json
+          git add package.json
+          git commit -m "chore: bump version to ${{ github.event.inputs.version }}+main"
+          git push origin main
+
+  update-version-checker:
+    needs: build
+    if: ${{ github.event.inputs.update-version-function == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate Google IAM
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: 'projects/340004706233/locations/global/workloadIdentityPools/gh-actions-pool/providers/github-actions-oidc-unleash'
+          service_account: 'versionUpdateSa@metrics-304612.iam.gserviceaccount.com'
+          token_format: 'access_token'
+      - name: Update version checker
+        uses: 'Unleash/update-version-action@v0'
+        with:
+          version: ${{ github.event.inputs.version }}
+          distribution: 'oss'

@@ -18,14 +18,13 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import type { CreateFeatureStrategySchema } from 'openapi';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const useDefaultStrategy = (
     projectId: string,
     environmentId: string,
 ) => {
-    const { project, refetch } = useProject(projectId);
+    const { project, refetch } = useProjectOverview(projectId);
 
     const defaultStrategyFallback = {
         name: 'flexibleRollout',

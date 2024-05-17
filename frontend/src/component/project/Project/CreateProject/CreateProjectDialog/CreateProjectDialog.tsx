@@ -1,4 +1,3 @@
-import type React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
@@ -18,7 +17,7 @@ import { Button, Dialog, styled } from '@mui/material';
 
 interface ICreateProjectDialogueProps {
     open: boolean;
-    onClose: (e: React.SyntheticEvent) => void;
+    onClose: () => void;
 }
 
 const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
@@ -118,7 +117,6 @@ export const CreateProjectDialogue = ({
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
                 disablePadding
-                loading={loading}
                 description={documentation}
                 documentationLink='https://docs.getunleash.io/reference/projects'
                 documentationLinkLabel='Projects documentation'
@@ -155,6 +153,7 @@ export const CreateProjectDialogue = ({
                     <CreateButton
                         name='project'
                         permission={CREATE_PROJECT}
+                        disabled={loading}
                         data-testid={CREATE_PROJECT_BTN}
                     />
                 </NewProjectForm>

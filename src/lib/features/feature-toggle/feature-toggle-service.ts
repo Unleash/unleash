@@ -2184,7 +2184,41 @@ class FeatureToggleService {
         return featureToggle;
     }
 
+    private async verifyLegacyVariants(featureName: string) {
+        const existingLegacyVariantsExist =
+            await this.featureEnvironmentStore.variantExists(featureName);
+        const enableLegacyVariants = this.flagResolver.isEnabled(
+            'enableLegacyVariants',
+        );
+        const useLegacyVariants =
+            existingLegacyVariantsExist || enableLegacyVariants;
+        if (!useLegacyVariants) {
+            throw new InvalidOperationError(
+                `Environment variants deprecated for feature: ${featureName}. Use strategy variants instead.`,
+            );
+        }
+    }
+
     async saveVariantsOnEnv(
+        projectId: string,
+        featureName: string,
+        environment: string,
+        newVariants: IVariant[],
+        auditUser: IAuditUser,
+        oldVariants?: IVariant[],
+    ): Promise<IVariant[]> {
+        await this.verifyLegacyVariants(featureName);
+        return this.legacySaveVariantsOnEnv(
+            projectId,
+            featureName,
+            environment,
+            newVariants,
+            auditUser,
+            oldVariants,
+        );
+    }
+
+    async legacySaveVariantsOnEnv(
         projectId: string,
         featureName: string,
         environment: string,

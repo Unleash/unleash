@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'parseProjectFromSession'
     | 'createProjectWithEnvironmentConfig'
     | 'manyStrategiesPagination'
-    | 'newCreateProjectUI';
+    | 'newCreateProjectUI'
+    | 'enableLegacyVariants';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -292,6 +293,10 @@ const flags: IFlags = {
     ),
     manyStrategiesPagination: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MANY_STRATEGIES_PAGINATION,
+        false,
+    ),
+    enableLegacyVariants: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ENABLE_LEGACY_VARIANTS,
         false,
     ),
 };

@@ -457,7 +457,7 @@ export default class ExportImportService
         await Promise.all(
             featureEnvsWithVariants.map((featureEnvironment) => {
                 return featureEnvironment.featureName
-                    ? this.featureToggleService.saveVariantsOnEnv(
+                    ? this.featureToggleService.legacySaveVariantsOnEnv(
                           dto.project,
                           featureEnvironment.featureName,
                           dto.environment,

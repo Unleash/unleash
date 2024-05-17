@@ -55,7 +55,7 @@ const IconsRow = styled(Box)(({ theme }) => ({
 
 const Line = styled(Box)(({ theme }) => ({
     height: '1px',
-    background: theme.palette.background.application,
+    background: theme.palette.divider,
     flex: 1,
 }));
 

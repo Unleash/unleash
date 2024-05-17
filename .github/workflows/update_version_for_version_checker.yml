@@ -5,8 +5,6 @@ permissions:
   contents: read
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       version:

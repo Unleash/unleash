@@ -38,10 +38,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
     gap: theme.spacing(5),
 }));
 
-const getDayLabels = (dayCount: number): number[] => {
-    return [...Array(dayCount).keys()].map((i) => i + 1);
-};
-
 const customHighlightPlugin = {
     id: 'customLine',
     beforeDraw: (chart: Chart) => {
@@ -198,6 +194,7 @@ export const NetworkTrafficUsage: VFC = () => {
         period,
         setPeriod,
         selectablePeriods,
+        getDayLabels,
         toChartData,
         toTrafficUsageSum,
         endpointsInfo,

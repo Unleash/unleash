@@ -160,6 +160,10 @@ const toTrafficUsageSum = (trafficData: ChartDatasetType[]): number => {
     return data;
 };
 
+const getDayLabels = (dayCount: number): number[] => {
+    return [...Array(dayCount).keys()].map((i) => i + 1);
+};
+
 export const calculateOverageCost = (
     dataUsage: number,
     includedTraffic: number,
@@ -223,6 +227,7 @@ export const useTrafficDataEstimation = () => {
         period,
         setPeriod,
         selectablePeriods,
+        getDayLabels,
         currentPeriod,
         toChartData,
         toTrafficUsageSum,

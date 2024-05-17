@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.4] - 2024-05-17
+
+### Miscellaneous Tasks
+
+- Automate release actions ([#7070](https://github.com/Unleash/unleash/issues/7070))
+
+
 ## [5.12.2] - 2024-05-08
 
 ### Features

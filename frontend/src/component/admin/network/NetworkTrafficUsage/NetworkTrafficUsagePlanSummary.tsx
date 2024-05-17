@@ -32,8 +32,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledCardTitleRow = styled(Box)(() => ({}));
-
 const StyledCardDescription = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -70,48 +68,29 @@ export const NetworkTrafficUsagePlanSummary = ({
 }: INetworkTrafficUsagePlanSummary) => {
     const overages = usageTotal - includedTraffic;
     const estimateFlagEnabled = useUiFlag('estimateTrafficDataCost');
-    console.log(estimateFlagEnabled);
     return (
         <StyledContainerGrid container spacing={4}>
             <StyledGrid item xs={5.5} md={5.5}>
                 <StyledContainer>
                     <StyledColumnGrid item>
-                        <StyledCardTitleRow>
+                        <Box>
                             <b>Number of requests to Unleash</b>
-                        </StyledCardTitleRow>
+                        </Box>
                         <StyledCardDescription>
                             <RowContainer>
                                 Incoming requests selected month{' '}
                                 <StyledNumbersDiv>
-                                    <ConditionallyRender
-                                        condition={includedTraffic > 0}
-                                        show={
-                                            <ConditionallyRender
-                                                condition={
-                                                    usageTotal <=
-                                                    includedTraffic
-                                                }
-                                                show={
-                                                    <Badge color='success'>
-                                                        {usageTotal.toLocaleString()}{' '}
-                                                        requests
-                                                    </Badge>
-                                                }
-                                                elseShow={
-                                                    <Badge color='error'>
-                                                        {usageTotal.toLocaleString()}{' '}
-                                                        requests
-                                                    </Badge>
-                                                }
-                                            />
+                                    <Badge
+                                        color={
+                                            includedTraffic > 0
+                                                ? usageTotal <= includedTraffic
+                                                    ? 'success'
+                                                    : 'error'
+                                                : 'neutral'
                                         }
-                                        elseShow={
-                                            <Badge color='neutral'>
-                                                {usageTotal.toLocaleString()}{' '}
-                                                requests
-                                            </Badge>
-                                        }
-                                    />
+                                    >
+                                        {usageTotal.toLocaleString()} requests
+                                    </Badge>
                                 </StyledNumbersDiv>
                             </RowContainer>
                         </StyledCardDescription>
@@ -140,9 +119,9 @@ export const NetworkTrafficUsagePlanSummary = ({
                     <StyledGrid item xs={5.5} md={5.5}>
                         <StyledContainer>
                             <StyledColumnGrid item>
-                                <StyledCardTitleRow>
+                                <Box>
                                     <b>Accrued traffic charges</b>
-                                </StyledCardTitleRow>
+                                </Box>
                                 <StyledCardDescription>
                                     <RowContainer>
                                         Requests overages this month (

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { ChartDataset } from 'chart.js';
 
-const trafficDataUnitCost = 5;
-const trafficDataUnitSize = 1_000_000;
+const TRAFFIC_DATA_UNIT_COST = 5;
+const TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
 export type SelectablePeriod = {
     key: string;
@@ -40,8 +40,8 @@ const endpointsInfo: Record<string, EndpointInfo> = {
 };
 
 const calculateTrafficDataCost = (trafficData: number) => {
-    const unitCount = Math.ceil(trafficData / trafficDataUnitSize);
-    return unitCount * trafficDataUnitCost;
+    const unitCount = Math.ceil(trafficData / TRAFFIC_DATA_UNIT_SIZE);
+    return unitCount * TRAFFIC_DATA_UNIT_COST;
 };
 
 const padMonth = (month: number): string =>

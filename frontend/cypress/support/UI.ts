@@ -281,69 +281,6 @@ export const addUserIdStrategyToFeature_UI = (
     return cy.wait('@addStrategyToFeature');
 };
 
-export const addVariantsToFeature_UI = (
-    featureToggleName: string,
-    variants: Array<string>,
-    projectName: string,
-) => {
-    const project = projectName || 'default';
-    cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
-    cy.wait(200);
-
-    cy.intercept(
-        'PATCH',
-        `/api/admin/projects/${project}/features/${featureToggleName}/environments/development/variants`,
-        (req) => {
-            variants.forEach((variant, index) => {
-                expect(req.body[index].op).to.equal('add');
-                expect(req.body[index].path).to.equal(`/${index}`);
-                expect(req.body[index].value.name).to.equal(variant);
-                expect(req.body[index].value.weight).to.equal(
-                    1000 / variants.length,
-                );
-            });
-        },
-    ).as('variantCreation');
-
-    cy.get('[data-testid=ADD_VARIANT_BUTTON]').first().click();
-    cy.wait(500);
-    variants.forEach((variant, index) => {
-        cy.get('[data-testid=VARIANT_NAME_INPUT]').eq(index).type(variant);
-        index + 1 < variants.length &&
-            cy.get('[data-testid=MODAL_ADD_VARIANT_BUTTON]').first().click();
-    });
-
-    cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').first().click();
-    return cy.wait('@variantCreation');
-};
-
-export const deleteVariant_UI = (
-    featureToggleName: string,
-    variant: string,
-    projectName?: string,
-): Chainable<any> => {
-    const project = projectName || 'default';
-    cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
-    cy.get('[data-testid=EDIT_VARIANTS_BUTTON]').click();
-    cy.wait(300);
-    cy.get(`[data-testid=VARIANT_DELETE_BUTTON_${variant}]`).first().click();
-
-    cy.intercept(
-        'PATCH',
-        `/api/admin/projects/${project}/features/${featureToggleName}/environments/development/variants`,
-        (req) => {
-            expect(req.body[0].op).to.equal('remove');
-            expect(req.body[0].path).to.equal('/1');
-            expect(req.body[1].op).to.equal('replace');
-            expect(req.body[1].path).to.equal('/0/weight');
-            expect(req.body[1].value).to.equal(1000);
-        },
-    ).as('delete');
-
-    cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
-    return cy.wait('@delete');
-};
-
 export const logout_UI = (): Chainable<any> => {
     return cy.visit('/logout');
 };

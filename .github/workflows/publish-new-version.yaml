@@ -76,10 +76,6 @@ jobs:
     if: ${{ github.event.inputs.bump-main == 'true' }}
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
       - name: checkout main branch
         uses: actions/checkout@v4
@@ -91,10 +87,21 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+      - name: Use Node js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'yarn'
       - name: upgrade package version
         run: |
           jq --arg version "${{ github.event.inputs.version }}+main" '.version=$version' package.json > package.json.tmp
           mv package.json.tmp package.json
+      - name: lint
+        run: |
+          yarn install --frozen-lockfile --ignore-scripts
+          yarn lint:fix
+      - name: push changes
+        run: |
           git add package.json
           git commit -m "chore: bump version to ${{ github.event.inputs.version }}+main"
           git push origin main

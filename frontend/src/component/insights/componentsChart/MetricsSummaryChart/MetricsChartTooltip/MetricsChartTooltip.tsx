@@ -112,19 +112,23 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▣ '}
-                        title={`Total requests: ${
+                        title={`Total requests: ${(
                             point.value.totalRequests ?? 0
-                        }`}
+                        ).toLocaleString()}`}
                         color={'info'}
                     />
                     <InfoLine
                         iconChar={'▲ '}
-                        title={`Exposed: ${point.value.totalYes ?? 0}`}
+                        title={`Exposed: ${(
+                            point.value.totalYes ?? 0
+                        ).toLocaleString()}`}
                         color={'success'}
                     />
                     <InfoLine
                         iconChar={'▼ '}
-                        title={`Not exposed: ${point.value.totalNo ?? 0}`}
+                        title={`Not exposed: ${(
+                            point.value.totalNo ?? 0
+                        ).toLocaleString()}`}
                         color={'error'}
                     />
                     <ConditionallyRender

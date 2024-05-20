@@ -40,8 +40,7 @@ export const ProjectGroup: React.FC<{
     projects: IProjectCard[];
     loading: boolean;
     searchValue: string;
-    handleHover: (id: string) => void;
-}> = ({ sectionTitle, projects, loading, searchValue, handleHover }) => {
+}> = ({ sectionTitle, projects, loading, searchValue }) => {
     const useNewProjectCards = useUiFlag('projectsListNewCards');
 
     const [StyledItemsContainer, ProjectCard] = useNewProjectCards
@@ -108,9 +107,7 @@ export const ProjectGroup: React.FC<{
                                             to={`/projects/${project.id}`}
                                         >
                                             <ProjectCard
-                                                onHover={() =>
-                                                    handleHover(project.id)
-                                                }
+                                                onHover={() => {}}
                                                 name={project.name}
                                                 mode={project.mode}
                                                 memberCount={

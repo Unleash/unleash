@@ -6,7 +6,6 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import ApiError from 'component/common/ApiError/ApiError';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { Alert, styled, TableBody, TableRow } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Link } from 'react-router-dom';
@@ -30,7 +29,9 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { EnvironmentHideDialog } from './EnvironmentHideDialog/EnvironmentHideDialog';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useProjectOverviewNameOrId } from '../../../hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview, {
+    useProjectOverviewNameOrId,
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -58,7 +59,7 @@ const ProjectEnvironmentList = () => {
     const { setToastData, setToastApiError } = useToast();
     const { environments, loading, error, refetchEnvironments } =
         useProjectEnvironments(projectId);
-    const { project, refetch: refetchProject } = useProject(projectId);
+    const { project, refetch: refetchProject } = useProjectOverview(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
 

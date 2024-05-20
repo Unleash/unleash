@@ -14,10 +14,10 @@ import useToast from 'hooks/useToast';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import type { IProject } from 'interfaces/project';
-import useProject from 'hooks/api/getters/useProject/useProject';
+import type { IProjectOverview } from 'interfaces/project';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledContainer = styled('div')<{ isPro: boolean }>(
     ({ theme, isPro }) => ({
@@ -41,7 +41,7 @@ const StyledFormContainer = styled('div')(({ theme }) => ({
 }));
 
 interface IUpdateProject {
-    project: IProject;
+    project: IProjectOverview;
 }
 const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 export const UpdateProject = ({ project }: IUpdateProject) => {
@@ -75,7 +75,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     );
 
     const { editProject, loading } = useProjectApi();
-    const { refetch } = useProject(id);
+    const { refetch } = useProjectOverview(id);
 
     const formatProjectApiCode = () => {
         return `curl --location --request PUT '${

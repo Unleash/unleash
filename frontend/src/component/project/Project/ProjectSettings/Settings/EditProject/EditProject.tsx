@@ -2,7 +2,6 @@ import {
     PROJECT_SETTINGS_WRITE,
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';
@@ -12,6 +11,9 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { UpdateEnterpriseSettings } from './UpdateEnterpriseSettings';
 import { UpdateProject } from './UpdateProject';
 import { DeleteProjectForm } from './DeleteProjectForm';
+import useProjectOverview, {
+    featuresCount,
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -23,7 +25,7 @@ const EditProject = () => {
     const { isEnterprise } = useUiConfig();
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
-    const { project } = useProject(id);
+    const { project } = useProjectOverview(id);
 
     if (!project.name) {
         return null;
@@ -47,7 +49,7 @@ const EditProject = () => {
                     condition={isEnterprise()}
                     show={<UpdateEnterpriseSettings project={project} />}
                 />
-                <DeleteProjectForm featureCount={project.features.length} />
+                <DeleteProjectForm featureCount={featuresCount(project)} />
             </StyledFormContainer>
         </>
     );

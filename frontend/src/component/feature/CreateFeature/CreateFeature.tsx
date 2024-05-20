@@ -16,7 +16,7 @@ import { Alert, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview, {
     featuresCount,
-} from '../../../hooks/api/getters/useProjectOverview/useProjectOverview';
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),

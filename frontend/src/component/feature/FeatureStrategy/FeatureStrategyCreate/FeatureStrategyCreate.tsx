@@ -119,6 +119,7 @@ export const FeatureStrategyCreate = () => {
     }, [
         featureId,
         JSON.stringify(strategyDefinition),
+        JSON.stringify(defaultStrategy),
         shouldUseDefaultStrategy,
     ]);
 

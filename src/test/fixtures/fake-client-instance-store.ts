@@ -49,6 +49,12 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         );
     }
 
+    async groupApplicationsBySdkAndProject(
+        projectId: string,
+    ): Promise<{ sdkVersion: string; applications: string[] }[]> {
+        throw new Error('Not implemented in mock');
+    }
+
     async deleteAll(): Promise<void> {
         this.instances = [];
     }

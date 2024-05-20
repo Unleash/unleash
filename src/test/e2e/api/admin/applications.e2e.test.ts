@@ -158,7 +158,7 @@ test('should show correct application metrics', async () => {
     ]);
 
     const { body: outdatedSdks } = await app.request
-        .get(`/api/admin/metrics/sdks/outdated`)
+        .get(`/api/admin/projects/default/sdks/outdated`)
         .expect(200);
 
     expect(outdatedSdks).toMatchObject({

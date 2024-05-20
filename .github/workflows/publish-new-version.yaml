@@ -54,14 +54,18 @@ jobs:
           echo PREV=$(git describe --tags ${PREV_COMMIT}) >> $GITHUB_ENV
       - if: ${{ !endsWith(github.event.inputs.version, '0') }}
         run: echo PREV=$(git describe --abbrev=0) >> $GITHUB_ENV
-      - name: Generate changelog if not pre-release
+      - name: Generate changelog from ${{ env.PREV }}
         continue-on-error: true
         if: ${{ !contains(github.event.inputs.version, '-') }}
         env:
           PREV: ${{ env.PREV }}
         run: |
-          git-cliff ${PREV}..HEAD --tag v${{ github.event.inputs.version }} --prepend CHANGELOG.md
+          git-cliff ${{ env.PREV }}..HEAD --tag v${{ github.event.inputs.version }} --prepend CHANGELOG.md
+          if [ -n "$(git status --porcelain)" ]; then
           git commit -am "docs: Update CHANGELOG.md"
+          else
+            echo "No changes to CHANGELOG.md"
+          fi
       - run: yarn install --frozen-lockfile --ignore-scripts
       - name: npm version
         run: |
@@ -109,15 +113,20 @@ jobs:
   publish-docker:
     needs: build
     uses: ./.github/workflows/docker_publish.yaml
+    with:
+      version: ${{ github.event.inputs.version }}
   
   publish-npm:
     needs: build
     uses: ./.github/workflows/release.yaml
+    with:
+      version: ${{ github.event.inputs.version }}
 
-  # TODO later: we need to figure out the tag_name and whether or not to upgrade the action that is archived
-  # release-changelog:
-  #   needs: build
-  #   uses: ./.github/workflows/release_changelog.yml
+  release-changelog: # TODO this changelog is different than the git-cliff one above
+    needs: build
+    uses: ./.github/workflows/release_changelog.yml
+    with:
+      version: ${{ github.event.inputs.version }}
 
   update-version-checker:
     needs: publish-docker

@@ -50,7 +50,9 @@ export const useProjectOverviewNameOrId = (id: string): string => {
     return useProjectOverview(id).project.name || id;
 };
 
-export const featuresCount = (project: IProjectOverview) => {
+export const featuresCount = (
+    project: Pick<IProjectOverview, 'featureTypeCounts'>,
+) => {
     return project.featureTypeCounts
         .map((count) => count.count)
         .reduce((a, b) => a + b, 0);

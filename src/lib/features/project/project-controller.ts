@@ -169,12 +169,12 @@ export default class ProjectController extends Controller {
         this.route({
             method: 'get',
             path: '/:projectId/sdks/outdated',
-            handler: this.getOutdatedSdks,
+            handler: this.getOutdatedProjectSdks,
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Unstable'],
-                    operationId: 'getOutdatedSdks',
+                    operationId: 'getOutdatedProjectSdks',
                     summary: 'Get outdated SDKs',
                     description:
                         'Returns a list of the outdated SDKS with the applications using them.',
@@ -336,7 +336,7 @@ export default class ProjectController extends Controller {
             serializeDates(applications),
         );
     }
-    async getOutdatedSdks(
+    async getOutdatedProjectSdks(
         req: IAuthRequest<IProjectParam>,
         res: Response<OutdatedSdksSchema>,
     ) {

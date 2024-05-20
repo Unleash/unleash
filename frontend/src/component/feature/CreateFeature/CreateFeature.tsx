@@ -13,8 +13,10 @@ import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { Alert, styled } from '@mui/material';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useProjectOverview, {
+    featuresCount,
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -54,7 +56,7 @@ const CreateFeature = () => {
         errors,
     } = useFeatureForm();
 
-    const { project: projectInfo } = useProject(project);
+    const { project: projectInfo } = useProjectOverview(project);
 
     const { createFeatureToggle, loading } = useFeatureApi();
 
@@ -98,7 +100,7 @@ const CreateFeature = () => {
 
     const featureLimitReached = isFeatureLimitReached(
         projectInfo.featureLimit,
-        projectInfo.features.length,
+        featuresCount(projectInfo),
     );
     return (
         <FormTemplate

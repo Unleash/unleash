@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -9,6 +8,7 @@ import { Link } from 'react-router-dom';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -41,7 +41,7 @@ const FeatureSettingsProjectConfirm = ({
     changeRequests,
 }: IFeatureSettingsProjectConfirm) => {
     const currentProjectId = useRequiredPathParam('projectId');
-    const { project } = useProject(projectId);
+    const { project } = useProjectOverview(projectId);
 
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);

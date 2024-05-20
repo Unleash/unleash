@@ -29,6 +29,9 @@ export interface IClientInstanceStore
     groupApplicationsBySdk(): Promise<
         { sdkVersion: string; applications: string[] }[]
     >;
+    groupApplicationsBySdkAndProject(
+        projectId: string,
+    ): Promise<{ sdkVersion: string; applications: string[] }[]>;
     getDistinctApplications(): Promise<string[]>;
     getDistinctApplicationsCount(daysBefore?: number): Promise<number>;
     deleteForApplication(appName: string): Promise<void>;

@@ -32,9 +32,7 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
     minWidth: 0,
 }));
 
-const ProjectOverview: FC<{
-    storageKey?: string;
-}> = ({ storageKey = 'project-overview-v2' }) => {
+const ProjectOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
 
@@ -58,8 +56,6 @@ const ProjectOverview: FC<{
                         environments={project.environments.map(
                             (environment) => environment.environment,
                         )}
-                        refreshInterval={refreshInterval}
-                        storageKey={storageKey}
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>

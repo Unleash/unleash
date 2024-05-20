@@ -175,7 +175,7 @@ export default class ProjectController extends Controller {
                 this.openApiService.validPath({
                     tags: ['Unstable'],
                     operationId: 'getOutdatedProjectSdks',
-                    summary: 'Get outdated SDKs',
+                    summary: 'Get outdated project SDKs',
                     description:
                         'Returns a list of the outdated SDKS with the applications using them.',
                     responses: {

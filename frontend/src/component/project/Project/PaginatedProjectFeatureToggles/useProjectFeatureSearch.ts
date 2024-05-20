@@ -18,7 +18,7 @@ import mapValues from 'lodash.mapvalues';
 
 export const useProjectFeatureSearch = (
     projectId: string,
-    storageKey = 'project-feature-toggles-v2',
+    storageKey = 'project-overview-v2',
     refreshInterval = 15 * 1000,
 ) => {
     const stateConfig = {

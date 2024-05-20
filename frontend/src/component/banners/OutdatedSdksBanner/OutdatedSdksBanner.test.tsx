@@ -7,7 +7,11 @@ import { OutdatedSdksBanner } from './OutdatedSdksBanner';
 const server = testServerSetup();
 
 const setupApi = (outdatedSdks: OutdatedSdksSchema) => {
-    testServerRoute(server, '/api/admin/metrics/sdks/outdated', outdatedSdks);
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/sdks/outdated',
+        outdatedSdks,
+    );
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             outdatedSdksBanner: true,
@@ -24,7 +28,7 @@ test('Show outdated SDKs and apps using them', async () => {
             },
         ],
     });
-    render(<OutdatedSdksBanner />);
+    render(<OutdatedSdksBanner project={'default'} />);
 
     const link = await screen.findByText('Please update those versions');
 

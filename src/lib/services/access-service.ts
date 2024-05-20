@@ -887,4 +887,11 @@ export class AccessService {
     async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
         return this.store.getUserAccessOverview();
     }
+
+    async isAdmin(userId: number): Promise<boolean> {
+        const roles = await this.store.getRolesForUserId(userId);
+        return roles.some(
+            (role) => role.name.toLowerCase() === ADMIN.toLowerCase(),
+        );
+    }
 }

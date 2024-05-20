@@ -285,3 +285,31 @@ describe('addAccessToProject', () => {
         ).rejects.toThrow(BadDataError);
     });
 });
+
+test('should return true if user has admin role', async () => {
+    const { accessService, accessStore } = getSetup();
+
+    const userId = 1;
+    accessStore.getRolesForUserId = jest
+        .fn()
+        .mockResolvedValue([{ id: 1, name: 'ADMIN', type: 'custom' }]);
+
+    const result = await accessService.isAdmin(userId);
+
+    expect(result).toBe(true);
+    expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
+});
+
+test('should return false if user does not have admin role', async () => {
+    const { accessService, accessStore } = getSetup();
+
+    const userId = 2;
+    accessStore.getRolesForUserId = jest
+        .fn()
+        .mockResolvedValue([{ id: 2, name: 'user', type: 'custom' }]);
+
+    const result = await accessService.isAdmin(userId);
+
+    expect(result).toBe(false);
+    expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
+});

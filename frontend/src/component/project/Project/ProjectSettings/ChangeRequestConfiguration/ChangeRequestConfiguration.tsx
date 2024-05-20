@@ -10,14 +10,14 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import { ChangeRequestTable } from './ChangeRequestTable';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
+import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const ChangeRequestConfiguration = () => {
     const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectNameOrId(projectId);
+    const projectName = useProjectOverviewNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
     const { isOss, isPro } = useUiConfig();
 

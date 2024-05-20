@@ -51,12 +51,5 @@ const useProject = (id: string, options: SWRConfiguration = {}) => {
         refetch,
     };
 };
-/**
- * @deprecated It is recommended to use useProjectOverviewNameOrId instead, unless you need project features.
- * In that case, we probably should create a project features endpoint and use that instead if features needed.
- */
-export const useProjectNameOrId = (id: string): string => {
-    return useProject(id).project.name || id;
-};
 
 export default useProject;

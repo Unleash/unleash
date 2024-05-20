@@ -11,12 +11,12 @@ import {
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ProjectAccessTable } from 'component/project/ProjectAccess/ProjectAccessTable/ProjectAccessTable';
-import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const ProjectAccess = () => {
     const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectNameOrId(projectId);
+    const projectName = useProjectOverviewNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
     const { isOss } = useUiConfig();
     usePageTitle(`Project access – ${projectName}`);

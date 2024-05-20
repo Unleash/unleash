@@ -34,7 +34,8 @@ const StyledContentContainer = styled(Box)(({ theme }) => ({
 
 const ProjectOverview: FC<{
     storageKey?: string;
-}> = ({ storageKey = 'project-overview-v2' }) => {
+    key: string;
+}> = ({ key, storageKey = 'project-overview-v2' }) => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
 
@@ -49,7 +50,7 @@ const ProjectOverview: FC<{
     }, [projectId, setLastViewed]);
 
     return (
-        <StyledContainer key={projectId}>
+        <StyledContainer key={key}>
             <StyledContentContainer>
                 <ProjectOverviewChangeRequests project={projectId} />
 

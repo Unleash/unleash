@@ -47,9 +47,15 @@ interface IImportModalProps {
     open: boolean;
     setOpen: (value: boolean) => void;
     project: string;
+    onImport: () => void;
 }
 
-export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
+export const ImportModal = ({
+    open,
+    setOpen,
+    project,
+    onImport,
+}: IImportModalProps) => {
     const [importStage, setImportStage] = useState<StageName>('configure');
     const [environment, setEnvironment] = useState('');
     const [importPayload, setImportPayload] = useState('');
@@ -135,6 +141,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             environment={environment}
                             payload={importPayload}
                             onClose={close}
+                            onImport={onImport}
                         />
                     }
                 />

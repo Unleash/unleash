@@ -14,7 +14,7 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
+import { Box, Paper, styled, Tabs, Typography } from '@mui/material';
 import FileUpload from '@mui/icons-material/FileUpload';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
@@ -43,6 +43,7 @@ import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/Hid
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
 import { ProjectInsights } from './ProjectInsights/ProjectInsights';
+import { useRefreshOnImport } from './Import/useRefreshOnImport';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -190,6 +191,8 @@ export const Project = () => {
         </Box>
     );
 
+    const { refreshOnImport, projectKey } = useRefreshOnImport(projectId);
+
     return (
         <div ref={ref}>
             <StyledHeader>
@@ -324,12 +327,16 @@ export const Project = () => {
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='applications' element={<ProjectApplications />} />
-                <Route path='*' element={<ProjectOverview />} />
+                <Route
+                    path='*'
+                    element={<ProjectOverview key={projectKey} />}
+                />
             </Routes>
             <ImportModal
                 open={modalOpen}
                 setOpen={setModalOpen}
                 project={projectId}
+                onImport={refreshOnImport}
             />
         </div>
     );

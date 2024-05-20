@@ -42,9 +42,21 @@ test('Import happy path', async () => {
     const setOpen = (open: boolean) => {
         closed = !open;
     };
-    render(<ImportModal open={true} setOpen={setOpen} project='default' />, {
-        permissions: [{ permission: CREATE_FEATURE }],
-    });
+    let imported = false;
+    const onImport = () => {
+        imported = true;
+    };
+    render(
+        <ImportModal
+            open={true}
+            setOpen={setOpen}
+            project='default'
+            onImport={onImport}
+        />,
+        {
+            permissions: [{ permission: CREATE_FEATURE }],
+        },
+    );
 
     // configure stage
     screen.getByText('Import options');
@@ -76,6 +88,8 @@ test('Import happy path', async () => {
     await screen.findByText('Importing...');
     await screen.findByText('Import completed');
 
+    expect(imported).toBe(true);
+
     expect(closed).toBe(false);
     const closeButton = screen.getByText('Close');
     closeButton.click();
@@ -85,9 +99,18 @@ test('Import happy path', async () => {
 test('Block when importing non json content', async () => {
     setupApi();
     const setOpen = () => {};
-    render(<ImportModal open={true} setOpen={setOpen} project='default' />, {
-        permissions: [{ permission: CREATE_FEATURE }],
-    });
+    const onImport = () => {};
+    render(
+        <ImportModal
+            open={true}
+            setOpen={setOpen}
+            project='default'
+            onImport={onImport}
+        />,
+        {
+            permissions: [{ permission: CREATE_FEATURE }],
+        },
+    );
 
     const codeEditorLabel = screen.getByText('Code editor');
     codeEditorLabel.click();
@@ -123,9 +146,18 @@ test('Show validation errors', async () => {
         'post',
     );
     const setOpen = () => {};
-    render(<ImportModal open={true} setOpen={setOpen} project='default' />, {
-        permissions: [{ permission: CREATE_FEATURE }],
-    });
+    const onImport = () => {};
+    render(
+        <ImportModal
+            open={true}
+            setOpen={setOpen}
+            project='default'
+            onImport={onImport}
+        />,
+        {
+            permissions: [{ permission: CREATE_FEATURE }],
+        },
+    );
 
     await importFile('{}');
     await waitFor(() => {

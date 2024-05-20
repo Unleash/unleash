@@ -106,19 +106,22 @@ jobs:
           git commit -m "chore: bump version to ${{ github.event.inputs.version }}+main"
           git push origin main
 
-  update-version-checker:
+  publish-docker:
     needs: build
+    uses: ./.github/workflows/docker_publish.yaml
+  
+  publish-npm:
+    needs: build
+    uses: ./.github/workflows/release.yaml
+
+  # TODO later: we need to figure out the tag_name and whether or not to upgrade the action that is archived
+  # release-changelog:
+  #   needs: build
+  #   uses: ./.github/workflows/release_changelog.yml
+
+  update-version-checker:
+    needs: publish-docker
     if: ${{ github.event.inputs.update-version-function == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Authenticate Google IAM
-        uses: 'google-github-actions/auth@v2'
-        with:
-          workload_identity_provider: 'projects/340004706233/locations/global/workloadIdentityPools/gh-actions-pool/providers/github-actions-oidc-unleash'
-          service_account: 'versionUpdateSa@metrics-304612.iam.gserviceaccount.com'
-          token_format: 'access_token'
-      - name: Update version checker
-        uses: 'Unleash/update-version-action@v0'
-        with:
-          version: ${{ github.event.inputs.version }}
-          distribution: 'oss'
+    uses: ./.github/workflows/update_version_for_version_checker.yml
+    with:
+      version: ${{ github.event.inputs.version }}

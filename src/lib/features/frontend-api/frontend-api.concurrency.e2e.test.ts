@@ -28,6 +28,7 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
+    console.log('Stopping all and clearing mocks');
     app.services.frontendApiService.stopAll();
     jest.clearAllMocks();
 });
@@ -37,7 +38,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-beforeEach(async () => {
+beforeEach(() => {
     appErrorLogs = [];
 });
 
@@ -54,14 +55,15 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
             tokenName: `test-token-${randomId()}`,
         });
 
-    await Promise.all(
-        Array.from(Array(10).keys()).map(() =>
-            app.request
-                .get('/api/frontend')
-                .set('Authorization', frontendTokenDefault.secret)
-                .expect('Content-Type', /json/)
-                .expect(200),
-        ),
+    const promises = Array(10).fill(
+        app.request
+            .get('/api/frontend')
+            .set('Authorization', frontendTokenDefault.secret)
+            .expect('Content-Type', /json/)
+            .expect(200),
     );
+
+    const allRequests = Promise.all(promises);
+    await expect(allRequests).resolves.toBeTruthy();
     expect(appErrorLogs).toHaveLength(0);
 });

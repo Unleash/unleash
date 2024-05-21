@@ -98,7 +98,8 @@ const uncompleteFeature = async (featureName: string, expectedCode = 200) => {
 function reachedStage(feature: string, stage: StageName) {
     return new Promise((resolve) =>
         featureLifecycleService.on(STAGE_ENTERED, (event) => {
-            if (event.stage === stage) resolve(stage);
+            if (event.stage === stage && event.feature === feature)
+                resolve(stage);
         }),
     );
 }

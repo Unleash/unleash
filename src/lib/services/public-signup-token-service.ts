@@ -70,10 +70,6 @@ export class PublicSignupTokenService {
         return this.store.getAll();
     }
 
-    public async getAllActiveTokens(): Promise<PublicSignupTokenSchema[]> {
-        return this.store.getAllActive();
-    }
-
     public async validate(secret: string): Promise<boolean> {
         return this.store.isValid(secret);
     }

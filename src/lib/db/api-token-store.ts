@@ -129,6 +129,7 @@ export class ApiTokenStore implements IApiTokenStore {
             .where('expires_at', 'IS', null)
             .orWhere('expires_at', '>', 'now()');
         stopTimer();
+        console.log(rows);
         return toTokens(rows);
     }
 

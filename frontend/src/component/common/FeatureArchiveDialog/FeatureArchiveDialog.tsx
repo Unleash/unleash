@@ -53,11 +53,11 @@ const UsageWarning = ({
                     variant={'body2'}
                     display='inline'
                 >
-                    {`${ids.length} feature toggles `}
+                    {`${ids.length} feature flags `}
                 </Typography>
                 <span>
                     have usage from applications. If you archive these feature
-                    toggles they will not be available to Client SDKs:
+                    flags they will not be available to Client SDKs:
                 </span>
                 <ul>
                     {ids?.map((id) => (
@@ -94,7 +94,7 @@ const ArchiveParentError = ({
                     variant={'body2'}
                     display='inline'
                 >
-                    {`${ids.length} feature toggles `}
+                    {`${ids.length} feature flags `}
                 </Typography>
                 <span>
                     have child features that depend on them and are not part of
@@ -194,9 +194,9 @@ const useActionButtonText = (projectId: string, isBulkArchive: boolean) => {
         return 'Add change to draft';
     }
     if (isBulkArchive) {
-        return 'Archive toggles';
+        return 'Archive flags';
     }
-    return 'Archive toggle';
+    return 'Archive flag';
 };
 
 const useArchiveAction = ({
@@ -239,8 +239,8 @@ const useArchiveAction = ({
         refetchChangeRequests();
         setToastData({
             text: isBulkArchive
-                ? 'Your archive feature toggles changes have been added to change request'
-                : 'Your archive feature toggle change has been added to change request',
+                ? 'Your archive feature flags changes have been added to change request'
+                : 'Your archive feature flag change has been added to change request',
             type: 'success',
             title: isBulkArchive
                 ? 'Changes added to a draft'
@@ -251,7 +251,7 @@ const useArchiveAction = ({
     const archiveToggle = async () => {
         await archiveFeatureToggle(projectId, featureIds[0]);
         setToastData({
-            text: 'Your feature toggle has been archived',
+            text: 'Your feature flag has been archived',
             type: 'success',
             title: 'Feature archived',
         });
@@ -260,7 +260,7 @@ const useArchiveAction = ({
     const archiveToggles = async () => {
         await archiveFeatures(projectId, featureIds);
         setToastData({
-            text: 'Selected feature toggles have been archived',
+            text: 'Selected feature flags have been archived',
             type: 'success',
             title: 'Features archived',
         });
@@ -339,8 +339,8 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     const buttonText = useActionButtonText(projectId, isBulkArchive);
 
     const dialogTitle = isBulkArchive
-        ? 'Archive feature toggles'
-        : 'Archive feature toggle';
+        ? 'Archive feature flags'
+        : 'Archive feature flag';
 
     const archiveAction = useArchiveAction({
         projectId,
@@ -381,8 +381,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                     <>
                         <p>
                             Are you sure you want to archive{' '}
-                            <strong>{featureIds?.length}</strong> feature
-                            toggles?
+                            <strong>{featureIds?.length}</strong> feature flags?
                         </p>
 
                         <ConditionallyRender
@@ -433,8 +432,8 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                         <p>
                             Are you sure you want to archive{' '}
                             {isBulkArchive
-                                ? 'these feature toggles'
-                                : 'this feature toggle'}
+                                ? 'these feature flags'
+                                : 'this feature flag'}
                             ?
                         </p>
                         <ConditionallyRender

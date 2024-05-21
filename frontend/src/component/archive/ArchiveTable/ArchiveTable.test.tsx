@@ -87,7 +87,7 @@ test('should show confirm dialog when reviving toggle', async () => {
     await screen.findByText('someFeature');
 
     const reviveButton = screen.getAllByTestId(
-        'revive-feature-toggle-button',
+        'revive-feature-flag-button',
     )?.[0];
     fireEvent.click(reviveButton);
 
@@ -143,7 +143,7 @@ test('should show info box when disableAllEnvsOnRevive flag is on', async () => 
     await screen.findByText('someFeature');
 
     const reviveButton = screen.getAllByTestId(
-        'revive-feature-toggle-button',
+        'revive-feature-flag-button',
     )?.[0];
     fireEvent.click(reviveButton);
 

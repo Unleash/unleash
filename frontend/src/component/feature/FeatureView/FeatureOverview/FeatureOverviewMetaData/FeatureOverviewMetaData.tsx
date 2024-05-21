@@ -244,12 +244,17 @@ const FeatureOverviewMetaData = () => {
                     />
                 }
             />
-            <MarkCompletedDialogue
-                isOpen={showMarkCompletedDialogue}
-                setIsOpen={setShowMarkCompletedDialogue}
-                projectId={feature.project}
-                featureId={feature.name}
-                onComplete={refetchFeature}
+            <ConditionallyRender
+                condition={Boolean(feature.project)}
+                show={
+                    <MarkCompletedDialogue
+                        isOpen={showMarkCompletedDialogue}
+                        setIsOpen={setShowMarkCompletedDialogue}
+                        projectId={feature.project}
+                        featureId={feature.name}
+                        onComplete={refetchFeature}
+                    />
+                }
             />
         </StyledContainer>
     );

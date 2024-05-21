@@ -121,10 +121,6 @@ export class ApiTokenService {
         if (!secret) {
             return undefined;
         }
-        console.log(
-            'Active tokens (with cache)',
-            this.activeTokens.map((t) => t.secret),
-        );
 
         let token = this.activeTokens.find(
             (activeToken) =>

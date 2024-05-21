@@ -13,7 +13,6 @@ export interface IPublicSignupTokenStore
         secret: string,
         value: { expiresAt?: Date; enabled?: boolean },
     ): Promise<PublicSignupTokenSchema>;
-    PublicSignup;
     delete(secret: string): Promise<void>;
     count(): Promise<number>;
 }

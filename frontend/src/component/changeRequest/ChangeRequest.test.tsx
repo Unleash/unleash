@@ -264,11 +264,11 @@ const verifyBannerForPendingChangeRequest = async () => {
     return screen.findByText('Change request mode', {}, { timeout: 5000 });
 };
 
-const changeToggle = async (environment: string) => {
-    const featureToggleStatusBox = screen.getByTestId('feature-toggle-status');
-    await within(featureToggleStatusBox).findByText(environment);
-    const toggle = screen.getAllByRole('checkbox')[1];
-    fireEvent.click(toggle);
+const changeFlag = async (environment: string) => {
+    const featureFlagStatusBox = screen.getByTestId('feature-flag-status');
+    await within(featureFlagStatusBox).findByText(environment);
+    const flag = screen.getAllByRole('checkbox')[1];
+    fireEvent.click(flag);
 };
 
 const verifyChangeRequestDialog = async (bannerMainText: string) => {
@@ -277,7 +277,7 @@ const verifyChangeRequestDialog = async (bannerMainText: string) => {
     expect(message).toBe(bannerMainText);
 };
 
-test('add toggle change to pending change request', async () => {
+test('add flag change to pending change request', async () => {
     setupHttpRoutes({ featureName: 'test', enabled: false });
 
     render(
@@ -291,7 +291,7 @@ test('add toggle change to pending change request', async () => {
 
     await verifyBannerForPendingChangeRequest();
 
-    await changeToggle('production');
+    await changeFlag('production');
 
     await verifyChangeRequestDialog('Enable feature toggle test in production');
 }, 10000);

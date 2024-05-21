@@ -217,8 +217,8 @@ export const formatUpdateStrategyApiCode = (
 };
 
 export const featureStrategyHelp = `
-    An activation strategy will only run when a feature toggle is enabled and provides a way to control who will get access to the feature.
-    If any of a feature toggle's activation strategies returns true, the user will get access.
+    An activation strategy will only run when a feature flag is enabled and provides a way to control who will get access to the feature.
+    If any of a feature flag's activation strategies returns true, the user will get access.
 `;
 
 export const featureStrategyDocsLink =

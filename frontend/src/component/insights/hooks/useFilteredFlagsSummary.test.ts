@@ -143,7 +143,7 @@ describe('useFilteredFlagTrends', () => {
         });
     });
 
-    it('should set health of a project without feature toggles to undefined', () => {
+    it('should set health of a project without feature flags to undefined', () => {
         const { result } = renderHook(() =>
             useFilteredFlagsSummary(
                 [

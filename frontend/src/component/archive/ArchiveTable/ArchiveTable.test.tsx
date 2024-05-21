@@ -149,6 +149,6 @@ test('should show info box when disableAllEnvsOnRevive flag is on', async () => 
 
     await screen.findByText('Revive feature flag?');
     await screen.findByText(
-        'Revived feature toggles will be automatically disabled in all environments',
+        'Revived feature flags will be automatically disabled in all environments',
     );
 });

@@ -76,7 +76,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
         e.preventDefault();
         try {
             if (!featureType?.id)
-                throw new Error('No feature toggle type loaded');
+                throw new Error('No feature flag type loaded');
 
             const value = doesntExpire ? 0 : lifetime;
             await updateFeatureTypeLifetime(featureType.id, value);
@@ -121,12 +121,12 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
             modal
             title={
                 loading
-                    ? 'Edit toggle type'
-                    : `Edit toggle type: ${featureType?.name}`
+                    ? 'Edit flag type'
+                    : `Edit flag type: ${featureType?.name}`
             }
             description={featureType?.description || ''}
             documentationLink='https://docs.getunleash.io/reference/feature-toggle-types'
-            documentationLinkLabel='Feature toggle types documentation'
+            documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
             <StyledForm component='form' onSubmit={onSubmit}>
@@ -137,7 +137,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         alignItems: 'center',
                     })}
                 >
-                    <Box component='label' htmlFor='feature-toggle-lifetime'>
+                    <Box component='label' htmlFor='feature-flag-lifetime'>
                         Expected lifetime
                     </Box>
                     <HelpIcon
@@ -145,8 +145,8 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         tooltip={
                             <>
                                 <p>
-                                    If your toggle exceeds the expected lifetime
-                                    of its toggle type it will be marked as
+                                    If your flag exceeds the expected lifetime
+                                    of its flag type it will be marked as
                                     potentially stale.
                                 </p>
                                 <br />
@@ -170,11 +170,11 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         marginBottom: theme.spacing(1),
                         marginRight: 'auto',
                     })}
-                    htmlFor='feature-toggle-expire'
+                    htmlFor='feature-flag-expire'
                 >
                     <Checkbox
                         checked={doesntExpire || lifetime === 0}
-                        id='feature-toggle-expire'
+                        id='feature-flag-expire'
                         onChange={onChangeDoesntExpire}
                         disabled={loading}
                     />
@@ -185,7 +185,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                     disabled={doesntExpire || loading}
                     type='number'
                     label='Lifetime in days'
-                    id='feature-toggle-lifetime'
+                    id='feature-flag-lifetime'
                     value={doesntExpire ? '0' : `${lifetime}`}
                     onChange={onChangeLifetime}
                     error={isIncorrect}
@@ -198,7 +198,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         type='submit'
                         disabled={loading || actionLoading}
                     >
-                        Save feature toggle type
+                        Save feature flag type
                     </PermissionButton>
                     <Button
                         type='button'

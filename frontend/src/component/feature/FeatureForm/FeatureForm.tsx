@@ -123,7 +123,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const editable = mode !== 'Edit';
 
     const renderToggleDescription = () => {
-        return featureTypes.find((toggle) => toggle.id === type)?.description;
+        return featureTypes.find((flag) => flag.id === type)?.description;
     };
 
     const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
@@ -138,7 +138,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledInputDescription>
-                What would you like to call your toggle?
+                What would you like to call your flag?
             </StyledInputDescription>
             <ConditionallyRender
                 condition={displayFeatureNamingInfo}
@@ -155,7 +155,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                         ? 'feature-naming-pattern-info'
                         : undefined
                 }
-                id='feature-toggle-name'
+                id='feature-flag-name'
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 onFocus={() => clearErrors()}
@@ -212,7 +212,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 multiline
                 rows={4}
                 label='Description'
-                placeholder='A short description of the feature toggle'
+                placeholder='A short description of the feature flag'
                 value={description}
                 data-testid={CF_DESC_ID}
                 onChange={(e) => setDescription(e.target.value)}
@@ -227,9 +227,9 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     Impression Data
                 </Typography>
                 <p>
-                    When you enable impression data for a feature toggle, your
+                    When you enable impression data for a feature flag, your
                     client SDKs will emit events you can listen for every time
-                    this toggle gets triggered. Learn more in{' '}
+                    this flag gets triggered. Learn more in{' '}
                     <Link
                         target='_blank'
                         rel='noopener noreferrer'

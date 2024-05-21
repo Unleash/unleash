@@ -36,7 +36,7 @@ const featureCollectionDetails = {
     infoText:
         'We collect data about your instance to improve the Unleash product user experience. We may also use the data in case you need help from our support team. Data collection is for internal use only and is not shared with third parties outside Unleash. As we want you to be in control of your data, we will leave it up to you to allow us to collect your data.',
     concreteDetails: {
-        'Feature toggles': 'The number of feature toggles in your instance',
+        'Feature flags': 'The number of feature toggles in your instance',
         Users: 'The number of users registered in your instance',
         Projects: 'The number of projects in your instance',
         'Context Fields': 'The number of custom context fields in use',

@@ -1,5 +1,5 @@
 import type { ProjectSchema, ProjectStatsSchema } from 'openapi';
-import type { IFeatureToggleListItem } from './featureToggle';
+import type { IFeatureFlagListItem } from './featureToggle';
 import type { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
 
@@ -37,7 +37,7 @@ export interface IProject {
     health: number;
     stats: ProjectStatsSchema;
     favorite: boolean;
-    features: IFeatureToggleListItem[];
+    features: IFeatureFlagListItem[];
     mode: ProjectMode;
     defaultStickiness: string;
     featureLimit?: number;

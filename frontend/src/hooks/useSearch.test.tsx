@@ -9,7 +9,7 @@ import {
 } from './useSearch';
 import type { FC } from 'react';
 import { render, screen } from '@testing-library/react';
-import type { IFeatureToggleListItem } from '../interfaces/featureToggle';
+import type { IFeatureFlagListItem } from '../interfaces/featureToggle';
 
 const columns = [
     {
@@ -39,12 +39,12 @@ const columns = [
             (value === 'seen' && row.seen) || (value === 'never' && !row.seen),
     },
     {
-        accessor: (row: IFeatureToggleListItem) =>
+        accessor: (row: IFeatureFlagListItem) =>
             row.tags?.map(({ type, value }) => `${type}:${value}`).join('\n') ||
             '',
         searchable: true,
         filterName: 'tags',
-        filterBy(row: IFeatureToggleListItem, values: string[]) {
+        filterBy(row: IFeatureFlagListItem, values: string[]) {
             return includesFilter(getColumnValues(this, row), values);
         },
     },
@@ -52,7 +52,7 @@ const columns = [
 
 const data = [
     {
-        name: 'my-feature-toggle',
+        name: 'my-feature-flag',
         project: 'default',
         stale: false,
         type: 'release',
@@ -63,7 +63,7 @@ const data = [
         ],
     },
     {
-        name: 'my-feature-toggle-2',
+        name: 'my-feature-flag-2',
         project: 'default',
         stale: true,
         type: 'experiment',
@@ -71,7 +71,7 @@ const data = [
         tags: [],
     },
     {
-        name: 'my-feature-toggle-3',
+        name: 'my-feature-flag-3',
         project: 'my-project',
         stale: false,
         type: 'operational',
@@ -79,7 +79,7 @@ const data = [
         tags: [],
     },
     {
-        name: 'my-feature-toggle-4',
+        name: 'my-feature-flag-4',
         project: 'my-project',
         stale: true,
         type: 'permission',
@@ -124,8 +124,8 @@ describe('getSearchText', () => {
         const tests = [
             { input: 'project:textsearch default', expectation: 'default' },
             {
-                input: 'project:default state:active feature-toggle',
-                expectation: 'feature-toggle',
+                input: 'project:default state:active feature-flag',
+                expectation: 'feature-flag',
             },
             { input: 'project:default', expectation: '' },
             { input: '', expectation: '' },
@@ -133,12 +133,12 @@ describe('getSearchText', () => {
             { input: 'a:', expectation: 'a:' },
             { input: 'my-feature:test', expectation: 'my-feature:test' },
             {
-                input: 'my-new-feature-toggle project:defaultstate:active',
-                expectation: 'my-new-feature-toggle',
+                input: 'my-new-feature-flag project:defaultstate:active',
+                expectation: 'my-new-feature-flag',
             },
             {
-                input: 'my-new-feature-toggle project:default state:active',
-                expectation: 'my-new-feature-toggle',
+                input: 'my-new-feature-flag project:default state:active',
+                expectation: 'my-new-feature-flag',
             },
         ];
 
@@ -149,10 +149,10 @@ describe('getSearchText', () => {
     });
 
     it('should return search value without multiple filters', () => {
-        const input = 'project:default state:active feature-toggle';
+        const input = 'project:default state:active feature-flag';
         const result = getSearchText(input);
 
-        expect(result).toBe('feature-toggle');
+        expect(result).toBe('feature-flag');
     });
 });
 
@@ -163,7 +163,7 @@ describe('searchInFilteredData', () => {
                 input: 'project',
                 expectation: [
                     {
-                        name: 'my-feature-toggle-3',
+                        name: 'my-feature-flag-3',
                         project: 'my-project',
                         stale: false,
                         tags: [],
@@ -171,7 +171,7 @@ describe('searchInFilteredData', () => {
                         seen: false,
                     },
                     {
-                        name: 'my-feature-toggle-4',
+                        name: 'my-feature-flag-4',
                         project: 'my-project',
                         stale: true,
                         tags: [],
@@ -181,10 +181,10 @@ describe('searchInFilteredData', () => {
                 ],
             },
             {
-                input: 'toggle-2',
+                input: 'flag-2',
                 expectation: [
                     {
-                        name: 'my-feature-toggle-2',
+                        name: 'my-feature-flag-2',
                         project: 'default',
                         stale: true,
                         tags: [],
@@ -194,7 +194,7 @@ describe('searchInFilteredData', () => {
                 ],
             },
             {
-                input: 'non-existing-toggle',
+                input: 'non-existing-flag',
                 expectation: [],
             },
         ];
@@ -210,7 +210,7 @@ describe('searchInFilteredData', () => {
 
         expect(result).toEqual([
             {
-                name: 'my-feature-toggle-2',
+                name: 'my-feature-flag-2',
                 project: 'default',
                 stale: true,
                 tags: [],
@@ -225,7 +225,7 @@ describe('searchInFilteredData', () => {
 
         expect(result).toEqual([
             {
-                name: 'my-feature-toggle-2',
+                name: 'my-feature-flag-2',
                 project: 'default',
                 stale: true,
                 tags: [],
@@ -233,7 +233,7 @@ describe('searchInFilteredData', () => {
                 seen: false,
             },
             {
-                name: 'my-feature-toggle-3',
+                name: 'my-feature-flag-3',
                 project: 'my-project',
                 stale: false,
                 tags: [],
@@ -251,7 +251,7 @@ describe('filter', () => {
                 input: 'project:default',
                 expectation: [
                     {
-                        name: 'my-feature-toggle',
+                        name: 'my-feature-flag',
                         project: 'default',
                         stale: false,
                         tags: [
@@ -262,7 +262,7 @@ describe('filter', () => {
                         seen: true,
                     },
                     {
-                        name: 'my-feature-toggle-2',
+                        name: 'my-feature-flag-2',
                         project: 'default',
                         stale: true,
                         tags: [],
@@ -275,7 +275,7 @@ describe('filter', () => {
                 input: 'state:active',
                 expectation: [
                     {
-                        name: 'my-feature-toggle',
+                        name: 'my-feature-flag',
                         project: 'default',
                         stale: false,
                         tags: [
@@ -286,7 +286,7 @@ describe('filter', () => {
                         seen: true,
                     },
                     {
-                        name: 'my-feature-toggle-3',
+                        name: 'my-feature-flag-3',
                         project: 'my-project',
                         stale: false,
                         tags: [],
@@ -312,7 +312,7 @@ describe('filter', () => {
 
         expect(result).toEqual([
             {
-                name: 'my-feature-toggle-3',
+                name: 'my-feature-flag-3',
                 project: 'my-project',
                 stale: false,
                 tags: [],
@@ -320,7 +320,7 @@ describe('filter', () => {
                 seen: false,
             },
             {
-                name: 'my-feature-toggle-4',
+                name: 'my-feature-flag-4',
                 project: 'my-project',
                 stale: true,
                 tags: [],
@@ -335,7 +335,7 @@ describe('filter', () => {
 
         expect(result).toEqual([
             {
-                name: 'my-feature-toggle-2',
+                name: 'my-feature-flag-2',
                 project: 'default',
                 stale: true,
                 tags: [],
@@ -343,7 +343,7 @@ describe('filter', () => {
                 seen: false,
             },
             {
-                name: 'my-feature-toggle-4',
+                name: 'my-feature-flag-4',
                 project: 'my-project',
                 stale: true,
                 tags: [],
@@ -370,13 +370,13 @@ describe('Search and filter data', () => {
     it('should filter single value', () => {
         render(<SearchData searchValue={'project:my-project'} />);
 
-        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+        screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
     it('should filter multiple values', () => {
         render(<SearchData searchValue={'project:my-project,another-value'} />);
 
-        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+        screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
     it('should filter multiple values with spaces', () => {
@@ -384,7 +384,7 @@ describe('Search and filter data', () => {
             <SearchData searchValue={'project:my-project  ,  another-value'} />,
         );
 
-        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+        screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
     it('should handle multiple filters', () => {
@@ -394,7 +394,7 @@ describe('Search and filter data', () => {
             />,
         );
 
-        screen.getByText('my-feature-toggle-3');
+        screen.getByText('my-feature-flag-3');
     });
 
     it('should handle multiple filters with long spaces', () => {
@@ -406,67 +406,67 @@ describe('Search and filter data', () => {
             />,
         );
 
-        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+        screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
     it('should handle multiple filters and search string in between', () => {
         render(
             <SearchData
                 searchValue={
-                    'project:my-project , another-value toggle-3 state:active , stale'
+                    'project:my-project , another-value flag-3 state:active , stale'
                 }
             />,
         );
 
-        screen.getByText('my-feature-toggle-3');
+        screen.getByText('my-feature-flag-3');
     });
 
     it('should handle multiple filters and search string at the end', () => {
         render(
             <SearchData
                 searchValue={
-                    'project:my-project , another-value state:active , stale toggle-3'
+                    'project:my-project , another-value state:active , stale flag-3'
                 }
             />,
         );
 
-        screen.getByText('my-feature-toggle-3');
+        screen.getByText('my-feature-flag-3');
     });
 
     it('should handle multiple filters and search string at the beginning', () => {
         render(
             <SearchData
                 searchValue={
-                    'toggle-3 project:my-project , another-value state:active , stale'
+                    'flag-3 project:my-project , another-value state:active , stale'
                 }
             />,
         );
 
-        screen.getByText('my-feature-toggle-3');
+        screen.getByText('my-feature-flag-3');
     });
 
     it('should return basic search text', () => {
-        render(<SearchText searchValue={'toggle-3'} />);
+        render(<SearchText searchValue={'flag-3'} />);
 
-        screen.getByText('toggle-3');
+        screen.getByText('flag-3');
     });
 
     it('should return advanced search text', () => {
         render(
             <SearchText
                 searchValue={
-                    'project:my-project , another-value toggle-3 state:active , stale'
+                    'project:my-project , another-value flag-3 state:active , stale'
                 }
             />,
         );
 
-        screen.getByText('toggle-3');
+        screen.getByText('flag-3');
     });
 
     it('should support custom filter and accessor', () => {
         render(<SearchData searchValue={'tags:simple:tag'} />);
 
-        screen.getByText('my-feature-toggle');
+        screen.getByText('my-feature-flag');
     });
 
     it('should support search on top of filter', () => {
@@ -478,22 +478,22 @@ describe('Search and filter data', () => {
     it('should support custom filter with spaces', () => {
         render(<SearchData searchValue={'tags:"simple:some space",tag'} />);
 
-        screen.getByText('my-feature-toggle');
+        screen.getByText('my-feature-flag');
     });
 
     it('should support custom filter with spaces - space in second term', () => {
         render(<SearchData searchValue={'tags:tag,"simple:some space"'} />);
 
-        screen.getByText('my-feature-toggle');
+        screen.getByText('my-feature-flag');
     });
 
     it('should support quotes in filter and search', () => {
         render(
             <SearchData
-                searchValue={'tags:tag,"simple:some space" "my-feature-toggle"'}
+                searchValue={'tags:tag,"simple:some space" "my-feature-flag"'}
             />,
         );
 
-        screen.getByText('my-feature-toggle');
+        screen.getByText('my-feature-flag');
     });
 });

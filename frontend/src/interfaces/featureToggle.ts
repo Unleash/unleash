@@ -4,7 +4,7 @@ import type { ITag } from './tags';
 /**
  * @deprecated use FeatureSchema from openapi
  */
-export interface IFeatureToggleListItem {
+export interface IFeatureFlagListItem {
     type: string;
     name: string;
     stale?: boolean;

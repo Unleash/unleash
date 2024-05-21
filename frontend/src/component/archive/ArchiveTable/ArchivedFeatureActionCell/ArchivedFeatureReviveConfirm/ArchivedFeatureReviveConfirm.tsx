@@ -52,10 +52,10 @@ export const ArchivedFeatureReviveConfirm = ({
         setOpen(false);
     };
 
-    const title = `Revive feature toggle${
+    const title = `Revive feature flag${
         revivedFeatures.length > 1 ? 's' : ''
     }?`;
-    const primaryBtnText = `Revive feature toggle${
+    const primaryBtnText = `Revive feature flag${
         revivedFeatures.length > 1 ? 's' : ''
     }`;
 

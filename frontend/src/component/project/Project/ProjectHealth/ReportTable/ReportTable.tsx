@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type {
     IEnvironments,
-    IFeatureToggleListItem,
+    IFeatureFlagListItem,
 } from 'interfaces/featureToggle';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -35,7 +35,7 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface IReportTableProps {
     projectId: string;
-    features: IFeatureToggleListItem[];
+    features: IFeatureFlagListItem[];
 }
 
 export interface IReportTableRow {

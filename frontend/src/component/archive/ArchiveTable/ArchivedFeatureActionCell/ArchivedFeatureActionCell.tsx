@@ -25,7 +25,7 @@ export const ArchivedFeatureActionCell: VFC<IReviveArchivedFeatureCell> = ({
                 onClick={onRevive}
                 projectId={project}
                 permission={UPDATE_FEATURE}
-                tooltipProps={{ title: 'Revive feature toggle' }}
+                tooltipProps={{ title: 'Revive feature flag' }}
                 data-testid={`revive-feature-flag-button`}
             >
                 <Undo />
@@ -33,7 +33,7 @@ export const ArchivedFeatureActionCell: VFC<IReviveArchivedFeatureCell> = ({
             <PermissionIconButton
                 permission={DELETE_FEATURE}
                 projectId={project}
-                tooltipProps={{ title: 'Delete feature toggle' }}
+                tooltipProps={{ title: 'Delete feature flag' }}
                 onClick={onDelete}
             >
                 <Delete />

@@ -62,7 +62,6 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
             .expect(200),
     );
 
-    const allRequests = Promise.all(promises);
-    await expect(allRequests).resolves.toBeTruthy();
+    await Promise.all(promises);
     expect(appErrorLogs).toHaveLength(0);
 });

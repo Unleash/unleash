@@ -28,7 +28,6 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
-    console.log('Stopping all and clearing mocks');
     app.services.frontendApiService.stopAll();
     jest.clearAllMocks();
 });

@@ -36,7 +36,7 @@ export const OutdatedSdksBanner = ({ project }: IOutdatedSdksBannerProps) => {
     };
 
     const outdatedSdksBanner: IBanner = {
-        message: `We noticed that an outdated SDK version is connected to this Unleash instance.`,
+        message: `We noticed that an outdated SDK version is connected to ${project} project.`,
         variant: 'warning',
         link: 'dialog',
         linkText: 'Please update those versions',

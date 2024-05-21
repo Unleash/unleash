@@ -294,7 +294,7 @@ test('should return true if user has admin role', async () => {
         .fn()
         .mockResolvedValue([{ id: 1, name: 'ADMIN', type: 'custom' }]);
 
-    const result = await accessService.isAdmin(userId);
+    const result = await accessService.isRootAdmin(userId);
 
     expect(result).toBe(true);
     expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
@@ -308,7 +308,7 @@ test('should return false if user does not have admin role', async () => {
         .fn()
         .mockResolvedValue([{ id: 2, name: 'user', type: 'custom' }]);
 
-    const result = await accessService.isAdmin(userId);
+    const result = await accessService.isRootAdmin(userId);
 
     expect(result).toBe(false);
     expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);

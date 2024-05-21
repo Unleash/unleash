@@ -888,7 +888,7 @@ export class AccessService {
         return this.store.getUserAccessOverview();
     }
 
-    async isAdmin(userId: number): Promise<boolean> {
+    async isRootAdmin(userId: number): Promise<boolean> {
         const roles = await this.store.getRolesForUserId(userId);
         return roles.some(
             (role) => role.name.toLowerCase() === ADMIN.toLowerCase(),

@@ -72,14 +72,14 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 </>
             }
             onClose={onClose}
-            title={`Enable feature toggle in ${environment}`}
+            title={`Enable feature flag in ${environment}`}
             fullWidth
         >
             <Typography sx={{ mb: (theme) => theme.spacing(3) }}>
-                A feature toggle cannot be enabled without an enabled strategy.
+                A feature flag cannot be enabled without an enabled strategy.
             </Typography>
             <Typography>
-                To enable this feature toggle you can choose to:
+                To enable this feature flag you can choose to:
             </Typography>
             <StyledList>
                 <li>
@@ -90,7 +90,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 <li>
                     <Typography>
                         <strong>Enable all the disabled strategies</strong>{' '}
-                        (this feature toggle has {disabledStrategiesText})
+                        (this feature flag has {disabledStrategiesText})
                     </Typography>
                 </li>
             </StyledList>

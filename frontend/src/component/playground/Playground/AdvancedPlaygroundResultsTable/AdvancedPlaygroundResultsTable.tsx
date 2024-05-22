@@ -259,7 +259,7 @@ export const AdvancedPlaygroundResultsTable = ({
                 show={() => (
                     <TablePlaceholder>
                         {data === undefined
-                            ? 'None of the feature toggles were evaluated yet.'
+                            ? 'None of the feature flags were evaluated yet.'
                             : 'No results found.'}
                     </TablePlaceholder>
                 )}
@@ -280,7 +280,7 @@ export const AdvancedPlaygroundResultsTable = ({
                             }
                             show={
                                 <TablePlaceholder>
-                                    No feature toggles found matching &ldquo;
+                                    No feature flags found matching &ldquo;
                                     {searchValue}&rdquo;
                                 </TablePlaceholder>
                             }
@@ -292,7 +292,7 @@ export const AdvancedPlaygroundResultsTable = ({
                             }
                             show={
                                 <TablePlaceholder>
-                                    No features toggles to display
+                                    No features flags to display
                                 </TablePlaceholder>
                             }
                         />

@@ -14,7 +14,7 @@ describe('FeatureTypeForm', () => {
         render(
             <FeatureTypeForm featureType={mockFeatureType} loading={false} />,
         );
-        expect(screen.getByText('Edit toggle type: Test')).toBeInTheDocument();
+        expect(screen.getByText('Edit flag type: Test')).toBeInTheDocument();
         expect(screen.getByText('Expected lifetime')).toBeInTheDocument();
     });
 
@@ -29,7 +29,7 @@ describe('FeatureTypeForm', () => {
         );
         expect(screen.getByLabelText('Expected lifetime')).toBeDisabled();
         expect(screen.getByLabelText("doesn't expire")).toBeDisabled();
-        expect(screen.getByText('Save feature toggle type')).toBeDisabled();
+        expect(screen.getByText('Save feature flag type')).toBeDisabled();
     });
 
     it('should check "doesn\'t expire" when lifetime is 0', () => {
@@ -87,6 +87,6 @@ describe('FeatureTypeForm', () => {
                 loading={false}
             />,
         );
-        expect(screen.getByText('Save feature toggle type')).toBeDisabled();
+        expect(screen.getByText('Save feature flag type')).toBeDisabled();
     });
 });

@@ -55,7 +55,7 @@ export const FeatureDetails = ({
     const [description, reason, color] = (() => {
         if (feature.isEnabled)
             return [
-                `This feature toggle is True in ${input?.environment} because `,
+                `This feature flag is True in ${input?.environment} because `,
                 'at least one strategy is True',
                 theme.palette.success.main,
             ];
@@ -65,7 +65,7 @@ export const FeatureDetails = ({
             !feature.isEnabledInCurrentEnvironment
         ) {
             return [
-                `This feature toggle is False in ${input?.environment} because `,
+                `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied and the environment is disabled',
                 theme.palette.error.main,
             ];
@@ -73,35 +73,35 @@ export const FeatureDetails = ({
 
         if (!feature.isEnabledInCurrentEnvironment)
             return [
-                `This feature toggle is False in ${input?.environment} because `,
+                `This feature flag is False in ${input?.environment} because `,
                 'the environment is disabled',
                 theme.palette.error.main,
             ];
 
         if (hasOnlyCustomStrategies(feature))
             return [
-                `This feature toggle is Unknown in ${input?.environment} because `,
+                `This feature flag is Unknown in ${input?.environment} because `,
                 'no strategies could be fully evaluated',
                 theme.palette.warning.main,
             ];
 
         if (hasCustomStrategies(feature))
             return [
-                `This feature toggle is Unknown in ${input?.environment} because `,
+                `This feature flag is Unknown in ${input?.environment} because `,
                 'not all strategies could be fully evaluated',
                 theme.palette.warning.main,
             ];
 
         if (feature.hasUnsatisfiedDependency) {
             return [
-                `This feature toggle is False in ${input?.environment} because `,
+                `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied',
                 theme.palette.error.main,
             ];
         }
 
         return [
-            `This feature toggle is False in ${input?.environment} because `,
+            `This feature flag is False in ${input?.environment} because `,
             'all strategies are either False or could not be fully evaluated',
             theme.palette.error.main,
         ];

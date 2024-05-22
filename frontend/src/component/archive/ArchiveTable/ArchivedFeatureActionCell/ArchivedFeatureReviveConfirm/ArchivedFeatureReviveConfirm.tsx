@@ -39,7 +39,7 @@ export const ArchivedFeatureReviveConfirm = ({
             setToastData({
                 type: 'success',
                 title: "And we're back!",
-                text: 'The feature toggles have been revived.',
+                text: 'The feature flags have been revived.',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -69,7 +69,7 @@ export const ArchivedFeatureReviveConfirm = ({
             onClose={clearModal}
         >
             <Alert severity='info'>
-                Revived feature toggles will be automatically disabled in all
+                Revived feature flags will be automatically disabled in all
                 environments
             </Alert>
 

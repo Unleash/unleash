@@ -14,7 +14,7 @@ export const UpdateCount: FC<{
             display='inline'
         >
             {featuresCount}{' '}
-            {featuresCount === 1 ? 'feature toggle' : 'feature toggles'}
+            {featuresCount === 1 ? 'feature flag' : 'feature flags'}
         </Typography>
         <ConditionallyRender
             condition={segmentsCount > 0}

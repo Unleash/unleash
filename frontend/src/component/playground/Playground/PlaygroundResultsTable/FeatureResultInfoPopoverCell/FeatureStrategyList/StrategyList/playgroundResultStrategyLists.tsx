@@ -121,7 +121,7 @@ export const WrappedPlaygroundResultStrategyList = ({
     return (
         <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>
             <StyledAlert severity={'info'} color={'warning'}>
-                {resolveHintText(feature)}, then this feature toggle would be{' '}
+                {resolveHintText(feature)}, then this feature flag would be{' '}
                 {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
                 evaluated like so:{' '}
             </StyledAlert>

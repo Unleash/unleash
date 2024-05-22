@@ -41,10 +41,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('Should not be possible to update feature toggle without permission', async () => {
+test('Should not be possible to update feature flag without permission', async () => {
     const email = 'user@mail.com';
     const url = '/api/admin/projects/default/features';
-    const name = 'auth.toggle.update';
+    const name = 'auth.flag.update';
 
     await db.stores.featureToggleStore.create('default', {
         name,
@@ -69,10 +69,10 @@ test('Should not be possible to update feature toggle without permission', async
         .expect(403);
 });
 
-test('Should be possible to update feature toggle with permission', async () => {
+test('Should be possible to update feature flag with permission', async () => {
     const email = 'user2@mail.com';
     const url = '/api/admin/projects/default/features';
-    const name = 'auth.toggle.update2';
+    const name = 'auth.flag.update2';
 
     await db.stores.featureToggleStore.create('default', {
         name,
@@ -97,10 +97,10 @@ test('Should be possible to update feature toggle with permission', async () => 
         .expect(200);
 });
 
-test('Should not be possible auto-enable feature toggle without CREATE_FEATURE_STRATEGY permission', async () => {
+test('Should not be possible auto-enable feature flag without CREATE_FEATURE_STRATEGY permission', async () => {
     const email = 'user33@mail.com';
     const url = '/api/admin/projects/default/features';
-    const name = 'auth.toggle.enable';
+    const name = 'auth.flag.enable';
 
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',

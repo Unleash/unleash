@@ -183,7 +183,7 @@ export default class FrontendAPIController extends Controller {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {
             throw new NotFoundError();
         }
-        const flags =
+        const toggles =
             await this.services.frontendApiService.getFrontendApiFeatures(
                 req.user,
                 FrontendAPIController.createContext(req),
@@ -195,7 +195,7 @@ export default class FrontendAPIController extends Controller {
             200,
             res,
             frontendApiFeaturesSchema.$id,
-            { flags },
+            { toggles },
         );
     }
 

@@ -5,7 +5,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Feature toggle'))
+        .then(handleErrorResponses('Feature flag'))
         .then((res) => res.json());
 };
 

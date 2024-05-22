@@ -114,7 +114,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
             <FormTemplate
                 loading={loading}
                 title='General settings'
-                description='Projects allows you to group feature toggles together in the management UI.'
+                description='Projects allows you to group feature flags together in the management UI.'
                 documentationLink='https://docs.getunleash.io/reference/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectApiCode}

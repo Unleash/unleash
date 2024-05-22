@@ -94,25 +94,25 @@ export default class MetricsMonitor {
             maxAgeSeconds: 600,
             ageBuckets: 5,
         });
-        const featureToggleUpdateTotal = createCounter({
+        const featureFlagUpdateTotal = createCounter({
             name: 'feature_toggle_update_total',
-            help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature toggle is created.',
+            help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature flag is created.',
             labelNames: ['toggle', 'project', 'environment', 'environmentType'],
         });
-        const featureToggleUsageTotal = createCounter({
+        const featureFlagUsageTotal = createCounter({
             name: 'feature_toggle_usage_total',
-            help: 'Number of times a feature toggle has been used',
+            help: 'Number of times a feature flag has been used',
             labelNames: ['toggle', 'active', 'appName'],
         });
-        const featureTogglesTotal = createGauge({
+        const featureFlagsTotal = createGauge({
             name: 'feature_toggles_total',
-            help: 'Number of feature toggles',
+            help: 'Number of feature flags',
             labelNames: ['version'],
         });
 
         const featureTogglesArchivedTotal = createGauge({
             name: 'feature_toggles_archived_total',
-            help: 'Number of archived feature toggles',
+            help: 'Number of archived feature flags',
         });
         const usersTotal = createGauge({
             name: 'users_total',
@@ -275,10 +275,8 @@ export default class MetricsMonitor {
             try {
                 const stats = await instanceStatsService.getStats();
 
-                featureTogglesTotal.reset();
-                featureTogglesTotal
-                    .labels({ version })
-                    .set(stats.featureToggles);
+                featureFlagsTotal.reset();
+                featureFlagsTotal.labels({ version }).set(stats.featureToggles);
 
                 featureTogglesArchivedTotal.reset();
                 featureTogglesArchivedTotal.set(stats.archivedFeatureToggles);
@@ -495,7 +493,7 @@ export default class MetricsMonitor {
         });
 
         eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.increment({
+            featureFlagUpdateTotal.increment({
                 toggle: featureName,
                 project,
                 environment: 'n/a',
@@ -503,7 +501,7 @@ export default class MetricsMonitor {
             });
         });
         eventStore.on(FEATURE_VARIANTS_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.increment({
+            featureFlagUpdateTotal.increment({
                 toggle: featureName,
                 project,
                 environment: 'n/a',
@@ -511,7 +509,7 @@ export default class MetricsMonitor {
             });
         });
         eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.increment({
+            featureFlagUpdateTotal.increment({
                 toggle: featureName,
                 project,
                 environment: 'n/a',
@@ -519,7 +517,7 @@ export default class MetricsMonitor {
             });
         });
         eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.increment({
+            featureFlagUpdateTotal.increment({
                 toggle: featureName,
                 project,
                 environment: 'default',
@@ -533,7 +531,7 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal.increment({
+                featureFlagUpdateTotal.increment({
                     toggle: featureName,
                     project,
                     environment,
@@ -548,7 +546,7 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal.increment({
+                featureFlagUpdateTotal.increment({
                     toggle: featureName,
                     project,
                     environment,
@@ -563,7 +561,7 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal.increment({
+                featureFlagUpdateTotal.increment({
                     toggle: featureName,
                     project,
                     environment,
@@ -578,7 +576,7 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal.increment({
+                featureFlagUpdateTotal.increment({
                     toggle: featureName,
                     project,
                     environment,
@@ -593,7 +591,7 @@ export default class MetricsMonitor {
                     environment,
                     cachedEnvironments,
                 );
-                featureToggleUpdateTotal.increment({
+                featureFlagUpdateTotal.increment({
                     toggle: featureName,
                     project,
                     environment,
@@ -602,7 +600,7 @@ export default class MetricsMonitor {
             },
         );
         eventStore.on(FEATURE_ARCHIVED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.increment({
+            featureFlagUpdateTotal.increment({
                 toggle: featureName,
                 project,
                 environment: 'n/a',
@@ -610,7 +608,7 @@ export default class MetricsMonitor {
             });
         });
         eventStore.on(FEATURE_REVIVED, ({ featureName, project }) => {
-            featureToggleUpdateTotal.increment({
+            featureFlagUpdateTotal.increment({
                 toggle: featureName,
                 project,
                 environment: 'n/a',
@@ -620,7 +618,7 @@ export default class MetricsMonitor {
 
         eventBus.on(CLIENT_METRICS, (m: ValidatedClientMetrics) => {
             for (const entry of Object.entries(m.bucket.toggles)) {
-                featureToggleUsageTotal.increment(
+                featureFlagUsageTotal.increment(
                     {
                         toggle: entry[0],
                         active: 'true',
@@ -628,7 +626,7 @@ export default class MetricsMonitor {
                     },
                     entry[1].yes,
                 );
-                featureToggleUsageTotal.increment(
+                featureFlagUsageTotal.increment(
                     {
                         toggle: entry[0],
                         active: 'false',

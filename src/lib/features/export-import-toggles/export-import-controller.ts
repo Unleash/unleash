@@ -66,7 +66,7 @@ class ExportImportController extends Controller {
                     },
                     description:
                         "Exports all features listed in the `features` property from the environment specified in the request body. If set to `true`, the `downloadFile` property will let you download a file with the exported data. Otherwise, the export data is returned directly as JSON. Refer to the documentation for more information about [Unleash's export functionality](https://docs.getunleash.io/reference/deploy/environment-import-export#export).",
-                    summary: 'Export feature toggles from an environment',
+                    summary: 'Export feature flags from an environment',
                 }),
             ],
         });

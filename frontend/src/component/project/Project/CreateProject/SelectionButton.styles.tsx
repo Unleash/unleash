@@ -15,6 +15,7 @@ export const StyledListItem = styled(ListItem)(({ theme }) => ({
         backgroundColor: theme.palette.action.hover,
         outline: 'none',
     },
+    minHeight: theme.spacing(4.5),
 }));
 
 export const StyledCheckbox = styled(Checkbox)(({ theme }) => ({

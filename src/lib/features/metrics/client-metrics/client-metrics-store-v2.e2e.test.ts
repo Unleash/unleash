@@ -149,7 +149,7 @@ test('Should insert individual rows for different apps', async () => {
     expect(savedMetrics[0].no).toBe(2);
 });
 
-test('Should insert individual rows for different toggles', async () => {
+test('Should insert individual rows for different flags', async () => {
     const metrics: IClientMetricsEnv[] = [];
 
     const date = new Date();
@@ -173,7 +173,7 @@ test('Should insert individual rows for different toggles', async () => {
     expect(savedMetrics[0].no).toBe(2);
 });
 
-test('Should get toggle metrics', async () => {
+test('Should get flag metrics', async () => {
     const metrics: IClientMetricsEnv[] = [];
 
     const date = new Date();
@@ -198,7 +198,7 @@ test('Should get toggle metrics', async () => {
     expect(savedMetrics[0].no).toBe(5050);
 });
 
-test('Should insert 1500 feature toggle metrics', async () => {
+test('Should insert 1500 feature flag metrics', async () => {
     const metrics: IClientMetricsEnv[] = [];
 
     const date = new Date();
@@ -220,7 +220,7 @@ test('Should insert 1500 feature toggle metrics', async () => {
     expect(savedMetrics).toHaveLength(1500);
 });
 
-test('Should return seen applications using a feature toggle', async () => {
+test('Should return seen applications using a feature flag', async () => {
     const metrics: IClientMetricsEnv[] = [
         {
             featureName: 'demo',

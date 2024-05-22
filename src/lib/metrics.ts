@@ -616,24 +616,29 @@ export default class MetricsMonitor {
             });
         });
 
+        const logger = config.getLogger('metrics.ts');
         eventBus.on(CLIENT_METRICS, (m: ValidatedClientMetrics) => {
-            for (const entry of Object.entries(m.bucket.toggles)) {
-                featureFlagUsageTotal.increment(
-                    {
-                        toggle: entry[0],
-                        active: 'true',
-                        appName: m.appName,
-                    },
-                    entry[1].yes,
-                );
-                featureFlagUsageTotal.increment(
-                    {
-                        toggle: entry[0],
-                        active: 'false',
-                        appName: m.appName,
-                    },
-                    entry[1].no,
-                );
+            try {
+                for (const entry of Object.entries(m.bucket.toggles)) {
+                    featureFlagUsageTotal.increment(
+                        {
+                            toggle: entry[0],
+                            active: 'true',
+                            appName: m.appName,
+                        },
+                        entry[1].yes,
+                    );
+                    featureFlagUsageTotal.increment(
+                        {
+                            toggle: entry[0],
+                            active: 'false',
+                            appName: m.appName,
+                        },
+                        entry[1].no,
+                    );
+                }
+            } catch (e) {
+                logger.warn('Metrics registration failed', e);
             }
         });
         eventStore.on(CLIENT_REGISTER, (m) => {

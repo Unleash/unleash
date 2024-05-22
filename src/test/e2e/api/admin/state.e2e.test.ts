@@ -206,8 +206,7 @@ test('Can roundtrip. I.e. export and then import', async () => {
         data,
         dropBeforeImport: true,
         keepExisting: false,
-        userName: 'export-tester',
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
 });
 
@@ -270,8 +269,7 @@ test('Roundtrip with tags works', async () => {
         data,
         dropBeforeImport: true,
         keepExisting: false,
-        userName: 'export-tester',
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
 
     const f = await app.services.featureTagService.listTags(featureName);
@@ -341,8 +339,7 @@ test('Roundtrip with strategies in multiple environments works', async () => {
         data,
         dropBeforeImport: true,
         keepExisting: false,
-        userName: 'export-tester',
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
     const f = await app.services.featureToggleServiceV2.getFeature({
         featureName,
@@ -423,8 +420,7 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
         data,
         dropBeforeImport: true,
         keepExisting: false,
-        userName: userName,
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
 
     const apiTokens = await app.services.apiTokenService.getAllTokens();

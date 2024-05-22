@@ -21,6 +21,8 @@ import {
     GROUP_CREATED,
     GROUP_USER_ADDED,
     GROUP_USER_REMOVED,
+    GroupUserAdded,
+    GroupUserRemoved,
     type IBaseEvent,
 } from '../types/events';
 import NameExistsError from '../error/name-exists-error';
@@ -235,6 +237,7 @@ export class GroupService {
         return this.groupStore.getProjectGroupRoles(projectId);
     }
 
+    /** @deprecated use syncExternalGroupsWithAudit */
     async syncExternalGroups(
         userId: number,
         externalGroups: string[],
@@ -280,6 +283,52 @@ export class GroupService {
                         userId,
                     },
                 });
+            }
+
+            await this.eventService.storeEvents(events);
+        }
+    }
+
+    async syncExternalGroupsWithAudit(
+        userId: number,
+        externalGroups: string[],
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        if (Array.isArray(externalGroups)) {
+            const newGroups = await this.groupStore.getNewGroupsForExternalUser(
+                userId,
+                externalGroups,
+            );
+            await this.groupStore.addUserToGroups(
+                userId,
+                newGroups.map((g) => g.id),
+                auditUser.username,
+            );
+            const oldGroups = await this.groupStore.getOldGroupsForExternalUser(
+                userId,
+                externalGroups,
+            );
+            await this.groupStore.deleteUsersFromGroup(oldGroups);
+
+            const events: IBaseEvent[] = [];
+            for (const group of newGroups) {
+                events.push(
+                    new GroupUserAdded({
+                        userId,
+                        groupId: group.id,
+                        auditUser,
+                    }),
+                );
+            }
+
+            for (const group of oldGroups) {
+                events.push(
+                    new GroupUserRemoved({
+                        userId,
+                        groupId: group.groupId,
+                        auditUser,
+                    }),
+                );
             }
 
             await this.eventService.storeEvents(events);

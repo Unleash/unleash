@@ -174,8 +174,7 @@ const StyledDescriptionCard = styled('article')(({ theme }) => ({
     zIndex: 1,
     color: theme.palette.common.white,
     position: 'relative',
-    paddingBlock: theme.spacing(4),
-    minHeight: '13rem',
+    margin: theme.spacing(3, 0),
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
@@ -183,7 +182,7 @@ const StyledDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledLinkContainer = styled('div')(({ theme }) => ({
-    // margin: theme.spacing(3, 0),
+    margin: theme.spacing(3, 0),
     display: 'flex',
     alignItems: 'center',
     width: '100%',
@@ -363,7 +362,6 @@ const MobileGuidance = ({
             <Collapse in={open} timeout={500}>
                 <Guidance
                     documentationIcon={documentationIcon}
-                    showLink={!!documentationLink}
                     description={description}
                     documentationLink={documentationLink}
                     documentationLinkLabel={documentationLinkLabel}
@@ -402,26 +400,25 @@ const Guidance: React.FC<IGuidanceProps> = ({
                             show={documentationIcon}
                         />
                         <StyledDescription>{description}</StyledDescription>
-
-                        <ConditionallyRender
-                            condition={showLink && !!documentationLink}
-                            show={
-                                <StyledLinkContainer>
-                                    <StyledLinkIcon />
-                                    <StyledDocumentationLink
-                                        href={documentationLink}
-                                        rel='noopener noreferrer'
-                                        target='_blank'
-                                    >
-                                        {documentationLinkLabel}
-                                    </StyledDocumentationLink>
-                                </StyledLinkContainer>
-                            }
-                        />
                     </StyledDescriptionCard>
                 }
             />
 
+            <ConditionallyRender
+                condition={showLink && !!documentationLink}
+                show={
+                    <StyledLinkContainer>
+                        <StyledLinkIcon />
+                        <StyledDocumentationLink
+                            href={documentationLink}
+                            rel='noopener noreferrer'
+                            target='_blank'
+                        >
+                            {documentationLinkLabel}
+                        </StyledDocumentationLink>
+                    </StyledLinkContainer>
+                }
+            />
             {children}
         </StyledSidebar>
     );

@@ -41,12 +41,12 @@ const StyledContainer = styled('section', {
     shouldForwardProp: (prop) =>
         !['modal', 'compact'].includes(prop.toString()),
 })<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
-    minHeight: modal ? '100vh' : compact ? 0 : '80vh',
+    minHeight: modal ? '100vh' : compact ? 'unset' : '80vh',
     borderRadius: modal ? 0 : theme.spacing(2),
     width: '100%',
     display: 'flex',
     margin: '0 auto',
-    overflow: modal ? 'unset' : 'hidden',
+    overflow: modal || compact ? 'unset' : 'hidden',
     [theme.breakpoints.down(1100)]: {
         flexDirection: 'column',
         minHeight: 0,

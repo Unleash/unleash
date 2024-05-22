@@ -15,6 +15,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
+import type { ReactNode } from 'react';
 import theme from 'themes/theme';
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -38,7 +39,8 @@ const TopGrid = styled(StyledFormSection)(({ theme }) => ({
 }));
 
 const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    fill: theme.palette.primary.main,
+    stroke: theme.palette.primary.main,
 }));
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
@@ -101,7 +103,7 @@ type FormProps = {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateProjectId: () => void;
-    overrideDocumentation: (description: string) => void;
+    overrideDocumentation: (args: { text: string; icon: ReactNode }) => void;
     clearDocumentationOverride: () => void;
 };
 
@@ -223,9 +225,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select project environments',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(
-                            `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
-                        )
+                        overrideDocumentation({
+                            icon: <EnvironmentsIcon />,
+                            text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+                        })
                     }
                     onClose={clearDocumentationOverride}
                 />
@@ -247,9 +250,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select default stickiness',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(
-                            'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
-                        )
+                        overrideDocumentation({
+                            icon: <StickinessIcon />,
+                            text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+                        })
                     }
                     onClose={clearDocumentationOverride}
                 />
@@ -271,9 +275,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 placeholder: 'Select project mode',
                             }}
                             onOpen={() =>
-                                overrideDocumentation(
-                                    'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
-                                )
+                                overrideDocumentation({
+                                    icon: <ProjectModeIcon />,
+                                    text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+                                })
                             }
                             onClose={clearDocumentationOverride}
                         />
@@ -316,9 +321,10 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 projectChangeRequestConfiguration
                             }
                             onOpen={() =>
-                                overrideDocumentation(
-                                    'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
-                                )
+                                overrideDocumentation({
+                                    icon: <ChangeRequestIcon />,
+                                    text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+                                })
                             }
                             onClose={clearDocumentationOverride}
                         />

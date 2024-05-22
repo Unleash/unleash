@@ -23,8 +23,9 @@ import { relative } from 'themes/themeStyles';
 interface ICreateProps {
     title?: ReactNode;
     description: string;
-    documentationLink: string;
-    documentationLinkLabel: string;
+    documentationLink?: string;
+    documentationIcon?: ReactNode;
+    documentationLinkLabel?: string;
     loading?: boolean;
     modal?: boolean;
     disablePadding?: boolean;
@@ -165,16 +166,26 @@ const StyledSidebar = styled('aside')(({ theme }) => ({
     },
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.common.white,
+const StyledDescriptionCard = styled('article')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    gap: theme.spacing(2),
+    alignItems: 'center',
     zIndex: 1,
+    color: theme.palette.common.white,
     position: 'relative',
+    marginBlockEnd: theme.spacing(3),
+}));
+
+const StyledDescription = styled('p')(({ theme }) => ({
+    width: '100%',
 }));
 
 const StyledLinkContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(3, 0),
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
 }));
 
 const StyledLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
@@ -195,6 +206,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     description,
     children,
     documentationLink,
+    documentationIcon,
     documentationLinkLabel,
     loading,
     modal,
@@ -261,6 +273,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     <StyledRelativeDiv>
                         <MobileGuidance
                             description={description}
+                            documentationIcon={documentationIcon}
                             documentationLink={documentationLink}
                             documentationLinkLabel={documentationLinkLabel}
                         />
@@ -300,6 +313,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                 condition={showGuidance && !smallScreen}
                 show={
                     <Guidance
+                        documentationIcon={documentationIcon}
                         description={description}
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
@@ -319,7 +333,8 @@ const FormTemplate: React.FC<ICreateProps> = ({
 
 interface IMobileGuidance {
     description: string;
-    documentationLink: string;
+    documentationLink?: string;
+    documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
 }
 
@@ -327,6 +342,7 @@ const MobileGuidance = ({
     description,
     documentationLink,
     documentationLinkLabel,
+    documentationIcon,
 }: IMobileGuidance) => {
     const [open, setOpen] = useState(false);
 
@@ -345,6 +361,7 @@ const MobileGuidance = ({
             </Tooltip>
             <Collapse in={open} timeout={500}>
                 <Guidance
+                    documentationIcon={documentationIcon}
                     description={description}
                     documentationLink={documentationLink}
                     documentationLinkLabel={documentationLinkLabel}
@@ -356,7 +373,8 @@ const MobileGuidance = ({
 
 interface IGuidanceProps {
     description: string;
-    documentationLink: string;
+    documentationIcon?: ReactNode;
+    documentationLink?: string;
     documentationLinkLabel?: string;
     showDescription?: boolean;
     showLink?: boolean;
@@ -366,6 +384,7 @@ const Guidance: React.FC<IGuidanceProps> = ({
     description,
     children,
     documentationLink,
+    documentationIcon,
     documentationLinkLabel = 'Learn more',
     showDescription = true,
     showLink = true,
@@ -374,11 +393,19 @@ const Guidance: React.FC<IGuidanceProps> = ({
         <StyledSidebar>
             <ConditionallyRender
                 condition={showDescription}
-                show={<StyledDescription>{description}</StyledDescription>}
+                show={
+                    <StyledDescriptionCard>
+                        <ConditionallyRender
+                            condition={!!documentationIcon}
+                            show={documentationIcon}
+                        />
+                        <StyledDescription>{description}</StyledDescription>
+                    </StyledDescriptionCard>
+                }
             />
 
             <ConditionallyRender
-                condition={showLink}
+                condition={showLink && !!documentationLink}
                 show={
                     <StyledLinkContainer>
                         <StyledLinkIcon />
@@ -392,7 +419,6 @@ const Guidance: React.FC<IGuidanceProps> = ({
                     </StyledLinkContainer>
                 }
             />
-
             {children}
         </StyledSidebar>
     );

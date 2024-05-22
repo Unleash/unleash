@@ -40,6 +40,11 @@ const visuallyHiddenStyles = {
     whiteSpace: 'nowrap',
 };
 
+export const HiddenDescription = styled('p')(() => ({
+    ...visuallyHiddenStyles,
+    position: 'absolute',
+}));
+
 export const StyledDropdownSearch = styled(TextField, {
     shouldForwardProp: (prop) => prop !== 'hideLabel',
 })<{ hideLabel?: boolean }>(({ theme, hideLabel }) => ({

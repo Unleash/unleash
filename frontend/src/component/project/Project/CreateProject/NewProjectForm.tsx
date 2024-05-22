@@ -79,8 +79,6 @@ type FormProps = {
     projectName: string;
     projectDesc: string;
     projectStickiness: string;
-    featureLimit?: string;
-    featureCount?: number;
     projectMode: string;
     projectEnvironments: Set<string>;
     projectChangeRequestConfiguration: Record<
@@ -89,10 +87,8 @@ type FormProps = {
     >;
     setProjectStickiness: React.Dispatch<React.SetStateAction<string>>;
     setProjectEnvironments: (envs: Set<string>) => void;
-    setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode: React.Dispatch<React.SetStateAction<ProjectMode>>;
     updateProjectChangeRequestConfig: {
         disableChangeRequests: (env: string) => void;
@@ -100,9 +96,6 @@ type FormProps = {
     };
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
-    mode: 'Create' | 'Edit';
-    clearErrors: () => void;
-    validateProjectId: () => void;
     overrideDocumentation: (args: { text: string; icon: ReactNode }) => void;
     clearDocumentationOverride: () => void;
 };
@@ -118,20 +111,14 @@ export const NewProjectForm: React.FC<FormProps> = ({
     projectStickiness,
     projectEnvironments,
     projectChangeRequestConfiguration,
-    featureLimit,
-    featureCount,
     projectMode,
     setProjectMode,
     setProjectEnvironments,
-    setProjectId,
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
     updateProjectChangeRequestConfig,
-    setFeatureLimit,
     errors,
-    mode,
-    clearErrors,
     overrideDocumentation,
     clearDocumentationOverride,
 }) => {

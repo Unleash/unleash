@@ -1,4 +1,5 @@
 import { formatUnknownError } from 'utils/formatUnknownError';
+import StickinessIcon from '@mui/icons-material/FormatPaint';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -116,6 +117,7 @@ export const CreateProjectDialogue = ({
             }
         }
     };
+
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
@@ -123,6 +125,7 @@ export const CreateProjectDialogue = ({
                 description={documentation}
                 documentationLink='https://docs.getunleash.io/reference/projects'
                 documentationLinkLabel='Projects documentation'
+                documentationIcon={<StickinessIcon />}
                 formatApiCode={formatApiCode}
             >
                 <NewProjectForm

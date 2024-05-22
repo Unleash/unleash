@@ -571,7 +571,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           </h2>
           <br />
           <small>
-            The enterprise ready feature toggle service.
+            The enterprise ready feature flag service.
           </small>
           <br />
         </section>

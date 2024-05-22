@@ -174,7 +174,7 @@ const StyledDescriptionCard = styled('article')(({ theme }) => ({
     zIndex: 1,
     color: theme.palette.common.white,
     position: 'relative',
-    margin: theme.spacing(3, 0),
+    marginBlockEnd: theme.spacing(3),
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({

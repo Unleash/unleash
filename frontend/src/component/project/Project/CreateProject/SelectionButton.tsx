@@ -1,4 +1,5 @@
 import Search from '@mui/icons-material/Search';
+import { v4 as uuidv4 } from 'uuid';
 import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
 import { type FC, type ReactNode, useRef, useState, useMemo } from 'react';
 import {
@@ -8,6 +9,7 @@ import {
     StyledPopover,
     StyledDropdownSearch,
     TableSearchInput,
+    HiddenDescription,
 } from './SelectionButton.styles';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
@@ -81,6 +83,7 @@ type CombinedSelectProps = {
     multiselect?: { selectedOptions: Set<string> };
     onOpen?: () => void;
     onClose?: () => void;
+    description: string; // visually hidden, for assistive tech
 };
 
 const CombinedSelect: FC<CombinedSelectProps> = ({
@@ -91,10 +94,12 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
     multiselect,
     onOpen = () => {},
     onClose = () => {},
+    description,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
+    const descriptionId = uuidv4();
 
     const open = () => {
         setSearchText('');
@@ -151,7 +156,10 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
                     horizontal: 'left',
                 }}
             >
-                <StyledDropdown>
+                <HiddenDescription id={descriptionId}>
+                    {description}
+                </HiddenDescription>
+                <StyledDropdown aria-describedby={descriptionId}>
                     <StyledDropdownSearch
                         variant='outlined'
                         size='small'
@@ -181,6 +189,7 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
 
                             return (
                                 <StyledListItem
+                                    aria-describedby={labelId}
                                     key={option.value}
                                     dense
                                     disablePadding
@@ -229,7 +238,7 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
 
 type MultiselectListProps = Pick<
     CombinedSelectProps,
-    'options' | 'button' | 'search' | 'onOpen' | 'onClose'
+    'options' | 'button' | 'search' | 'onOpen' | 'onClose' | 'description'
 > & {
     selectedOptions: Set<string>;
     onChange: (values: Set<string>) => void;
@@ -265,7 +274,13 @@ export const MultiselectList: FC<MultiselectListProps> = ({
 
 type SingleSelectListProps = Pick<
     CombinedSelectProps,
-    'options' | 'button' | 'search' | 'onChange' | 'onOpen' | 'onClose'
+    | 'options'
+    | 'button'
+    | 'search'
+    | 'onChange'
+    | 'onOpen'
+    | 'onClose'
+    | 'description'
 >;
 
 export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
@@ -274,7 +289,7 @@ export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
 
 type TableSelectProps = Pick<
     CombinedSelectProps,
-    'button' | 'search' | 'onOpen' | 'onClose'
+    'button' | 'search' | 'onOpen' | 'onClose' | 'description'
 > & {
     updateProjectChangeRequestConfiguration: {
         disableChangeRequests: (env: string) => void;

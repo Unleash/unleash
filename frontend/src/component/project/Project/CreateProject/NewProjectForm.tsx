@@ -154,6 +154,25 @@ export const NewProjectForm: React.FC<FormProps> = ({
 
     const stickinessOptions = useStickinessOptions(projectStickiness);
 
+    const selectionButtonData = {
+        environments: {
+            icon: <EnvironmentsIcon />,
+            text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+        },
+        stickiness: {
+            icon: <StickinessIcon />,
+            text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+        },
+        mode: {
+            icon: <ProjectModeIcon />,
+            text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+        },
+        changeRequests: {
+            icon: <ChangeRequestIcon />,
+            text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+        },
+    };
+
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -207,6 +226,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
 
             <OptionButtons>
                 <MultiselectList
+                    description={selectionButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
                         label: env.name,
@@ -225,15 +245,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select project environments',
                     }}
                     onOpen={() =>
-                        overrideDocumentation({
-                            icon: <EnvironmentsIcon />,
-                            text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
-                        })
+                        overrideDocumentation(selectionButtonData.environments)
                     }
                     onClose={clearDocumentationOverride}
                 />
 
                 <SingleSelectList
+                    description={selectionButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
                         ...rest,
@@ -250,10 +268,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select default stickiness',
                     }}
                     onOpen={() =>
-                        overrideDocumentation({
-                            icon: <StickinessIcon />,
-                            text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
-                        })
+                        overrideDocumentation(selectionButtonData.stickiness)
                     }
                     onClose={clearDocumentationOverride}
                 />
@@ -262,6 +277,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <SingleSelectList
+                            description={selectionButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
                                 setProjectMode(value);
@@ -275,10 +291,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 placeholder: 'Select project mode',
                             }}
                             onOpen={() =>
-                                overrideDocumentation({
-                                    icon: <ProjectModeIcon />,
-                                    text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
-                                })
+                                overrideDocumentation(selectionButtonData.mode)
                             }
                             onClose={clearDocumentationOverride}
                         />
@@ -288,6 +301,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <TableSelect
+                            description={
+                                selectionButtonData.changeRequests.text
+                            }
                             disabled={projectEnvironments.size === 0}
                             activeEnvironments={activeEnvironments
                                 .filter((env) =>
@@ -321,10 +337,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 projectChangeRequestConfiguration
                             }
                             onOpen={() =>
-                                overrideDocumentation({
-                                    icon: <ChangeRequestIcon />,
-                                    text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
-                                })
+                                overrideDocumentation(
+                                    selectionButtonData.changeRequests,
+                                )
                             }
                             onClose={clearDocumentationOverride}
                         />

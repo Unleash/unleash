@@ -1,5 +1,4 @@
 import { formatUnknownError } from 'utils/formatUnknownError';
-import StickinessIcon from '@mui/icons-material/FormatPaint';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -15,6 +14,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, styled } from '@mui/material';
+import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
 interface ICreateProjectDialogueProps {
     open: boolean;
@@ -35,6 +35,11 @@ const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
+}));
+
+const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
+    fill: theme.palette.common.white,
+    stroke: theme.palette.common.white,
 }));
 
 export const CreateProjectDialogue = ({
@@ -69,8 +74,10 @@ export const CreateProjectDialogue = ({
         errors,
     } = useProjectForm();
 
-    const generalDocumentation =
-        'Projects allows you to group feature flags together in the management UI.';
+    const generalDocumentation = {
+        icon: <StyledProjectIcon />,
+        text: 'Projects allows you to group feature flags together in the management UI.',
+    };
 
     const [documentation, setDocumentation] = useState(generalDocumentation);
 
@@ -122,10 +129,10 @@ export const CreateProjectDialogue = ({
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
                 disablePadding
-                description={documentation}
+                description={documentation.text}
+                documentationIcon={documentation.icon}
                 documentationLink='https://docs.getunleash.io/reference/projects'
                 documentationLinkLabel='Projects documentation'
-                documentationIcon={<StickinessIcon />}
                 formatApiCode={formatApiCode}
             >
                 <NewProjectForm

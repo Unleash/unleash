@@ -16,6 +16,7 @@ import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
 import type { ReactNode } from 'react';
+import theme from 'themes/theme';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -34,7 +35,7 @@ const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     gridTemplateAreas:
         '"icon header" "icon project-name" "icon project-description"',
     gridTemplateColumns: 'auto 1fr',
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
 }));
 
 const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
@@ -59,14 +60,6 @@ const ProjectDescriptionContainer = styled('div')(({ theme }) => ({
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     fieldset: { border: 'none' },
-}));
-
-const StyledProjectName = styled(StyledInput)(({ theme }) => ({
-    '*': { fontSize: theme.typography.h2.fontSize },
-}));
-
-const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
-    '*': { fontSize: theme.typography.h3.fontSize },
 }));
 
 const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
@@ -171,7 +164,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <StyledIcon aria-hidden='true' />
                 <StyledHeader variant='h2'>New project</StyledHeader>
                 <ProjectNameContainer>
-                    <StyledProjectName
+                    <StyledInput
                         label='Project name'
                         aria-required
                         value={projectName}
@@ -183,10 +176,18 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         }}
                         data-testid={PROJECT_NAME_INPUT}
                         autoFocus
+                        InputProps={{
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        }}
+                        InputLabelProps={{
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        }}
+                        size='medium'
                     />
                 </ProjectNameContainer>
                 <ProjectDescriptionContainer>
-                    <StyledProjectDescription
+                    <StyledInput
+                        size='medium'
                         className='description'
                         label='Description (optional)'
                         multiline
@@ -194,6 +195,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         value={projectDesc}
                         onChange={(e) => setProjectDesc(e.target.value)}
                         data-testid={PROJECT_DESCRIPTION_INPUT}
+                        InputProps={{
+                            style: { fontSize: theme.typography.h2.fontSize },
+                        }}
+                        InputLabelProps={{
+                            style: { fontSize: theme.typography.h2.fontSize },
+                        }}
                     />
                 </ProjectDescriptionContainer>
             </TopGrid>

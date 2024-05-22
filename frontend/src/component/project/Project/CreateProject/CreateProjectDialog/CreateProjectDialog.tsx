@@ -136,6 +136,7 @@ export const CreateProjectDialogue = ({
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
+                compact
                 disablePadding
                 description={documentation.text}
                 documentationIcon={documentation.icon}

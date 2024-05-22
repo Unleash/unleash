@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'createProjectWithEnvironmentConfig'
     | 'manyStrategiesPagination'
     | 'newCreateProjectUI'
-    | 'enableLegacyVariants';
+    | 'enableLegacyVariants'
+    | 'debugMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -297,6 +298,10 @@ const flags: IFlags = {
     ),
     enableLegacyVariants: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENABLE_LEGACY_VARIANTS,
+        false,
+    ),
+    debugMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DEBUG_METRICS,
         false,
     ),
 };

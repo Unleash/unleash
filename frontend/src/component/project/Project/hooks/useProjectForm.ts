@@ -18,7 +18,7 @@ const useProjectForm = (
         { requiredApprovals: number }
     > = {},
 ) => {
-    const { isEnterprise, ...rest } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
     const [projectId, setProjectId] = useState(initialProjectId);
     const [projectMode, setProjectMode] =
         useState<ProjectMode>(initialProjectMode);
@@ -65,8 +65,6 @@ const useProjectForm = (
             }
         },
     };
-
-    console.log('is enterprise?', isEnterprise(), rest);
 
     const [errors, setErrors] = useState({});
 

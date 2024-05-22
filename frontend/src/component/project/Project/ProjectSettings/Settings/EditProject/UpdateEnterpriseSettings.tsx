@@ -151,6 +151,7 @@ export const UpdateEnterpriseSettings = ({
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectSettingsApiCode}
                 compactPadding
+                compact
                 showDescription={false}
                 showLink={false}
             >

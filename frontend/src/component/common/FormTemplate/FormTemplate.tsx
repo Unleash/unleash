@@ -27,6 +27,7 @@ interface ICreateProps {
     documentationLinkLabel: string;
     loading?: boolean;
     modal?: boolean;
+    centeredModal?: boolean;
     disablePadding?: boolean;
     compactPadding?: boolean;
     showDescription?: boolean;
@@ -39,19 +40,21 @@ interface ICreateProps {
 
 const StyledContainer = styled('section', {
     shouldForwardProp: (prop) =>
-        !['modal', 'compact'].includes(prop.toString()),
-})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
-    minHeight: modal ? '100vh' : compact ? 'unset' : '80vh',
-    borderRadius: modal ? 0 : theme.spacing(2),
-    width: '100%',
-    display: 'flex',
-    margin: '0 auto',
-    overflow: modal || compact ? 'unset' : 'hidden',
-    [theme.breakpoints.down(1100)]: {
-        flexDirection: 'column',
-        minHeight: 0,
-    },
-}));
+        !['modal', 'compact', 'centeredModal'].includes(prop.toString()),
+})<{ modal?: boolean; compact?: boolean; centeredModal?: boolean }>(
+    ({ theme, modal, centeredModal, compact }) => ({
+        minHeight: modal ? '100vh' : compact ? 'unset' : '80vh',
+        borderRadius: modal ? 0 : theme.spacing(2),
+        width: '100%',
+        display: 'flex',
+        margin: '0 auto',
+        overflow: modal || centeredModal ? 'unset' : 'hidden',
+        [theme.breakpoints.down(1100)]: {
+            flexDirection: 'column',
+            minHeight: 0,
+        },
+    }),
+);
 
 const StyledRelativeDiv = styled('div')(({ theme }) => relative);
 
@@ -206,6 +209,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     footer,
     compact,
     showGuidance = true,
+    centeredModal,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -254,7 +258,11 @@ const FormTemplate: React.FC<ICreateProps> = ({
     };
 
     return (
-        <StyledContainer modal={modal} compact={compact}>
+        <StyledContainer
+            modal={modal}
+            compact={compact}
+            centeredModal={centeredModal}
+        >
             <ConditionallyRender
                 condition={showGuidance && smallScreen}
                 show={

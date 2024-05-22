@@ -100,6 +100,7 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
     const descriptionId = uuidv4();
+    const [recentlyClosed, setRecentlyClosed] = useState(false);
 
     const open = () => {
         setSearchText('');
@@ -116,6 +117,11 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
         onChange(selected);
         if (!multiselect) {
             handleClose();
+            setRecentlyClosed(true);
+            // this is a hack to prevent the button from being
+            // auto-clicked after you select an item by pressing enter
+            // in the search bar for single-select lists.
+            setTimeout(() => setRecentlyClosed(false), 1);
         }
     };
 
@@ -134,10 +140,9 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
                     color='primary'
                     startIcon={button.icon}
                     onClick={() => {
-                        // todo: find out why this is clicked when you
-                        // press enter in the search bar (only in
-                        // single-select mode)
-                        open();
+                        if (!recentlyClosed) {
+                            open();
+                        }
                     }}
                 >
                     {button.label}

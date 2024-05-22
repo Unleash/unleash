@@ -82,7 +82,7 @@ const CreateEnvironment = () => {
                             feature flags are accessible in all your
                             environments, but they can take different
                             configurations per environment. This means
-                            that you can enable a feature toggle in a
+                            that you can enable a feature flag in a
                             development or test environment without
                             enabling the feature flag in the
                             production environment.'

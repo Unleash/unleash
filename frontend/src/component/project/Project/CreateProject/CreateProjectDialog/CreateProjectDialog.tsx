@@ -118,6 +118,7 @@ export const CreateProjectDialogue = ({
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
+                compact
                 disablePadding
                 description={documentation}
                 documentationLink='https://docs.getunleash.io/reference/projects'

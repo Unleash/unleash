@@ -137,6 +137,10 @@ export default class ClientMetricsServiceV2 {
         data: ClientMetricsSchema,
         clientIp: string,
     ): Promise<void> {
+        if (this.flagResolver.isEnabled('debugMetrics')) {
+            this.logger.debug(`Metrics received: ${JSON.stringify(data)}`);
+        }
+
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles).filter(
             (name) =>
@@ -149,7 +153,7 @@ export default class ClientMetricsServiceV2 {
         const validatedToggleNames =
             await this.filterValidToggleNames(toggleNames);
 
-        this.logger.debug(
+        console.log(
             `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,
         );
 

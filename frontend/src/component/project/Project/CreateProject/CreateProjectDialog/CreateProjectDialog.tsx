@@ -24,6 +24,7 @@ const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
         maxWidth: theme.spacing(170),
+        width: '100%',
         backgroundColor: 'transparent',
     },
     padding: 0,

@@ -68,7 +68,7 @@ export const CreateProjectDialogue = ({
     } = useProjectForm();
 
     const generalDocumentation =
-        'Projects allows you to group feature toggles together in the management UI.';
+        'Projects allows you to group feature flags together in the management UI.';
 
     const [documentation, setDocumentation] = useState(generalDocumentation);
 
@@ -99,7 +99,7 @@ export const CreateProjectDialogue = ({
                 navigate(`/projects/${createdProject.id}`, { replace: true });
                 setToastData({
                     title: 'Project created',
-                    text: 'Now you can add toggles to this project',
+                    text: 'Now you can add flags to this project',
                     confetti: true,
                     type: 'success',
                 });

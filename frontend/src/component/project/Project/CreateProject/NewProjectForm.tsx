@@ -217,7 +217,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     }}
                     onOpen={() =>
                         overrideDocumentation(
-                            `Each feature toggle can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+                            `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
                         )
                     }
                     onClose={clearDocumentationOverride}

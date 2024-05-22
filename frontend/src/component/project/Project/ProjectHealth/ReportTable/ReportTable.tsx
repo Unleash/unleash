@@ -187,8 +187,8 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
 
     const title =
         rows.length < data.length
-            ? `Feature toggles (${rows.length} of ${data.length})`
-            : `Feature toggles (${data.length})`;
+            ? `Feature flags (${rows.length} of ${data.length})`
+            : `Feature flags (${data.length})`;
 
     return (
         <PageContent
@@ -218,14 +218,14 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                         condition={globalFilter?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No feature toggles found matching &ldquo;
+                                No feature flags found matching &ldquo;
                                 {globalFilter}
                                 &rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No feature toggles available. Get started by
+                                No feature flags available. Get started by
                                 adding a new feature toggle.
                             </TablePlaceholder>
                         }

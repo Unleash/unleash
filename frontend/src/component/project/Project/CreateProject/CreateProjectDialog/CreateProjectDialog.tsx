@@ -9,7 +9,7 @@ import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
@@ -74,9 +74,17 @@ export const CreateProjectDialogue = ({
         errors,
     } = useProjectForm();
 
-    const generalDocumentation = {
+    const generalDocumentation: {
+        icon: ReactNode;
+        text: string;
+        link?: { url: string; label: string };
+    } = {
         icon: <StyledProjectIcon />,
         text: 'Projects allows you to group feature flags together in the management UI.',
+        link: {
+            url: 'https://docs.getunleash.io/reference/projects',
+            label: 'Projects documentation',
+        },
     };
 
     const [documentation, setDocumentation] = useState(generalDocumentation);
@@ -131,8 +139,8 @@ export const CreateProjectDialogue = ({
                 disablePadding
                 description={documentation.text}
                 documentationIcon={documentation.icon}
-                documentationLink='https://docs.getunleash.io/reference/projects'
-                documentationLinkLabel='Projects documentation'
+                documentationLink={documentation.link?.url}
+                documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}
             >
                 <NewProjectForm

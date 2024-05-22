@@ -23,7 +23,7 @@ import { relative } from 'themes/themeStyles';
 interface ICreateProps {
     title?: ReactNode;
     description: string;
-    documentationLink: string;
+    documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
     loading?: boolean;
@@ -174,6 +174,8 @@ const StyledDescriptionCard = styled('article')(({ theme }) => ({
     zIndex: 1,
     color: theme.palette.common.white,
     position: 'relative',
+    paddingBlock: theme.spacing(4),
+    minHeight: '13rem',
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
@@ -181,9 +183,10 @@ const StyledDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledLinkContainer = styled('div')(({ theme }) => ({
-    margin: theme.spacing(3, 0),
+    // margin: theme.spacing(3, 0),
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
 }));
 
 const StyledLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
@@ -330,8 +333,8 @@ const FormTemplate: React.FC<ICreateProps> = ({
 };
 
 interface IMobileGuidance {
-    description: ReactNode;
-    documentationLink: string;
+    description: string;
+    documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
 }
@@ -360,6 +363,7 @@ const MobileGuidance = ({
             <Collapse in={open} timeout={500}>
                 <Guidance
                     documentationIcon={documentationIcon}
+                    showLink={!!documentationLink}
                     description={description}
                     documentationLink={documentationLink}
                     documentationLinkLabel={documentationLinkLabel}
@@ -372,7 +376,7 @@ const MobileGuidance = ({
 interface IGuidanceProps {
     description: string;
     documentationIcon?: ReactNode;
-    documentationLink: string;
+    documentationLink?: string;
     documentationLinkLabel?: string;
     showDescription?: boolean;
     showLink?: boolean;
@@ -398,23 +402,23 @@ const Guidance: React.FC<IGuidanceProps> = ({
                             show={documentationIcon}
                         />
                         <StyledDescription>{description}</StyledDescription>
-                    </StyledDescriptionCard>
-                }
-            />
 
-            <ConditionallyRender
-                condition={showLink}
-                show={
-                    <StyledLinkContainer>
-                        <StyledLinkIcon />
-                        <StyledDocumentationLink
-                            href={documentationLink}
-                            rel='noopener noreferrer'
-                            target='_blank'
-                        >
-                            {documentationLinkLabel}
-                        </StyledDocumentationLink>
-                    </StyledLinkContainer>
+                        <ConditionallyRender
+                            condition={showLink && !!documentationLink}
+                            show={
+                                <StyledLinkContainer>
+                                    <StyledLinkIcon />
+                                    <StyledDocumentationLink
+                                        href={documentationLink}
+                                        rel='noopener noreferrer'
+                                        target='_blank'
+                                    >
+                                        {documentationLinkLabel}
+                                    </StyledDocumentationLink>
+                                </StyledLinkContainer>
+                            }
+                        />
+                    </StyledDescriptionCard>
                 }
             />
 

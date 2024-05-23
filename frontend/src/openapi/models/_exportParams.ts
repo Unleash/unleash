@@ -19,7 +19,7 @@ export type _ExportParams = {
      */
     strategies?: boolean | string | number;
     /**
-     * Whether feature toggles should be included in the exported data.
+     * Whether feature flags should be included in the exported data.
      */
     featureToggles?: boolean | string | number;
     /**

@@ -1,5 +1,5 @@
 import { randomId } from '../../util/random-id';
-import type { IFeatureToggleClient, ISegment } from '../../types/model';
+import type { ISegment } from '../../types/model';
 import { collectIds } from '../../util/collect-ids';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
@@ -12,13 +12,17 @@ import {
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import type { StrategiesUsingSegment } from './segment-service-interface';
-import type { IUser } from '../../types';
+import type { IFeatureOverview, IUser } from '../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 const SEGMENTS_BASE_PATH = '/api/admin/segments';
-const FEATURES_LIST_BASE_PATH = '/api/admin/features';
+const FEATURES_LIST_BASE_PATH = '/api/admin/projects/default/features';
+
+const getFeatureStrategiesPath = (featureName: string) => {
+    return `/api/admin/projects/default/features/${featureName}/environments/default/strategies`;
+};
 
 // Recursively change all Date properties to string properties.
 type SerializeDatesDeep<T> = {
@@ -39,11 +43,17 @@ const fetchSegmentsByStrategy = (
         .expect(200)
         .then((res) => res.body.segments);
 
-const fetchFeatures = (): Promise<IFeatureToggleClient[]> =>
+const fetchFeatures = (): Promise<IFeatureOverview[]> =>
     app.request
         .get(FEATURES_LIST_BASE_PATH)
         .expect(200)
         .then((res) => res.body.features);
+
+const fetchFeatureStrategies = (featureName: string) =>
+    app.request
+        .get(getFeatureStrategiesPath(featureName))
+        .expect(200)
+        .then((res) => res.body);
 
 const fetchSegmentStrategies = (
     segmentId: number,
@@ -288,8 +298,9 @@ test('should not delete segments used by strategies', async () => {
         toggle.name,
     );
     const [feature] = await fetchFeatures();
+    const [strategy] = await fetchFeatureStrategies(feature.name);
     //@ts-ignore
-    await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
+    await addSegmentsToStrategy([segment.id], strategy.id);
     const segments = await fetchSegments();
     expect(segments.length).toEqual(1);
 
@@ -316,8 +327,9 @@ test('should delete segments used by strategies in archived feature toggles', as
         toggle.name,
     );
     const [feature] = await fetchFeatures();
+    const [strategy] = await fetchFeatureStrategies(feature.name);
     //@ts-ignore
-    await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
+    await addSegmentsToStrategy([segment.id], strategy.id);
     const segments = await fetchSegments();
     expect(segments.length).toEqual(1);
 
@@ -372,36 +384,40 @@ test('should list strategies by segment', async () => {
     const [feature1, feature2, feature3] = await fetchFeatures();
     const [segment1, segment2, segment3] = await fetchSegments();
 
+    const feature1Strategies = await fetchFeatureStrategies(feature1.name);
+    const feature2Strategies = await fetchFeatureStrategies(feature2.name);
+    const feature3Strategies = await fetchFeatureStrategies(feature3.name);
+
     await addSegmentsToStrategy(
         [segment1.id, segment2.id, segment3.id],
         //@ts-ignore
-        feature1.strategies[0].id,
+        feature1Strategies[0].id,
     );
     await addSegmentsToStrategy(
         [segment2.id, segment3.id],
         //@ts-ignore
-        feature2.strategies[0].id,
+        feature2Strategies[0].id,
     );
     //@ts-ignore
-    await addSegmentsToStrategy([segment3.id], feature3.strategies[0].id);
+    await addSegmentsToStrategy([segment3.id], feature3Strategies[0].id);
 
     const segmentStrategies1 = await fetchSegmentStrategies(segment1.id);
     const segmentStrategies2 = await fetchSegmentStrategies(segment2.id);
     const segmentStrategies3 = await fetchSegmentStrategies(segment3.id);
 
     expect(collectIds(segmentStrategies1.strategies)).toEqual(
-        collectIds(feature1.strategies),
+        collectIds(feature1Strategies),
     );
 
     expect(collectIds(segmentStrategies2.strategies)).toEqual(
-        collectIds([...feature1.strategies, ...feature2.strategies]),
+        collectIds([...feature1Strategies, ...feature2Strategies]),
     );
 
     expect(collectIds(segmentStrategies3.strategies)).toEqual(
         collectIds([
-            ...feature1.strategies,
-            ...feature2.strategies,
-            ...feature3.strategies,
+            ...feature1Strategies,
+            ...feature2Strategies,
+            ...feature3Strategies,
         ]),
     );
 });
@@ -448,30 +464,35 @@ test('should list segments by strategy', async () => {
     const [feature1, feature2, feature3] = await fetchFeatures();
     const [segment1, segment2, segment3] = await fetchSegments();
 
+    const [feature1Strategy] = await fetchFeatureStrategies(feature1.name);
+    const [feature2Strategy] = await fetchFeatureStrategies(feature2.name);
+    const [feature3Strategy] = await fetchFeatureStrategies(feature3.name);
+    console.log({ feature1Strategy, feature2Strategy, feature3Strategy });
+
     await addSegmentsToStrategy(
         [segment1.id, segment2.id, segment3.id],
         //@ts-ignore
-        feature1.strategies[0].id,
+        feature1Strategy.id,
     );
     await addSegmentsToStrategy(
         [segment2.id, segment3.id],
         //@ts-ignore
-        feature2.strategies[0].id,
+        feature2Strategy.id,
     );
     //@ts-ignore
-    await addSegmentsToStrategy([segment3.id], feature3.strategies[0].id);
+    await addSegmentsToStrategy([segment3.id], feature3Strategy.id);
 
     const strategySegments1 = await fetchSegmentsByStrategy(
         //@ts-ignore
-        feature1.strategies[0].id,
+        feature1Strategy.id,
     );
     const strategySegments2 = await fetchSegmentsByStrategy(
         //@ts-ignore
-        feature2.strategies[0].id,
+        feature2Strategy.id,
     );
     const strategySegments3 = await fetchSegmentsByStrategy(
         //@ts-ignore
-        feature3.strategies[0].id,
+        feature3Strategy.id,
     );
 
     expect(collectIds(strategySegments1)).toEqual(
@@ -581,8 +602,9 @@ test('Should show usage in features and projects', async () => {
         toggle.name,
     );
     const [feature] = await fetchFeatures();
+    const [strategy] = await fetchFeatureStrategies(feature.name);
     //@ts-ignore
-    await addSegmentsToStrategy([segment.id], feature.strategies[0].id);
+    await addSegmentsToStrategy([segment.id], strategy.id);
 
     const segments = await fetchSegments();
     expect(segments).toMatchObject([
@@ -768,8 +790,9 @@ describe('detect strategy usage in change requests', () => {
         );
 
         const [feature] = await fetchFeatures();
+        const [strategy] = await fetchFeatureStrategies(feature.name);
 
-        const strategyId = feature.strategies[0].id;
+        const strategyId = strategy.id;
 
         await db.rawDatabase.table('change_request_events').insert({
             feature: toggle.name,
@@ -827,8 +850,9 @@ describe('detect strategy usage in change requests', () => {
         );
 
         const [feature] = await fetchFeatures();
+        const [strategy] = await fetchFeatureStrategies(feature.name);
 
-        const strategyId = feature.strategies[0].id;
+        const strategyId = strategy.id;
         await addSegmentsToStrategy([segment.id], strategyId!);
 
         await db.rawDatabase.table('change_request_events').insert({

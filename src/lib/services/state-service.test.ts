@@ -308,7 +308,7 @@ test('should export featureToggles', async () => {
     expect(data.features[0].name).toBe('a-feature');
 });
 
-test('archived feature toggles should not be included', async () => {
+test('archived feature flags should not be included', async () => {
     const { stateService, stores } = getSetup();
 
     await stores.featureToggleStore.create('default', {
@@ -321,7 +321,7 @@ test('archived feature toggles should not be included', async () => {
     expect(data.features).toHaveLength(0);
 });
 
-test('featureStrategy connected to an archived feature toggle should not be included', async () => {
+test('featureStrategy connected to an archived feature flag should not be included', async () => {
     const { stateService, stores } = getSetup();
     const featureName = 'fstrat-archived-feature';
     await stores.featureToggleStore.create('default', {

@@ -29,13 +29,14 @@ const Input = ({
     className,
     value,
     onChange,
+    size = 'small',
     ...rest
 }: IInputProps) => {
     const { classes: styles } = useStyles();
     return (
         <StyledDiv data-loading>
             <TextField
-                size='small'
+                size={size}
                 variant='outlined'
                 label={label}
                 placeholder={placeholder}

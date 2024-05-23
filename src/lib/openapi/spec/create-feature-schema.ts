@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const createFeatureSchema = {
     $id: '#/components/schemas/createFeatureSchema',
     type: 'object',
-    description: 'Data used to create a new feature toggle.',
+    description: 'Data used to create a new feature flag.',
     required: ['name'],
     properties: {
         name: {
@@ -15,7 +15,7 @@ export const createFeatureSchema = {
             type: 'string',
             example: 'release',
             description:
-                "The feature toggle's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission",
+                "The feature flag's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission",
         },
         description: {
             type: 'string',

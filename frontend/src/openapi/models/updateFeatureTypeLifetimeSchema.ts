@@ -5,11 +5,11 @@
  */
 
 /**
- * Data used when updating the lifetime of a [feature toggle type](https://docs.getunleash.io/reference/feature-toggle-types).
+ * Data used when updating the lifetime of a [feature flag type](https://docs.getunleash.io/reference/feature-toggle-types).
  */
 export interface UpdateFeatureTypeLifetimeSchema {
     /**
-     * The new lifetime (in days) that you want to assign to the feature toggle type. If the value is `null` or `0`, then the feature toggles of that type will never be marked as potentially stale. Otherwise, they will be considered potentially stale after the number of days indicated by this property.
+     * The new lifetime (in days) that you want to assign to the feature flag type. If the value is `null` or `0`, then the feature flags of that type will never be marked as potentially stale. Otherwise, they will be considered potentially stale after the number of days indicated by this property.
      * @minimum 0
      * @maximum 2147483647
      * @nullable

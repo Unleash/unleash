@@ -87,7 +87,7 @@ class ExportImportController extends Controller {
                         ...getStandardResponses(404),
                     },
                     summary: 'Validate feature import data',
-                    description: `Validates a feature toggle data set. Checks whether the data can be imported into the specified project and environment. The returned value is an object that contains errors, warnings, and permissions required to perform the import, as described in the [import documentation](https://docs.getunleash.io/reference/deploy/environment-import-export#import).`,
+                    description: `Validates a feature flag data set. Checks whether the data can be imported into the specified project and environment. The returned value is an object that contains errors, warnings, and permissions required to perform the import, as described in the [import documentation](https://docs.getunleash.io/reference/deploy/environment-import-export#import).`,
                 }),
             ],
         });
@@ -105,8 +105,8 @@ class ExportImportController extends Controller {
                         200: emptyResponse,
                         ...getStandardResponses(404),
                     },
-                    summary: 'Import feature toggles',
-                    description: `[Import feature toggles](https://docs.getunleash.io/reference/deploy/environment-import-export#import) into a specific project and environment.`,
+                    summary: 'Import feature flags',
+                    description: `[Import feature flags](https://docs.getunleash.io/reference/deploy/environment-import-export#import) into a specific project and environment.`,
                 }),
             ],
         });

@@ -154,7 +154,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     summary: 'Get a feature environment',
                     description:
-                        'Information about the enablement status and strategies for a feature toggle in specified environment.',
+                        'Information about the enablement status and strategies for a feature flag in specified environment.',
                     tags: ['Features'],
                     operationId: 'getFeatureEnvironment',
                     responses: {
@@ -173,9 +173,9 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Disable a feature toggle',
+                    summary: 'Disable a feature flag',
                     description:
-                        'Disable a feature toggle in the specified environment.',
+                        'Disable a feature flag in the specified environment.',
                     tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOff',
                     responses: {
@@ -194,9 +194,9 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Enable a feature toggle',
+                    summary: 'Enable a feature flag',
                     description:
-                        'Enable a feature toggle in the specified environment.',
+                        'Enable a feature flag in the specified environment.',
                     tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOn',
                     responses: {
@@ -217,7 +217,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     summary: 'Bulk enable a list of features',
                     description:
-                        'This endpoint enables multiple feature toggles.',
+                        'This endpoint enables multiple feature flags.',
                     operationId: 'bulkToggleFeaturesEnvironmentOn',
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
@@ -240,7 +240,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     summary: 'Bulk disable a list of features',
                     description:
-                        'This endpoint disables multiple feature toggles.',
+                        'This endpoint disables multiple feature flags.',
                     operationId: 'bulkToggleFeaturesEnvironmentOff',
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
@@ -261,10 +261,10 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Get feature toggle strategies',
+                    summary: 'Get feature flag strategies',
                     operationId: 'getFeatureStrategies',
                     description:
-                        'Get strategies defined for a feature toggle in the specified environment.',
+                        'Get strategies defined for a feature flag in the specified environment.',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
                         ...getStandardResponses(401, 403, 404),
@@ -281,9 +281,9 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Add a strategy to a feature toggle',
+                    summary: 'Add a strategy to a feature flag',
                     description:
-                        'Add a strategy to a feature toggle in the specified environment.',
+                        'Add a strategy to a feature flag in the specified environment.',
                     operationId: 'addFeatureStrategy',
                     requestBody: createRequestSchema(
                         'createFeatureStrategySchema',
@@ -306,7 +306,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     summary: 'Get a strategy configuration',
                     description:
-                        'Get a strategy configuration for an environment in a feature toggle.',
+                        'Get a strategy configuration for an environment in a feature flag.',
                     operationId: 'getFeatureStrategy',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -349,7 +349,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     summary: 'Update a strategy',
                     description:
-                        'Replace strategy configuration for a feature toggle in the specified environment.',
+                        'Replace strategy configuration for a feature flag in the specified environment.',
                     operationId: 'updateFeatureStrategy',
                     requestBody: createRequestSchema(
                         'updateFeatureStrategySchema',
@@ -372,7 +372,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     summary: 'Change specific properties of a strategy',
                     description:
-                        'Change specific properties of a strategy configuration in a feature toggle.',
+                        'Change specific properties of a strategy configuration in a feature flag.',
                     operationId: 'patchFeatureStrategy',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
@@ -392,9 +392,9 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Delete a strategy from a feature toggle',
+                    summary: 'Delete a strategy from a feature flag',
                     description:
-                        'Delete a strategy configuration from a feature toggle in the specified environment.',
+                        'Delete a strategy configuration from a feature flag in the specified environment.',
                     operationId: 'deleteFeatureStrategy',
                     responses: {
                         200: emptyResponse,
@@ -431,9 +431,9 @@ export default class ProjectFeaturesController extends Controller {
             permission: CREATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Add a new feature toggle',
+                    summary: 'Add a new feature flag',
                     description:
-                        'Create a new feature toggle in a specified project.',
+                        'Create a new feature flag in a specified project.',
                     tags: ['Features'],
                     operationId: 'createFeature',
                     requestBody: createRequestSchema('createFeatureSchema'),
@@ -453,9 +453,9 @@ export default class ProjectFeaturesController extends Controller {
             permission: CREATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Clone a feature toggle',
+                    summary: 'Clone a feature flag',
                     description:
-                        'Creates a copy of the specified feature toggle. The copy can be created in any project.',
+                        'Creates a copy of the specified feature flag. The copy can be created in any project.',
                     tags: ['Features'],
                     operationId: 'cloneFeature',
                     requestBody: createRequestSchema('cloneFeatureSchema'),
@@ -500,7 +500,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'updateFeature',
-                    summary: 'Update a feature toggle',
+                    summary: 'Update a feature flag',
                     description:
                         'Updates the specified feature if the feature belongs to the specified project. Only the provided properties are updated; any feature properties left out of the request body are left untouched.',
                     requestBody: createRequestSchema('updateFeatureSchema'),
@@ -521,9 +521,9 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'patchFeature',
-                    summary: 'Modify a feature toggle',
+                    summary: 'Modify a feature flag',
                     description:
-                        'Change specific properties of a feature toggle.',
+                        'Change specific properties of a feature flag.',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
                         200: createResponseSchema('featureSchema'),
@@ -543,7 +543,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'archiveFeature',
-                    summary: 'Archive a feature toggle',
+                    summary: 'Archive a feature flag',
                     description:
                         'This endpoint archives the specified feature if the feature belongs to the specified project.',
                     responses: {
@@ -722,7 +722,7 @@ export default class ProjectFeaturesController extends Controller {
         const { projectId, featureName } = req.params;
         const { createdAt, ...data } = req.body;
         if (data.name && data.name !== featureName) {
-            throw new BadDataError('Cannot change name of feature toggle');
+            throw new BadDataError('Cannot change name of feature flag');
         }
         const created = await this.featureService.updateFeatureToggle(
             projectId,

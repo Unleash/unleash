@@ -76,7 +76,8 @@ export const StyledParagraphInfo = styled('p')(({ theme }) => ({
 }));
 
 export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    fill: theme.palette.primary.main,
+    stroke: theme.palette.primary.main,
 }));
 
 export const StyledIconBox = styled(Box)(({ theme }) => ({

@@ -21,13 +21,13 @@ const OPENAPI_TAGS = [
     {
         name: 'Archive',
         description:
-            'Revive or permanently delete [archived feature toggles](https://docs.getunleash.io/advanced/archived_toggles).',
+            'Revive or permanently delete [archived feature flags](https://docs.getunleash.io/advanced/archived_toggles).',
     },
     { name: 'Auth', description: 'Manage logins, passwords, etc.' },
     {
         name: 'Banners',
         description:
-            'Create, update, toggle, and delete [banners](https://docs.getunleash.io/reference/banners).',
+            'Create, update, flag, and delete [banners](https://docs.getunleash.io/reference/banners).',
     },
     {
         name: 'Change Requests',
@@ -58,12 +58,12 @@ const OPENAPI_TAGS = [
     {
         name: 'Feature Types',
         description:
-            'Manage [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types).',
+            'Manage [feature flag types](https://docs.getunleash.io/reference/feature-toggle-types).',
     },
     {
         name: 'Features',
         description:
-            'Create, update, and delete [features toggles](https://docs.getunleash.io/reference/feature-toggles).',
+            'Create, update, and delete [features flags](https://docs.getunleash.io/reference/feature-toggles).',
     },
     {
         name: 'Frontend API',
@@ -105,8 +105,7 @@ const OPENAPI_TAGS = [
     },
     {
         name: 'Playground',
-        description:
-            'Evaluate an Unleash context against your feature toggles.',
+        description: 'Evaluate an Unleash context against your feature flags.',
     },
     {
         name: 'Projects',

@@ -33,18 +33,18 @@ export const projectInsightsSchema = {
                 },
                 activeCount: {
                     type: 'number',
-                    description: 'The number of active feature toggles.',
+                    description: 'The number of active feature flags.',
                     example: 12,
                 },
                 potentiallyStaleCount: {
                     type: 'number',
                     description:
-                        'The number of potentially stale feature toggles.',
+                        'The number of potentially stale feature flags.',
                     example: 5,
                 },
                 staleCount: {
                     type: 'number',
-                    description: 'The number of stale feature toggles.',
+                    description: 'The number of stale feature flags.',
                     example: 10,
                 },
             },

@@ -83,7 +83,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns three feature toggles', async () => {
+test('returns three feature flags', async () => {
     return app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)

@@ -23,18 +23,18 @@ export const ImportExplanation: FC = () => (
             What is being imported?
         </ImportExplanationHeader>
         <ImportExplanationDescription>
-            Feature toggles will be imported with full configuration:
+            Feature flags will be imported with full configuration:
             <ul>
                 <li>strategies</li>
                 <li>context fields</li>
                 <li>variants</li>
                 <li>tags</li>
-                <li>feature toggle status</li>
+                <li>feature flag status</li>
             </ul>
         </ImportExplanationDescription>
         <ImportExplanationHeader>Exceptions?</ImportExplanationHeader>
         <ImportExplanationDescription>
-            If the feature toggle already exists in the new instance, it will be
+            If the feature flag already exists in the new instance, it will be
             overwritten
         </ImportExplanationDescription>
         <ImportExplanationHeader>What is not imported?</ImportExplanationHeader>

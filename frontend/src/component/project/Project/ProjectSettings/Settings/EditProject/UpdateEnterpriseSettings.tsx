@@ -17,7 +17,6 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,
     borderRadius: theme.spacing(2),
-    border: `1px solid ${theme.palette.divider}`,
     width: '100%',
     display: 'flex',
     margin: '0 auto',
@@ -151,6 +150,7 @@ export const UpdateEnterpriseSettings = ({
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectSettingsApiCode}
                 compactPadding
+                compact
                 showDescription={false}
                 showLink={false}
             >

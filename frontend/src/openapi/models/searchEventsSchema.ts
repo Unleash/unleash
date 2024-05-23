@@ -12,7 +12,7 @@ import type { SearchEventsSchemaType } from './searchEventsSchemaType';
     
  */
 export interface SearchEventsSchema {
-    /** Find events by feature toggle name (case-sensitive). */
+    /** Find events by feature flag name (case-sensitive). */
     feature?: string;
     /**
      * The maximum amount of events to return in the search result

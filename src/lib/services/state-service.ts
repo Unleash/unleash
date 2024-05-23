@@ -312,9 +312,7 @@ export default class StateService {
             ? []
             : await this.featureStrategiesStore.getAll();
         if (dropBeforeImport) {
-            this.logger.info(
-                'Dropping existing strategies for feature toggles',
-            );
+            this.logger.info('Dropping existing strategies for feature flags');
             await this.featureStrategiesStore.deleteAll();
         }
         const strategiesToImport = keepExisting
@@ -366,13 +364,13 @@ export default class StateService {
         featureEnvironments,
         auditUser,
     }): Promise<void> {
-        this.logger.info(`Importing ${features.length} feature toggles`);
+        this.logger.info(`Importing ${features.length} feature flags`);
         const oldToggles = dropBeforeImport
             ? []
             : await this.toggleStore.getAll();
 
         if (dropBeforeImport) {
-            this.logger.info('Dropping existing feature toggles');
+            this.logger.info('Dropping existing feature flags');
             await this.toggleStore.deleteAll();
             await this.eventService.storeEvent(
                 new DropFeaturesEvent({ auditUser }),

@@ -59,7 +59,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({
             onChange?.();
             setToastData({
                 title: 'State updated',
-                text: 'Feature toggles marked as stale',
+                text: 'Feature flags marked as stale',
                 type: 'success',
             });
             trackEvent('batch_operations', {
@@ -79,7 +79,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({
             onChange?.();
             setToastData({
                 title: 'State updated',
-                text: 'Feature toggles unmarked as stale',
+                text: 'Feature flags unmarked as stale',
                 type: 'success',
             });
             trackEvent('batch_operations', {

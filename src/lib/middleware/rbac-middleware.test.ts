@@ -279,9 +279,9 @@ test('should lookup projectId from params', async () => {
     );
 });
 
-test('should lookup projectId from feature toggle', async () => {
+test('should lookup projectId from feature flag', async () => {
     const projectId = 'some-project-33';
-    const featureName = 'some-feature-toggle';
+    const featureName = 'some-feature-flag';
 
     const accessService = {
         hasPermission: jest.fn(),
@@ -320,7 +320,7 @@ test('should lookup projectId from feature toggle', async () => {
 
 test('should lookup projectId from data', async () => {
     const projectId = 'some-project-33';
-    const featureName = 'some-feature-toggle';
+    const featureName = 'some-feature-flag';
 
     const accessService = {
         hasPermission: jest.fn(),
@@ -357,9 +357,9 @@ test('should lookup projectId from data', async () => {
     );
 });
 
-test('Does not double check permission if not changing project when updating toggle', async () => {
+test('Does not double check permission if not changing project when updating flag', async () => {
     const oldProjectId = 'some-project-34';
-    const featureName = 'some-feature-toggle';
+    const featureName = 'some-feature-flag';
     const accessService = {
         hasPermission: jest.fn().mockReturnValue(true),
     };

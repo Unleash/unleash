@@ -15,6 +15,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
+import type { ReactNode } from 'react';
+import theme from 'themes/theme';
 
 const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
@@ -33,11 +35,12 @@ const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     gridTemplateAreas:
         '"icon header" "icon project-name" "icon project-description"',
     gridTemplateColumns: 'auto 1fr',
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
 }));
 
 const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    fill: theme.palette.primary.main,
+    stroke: theme.palette.primary.main,
 }));
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
@@ -57,14 +60,6 @@ const ProjectDescriptionContainer = styled('div')(({ theme }) => ({
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     fieldset: { border: 'none' },
-}));
-
-const StyledProjectName = styled(StyledInput)(({ theme }) => ({
-    '*': { fontSize: theme.typography.h2.fontSize },
-}));
-
-const StyledProjectDescription = styled(StyledInput)(({ theme }) => ({
-    '*': { fontSize: theme.typography.h3.fontSize },
 }));
 
 const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
@@ -108,7 +103,7 @@ type FormProps = {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateProjectId: () => void;
-    overrideDocumentation: (description: string) => void;
+    overrideDocumentation: (args: { text: string; icon: ReactNode }) => void;
     clearDocumentationOverride: () => void;
 };
 
@@ -159,6 +154,25 @@ export const NewProjectForm: React.FC<FormProps> = ({
 
     const stickinessOptions = useStickinessOptions(projectStickiness);
 
+    const selectionButtonData = {
+        environments: {
+            icon: <EnvironmentsIcon />,
+            text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+        },
+        stickiness: {
+            icon: <StickinessIcon />,
+            text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+        },
+        mode: {
+            icon: <ProjectModeIcon />,
+            text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+        },
+        changeRequests: {
+            icon: <ChangeRequestIcon />,
+            text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+        },
+    };
+
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -169,7 +183,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <StyledIcon aria-hidden='true' />
                 <StyledHeader variant='h2'>New project</StyledHeader>
                 <ProjectNameContainer>
-                    <StyledProjectName
+                    <StyledInput
                         label='Project name'
                         aria-required
                         value={projectName}
@@ -181,10 +195,18 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         }}
                         data-testid={PROJECT_NAME_INPUT}
                         autoFocus
+                        InputProps={{
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        }}
+                        InputLabelProps={{
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        }}
+                        size='medium'
                     />
                 </ProjectNameContainer>
                 <ProjectDescriptionContainer>
-                    <StyledProjectDescription
+                    <StyledInput
+                        size='medium'
                         className='description'
                         label='Description (optional)'
                         multiline
@@ -192,12 +214,19 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         value={projectDesc}
                         onChange={(e) => setProjectDesc(e.target.value)}
                         data-testid={PROJECT_DESCRIPTION_INPUT}
+                        InputProps={{
+                            style: { fontSize: theme.typography.h2.fontSize },
+                        }}
+                        InputLabelProps={{
+                            style: { fontSize: theme.typography.h2.fontSize },
+                        }}
                     />
                 </ProjectDescriptionContainer>
             </TopGrid>
 
             <OptionButtons>
                 <MultiselectList
+                    description={selectionButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
                         label: env.name,
@@ -216,14 +245,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select project environments',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(
-                            `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
-                        )
+                        overrideDocumentation(selectionButtonData.environments)
                     }
                     onClose={clearDocumentationOverride}
                 />
 
                 <SingleSelectList
+                    description={selectionButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
                         ...rest,
@@ -240,9 +268,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select default stickiness',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(
-                            'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
-                        )
+                        overrideDocumentation(selectionButtonData.stickiness)
                     }
                     onClose={clearDocumentationOverride}
                 />
@@ -251,6 +277,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <SingleSelectList
+                            description={selectionButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
                                 setProjectMode(value);
@@ -264,9 +291,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 placeholder: 'Select project mode',
                             }}
                             onOpen={() =>
-                                overrideDocumentation(
-                                    'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
-                                )
+                                overrideDocumentation(selectionButtonData.mode)
                             }
                             onClose={clearDocumentationOverride}
                         />
@@ -276,6 +301,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <TableSelect
+                            description={
+                                selectionButtonData.changeRequests.text
+                            }
                             disabled={projectEnvironments.size === 0}
                             activeEnvironments={activeEnvironments
                                 .filter((env) =>
@@ -310,7 +338,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             }
                             onOpen={() =>
                                 overrideDocumentation(
-                                    'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+                                    selectionButtonData.changeRequests,
                                 )
                             }
                             onClose={clearDocumentationOverride}

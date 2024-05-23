@@ -10,7 +10,7 @@ interface IUsedInCellProps {
 
 export const UsedInCell: VFC<IUsedInCellProps> = ({ original }) => {
     const projectText = original.usedInProjects === 1 ? 'project' : 'projects';
-    const togglesText = original.usedInFeatures === 1 ? 'toggle' : 'toggles';
+    const flagsText = original.usedInFeatures === 1 ? 'flag' : 'flags';
     return (
         <TextCell
             sx={{
@@ -25,7 +25,7 @@ export const UsedInCell: VFC<IUsedInCellProps> = ({ original }) => {
                 {original.usedInProjects} {projectText}
             </Box>
             <Box>
-                {original.usedInFeatures} feature {togglesText}
+                {original.usedInFeatures} feature {flagsText}
             </Box>
         </TextCell>
     );

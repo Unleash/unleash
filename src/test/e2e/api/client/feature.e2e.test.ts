@@ -103,7 +103,7 @@ beforeAll(async () => {
         'default',
         {
             name: 'feature.with.variants',
-            description: 'A feature toggle with variants',
+            description: 'A feature flag with variants',
         },
         TEST_AUDIT_USER,
     );
@@ -133,7 +133,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns four feature toggles', async () => {
+test('returns four feature flags', async () => {
     return app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
@@ -163,7 +163,7 @@ test('returns dependencies', async () => {
         });
 });
 
-test('returns four feature toggles without createdAt', async () => {
+test('returns four feature flags without createdAt', async () => {
     return app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
@@ -181,7 +181,7 @@ test('gets a feature by name', async () => {
         .expect(200);
 });
 
-test('returns a feature toggles impression data', async () => {
+test('returns a feature flags impression data', async () => {
     return app.request
         .get('/api/client/features/featureX')
         .expect('Content-Type', /json/)
@@ -221,7 +221,7 @@ test('Can get strategies for specific environment', async () => {
     const featureName = 'test.feature.with.env';
     const env = DEFAULT_ENV;
 
-    // Create feature toggle
+    // Create feature flag
     await app.request.post('/api/admin/projects/default/features').send({
         name: featureName,
         type: 'killswitch',
@@ -322,7 +322,7 @@ test('Can use multiple filters', async () => {
         });
 });
 
-test('returns a feature toggles impression data for a different project', async () => {
+test('returns a feature flags impression data for a different project', async () => {
     const project = {
         id: 'impression-data-client',
         name: 'ImpressionData',
@@ -332,14 +332,14 @@ test('returns a feature toggles impression data for a different project', async 
 
     await db.stores.projectStore.create(project);
 
-    const toggle = {
+    const flag = {
         name: 'project-client.impression.data',
         impressionData: true,
     };
 
     await app.request
         .post('/api/admin/projects/impression-data-client/features')
-        .send(toggle)
+        .send(flag)
         .expect(201)
         .expect((res) => {
             expect(res.body.impressionData).toBe(true);
@@ -349,12 +349,12 @@ test('returns a feature toggles impression data for a different project', async 
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect((res) => {
-            const projectToggle = res.body.features.find(
-                (resToggle) => resToggle.project === project.id,
+            const projectFlag = res.body.features.find(
+                (resFlag) => resFlag.project === project.id,
             );
 
-            expect(projectToggle.name).toBe(toggle.name);
-            expect(projectToggle.project).toBe(project.id);
-            expect(projectToggle.impressionData).toBe(true);
+            expect(projectFlag.name).toBe(flag.name);
+            expect(projectFlag.project).toBe(project.id);
+            expect(projectFlag.impressionData).toBe(true);
         });
 });

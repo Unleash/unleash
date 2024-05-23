@@ -429,7 +429,7 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
     expect(apiTokens[0].username).toBe(apiTokenName);
 });
 
-test(`should not show environment on feature toggle, when environment is disabled`, async () => {
+test(`should not show environment on feature flag, when environment is disabled`, async () => {
     await app.request
         .post('/api/admin/state/import?drop=true')
         .attach('file', 'src/test/examples/import-state.json')

@@ -43,7 +43,13 @@ import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import CorsIcon from '@mui/icons-material/StorageOutlined';
 import BillingIcon from '@mui/icons-material/CreditCardOutlined';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import { type FC, type ReactNode, useCallback } from 'react';
+import {
+    type FC,
+    type ReactNode,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 import { getCondensedRoutes, getRoutes } from '../../../menu/routes';
 import { useAdminRoutes } from '../../../admin/useAdminRoutes';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
@@ -74,7 +80,7 @@ const EnterprisePlanBadge = () => (
     </Tooltip>
 );
 
-const StyledListItem: FC<{ href: string; text: string; badge?: ReactNode }> = ({
+const FullListItem: FC<{ href: string; text: string; badge?: ReactNode }> = ({
     href,
     text,
     badge,
@@ -88,6 +94,26 @@ const StyledListItem: FC<{ href: string; text: string; badge?: ReactNode }> = ({
                 </ListItemIcon>
                 <ListItemText primary={text} />
                 {badge}
+            </ListItemButton>
+        </ListItem>
+    );
+};
+
+const MiniListItem: FC<{ href: string; text: string }> = ({
+    href,
+    text,
+    children,
+}) => {
+    return (
+        <ListItem disablePadding>
+            <ListItemButton dense={true} component={Link} to={href}>
+                <Tooltip title={text} placement='right'>
+                    <ListItemIcon
+                        sx={(theme) => ({ minWidth: theme.spacing(4) })}
+                    >
+                        {children}
+                    </ListItemIcon>
+                </Tooltip>
             </ListItemButton>
         </ListItem>
     );
@@ -166,62 +192,96 @@ const useRoutes = () => {
     return { routes: filteredMainRoutes, showBadge };
 };
 
+const useNavigationMode = () => {
+    const [mode, setMode] = useState<'mini' | 'full'>('full');
+    useEffect(() => {
+        const handleKeyDown = (event: any) => {
+            console.log('key down', mode);
+            if (event.key === 'b' && (event.metaKey || event.ctrlKey)) {
+                event.preventDefault();
+                setMode(mode === 'mini' ? 'full' : 'mini');
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [mode]);
+
+    return mode;
+};
+
 export const NavigationSidebar = () => {
     const { routes, showBadge } = useRoutes();
+
+    const mode = useNavigationMode();
+
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     return (
         <StyledBox>
             <List>
-                <StyledListItem href='/projects' text='Projects'>
+                <DynamicListItem href='/projects' text='Projects'>
                     <StyledProjectIcon />
-                </StyledListItem>
-                <StyledListItem href='/search' text='Search'>
+                </DynamicListItem>
+                <DynamicListItem href='/search' text='Search'>
                     <SearchIcon />
-                </StyledListItem>
-                <StyledListItem href='/playground' text='Playground'>
+                </DynamicListItem>
+                <DynamicListItem href='/playground' text='Playground'>
                     <PlaygroundIcon />
-                </StyledListItem>
-                <StyledListItem href='/insights' text='Insights'>
+                </DynamicListItem>
+                <DynamicListItem href='/insights' text='Insights'>
                     <InsightsIcon />
-                </StyledListItem>
+                </DynamicListItem>
             </List>
             <Accordion disableGutters={true} sx={{ boxShadow: 'none' }}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls='configure-content'
-                    id='configure-header'
-                >
-                    <Typography sx={{ fontWeight: 'bold', fontSize: 'small' }}>
-                        Configure
-                    </Typography>
-                </AccordionSummary>
+                {mode === 'full' && (
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='configure-content'
+                        id='configure-header'
+                    >
+                        <Typography
+                            sx={{ fontWeight: 'bold', fontSize: 'small' }}
+                        >
+                            Configure
+                        </Typography>
+                    </AccordionSummary>
+                )}
                 <AccordionDetails sx={{ p: 0 }}>
                     <List>
                         {routes.mainNavRoutes.map((route) => (
-                            <StyledListItem
+                            <DynamicListItem
                                 href={route.path}
                                 text={route.title}
                             >
                                 <IconRenderer path={route.path} />
-                            </StyledListItem>
+                            </DynamicListItem>
                         ))}
                     </List>
                 </AccordionDetails>
             </Accordion>
             <Accordion disableGutters={true} sx={{ boxShadow: 'none' }}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls='admin-content'
-                    id='admin-header'
-                >
-                    <Typography sx={{ fontWeight: 'bold', fontSize: 'small' }}>
-                        Admin
-                    </Typography>
-                </AccordionSummary>
+                {mode === 'full' && (
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='admin-content'
+                        id='admin-header'
+                    >
+                        <Typography
+                            sx={{ fontWeight: 'bold', fontSize: 'small' }}
+                        >
+                            Admin
+                        </Typography>
+                    </AccordionSummary>
+                )}
+
                 <AccordionDetails sx={{ p: 0 }}>
                     <List>
                         {routes.adminRoutes.map((route) => (
-                            <StyledListItem
+                            <DynamicListItem
                                 href={route.path}
                                 text={route.title}
                                 badge={
@@ -231,7 +291,7 @@ export const NavigationSidebar = () => {
                                 }
                             >
                                 <IconRenderer path={route.path} />
-                            </StyledListItem>
+                            </DynamicListItem>
                         ))}
                     </List>
                 </AccordionDetails>

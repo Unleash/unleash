@@ -1099,41 +1099,6 @@ class FeatureToggleService {
         return features as FeatureConfigurationClient[];
     }
 
-    /**
-     * @deprecated Legacy!
-     *
-     * Used to retrieve metadata of all feature toggles defined in Unleash.
-     * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
-     * @param userId - Used to find / mark features as favorite based on users preferences
-     * @param archived - Return archived or active toggles
-     * @returns
-     */
-    async getFeatureToggles(
-        query?: IFeatureToggleQuery,
-        userId?: number,
-        archived: boolean = false,
-    ): Promise<FeatureToggle[]> {
-        // Remove with with feature flag
-        const features = await this.featureToggleStore.getFeatureToggleList(
-            query,
-            userId,
-            archived,
-        );
-
-        if (userId) {
-            const projectAccess =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-            return projectAccess.mode === 'all'
-                ? features
-                : features.filter((f) =>
-                      projectAccess.projects.includes(f.project),
-                  );
-        }
-        return features;
-    }
-
     async getFeatureOverview(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
@@ -1947,10 +1912,6 @@ class FeatureToggleService {
                 featureName,
             }),
         );
-    }
-
-    async getArchivedFeatures(): Promise<FeatureToggle[]> {
-        return this.getFeatureToggles({}, undefined, true);
     }
 
     // TODO: add project id.

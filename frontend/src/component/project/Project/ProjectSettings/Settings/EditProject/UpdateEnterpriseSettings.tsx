@@ -3,21 +3,20 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjectEnterpriseSettingsForm from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ProjectEnterpriseSettingsForm from 'component/project/Project/ProjectEnterpriseSettingsForm/ProjectEnterpriseSettingsForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import type { IProject } from 'component/../interfaces/project';
+import type { IProjectOverview } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,
     borderRadius: theme.spacing(2),
-    border: `1px solid ${theme.palette.divider}`,
     width: '100%',
     display: 'flex',
     margin: '0 auto',
@@ -34,7 +33,7 @@ const StyledFormContainer = styled('div')(({ theme }) => ({
 }));
 
 interface IUpdateEnterpriseSettings {
-    project: IProject;
+    project: IProjectOverview;
 }
 const EDIT_PROJECT_SETTINGS_BTN = 'EDIT_PROJECT_SETTINGS_BTN';
 
@@ -89,7 +88,7 @@ export const UpdateEnterpriseSettings = ({
 --data-raw '${JSON.stringify(getEnterpriseSettingsPayload(), undefined, 2)}'`;
     };
 
-    const { refetch } = useProject(id);
+    const { refetch } = useProjectOverview(id);
     const { editProjectSettings, loading } = useProjectApi();
 
     const useFeatureNamePatternTracking = () => {
@@ -151,6 +150,7 @@ export const UpdateEnterpriseSettings = ({
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectSettingsApiCode}
                 compactPadding
+                compact
                 showDescription={false}
                 showLink={false}
             >

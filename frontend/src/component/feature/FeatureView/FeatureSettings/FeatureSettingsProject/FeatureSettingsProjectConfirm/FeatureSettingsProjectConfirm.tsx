@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -9,6 +8,7 @@ import { Link } from 'react-router-dom';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -41,7 +41,7 @@ const FeatureSettingsProjectConfirm = ({
     changeRequests,
 }: IFeatureSettingsProjectConfirm) => {
     const currentProjectId = useRequiredPathParam('projectId');
-    const { project } = useProject(projectId);
+    const { project } = useProjectOverview(projectId);
 
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
@@ -80,12 +80,12 @@ const FeatureSettingsProjectConfirm = ({
                 >
                     <StyledContainer>
                         <StyledAlert severity='success'>
-                            This feature toggle is compatible with the new
+                            This feature flag is compatible with the new
                             project.
                         </StyledAlert>
                         <p>
                             Are you sure you want to change the project for this
-                            toggle?
+                            flag?
                         </p>
                     </StyledContainer>
                 </Dialogue>
@@ -107,7 +107,7 @@ const FeatureSettingsProjectConfirm = ({
                             show={
                                 <p>
                                     <span>
-                                        The feature toggle must not have any
+                                        The feature flag must not have any
                                         dependencies.
                                     </span>{' '}
                                     <br />
@@ -122,9 +122,9 @@ const FeatureSettingsProjectConfirm = ({
                             condition={!hasSameEnvironments}
                             show={
                                 <p>
-                                    In order to move a feature toggle between
-                                    two projects, both projects must have the
-                                    exact same environments enabled.
+                                    In order to move a feature flag between two
+                                    projects, both projects must have the exact
+                                    same environments enabled.
                                 </p>
                             }
                         />
@@ -133,9 +133,9 @@ const FeatureSettingsProjectConfirm = ({
                             show={
                                 <>
                                     <p>
-                                        The feature toggle must not have any
+                                        The feature flag must not have any
                                         pending change requests. This feature
-                                        toggle is currently referenced in the
+                                        flag is currently referenced in the
                                         following change requests:
                                     </p>
                                     <StyledList>

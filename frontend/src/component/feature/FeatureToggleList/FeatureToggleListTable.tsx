@@ -339,7 +339,7 @@ export const FeatureToggleListTable: VFC = () => {
                                             expandable
                                             initialValue={query || ''}
                                             onChange={setSearchValue}
-                                            id='globalFeatureToggles'
+                                            id='globalFeatureFlags'
                                         />
                                         <PageHeader.Divider />
                                     </>
@@ -430,7 +430,7 @@ export const FeatureToggleListTable: VFC = () => {
                             <Search
                                 initialValue={query || ''}
                                 onChange={setSearchValue}
-                                id='globalFeatureToggles'
+                                id='globalFeatureFlags'
                             />
                         }
                     />
@@ -454,16 +454,16 @@ export const FeatureToggleListTable: VFC = () => {
                             condition={(query || '')?.length > 0}
                             show={
                                 <TablePlaceholder>
-                                    No feature toggles found matching &ldquo;
+                                    No feature flags found matching &ldquo;
                                     {query}
                                     &rdquo;
                                 </TablePlaceholder>
                             }
                             elseShow={
                                 <TablePlaceholder>
-                                    No feature toggles found matching your
+                                    No feature flags found matching your
                                     criteria. Get started by adding a new
-                                    feature toggle.
+                                    feature flag.
                                 </TablePlaceholder>
                             }
                         />

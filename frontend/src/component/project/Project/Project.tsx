@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
@@ -43,6 +42,7 @@ import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/Hid
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
 import { ProjectInsights } from './ProjectInsights/ProjectInsights';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -65,7 +65,7 @@ interface ITab {
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
-    const { project, loading, error, refetch } = useProject(projectId);
+    const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
     const { setToastData, setToastApiError } = useToast();
     const [modalOpen, setModalOpen] = useState(false);

@@ -75,7 +75,7 @@ test('should load the table', async () => {
     await screen.findByText('someFeature');
 });
 
-test('should show confirm dialog when reviving toggle', async () => {
+test('should show confirm dialog when reviving flag', async () => {
     setupApi();
     render(
         <>
@@ -87,20 +87,20 @@ test('should show confirm dialog when reviving toggle', async () => {
     await screen.findByText('someFeature');
 
     const reviveButton = screen.getAllByTestId(
-        'revive-feature-toggle-button',
+        'revive-feature-flag-button',
     )?.[0];
     fireEvent.click(reviveButton);
 
-    await screen.findByText('Revive feature toggle?');
-    const reviveTogglesButton = screen.getByRole('button', {
-        name: /Revive feature toggle/i,
+    await screen.findByText('Revive feature flag?');
+    const reviveFlagsButton = screen.getByRole('button', {
+        name: /Revive feature flag/i,
     });
-    fireEvent.click(reviveTogglesButton);
+    fireEvent.click(reviveFlagsButton);
 
     await screen.findByText("And we're back!");
 });
 
-test('should show confirm dialog when batch reviving toggle', async () => {
+test('should show confirm dialog when batch reviving flag', async () => {
     setupApi();
     render(
         <>
@@ -121,10 +121,10 @@ test('should show confirm dialog when batch reviving toggle', async () => {
     const batchReviveButton = await screen.findByText(/Revive/i);
     await userEvent.click(batchReviveButton!);
 
-    await screen.findByText('Revive feature toggles?');
+    await screen.findByText('Revive feature flags?');
 
     const reviveTogglesButton = screen.getByRole('button', {
-        name: /Revive feature toggles/i,
+        name: /Revive feature flags/i,
     });
     fireEvent.click(reviveTogglesButton);
 
@@ -143,12 +143,12 @@ test('should show info box when disableAllEnvsOnRevive flag is on', async () => 
     await screen.findByText('someFeature');
 
     const reviveButton = screen.getAllByTestId(
-        'revive-feature-toggle-button',
+        'revive-feature-flag-button',
     )?.[0];
     fireEvent.click(reviveButton);
 
-    await screen.findByText('Revive feature toggle?');
+    await screen.findByText('Revive feature flag?');
     await screen.findByText(
-        'Revived feature toggles will be automatically disabled in all environments',
+        'Revived feature flags will be automatically disabled in all environments',
     );
 });

@@ -1,8 +1,8 @@
-import useProject from './api/getters/useProject/useProject';
+import useProjectOverview from './api/getters/useProjectOverview/useProjectOverview';
 
 const DEFAULT_STICKINESS = 'default';
 export const useDefaultProjectSettings = (projectId: string) => {
-    const { project, loading, error } = useProject(projectId);
+    const { project, loading, error } = useProjectOverview(projectId);
     return {
         defaultStickiness: project.defaultStickiness
             ? project.defaultStickiness

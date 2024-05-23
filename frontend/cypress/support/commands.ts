@@ -8,12 +8,10 @@ import {
     createFeature_UI,
     createSegment_UI,
     deleteSegment_UI,
-    deleteVariant_UI,
     deleteFeatureStrategy_UI,
     addFlexibleRolloutStrategyToFeature_UI,
     addUserIdStrategyToFeature_UI,
     updateFlexibleRolloutStrategy_UI,
-    addVariantsToFeature_UI,
     //@ts-ignore
 } from './UI';
 import {
@@ -43,8 +41,6 @@ Cypress.Commands.add('updateUserPassword_API', updateUserPassword_API);
 Cypress.Commands.add('createFeature_UI', createFeature_UI);
 Cypress.Commands.add('deleteFeatureStrategy_UI', deleteFeatureStrategy_UI);
 Cypress.Commands.add('createFeature_API', createFeature_API);
-Cypress.Commands.add('deleteVariant_UI', deleteVariant_UI);
-Cypress.Commands.add('addVariantsToFeature_UI', addVariantsToFeature_UI);
 Cypress.Commands.add(
     'addUserIdStrategyToFeature_UI',
     addUserIdStrategyToFeature_UI,

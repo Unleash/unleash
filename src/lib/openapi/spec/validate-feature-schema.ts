@@ -4,7 +4,7 @@ export const validateFeatureSchema = {
     $id: '#/components/schemas/validateFeatureSchema',
     type: 'object',
     required: ['name'],
-    description: "Data used to validate a feature toggle's name.",
+    description: "Data used to validate a feature flag's name.",
     properties: {
         name: {
             description: 'The feature name to validate.',

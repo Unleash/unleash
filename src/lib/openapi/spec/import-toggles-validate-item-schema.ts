@@ -6,7 +6,7 @@ export const importTogglesValidateItemSchema = {
     required: ['message', 'affectedItems'],
     additionalProperties: false,
     description:
-        'A description of an error or warning pertaining to a feature toggle import job.',
+        'A description of an error or warning pertaining to a feature flag import job.',
     properties: {
         message: {
             type: 'string',

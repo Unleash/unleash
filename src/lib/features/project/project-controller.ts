@@ -18,6 +18,8 @@ import {
     createResponseSchema,
     type DeprecatedProjectOverviewSchema,
     deprecatedProjectOverviewSchema,
+    outdatedSdksSchema,
+    type OutdatedSdksSchema,
     type ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
     projectOverviewSchema,
@@ -41,17 +43,21 @@ import { projectApplicationsQueryParameters } from '../../openapi/spec/project-a
 import { normalizeQueryParams } from '../feature-search/search-utils';
 import ProjectInsightsController from '../project-insights/project-insights-controller';
 import FeatureLifecycleController from '../feature-lifecycle/feature-lifecycle-controller';
+import type ClientInstanceService from '../metrics/instance/instance-service';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
 
     private openApiService: OpenApiService;
 
+    private clientInstanceService: ClientInstanceService;
+
     private flagResolver: IFlagResolver;
 
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
         super(config);
         this.projectService = services.projectService;
+        this.clientInstanceService = services.clientInstanceService;
         this.openApiService = services.openApiService;
         this.flagResolver = config.flagResolver;
 
@@ -155,6 +161,26 @@ export default class ProjectController extends Controller {
                     responses: {
                         200: createResponseSchema('projectApplicationsSchema'),
                         ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/sdks/outdated',
+            handler: this.getOutdatedProjectSdks,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getOutdatedProjectSdks',
+                    summary: 'Get outdated project SDKs',
+                    description:
+                        'Returns a list of the outdated SDKS with the applications using them.',
+                    responses: {
+                        200: createResponseSchema('outdatedSdksSchema'),
+                        ...getStandardResponses(404),
                     },
                 }),
             ],
@@ -308,6 +334,23 @@ export default class ProjectController extends Controller {
             res,
             projectApplicationsSchema.$id,
             serializeDates(applications),
+        );
+    }
+    async getOutdatedProjectSdks(
+        req: IAuthRequest<IProjectParam>,
+        res: Response<OutdatedSdksSchema>,
+    ) {
+        const { projectId } = req.params;
+        const outdatedSdks =
+            await this.clientInstanceService.getOutdatedSdksByProject(
+                projectId,
+            );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            outdatedSdksSchema.$id,
+            { sdks: outdatedSdks },
         );
     }
 }

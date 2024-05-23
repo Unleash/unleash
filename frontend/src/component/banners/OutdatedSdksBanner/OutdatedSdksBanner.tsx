@@ -8,10 +8,14 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledList = styled('ul')({ margin: 0 });
 
-export const OutdatedSdksBanner = () => {
+interface IOutdatedSdksBannerProps {
+    project: string;
+}
+
+export const OutdatedSdksBanner = ({ project }: IOutdatedSdksBannerProps) => {
     const {
         data: { sdks },
-    } = useOutdatedSdks();
+    } = useOutdatedSdks(project);
     const { trackEvent } = usePlausibleTracker();
 
     const applicationClickedWithVersion = (sdkVersion: string) => {
@@ -32,7 +36,7 @@ export const OutdatedSdksBanner = () => {
     };
 
     const outdatedSdksBanner: IBanner = {
-        message: `We noticed that an outdated SDK version is connected to this Unleash instance.`,
+        message: `We noticed that an outdated SDK version is connected to ${project} project.`,
         variant: 'warning',
         link: 'dialog',
         linkText: 'Please update those versions',
@@ -73,7 +77,7 @@ export const OutdatedSdksBanner = () => {
         <>
             <ConditionallyRender
                 condition={sdks.length > 0}
-                show={<Banner banner={outdatedSdksBanner} />}
+                show={<Banner banner={outdatedSdksBanner} inline />}
             />
         </>
     );

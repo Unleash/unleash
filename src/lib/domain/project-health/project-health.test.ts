@@ -35,7 +35,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    it('counts active toggles', () => {
+    it('counts active flags', () => {
         const features = [{ stale: false }, {}];
 
         expect(calculateProjectHealth(features, exampleFeatureTypes)).toEqual({
@@ -45,7 +45,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    it('counts stale toggles', () => {
+    it('counts stale flags', () => {
         const features = [{ stale: true }, { stale: false }, {}];
 
         expect(calculateProjectHealth(features, exampleFeatureTypes)).toEqual({
@@ -55,7 +55,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    it('takes feature type into account when calculating potentially stale toggles', () => {
+    it('takes feature type into account when calculating potentially stale flags', () => {
         expect(
             calculateProjectHealth(
                 [
@@ -108,7 +108,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    it("doesn't count stale toggles as potentially stale or stale as active", () => {
+    it("doesn't count stale flags as potentially stale or stale as active", () => {
         const features = [
             {
                 stale: true,
@@ -150,11 +150,11 @@ describe('calculateProjectHealth', () => {
 });
 
 describe('calculateHealthRating', () => {
-    it('works with empty feature toggles', () => {
+    it('works with empty feature flags', () => {
         expect(calculateHealthRating([], exampleFeatureTypes)).toEqual(100);
     });
 
-    it('works with stale and active feature toggles', () => {
+    it('works with stale and active feature flags', () => {
         expect(
             calculateHealthRating(
                 [{ stale: true }, { stale: true }],
@@ -175,7 +175,7 @@ describe('calculateHealthRating', () => {
         ).toEqual(67);
     });
 
-    it('counts potentially stale toggles', () => {
+    it('counts potentially stale flags', () => {
         expect(
             calculateHealthRating(
                 [

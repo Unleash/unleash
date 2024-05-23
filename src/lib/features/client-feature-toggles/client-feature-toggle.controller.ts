@@ -102,9 +102,9 @@ export default class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getClientFeature',
-                    summary: 'Get a single feature toggle',
+                    summary: 'Get a single feature flag',
                     description:
-                        'Gets all the client data for a single toggle. Contains the exact same information about a toggle as the `/api/client/features` endpoint does, but only contains data about the specified toggle. All SDKs should use `/api/client/features`',
+                        'Gets all the client data for a single flag. Contains the exact same information about a flag as the `/api/client/features` endpoint does, but only contains data about the specified flag. All SDKs should use `/api/client/features`',
                     tags: ['Client'],
                     responses: {
                         200: createResponseSchema('clientFeatureSchema'),
@@ -120,9 +120,9 @@ export default class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Get all toggles (SDK)',
+                    summary: 'Get all flags (SDK)',
                     description:
-                        'Returns the SDK configuration for all feature toggles that are available to the provided API key. Used by SDKs to configure local evaluation',
+                        'Returns the SDK configuration for all feature flags that are available to the provided API key. Used by SDKs to configure local evaluation',
                     operationId: 'getAllClientFeatures',
                     tags: ['Client'],
                     responses: {
@@ -302,7 +302,7 @@ export default class FeatureController extends Controller {
 
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {
-            throw new NotFoundError(`Could not find feature toggle ${name}`);
+            throw new NotFoundError(`Could not find feature flag ${name}`);
         }
         this.openApiService.respondWithValidation(
             200,

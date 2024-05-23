@@ -13,7 +13,7 @@ import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegment
 import type { TagTypeSchema } from './tagTypeSchema';
 
 /**
- * The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)
+ * The result of the export operation, providing you with the feature flag definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)
  */
 export interface ExportResultSchema {
     /** A list of all the context fields that are in use by any of the strategies in the `featureStrategies` list. */

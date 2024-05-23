@@ -237,7 +237,7 @@ export const EnvironmentCloneModal = ({
                 loading={loading}
                 modal
                 title={`Clone ${environment.name} environment`}
-                description='Cloning an environment will clone all feature toggles and their configuration (activation strategies, segments, status, etc) into a new environment.'
+                description='Cloning an environment will clone all feature flags and their configuration (activation strategies, segments, status, etc) into a new environment.'
                 documentationLink='https://docs.getunleash.io/reference/environments#cloning-environments'
                 documentationLinkLabel='Cloning environments documentation'
                 formatApiCode={formatApiCode}
@@ -267,7 +267,7 @@ export const EnvironmentCloneModal = ({
                         <StyledInputDescription>
                             Select which projects you want to clone the
                             environment configuration in?
-                            <HelpIcon tooltip='The cloned environment will keep the feature toggle state for the selected projects, where it will be enabled by default.' />
+                            <HelpIcon tooltip='The cloned environment will keep the feature flag state for the selected projects, where it will be enabled by default.' />
                         </StyledInputDescription>
                         <EnvironmentProjectSelect
                             projects={projects}
@@ -278,7 +278,7 @@ export const EnvironmentCloneModal = ({
                         </StyledInputDescription>
                         <StyledInputSecondaryDescription>
                             If you turn it off, the permission for this
-                            environment across all projects and feature toggles
+                            environment across all projects and feature flags
                             will remain only for admin and editor roles.
                         </StyledInputSecondaryDescription>
                         <FormControlLabel

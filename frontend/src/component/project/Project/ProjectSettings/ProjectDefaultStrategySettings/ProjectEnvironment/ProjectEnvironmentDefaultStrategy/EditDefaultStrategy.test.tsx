@@ -21,7 +21,7 @@ const RenderFallbackStrategy = () => {
 };
 
 test('should render default strategy from project', async () => {
-    testServerRoute(server, '/api/admin/projects/default', {
+    testServerRoute(server, '/api/admin/projects/default/overview', {
         environments: [
             {
                 environment: 'development',
@@ -35,7 +35,7 @@ test('should render default strategy from project', async () => {
 });
 
 test('should render fallback default strategy with project default stickiness', async () => {
-    testServerRoute(server, '/api/admin/projects/default', {
+    testServerRoute(server, '/api/admin/projects/default/overview', {
         defaultStickiness: 'clientId',
         environments: [],
     });
@@ -45,7 +45,7 @@ test('should render fallback default strategy with project default stickiness', 
 });
 
 test('should render fallback default strategy with no project default stickiness', async () => {
-    testServerRoute(server, '/api/admin/projects/default', {
+    testServerRoute(server, '/api/admin/projects/default/overview', {
         environments: [],
     });
     render(<RenderFallbackStrategy />);

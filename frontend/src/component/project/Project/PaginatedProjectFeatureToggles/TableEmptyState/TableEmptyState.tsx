@@ -15,7 +15,7 @@ export const TableEmptyState: FC<ITablePlaceholderProps> = ({ query }) => {
                 })}
             >
                 <TablePlaceholder>
-                    No feature toggles found matching &ldquo;
+                    No feature flags found matching &ldquo;
                     {query}
                     &rdquo;
                 </TablePlaceholder>
@@ -29,7 +29,7 @@ export const TableEmptyState: FC<ITablePlaceholderProps> = ({ query }) => {
                 padding: theme.spacing(3),
             })}
         >
-            <TablePlaceholder>No feature toggles available.</TablePlaceholder>
+            <TablePlaceholder>No feature flags available.</TablePlaceholder>
         </Box>
     );
 };

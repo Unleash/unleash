@@ -75,9 +75,9 @@ export class FeatureTypeController extends Controller {
                     tags: ['Feature Types'],
                     operationId: 'updateFeatureTypeLifetime',
                     summary: 'Update feature type lifetime',
-                    description: `Updates the lifetime configuration for the specified [feature toggle type](https://docs.getunleash.io/reference/feature-toggle-types). The expected lifetime is an integer representing the number of days before Unleash marks a feature toggle of that type as potentially stale. If set to \`null\` or \`0\`, then feature toggles of that particular type will never be marked as potentially stale.
+                    description: `Updates the lifetime configuration for the specified [feature flag type](https://docs.getunleash.io/reference/feature-toggle-types). The expected lifetime is an integer representing the number of days before Unleash marks a feature flag of that type as potentially stale. If set to \`null\` or \`0\`, then feature flags of that particular type will never be marked as potentially stale.
 
-When a feature toggle type's expected lifetime is changed, this will also cause any feature toggles of this type to be reevaluated for potential staleness.`,
+When a feature flag type's expected lifetime is changed, this will also cause any feature flags of this type to be reevaluated for potential staleness.`,
                     responses: {
                         200: createResponseSchema('featureTypeSchema'),
                         ...getStandardResponses(400, 401, 403, 404, 409, 415),

@@ -5,8 +5,6 @@ permissions:
   contents: read
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       version:
@@ -25,12 +23,6 @@ jobs:
           workload_identity_provider: 'projects/340004706233/locations/global/workloadIdentityPools/gh-actions-pool/providers/github-actions-oidc-unleash'
           service_account: 'versionUpdateSa@metrics-304612.iam.gserviceaccount.com'
           token_format: 'access_token'
-      - name: Update version
-        if: ${{ github.event_name == 'release' }}
-        uses: 'Unleash/update-version-action@v0'
-        with:
-          version: ${{ github.event.release.tag_name }}
-          distribution: 'oss'
       - name: Update version from manual dispatch
         if: ${{ inputs.version != '' }}
         uses: 'Unleash/update-version-action@v0'

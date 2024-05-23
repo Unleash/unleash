@@ -6,9 +6,6 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import ApiError from 'component/common/ApiError/ApiError';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useProject, {
-    useProjectNameOrId,
-} from 'hooks/api/getters/useProject/useProject';
 import { Alert, styled, TableBody, TableRow } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Link } from 'react-router-dom';
@@ -17,7 +14,7 @@ import type { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useTable, useGlobalFilter } from 'react-table';
+import { useGlobalFilter, useTable } from 'react-table';
 import {
     SortableTableHeader,
     Table,
@@ -32,6 +29,9 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { EnvironmentHideDialog } from './EnvironmentHideDialog/EnvironmentHideDialog';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import useProjectOverview, {
+    useProjectOverviewNameOrId,
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -52,14 +52,14 @@ const StyledApiError = styled(ApiError)(({ theme }) => ({
 
 const ProjectEnvironmentList = () => {
     const projectId = useRequiredPathParam('projectId');
-    const projectName = useProjectNameOrId(projectId);
+    const projectName = useProjectOverviewNameOrId(projectId);
     usePageTitle(`Project environments – ${projectName}`);
 
     // api state
     const { setToastData, setToastApiError } = useToast();
     const { environments, loading, error, refetchEnvironments } =
         useProjectEnvironments(projectId);
-    const { project, refetch: refetchProject } = useProject(projectId);
+    const { project, refetch: refetchProject } = useProjectOverview(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
 
@@ -186,7 +186,7 @@ const ProjectEnvironmentList = () => {
                         <PermissionSwitch
                             tooltip={
                                 original.projectVisible
-                                    ? 'Hide environment and disable feature toggles'
+                                    ? 'Hide environment and disable feature flags'
                                     : 'Make it visible'
                             }
                             size='medium'

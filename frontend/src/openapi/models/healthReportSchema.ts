@@ -10,10 +10,10 @@ import type { HealthReportSchemaMode } from './healthReportSchemaMode';
 import type { ProjectStatsSchema } from './projectStatsSchema';
 
 /**
- * A report of the current health of the requested project, with datapoints like counters of currently active, stale, and potentially stale feature toggles.
+ * A report of the current health of the requested project, with datapoints like counters of currently active, stale, and potentially stale feature flags.
  */
 export interface HealthReportSchema {
-    /** The number of active feature toggles. */
+    /** The number of active feature flags. */
     activeCount: number;
     /**
      * When the project was last updated.
@@ -50,9 +50,9 @@ export interface HealthReportSchema {
     mode: HealthReportSchemaMode;
     /** The project's name */
     name: string;
-    /** The number of potentially stale feature toggles. */
+    /** The number of potentially stale feature flags. */
     potentiallyStaleCount: number;
-    /** The number of stale feature toggles. */
+    /** The number of stale feature flags. */
     staleCount: number;
     /** Project statistics */
     stats?: ProjectStatsSchema;

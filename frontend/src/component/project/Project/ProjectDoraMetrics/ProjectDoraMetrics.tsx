@@ -89,7 +89,7 @@ export const ProjectDoraMetrics = () => {
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <Tooltip
-                        title='The time from the feature toggle of type release was created until it was turned on in a production environment'
+                        title='The time from the feature flag of type release was created until it was turned on in a production environment'
                         arrow
                     >
                         <Box
@@ -204,7 +204,7 @@ export const ProjectDoraMetrics = () => {
                 isLoading={loading}
                 header={
                     <PageHeader
-                        title={`Lead time for changes (per release toggle)`}
+                        title={`Lead time for changes (per release flag)`}
                     />
                 }
             >

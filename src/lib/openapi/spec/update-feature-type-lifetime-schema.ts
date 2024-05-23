@@ -5,11 +5,11 @@ export const updateFeatureTypeLifetimeSchema = {
     type: 'object',
     required: ['lifetimeDays'],
     description:
-        'Data used when updating the lifetime of a [feature toggle type](https://docs.getunleash.io/reference/feature-toggle-types).',
+        'Data used when updating the lifetime of a [feature flag type](https://docs.getunleash.io/reference/feature-toggle-types).',
     properties: {
         lifetimeDays: {
             description:
-                'The new lifetime (in days) that you want to assign to the feature toggle type. If the value is `null` or `0`, then the feature toggles of that type will never be marked as potentially stale. Otherwise, they will be considered potentially stale after the number of days indicated by this property.',
+                'The new lifetime (in days) that you want to assign to the feature flag type. If the value is `null` or `0`, then the feature flags of that type will never be marked as potentially stale. Otherwise, they will be considered potentially stale after the number of days indicated by this property.',
             example: 7,
             type: 'integer',
             nullable: true,

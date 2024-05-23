@@ -1,7 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { mutate } from 'swr';
-import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IProjectCard } from 'interfaces/project';
@@ -13,7 +11,7 @@ import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import Add from '@mui/icons-material/Add';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useMediaQuery, styled } from '@mui/material';
+import { styled, useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
@@ -93,7 +91,6 @@ export const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
     const { projects, loading, error, refetch } = useProjects();
-    const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
     const { isOss } = useUiConfig();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -144,16 +141,6 @@ export const ProjectListNew = () => {
         return groupProjects(myProjects, filteredProjects);
     }, [filteredProjects, myProjects, splitProjectList]);
 
-    const handleHover = (projectId: string) => {
-        if (fetchedProjects[projectId]) {
-            return;
-        }
-
-        const { KEY, fetcher } = getProjectFetcher(projectId);
-        mutate(KEY, fetcher);
-        setFetchedProjects((prev) => ({ ...prev, [projectId]: true }));
-    };
-
     const createButtonData = resolveCreateButtonData(
         isOss(),
         hasAccess(CREATE_PROJECT),
@@ -172,7 +159,6 @@ export const ProjectListNew = () => {
             <ProjectGroup
                 loading={loading}
                 searchValue={searchValue}
-                handleHover={handleHover}
                 {...props}
             />
         );

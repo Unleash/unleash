@@ -275,6 +275,17 @@ export default class ClientInstanceService {
         return sdkApps.filter((sdkApp) => isOutdatedSdk(sdkApp.sdkVersion));
     }
 
+    async getOutdatedSdksByProject(
+        projectId: string,
+    ): Promise<OutdatedSdksSchema['sdks']> {
+        const sdkApps =
+            await this.clientInstanceStore.groupApplicationsBySdkAndProject(
+                projectId,
+            );
+
+        return sdkApps.filter((sdkApp) => isOutdatedSdk(sdkApp.sdkVersion));
+    }
+
     async usesSdkOlderThan(
         sdkName: string,
         sdkVersion: string,

@@ -37,7 +37,7 @@ export const ArchivedFeatureDeleteConfirm = ({
     const { setToastData, setToastApiError } = useToast();
     const { deleteFeatures } = useProjectApi();
 
-    const singularOrPluralToggles =
+    const singularOrPluralFlags =
         deletedFeatures.length > 1 ? 'toggles' : 'toggle';
 
     const onDeleteFeatureToggle = async () => {
@@ -50,8 +50,8 @@ export const ArchivedFeatureDeleteConfirm = ({
             await refetch();
             setToastData({
                 type: 'success',
-                title: `Feature ${singularOrPluralToggles} deleted`,
-                text: `You have successfully deleted the following feature ${singularOrPluralToggles}: ${deletedFeatures.join(
+                title: `Feature ${singularOrPluralFlags} deleted`,
+                text: `You have successfully deleted the following feature ${singularOrPluralFlags}: ${deletedFeatures.join(
                     ', ',
                 )}.`,
             });
@@ -71,9 +71,9 @@ export const ArchivedFeatureDeleteConfirm = ({
 
     return (
         <Dialogue
-            title={`Delete feature ${singularOrPluralToggles}?`}
+            title={`Delete feature ${singularOrPluralFlags}?`}
             open={open}
-            primaryButtonText={`Delete feature ${singularOrPluralToggles}`}
+            primaryButtonText={`Delete feature ${singularOrPluralFlags}`}
             secondaryButtonText='Cancel'
             onClick={onDeleteFeatureToggle}
             onClose={clearModal}
@@ -81,22 +81,22 @@ export const ArchivedFeatureDeleteConfirm = ({
             formId={formId}
         >
             <Alert severity='warning'>
-                <b>Warning!</b> Before you delete a feature toggle, make sure
-                all in-code references to that feature toggle have been removed.
-                Otherwise, a new feature toggle with the same name could
-                activate the old code paths.
+                <b>Warning!</b> Before you delete a feature flag, make sure all
+                in-code references to that feature flag have been removed.
+                Otherwise, a new feature flag with the same name could activate
+                the old code paths.
             </Alert>
 
             <StyledDeleteParagraph>
                 You are about to delete the following feature{' '}
-                {singularOrPluralToggles}:{' '}
+                {singularOrPluralFlags}:{' '}
                 <strong>{deletedFeatures.join(', ')}</strong>.
             </StyledDeleteParagraph>
 
             <StyledDeleteParagraph
                 sx={(theme) => ({ marginTop: theme.spacing(2) })}
             >
-                In order to delete the feature {singularOrPluralToggles}, please
+                In order to delete the feature {singularOrPluralFlags}, please
                 enter the following confirmation text in the text field below:{' '}
                 <strong>I want to delete</strong>
             </StyledDeleteParagraph>

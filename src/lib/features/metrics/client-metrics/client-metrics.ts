@@ -84,7 +84,7 @@ class ClientMetricsController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeatureUsageSummary',
                     tags: ['Metrics'],
-                    summary: `Last hour of usage and a list of applications that have reported seeing this feature toggle`,
+                    summary: `Last hour of usage and a list of applications that have reported seeing this feature flag`,
                     description:
                         'Separate counts for yes (enabled), no (disabled), as well as how many times each variant was selected during the last hour',
                     responses: {

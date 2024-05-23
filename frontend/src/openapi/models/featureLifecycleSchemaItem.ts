@@ -13,4 +13,6 @@ export type FeatureLifecycleSchemaItem = {
     enteredStageAt: string;
     /** The name of the lifecycle stage that got recorded for a given feature */
     stage: FeatureLifecycleSchemaItemStage;
+    /** The name of the detailed status of a given stage. E.g. completed stage can be kept or discarded. */
+    status?: string;
 };

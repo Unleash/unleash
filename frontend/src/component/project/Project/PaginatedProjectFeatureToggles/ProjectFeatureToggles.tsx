@@ -20,23 +20,6 @@ import {
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import useLoading from 'hooks/useLoading';
-import {
-    DEFAULT_PAGE_LIMIT,
-    useFeatureSearch,
-} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import mapValues from 'lodash.mapvalues';
-import { usePersistentTableState } from 'hooks/usePersistentTableState';
-import {
-    BooleansStringParam,
-    FilterItemParam,
-} from 'utils/serializeQueryParams';
-import {
-    ArrayParam,
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
@@ -52,11 +35,10 @@ import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
 import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useProjectFeatureSearch } from './useProjectFeatureSearch';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
-    refreshInterval?: number;
-    storageKey?: string;
 }
 
 const formatEnvironmentColumnId = (environment: string) =>
@@ -67,45 +49,23 @@ const getRowId = (row: { name: string }) => row.name;
 
 export const ProjectFeatureToggles = ({
     environments,
-    refreshInterval = 15 * 1000,
-    storageKey = 'project-feature-toggles-v2',
 }: IPaginatedProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
 
-    const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        favoritesFirst: withDefault(BooleansStringParam, true),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-        columns: ArrayParam,
-        tag: FilterItemParam,
-        createdAt: FilterItemParam,
-    };
-    const [tableState, setTableState] = usePersistentTableState(
-        `${storageKey}-${projectId}`,
-        stateConfig,
-    );
+    const {
+        features,
+        total,
+        refetch,
+        loading,
+        initialLoad,
+        tableState,
+        setTableState,
+    } = useProjectFeatureSearch(projectId);
 
     const filterState = {
         tag: tableState.tag,
         createdAt: tableState.createdAt,
     };
-
-    const { columns: _, ...apiTableState } = tableState;
-    const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
-        mapValues(
-            {
-                ...encodeQueryParams(stateConfig, apiTableState),
-                project: `IS:${projectId}`,
-            },
-            (value) => (value ? `${value}` : undefined),
-        ),
-        {
-            refreshInterval,
-        },
-    );
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(

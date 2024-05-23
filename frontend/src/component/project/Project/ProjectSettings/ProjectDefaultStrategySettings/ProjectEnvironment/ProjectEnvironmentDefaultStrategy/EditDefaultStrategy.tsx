@@ -18,14 +18,13 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import type { CreateFeatureStrategySchema } from 'openapi';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const useDefaultStrategy = (
     projectId: string,
     environmentId: string,
 ) => {
-    const { project, refetch } = useProject(projectId);
+    const { project, refetch } = useProjectOverview(projectId);
 
     const defaultStrategyFallback = {
         name: 'flexibleRollout',
@@ -207,8 +206,8 @@ export const formatUpdateStrategyApiCode = (
 };
 
 export const projectDefaultStrategyHelp = `
-    An activation strategy will only run when a feature toggle is enabled and provides a way to control who will get access to the feature.
-    If any of a feature toggle's activation strategies returns true, the user will get access.
+    An activation strategy will only run when a feature flag is enabled and provides a way to control who will get access to the feature.
+    If any of a feature flag's activation strategies returns true, the user will get access.
 `;
 
 export const projectDefaultStrategyDocsLink =

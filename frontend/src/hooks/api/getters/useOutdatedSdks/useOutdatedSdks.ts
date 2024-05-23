@@ -2,9 +2,8 @@ import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter';
 import type { OutdatedSdksSchema } from '../../../../openapi';
 import { formatApiPath } from 'utils/formatPath';
 
-const PATH = 'api/admin/metrics/sdks/outdated';
-
-export const useOutdatedSdks = () => {
+export const useOutdatedSdks = (project: string) => {
+    const PATH = `api/admin/projects/${project}/sdks/outdated`;
     const { data, refetch, loading, error } = useApiGetter<OutdatedSdksSchema>(
         formatApiPath(PATH),
         () => fetcher(formatApiPath(PATH), 'Outdated SDKs'),

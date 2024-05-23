@@ -22,8 +22,8 @@ export const searchEventsSchema = {
         },
         feature: {
             type: 'string',
-            description: 'Find events by feature toggle name (case-sensitive).',
-            example: 'my.first.toggle',
+            description: 'Find events by feature flag name (case-sensitive).',
+            example: 'my.first.flag',
         },
         query: {
             type: 'string',

@@ -121,7 +121,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns feature toggle with "default" config', async () => {
+test('returns feature flag with "default" config', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         tokenName,
@@ -143,7 +143,7 @@ test('returns feature toggle with "default" config', async () => {
         });
 });
 
-test('returns feature toggle with testing environment config', async () => {
+test('returns feature flag with testing environment config', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
@@ -169,7 +169,7 @@ test('returns feature toggle with testing environment config', async () => {
         });
 });
 
-test('returns feature toggle for project2', async () => {
+test('returns feature flag for project2', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,
@@ -189,7 +189,7 @@ test('returns feature toggle for project2', async () => {
         });
 });
 
-test('returns feature toggle for all projects', async () => {
+test('returns feature flag for all projects', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         tokenName: tokenName,

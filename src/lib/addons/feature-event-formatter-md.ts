@@ -334,7 +334,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             const text = `#${changeRequestId}`;
             const featureLink = this.generateFeatureLink(event);
             const featureText = featureLink
-                ? ` for feature toggle *${featureLink}*`
+                ? ` for feature flag *${featureLink}*`
                 : '';
             const environmentText = environment
                 ? ` in the *${environment}* environment`

@@ -67,7 +67,7 @@ const StyledInnerContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledToggleInfoContainer = styled('div')({
+const StyledFlagInfoContainer = styled('div')({
     display: 'flex',
     alignItems: 'center',
 });
@@ -240,13 +240,13 @@ export const FeatureView = () => {
         <div ref={ref}>
             <StyledHeader>
                 <StyledInnerContainer>
-                    <StyledToggleInfoContainer>
+                    <StyledFlagInfoContainer>
                         <FavoriteIconButton
                             onClick={onFavorite}
                             isFavorite={feature?.favorite}
                         />
                         <div>
-                            <StyledToggleInfoContainer>
+                            <StyledFlagInfoContainer>
                                 <StyledFeatureViewHeader data-loading>
                                     {feature.name}{' '}
                                 </StyledFeatureViewHeader>
@@ -279,7 +279,7 @@ export const FeatureView = () => {
                                         />
                                     }
                                 />
-                            </StyledToggleInfoContainer>
+                            </StyledFlagInfoContainer>
                             <ConditionallyRender
                                 condition={feature.dependencies.length > 0}
                                 show={
@@ -306,7 +306,7 @@ export const FeatureView = () => {
                                 }
                             />
                         </div>
-                    </StyledToggleInfoContainer>
+                    </StyledFlagInfoContainer>
 
                     <StyledToolbarContainer>
                         <PermissionIconButton
@@ -325,7 +325,7 @@ export const FeatureView = () => {
                             permission={DELETE_FEATURE}
                             projectId={projectId}
                             tooltipProps={{
-                                title: 'Archive feature toggle',
+                                title: 'Archive feature flag',
                             }}
                             data-loading
                             onClick={() => setShowDelDialog(true)}

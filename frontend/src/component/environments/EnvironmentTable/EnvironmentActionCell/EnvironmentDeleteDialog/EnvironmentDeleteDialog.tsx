@@ -52,7 +52,7 @@ export const EnvironmentDeleteDialog = ({
                     caution.
                 </strong>{' '}
                 Deleting this environment will result in removing all strategies
-                that are active in this environment across all feature toggles.
+                that are active in this environment across all feature flags.
             </Alert>
 
             <EnvironmentTableSingle

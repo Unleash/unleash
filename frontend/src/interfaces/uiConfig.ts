@@ -76,6 +76,7 @@ export type UiFlags = {
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
     displayTrafficDataUsage?: boolean;
+    estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
@@ -86,6 +87,7 @@ export type UiFlags = {
     newCreateProjectUI?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
+    navigationSidebar?: boolean;
 };
 
 export interface IVersionInfo {

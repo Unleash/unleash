@@ -13,8 +13,10 @@ import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { Alert, styled } from '@mui/material';
-import useProject from 'hooks/api/getters/useProject/useProject';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useProjectOverview, {
+    featuresCount,
+} from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -54,7 +56,7 @@ const CreateFeature = () => {
         errors,
     } = useFeatureForm();
 
-    const { project: projectInfo } = useProject(project);
+    const { project: projectInfo } = useProjectOverview(project);
 
     const { createFeatureToggle, loading } = useFeatureApi();
 
@@ -98,26 +100,26 @@ const CreateFeature = () => {
 
     const featureLimitReached = isFeatureLimitReached(
         projectInfo.featureLimit,
-        projectInfo.features.length,
+        featuresCount(projectInfo),
     );
     return (
         <FormTemplate
             loading={loading}
-            title='Create feature toggle'
-            description='Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
-            The feature toggle is disabled when created and you decide when to enable'
+            title='Create feature flag'
+            description='Feature flags support different use cases, each with their own specific needs such as simple static routing or more complex routing.
+            The feature flag is disabled when created and you decide when to enable'
             documentationLink='https://docs.getunleash.io/reference/feature-toggle-types'
-            documentationLinkLabel='Feature toggle types documentation'
+            documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
             <ConditionallyRender
                 condition={featureLimitReached}
                 show={
                     <StyledAlert severity='error'>
-                        <strong>Feature toggle project limit reached. </strong>{' '}
-                        To be able to create more feature toggles in this
-                        project please increase the feature toggle upper limit
-                        in the project settings.
+                        <strong>Feature flag project limit reached. </strong> To
+                        be able to create more feature flags in this project
+                        please increase the feature flag upper limit in the
+                        project settings.
                     </StyledAlert>
                 }
             />
@@ -142,7 +144,7 @@ const CreateFeature = () => {
                 featureNaming={projectInfo.featureNaming}
             >
                 <CreateButton
-                    name='feature toggle'
+                    name='feature flag'
                     disabled={featureLimitReached}
                     permission={CREATE_FEATURE}
                     projectId={project}

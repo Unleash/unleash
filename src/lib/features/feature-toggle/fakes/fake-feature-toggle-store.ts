@@ -29,7 +29,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             return feature;
         }
         throw new NotFoundError(
-            `Could not find feature toggle with name ${featureName}`,
+            `Could not find feature flag with name ${featureName}`,
         );
     }
 

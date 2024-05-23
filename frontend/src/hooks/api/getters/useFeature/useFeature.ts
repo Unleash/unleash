@@ -54,7 +54,7 @@ export const featureFetcher = async (
     }
 
     if (!res.ok) {
-        await handleErrorResponses('Feature toggle data')(res);
+        await handleErrorResponses('Feature flag data')(res);
     }
 
     return {

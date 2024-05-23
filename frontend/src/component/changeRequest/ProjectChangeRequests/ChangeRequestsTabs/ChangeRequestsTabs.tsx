@@ -118,8 +118,8 @@ export const ChangeRequestsTabs = ({
                 Cell: ChangeRequestTitleCell,
             },
             {
-                id: 'Updated feature toggles',
-                Header: 'Updated feature toggles',
+                id: 'Updated feature flags',
+                Header: 'Updated feature flags',
                 canSort: false,
                 accessor: 'features',
                 searchable: true,

@@ -10,7 +10,7 @@ import type { StrategyVariantSchemaWeightType } from './strategyVariantSchemaWei
  * This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. A strategy variant allows you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.
  */
 export interface StrategyVariantSchema {
-    /** The variant name. Must be unique for this feature toggle */
+    /** The variant name. Must be unique for this feature flag */
     name: string;
     /** Extra data configured for this variant */
     payload?: StrategyVariantSchemaPayload;

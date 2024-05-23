@@ -41,6 +41,7 @@ export type IFlagKey =
     | 'killScheduledChangeRequestCache'
     | 'collectTrafficDataUsage'
     | 'displayTrafficDataUsage'
+    | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
     | 'checkEdgeValidTokensFromCache'
@@ -61,7 +62,9 @@ export type IFlagKey =
     | 'createProjectWithEnvironmentConfig'
     | 'manyStrategiesPagination'
     | 'newCreateProjectUI'
-    | 'enableLegacyVariants';
+    | 'enableLegacyVariants'
+    | 'debugMetrics'
+    | 'navigationSidebar';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -225,6 +228,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISPLAY_TRAFFIC_DATA_USAGE,
         false,
     ),
+    estimateTrafficDataCost: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
+        false,
+    ),
     userAccessUIEnabled: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USER_ACCESS_UI_ENABLED,
         false,
@@ -292,6 +299,14 @@ const flags: IFlags = {
     ),
     enableLegacyVariants: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENABLE_LEGACY_VARIANTS,
+        false,
+    ),
+    debugMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DEBUG_METRICS,
+        false,
+    ),
+    navigationSidebar: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         false,
     ),
 };

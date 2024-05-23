@@ -13,7 +13,7 @@ const setupApi = () => {
             current: { enterprise: 'present' },
         },
     });
-    testServerRoute(server, '/api/admin/projects/default', {
+    testServerRoute(server, '/api/admin/projects/default/overview', {
         environments: [
             { environment: 'development' },
             { environment: 'production' },

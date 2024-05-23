@@ -43,14 +43,13 @@ import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import CorsIcon from '@mui/icons-material/StorageOutlined';
 import BillingIcon from '@mui/icons-material/CreditCardOutlined';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import { type FC, useCallback } from 'react';
+import { type FC, type ReactNode, useCallback } from 'react';
 import { getCondensedRoutes, getRoutes } from '../../../menu/routes';
 import { useAdminRoutes } from '../../../admin/useAdminRoutes';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { INavigationMenuItem } from 'interfaces/route';
 
 export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
@@ -67,10 +66,18 @@ const StyledBadgeContainer = styled('div')(({ theme }) => ({
     display: 'flex',
 }));
 
-const StyledListItem: FC<{ href: string; text: string; badge?: boolean }> = ({
+const EnterprisePlanBadge = () => (
+    <Tooltip title='This is an Enterprise feature'>
+        <StyledBadgeContainer>
+            <EnterpriseBadge />
+        </StyledBadgeContainer>
+    </Tooltip>
+);
+
+const StyledListItem: FC<{ href: string; text: string; badge?: ReactNode }> = ({
     href,
     text,
-    badge = false,
+    badge,
     children,
 }) => {
     return (
@@ -80,16 +87,7 @@ const StyledListItem: FC<{ href: string; text: string; badge?: boolean }> = ({
                     {children}
                 </ListItemIcon>
                 <ListItemText primary={text} />
-                <ConditionallyRender
-                    condition={badge}
-                    show={
-                        <Tooltip title='This is an Enterprise feature'>
-                            <StyledBadgeContainer>
-                                <EnterpriseBadge />
-                            </StyledBadgeContainer>
-                        </Tooltip>
-                    }
-                />
+                {badge}
             </ListItemButton>
         </ListItem>
     );
@@ -226,7 +224,11 @@ export const NavigationSidebar = () => {
                             <StyledListItem
                                 href={route.path}
                                 text={route.title}
-                                badge={showBadge(route?.menu?.mode)}
+                                badge={
+                                    showBadge(route?.menu?.mode) ? (
+                                        <EnterprisePlanBadge />
+                                    ) : null
+                                }
                             >
                                 <IconRenderer path={route.path} />
                             </StyledListItem>

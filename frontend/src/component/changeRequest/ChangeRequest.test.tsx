@@ -293,5 +293,5 @@ test('add flag change to pending change request', async () => {
 
     await changeFlag('production');
 
-    await verifyChangeRequestDialog('Enable feature toggle test in production');
+    await verifyChangeRequestDialog('Enable feature flag test in production');
 }, 10000);

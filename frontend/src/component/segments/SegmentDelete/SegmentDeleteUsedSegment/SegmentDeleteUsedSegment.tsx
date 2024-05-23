@@ -58,7 +58,7 @@ export const SegmentDeleteUsedSegment = ({
             onClick={onClose}
         >
             <p>
-                The following feature toggles are using the{' '}
+                The following feature flags are using the{' '}
                 <strong>{segment.name}</strong> segment for their strategies:
             </p>
             <StyledUl>

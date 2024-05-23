@@ -21,8 +21,8 @@ export const FeatureMetricsContent = ({
         return (
             <Box mt={6}>
                 <Typography variant='body1' paragraph>
-                    We have yet to receive any metrics for this feature toggle
-                    in the selected time period.
+                    We have yet to receive any metrics for this feature flag in
+                    the selected time period.
                 </Typography>
                 <Typography variant='body1' paragraph>
                     Please note that, since the SDKs send metrics on an

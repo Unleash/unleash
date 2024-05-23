@@ -226,7 +226,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                         elseShow={
                             <TablePlaceholder>
                                 No feature flags available. Get started by
-                                adding a new feature toggle.
+                                adding a new feature flag.
                             </TablePlaceholder>
                         }
                     />

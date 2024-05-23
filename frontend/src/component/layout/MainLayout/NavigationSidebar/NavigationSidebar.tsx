@@ -46,8 +46,8 @@ import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg
 import { type FC, useCallback } from 'react';
 import { getCondensedRoutes, getRoutes } from '../../../menu/routes';
 import { useAdminRoutes } from '../../../admin/useAdminRoutes';
-import { filterByConfig, mapRouteLink } from '../../../common/util';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { filterByConfig, mapRouteLink } from 'component/common/util';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

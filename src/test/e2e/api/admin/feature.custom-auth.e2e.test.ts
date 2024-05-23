@@ -36,7 +36,7 @@ test('should require authenticated user', async () => {
         );
     };
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
-    await request.get('/api/admin/features').expect(401);
+    await request.get('/api/admin/projects/default/features').expect(401);
     await destroy();
 });
 

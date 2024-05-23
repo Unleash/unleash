@@ -125,7 +125,7 @@ test('should return lifecycle stages', async () => {
         bucket: {
             toggles: {
                 my_feature_a: 'irrelevant',
-                non_existent_feature: 'irrelevent',
+                non_existent_feature: 'irrelevant',
             },
         },
         environment: 'default',

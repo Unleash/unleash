@@ -195,8 +195,7 @@ const useRoutes = () => {
 const useNavigationMode = () => {
     const [mode, setMode] = useState<'mini' | 'full'>('full');
     useEffect(() => {
-        const handleKeyDown = (event: any) => {
-            console.log('key down', mode);
+        const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'b' && (event.metaKey || event.ctrlKey)) {
                 event.preventDefault();
                 setMode(mode === 'mini' ? 'full' : 'mini');

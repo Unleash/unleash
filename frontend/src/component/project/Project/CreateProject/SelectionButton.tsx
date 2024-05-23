@@ -1,7 +1,14 @@
 import Search from '@mui/icons-material/Search';
 import { v4 as uuidv4 } from 'uuid';
 import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
-import { type FC, type ReactNode, useRef, useState, useMemo } from 'react';
+import {
+    type FC,
+    type ReactNode,
+    useRef,
+    useState,
+    useMemo,
+    type PropsWithChildren,
+} from 'react';
 import {
     StyledCheckbox,
     StyledDropdown,
@@ -84,6 +91,349 @@ type CombinedSelectProps = {
     onOpen?: () => void;
     onClose?: () => void;
     description: string; // visually hidden, for assistive tech
+};
+
+const CombinedSelectNoDropdown: FC<
+    PropsWithChildren<{
+        button: { label: string; icon: ReactNode };
+        onOpen?: () => void;
+        onClose?: () => void;
+        description: string; // visually hidden, for assistive tech
+        preventOpen?: boolean;
+        anchorEl: HTMLDivElement | null | undefined;
+        setAnchorEl: (el: HTMLDivElement | null | undefined) => void;
+    }>
+> = ({
+    button,
+    onOpen = () => {},
+    onClose = () => {},
+    description,
+    children,
+    preventOpen,
+    anchorEl,
+    setAnchorEl,
+}) => {
+    const ref = useRef<HTMLDivElement>(null);
+    const descriptionId = uuidv4();
+
+    const open = () => {
+        setAnchorEl(ref.current);
+        onOpen();
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        onClose();
+    };
+
+    return (
+        <>
+            <Box ref={ref}>
+                <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={button.icon}
+                    onClick={() => {
+                        if (!preventOpen) {
+                            open();
+                        }
+                    }}
+                >
+                    {button.label}
+                </Button>
+            </Box>
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <HiddenDescription id={descriptionId}>
+                    {description}
+                </HiddenDescription>
+                <StyledDropdown aria-describedby={descriptionId}>
+                    {children}
+                </StyledDropdown>
+            </StyledPopover>
+        </>
+    );
+};
+
+const DropdownList: FC<CombinedSelectProps> = ({
+    options,
+    onChange,
+    search,
+    multiselect,
+}) => {
+    const [searchText, setSearchText] = useState('');
+
+    const onSelection = (selected: string) => {
+        onChange(selected);
+    };
+
+    const { listRefs, handleSelection } = useSelectionManagement({
+        handleToggle: (selected: string) => () => onSelection(selected),
+    });
+
+    const filteredOptions = options?.filter((option) =>
+        option.label.toLowerCase().includes(searchText.toLowerCase()),
+    );
+
+    return (
+        <>
+            <StyledDropdownSearch
+                variant='outlined'
+                size='small'
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+                label={search.label}
+                hideLabel
+                placeholder={search.placeholder}
+                autoFocus
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                            <Search fontSize='small' />
+                        </InputAdornment>
+                    ),
+                }}
+                inputRef={(el) => {
+                    listRefs.current[0] = el;
+                }}
+                onKeyDown={(event) =>
+                    handleSelection(event, 0, filteredOptions)
+                }
+            />
+            <List sx={{ overflowY: 'auto' }} disablePadding>
+                {filteredOptions.map((option, index) => {
+                    const labelId = `checkbox-list-label-${option.value}`;
+
+                    return (
+                        <StyledListItem
+                            aria-describedby={labelId}
+                            key={option.value}
+                            dense
+                            disablePadding
+                            tabIndex={0}
+                            onClick={() => {
+                                onSelection(option.value);
+                            }}
+                            ref={(el) => {
+                                listRefs.current[index + 1] = el;
+                            }}
+                            onKeyDown={(event) =>
+                                handleSelection(
+                                    event,
+                                    index + 1,
+                                    filteredOptions,
+                                )
+                            }
+                        >
+                            {multiselect ? (
+                                <StyledCheckbox
+                                    edge='start'
+                                    checked={multiselect.selectedOptions.has(
+                                        option.value,
+                                    )}
+                                    tabIndex={-1}
+                                    inputProps={{
+                                        'aria-labelledby': labelId,
+                                    }}
+                                    size='small'
+                                    disableRipple
+                                />
+                            ) : null}
+                            <ListItemText id={labelId} primary={option.label} />
+                        </StyledListItem>
+                    );
+                })}
+            </List>
+        </>
+    );
+};
+
+export const SingleSelectList2: FC<SingleSelectListProps> = ({
+    onChange,
+    ...props
+}) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+    const [recentlyClosed, setRecentlyClosed] = useState(false);
+
+    const handleChange = (value: any) => {
+        onChange(value);
+        setAnchorEl(null);
+        props.onClose && props.onClose();
+
+        setRecentlyClosed(true);
+        // this is a hack to prevent the button from being
+        // auto-clicked after you select an item by pressing enter
+        // in the search bar for single-select lists.
+        setTimeout(() => setRecentlyClosed(false), 1);
+    };
+
+    return (
+        <CombinedSelectNoDropdown
+            {...props}
+            preventOpen={recentlyClosed}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+        >
+            <DropdownList {...props} onChange={handleChange} />
+        </CombinedSelectNoDropdown>
+    );
+};
+
+export const MultiselectList2: FC<MultiselectListProps> = ({
+    selectedOptions,
+    onChange,
+    ...rest
+}) => {
+    // todo: add "select all" and "deselect all"
+
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+
+    const handleToggle = (value: string) => {
+        if (selectedOptions.has(value)) {
+            selectedOptions.delete(value);
+        } else {
+            selectedOptions.add(value);
+        }
+
+        onChange(new Set(selectedOptions));
+    };
+
+    return (
+        <CombinedSelectNoDropdown
+            {...rest}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+        >
+            <DropdownList
+                multiselect={{
+                    selectedOptions,
+                }}
+                onChange={handleToggle}
+                {...rest}
+            />
+        </CombinedSelectNoDropdown>
+    );
+};
+
+export const TableSelect2: FC<TableSelectProps> = ({
+    button,
+    disabled,
+    search,
+    projectChangeRequestConfiguration,
+    updateProjectChangeRequestConfiguration,
+    activeEnvironments,
+    onOpen = () => {},
+    onClose = () => {},
+    ...props
+}) => {
+    const configured = useMemo(() => {
+        return Object.fromEntries(
+            Object.entries(projectChangeRequestConfiguration).map(
+                ([name, config]) => [
+                    name,
+                    { ...config, changeRequestEnabled: true },
+                ],
+            ),
+        );
+    }, [projectChangeRequestConfiguration]);
+
+    const tableEnvs = useMemo(
+        () =>
+            activeEnvironments.map(({ name, type }) => ({
+                name,
+                type,
+                ...(configured[name] ?? { changeRequestEnabled: false }),
+            })),
+        [configured, activeEnvironments],
+    );
+
+    const onEnable = (name: string, requiredApprovals: number) => {
+        updateProjectChangeRequestConfiguration.enableChangeRequests(
+            name,
+            requiredApprovals,
+        );
+    };
+
+    const onDisable = (name: string) => {
+        updateProjectChangeRequestConfiguration.disableChangeRequests(name);
+    };
+
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+    const [searchText, setSearchText] = useState('');
+
+    const open = () => {
+        setSearchText('');
+        setAnchorEl(ref.current);
+        onOpen();
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        onClose();
+    };
+
+    const filteredEnvs = tableEnvs.filter((env) =>
+        env.name.toLowerCase().includes(searchText.toLowerCase()),
+    );
+
+    const toggleTopItem = (event: React.KeyboardEvent) => {
+        if (
+            event.key === 'Enter' &&
+            searchText.trim().length > 0 &&
+            filteredEnvs.length > 0
+        ) {
+            const firstEnv = filteredEnvs[0];
+            if (firstEnv.name in configured) {
+                onDisable(firstEnv.name);
+            } else {
+                onEnable(firstEnv.name, 1);
+            }
+        }
+    };
+
+    return (
+        <CombinedSelectNoDropdown
+            button={button}
+            {...props}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+        >
+            <TableSearchInput
+                variant='outlined'
+                size='small'
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+                hideLabel
+                label={search.label}
+                placeholder={search.placeholder}
+                autoFocus
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                            <Search fontSize='small' />
+                        </InputAdornment>
+                    ),
+                }}
+                onKeyDown={toggleTopItem}
+            />
+            <ChangeRequestTable
+                environments={filteredEnvs}
+                enableEnvironment={onEnable}
+                disableEnvironment={onDisable}
+            />
+        </CombinedSelectNoDropdown>
+    );
 };
 
 const CombinedSelect: FC<CombinedSelectProps> = ({
@@ -319,6 +669,7 @@ export const TableSelect: FC<TableSelectProps> = ({
     activeEnvironments,
     onOpen = () => {},
     onClose = () => {},
+    ...props
 }) => {
     const configured = useMemo(() => {
         return Object.fromEntries(

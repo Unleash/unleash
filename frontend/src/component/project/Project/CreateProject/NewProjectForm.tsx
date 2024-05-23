@@ -4,8 +4,11 @@ import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import {
     MultiselectList,
+    MultiselectList2,
     SingleSelectList,
+    SingleSelectList2,
     TableSelect,
+    TableSelect2,
 } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
@@ -288,6 +291,129 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <TableSelect
+                            description={
+                                selectionButtonData.changeRequests.text
+                            }
+                            disabled={projectEnvironments.size === 0}
+                            activeEnvironments={activeEnvironments
+                                .filter((env) =>
+                                    projectEnvironments.has(env.name),
+                                )
+                                .map((env) => ({
+                                    name: env.name,
+                                    type: env.type,
+                                }))}
+                            updateProjectChangeRequestConfiguration={
+                                updateProjectChangeRequestConfig
+                            }
+                            button={{
+                                label:
+                                    Object.keys(
+                                        projectChangeRequestConfiguration,
+                                    ).length > 0
+                                        ? `${
+                                              Object.keys(
+                                                  projectChangeRequestConfiguration,
+                                              ).length
+                                          } selected`
+                                        : 'Configure change requests',
+                                icon: <ChangeRequestIcon />,
+                            }}
+                            search={{
+                                label: 'Filter environments',
+                                placeholder: 'Filter environments',
+                            }}
+                            projectChangeRequestConfiguration={
+                                projectChangeRequestConfiguration
+                            }
+                            onOpen={() =>
+                                overrideDocumentation(
+                                    selectionButtonData.changeRequests,
+                                )
+                            }
+                            onClose={clearDocumentationOverride}
+                        />
+                    }
+                />
+            </OptionButtons>
+
+            <OptionButtons>
+                <MultiselectList2
+                    description={selectionButtonData.environments.text}
+                    selectedOptions={projectEnvironments}
+                    options={activeEnvironments.map((env) => ({
+                        label: env.name,
+                        value: env.name,
+                    }))}
+                    onChange={setProjectEnvironments}
+                    button={{
+                        label:
+                            projectEnvironments.size > 0
+                                ? `${projectEnvironments.size} selected`
+                                : 'All environments',
+                        icon: <EnvironmentsIcon />,
+                    }}
+                    search={{
+                        label: 'Filter project environments',
+                        placeholder: 'Select project environments',
+                    }}
+                    onOpen={() =>
+                        overrideDocumentation(selectionButtonData.environments)
+                    }
+                    onClose={clearDocumentationOverride}
+                />
+
+                <SingleSelectList2
+                    description={selectionButtonData.stickiness.text}
+                    options={stickinessOptions.map(({ key, ...rest }) => ({
+                        value: key,
+                        ...rest,
+                    }))}
+                    onChange={(value: any) => {
+                        setProjectStickiness(value);
+                    }}
+                    button={{
+                        label: projectStickiness,
+                        icon: <StickinessIcon />,
+                    }}
+                    search={{
+                        label: 'Filter stickiness options',
+                        placeholder: 'Select default stickiness',
+                    }}
+                    onOpen={() =>
+                        overrideDocumentation(selectionButtonData.stickiness)
+                    }
+                    onClose={clearDocumentationOverride}
+                />
+
+                <ConditionallyRender
+                    condition={isEnterprise()}
+                    show={
+                        <SingleSelectList2
+                            description={selectionButtonData.mode.text}
+                            options={projectModeOptions}
+                            onChange={(value: any) => {
+                                setProjectMode(value);
+                            }}
+                            button={{
+                                label: projectMode,
+                                icon: <ProjectModeIcon />,
+                            }}
+                            search={{
+                                label: 'Filter project mode options',
+                                placeholder: 'Select project mode',
+                            }}
+                            onOpen={() =>
+                                overrideDocumentation(selectionButtonData.mode)
+                            }
+                            onClose={clearDocumentationOverride}
+                        />
+                    }
+                />
+                <ConditionallyRender
+                    condition={isEnterprise()}
+                    show={
+                        <TableSelect2
                             description={
                                 selectionButtonData.changeRequests.text
                             }

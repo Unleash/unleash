@@ -9,8 +9,8 @@ import type { DoraFeaturesSchema } from './doraFeaturesSchema';
  * A projects dora metrics
  */
 export interface ProjectDoraMetricsSchema {
-    /** An array of objects containing feature toggle name and timeToProduction values. The measurement unit of timeToProduction is days. */
+    /** An array of objects containing feature flag name and timeToProduction values. The measurement unit of timeToProduction is days. */
     features: DoraFeaturesSchema[];
-    /** The average time it takes a feature toggle to be enabled in production. The measurement unit is days. */
+    /** The average time it takes a feature flag to be enabled in production. The measurement unit is days. */
     projectAverage?: number;
 }

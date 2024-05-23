@@ -73,9 +73,9 @@ export default class FrontendAPIController extends Controller {
                         ...getStandardResponses(401, 404),
                     },
                     summary:
-                        'Retrieve enabled feature toggles for the provided context.',
+                        'Retrieve enabled feature flags for the provided context.',
                     description:
-                        'This endpoint returns the list of feature toggles that the frontend API evaluates to enabled for the given context. Context values are provided as query parameters. If the Frontend API is disabled 404 is returned.',
+                        'This endpoint returns the list of feature flags that the frontend API evaluates to enabled for the given context. Context values are provided as query parameters. If the Frontend API is disabled 404 is returned.',
                 }),
             ],
         });
@@ -103,7 +103,7 @@ export default class FrontendAPIController extends Controller {
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
                     summary: 'Register client usage metrics',
-                    description: `Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user. If the Frontend API is disabled 404 is returned.`,
+                    description: `Registers usage metrics. Stores information about how many times each flag was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature flag's variants were displayed to the end user. If the Frontend API is disabled 404 is returned.`,
                     operationId: 'registerFrontendMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {

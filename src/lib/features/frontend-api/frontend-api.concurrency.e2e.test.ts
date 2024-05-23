@@ -1,13 +1,13 @@
 import {
-    type IUnleashTest,
-    setupAppWithAuth,
+    type IUnleashNoSupertest,
+    setupAppWithoutSupertest,
 } from '../../../test/e2e/helpers/test-helper';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { randomId } from '../../util';
 import { ApiTokenType } from '../../types/models/api-token';
 
-let app: IUnleashTest;
+let app: IUnleashNoSupertest;
 let db: ITestDb;
 let appErrorLogs: string[] = [];
 
@@ -21,7 +21,7 @@ beforeAll(async () => {
             baseLogger.error(msg, ...args);
         },
     };
-    app = await setupAppWithAuth(db.stores, {
+    app = await setupAppWithoutSupertest(db.stores, {
         frontendApiOrigins: ['https://example.com'],
         getLogger: () => appLogger,
     });
@@ -53,14 +53,19 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
             environment: 'default',
             tokenName: `test-token-${randomId()}`,
         });
-
+    const address = app.server.address();
+    expect(address).not.toBeNull();
+    expect(address).toHaveProperty('port');
+    // @ts-ignore - We've just checked that we have this property
+    const serverUrl = `http://localhost:${address.port}/api/frontend`;
     await Promise.all(
         Array.from(Array(10).keys()).map(() =>
-            app.request
-                .get('/api/frontend')
-                .set('Authorization', frontendTokenDefault.secret)
-                .expect('Content-Type', /json/)
-                .expect(200),
+            fetch(serverUrl, {
+                method: 'GET',
+                headers: {
+                    Authorization: frontendTokenDefault.secret,
+                },
+            }).then((res) => expect(res.status).toBe(200)),
         ),
     );
     expect(appErrorLogs).toHaveLength(0);

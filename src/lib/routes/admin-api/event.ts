@@ -88,9 +88,9 @@ export default class EventController extends Controller {
                         200: createResponseSchema('featureEventsSchema'),
                     },
                     description:
-                        'Returns all events related to the specified feature toggle. If the feature toggle does not exist, the list of events will be empty.',
+                        'Returns all events related to the specified feature flag. If the feature flag does not exist, the list of events will be empty.',
                     summary:
-                        'Get all events related to a specific feature toggle.',
+                        'Get all events related to a specific feature flag.',
                 }),
             ],
         });

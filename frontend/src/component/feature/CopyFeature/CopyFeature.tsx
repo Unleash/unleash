@@ -70,7 +70,7 @@ export const CopyFeatureToggle = () => {
     const [replaceGroupId, setReplaceGroupId] = useState(true);
     const [apiError, setApiError] = useState('');
     const [nameError, setNameError] = useState<string | undefined>();
-    const [newToggleName, setNewToggleName] = useState<string>();
+    const [newToggleName, setnewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
@@ -85,7 +85,7 @@ export const CopyFeatureToggle = () => {
 
     const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = trim(event.target.value);
-        setNewToggleName(value);
+        setnewToggleName(value);
     };
 
     const toggleReplaceGroupId = () => {
@@ -148,12 +148,12 @@ export const CopyFeatureToggle = () => {
             />
             <StyledSection>
                 <StyledDescription>
-                    You are about to create a new feature toggle by cloning the
-                    configuration of feature toggle&nbsp;
+                    You are about to create a new feature flag by cloning the
+                    configuration of feature flag&nbsp;
                     <Link to={getTogglePath(projectId, featureId)}>
                         {featureId}
                     </Link>
-                    . You must give the new feature toggle a unique name before
+                    . You must give the new feature flag a unique name before
                     you can proceed.
                 </StyledDescription>
 

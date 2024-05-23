@@ -123,7 +123,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const editable = mode !== 'Edit';
 
     const renderToggleDescription = () => {
-        return featureTypes.find((toggle) => toggle.id === type)?.description;
+        return featureTypes.find((flag) => flag.id === type)?.description;
     };
 
     const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
@@ -138,7 +138,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledInputDescription>
-                What would you like to call your toggle?
+                What would you like to call your flag?
             </StyledInputDescription>
             <ConditionallyRender
                 condition={displayFeatureNamingInfo}
@@ -155,7 +155,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                         ? 'feature-naming-pattern-info'
                         : undefined
                 }
-                id='feature-toggle-name'
+                id='feature-flag-name'
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 onFocus={() => clearErrors()}
@@ -165,13 +165,13 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 onBlur={validateToggleName}
             />
             <StyledInputDescription>
-                What kind of feature toggle do you want?
+                What kind of feature flag do you want?
             </StyledInputDescription>
             <FeatureTypeSelect
                 sx={styledSelectInput}
                 value={type}
                 onChange={setType}
-                label={'Toggle type'}
+                label={'Flag type'}
                 id='feature-type-select'
                 editable
                 data-testid={CF_TYPE_ID}
@@ -184,7 +184,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 condition={editable}
                 show={
                     <StyledInputDescription>
-                        In which project do you want to save the toggle?
+                        In which project do you want to save the flag?
                     </StyledInputDescription>
                 }
             />
@@ -206,13 +206,13 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             />
 
             <StyledInputDescription>
-                How would you describe your feature toggle?
+                How would you describe your feature flag?
             </StyledInputDescription>
             <StyledInput
                 multiline
                 rows={4}
                 label='Description'
-                placeholder='A short description of the feature toggle'
+                placeholder='A short description of the feature flag'
                 value={description}
                 data-testid={CF_DESC_ID}
                 onChange={(e) => setDescription(e.target.value)}
@@ -227,9 +227,9 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     Impression Data
                 </Typography>
                 <p>
-                    When you enable impression data for a feature toggle, your
+                    When you enable impression data for a feature flag, your
                     client SDKs will emit events you can listen for every time
-                    this toggle gets triggered. Learn more in{' '}
+                    this flag gets triggered. Learn more in{' '}
                     <Link
                         target='_blank'
                         rel='noopener noreferrer'

@@ -15,6 +15,7 @@ export const StyledListItem = styled(ListItem)(({ theme }) => ({
         backgroundColor: theme.palette.action.hover,
         outline: 'none',
     },
+    minHeight: theme.spacing(4.5),
 }));
 
 export const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
@@ -38,6 +39,11 @@ const visuallyHiddenStyles = {
     width: '1px',
     whiteSpace: 'nowrap',
 };
+
+export const HiddenDescription = styled('p')(() => ({
+    ...visuallyHiddenStyles,
+    position: 'absolute',
+}));
 
 export const StyledDropdownSearch = styled(TextField, {
     shouldForwardProp: (prop) => prop !== 'hideLabel',

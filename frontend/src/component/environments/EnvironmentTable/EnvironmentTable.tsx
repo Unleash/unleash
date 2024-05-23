@@ -92,8 +92,8 @@ export const EnvironmentTable = () => {
         <PageContent header={header}>
             <StyledAlert severity='info'>
                 This is the order of environments that you have today in each
-                feature toggle. Rearranging them here will change also the order
-                inside each feature toggle.
+                feature flag. Rearranging them here will change also the order
+                inside each feature flag.
             </StyledAlert>
             <SearchHighlightProvider value={globalFilter}>
                 <Table {...getTableProps()} rowHeight='compact'>

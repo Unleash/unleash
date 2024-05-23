@@ -15,7 +15,7 @@ export const EnvironmentFooter = ({
 
     return (
         <>
-            <SectionSeparator>Feature toggle exposure</SectionSeparator>
+            <SectionSeparator>Feature flag exposure</SectionSeparator>
 
             <div>
                 <FeatureMetricsStats

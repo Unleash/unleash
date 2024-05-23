@@ -6,8 +6,8 @@ export const PlaygroundGuidance = () => {
         <Box sx={{ ml: 4 }}>
             <Typography variant='body1'>
                 Unleash playground is for helping you to understand how Unleash
-                works, how feature toggles are evaluated and for you to easily
-                debug your feature toggles.
+                works, how feature flags are evaluated and for you to easily
+                debug your feature flags.
             </Typography>
 
             <Divider sx={{ mt: 2, mb: 2 }} />
@@ -18,9 +18,9 @@ export const PlaygroundGuidance = () => {
 
             <PlaygroundGuidanceSection
                 headerText='Select in which environment you want to test your
-                            feature toggle configuration'
+                            feature flag configuration'
                 bodyText='You can also specify specific projects, or check
-                            toggles in all projects.'
+                            flags in all projects.'
                 sectionNumber='1'
             />
 
@@ -32,7 +32,7 @@ export const PlaygroundGuidance = () => {
 
             <PlaygroundGuidanceSection
                 headerText='Submit the form to try the configuration'
-                bodyText='The results of evaluating your feature toggles will appear after you submit the form. Then view the results.'
+                bodyText='The results of evaluating your feature flags will appear after you submit the form. Then view the results.'
                 sectionNumber='3'
             />
         </Box>

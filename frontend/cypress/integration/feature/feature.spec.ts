@@ -24,7 +24,7 @@ describe('feature', () => {
         cy.visit('/features');
     });
 
-    it('can create a feature toggle', () => {
+    it('can create a feature flag', () => {
         cy.createFeature_UI(featureToggleName, true, projectName);
         cy.url().should('include', featureToggleName);
     });
@@ -32,7 +32,7 @@ describe('feature', () => {
     it('gives an error if a toggle exists with the same name', () => {
         cy.createFeature_UI(featureToggleName, false, projectName);
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            'A toggle with that name already exists',
+            'A flag with that name already exists',
         );
     });
 

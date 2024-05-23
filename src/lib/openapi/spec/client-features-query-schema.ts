@@ -36,7 +36,7 @@ export const clientFeaturesQuerySchema = {
         environment: {
             type: 'string',
             description:
-                'Strategies for the feature toggle configured for this environment are included. (DEPRECATED) - Handled by API tokens',
+                'Strategies for the feature flag configured for this environment are included. (DEPRECATED) - Handled by API tokens',
             deprecated: true,
         },
         inlineSegmentConstraints: {

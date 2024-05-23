@@ -17,7 +17,7 @@ describe('feature', () => {
         cy.visit('/features');
     });
 
-    it('can create a feature toggle', () => {
+    it('can create a feature flag', () => {
         cy.createFeature_UI(featureToggleName, true, 'default', true);
         cy.url().should('include', featureToggleName);
     });

@@ -13,7 +13,7 @@ export const featureSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name'],
-    description: 'A feature toggle definition',
+    description: 'A feature flag definition',
     properties: {
         name: {
             type: 'string',
@@ -24,7 +24,7 @@ export const featureSchema = {
             type: 'string',
             example: 'kill-switch',
             description:
-                'Type of the toggle e.g. experiment, kill-switch, release, operational, permission',
+                'Type of the flag e.g. experiment, kill-switch, release, operational, permission',
         },
         description: {
             type: 'string',

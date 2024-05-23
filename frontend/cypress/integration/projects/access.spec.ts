@@ -120,7 +120,7 @@ describe('project-access', () => {
 
         cy.get(`[data-testid='CancelIcon']`).last().click();
         cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
-        cy.contains('update feature toggles within a project').click({
+        cy.contains('update feature flags within a project').click({
             force: true,
         });
 

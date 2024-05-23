@@ -35,7 +35,7 @@ test('batch archive', async () => {
 
     archiveButton.click();
 
-    screen.getByText('Archive feature toggles');
+    screen.getByText('Archive feature flags');
     screen.getByText('featureA');
     screen.getByText('featureB');
 });

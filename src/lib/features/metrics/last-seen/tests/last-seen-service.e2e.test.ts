@@ -35,7 +35,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('should clean unknown feature toggle names from last seen store', async () => {
+test('should clean unknown feature flag names from last seen store', async () => {
     const { lastSeenService, featureToggleService } = app.services;
 
     const clean = ['clean1', 'clean2', 'clean3', 'clean4'];
@@ -86,7 +86,7 @@ test('should clean unknown feature toggle names from last seen store', async () 
     expect(notInDirty.length).toBe(4);
 });
 
-test('should clean unknown feature toggle environments from last seen store', async () => {
+test('should clean unknown feature flag environments from last seen store', async () => {
     const { lastSeenService, featureToggleService } = app.services;
 
     const clean = [

@@ -30,7 +30,7 @@ export const PlaygroundResultFeatureStrategyList = ({
                 condition={feature?.strategies?.data?.length === 0}
                 show={
                     <Alert severity='warning' sx={{ mt: 2 }}>
-                        There are no strategies added to this feature toggle in
+                        There are no strategies added to this feature flag in
                         selected environment.
                     </Alert>
                 }

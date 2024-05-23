@@ -312,7 +312,7 @@ test('Can push variants to multiple environments', async () => {
         });
 });
 
-test("Returns proper error if project and/or feature toggle doesn't exist", async () => {
+test("Returns proper error if project and/or feature flag doesn't exist", async () => {
     await app.request
         .put(
             `/api/admin/projects/nonexistent/features/undefined/variants-batch`,

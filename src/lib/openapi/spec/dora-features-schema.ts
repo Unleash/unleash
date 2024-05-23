@@ -10,12 +10,12 @@ export const doraFeaturesSchema = {
     properties: {
         name: {
             type: 'string',
-            description: 'The name of a feature toggle',
+            description: 'The name of a feature flag',
         },
         timeToProduction: {
             type: 'number',
             description:
-                'The average number of days it takes a feature toggle to get into production',
+                'The average number of days it takes a feature flag to get into production',
         },
     },
     components: {},

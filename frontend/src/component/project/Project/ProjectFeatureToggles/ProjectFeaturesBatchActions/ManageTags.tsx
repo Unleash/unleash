@@ -76,7 +76,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({
 
             setToastData({
                 title: 'Tags updated',
-                text: `${features.length} feature toggles updated. ${added} ${removed}`,
+                text: `${features.length} feature flags updated. ${added} ${removed}`,
                 type: 'success',
                 autoHideDuration: 12000,
             });

@@ -227,7 +227,7 @@ export const theme = {
         },
 
         /**
-         * For 'Seen' column on feature toggles list and other
+         * For 'Seen' column on feature flags list and other
          */
         seen: {
             unknown: colors.grey[100],

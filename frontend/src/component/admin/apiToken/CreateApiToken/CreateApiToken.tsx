@@ -99,7 +99,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
             loading={loading}
             title={pageTitle}
             modal={modal}
-            description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature toggle configurations and post usage metrics."
+            description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature flag configurations and post usage metrics."
             documentationLink='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
             documentationLinkLabel='API tokens documentation'
             formatApiCode={formatApiCode}

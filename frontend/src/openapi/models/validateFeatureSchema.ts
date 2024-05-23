@@ -5,7 +5,7 @@
  */
 
 /**
- * Data used to validate a feature toggle's name.
+ * Data used to validate a feature flag's name.
  */
 export interface ValidateFeatureSchema {
     /** The feature name to validate. */

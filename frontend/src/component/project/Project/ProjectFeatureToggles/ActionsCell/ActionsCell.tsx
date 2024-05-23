@@ -88,7 +88,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
 
     return (
         <StyledBoxCell>
-            <Tooltip title='Feature toggle actions' arrow describeChild>
+            <Tooltip title='Feature flag actions' arrow describeChild>
                 <IconButton
                     id={id}
                     data-loading

@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: build (20.x) # temporary solution to trick branch protection rules
+    name: build # temporary solution to trick branch protection rules
 
     services:
       # Label used to access the service container

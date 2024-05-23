@@ -308,14 +308,13 @@ export const ArchiveTable = ({
                             condition={searchValue?.length > 0}
                             show={
                                 <TablePlaceholder>
-                                    No feature toggles found matching &ldquo;
+                                    No feature flags found matching &ldquo;
                                     {searchValue}&rdquo;
                                 </TablePlaceholder>
                             }
                             elseShow={
                                 <TablePlaceholder>
-                                    None of the feature toggles were archived
-                                    yet.
+                                    None of the feature flags were archived yet.
                                 </TablePlaceholder>
                             }
                         />

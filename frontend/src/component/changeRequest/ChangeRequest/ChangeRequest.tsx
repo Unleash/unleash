@@ -49,7 +49,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                 condition={changeRequest.features.length > 0}
                 show={
                     <Typography variant='body2' color='text.secondary'>
-                        You request changes for these feature toggles:
+                        You request changes for these feature flags:
                     </Typography>
                 }
             />

@@ -11,7 +11,7 @@ import type { ClientSegmentSchema } from './clientSegmentSchema';
  * Configuration data for server-side SDKs for evaluating feature flags.
  */
 export interface ClientFeaturesSchema {
-    /** A list of feature toggles with their configuration */
+    /** A list of feature flags with their configuration */
     features: ClientFeatureSchema[];
     /** A summary of filters and parameters sent to the endpoint. Used by the server to build the features and segments response */
     query?: ClientFeaturesQuerySchema;

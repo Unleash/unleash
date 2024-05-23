@@ -6,7 +6,7 @@
 import type { AdvancedPlaygroundFeatureSchemaEnvironments } from './advancedPlaygroundFeatureSchemaEnvironments';
 
 /**
- * A simplified feature toggle model intended for the Unleash playground.
+ * A simplified feature flag model intended for the Unleash playground.
  */
 export interface AdvancedPlaygroundFeatureSchema {
     /** The lists of features that have been evaluated grouped by environment. */

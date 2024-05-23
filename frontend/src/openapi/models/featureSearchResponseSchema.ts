@@ -11,7 +11,7 @@ import type { TagSchema } from './tagSchema';
 import type { VariantSchema } from './variantSchema';
 
 /**
- * A feature toggle definition
+ * A feature flag definition
  */
 export interface FeatureSearchResponseSchema {
     /** `true` if the feature is archived */
@@ -68,7 +68,7 @@ export interface FeatureSearchResponseSchema {
      * @nullable
      */
     tags?: TagSchema[] | null;
-    /** Type of the toggle e.g. experiment, kill-switch, release, operational, permission */
+    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type: string;
     /**
      * The list of feature variants

@@ -248,6 +248,7 @@ module.exports = {
                         'reference/public-signup',
                         'reference/projects',
                         'reference/project-collaboration-mode',
+                        'reference/provisioning',
                         'reference/rbac',
                         'reference/search-operators',
                         'reference/segments',
@@ -485,6 +486,19 @@ module.exports = {
                                 title: 'How-to: Single Sign-On',
                                 description: 'Single Sign-On how-to guides.',
                                 slug: '/how-to/sso',
+                            },
+                        },
+                        {
+                            label: 'Automatic provisioning',
+                            items: [
+                                'how-to/how-to-setup-provisioning-with-okta',
+                            ],
+                            type: 'category',
+                            link: {
+                                type: 'generated-index',
+                                title: 'How to: Provisioning',
+                                description: 'Provisioning how-to guides.',
+                                slug: '/how-to/provisioning',
                             },
                         },
                     ],

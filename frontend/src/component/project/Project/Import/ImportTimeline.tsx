@@ -88,7 +88,7 @@ export const ImportTimeline: FC<{
                         Import file
                     </TimelineItemTitle>
                     <TimelineItemDescription>
-                        Import previously exported toggle configuration from
+                        Import previously exported flag configuration from
                         another Unleash instance as a JSON file
                     </TimelineItemDescription>
                 </StyledTimelineContent>
@@ -126,8 +126,8 @@ export const ImportTimeline: FC<{
                         Finish import
                     </TimelineItemTitle>
                     <TimelineItemDescription>
-                        Feature toggle configuration will be imported to your
-                        new Unleash instance
+                        Feature flag configuration will be imported to your new
+                        Unleash instance
                     </TimelineItemDescription>
                 </StyledTimelineContent>
             </TimelineItem>

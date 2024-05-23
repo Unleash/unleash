@@ -20,7 +20,7 @@ export const adminFeaturesQuerySchema = {
         namePrefix: {
             type: 'string',
             description:
-                'A case-insensitive prefix filter for the names of feature toggles',
+                'A case-insensitive prefix filter for the names of feature flags',
             example: 'demo.part1',
         },
     },

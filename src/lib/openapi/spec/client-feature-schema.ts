@@ -12,24 +12,24 @@ export const clientFeatureSchema = {
     type: 'object',
     required: ['name', 'enabled'],
     description:
-        'Feature toggle configuration used by SDKs to evaluate state of a toggle',
+        'Feature flag configuration used by SDKs to evaluate state of a flag',
     additionalProperties: false,
     properties: {
         name: {
             type: 'string',
             description:
-                'The unique name of a feature toggle. Is validated to be URL safe on creation',
+                'The unique name of a feature flag. Is validated to be URL safe on creation',
             example: 'new.payment.flow.stripe',
         },
         type: {
             type: 'string',
             description:
-                'What kind of feature flag is this. Refer to the documentation on [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) for more information',
+                'What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/reference/feature-toggle-types) for more information',
             example: 'release',
         },
         description: {
             type: 'string',
-            description: 'A description of the toggle',
+            description: 'A description of the flag',
             nullable: true,
             example: 'No variants here',
         },
@@ -41,26 +41,26 @@ export const clientFeatureSchema = {
         },
         stale: {
             description:
-                'If this is true Unleash believes this feature toggle has been active longer than Unleash expects a toggle of this type to be active',
+                'If this is true Unleash believes this feature flag has been active longer than Unleash expects a flag of this type to be active',
             type: 'boolean',
             example: false,
         },
         impressionData: {
             description:
-                'Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this toggle is evaluated',
+                'Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this flag is evaluated',
             type: 'boolean',
             nullable: true,
             example: false,
         },
         project: {
-            description: 'Which project this feature toggle belongs to',
+            description: 'Which project this feature flag belongs to',
             type: 'string',
             example: 'new.payment.flow',
         },
         strategies: {
             type: 'array',
             description:
-                'Evaluation strategies for this toggle. Each entry in this list will be evaluated and ORed together',
+                'Evaluation strategies for this flag. Each entry in this list will be evaluated and ORed together',
             items: {
                 $ref: '#/components/schemas/featureStrategySchema',
             },
@@ -68,7 +68,7 @@ export const clientFeatureSchema = {
         variants: {
             type: 'array',
             description:
-                '[Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this toggle',
+                '[Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this flag',
             items: {
                 $ref: '#/components/schemas/variantSchema',
             },
@@ -76,7 +76,7 @@ export const clientFeatureSchema = {
         },
         dependencies: {
             type: 'array',
-            description: 'Feature dependencies for this toggle',
+            description: 'Feature dependencies for this flag',
             items: {
                 $ref: '#/components/schemas/dependentFeatureSchema',
             },

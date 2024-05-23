@@ -22,7 +22,7 @@ export type PlaygroundFeatureSchemaVariant = {
      * @deprecated
      */
     featureEnabled?: boolean;
-    /** The variant's name. If there is no variant or if the toggle is disabled, this will be `disabled` */
+    /** The variant's name. If there is no variant or if the flag is disabled, this will be `disabled` */
     name: string;
     /** An optional payload attached to the variant. */
     payload?: PlaygroundFeatureSchemaVariantPayload;

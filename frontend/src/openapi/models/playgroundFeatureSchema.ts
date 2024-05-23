@@ -8,7 +8,7 @@ import type { PlaygroundFeatureSchemaVariant } from './playgroundFeatureSchemaVa
 import type { VariantSchema } from './variantSchema';
 
 /**
- * A simplified feature toggle model intended for the Unleash playground.
+ * A simplified feature flag model intended for the Unleash playground.
  */
 export interface PlaygroundFeatureSchema {
     /** Whether the feature has a parent dependency that is not satisfied */

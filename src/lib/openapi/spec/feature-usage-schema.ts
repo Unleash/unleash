@@ -7,7 +7,7 @@ export const featureUsageSchema = {
     type: 'object',
     additionalProperties: false,
     description:
-        'How many applications have seen this feature toggle, as well as how this feature was evaluated the last hour',
+        'How many applications have seen this feature flag, as well as how this feature was evaluated the last hour',
     required: [
         'version',
         'maturity',

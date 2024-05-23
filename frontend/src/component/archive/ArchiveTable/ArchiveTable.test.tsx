@@ -75,7 +75,7 @@ test('should load the table', async () => {
     await screen.findByText('someFeature');
 });
 
-test('should show confirm dialog when reviving toggle', async () => {
+test('should show confirm dialog when reviving flag', async () => {
     setupApi();
     render(
         <>
@@ -100,7 +100,7 @@ test('should show confirm dialog when reviving toggle', async () => {
     await screen.findByText("And we're back!");
 });
 
-test('should show confirm dialog when batch reviving toggle', async () => {
+test('should show confirm dialog when batch reviving flag', async () => {
     setupApi();
     render(
         <>

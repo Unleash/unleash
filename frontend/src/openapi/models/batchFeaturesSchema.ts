@@ -5,9 +5,9 @@
  */
 
 /**
- * A list of feature toggle names for batch operations
+ * A list of feature flag names for batch operations
  */
 export interface BatchFeaturesSchema {
-    /** List of feature toggle names */
+    /** List of feature flag names */
     features: string[];
 }

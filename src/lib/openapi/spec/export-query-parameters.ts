@@ -70,7 +70,7 @@ export const exportQueryParameters = [
             default: true,
         },
         description:
-            'Whether feature toggles should be included in the exported data.',
+            'Whether feature flags should be included in the exported data.',
         in: 'query',
     },
     {

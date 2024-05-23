@@ -34,7 +34,7 @@ export const CollaborationModeTooltip: FC = () => {
                         <StyledTitle>private: </StyledTitle>
                         <StyledDescription>
                             Only admins, editors and project members can see and
-                            access the project and associated feature toggles
+                            access the project and associated feature flags
                         </StyledDescription>
                     </Box>
                 </>

@@ -159,7 +159,7 @@ export const EdgeIntegration = () => {
                             and the one you should default to in most cases. It
                             connects to an upstream node, such as your Unleash
                             instance, and uses that as the source of truth for
-                            feature toggles.
+                            feature flags.
                         </Typography>
                         <StyledFigure>
                             <img src={formatAssetPath(edgeMode)} alt='test' />

@@ -7,11 +7,11 @@ import type { FeatureTypeSchema } from './featureTypeSchema';
 import type { FeatureTypesSchemaVersion } from './featureTypesSchemaVersion';
 
 /**
- * A list of [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) and the schema version used to represent those feature types.
+ * A list of [feature flag types](https://docs.getunleash.io/reference/feature-toggle-types) and the schema version used to represent those feature types.
  */
 export interface FeatureTypesSchema {
-    /** The list of feature toggle types. */
+    /** The list of feature flag types. */
     types: FeatureTypeSchema[];
-    /** The schema version used to describe the feature toggle types listed in the `types` property. */
+    /** The schema version used to describe the feature flag types listed in the `types` property. */
     version: FeatureTypesSchemaVersion;
 }

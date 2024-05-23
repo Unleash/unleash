@@ -5,7 +5,7 @@ import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import {
     addStrategyToFeatureEnv,
-    createFeatureToggle,
+    createFeatureFlag,
 } from '../../../test/e2e/helpers/app.utils';
 import {
     type IUnleashTest,
@@ -80,7 +80,7 @@ const addSegmentsToStrategy = (
         })
         .expect(expectStatusCode);
 
-const mockFeatureToggle = () => ({
+const mockFeatureFlag = () => ({
     name: randomId(),
     strategies: [
         {
@@ -277,15 +277,15 @@ test('should not delete segments used by strategies', async () => {
         name: 'a',
         constraints: [],
     });
-    const toggle = mockFeatureToggle();
-    await createFeatureToggle(app, toggle);
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
     const [segment] = await fetchSegments();
 
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle.strategies[0] },
+        { ...flag.strategies[0] },
         'default',
-        toggle.name,
+        flag.name,
     );
     const [feature] = await fetchFeatures();
     //@ts-ignore
@@ -300,20 +300,20 @@ test('should not delete segments used by strategies', async () => {
     expect((await fetchSegments()).length).toEqual(1);
 });
 
-test('should delete segments used by strategies in archived feature toggles', async () => {
+test('should delete segments used by strategies in archived feature flags', async () => {
     await app.createSegment({
         name: 'a',
         constraints: [],
     });
-    const toggle = mockFeatureToggle();
-    await createFeatureToggle(app, toggle);
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
     const [segment] = await fetchSegments();
 
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle.strategies[0] },
+        { ...flag.strategies[0] },
         'default',
-        toggle.name,
+        flag.name,
     );
     const [feature] = await fetchFeatures();
     //@ts-ignore
@@ -343,30 +343,30 @@ test('should list strategies by segment', async () => {
         name: 'S3',
         constraints: [],
     });
-    const toggle1 = mockFeatureToggle();
-    const toggle2 = mockFeatureToggle();
-    const toggle3 = mockFeatureToggle();
-    await createFeatureToggle(app, toggle1);
-    await createFeatureToggle(app, toggle2);
-    await createFeatureToggle(app, toggle3);
+    const flag1 = mockFeatureFlag();
+    const flag2 = mockFeatureFlag();
+    const flag3 = mockFeatureFlag();
+    await createFeatureFlag(app, flag1);
+    await createFeatureFlag(app, flag2);
+    await createFeatureFlag(app, flag3);
 
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle1.strategies[0] },
+        { ...flag1.strategies[0] },
         'default',
-        toggle1.name,
+        flag1.name,
     );
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle1.strategies[0] },
+        { ...flag1.strategies[0] },
         'default',
-        toggle2.name,
+        flag2.name,
     );
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle3.strategies[0] },
+        { ...flag3.strategies[0] },
         'default',
-        toggle3.name,
+        flag3.name,
     );
 
     const [feature1, feature2, feature3] = await fetchFeatures();
@@ -419,30 +419,30 @@ test('should list segments by strategy', async () => {
         name: 'S3',
         constraints: [],
     });
-    const toggle1 = mockFeatureToggle();
-    const toggle2 = mockFeatureToggle();
-    const toggle3 = mockFeatureToggle();
-    await createFeatureToggle(app, toggle1);
-    await createFeatureToggle(app, toggle2);
-    await createFeatureToggle(app, toggle3);
+    const flag1 = mockFeatureFlag();
+    const flag2 = mockFeatureFlag();
+    const flag3 = mockFeatureFlag();
+    await createFeatureFlag(app, flag1);
+    await createFeatureFlag(app, flag2);
+    await createFeatureFlag(app, flag3);
 
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle1.strategies[0] },
+        { ...flag1.strategies[0] },
         'default',
-        toggle1.name,
+        flag1.name,
     );
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle1.strategies[0] },
+        { ...flag1.strategies[0] },
         'default',
-        toggle2.name,
+        flag2.name,
     );
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle3.strategies[0] },
+        { ...flag3.strategies[0] },
         'default',
-        toggle3.name,
+        flag3.name,
     );
 
     const [feature1, feature2, feature3] = await fetchFeatures();
@@ -571,14 +571,14 @@ test('Should show usage in features and projects', async () => {
         name: 'a',
         constraints: [],
     });
-    const toggle = mockFeatureToggle();
-    await createFeatureToggle(app, toggle);
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
     const [segment] = await fetchSegments();
     await addStrategyToFeatureEnv(
         app,
-        { ...toggle.strategies[0] },
+        { ...flag.strategies[0] },
         'default',
-        toggle.name,
+        flag.name,
     );
     const [feature] = await fetchFeatures();
     //@ts-ignore
@@ -662,12 +662,12 @@ describe('detect strategy usage in change requests', () => {
             name: 'a',
             constraints: [],
         });
-        const toggle = mockFeatureToggle();
-        await createFeatureToggle(enterpriseApp, toggle);
+        const flag = mockFeatureFlag();
+        await createFeatureFlag(enterpriseApp, flag);
         const [segment] = await enterpriseFetchSegments();
 
         await db.rawDatabase.table('change_request_events').insert({
-            feature: toggle.name,
+            feature: flag.name,
             action: 'addStrategy',
             payload: {
                 name: 'flexibleRollout',
@@ -676,7 +676,7 @@ describe('detect strategy usage in change requests', () => {
                 segments: [segment.id],
                 variants: [],
                 parameters: {
-                    groupId: toggle.name,
+                    groupId: flag.name,
                     rollout: '100',
                     stickiness: 'default',
                 },
@@ -706,12 +706,12 @@ describe('detect strategy usage in change requests', () => {
             name: 'a',
             constraints: [],
         });
-        const toggle = mockFeatureToggle();
-        await createFeatureToggle(enterpriseApp, toggle);
+        const flag = mockFeatureFlag();
+        await createFeatureFlag(enterpriseApp, flag);
         const [segment] = await enterpriseFetchSegments();
 
         await db.rawDatabase.table('change_request_events').insert({
-            feature: toggle.name,
+            feature: flag.name,
             action: 'addStrategy',
             payload: {
                 name: 'flexibleRollout',
@@ -720,7 +720,7 @@ describe('detect strategy usage in change requests', () => {
                 segments: [segment.id],
                 variants: [],
                 parameters: {
-                    groupId: toggle.name,
+                    groupId: flag.name,
                     rollout: '100',
                     stickiness: 'default',
                 },
@@ -737,7 +737,7 @@ describe('detect strategy usage in change requests', () => {
         expect(changeRequestStrategies).toMatchObject([
             {
                 environment: 'default',
-                featureName: toggle.name,
+                featureName: flag.name,
                 projectId: 'default',
                 strategyName: 'flexibleRollout',
                 changeRequest: { id: CR_ID, title: CR_TITLE },
@@ -756,15 +756,15 @@ describe('detect strategy usage in change requests', () => {
             name: 'a',
             constraints: [],
         });
-        const toggle = mockFeatureToggle();
-        await createFeatureToggle(enterpriseApp, toggle);
+        const flag = mockFeatureFlag();
+        await createFeatureFlag(enterpriseApp, flag);
         const [segment] = await enterpriseFetchSegments();
 
         await addStrategyToFeatureEnv(
             enterpriseApp,
-            { ...toggle.strategies[0] },
+            { ...flag.strategies[0] },
             'default',
-            toggle.name,
+            flag.name,
         );
 
         const [feature] = await fetchFeatures();
@@ -772,7 +772,7 @@ describe('detect strategy usage in change requests', () => {
         const strategyId = feature.strategies[0].id;
 
         await db.rawDatabase.table('change_request_events').insert({
-            feature: toggle.name,
+            feature: flag.name,
             action: 'updateStrategy',
             payload: {
                 id: strategyId,
@@ -782,7 +782,7 @@ describe('detect strategy usage in change requests', () => {
                 segments: [segment.id],
                 variants: [],
                 parameters: {
-                    groupId: toggle.name,
+                    groupId: flag.name,
                     rollout: '100',
                     stickiness: 'default',
                 },
@@ -815,15 +815,15 @@ describe('detect strategy usage in change requests', () => {
             name: 'a',
             constraints: [],
         });
-        const toggle = mockFeatureToggle();
-        await createFeatureToggle(enterpriseApp, toggle);
+        const flag = mockFeatureFlag();
+        await createFeatureFlag(enterpriseApp, flag);
         const [segment] = await enterpriseFetchSegments();
 
         await addStrategyToFeatureEnv(
             enterpriseApp,
-            { ...toggle.strategies[0] },
+            { ...flag.strategies[0] },
             'default',
-            toggle.name,
+            flag.name,
         );
 
         const [feature] = await fetchFeatures();
@@ -832,7 +832,7 @@ describe('detect strategy usage in change requests', () => {
         await addSegmentsToStrategy([segment.id], strategyId!);
 
         await db.rawDatabase.table('change_request_events').insert({
-            feature: toggle.name,
+            feature: flag.name,
             action: 'updateStrategy',
             payload: {
                 id: strategyId,
@@ -842,7 +842,7 @@ describe('detect strategy usage in change requests', () => {
                 segments: [segment.id],
                 variants: [],
                 parameters: {
-                    groupId: toggle.name,
+                    groupId: flag.name,
                     rollout: '100',
                     stickiness: 'default',
                 },
@@ -868,17 +868,17 @@ describe('detect strategy usage in change requests', () => {
 
     test('Should show usage in features and projects in CRs', async () => {
         // because they use the same db, we can use the regular app
-        // (through `createSegment` and `createFeatureToggle`) to
+        // (through `createSegment` and `createFeatureFlag`) to
         // create the segment and the flag
         await app.createSegment({ name: 'a', constraints: [] });
-        const toggle = mockFeatureToggle();
-        await createFeatureToggle(app, toggle);
+        const flag = mockFeatureFlag();
+        await createFeatureFlag(app, flag);
         const [segment] = await enterpriseFetchSegments();
 
         expect(segment).toMatchObject({ usedInFeatures: 0, usedInProjects: 0 });
 
         await db.rawDatabase.table('change_request_events').insert({
-            feature: toggle.name,
+            feature: flag.name,
             action: 'addStrategy',
             payload: {
                 name: 'flexibleRollout',
@@ -887,7 +887,7 @@ describe('detect strategy usage in change requests', () => {
                 segments: [segment.id],
                 variants: [],
                 parameters: {
-                    groupId: toggle.name,
+                    groupId: flag.name,
                     rollout: '100',
                     stickiness: 'default',
                 },

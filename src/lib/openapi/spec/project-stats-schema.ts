@@ -30,25 +30,25 @@ Stats are divided into current and previous **windows**.
             type: 'number',
             example: 15,
             description:
-                'The number of feature toggles created during the current window',
+                'The number of feature flags created during the current window',
         },
         createdPastWindow: {
             type: 'number',
             example: 15,
             description:
-                'The number of feature toggles created during the previous window',
+                'The number of feature flags created during the previous window',
         },
         archivedCurrentWindow: {
             type: 'number',
             example: 5,
             description:
-                'The number of feature toggles that were archived during the current window',
+                'The number of feature flags that were archived during the current window',
         },
         archivedPastWindow: {
             type: 'number',
             example: 5,
             description:
-                'The number of feature toggles that were archived during the previous window',
+                'The number of feature flags that were archived during the previous window',
         },
         projectActivityCurrentWindow: {
             type: 'number',

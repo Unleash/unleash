@@ -26,7 +26,7 @@ export const clientFeaturesSchema = {
             minimum: 0,
         },
         features: {
-            description: 'A list of feature toggles with their configuration',
+            description: 'A list of feature flags with their configuration',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/clientFeatureSchema',

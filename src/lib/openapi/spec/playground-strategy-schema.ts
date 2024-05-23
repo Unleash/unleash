@@ -114,8 +114,7 @@ export const strategyEvaluationResults = {
 export const playgroundStrategySchema = {
     $id: '#/components/schemas/playgroundStrategySchema',
     type: 'object',
-    description:
-        'An evaluated feature toggle strategy as used by the Playground',
+    description: 'An evaluated feature flag strategy as used by the Playground',
     additionalProperties: false,
     required: [
         'id',

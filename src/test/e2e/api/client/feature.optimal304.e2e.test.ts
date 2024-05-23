@@ -93,7 +93,7 @@ beforeAll(async () => {
         'default',
         {
             name: 'feature.with.variants',
-            description: 'A feature toggle with variants',
+            description: 'A feature flag with variants',
         },
         TEST_AUDIT_USER,
     );

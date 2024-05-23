@@ -41,7 +41,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns feature toggle for default env', async () => {
+test('returns feature flag for default env', async () => {
     await app.services.featureToggleServiceV2.updateEnabled(
         'default',
         'feature.default.1',
@@ -61,7 +61,7 @@ test('returns feature toggle for default env', async () => {
         });
 });
 
-test('returns feature toggle for default env even if it is removed from project', async () => {
+test('returns feature flag for default env even if it is removed from project', async () => {
     await db.stores.featureEnvironmentStore.disconnectFeatures(
         'default',
         'default',

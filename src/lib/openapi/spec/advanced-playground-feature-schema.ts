@@ -12,7 +12,7 @@ import { sdkFlatContextSchema } from './sdk-flat-context-schema';
 export const advancedPlaygroundFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundFeatureSchema',
     description:
-        'A simplified feature toggle model intended for the Unleash playground.',
+        'A simplified feature flag model intended for the Unleash playground.',
     type: 'object',
     additionalProperties: false,
     required: ['name', 'projectId', 'environments'],

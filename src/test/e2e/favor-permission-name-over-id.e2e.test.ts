@@ -142,13 +142,13 @@ test('Favor permission name over id migration correctly assigns permissions by n
         {
             name: 'Owner',
             description:
-                'Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
+                'Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature flags within the project, and control advanced project features like archiving and deleting the project.',
             type: 'project',
         },
         {
             name: 'Member',
             description:
-                "Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.",
+                "Users with the project member role are allowed to view, create, and update feature flags within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.",
             type: 'project',
         },
     ]);

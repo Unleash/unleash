@@ -7,7 +7,7 @@ export const featureEventsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['events'],
-    description: 'One or more events happening to a specific feature toggle',
+    description: 'One or more events happening to a specific feature flag',
     properties: {
         version: {
             type: 'integer',
@@ -17,10 +17,9 @@ export const featureEventsSchema = {
             example: 1,
         },
         toggleName: {
-            description:
-                'The name of the feature toggle these events relate to',
+            description: 'The name of the feature flag these events relate to',
             type: 'string',
-            example: 'my.first.feature.toggle',
+            example: 'my.first.feature.flag',
         },
         events: {
             description: 'The list of events',
@@ -28,7 +27,7 @@ export const featureEventsSchema = {
             items: { $ref: eventSchema.$id },
         },
         totalEvents: {
-            description: 'How many events are there for this feature toggle',
+            description: 'How many events are there for this feature flag',
             type: 'integer',
             minimum: 0,
             example: 13,

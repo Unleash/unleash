@@ -32,7 +32,7 @@ export const frontendApiFeatureSchema = {
                 name: {
                     type: 'string',
                     description:
-                        'The variants name. Is unique for this feature toggle',
+                        'The variants name. Is unique for this feature flag',
                     example: 'blue_group',
                 },
                 enabled: {

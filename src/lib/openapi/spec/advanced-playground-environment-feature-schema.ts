@@ -14,7 +14,7 @@ import { sdkFlatContextSchema } from './sdk-flat-context-schema';
 export const advancedPlaygroundEnvironmentFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundEnvironmentFeatureSchema',
     description:
-        'A simplified feature toggle model intended for the Unleash playground.',
+        'A simplified feature flag model intended for the Unleash playground.',
     type: 'object',
     additionalProperties: false,
     required: [
@@ -40,7 +40,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
             description: "The feature's environment.",
         },
         context: {
-            description: 'The context to use when evaluating toggles',
+            description: 'The context to use when evaluating flags',
             $ref: sdkFlatContextSchema.$id,
         },
         projectId: {
@@ -102,7 +102,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
                 name: {
                     type: 'string',
                     description:
-                        "The variant's name. If there is no variant or if the toggle is disabled, this will be `disabled`",
+                        "The variant's name. If there is no variant or if the flag is disabled, this will be `disabled`",
                     example: 'red-variant',
                 },
                 enabled: {

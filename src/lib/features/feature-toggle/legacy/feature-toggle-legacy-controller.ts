@@ -10,7 +10,6 @@ import type { IFeatureToggleQuery } from '../../../types/model';
 import type FeatureTagService from '../../../services/feature-tag-service';
 import type { IAuthRequest } from '../../../routes/unleash-types';
 import { DEFAULT_ENV } from '../../../util/constants';
-import {} from '../../../openapi/spec/features-schema';
 import type { TagSchema } from '../../../openapi/spec/tag-schema';
 import type { TagsSchema } from '../../../openapi/spec/tags-schema';
 import type { OpenApiService } from '../../../services/openapi-service';

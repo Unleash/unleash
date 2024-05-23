@@ -467,7 +467,6 @@ test('should list segments by strategy', async () => {
     const [feature1Strategy] = await fetchFeatureStrategies(feature1.name);
     const [feature2Strategy] = await fetchFeatureStrategies(feature2.name);
     const [feature3Strategy] = await fetchFeatureStrategies(feature3.name);
-    console.log({ feature1Strategy, feature2Strategy, feature3Strategy });
 
     await addSegmentsToStrategy(
         [segment1.id, segment2.id, segment3.id],

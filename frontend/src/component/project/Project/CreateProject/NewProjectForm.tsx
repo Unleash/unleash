@@ -72,6 +72,7 @@ const FormActions = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(5),
     justifyContent: 'flex-end',
+    flexFlow: 'row wrap',
 }));
 
 type FormProps = {

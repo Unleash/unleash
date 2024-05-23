@@ -92,7 +92,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                             <Typography variant='body2'>
                                                 Constraints are advanced
                                                 targeting rules that you can use
-                                                to enable a feature toggle for a
+                                                to enable a feature flag for a
                                                 subset of your users. Read more
                                                 about constraints{' '}
                                                 <a

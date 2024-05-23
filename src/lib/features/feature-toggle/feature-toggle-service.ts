@@ -1102,10 +1102,10 @@ class FeatureToggleService {
     /**
      * @deprecated Legacy!
      *
-     * Used to retrieve metadata of all feature toggles defined in Unleash.
+     * Used to retrieve metadata of all feature flags defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
      * @param userId - Used to find / mark features as favorite based on users preferences
-     * @param archived - Return archived or active toggles
+     * @param archived - Return archived or active flags
      * @returns
      */
     async getFeatureToggles(

@@ -78,7 +78,7 @@ const rbacMiddleware = (
                 findParam('environment', req) ||
                 findParam('environmentId', req);
 
-            // Temporary workaround to figure out projectId for feature toggle updates.
+            // Temporary workaround to figure out projectId for feature flag updates.
             // will be removed in Unleash v5.0
             if (
                 !projectId &&

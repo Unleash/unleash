@@ -32,7 +32,7 @@ describe('feature', () => {
     it('gives an error if a toggle exists with the same name', () => {
         cy.createFeature_UI(featureToggleName, false, projectName);
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            'A toggle with that name already exists',
+            'A flag with that name already exists',
         );
     });
 

@@ -20,7 +20,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     '& .MuiInputBase-input': {
-        fontSize: theme.typography.body1.fontSize,
+        fontSize: theme.fontSizes.smallBody,
     },
 }));
 

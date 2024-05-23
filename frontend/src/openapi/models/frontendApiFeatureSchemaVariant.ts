@@ -18,7 +18,7 @@ export type FrontendApiFeatureSchemaVariant = {
      * @deprecated
      */
     featureEnabled?: boolean;
-    /** The variants name. Is unique for this feature toggle */
+    /** The variants name. Is unique for this feature flag */
     name: string;
     /** Extra data configured for this variant */
     payload?: FrontendApiFeatureSchemaVariantPayload;

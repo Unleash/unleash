@@ -10,7 +10,7 @@ import type { PlaygroundStrategySchemaResult } from './playgroundStrategySchemaR
 import type { PlaygroundSegmentSchema } from './playgroundSegmentSchema';
 
 /**
- * An evaluated feature toggle strategy as used by the Playground
+ * An evaluated feature flag strategy as used by the Playground
  */
 export interface PlaygroundStrategySchema {
     /** The strategy's constraints and their evaluation results. */

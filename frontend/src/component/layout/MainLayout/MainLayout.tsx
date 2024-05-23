@@ -1,5 +1,5 @@
 import { forwardRef, type ReactNode } from 'react';
-import { Box, Grid, styled } from '@mui/material';
+import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import Proclamation from 'component/common/Proclamation/Proclamation';
@@ -105,6 +105,8 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
 
         const StyledMainLayoutContent = SpaciousMainLayoutContent;
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
+        const theme = useTheme();
+        const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
         return (
             <>
@@ -120,9 +122,16 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             )}
                             show={<DraftBanner project={projectId || ''} />}
                         />
-                        <Box sx={{ display: 'flex', mt: '2px' }}>
+                        <Box
+                            sx={(theme) => ({
+                                display: 'flex',
+                                mt: theme.spacing(0.25),
+                            })}
+                        >
                             <ConditionallyRender
-                                condition={sidebarNavigationEnabled}
+                                condition={
+                                    sidebarNavigationEnabled && !isSmallScreen
+                                }
                                 show={<NavigationSidebar />}
                             />
                             <StyledMainLayoutContent

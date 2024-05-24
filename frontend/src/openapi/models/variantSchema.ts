@@ -11,7 +11,7 @@ import type { VariantSchemaWeightType } from './variantSchemaWeightType';
  * A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description
  */
 export interface VariantSchema {
-    /** The variants name. Is unique for this feature toggle */
+    /** The variants name. Is unique for this feature flag */
     name: string;
     /** Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence. */
     overrides?: OverrideSchema[];

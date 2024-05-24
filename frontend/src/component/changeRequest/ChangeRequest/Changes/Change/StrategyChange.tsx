@@ -67,7 +67,7 @@ const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
     if (disabled) {
         return (
             <Tooltip
-                title='This strategy will not be taken into account when evaluating feature toggle.'
+                title='This strategy will not be taken into account when evaluating feature flag.'
                 arrow
                 sx={{ cursor: 'pointer' }}
             >
@@ -80,7 +80,7 @@ const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
 
     return (
         <Tooltip
-            title='This was disabled before and with this change it will be taken into account when evaluating feature toggle.'
+            title='This was disabled before and with this change it will be taken into account when evaluating feature flag.'
             arrow
             sx={{ cursor: 'pointer' }}
         >

@@ -205,12 +205,12 @@ test('should collect metrics for function timings', async () => {
     );
 });
 
-test('should collect metrics for feature toggle size', async () => {
+test('should collect metrics for feature flag size', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
 
-test('should collect metrics for archived feature toggle size', async () => {
+test('should collect metrics for archived feature flag size', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_archived_total 0/);
 });

@@ -49,7 +49,7 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
                     px: 3,
                 }}
             >
-                <Typography>Feature toggle name: </Typography>
+                <Typography>Feature flag name: </Typography>
 
                 <Link
                     component={RouterLink}

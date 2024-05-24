@@ -179,9 +179,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
             differenceCount > 0 &&
                 setToastData({
                     type: 'success',
-                    title: `Updated tag${
-                        added.length > 1 ? 's' : ''
-                    } to toggle`,
+                    title: `Updated tag${added.length > 1 ? 's' : ''} to flag`,
                     text: getToastText(added.length, removed.length),
                     confetti: true,
                 });
@@ -253,7 +251,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
             open={open}
             secondaryButtonText='Cancel'
             primaryButtonText='Save tags'
-            title='Update feature toggle tags'
+            title='Update feature flag tags'
             onClick={onSubmit}
             disabledPrimaryButton={loading || differenceCount === 0}
             onClose={onCancel}

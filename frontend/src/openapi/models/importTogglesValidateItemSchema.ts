@@ -5,7 +5,7 @@
  */
 
 /**
- * A description of an error or warning pertaining to a feature toggle import job.
+ * A description of an error or warning pertaining to a feature flag import job.
  */
 export interface ImportTogglesValidateItemSchema {
     /** The items affected by this error message  */

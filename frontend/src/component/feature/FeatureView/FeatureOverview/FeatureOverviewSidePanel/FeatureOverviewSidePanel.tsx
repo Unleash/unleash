@@ -79,7 +79,7 @@ export const FeatureOverviewSidePanel = ({
             <FeatureOverviewSidePanelTags
                 header={
                     <StyledHeader data-loading>
-                        Tags for this feature toggle
+                        Tags for this feature flag
                     </StyledHeader>
                 }
                 feature={feature}

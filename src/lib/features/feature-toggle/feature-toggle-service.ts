@@ -1102,10 +1102,10 @@ class FeatureToggleService {
     /**
      * @deprecated Legacy!
      *
-     * Used to retrieve metadata of all feature toggles defined in Unleash.
+     * Used to retrieve metadata of all feature flags defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
      * @param userId - Used to find / mark features as favorite based on users preferences
-     * @param archived - Return archived or active toggles
+     * @param archived - Return archived or active flags
      * @returns
      */
     async getFeatureToggles(
@@ -1161,7 +1161,7 @@ class FeatureToggleService {
         isValidated: boolean = false,
     ): Promise<FeatureToggle> {
         this.logger.info(
-            `${auditUser.username} creates feature toggle ${value.name}`,
+            `${auditUser.username} creates feature flag ${value.name}`,
         );
         await this.validateName(value.name);
         await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
@@ -1170,7 +1170,7 @@ class FeatureToggleService {
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
             throw new InvalidOperationError(
-                'You have reached the maximum number of feature toggles for this project.',
+                'You have reached the maximum number of feature flags for this project.',
             );
         }
         if (exists) {
@@ -1306,7 +1306,7 @@ class FeatureToggleService {
             );
         }
         this.logger.info(
-            `${auditUser.username} clones feature toggle ${featureName} to ${newFeatureName}`,
+            `${auditUser.username} clones feature flag ${featureName} to ${newFeatureName}`,
         );
         await this.validateName(newFeatureName);
 
@@ -1384,7 +1384,7 @@ class FeatureToggleService {
         });
 
         this.logger.info(
-            `${auditUser.username} updates feature toggle ${featureName}`,
+            `${auditUser.username} updates feature flag ${featureName}`,
         );
 
         const featureData =
@@ -1508,8 +1508,8 @@ class FeatureToggleService {
         try {
             const feature = await this.featureToggleStore.get(name);
             msg = feature.archived
-                ? 'An archived toggle with that name already exists'
-                : 'A toggle with that name already exists';
+                ? 'An archived flag with that name already exists'
+                : 'A flag with that name already exists';
         } catch (error) {
             return;
         }

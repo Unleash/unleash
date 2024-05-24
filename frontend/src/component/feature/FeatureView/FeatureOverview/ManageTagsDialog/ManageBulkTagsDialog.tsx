@@ -229,7 +229,7 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
             open={open}
             secondaryButtonText='Cancel'
             primaryButtonText='Save tags'
-            title='Update feature toggle tags'
+            title='Update feature flag tags'
             onClick={() => onSubmit(payload)}
             disabledPrimaryButton={
                 payload.addedTags.length === 0 &&

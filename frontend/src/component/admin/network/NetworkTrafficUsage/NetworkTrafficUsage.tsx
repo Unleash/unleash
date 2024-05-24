@@ -257,20 +257,23 @@ export const NetworkTrafficUsage: VFC = () => {
     useEffect(() => {
         if (data) {
             const usage = toTrafficUsageSum(data.datasets);
-            const calculatedOverageCost = calculateOverageCost(
-                usage,
-                includedTraffic,
-            );
             setUsageTotal(usage);
-            setOverageCost(calculatedOverageCost);
-            setEstimatedMonthlyCost(
-                calculateEstimatedMonthlyCost(
-                    period,
-                    data.datasets,
+            if (includedTraffic > 0) {
+                const calculatedOverageCost = calculateOverageCost(
+                    usage,
                     includedTraffic,
-                    new Date(),
-                ),
-            );
+                );
+                setOverageCost(calculatedOverageCost);
+
+                setEstimatedMonthlyCost(
+                    calculateEstimatedMonthlyCost(
+                        period,
+                        data.datasets,
+                        includedTraffic,
+                        new Date(),
+                    ),
+                );
+            }
         }
     }, [data]);
 
@@ -281,7 +284,7 @@ export const NetworkTrafficUsage: VFC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={overageCost > 0}
+                        condition={includedTraffic > 0 && overageCost > 0}
                         show={
                             <Alert severity='warning' sx={{ mb: 4 }}>
                                 <b>Heads up!</b> You are currently consuming

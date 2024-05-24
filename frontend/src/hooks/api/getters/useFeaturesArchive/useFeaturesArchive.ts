@@ -12,7 +12,7 @@ export interface IUseFeaturesArchiveOutput {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Feature toggle archive'))
+        .then(handleErrorResponses('Feature flag archive'))
         .then((res) => res.json());
 };
 

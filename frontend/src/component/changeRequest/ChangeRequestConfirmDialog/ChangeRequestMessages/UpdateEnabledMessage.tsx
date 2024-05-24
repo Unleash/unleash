@@ -12,7 +12,7 @@ export const UpdateEnabledMessage = ({
     environment,
 }: UpdateEnabledMsg) => (
     <Typography data-testid='update-enabled-message'>
-        <strong>{enabled ? 'Enable' : 'Disable'}</strong> feature toggle{' '}
+        <strong>{enabled ? 'Enable' : 'Disable'}</strong> feature flag{' '}
         <strong>{featureName}</strong> in <strong>{environment}</strong>
     </Typography>
 );

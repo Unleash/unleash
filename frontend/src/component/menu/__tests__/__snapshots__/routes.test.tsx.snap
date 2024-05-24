@@ -70,7 +70,7 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {},
     "parent": "/projects/:projectId/features",
     "path": "/projects/:projectId/create-toggle",
-    "title": "Create feature toggle",
+    "title": "Create feature flag",
     "type": "protected",
   },
   {
@@ -202,7 +202,7 @@ exports[`returns all baseRoutes 1`] = `
       "mobile": true,
     },
     "path": "/feature-toggle-type/*",
-    "title": "Feature toggle types",
+    "title": "Feature flag types",
     "type": "protected",
   },
   {
@@ -409,7 +409,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "menu": {},
     "path": "/archive",
-    "title": "Archived toggles",
+    "title": "Archived flags",
     "type": "protected",
   },
   {

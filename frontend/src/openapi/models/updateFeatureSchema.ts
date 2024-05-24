@@ -5,10 +5,10 @@
  */
 
 /**
- * Data used for updating a feature toggle
+ * Data used for updating a feature flag
  */
 export interface UpdateFeatureSchema {
-    /** If `true` the feature toggle will be moved to the [archive](https://docs.getunleash.io/reference/archived-toggles) with a property `archivedAt` set to current time */
+    /** If `true` the feature flag will be moved to the [archive](https://docs.getunleash.io/reference/archived-toggles) with a property `archivedAt` set to current time */
     archived?: boolean;
     /** Detailed description of the feature */
     description?: string;
@@ -16,6 +16,6 @@ export interface UpdateFeatureSchema {
     impressionData?: boolean;
     /** `true` if the feature is archived */
     stale?: boolean;
-    /** Type of the toggle e.g. experiment, kill-switch, release, operational, permission */
+    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type?: string;
 }

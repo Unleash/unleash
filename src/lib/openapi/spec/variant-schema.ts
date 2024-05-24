@@ -11,7 +11,7 @@ export const variantSchema = {
     properties: {
         name: {
             type: 'string',
-            description: 'The variants name. Is unique for this feature toggle',
+            description: 'The variants name. Is unique for this feature flag',
             example: 'blue_group',
         },
         weight: {

@@ -55,7 +55,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
         (environment) => environment.enabled && environment.variants?.length,
     );
     return (
-        <StyledContainer data-testid='feature-toggle-status'>
+        <StyledContainer data-testid='feature-flag-status'>
             {header}
             {feature.environments.map((environment) => {
                 const strategiesLabel =

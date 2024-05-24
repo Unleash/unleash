@@ -19,21 +19,18 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
-const StyledContainer = styled('div')<{ isPro: boolean }>(
-    ({ theme, isPro }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
+    minHeight: 0,
+    borderRadius: theme.spacing(2),
+    width: '100%',
+    display: 'flex',
+    margin: '0 auto',
+    overflow: 'hidden',
+    [theme.breakpoints.down(1100)]: {
+        flexDirection: 'column',
         minHeight: 0,
-        borderRadius: theme.spacing(2),
-        border: isPro ? '0' : `1px solid ${theme.palette.divider}`,
-        width: '100%',
-        display: 'flex',
-        margin: '0 auto',
-        overflow: 'hidden',
-        [theme.breakpoints.down(1100)]: {
-            flexDirection: 'column',
-            minHeight: 0,
-        },
-    }),
-);
+    },
+}));
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -46,7 +43,7 @@ interface IUpdateProject {
 const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 export const UpdateProject = ({ project }: IUpdateProject) => {
     const id = useRequiredPathParam('projectId');
-    const { uiConfig, isPro } = useUiConfig();
+    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { defaultStickiness } = useDefaultProjectSettings(id);
     const { trackEvent } = usePlausibleTracker();
@@ -110,11 +107,11 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     };
 
     return (
-        <StyledContainer isPro={isPro()}>
+        <StyledContainer>
             <FormTemplate
                 loading={loading}
                 title='General settings'
-                description='Projects allows you to group feature toggles together in the management UI.'
+                description='Projects allows you to group feature flags together in the management UI.'
                 documentationLink='https://docs.getunleash.io/reference/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectApiCode}

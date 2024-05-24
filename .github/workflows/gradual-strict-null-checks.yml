@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
 
     steps:
       - name: Checkout current branch
@@ -30,7 +30,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
           cache: 'yarn'
           cache-dependency-path: |
             current/yarn.lock

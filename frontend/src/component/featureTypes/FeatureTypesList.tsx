@@ -101,7 +101,7 @@ export const FeatureTypesList = () => {
                                 }
                                 permission={ADMIN}
                                 tooltipProps={{
-                                    title: `Edit ${featureType.name} feature toggle type`,
+                                    title: `Edit ${featureType.name} feature flag type`,
                                 }}
                             >
                                 <Edit />
@@ -158,7 +158,7 @@ export const FeatureTypesList = () => {
                             fontSize: theme.fontSizes.mainHeader,
                         })}
                     >
-                        Feature toggle types
+                        Feature flag types
                     </Typography>
                 </PageHeader>
             }
@@ -185,7 +185,7 @@ export const FeatureTypesList = () => {
                     path='edit/:featureTypeId'
                     element={
                         <SidebarModal
-                            label='Edit feature toggle type'
+                            label='Edit feature flag type'
                             onClose={() => navigate(basePath)}
                             open
                         >

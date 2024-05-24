@@ -68,7 +68,7 @@ test('Add single archive feature change to change request', async () => {
         />,
     );
 
-    expect(screen.getByText('Archive feature toggle')).toBeInTheDocument();
+    expect(screen.getByText('Archive feature flag')).toBeInTheDocument();
     await screen.findByText(
         'Archiving features with dependencies will also remove those dependencies.',
     );
@@ -98,7 +98,7 @@ test('Add multiple archive feature changes to change request', async () => {
         />,
     );
 
-    await screen.findByText('Archive feature toggles');
+    await screen.findByText('Archive feature flags');
     await screen.findByText(
         'Archiving features with dependencies will also remove those dependencies.',
     );
@@ -129,7 +129,7 @@ test('Skip change request does not affect archive', async () => {
         { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] },
     );
 
-    await screen.findByText('Archive feature toggle');
+    await screen.findByText('Archive feature flag');
     const button = await screen.findByText('Add change to draft');
 
     await waitFor(() => expect(button).toBeEnabled());
@@ -157,7 +157,7 @@ test('Show error message when multiple parents of orphaned children are archived
         />,
     );
 
-    await screen.findByText('2 feature toggles');
+    await screen.findByText('2 feature flags');
     await screen.findByText(
         'have child features that depend on them and are not part of the archive operation. These parent features can not be archived:',
     );

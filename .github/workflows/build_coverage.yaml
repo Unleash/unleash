@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
     services:
       # Label used to access the service container
       postgres:
@@ -37,7 +37,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
           cache: 'yarn'
       - run: yarn
       - run: yarn build:frontend:if-needed

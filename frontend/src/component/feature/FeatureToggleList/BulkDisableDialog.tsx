@@ -73,7 +73,7 @@ export const BulkDisableDialog = ({
                 );
                 refetchChangeRequests();
                 setToastData({
-                    text: 'Your disabled feature toggles changes have been added to change request',
+                    text: 'Your disabled feature flags changes have been added to change request',
                     type: 'success',
                     title: 'Changes added to a draft',
                 });
@@ -84,7 +84,7 @@ export const BulkDisableDialog = ({
                     selected,
                 );
                 setToastData({
-                    text: 'Your feature toggles have been disabled',
+                    text: 'Your feature flags have been disabled',
                     type: 'success',
                     title: 'Features disabled',
                 });
@@ -98,20 +98,19 @@ export const BulkDisableDialog = ({
 
     const buttonText = isChangeRequestConfigured(selected)
         ? 'Add to change request'
-        : 'Disable toggles';
+        : 'Disable flags';
 
     return (
         <Dialogue
             open={showExportDialog}
-            title='Disable feature toggles'
+            title='Disable feature flags'
             onClose={onClose}
             onClick={onClick}
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
         >
             <Box>
-                You have selected <b>{data.length}</b> feature toggles to
-                disable.
+                You have selected <b>{data.length}</b> feature flags to disable.
                 <br />
                 <br />
                 <Typography>
@@ -136,8 +135,8 @@ export const BulkDisableDialog = ({
                         <SpacedAlert severity='info'>
                             {alreadyDisabledCount} feature{' '}
                             {alreadyDisabledCount > 1
-                                ? 'toggles are '
-                                : 'toggle is '}
+                                ? 'flags are '
+                                : 'flag is '}
                             already disabled.
                         </SpacedAlert>
                     }

@@ -41,9 +41,9 @@ export const DeleteProject = ({
         <StyledContainer>
             <p>
                 Before you can delete a project, you must first archive all the
-                feature toggles associated with it. Keep in mind that deleting a
-                project will permanently remove all the archived feature
-                toggles, and they cannot be recovered once deleted.
+                feature flags associated with it. Keep in mind that deleting a
+                project will permanently remove all the archived feature flags,
+                and they cannot be recovered once deleted.
             </p>
             <ConditionallyRender
                 condition={isEnterprise() && automatedActionsEnabled}
@@ -57,7 +57,7 @@ export const DeleteProject = ({
             />
             <p>
                 Currently there are{' '}
-                <strong>{featureCount} feature toggles active</strong>
+                <strong>{featureCount} feature flags active</strong>
             </p>
             <ConditionallyRender
                 condition={isEnterprise() && automatedActionsEnabled}

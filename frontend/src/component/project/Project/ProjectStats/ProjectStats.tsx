@@ -95,10 +95,10 @@ export const ProjectStats = ({ stats }: IProjectStatsProps) => {
                     percentage
                 >
                     <HelpPopper id='avg-time-to-prod'>
-                        How long did it take on average from a feature toggle
-                        was created until it was enabled in an environment of
-                        type production. This is calculated only from feature
-                        toggles with the type of "release".
+                        How long did it take on average from a feature flag was
+                        created until it was enabled in an environment of type
+                        production. This is calculated only from feature flags
+                        with the type of "release".
                     </HelpPopper>
                 </StatusBox>
             </StyledWidget>

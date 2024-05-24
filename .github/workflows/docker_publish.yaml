@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [18.18.2-alpine]
+        version: [20.13.1-alpine]
     steps:
       - name: Checkout
         uses: actions/checkout@v4

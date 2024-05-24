@@ -24,17 +24,17 @@ export const FeatureStaleDialog = ({
     const { setToastData, setToastApiError } = useToast();
     const { patchFeatureToggle } = useFeatureApi();
 
-    const toggleToStaleContent = (
-        <Typography>Setting a toggle to stale marks it for cleanup</Typography>
+    const flagToStaleContent = (
+        <Typography>Setting a flag to stale marks it for cleanup</Typography>
     );
 
-    const toggleToActiveContent = (
+    const flagToActiveContent = (
         <Typography>
-            Setting a toggle to active marks it as in active use
+            Setting a flag to active marks it as in active use
         </Typography>
     );
 
-    const toggleActionText = isStale ? 'active' : 'stale';
+    const flagActionText = isStale ? 'active' : 'stale';
 
     const onSubmit = async (event: React.SyntheticEvent) => {
         event.stopPropagation();
@@ -51,13 +51,13 @@ export const FeatureStaleDialog = ({
             setToastData({
                 type: 'success',
                 title: "And we're back!",
-                text: 'The toggle is no longer marked as stale.',
+                text: 'The flag is no longer marked as stale.',
             });
         } else {
             setToastData({
                 type: 'success',
                 title: 'A job well done.',
-                text: 'The toggle has been marked as stale.',
+                text: 'The flag has been marked as stale.',
             });
         }
     };
@@ -66,15 +66,15 @@ export const FeatureStaleDialog = ({
         <Dialogue
             open={isOpen}
             secondaryButtonText={'Cancel'}
-            primaryButtonText={`Flip to ${toggleActionText}`}
-            title={`Set feature state to ${toggleActionText}`}
+            primaryButtonText={`Flip to ${flagActionText}`}
+            title={`Set feature state to ${flagActionText}`}
             onClick={onSubmit}
             onClose={onClose}
         >
             <ConditionallyRender
                 condition={isStale}
-                show={toggleToActiveContent}
-                elseShow={toggleToStaleContent}
+                show={flagToActiveContent}
+                elseShow={flagToStaleContent}
             />
         </Dialogue>
     );

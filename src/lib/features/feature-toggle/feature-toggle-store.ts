@@ -441,7 +441,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     rowToFeature(row: FeaturesTable): FeatureToggle {
         if (!row) {
-            throw new NotFoundError('No feature toggle found');
+            throw new NotFoundError('No feature flag found');
         }
         return {
             name: row.name,
@@ -571,7 +571,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async delete(name: string): Promise<void> {
         await this.db(TABLE)
-            .where({ name }) // Feature toggle must be archived to allow deletion
+            .where({ name }) // Feature flag must be archived to allow deletion
             .whereNotNull('archived_at')
             .del();
     }
@@ -609,7 +609,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async getVariants(featureName: string): Promise<IVariant[]> {
         if (!(await this.exists(featureName))) {
-            throw new NotFoundError('No feature toggle found');
+            throw new NotFoundError('No feature flag found');
         }
         const row = await this.db(`${TABLE} as f`)
             .select('fe.variants')
@@ -656,10 +656,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             name: featureName,
         });
 
-        const toggle = this.rowToFeature(row[0]);
-        toggle.variants = newVariants;
+        const flag = this.rowToFeature(row[0]);
+        flag.variants = newVariants;
 
-        return toggle;
+        return flag;
     }
 
     async updatePotentiallyStaleFeatures(currentTime?: string): Promise<

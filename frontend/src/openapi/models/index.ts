@@ -664,6 +664,7 @@ export * from './getMe401';
 export * from './getOidcSettings400';
 export * from './getOidcSettings401';
 export * from './getOidcSettings403';
+export * from './getOutdatedProjectSdks404';
 export * from './getOutdatedSdks404';
 export * from './getPats401';
 export * from './getPats403';

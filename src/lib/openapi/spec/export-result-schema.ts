@@ -20,7 +20,7 @@ export const exportResultSchema = {
     type: 'object',
     additionalProperties: false,
     description:
-        'The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)',
+        'The result of the export operation, providing you with the feature flag definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)',
     required: ['features', 'featureStrategies', 'tagTypes'],
     properties: {
         features: {

@@ -40,7 +40,7 @@ export const CreateFeatureButton = ({
                     to={createFeature.path}
                     size='large'
                     tooltipProps={{
-                        title: 'Create feature toggle',
+                        title: 'Create feature flag',
                     }}
                 >
                     <Add />
@@ -58,7 +58,7 @@ export const CreateFeatureButton = ({
                     data-testid={NAVIGATE_TO_CREATE_FEATURE}
                     className={classnames({ skeleton: loading })}
                 >
-                    New feature toggle
+                    New feature flag
                 </PermissionButton>
             }
         />

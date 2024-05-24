@@ -64,7 +64,7 @@ test('Can create a new tag type', async () => {
         .send({
             name: 'slack',
             description:
-                'Tag your feature toggles with slack channel to post updates for toggle to',
+                'Tag your feature flags with slack channel to post updates for flag to',
             icon: 'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
         })
         .expect(201);

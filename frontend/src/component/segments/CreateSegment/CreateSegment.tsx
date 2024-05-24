@@ -129,5 +129,5 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
 export const segmentsFormDescription = `
     Segments make it easy for you to define which of your users should get access to a feature.
     A segment is a reusable collection of constraints.
-    You can create and apply a segment when configuring activation strategies for a feature toggle or at any time from the segments page in the navigation menu.
+    You can create and apply a segment when configuring activation strategies for a feature flag or at any time from the segments page in the navigation menu.
 `;

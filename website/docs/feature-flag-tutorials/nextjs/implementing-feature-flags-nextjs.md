@@ -15,13 +15,13 @@ Feature flags are a powerful technique that allows you to toggle features on and
 
 Next.js provides features such as:
 
-- Server-side rendering
-- Static site generation
-- Code splitting
-- Dynamic routing
-- TypeScript support
-- CSS modules support
-- And many more
+-   Server-side rendering
+-   Static site generation
+-   Code splitting
+-   Dynamic routing
+-   TypeScript support
+-   CSS modules support
+-   And many more
 
 With Next.js, you can create hybrid applications that can use both static and dynamic pages. Static pages are pre-rendered at build time and served from a CDN, which makes them fast and secure. Dynamic pages are rendered on-demand by a Node.js server, which allows you to use data from any source and handle user interactions. You can also use incremental static regeneration to update static pages without rebuilding your entire application.
 
@@ -74,11 +74,11 @@ import type { AppProps } from "next/app";
 import { FlagProvider } from "@unleash/nextjs/client";
 
 export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <FlagProvider>
-      <Component {...pageProps} />
-    </FlagProvider>
-  );
+    return (
+        <FlagProvider>
+            <Component {...pageProps} />
+        </FlagProvider>
+    );
 }
 ```
 
@@ -89,50 +89,56 @@ import { useEffect, useState } from "react";
 import { useFlag } from "@unleash/nextjs/client";
 
 const Activity = () => {
-  const [activityData, setActivityData] = useState({});
+    const [activityData, setActivityData] = useState({});
 
-  const showActivity = useFlag("activity");
+    const showActivity = useFlag("activity");
 
-  useEffect(() => {
-    const fetchActivity = async () => {
-      try {
-        const response = await fetch("https://www.boredapi.com/api/activity/");
-        const data = await response.json();
-        setActivityData(data);
-      } catch (error) {
-        console.error("Error fetching activity:", error);
-      }
-    };
+    useEffect(() => {
+        const fetchActivity = async () => {
+            try {
+                const response = await fetch(
+                    "https://www.boredapi.com/api/activity/"
+                );
+                const data = await response.json();
+                setActivityData(data);
+            } catch (error) {
+                console.error("Error fetching activity:", error);
+            }
+        };
 
-    if (showActivity) {
-      fetchActivity();
-    }
-  }, [showActivity]);
+        if (showActivity) {
+            fetchActivity();
+        }
+    }, [showActivity]);
 
-  return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-lg">
-        <h1 className="text-3xl font-bold mb-4">
-          Here is an activity for you!
-        </h1>
-        {showActivity ? (
-          <>
-            <p className="mb-2">Activity: {activityData.activity}</p>
-            <p className="mb-2">Participants: {activityData.participants}</p>
-            <p>Price: ${activityData.price}</p>
-          </>
-        ) : (
-          <p>Activity not available</p>
-        )}
-      </div>
-    </div>
-  );
+    return (
+        <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+            <div className="bg-white p-8 rounded shadow-lg">
+                <h1 className="text-3xl font-bold mb-4">
+                    Here is an activity for you!
+                </h1>
+                {showActivity ? (
+                    <>
+                        <p className="mb-2">
+                            Activity: {activityData.activity}
+                        </p>
+                        <p className="mb-2">
+                            Participants: {activityData.participants}
+                        </p>
+                        <p>Price: ${activityData.price}</p>
+                    </>
+                ) : (
+                    <p>Activity not available</p>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default Activity;
 ```
 
-Our feature flag can now be used to control whether or not activity is displayed. If we toggle on the gradual roll out:
+Our feature flag can now be used to control whether or not activity is displayed. If we switch on the gradual roll out:
 
 ![Gradual Rollout](/img/gradual-rollout-nextjs.png)
 
@@ -140,9 +146,9 @@ The activity is displayed:
 
 ![Activity Successful](/img/activity-success-nextjs.png)
 
-If we toggle it off:
+If we turn it off:
 
-![Toggle Off](/img/gradual-rollout-nextjs-1.png)
+![Turn flag Off](/img/gradual-rollout-nextjs-1.png)
 
 No activity is displayed:
 
@@ -150,11 +156,11 @@ No activity is displayed:
 
 To configure access to Unleash beyond localhost development, follow these steps:
 
-- Self-host Unleash or run an instance on [Unleash Cloud](https://www.getunleash.io/pricing).
+-   Self-host Unleash or run an instance on [Unleash Cloud](https://www.getunleash.io/pricing).
 
-- Get an API key from the Unleash dashboard.
+-   Get an API key from the Unleash dashboard.
 
-- Store the API key in your Vercel Project Environment Variable, which secures it and makes it accessible in your code.
+-   Store the API key in your Vercel Project Environment Variable, which secures it and makes it accessible in your code.
 
 ## Conclusion
 

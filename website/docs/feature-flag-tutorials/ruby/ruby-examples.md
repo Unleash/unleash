@@ -7,17 +7,17 @@ In our [Ruby feature flag tutorial](/feature-flag-tutorials/ruby), we implemente
 
 We built many features into Unleash, our open-source feature flag platform, to address the complexities of releasing code. This tutorial will explore the following:
 
-- [Gradual Rollouts for Ruby Apps](#gradual-rollouts-for-ruby-apps)
-- [Canary Deployments in Ruby](#canary-deployments-in-ruby)
-  - [What is a canary deployment?](#what-is-a-canary-deployment)
-  - [How to do canary deployments with a feature flag in Ruby?](#how-to-do-canary-deployments-with-a-feature-flag-in-ruby)
-  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
-- [Server-side A/B Testing in Ruby](#server-side-ab-testing-in-ruby)
-- [Feature Flag Analytics and Reporting in Ruby](#feature-flag-analytics-and-reporting-in-ruby)
-  - [Enable impression data events in Ruby](#enable-impression-data-events-in-ruby)
-- [Application Metrics \& Monitoring for Ruby apps](#application-metrics--monitoring-for-ruby-apps)
-- [Feature Flag Audit Logs in Ruby](#feature-flag-audit-logs-in-ruby)
-- [Flag Automation \& Workflow Integration for Ruby Apps](#flag-automation--workflow-integration-for-ruby-apps)
+-   [Gradual Rollouts for Ruby Apps](#gradual-rollouts-for-ruby-apps)
+-   [Canary Deployments in Ruby](#canary-deployments-in-ruby)
+    -   [What is a canary deployment?](#what-is-a-canary-deployment)
+    -   [How to do canary deployments with a feature flag in Ruby?](#how-to-do-canary-deployments-with-a-feature-flag-in-ruby)
+    -   [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+-   [Server-side A/B Testing in Ruby](#server-side-ab-testing-in-ruby)
+-   [Feature Flag Analytics and Reporting in Ruby](#feature-flag-analytics-and-reporting-in-ruby)
+    -   [Enable impression data events in Ruby](#enable-impression-data-events-in-ruby)
+-   [Application Metrics \& Monitoring for Ruby apps](#application-metrics--monitoring-for-ruby-apps)
+-   [Feature Flag Audit Logs in Ruby](#feature-flag-audit-logs-in-ruby)
+-   [Flag Automation \& Workflow Integration for Ruby Apps](#flag-automation--workflow-integration-for-ruby-apps)
 
 > Note:
 > We're using the `httpx` gem to make sending requests easier.
@@ -232,11 +232,11 @@ At the flag level in Unleash, navigate to the Settings view.
 
 ![From your flag page in Unleash, you go to Settings and edit the settings for your flag called 'feature information'.](./flag-settings.png)
 
-In the Settings view, there's an edit button with pencil icon. This will take us to the ‘Edit Feature toggle’ form.
+In the Settings view, there's an edit button with pencil icon. This will take us to the ‘Edit Feature flag’ form.
 
 Turn on the impression data and then save it. Events will now be emitted every time the feature flag is triggered.
 
-![There is a toggle that turns on the impression data events in your flag form.](./enable-impression-data.png)
+![There is a flag that turns on the impression data events in your flag form.](./enable-impression-data.png)
 
 You can also use our API command to enable the impression data:
 

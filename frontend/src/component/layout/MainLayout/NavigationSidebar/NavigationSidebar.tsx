@@ -43,6 +43,7 @@ import FlagTypesIcon from '@mui/icons-material/OutlinedFlag';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import CorsIcon from '@mui/icons-material/StorageOutlined';
 import BillingIcon from '@mui/icons-material/CreditCardOutlined';
+import SignOutIcon from '@mui/icons-material/ExitToApp';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import {
     type FC,
@@ -60,6 +61,9 @@ import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadg
 import type { INavigationMenuItem } from 'interfaces/route';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import { basePath } from 'utils/formatPath';
 
 export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.neutral.main,
@@ -83,14 +87,14 @@ const EnterprisePlanBadge = () => (
     </Tooltip>
 );
 
-const FullListItem: FC<{ href: string; text: string; badge?: ReactNode }> = ({
-    href,
-    text,
-    badge,
-    children,
-}) => {
+const FullListItem: FC<{
+    href: string;
+    text: string;
+    badge?: ReactNode;
+    onClick?: () => void;
+}> = ({ href, text, badge, onClick, children }) => {
     return (
-        <ListItem disablePadding>
+        <ListItem disablePadding onClick={onClick}>
             <ListItemButton dense={true} component={Link} to={href}>
                 <ListItemIcon sx={(theme) => ({ minWidth: theme.spacing(4) })}>
                     {children}
@@ -99,6 +103,46 @@ const FullListItem: FC<{ href: string; text: string; badge?: ReactNode }> = ({
                 {badge}
             </ListItemButton>
         </ListItem>
+    );
+};
+
+const ExternalFullListItem: FC<{ href: string; text: string }> = ({
+    href,
+    text,
+    children,
+}) => {
+    return (
+        <ListItem disablePadding>
+            <ListItemButton
+                dense={true}
+                component={Link}
+                to={href}
+                rel='noopener noreferrer'
+                target='_blank'
+            >
+                <ListItemIcon sx={(theme) => ({ minWidth: theme.spacing(4) })}>
+                    {children}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+            </ListItemButton>
+        </ListItem>
+    );
+};
+
+const SignOutItem = () => {
+    return (
+        <form method='POST' action={`${basePath}/logout`}>
+            <ListItem disablePadding>
+                <ListItemButton dense={true} component='button' type='submit'>
+                    <ListItemIcon
+                        sx={(theme) => ({ minWidth: theme.spacing(4) })}
+                    >
+                        <SignOutIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Sign out' />
+                </ListItemButton>
+            </ListItem>
+        </form>
     );
 };
 
@@ -156,6 +200,8 @@ const icons: Record<string, typeof SvgIcon> = {
     '/admin/cors': CorsIcon,
     '/admin/billing': BillingIcon,
     '/history': EventLogIcon,
+    GitHub: GitHubIcon,
+    Documentation: LibraryBooksIcon,
 };
 
 const findIconByPath = (path: string) => {
@@ -199,7 +245,7 @@ const ShowHide: FC<{ mode: 'full' | 'mini'; onChange: () => void }> = ({
 };
 
 const useRoutes = () => {
-    const { uiConfig, isPro } = useUiConfig();
+    const { uiConfig } = useUiConfig();
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
 
@@ -213,6 +259,12 @@ const useRoutes = () => {
         adminRoutes,
     };
 
+    return { routes: filteredMainRoutes };
+};
+
+const useShowBadge = () => {
+    const { isPro } = useUiConfig();
+
     const showBadge = useCallback(
         (mode?: INavigationMenuItem['menu']['mode']) => {
             return !!(
@@ -223,8 +275,7 @@ const useRoutes = () => {
         },
         [isPro],
     );
-
-    return { routes: filteredMainRoutes, showBadge };
+    return showBadge;
 };
 
 const useNavigationMode = () => {
@@ -247,29 +298,137 @@ const useNavigationMode = () => {
     return [mode, setMode] as const;
 };
 
-export const NavigationSidebar = () => {
-    const { routes, showBadge } = useRoutes();
+const MainNavigationList: FC<{ mode: 'mini' | 'full'; onClick?: () => void }> =
+    ({ mode, onClick }) => {
+        const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
-    const [mode, setMode] = useNavigationMode();
-
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <StyledBox>
+        return (
             <List>
-                <DynamicListItem href='/projects' text='Projects'>
+                <DynamicListItem
+                    href='/projects'
+                    text='Projects'
+                    onClick={onClick}
+                >
                     <StyledProjectIcon />
                 </DynamicListItem>
-                <DynamicListItem href='/search' text='Search'>
+                <DynamicListItem href='/search' text='Search' onClick={onClick}>
                     <SearchIcon />
                 </DynamicListItem>
-                <DynamicListItem href='/playground' text='Playground'>
+                <DynamicListItem
+                    href='/playground'
+                    text='Playground'
+                    onClick={onClick}
+                >
                     <PlaygroundIcon />
                 </DynamicListItem>
-                <DynamicListItem href='/insights' text='Insights'>
+                <DynamicListItem
+                    href='/insights'
+                    text='Insights'
+                    onClick={onClick}
+                >
                     <InsightsIcon />
                 </DynamicListItem>
             </List>
+        );
+    };
+
+const ConfigureNavigationList: FC<{
+    routes: INavigationMenuItem[];
+    mode: 'mini' | 'full';
+    onClick?: () => void;
+}> = ({ routes, mode, onClick }) => {
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+
+    return (
+        <List>
+            {routes.map((route) => (
+                <DynamicListItem
+                    href={route.path}
+                    text={route.title}
+                    onClick={onClick}
+                >
+                    <IconRenderer path={route.path} />
+                </DynamicListItem>
+            ))}
+        </List>
+    );
+};
+
+const AdminNavigationList: FC<{
+    routes: INavigationMenuItem[];
+    mode: 'mini' | 'full';
+    badge?: ReactNode;
+    onClick?: () => void;
+}> = ({ routes, mode, onClick, badge }) => {
+    const showBadge = useShowBadge();
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+
+    return (
+        <List>
+            {routes.map((route) => (
+                <DynamicListItem
+                    onClick={onClick}
+                    href={route.path}
+                    text={route.title}
+                    badge={
+                        showBadge(route?.menu?.mode) ? (
+                            <EnterprisePlanBadge />
+                        ) : null
+                    }
+                >
+                    <IconRenderer path={route.path} />
+                </DynamicListItem>
+            ))}
+        </List>
+    );
+};
+
+const OtherLinksList = () => {
+    const { uiConfig } = useUiConfig();
+
+    return (
+        <List>
+            {uiConfig.links.map((link) => (
+                <ExternalFullListItem href={link.href} text={link.value}>
+                    <IconRenderer path={link.value} />
+                </ExternalFullListItem>
+            ))}
+            <SignOutItem />
+        </List>
+    );
+};
+
+export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
+    onClick,
+}) => {
+    const { routes } = useRoutes();
+
+    return (
+        <>
+            <MainNavigationList mode='full' onClick={onClick} />
+            <ConfigureNavigationList
+                routes={routes.mainNavRoutes}
+                mode='full'
+                onClick={onClick}
+            />
+            <AdminNavigationList
+                routes={routes.adminRoutes}
+                mode='full'
+                onClick={onClick}
+            />
+            <OtherLinksList />
+        </>
+    );
+};
+
+export const NavigationSidebar = () => {
+    const { routes } = useRoutes();
+
+    const [mode, setMode] = useNavigationMode();
+
+    return (
+        <StyledBox>
+            <MainNavigationList mode={mode} />
             <Accordion disableGutters={true} sx={{ boxShadow: 'none' }}>
                 {mode === 'full' && (
                     <AccordionSummary
@@ -285,16 +444,10 @@ export const NavigationSidebar = () => {
                     </AccordionSummary>
                 )}
                 <AccordionDetails sx={{ p: 0 }}>
-                    <List>
-                        {routes.mainNavRoutes.map((route) => (
-                            <DynamicListItem
-                                href={route.path}
-                                text={route.title}
-                            >
-                                <IconRenderer path={route.path} />
-                            </DynamicListItem>
-                        ))}
-                    </List>
+                    <ConfigureNavigationList
+                        routes={routes.mainNavRoutes}
+                        mode={mode}
+                    />
                 </AccordionDetails>
             </Accordion>
             <Accordion disableGutters={true} sx={{ boxShadow: 'none' }}>
@@ -313,21 +466,10 @@ export const NavigationSidebar = () => {
                 )}
 
                 <AccordionDetails sx={{ p: 0 }}>
-                    <List>
-                        {routes.adminRoutes.map((route) => (
-                            <DynamicListItem
-                                href={route.path}
-                                text={route.title}
-                                badge={
-                                    showBadge(route?.menu?.mode) ? (
-                                        <EnterprisePlanBadge />
-                                    ) : null
-                                }
-                            >
-                                <IconRenderer path={route.path} />
-                            </DynamicListItem>
-                        ))}
-                    </List>
+                    <AdminNavigationList
+                        routes={routes.adminRoutes}
+                        mode={mode}
+                    />
                 </AccordionDetails>
             </Accordion>
             <ShowHide

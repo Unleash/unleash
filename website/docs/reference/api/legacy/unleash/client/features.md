@@ -4,7 +4,7 @@ title: /api/client/features
 
 > In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a CLIENT token](/how-to/how-to-create-api-tokens.mdx) and add an Authorization header using the token.
 
-### Fetching Feature Toggles {#fetching-feature-toggles}
+### Fetching Feature Flags {#fetching-feature-toggles}
 
 `GET: http://unleash.host.com/api/client/features`
 
@@ -13,7 +13,7 @@ title: /api/client/features
 - UNLEASH-APPNAME: appName
 - UNLEASH-INSTANCEID: instanceId
 
-This endpoint is the one all clients should use to fetch all available feature toggles from the _unleash-server_. The response returns all active feature toggles and their current strategy configuration. A feature toggle will have _at least_ one configured strategy. A strategy will have a `name` and `parameters` map.
+This endpoint is the one all clients should use to fetch all available feature flags from the _unleash-server_. The response returns all active feature flags and their current strategy configuration. A feature flag will have _at least_ one configured strategy. A strategy will have a `name` and `parameters` map.
 
 > _Note:_ Clients should prefer the `strategies` property. Legacy properties (`strategy` & `parameters`) will be kept until **version 2** of the format.
 
@@ -67,7 +67,7 @@ This endpoint should never return anything besides a valid _20X or 304-response_
 }
 ```
 
-#### Filter feature toggles {#filter-feature-toggles}
+#### Filter feature flags {#filter-feature-toggles}
 
 Supports three params for now
 
@@ -87,13 +87,13 @@ To filter for any feature belonging to project `myproject` use
 
 Response format is the same as `api/client/features`
 
-### Get specific feature toggle {#get-specific-feature-toggle}
+### Get specific feature flag {#get-specific-feature-toggle}
 
 `GET: http://unleash.host.com/api/client/features/:featureName`
 
-Used to fetch details about a specific feature toggle. This is mainly provided to make it easy to debug the API and should not be used by the client implementations.
+Used to fetch details about a specific feature flag. This is mainly provided to make it easy to debug the API and should not be used by the client implementations.
 
-> _Notice_: You will not get a version property when fetching a specific feature toggle by name.
+> _Notice_: You will not get a version property when fetching a specific feature flag by name.
 
 ```json
 {
@@ -163,7 +163,7 @@ In the example `environment` needs to be `production` AND `userId` must be eithe
 
 ### Variants {#variants}
 
-All feature toggles can also take an array of variants. You can read more about [feature toggle variants](/reference/feature-toggle-variants).
+All feature flags can also take an array of variants. You can read more about [feature flag variants](/reference/feature-toggle-variants).
 
 ```json
 {

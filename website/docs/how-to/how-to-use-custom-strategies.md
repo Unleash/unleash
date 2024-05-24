@@ -10,9 +10,9 @@ The downside of using a custom activation strategy instead of constraints is tha
 :::
 
 
-This guide takes you through how to use [custom activation strategies](../reference/custom-activation-strategies.md) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a toggle, and how you'd implement it in a [client SDK](../reference/sdks/index.md).
+This guide takes you through how to use [custom activation strategies](../reference/custom-activation-strategies.md) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a flag, and how you'd implement it in a [client SDK](../reference/sdks/index.md).
 
-In this example we want to define an activation strategy offers a scheduled release of a feature toggle. This means that we want the feature toggle to be activated after a given date and time.
+In this example we want to define an activation strategy offers a scheduled release of a feature flag. This means that we want the feature flag to be activated after a given date and time.
 
 ## Step 1: Define your custom strategy {#step-1}
 
@@ -22,11 +22,11 @@ In this example we want to define an activation strategy offers a scheduled rele
 
 2. **Define your strategy**. Use the "Add new strategy" button to open the strategy creation form. Fill in the form to define your strategy. Refer to [the custom strategy reference documentation](../reference/custom-activation-strategies.md#definition) for a full list of options.
 
-   ![A strategy creation form. It has fields labeled "strategy name" — "TimeStamp" — and "description" — "activate toggle after a given timestamp". It also has fields for a parameter named "enableAfter". The parameter is of type "string" and the parameter description is "Expected format: YYYY-MM-DD HH:MM". The parameter is required.](/img/timestamp_create_strategy.png)
+   ![A strategy creation form. It has fields labeled "strategy name" — "TimeStamp" — and "description" — "activate flag after a given timestamp". It also has fields for a parameter named "enableAfter". The parameter is of type "string" and the parameter description is "Expected format: YYYY-MM-DD HH:MM". The parameter is required.](/img/timestamp_create_strategy.png)
 
-## Step 2: Apply your custom strategy to a feature toggle {#step-2}
+## Step 2: Apply your custom strategy to a feature flag {#step-2}
 
-**Navigate to your feature toggle** and **apply the strategy** you just created.
+**Navigate to your feature flag** and **apply the strategy** you just created.
 
 ![The strategy configuration screen for the custom "TimeStamp" strategy from the previous step. The "enableAfter" field says "2021-12-25 00:00".](/img/timestamp_use_strategy.png)
 

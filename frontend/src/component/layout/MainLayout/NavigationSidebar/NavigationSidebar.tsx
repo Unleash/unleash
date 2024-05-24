@@ -45,13 +45,7 @@ import CorsIcon from '@mui/icons-material/StorageOutlined';
 import BillingIcon from '@mui/icons-material/CreditCardOutlined';
 import SignOutIcon from '@mui/icons-material/ExitToApp';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import {
-    type FC,
-    type ReactNode,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react';
+import { type FC, type ReactNode, useCallback, useEffect } from 'react';
 import { getCondensedRoutes, getRoutes } from '../../../menu/routes';
 import { useAdminRoutes } from '../../../admin/useAdminRoutes';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
@@ -64,6 +58,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { basePath } from 'utils/formatPath';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.neutral.main,
@@ -276,7 +271,10 @@ const useShowBadge = () => {
 };
 
 const useNavigationMode = () => {
-    const [mode, setMode] = useState<'mini' | 'full'>('full');
+    const [mode, setMode] = useLocalStorageState<'mini' | 'full'>(
+        'navigation-mode:v1',
+        'full',
+    );
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'b' && (event.metaKey || event.ctrlKey)) {

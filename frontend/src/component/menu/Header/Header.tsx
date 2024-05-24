@@ -113,12 +113,7 @@ const Header: VFC = () => {
 
     const disableNotifications = useUiFlag('disableNotifications');
     const { uiConfig, isOss } = useUiConfig();
-    const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
-    const smallScreen = useMediaQuery(
-        sidebarNavigationEnabled
-            ? theme.breakpoints.down('lg')
-            : theme.breakpoints.down('md'),
-    );
+    const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');

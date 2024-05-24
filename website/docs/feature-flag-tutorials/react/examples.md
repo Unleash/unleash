@@ -7,29 +7,28 @@ In our [React tutorial](/feature-flag-tutorials/react), we implemented a simple 
 
 Applications evolve, and teams must manage all aspects of this evolution, including the flags used to control the application. We built multiple features into Unleash to address the complexities of releasing code and managing feature flags along the way:
 
-- [Gradual Rollouts for React Apps](#gradual-rollouts-for-react-apps)
-- [Canary Deployments in React](#canary-deployments-in-react)
-  - [What is a canary deployment?](#what-is-a-canary-deployment)
-  - [Why use canary deployments?](#why-use-canary-deployments)
-  - [How to leverage feature flags for canary deployments in React?](#how-to-leverage-feature-flags-for-canary-deployments-in-react)
-    - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
-- [A/B Testing in React](#ab-testing-in-react)
-- [Feature Flag Analytics and Reporting in React](#feature-flag-analytics-and-reporting-in-react)
-  - [Enable feature flag impression data](#enable-feature-flag-impression-data)
-  - [Capture impression data for flag analytics](#capture-impression-data-for-flag-analytics)
-  - [Application Metrics \& Monitoring](#application-metrics--monitoring)
-- [Feature Flag Audit Logs in React](#feature-flag-audit-logs-in-react)
-- [Change Management \& Feature Flag Approvals in React](#change-management--feature-flag-approvals-in-react)
-- [Flag Automation \& Workflow Integration for React Apps](#flag-automation--workflow-integration-for-react-apps)
-- [Common Usage Examples of React Feature Flags](#common-usage-examples-of-react-feature-flags)
-  - [`useFlag` example](#useflag-example)
-  - [`useVariant` example](#usevariant-example)
-  - [`useUnleashClient` example](#useunleashclient-example)
-  - [`useUnleashContext` example](#useunleashcontext-example)
-  - [`useFlags` example](#useflags-example)
-  - [`useFlagsStatus` example](#useflagsstatus-example)
-- [Additional Examples](#additional-examples)
-
+-   [Gradual Rollouts for React Apps](#gradual-rollouts-for-react-apps)
+-   [Canary Deployments in React](#canary-deployments-in-react)
+    -   [What is a canary deployment?](#what-is-a-canary-deployment)
+    -   [Why use canary deployments?](#why-use-canary-deployments)
+    -   [How to leverage feature flags for canary deployments in React?](#how-to-leverage-feature-flags-for-canary-deployments-in-react)
+        -   [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+-   [A/B Testing in React](#ab-testing-in-react)
+-   [Feature Flag Analytics and Reporting in React](#feature-flag-analytics-and-reporting-in-react)
+    -   [Enable feature flag impression data](#enable-feature-flag-impression-data)
+    -   [Capture impression data for flag analytics](#capture-impression-data-for-flag-analytics)
+    -   [Application Metrics \& Monitoring](#application-metrics--monitoring)
+-   [Feature Flag Audit Logs in React](#feature-flag-audit-logs-in-react)
+-   [Change Management \& Feature Flag Approvals in React](#change-management--feature-flag-approvals-in-react)
+-   [Flag Automation \& Workflow Integration for React Apps](#flag-automation--workflow-integration-for-react-apps)
+-   [Common Usage Examples of React Feature Flags](#common-usage-examples-of-react-feature-flags)
+    -   [`useFlag` example](#useflag-example)
+    -   [`useVariant` example](#usevariant-example)
+    -   [`useUnleashClient` example](#useunleashclient-example)
+    -   [`useUnleashContext` example](#useunleashcontext-example)
+    -   [`useFlags` example](#useflags-example)
+    -   [`useFlagsStatus` example](#useflagsstatus-example)
+-   [Additional Examples](#additional-examples)
 
 ## Gradual Rollouts for React Apps
 
@@ -261,7 +260,7 @@ At the flag level in Unleash, navigate to the Settings view.
 
 ![Editing feature flag settings in Unleash.](/img/react-ex-edit-settings.png)
 
-In the Settings view, click on the edit button. This will take us to the ‘Edit Feature toggle’ form.
+In the Settings view, click on the edit button. This will take us to the ‘Edit feature flag form.
 
 ![Enabling impression data for a feature flag.](/img/react-ex-enable-impression-data.png)
 

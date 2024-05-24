@@ -7,22 +7,20 @@ In our [Java Spring Boot feature flag tutorial](/feature-flag-tutorials/spring-b
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
-- [Gradual Rollouts for Java Spring Boot Apps](#gradual-rollouts-for-java-spring-boot-apps)
-- [Canary Deployments in Java](#canary-deployments-in-java)
-  - [What is a canary deployment?](#what-is-a-canary-deployment)
-  - [How to do canary deployments with a feature flag in Java?](#how-to-do-canary-deployments-with-a-feature-flag-in-java)
-  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
-- [Server-side A/B Testing in Java Spring Boot](#server-side-ab-testing-in-java-spring-boot)
-- [Feature Flag Analytics and Reporting in Java](#feature-flag-analytics-and-reporting-in-java)
-- [Application Metrics \& Monitoring](#application-metrics--monitoring)
-- [Feature Flag Audit Logs in Java](#feature-flag-audit-logs-in-java)
-- [Flag Automation \& Workflow Integration for Java Apps](#flag-automation--workflow-integration-for-java-apps)
-
+-   [Gradual Rollouts for Java Spring Boot Apps](#gradual-rollouts-for-java-spring-boot-apps)
+-   [Canary Deployments in Java](#canary-deployments-in-java)
+    -   [What is a canary deployment?](#what-is-a-canary-deployment)
+    -   [How to do canary deployments with a feature flag in Java?](#how-to-do-canary-deployments-with-a-feature-flag-in-java)
+    -   [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+-   [Server-side A/B Testing in Java Spring Boot](#server-side-ab-testing-in-java-spring-boot)
+-   [Feature Flag Analytics and Reporting in Java](#feature-flag-analytics-and-reporting-in-java)
+-   [Application Metrics \& Monitoring](#application-metrics--monitoring)
+-   [Feature Flag Audit Logs in Java](#feature-flag-audit-logs-in-java)
+-   [Flag Automation \& Workflow Integration for Java Apps](#flag-automation--workflow-integration-for-java-apps)
 
 ## Gradual Rollouts for Java Spring Boot Apps
 
-
-It is common to use feature flags to roll out changes to a percentage of users, and we can use Unleash to do a gradual rollout with a Java-based app. 
+It is common to use feature flags to roll out changes to a percentage of users, and we can use Unleash to do a gradual rollout with a Java-based app.
 
 In our Spring Boot tutorial, the flag controls the release of a new service implementation on a product page. To further customize that, you can modify the basic setup to adjust the percentage of users who experience this feature with a gradual rollout.
 
@@ -53,33 +51,27 @@ Response response = client.newCall(request).execute();
 
 Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
 
-
 ## Canary Deployments in Java
-
 
 ### What is a canary deployment?
 
 Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to. They help find abnormalities and align with the agile process for faster releases and quick reversions.
 
-
 ### How to do canary deployments with a feature flag in Java?
-
 
 Canary deployments are a safer and more gradual way to make changes in software development. They help find abnormalities and align with the agile process for faster releases and quick reversions.
 
 Unleash has a few ways to help manage canary deployments for Java apps at scale:
 
-* Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in the previous section](#gradual-rollouts-for-java-spring-boot-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+-   Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in the previous section](#gradual-rollouts-for-java-spring-boot-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
-* Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout
+-   Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout
 
-* [Strategy variants](/reference/strategy-variants) are used for more advanced cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use strategy variants to split your population of users and conduct an A/B test with them.
+-   [Strategy variants](/reference/strategy-variants) are used for more advanced cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use strategy variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk through how to use strategy constraints in our Java app.
 
-
 ### Configure strategy constraints for canary deployments
-
 
 We will build a strategy constraint on our existing gradual rollout strategy. This will allow us to target a subset of users for the rollout.
 
@@ -95,12 +87,11 @@ Let’s say we are experimenting with releasing the new service implementation t
 
 ![The new constraint form includes a context field, operator, and values field to customize the conditions under which a user will be exposed to the flag](/img/ex-constraint-page.png)
 
-
 We can configure the constraint in the form to match these requirements:
-- The context field is set to **environment**
-- The operator is set to **NOT_IN**
-- The value added is **production**
 
+-   The context field is set to **environment**
+-   The operator is set to **NOT_IN**
+-   The value added is **production**
 
 Once you’ve filled out the proper constraint fields, select ‘Done’ and save the strategy.
 
@@ -131,13 +122,11 @@ Check out our [API docs on updating flag strategies](/reference/api/unleash/upda
 
 Read our documentation for more context on [strategy constraint configurations](/reference/strategy-constraints) and use cases.
 
-
 ## Server-side A/B Testing in Java Spring Boot
-
 
 A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. Server-side A/B testing can help with making infrastructure improvements and comparing different versions of server-side methods. At Unleash, we call these strategy [variants](/reference/feature-toggle-variants).
 
-When a feature flag is enabled, we can expose a particular version of a feature to select user bases. From there, we can use the variants to view the performance metrics in Unleash and see which is more efficient. 
+When a feature flag is enabled, we can expose a particular version of a feature to select user bases. From there, we can use the variants to view the performance metrics in Unleash and see which is more efficient.
 
 In the context of our Java Spring Boot tutorial, we’re going to create a flag and two variants that represent different design implementations of the product page we created in the Pet Clinic application.
 
@@ -159,17 +148,15 @@ We have successfully configured our flag variant and implemented them into our a
 
 Next, we can examine how Unleash can track the results and provide insights with data analytics.
 
-
 ## Feature Flag Analytics and Reporting in Java
-
 
 Shipping code is one thing, but monitoring your applications is another aspect of managing code that developers must account for. Some things to consider would be:
 
-- Security concerns
-- Performance metrics
-- Tracking user behavior
+-   Security concerns
+-   Performance metrics
+-   Tracking user behavior
 
-Unleash was built with all these considerations in mind as part of our feature flag management approach. You can use feature flag events to send impression data to an analytics tool. 
+Unleash was built with all these considerations in mind as part of our feature flag management approach. You can use feature flag events to send impression data to an analytics tool.
 
 For example, if a new feature you’ve released causes more autoscaling in your service resources than expected, you can either view that in your analytics tool or get notified from a Slack integration. Our impression data gives developers a full view of the activity that could raise alarms.
 
@@ -179,9 +166,9 @@ At the flag level in Unleash, navigate to the Settings view.
 
 ![From your flag page in Unleash, you go to Settings and edit the settings for your flag called 'feature information'.](/img/spring-boot-ex-edit-flag.png)
 
-In the Settings view, click on the edit button. This will take us to the ‘Edit Feature toggle’ form.
+In the Settings view, click on the edit button. This will take us to the ‘Edit Feature flag’ form.
 
-![Enable impression data by turning the toggle on in the form.](/img/spring-boot-ex-enable-impression-data.png)
+![Enable impression data by turning switching it on in the form.](/img/spring-boot-ex-enable-impression-data.png)
 
 Turn on the impression data and then save it. Events will now be emitted every time the feature flag is triggered.
 
@@ -191,9 +178,7 @@ You can send the impression events data from your flag and flag variants to anal
 
 You can find more information in our [impression data docs](/reference/impression-data#impression-event-data).
 
-
 ## Application Metrics & Monitoring
-
 
 Under your feature flag’s Metrics tab in Unleash, you can see the general activity from the Pet Clinic app tutorial in the development environment over different periods of time. If the app had a production environment enabled, we would also be able to view exposure (amount of users that are exposed to the flag by count and overall percentage) and requests the app is receiving over time.
 
@@ -201,16 +186,14 @@ Under your feature flag’s Metrics tab in Unleash, you can see the general acti
 
 Our metrics are great for understanding user traffic. You can get a better sense of:
 
-* What time(s) of the day or week are requests the highest?
-* Which feature flags are the most popular?
+-   What time(s) of the day or week are requests the highest?
+-   Which feature flags are the most popular?
 
 Another use case for reviewing metrics is verifying that the right users are being exposed to your feature based on how you’ve configured your strategies and/or variants.
 
 Take a look at our [Metrics API documentation](/reference/api/unleash/metrics) to understand how it works from a code perspective.
 
-
 ## Feature Flag Audit Logs in Java
-
 
 Because a feature flag service controls how an application behaves in production, it can be important to have visibility into when changes have been made and by whom. This is especially true in highly regulated environments, such as health care, insurance, banking, and others. In these cases (or similar), you might find audit logging useful for:
 
@@ -221,17 +204,15 @@ Unleash provides the data to log any change over time at the flag level and the 
 
 For our Spring Boot app, we can view Event logs to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
-- When the flag was created
-- How the gradual rollout strategy was configured
-- When and how the variants were created and configured
+-   When the flag was created
+-   How the gradual rollout strategy was configured
+-   When and how the variants were created and configured
 
 ![Event logs in Unleash track every single change made to flags, similar to Git commit history.](/img/spring-boot-events-log.png)
 
 You can also retrieve event log data by using an API command. Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
-
 ## Flag Automation & Workflow Integration for Java Apps
-
 
 An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 

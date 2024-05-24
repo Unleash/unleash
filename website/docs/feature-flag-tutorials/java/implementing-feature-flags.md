@@ -75,7 +75,7 @@ Username: admin
 Password: unleash4all
 ```
 
-Click the ‘New feature toggle’ button to create a new feature flag. Once you have created a flag, you will see it here.
+Click the ‘New feature flag’ button to create a new feature flag. Once you have created a flag, you will see it here.
 
 ![This is an image of the Unleash platform to create a new Java feature flag.](/img/tutorial-create-flag.png)
 

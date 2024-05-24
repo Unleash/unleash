@@ -82,7 +82,7 @@ Username: admin
 Password: unleash4all
 ```
 
-Click the ‘New feature toggle’ button to create a new feature flag. Once you have created a flag, you will see it here.
+Click the ‘New feature flag’ button to create a new feature flag. Once you have created a flag, you will see it here.
 
 ![Image of the Unleash platform to create a new feature flag](/img/tutorial-create-flag.png)
 
@@ -90,7 +90,7 @@ Click the ‘New feature toggle’ button to create a new feature flag. Once you
 
 Next, you will create a feature flag and turn it on for your Python app.
 
-In the Create Toggle view, give your feature flag a unique name and click ‘Create toggle feature’.
+In the Create Flag view, give your feature flag a unique name and click ‘Create feature flag’.
 
 For the purpose of this tutorial, name the feature flag `delete_survey_flag`. Use the default values in the rest of the feature flag form.
 

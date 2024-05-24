@@ -6,14 +6,13 @@ on:
       - main
     paths-ignore:
       - website/**
-    tags:
-      - 'v*'
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      ignore-push:
-        description: 'Ignore push to dockerhub. If not set the image will be pushed with the sha of the commit as tag'
-        required: false
-        type: boolean
+      version:
+        description: "Which version to release"
+        type: 'string'
+        required: true
+  workflow_dispatch:
 
 jobs:
   build:
@@ -35,10 +34,10 @@ jobs:
           images: |
             unleashorg/unleash-server
           tags: |
-            # only enabled for v* tags:
-            type=semver,pattern={{ version }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=semver,pattern={{ major.minor }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=semver,pattern={{ major }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            # only enabled for workflow dispatch except main (assume its a release):
+            type=semver,pattern={{ version }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
+            type=semver,pattern={{ major }}.{{ minor }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
+            type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
             # only enabled in main:
             type=edge,prefix=main-,suffix=-${{ matrix.version }},enable=${{ github.ref == 'refs/heads/main' }}
             # only enabled on workflow_dispatch:
@@ -57,7 +56,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.ignore-push != 'true' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: NODE_VERSION=${{ matrix.version }}

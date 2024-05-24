@@ -18,7 +18,7 @@ Here are the steps we will cover in this tutorial:
 3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
 4. [Add Unleash to a Spring Boot app](#4-add-unleash-to-a-spring-boot-app)
 5. [Configure Spring Beans in your Spring Boot app](#5-configure-spring-beans-in-your-app)
-6. [Verify the feature flag experience](#6-verify-the-toggle-experience)
+6. [Verify the feature flag experience](#6-verify-the-feature-flag-experience)
 
 Watch the video tutorial and follow along with the code from this documentation.
 
@@ -356,7 +356,7 @@ In the real world, separate data sources could be plugged into these different i
 
 You can toggle between the two service beans by turning the flag off, which we will experiment with in the next step.
 
-## 6. Verify the toggle experience
+## 6. Verify the feature flag experience
 
 You can verify that the Pet Clinic app will swap implementations on the product page by turning off your flag in Unleash.
 

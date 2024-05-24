@@ -13,17 +13,17 @@ Environments were released in Unleash v4.3.0.
     <iframe src="https://www.loom.com/embed/95239e875bbc4e09a5c5833e1942e4b0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%'}}></iframe>
 </div>
 
-Environments is a new way to organize activation strategy configurations for feature toggles into separate environments. In Unleash, a feature lives across all your environments — after all, the goal is to get the new feature released as soon as possible — but it makes sense to configure the activation differently per environment. You might want the feature enabled for everyone in development, but only for yourself in production, for instance.
+Environments is a new way to organize activation strategy configurations for feature flags into separate environments. In Unleash, a feature lives across all your environments — after all, the goal is to get the new feature released as soon as possible — but it makes sense to configure the activation differently per environment. You might want the feature enabled for everyone in development, but only for yourself in production, for instance.
 
 Previously, Unleash Enterprise could use [strategy constraints](../reference/strategy-constraints.md) to control the rollout across environments. With the new environments feature, this is no longer necessary. Now all activation strategies belong to an explicit environment instead.
 
-Further, connected applications will use environment-scoped API keys to make sure they only download feature toggle configurations for the environment they are running in.
+Further, connected applications will use environment-scoped API keys to make sure they only download feature flag configurations for the environment they are running in.
 
 Finally, metrics have also been upgraded to record the environment. This, in turn, means that Unleash can display usage metrics per environment.
 
-Despite this being a shift in how Unleash works, everything will continue to work exactly how it did for existing users. For backwards compatibility, we have created an environment named "default" that will contain all of the existing toggles and API keys. Read more about that in [the migration section](#migration).
+Despite this being a shift in how Unleash works, everything will continue to work exactly how it did for existing users. For backwards compatibility, we have created an environment named "default" that will contain all of the existing flags and API keys. Read more about that in [the migration section](#migration).
 
-![A graph showing how environments work. Each project can have multiple features, and each feature can have different activation strategies in each of its environments.](/img/environments_overview.svg 'A feature toggle exists across all environments, but take different activation strategies per environment.')
+![A graph showing how environments work. Each project can have multiple features, and each feature can have different activation strategies in each of its environments.](/img/environments_overview.svg 'A feature flag exists across all environments, but take different activation strategies per environment.')
 
 ## Environment types
 
@@ -51,23 +51,23 @@ If you are on v4.2, you also need to have the environment feature enabled (if yo
 
 If you are on v4.3 or later, environments are already enabled for you.
 
-Note that in order to enable an environment for a feature toggle, you must first add activation strategies for that environment. You cannot enable an environment without activation strategies.
+Note that in order to enable an environment for a feature flag, you must first add activation strategies for that environment. You cannot enable an environment without activation strategies.
 
 ### Step 1: Enable new environments for your Project
 
 Navigate to the project and choose the “environments” tab.
 
-![A project view showing the Environments tab. The UI displays three environment toggles: "default", "development", and "production". The "default" environment is enabled.](/img/environments_configure.png 'Configure environment for this project')
+![A project view showing the Environments tab. The UI displays three environment flags: "default", "development", and "production". The "default" environment is enabled.](/img/environments_configure.png 'Configure environment for this project')
 
 ### Step 2: Configure activation strategies for the new environment
 
-From the “feature toggle view” you will now be able to configure activation strategies per environment. You can also enable and disable environments here. Remember that an environment must have activation strategies before you can enable it.
+From the “feature flag view” you will now be able to configure activation strategies per environment. You can also enable and disable environments here. Remember that an environment must have activation strategies before you can enable it.
 
-![A feature toggle strategies tab showing three different environments, of which one is active. The UI displays data about the currently selected environment, ](/img/environments_strategies.png 'Add strategy configuration per environment')
+![A feature flag strategies tab showing three different environments, of which one is active. The UI displays data about the currently selected environment, ](/img/environments_strategies.png 'Add strategy configuration per environment')
 
 ### Step 3: Create environment specific API keys
 
-In order for the SDK to download the feature toggle configuration for the correct environment you will need to create an API token for a defined environment.
+In order for the SDK to download the feature flag configuration for the correct environment you will need to create an API token for a defined environment.
 
 ![An API key creation form. The form's fields are "username", "token type", "project", and, crucially, "environment". The development environment is selected.](/img/environments_api_keys.png 'Create Environment specific API Keys')
 
@@ -79,7 +79,7 @@ Environment cloning was made available in Unleash 4.19.
 
 :::
 
-Unleash environments can be cloned. Cloning an environment creates a **new** environment based on the selected source environment. When cloning an environment, you select any number of projects whose feature toggle configurations will also be cloned. These projects will have identical configurations for the source and target environments. However, the environments can then be configured independently and will not stay in sync with each other.
+Unleash environments can be cloned. Cloning an environment creates a **new** environment based on the selected source environment. When cloning an environment, you select any number of projects whose feature flag configurations will also be cloned. These projects will have identical configurations for the source and target environments. However, the environments can then be configured independently and will not stay in sync with each other.
 
 When cloning an environment, you must give the new environment
 - a name
@@ -102,7 +102,7 @@ If you're currently using strategy constraints together with the “environment�
 
 ### Integrations
 
-We have made some slight changes to events related to feature toggles: there's one deprecation and several new event types. Most of the new events contain _project_ and _environment_ data.
+We have made some slight changes to events related to feature flags: there's one deprecation and several new event types. Most of the new events contain _project_ and _environment_ data.
 
 To avoid missing important updates, you will also need to update your integration configuration to subscribe to the new events.
 
@@ -112,22 +112,22 @@ To avoid missing important updates, you will also need to update your integratio
 
 **New Events**
 
-- **FEATURE-METADATA-UPDATED** - The feature toggle metadata was updated (across all environments).
-- **FEATURE-STRATEGY-ADD**¹ - An activation strategy was added to a feature toggle in an environment. The _data_ will contain the updated strategy configuration.
-- **FEATURE-STRATEGY-UPDATE**¹ - An activation strategy was updated for a feature toggle. The _data_ will contain the updated strategy configuration.
-- **FEATURE-STRATEGY-REMOVE**¹ - An activation strategy was removed for a feature toggle.
-- **FEATURE-ENVIRONMENT-ENABLED**¹ - Signals that a feature toggle has been _enabled_ in a defined environment.
-- **FEATURE-ENVIRONMENT-DISABLED**¹ - Signals that a feature toggle has been _disabled_ in a defined environment.
-- **FEATURE-PROJECT-CHANGE**¹ - The feature toggle was moved to a new project.
+- **FEATURE-METADATA-UPDATED** - The feature flag metadata was updated (across all environments).
+- **FEATURE-STRATEGY-ADD**¹ - An activation strategy was added to a feature flag in an environment. The _data_ will contain the updated strategy configuration.
+- **FEATURE-STRATEGY-UPDATE**¹ - An activation strategy was updated for a feature flag. The _data_ will contain the updated strategy configuration.
+- **FEATURE-STRATEGY-REMOVE**¹ - An activation strategy was removed for a feature flag.
+- **FEATURE-ENVIRONMENT-ENABLED**¹ - Signals that a feature flag has been _enabled_ in a defined environment.
+- **FEATURE-ENVIRONMENT-DISABLED**¹ - Signals that a feature flag has been _disabled_ in a defined environment.
+- **FEATURE-PROJECT-CHANGE**¹ - The feature flag was moved to a new project.
 
 > 1. These feature events will contain _project_ and _environment_ as part of the event metadata.
 
 ### API
 
-In order to support configuration per environment we had to rebuild our feature toggle admin API to account for environments as well. This means that we're making the following changes to the API:
+In order to support configuration per environment we had to rebuild our feature flag admin API to account for environments as well. This means that we're making the following changes to the API:
 
-- **/api/admin/features** - _deprecated (scheduled for removal in Unleash v5.0). The [old feature toggles admin API](/reference/api/legacy/unleash/admin/features.md) still works, but strategy configuration will be assumed to target the “default” environment._
-- **/api/admin/projects/:projectId/features** - New feature API to be used for feature toggles which also adds support for environments. See [the documentation](/reference/api/legacy/unleash/admin/features.md) to learn more.
+- **/api/admin/features** - _deprecated (scheduled for removal in Unleash v5.0). The [old feature flags admin API](/reference/api/legacy/unleash/admin/features.md) still works, but strategy configuration will be assumed to target the “default” environment._
+- **/api/admin/projects/:projectId/features** - New feature API to be used for feature flags which also adds support for environments. See [the documentation](/reference/api/legacy/unleash/admin/features.md) to learn more.
 
 ## Plan Differences
 

@@ -18,7 +18,7 @@ When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT
 
 :::
 
-**Strategy constraints** are conditions that must be satisfied for an [activation strategy](../reference/activation-strategies) to be evaluated for a feature toggle.
+**Strategy constraints** are conditions that must be satisfied for an [activation strategy](../reference/activation-strategies) to be evaluated for a feature flag.
 With strategy constraints, you can:
 - roll out a feature **only to users in a specific region**
 - schedule a feature to be **released at a specific time**
@@ -52,7 +52,7 @@ By using [custom context fields](../reference/unleash-context#custom-context-fie
 
 You can also combine strategy constraints with the [gradual rollout strategy](../reference/activation-strategies#gradual-rollout) to do a gradual rollout to a **specific segment** of your user base.
 
-![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/strategy-constraints.png)
+![A flag with the gradual rollout strategy. The flag is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/strategy-constraints.png)
 
 ## Constraint structure
 
@@ -202,15 +202,15 @@ For instance, instead of adding hundreds of user ids to the constraint value lis
 
 Can you map their common feature into an [Unleash context](../reference/unleash-context) property instead and set the constraint on that? If they're beta testers, how about using a `betaTester` property? And likewise, for premium members, you could check to see if their `membership` is `premium`? And if they're employees, maybe you're better off checking whether their user ID ends with `@yourcompany.tld`?
 
-The **reason** why you should try and keep value lists small has to do with Unleash's evaluation model: Because Unleash's server-side SDKs fetch the full feature toggle configuration from Unleash, every value that you add to that constraint value list will increase the payload size. For small numbers, this isn't an issue, but as the list grows, so will the payload, and so will the time and processing power used by the SDK to evaluate the feature.
+The **reason** why you should try and keep value lists small has to do with Unleash's evaluation model: Because Unleash's server-side SDKs fetch the full feature flag configuration from Unleash, every value that you add to that constraint value list will increase the payload size. For small numbers, this isn't an issue, but as the list grows, so will the payload, and so will the time and processing power used by the SDK to evaluate the feature.
 
 ## Incompatibilities and undefined behavior {#incompatibilities}
 
 It's important that you use an up-to-date client SDK if you're using the advanced constraint operators introduced in Unleash 4.9. If your client SDK does not support the new operators, we cannot guarantee how it'll react. As a result, you may see different behavior across applications.
 
 If you use the new constraints with old SDKs, here's how it'll affect _some_ of the SDKs (the list is not exhaustive):
-- The Node.js and Go client SDKs will ignore the new constraints completely: the constraints will not affect the toggle's status.
-- The Python client SDK will evaluate the toggle to false, as it cannot evaluate the constraint successfully.
+- The Node.js and Go client SDKs will ignore the new constraints completely: the constraints will not affect the flag's status.
+- The Python client SDK will evaluate the flag to false, as it cannot evaluate the constraint successfully.
 - The .NET, Ruby, and PHP SDKs raise exceptions if the provided operator is not `IN` or `NOT_IN`.
 
 Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../reference/sdks/index.md#strategy-constraints).
@@ -219,6 +219,6 @@ After Unleash 4.9, we updated the [Unleash client specification](https://github.
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 
-Before Unleash 4.3, using strategy constraints was the recommended way to have different toggle configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../reference/environments.md).
+Before Unleash 4.3, using strategy constraints was the recommended way to have different flag configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../reference/environments.md).
 
 [^1]: `userScore` is not a default Unleash field, but can be added as a [custom context field](../reference/unleash-context#custom-context-fields).

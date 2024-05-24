@@ -41,7 +41,7 @@ const addDocsRoutePrefix = ({ from, ...rest }) => {
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
     title: 'Unleash',
-    tagline: 'The enterprise ready feature toggle service',
+    tagline: 'The enterprise ready feature flag service',
     url: 'https://docs.getunleash.io',
     baseUrl: '/',
     onBrokenLinks: 'throw',

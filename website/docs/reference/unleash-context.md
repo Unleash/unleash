@@ -2,7 +2,7 @@
 title: Unleash Context
 ---
 
-The **Unleash Context** contains information relating to the current feature toggle request. Unleash uses this context to evaluate [activation strategies](activation-strategies.md) and [strategy constraints](../reference/strategy-constraints.md) and to calculate [toggle stickiness](../reference/stickiness.md). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks/index.md).
+The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies.md) and [strategy constraints](../reference/strategy-constraints.md) and to calculate [flag stickiness](../reference/stickiness.md). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks/index.md).
 
 ## Structure
 
@@ -10,7 +10,7 @@ You can group the Unleash Context fields into two separate groups based on how t
 
 **Static** fields' values remain constant throughout an application's lifetime. You'll typically set these when you initialize the client SDK.
 
-**Dynamic** fields, however, can change with every request. You'll typically provide these when checking whether a toggle is enabled in your client.
+**Dynamic** fields, however, can change with every request. You'll typically provide these when checking whether a flag is enabled in your client.
 
 _All fields are optional_, but some strategies depend on certain fields being present. For instance, [the UserIDs strategy](activation-strategies.md#userids) requires that the `userId` field is present on the Context.
 
@@ -48,7 +48,7 @@ Before Unleash 4.16, custom context fields were only available to Unleash Pro an
 
 :::
 
-Custom context fields allow you to extend the Unleash Context with more data that is applicable to your situation. Each context field definition consists of a name and an optional description. Additionally, you can choose to define a set of [_legal values_](#legal-values "legal values for custom context fields"), and you can choose whether or not the context field can be used in [custom stickiness calculations](../reference/stickiness.md#custom-stickiness) for the [gradual rollout strategy](activation-strategies.md#customize-stickiness-beta) and for [feature toggle variants](../reference/feature-toggle-variants.md).
+Custom context fields allow you to extend the Unleash Context with more data that is applicable to your situation. Each context field definition consists of a name and an optional description. Additionally, you can choose to define a set of [_legal values_](#legal-values "legal values for custom context fields"), and you can choose whether or not the context field can be used in [custom stickiness calculations](../reference/stickiness.md#custom-stickiness) for the [gradual rollout strategy](activation-strategies.md#customize-stickiness-beta) and for [feature flag variants](../reference/feature-toggle-variants.md).
 
 When interacting with custom context fields in code, they must be accessed via the Unleash Context's `properties` map, using the context field's name as the key.
 

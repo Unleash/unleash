@@ -11,7 +11,7 @@ Api admin state is deprecated from version 5. We recommend using the new [Enviro
 
 > In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
 
-### Export Feature Toggles & Strategies {#export-feature-toggles--strategies}
+### Export Feature Flags & Strategies {#export-feature-toggles--strategies}
 
 `GET: http://unleash.host.com/api/admin/state/export`
 
@@ -64,7 +64,7 @@ strategies:
         required: true
 ```
 
-### Import Feature Toggles & Strategies {#import-feature-toggles--strategies}
+### Import Feature Flags & Strategies {#import-feature-toggles--strategies}
 
 `POST: http://unleash.host.com/api/admin/state/import`
 
@@ -74,7 +74,7 @@ You can either send the data as JSON in the POST-body or send a `file` parameter
 **Query Paramters**
 
 - **drop** - Use this parameter if you want the database to be cleaned before import (all strategies and features will be removed).
-- **keep** - Use this query parameter if you want to keep all exiting feature toggle (and strategy) configurations as is (no override), and only insert missing feature toggles from the data provided.
+- **keep** - Use this query parameter if you want to keep all exiting feature flag (and strategy) configurations as is (no override), and only insert missing feature flags from the data provided.
 
 > You should be careful using the `drop` parameter in production environments.
 

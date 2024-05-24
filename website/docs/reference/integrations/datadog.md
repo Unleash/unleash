@@ -5,7 +5,7 @@ title: Datadog
 
 > This feature was introduced in _Unleash v4.0.0_.
 
-The Datadog integration allows Unleash to post Updates to Datadog when a feature toggle is updated. To set up this integration, you need to set up a webhook connector for your channel. You can follow [Submitting events to Datadog](https://docs.datadoghq.com/api/latest/events/#post-an-event) on how to do that.
+The Datadog integration allows Unleash to post Updates to Datadog when a feature flag is updated. To set up this integration, you need to set up a webhook connector for your channel. You can follow [Submitting events to Datadog](https://docs.datadoghq.com/api/latest/events/#post-an-event) on how to do that.
 
 The Datadog integration will perform a single retry if the HTTP POST against the Datadog Webhook URL fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
 
@@ -83,7 +83,7 @@ If you don't specify anything Unleash will send a formatted markdown body.
 Example:
 
 ```markdown
-username created feature toggle (featurename)[http://your.url/projects/projectname/features/featurename] in project *projectname*
+username created feature flag (featurename)[http://your.url/projects/projectname/features/featurename] in project *projectname*
 ```
 
 #### Tags {#tags}

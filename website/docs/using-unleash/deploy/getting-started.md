@@ -121,7 +121,7 @@ docker run -p 4242:4242 \
 
 ## Test your server and create a sample API call {#test-your-server-and-create-a-sample-api-call}
 
-Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see an empty list of feature toggles, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
+Once the Unleash server has started, go to [localhost:4242](http://localhost:4242) in your browser. If you see an empty list of feature flags, try creating one with [curl](https://curl.se/) from a terminal/bash shell:
 
 ```
 curl --location -H "Authorization: <apitoken from previous step>" \

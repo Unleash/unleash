@@ -115,7 +115,7 @@ export default class ClientInstanceService {
             if (appsToAnnounce.length > 0) {
                 const events = appsToAnnounce.map((app) => ({
                     type: APPLICATION_CREATED,
-                    createdBy: app.createdBy || SYSTEM_USER.username,
+                    createdBy: app.createdBy || SYSTEM_USER.username!,
                     data: app,
                     createdByUserId: app.createdByUserId || SYSTEM_USER.id,
                 }));

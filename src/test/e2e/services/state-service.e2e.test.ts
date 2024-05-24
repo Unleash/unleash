@@ -4,7 +4,7 @@ import StateService from '../../../lib/services/state-service';
 import oldFormat from '../../examples/variantsexport_v3.json';
 import { WeightType } from '../../../lib/types/model';
 import { EventService } from '../../../lib/services';
-import type { IUnleashStores } from '../../../lib/types';
+import { SYSTEM_USER_AUDIT, type IUnleashStores } from '../../../lib/types';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -143,7 +143,7 @@ test('Should import variants from old format and convert to new format (per envi
         data: oldFormat,
         keepExisting: false,
         dropBeforeImport: true,
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
     const featureEnvironments = await stores.featureEnvironmentStore.getAll();
     expect(featureEnvironments).toHaveLength(6); // There are 3 environments enabled and 2 features
@@ -158,14 +158,14 @@ test('Should import variants in new format (per environment)', async () => {
         data: oldFormat,
         keepExisting: false,
         dropBeforeImport: true,
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
     const exportedJson = await stateService.export({});
     await stateService.import({
         data: exportedJson,
         keepExisting: false,
         dropBeforeImport: true,
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
     const featureEnvironments = await stores.featureEnvironmentStore.getAll();
     expect(featureEnvironments).toHaveLength(6); // 3 environments, 2 features === 6 rows
@@ -190,10 +190,9 @@ test('Importing states with deprecated strategies should keep their deprecated s
     };
     await stateService.import({
         data: deprecatedStrategyExample,
-        userName: 'strategy-importer',
         dropBeforeImport: true,
         keepExisting: false,
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
     const deprecatedStrategy =
         await stores.strategyStore.get('deprecatedstrat');
@@ -205,8 +204,7 @@ test('Exporting a deprecated strategy and then importing it should keep correct 
         data: oldFormat,
         keepExisting: false,
         dropBeforeImport: true,
-        userName: 'strategy importer',
-        userId: -9999,
+        auditUser: SYSTEM_USER_AUDIT,
     });
     const rolloutRandom = await stores.strategyStore.get(
         'gradualRolloutRandom',

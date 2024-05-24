@@ -79,7 +79,7 @@ If you would like to reassign users to different variants using existing stickin
 
 ### Strategy variants vs feature toggle variants
 
-Strategy variants take precedence over the [feature toggle variants](./feature-toggle-variants.md). If your matching activation strategy doesn't have any variants configured you will fall back to the [feature toggle variants](./feature-toggle-variants.md).
+Strategy variants take precedence over the [feature flag variants](./feature-toggle-variants.md). If your matching activation strategy doesn't have any variants configured you will fall back to the [feature flag variants](./feature-toggle-variants.md).
 Since strategy variants are part of activation strategies they have full access to constraints and segments. Feature variants are much more limited since they only allow simple overrides.
 
 ## How do I configure strategy variants
@@ -90,7 +90,7 @@ In the Unleash UI, you can configure variants by navigating to the gradual strat
 
 ## The `disabled` variant
 
-When your matching strategy has no variants or when your toggle has no variants or when a toggle is disabled for a user, Unleash will return variant data that looks like this:
+When your matching strategy has no variants or when your flag has no variants or when a flag is disabled for a user, Unleash will return variant data that looks like this:
 
 ```json
 {

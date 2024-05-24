@@ -22,7 +22,7 @@ For instance: When using the [gradual rollout activation strategy](../reference/
 Custom stickiness is available starting from Unleash Enterprise v4.
 :::
 
-When using [the gradual rollout strategy](../reference/activation-strategies.md#gradual-rollout) or [feature toggle variants](./feature-toggle-variants.md), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../reference/unleash-context.md) as long as you have enabled custom stickiness for these fields.
+When using [the gradual rollout strategy](../reference/activation-strategies.md#gradual-rollout) or [feature flag variants](./feature-toggle-variants.md), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../reference/unleash-context.md) as long as you have enabled custom stickiness for these fields.
 
 :::note SDK compatibility
 
@@ -32,9 +32,9 @@ Custom stickiness is supported by all of our SDKs except for the Rust SDK. You c
 
 ### Enabling custom stickiness
 
-To enable custom stickiness on a field, navigate to the Create Context screen in the UI and find the field you want to enable. There's a "Custom stickiness" option at the bottom of the form. Enable this toggle and update the context field by pressing the "Update" button.
+To enable custom stickiness on a field, navigate to the Create Context screen in the UI and find the field you want to enable. There's a "Custom stickiness" option at the bottom of the form. Enable this flag and update the context field by pressing the "Update" button.
 
-![The Create Context screen in the Unleash UI. There's a toggle at the bottom to control custom stickiness.](/img/enable_custom_stickiness.png)
+![The Create Context screen in the Unleash UI. There's a flag at the bottom to control custom stickiness.](/img/enable_custom_stickiness.png)
 
 ## Project default stickiness
 

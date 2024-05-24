@@ -19,7 +19,7 @@ const EditFeature = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
-    const { patchFeatureToggle, loading } = useFeatureApi();
+    const { patchFeatureToggle: patchFeatureFlag, loading } = useFeatureApi();
     const { feature } = useFeature(projectId, featureId);
 
     const {
@@ -54,7 +54,7 @@ const EditFeature = () => {
         clearErrors();
         const patch = createPatch();
         try {
-            await patchFeatureToggle(project, featureId, patch);
+            await patchFeatureFlag(project, featureId, patch);
             navigate(`/projects/${project}/features/${name}`);
             setToastData({
                 title: 'Toggle updated successfully',
@@ -81,11 +81,11 @@ const EditFeature = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Edit Feature toggle'
-            description='Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
-            The feature toggle is disabled when created and you decide when to enable'
+            title='Edit Feature flag'
+            description='Feature flags support different use cases, each with their own specific needs such as simple static routing or more complex routing.
+            The feature flag is disabled when created and you decide when to enable'
             documentationLink='https://docs.getunleash.io/reference/feature-toggle-types'
-            documentationLinkLabel='Feature toggle types documentation'
+            documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
             <FeatureForm

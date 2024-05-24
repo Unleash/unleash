@@ -31,13 +31,13 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
     padding: theme.spacing(1, 1.5),
 }));
 
-interface IFeatureToggleListActions {
+interface IFeatureFlagListActions {
     onExportClick: () => void;
 }
 
-export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
+export const FeatureToggleListActions: FC<IFeatureFlagListActions> = ({
     onExportClick,
-}: IFeatureToggleListActions) => {
+}: IFeatureFlagListActions) => {
     const { trackEvent } = usePlausibleTracker();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const featuresExportImport = useUiFlag('featuresExportImport');
@@ -59,7 +59,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
         setAnchorEl(null);
     };
 
-    const id = `feature-toggle-list-actions`;
+    const id = `feature-flag-list-actions`;
     const menuId = `${id}-menu`;
 
     return (
@@ -117,7 +117,7 @@ export const FeatureToggleListActions: FC<IFeatureToggleListActions> = ({
                                 </ListItemIcon>
                                 <ListItemText>
                                     <Typography variant='body2'>
-                                        New feature toggle
+                                        New feature flag
                                     </Typography>
                                 </ListItemText>
                             </MenuItem>

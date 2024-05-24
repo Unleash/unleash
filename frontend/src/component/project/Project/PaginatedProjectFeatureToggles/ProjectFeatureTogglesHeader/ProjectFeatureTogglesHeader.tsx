@@ -95,7 +95,7 @@ export const ProjectFeatureTogglesHeader: VFC<
             <PageHeader
                 titleElement={
                     showTitle
-                        ? `Feature toggles ${
+                        ? `Feature flags ${
                               totalItems !== undefined ? `(${totalItems})` : ''
                           }`
                         : null
@@ -114,7 +114,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                                     onFocus={() => setShowTitle(false)}
                                     onBlur={() => setShowTitle(true)}
                                     hasFilters
-                                    id='projectFeatureToggles'
+                                    id='projectFeatureFlags'
                                 />
                             }
                         />
@@ -125,7 +125,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                             show={
                                 <>
                                     <Tooltip
-                                        title='Export all project toggles'
+                                        title='Export all project flags'
                                         arrow
                                     >
                                         <IconButton
@@ -188,7 +188,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                             permission={CREATE_FEATURE}
                             data-testid='NAVIGATE_TO_CREATE_FEATURE'
                         >
-                            New feature toggle
+                            New feature flag
                         </StyledResponsiveButton>
                     </>
                 }
@@ -200,7 +200,7 @@ export const ProjectFeatureTogglesHeader: VFC<
                             initialValue={searchQuery || ''}
                             onChange={handleSearch}
                             hasFilters
-                            id='projectFeatureToggles'
+                            id='projectFeatureFlags'
                         />
                     }
                 />

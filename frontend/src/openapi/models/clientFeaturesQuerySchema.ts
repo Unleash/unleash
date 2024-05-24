@@ -9,7 +9,7 @@
  */
 export interface ClientFeaturesQuerySchema {
     /**
-     * Strategies for the feature toggle configured for this environment are included. (DEPRECATED) - Handled by API tokens
+     * Strategies for the feature flag configured for this environment are included. (DEPRECATED) - Handled by API tokens
      * @deprecated
      */
     environment?: string;

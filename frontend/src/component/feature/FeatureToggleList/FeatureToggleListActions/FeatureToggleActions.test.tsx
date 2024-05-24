@@ -18,6 +18,6 @@ test('all options are drawn', async () => {
 
     await userEvent.click(batchReviveButton!);
 
-    await screen.findByText('New feature toggle');
+    await screen.findByText('New feature flag');
     await screen.findByText('Export');
 });

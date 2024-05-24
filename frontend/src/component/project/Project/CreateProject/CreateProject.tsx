@@ -57,7 +57,7 @@ const CreateProject = () => {
     }
 
     const generalDocumentation =
-        'Projects allows you to group feature toggles together in the management UI.';
+        'Projects allows you to group feature flags together in the management UI.';
 
     const [documentation, setDocumentation] = useState(generalDocumentation);
 
@@ -82,7 +82,7 @@ const CreateProject = () => {
                 navigate(`/projects/${createdProject.id}`, { replace: true });
                 setToastData({
                     title: 'Project created',
-                    text: 'Now you can add toggles to this project',
+                    text: 'Now you can add flags to this project',
                     confetti: true,
                     type: 'success',
                 });
@@ -118,7 +118,7 @@ const CreateProject = () => {
         <FormTemplate
             loading={loading}
             title='Create project'
-            description='Projects allows you to group feature toggles together in the management UI.'
+            description='Projects allows you to group feature flags together in the management UI.'
             documentationLink='https://docs.getunleash.io/reference/projects'
             documentationLinkLabel='Projects documentation'
             formatApiCode={formatApiCode}

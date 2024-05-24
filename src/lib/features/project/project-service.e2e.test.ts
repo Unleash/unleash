@@ -188,9 +188,9 @@ test('should delete project', async () => {
     }
 });
 
-test('should not be able to delete project with toggles', async () => {
+test('should not be able to delete project with flags', async () => {
     const project = {
-        id: 'test-delete-with-toggles',
+        id: 'test-delete-with-flags',
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
@@ -206,7 +206,7 @@ test('should not be able to delete project with toggles', async () => {
         await projectService.deleteProject(project.id, user, auditUser);
     } catch (err) {
         expect(err.message).toBe(
-            'You can not delete a project with active feature toggles',
+            'You can not delete a project with active feature flags',
         );
     }
 });
@@ -842,7 +842,7 @@ test('should remove user from the project', async () => {
     expect(memberUsers).toHaveLength(0);
 });
 
-test('should not change project if feature toggle project does not match current project id', async () => {
+test('should not change project if feature flag project does not match current project id', async () => {
     const project = {
         id: 'test-change-project',
         name: 'New project',
@@ -851,19 +851,15 @@ test('should not change project if feature toggle project does not match current
         defaultStickiness: 'clientId',
     };
 
-    const toggle = { name: 'test-toggle' };
+    const flag = { name: 'test-flag' };
 
     await projectService.createProject(project, user, auditUser);
-    await featureToggleService.createFeatureToggle(
-        project.id,
-        toggle,
-        auditUser,
-    );
+    await featureToggleService.createFeatureToggle(project.id, flag, auditUser);
 
     try {
         await projectService.changeProject(
             'newProject',
-            toggle.name,
+            flag.name,
             user,
             'wrong-project-id',
             auditUser,
@@ -883,19 +879,15 @@ test('should return 404 if no project is found with the project id', async () =>
         defaultStickiness: 'clientId',
     };
 
-    const toggle = { name: 'test-toggle-2' };
+    const flag = { name: 'test-flag-2' };
 
     await projectService.createProject(project, user, auditUser);
-    await featureToggleService.createFeatureToggle(
-        project.id,
-        toggle,
-        auditUser,
-    );
+    await featureToggleService.createFeatureToggle(project.id, flag, auditUser);
 
     try {
         await projectService.changeProject(
             'newProject',
-            toggle.name,
+            flag.name,
             user,
             project.id,
             auditUser,
@@ -922,7 +914,7 @@ test('should fail if user is not authorized', async () => {
         defaultStickiness: 'clientId',
     };
 
-    const toggle = { name: 'test-toggle-3' };
+    const flag = { name: 'test-flag-3' };
     const projectAdmin1 = await stores.userStore.insert({
         name: 'test-change-project-creator',
         email: 'admin-change-project@getunleash.io',
@@ -934,16 +926,12 @@ test('should fail if user is not authorized', async () => {
         projectAdmin1,
         auditUser,
     );
-    await featureToggleService.createFeatureToggle(
-        project.id,
-        toggle,
-        auditUser,
-    );
+    await featureToggleService.createFeatureToggle(project.id, flag, auditUser);
 
     try {
         await projectService.changeProject(
             projectDestination.id,
-            toggle.name,
+            flag.name,
             user,
             project.id,
             auditUser,
@@ -967,25 +955,25 @@ test('should change project when checks pass', async () => {
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    const toggle = { name: randomId() };
+    const flag = { name: randomId() };
 
     await projectService.createProject(projectA, user, auditUser);
     await projectService.createProject(projectB, user, auditUser);
     await featureToggleService.createFeatureToggle(
         projectA.id,
-        toggle,
+        flag,
         auditUser,
     );
     await projectService.changeProject(
         projectB.id,
-        toggle.name,
+        flag.name,
         user,
         projectA.id,
         auditUser,
     );
 
     const updatedFeature = await featureToggleService.getFeature({
-        featureName: toggle.name,
+        featureName: flag.name,
     });
     expect(updatedFeature.project).toBe(projectB.id);
 });
@@ -1003,18 +991,18 @@ test('changing project should emit event even if user does not have a username s
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
-    const toggle = { name: randomId() };
+    const flag = { name: randomId() };
     await projectService.createProject(projectA, user, auditUser);
     await projectService.createProject(projectB, user, auditUser);
     await featureToggleService.createFeatureToggle(
         projectA.id,
-        toggle,
+        flag,
         auditUser,
     );
     const eventsBeforeChange = await stores.eventStore.getEvents();
     await projectService.changeProject(
         projectB.id,
-        toggle.name,
+        flag.name,
         user,
         projectA.id,
         auditUser,
@@ -1037,13 +1025,13 @@ test('should require equal project environments to move features', async () => {
         defaultStickiness: 'clientId',
     };
     const environment = { name: randomId(), type: 'production' };
-    const toggle = { name: randomId() };
+    const flag = { name: randomId() };
 
     await projectService.createProject(projectA, user, auditUser);
     await projectService.createProject(projectB, user, auditUser);
     await featureToggleService.createFeatureToggle(
         projectA.id,
-        toggle,
+        flag,
         auditUser,
     );
     await stores.environmentStore.create(environment);
@@ -1056,7 +1044,7 @@ test('should require equal project environments to move features', async () => {
     await expect(() =>
         projectService.changeProject(
             projectB.id,
-            toggle.name,
+            flag.name,
             user,
             projectA.id,
             auditUser,
@@ -1816,7 +1804,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
     expect(groups[0].roles).toStrictEqual([role1.id, role2.id]);
 });
 
-test('should only count active feature toggles for project', async () => {
+test('should only count active feature flags for project', async () => {
     const project = {
         id: 'only-active',
         name: 'New project',
@@ -1855,15 +1843,11 @@ test('should list projects with all features archived', async () => {
     await projectService.createProject(project, user, auditUser);
 
     await stores.featureToggleStore.create(project.id, {
-        name: 'archived-toggle',
+        name: 'archived-flag',
         createdByUserId: 9999,
     });
 
-    await featureToggleService.archiveToggle(
-        'archived-toggle',
-        user,
-        auditUser,
-    );
+    await featureToggleService.archiveToggle('archived-flag', user, auditUser);
 
     const projects = await projectService.getProjects();
     const theProject = projects.find((p) => p.id === project.id);
@@ -1894,7 +1878,7 @@ test('should calculate average time to production', async () => {
 
     await projectService.createProject(project, user, auditUser);
 
-    const toggles = [
+    const flags = [
         { name: 'average-prod-time' },
         { name: 'average-prod-time-2' },
         { name: 'average-prod-time-3' },
@@ -1902,23 +1886,23 @@ test('should calculate average time to production', async () => {
         { name: 'average-prod-time-5' },
     ];
 
-    const featureToggles = await Promise.all(
-        toggles.map((toggle) => {
+    const featureFlags = await Promise.all(
+        flags.map((flag) => {
             return featureToggleService.createFeatureToggle(
                 project.id,
-                toggle,
+                flag,
                 auditUser,
             );
         }),
     );
 
     await Promise.all(
-        featureToggles.map((toggle) => {
+        featureFlags.map((flag) => {
             return eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled: true,
                     project: project.id,
-                    featureName: toggle.name,
+                    featureName: flag.name,
                     environment: 'default',
                     auditUser,
                 }),
@@ -1929,8 +1913,8 @@ test('should calculate average time to production', async () => {
     await updateEventCreatedAt(subDays(new Date(), 31), 'average-prod-time-5');
 
     await Promise.all(
-        featureToggles.map((toggle) =>
-            updateFeature(toggle.name, { created_at: subDays(new Date(), 15) }),
+        featureFlags.map((flag) =>
+            updateFeature(flag.name, { created_at: subDays(new Date(), 15) }),
         ),
     );
 
@@ -1969,74 +1953,70 @@ test('should calculate average time to production ignoring some items', async ()
         SYSTEM_USER_AUDIT,
     );
 
-    // actual toggle we take for calculations
-    const toggle = { name: 'main-toggle' };
-    await featureToggleService.createFeatureToggle(
-        project.id,
-        toggle,
-        auditUser,
-    );
-    await updateFeature(toggle.name, {
+    // actual flag we take for calculations
+    const flag = { name: 'main-flag' };
+    await featureToggleService.createFeatureToggle(project.id, flag, auditUser);
+    await updateFeature(flag.name, {
         created_at: subDays(new Date(), 20),
     });
     await eventService.storeEvent(
-        new FeatureEnvironmentEvent(makeEvent(toggle.name)),
+        new FeatureEnvironmentEvent(makeEvent(flag.name)),
     );
     // ignore events added after first enabled
-    await updateEventCreatedAt(addDays(new Date(), 1), toggle.name);
+    await updateEventCreatedAt(addDays(new Date(), 1), flag.name);
     await eventService.storeEvent(
-        new FeatureEnvironmentEvent(makeEvent(toggle.name)),
+        new FeatureEnvironmentEvent(makeEvent(flag.name)),
     );
 
-    // ignore toggles enabled in non-prod envs
-    const devToggle = { name: 'dev-toggle' };
+    // ignore flags enabled in non-prod envs
+    const devFlag = { name: 'dev-flag' };
     await featureToggleService.createFeatureToggle(
         project.id,
-        devToggle,
+        devFlag,
         auditUser,
     );
     await eventService.storeEvent(
         new FeatureEnvironmentEvent({
-            ...makeEvent(devToggle.name),
+            ...makeEvent(devFlag.name),
             environment: 'customEnv',
         }),
     );
 
-    // ignore toggles from other projects
-    const otherProjectToggle = { name: 'other-project' };
+    // ignore flags from other projects
+    const otherProjectFlag = { name: 'other-project' };
     await featureToggleService.createFeatureToggle(
         'default',
-        otherProjectToggle,
+        otherProjectFlag,
         auditUser,
     );
     await eventService.storeEvent(
-        new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
+        new FeatureEnvironmentEvent(makeEvent(otherProjectFlag.name)),
     );
 
-    // ignore non-release toggles
-    const nonReleaseToggle = { name: 'permission-toggle', type: 'permission' };
+    // ignore non-release flags
+    const nonReleaseFlag = { name: 'permission-flag', type: 'permission' };
     await featureToggleService.createFeatureToggle(
         project.id,
-        nonReleaseToggle,
+        nonReleaseFlag,
         auditUser,
     );
     await eventService.storeEvent(
-        new FeatureEnvironmentEvent(makeEvent(nonReleaseToggle.name)),
+        new FeatureEnvironmentEvent(makeEvent(nonReleaseFlag.name)),
     );
 
-    // ignore toggles with events before toggle creation time
-    const previouslyDeleteToggle = { name: 'previously-deleted' };
+    // ignore flags with events before flag creation time
+    const previouslyDeleteFlag = { name: 'previously-deleted' };
     await featureToggleService.createFeatureToggle(
         project.id,
-        previouslyDeleteToggle,
+        previouslyDeleteFlag,
         auditUser,
     );
     await eventService.storeEvent(
-        new FeatureEnvironmentEvent(makeEvent(previouslyDeleteToggle.name)),
+        new FeatureEnvironmentEvent(makeEvent(previouslyDeleteFlag.name)),
     );
     await updateEventCreatedAt(
         subDays(new Date(), 30),
-        previouslyDeleteToggle.name,
+        previouslyDeleteFlag.name,
     );
 
     const result = await projectService.getStatusUpdates(project.id);
@@ -2053,7 +2033,7 @@ test('should get correct amount of features created in current and past window',
 
     await projectService.createProject(project, user, auditUser);
 
-    const toggles = [
+    const flags = [
         { name: 'features-created' },
         { name: 'features-created-2' },
         { name: 'features-created-3' },
@@ -2061,18 +2041,18 @@ test('should get correct amount of features created in current and past window',
     ];
 
     await Promise.all(
-        toggles.map((toggle) => {
+        flags.map((flag) => {
             return featureToggleService.createFeatureToggle(
                 project.id,
-                toggle,
+                flag,
                 auditUser,
             );
         }),
     );
 
     await Promise.all([
-        updateFeature(toggles[2].name, { created_at: subDays(new Date(), 31) }),
-        updateFeature(toggles[3].name, { created_at: subDays(new Date(), 31) }),
+        updateFeature(flags[2].name, { created_at: subDays(new Date(), 31) }),
+        updateFeature(flags[3].name, { created_at: subDays(new Date(), 31) }),
     ]);
 
     const result = await projectService.getStatusUpdates(project.id);
@@ -2090,7 +2070,7 @@ test('should get correct amount of features archived in current and past window'
 
     await projectService.createProject(project, user, auditUser);
 
-    const toggles = [
+    const flags = [
         { name: 'features-archived' },
         { name: 'features-archived-2' },
         { name: 'features-archived-3' },
@@ -2098,26 +2078,26 @@ test('should get correct amount of features archived in current and past window'
     ];
 
     await Promise.all(
-        toggles.map((toggle) => {
+        flags.map((flag) => {
             return featureToggleService.createFeatureToggle(
                 project.id,
-                toggle,
+                flag,
                 auditUser,
             );
         }),
     );
 
     await Promise.all([
-        updateFeature(toggles[0].name, {
+        updateFeature(flags[0].name, {
             archived_at: new Date(),
         }),
-        updateFeature(toggles[1].name, {
+        updateFeature(flags[1].name, {
             archived_at: new Date(),
         }),
-        updateFeature(toggles[2].name, {
+        updateFeature(flags[2].name, {
             archived_at: subDays(new Date(), 31),
         }),
-        updateFeature(toggles[3].name, {
+        updateFeature(flags[3].name, {
             archived_at: subDays(new Date(), 31),
         }),
     ]);
@@ -2167,17 +2147,17 @@ test('should get correct amount of project members for current and past window',
     expect(result.updates.projectActivityPastWindow).toBe(0);
 });
 
-test('should return average time to production per toggle', async () => {
+test('should return average time to production per flag', async () => {
     const project = {
-        id: 'average-time-to-prod-per-toggle',
-        name: 'average-time-to-prod-per-toggle',
+        id: 'average-time-to-prod-per-flag',
+        name: 'average-time-to-prod-per-flag',
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user, auditUser);
 
-    const toggles = [
+    const flags = [
         { name: 'average-prod-time-pt', subdays: 7 },
         { name: 'average-prod-time-pt-2', subdays: 14 },
         { name: 'average-prod-time-pt-3', subdays: 40 },
@@ -2185,23 +2165,23 @@ test('should return average time to production per toggle', async () => {
         { name: 'average-prod-time-pt-5', subdays: 2 },
     ];
 
-    const featureToggles = await Promise.all(
-        toggles.map((toggle) => {
+    const featureFlags = await Promise.all(
+        flags.map((flag) => {
             return featureToggleService.createFeatureToggle(
                 project.id,
-                toggle,
+                flag,
                 auditUser,
             );
         }),
     );
 
     await Promise.all(
-        featureToggles.map((toggle) => {
+        featureFlags.map((flag) => {
             return eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled: true,
                     project: project.id,
-                    featureName: toggle.name,
+                    featureName: flag.name,
                     environment: 'default',
                     auditUser,
                 }),
@@ -2210,9 +2190,9 @@ test('should return average time to production per toggle', async () => {
     );
 
     await Promise.all(
-        toggles.map((toggle) =>
-            updateFeature(toggle.name, {
-                created_at: subDays(new Date(), toggle.subdays),
+        flags.map((flag) =>
+            updateFeature(flag.name, {
+                created_at: subDays(new Date(), flag.subdays),
             }),
         ),
     );
@@ -2224,16 +2204,16 @@ test('should return average time to production per toggle', async () => {
     expect(result.projectAverage).toBeTruthy();
 });
 
-test('should return average time to production per toggle for a specific project', async () => {
+test('should return average time to production per flag for a specific project', async () => {
     const project1 = {
-        id: 'average-time-to-prod-per-toggle-1',
+        id: 'average-time-to-prod-per-flag-1',
         name: 'Project 1',
         mode: 'open' as const,
         defaultStickiness: 'clientId',
     };
 
     const project2 = {
-        id: 'average-time-to-prod-per-toggle-2',
+        id: 'average-time-to-prod-per-flag-2',
         name: 'Project 2',
         mode: 'open' as const,
         defaultStickiness: 'clientId',
@@ -2242,44 +2222,44 @@ test('should return average time to production per toggle for a specific project
     await projectService.createProject(project1, user, auditUser);
     await projectService.createProject(project2, user, auditUser);
 
-    const togglesProject1 = [
+    const flagsProject1 = [
         { name: 'average-prod-time-pt-10', subdays: 7 },
         { name: 'average-prod-time-pt-11', subdays: 14 },
         { name: 'average-prod-time-pt-12', subdays: 40 },
     ];
 
-    const togglesProject2 = [
+    const flagsProject2 = [
         { name: 'average-prod-time-pt-13', subdays: 15 },
         { name: 'average-prod-time-pt-14', subdays: 2 },
     ];
 
-    const featureTogglesProject1 = await Promise.all(
-        togglesProject1.map((toggle) => {
+    const featureFlagsProject1 = await Promise.all(
+        flagsProject1.map((flag) => {
             return featureToggleService.createFeatureToggle(
                 project1.id,
-                toggle,
+                flag,
                 auditUser,
             );
         }),
     );
 
-    const featureTogglesProject2 = await Promise.all(
-        togglesProject2.map((toggle) => {
+    const featureFlagsProject2 = await Promise.all(
+        flagsProject2.map((flag) => {
             return featureToggleService.createFeatureToggle(
                 project2.id,
-                toggle,
+                flag,
                 auditUser,
             );
         }),
     );
 
     await Promise.all(
-        featureTogglesProject1.map((toggle) => {
+        featureFlagsProject1.map((flag) => {
             return eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled: true,
                     project: project1.id,
-                    featureName: toggle.name,
+                    featureName: flag.name,
                     environment: 'default',
                     auditUser,
                 }),
@@ -2288,12 +2268,12 @@ test('should return average time to production per toggle for a specific project
     );
 
     await Promise.all(
-        featureTogglesProject2.map((toggle) => {
+        featureFlagsProject2.map((flag) => {
             return eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled: true,
                     project: project2.id,
-                    featureName: toggle.name,
+                    featureName: flag.name,
                     environment: 'default',
                     auditUser,
                 }),
@@ -2302,17 +2282,17 @@ test('should return average time to production per toggle for a specific project
     );
 
     await Promise.all(
-        togglesProject1.map((toggle) =>
-            updateFeature(toggle.name, {
-                created_at: subDays(new Date(), toggle.subdays),
+        flagsProject1.map((flag) =>
+            updateFeature(flag.name, {
+                created_at: subDays(new Date(), flag.subdays),
             }),
         ),
     );
 
     await Promise.all(
-        togglesProject2.map((toggle) =>
-            updateFeature(toggle.name, {
-                created_at: subDays(new Date(), toggle.subdays),
+        flagsProject2.map((flag) =>
+            updateFeature(flag.name, {
+                created_at: subDays(new Date(), flag.subdays),
             }),
         ),
     );
@@ -2324,9 +2304,9 @@ test('should return average time to production per toggle for a specific project
     expect(resultProject2.features).toHaveLength(2);
 });
 
-test('should return average time to production per toggle and include archived toggles', async () => {
+test('should return average time to production per flag and include archived flags', async () => {
     const project1 = {
-        id: 'average-time-to-prod-per-toggle-12',
+        id: 'average-time-to-prod-per-flag-12',
         name: 'Project 1',
         mode: 'open' as const,
         defaultStickiness: 'clientId',
@@ -2334,29 +2314,29 @@ test('should return average time to production per toggle and include archived t
 
     await projectService.createProject(project1, user, auditUser);
 
-    const togglesProject1 = [
+    const flagsProject1 = [
         { name: 'average-prod-time-pta-10', subdays: 7 },
         { name: 'average-prod-time-pta-11', subdays: 14 },
         { name: 'average-prod-time-pta-12', subdays: 40 },
     ];
 
-    const featureTogglesProject1 = await Promise.all(
-        togglesProject1.map((toggle) => {
+    const featureFlagsProject1 = await Promise.all(
+        flagsProject1.map((flag) => {
             return featureToggleService.createFeatureToggle(
                 project1.id,
-                toggle,
+                flag,
                 auditUser,
             );
         }),
     );
 
     await Promise.all(
-        featureTogglesProject1.map((toggle) => {
+        featureFlagsProject1.map((flag) => {
             return eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled: true,
                     project: project1.id,
-                    featureName: toggle.name,
+                    featureName: flag.name,
                     environment: 'default',
                     auditUser,
                 }),
@@ -2365,9 +2345,9 @@ test('should return average time to production per toggle and include archived t
     );
 
     await Promise.all(
-        togglesProject1.map((toggle) =>
-            updateFeature(toggle.name, {
-                created_at: subDays(new Date(), toggle.subdays),
+        flagsProject1.map((flag) =>
+            updateFeature(flag.name, {
+                created_at: subDays(new Date(), flag.subdays),
             }),
         ),
     );
@@ -2436,36 +2416,36 @@ describe('feature flag naming patterns', () => {
     });
 });
 
-test('deleting a project with archived toggles should result in any remaining archived toggles being deleted', async () => {
+test('deleting a project with archived flags should result in any remaining archived flags being deleted', async () => {
     const project = {
-        id: 'project-with-archived-toggles',
-        name: 'project-with-archived-toggles',
+        id: 'project-with-archived-flags',
+        name: 'project-with-archived-flags',
     };
-    const toggleName = 'archived-and-deleted';
+    const flagName = 'archived-and-deleted';
 
     await projectService.createProject(project, user, auditUser);
 
     await stores.featureToggleStore.create(project.id, {
-        name: toggleName,
+        name: flagName,
         createdByUserId: 9999,
     });
 
-    await stores.featureToggleStore.archive(toggleName);
+    await stores.featureToggleStore.archive(flagName);
     await projectService.deleteProject(project.id, user, auditUser);
 
-    // bring the project back again, previously this would allow those archived toggles to be resurrected
+    // bring the project back again, previously this would allow those archived flags to be resurrected
     // we now expect them to be deleted correctly
     await projectService.createProject(project, user, auditUser);
 
-    const toggles = await stores.featureToggleStore.getAll({
+    const flags = await stores.featureToggleStore.getAll({
         project: project.id,
         archived: true,
     });
 
-    expect(toggles.find((t) => t.name === toggleName)).toBeUndefined();
+    expect(flags.find((t) => t.name === flagName)).toBeUndefined();
 });
 
-test('deleting a project with no archived toggles should not result in an error', async () => {
+test('deleting a project with no archived flags should not result in an error', async () => {
     const project = {
         id: 'project-with-nothing',
         name: 'project-with-nothing',

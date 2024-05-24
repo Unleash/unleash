@@ -5,7 +5,7 @@
  */
 
 /**
- * Data used to create a new feature toggle.
+ * Data used to create a new feature flag.
  */
 export interface CreateFeatureSchema {
     /**
@@ -17,6 +17,6 @@ export interface CreateFeatureSchema {
     impressionData?: boolean;
     /** Unique feature name */
     name: string;
-    /** The feature toggle's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission */
+    /** The feature flag's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission */
     type?: string;
 }

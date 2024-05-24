@@ -173,7 +173,7 @@ class FeatureTagStore implements IFeatureTagStore {
     }
 
     /**
-     * Only gets tags for active feature toggles.
+     * Only gets tags for active feature flags.
      */
     async getAllFeatureTags(): Promise<IFeatureTag[]> {
         const rows = await this.db(TABLE)

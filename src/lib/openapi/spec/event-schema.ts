@@ -8,10 +8,10 @@ const eventDataSchema = {
     nullable: true,
     'x-enforcer-exception-skip-codes': 'WSCH006', // allow additional properties in example (openapi enforcer)
     description:
-        'Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable.',
+        'Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable.',
     example: {
         name: 'new-feature',
-        description: 'Toggle description',
+        description: 'Flag description',
         type: 'release',
         project: 'my-project',
         stale: false,
@@ -61,7 +61,7 @@ export const eventSchema = {
         environment: {
             type: 'string',
             description:
-                'The feature toggle environment the event relates to, if applicable.',
+                'The feature flag environment the event relates to, if applicable.',
             nullable: true,
             example: 'development',
         },
@@ -75,7 +75,7 @@ export const eventSchema = {
             type: 'string',
             nullable: true,
             description:
-                'The name of the feature toggle the event relates to, if applicable.',
+                'The name of the feature flag the event relates to, if applicable.',
             example: 'my.first.feature',
         },
         data: eventDataSchema,

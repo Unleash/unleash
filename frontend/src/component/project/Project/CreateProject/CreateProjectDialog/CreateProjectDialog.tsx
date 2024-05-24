@@ -9,11 +9,12 @@ import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, styled } from '@mui/material';
+import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
 interface ICreateProjectDialogueProps {
     open: boolean;
@@ -24,6 +25,7 @@ const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
         maxWidth: theme.spacing(170),
+        width: '100%',
         backgroundColor: 'transparent',
     },
     padding: 0,
@@ -33,6 +35,11 @@ const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
+}));
+
+const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
+    fill: theme.palette.common.white,
+    stroke: theme.palette.common.white,
 }));
 
 export const CreateProjectDialogue = ({
@@ -67,19 +74,34 @@ export const CreateProjectDialogue = ({
         errors,
     } = useProjectForm();
 
-    const generalDocumentation =
-        'Projects allows you to group feature toggles together in the management UI.';
+    const generalDocumentation: {
+        icon: ReactNode;
+        text: string;
+        link?: { url: string; label: string };
+    } = {
+        icon: <StyledProjectIcon />,
+        text: 'Projects allows you to group feature flags together in the management UI.',
+        link: {
+            url: 'https://docs.getunleash.io/reference/projects',
+            label: 'Projects documentation',
+        },
+    };
 
     const [documentation, setDocumentation] = useState(generalDocumentation);
 
     const clearDocumentationOverride = () =>
         setDocumentation(generalDocumentation);
 
+    const projectPayload = getCreateProjectPayload({
+        omitId: true,
+        includeChangeRequestConfig: true,
+    });
+
     const formatApiCode = () => {
         return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getCreateProjectPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(projectPayload, undefined, 2)}'`;
     };
 
     const handleSubmit = async (e: Event) => {
@@ -88,16 +110,13 @@ export const CreateProjectDialogue = ({
         const validName = validateName();
 
         if (validName) {
-            const payload = getCreateProjectPayload({
-                omitId: true,
-            });
             try {
-                const createdProject = await createProject(payload);
+                const createdProject = await createProject(projectPayload);
                 refetchUser();
                 navigate(`/projects/${createdProject.id}`, { replace: true });
                 setToastData({
                     title: 'Project created',
-                    text: 'Now you can add toggles to this project',
+                    text: 'Now you can add flags to this project',
                     confetti: true,
                     type: 'success',
                 });
@@ -113,13 +132,16 @@ export const CreateProjectDialogue = ({
             }
         }
     };
+
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
+                compact
                 disablePadding
-                description={documentation}
-                documentationLink='https://docs.getunleash.io/reference/projects'
-                documentationLinkLabel='Projects documentation'
+                description={documentation.text}
+                documentationIcon={documentation.icon}
+                documentationLink={documentation.link?.url}
+                documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}
             >
                 <NewProjectForm

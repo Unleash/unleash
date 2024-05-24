@@ -1,4 +1,4 @@
-import type { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import type { IFeatureFlagListItem } from 'interfaces/featureToggle';
 import { expired, getDiffInDays } from '../utils';
 import { KILLSWITCH, PERMISSION } from 'constants/featureToggleTypes';
 import { parseISO } from 'date-fns';
@@ -7,7 +7,7 @@ import type { FeatureTypeSchema } from 'openapi';
 export type ReportingStatus = 'potentially-stale' | 'healthy';
 
 export const formatStatus = (
-    feature: IFeatureToggleListItem,
+    feature: IFeatureFlagListItem,
     featureTypes: FeatureTypeSchema[],
 ): ReportingStatus => {
     const { type, createdAt } = feature;

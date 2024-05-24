@@ -4,7 +4,7 @@ import type { IUnleashTest } from './test-helper';
 export const FEATURES_BASE_PATH = '/api/admin/projects/default/features';
 export const ADMIN_BASE_PATH = '/api/admin';
 
-export const createFeatureToggle = (
+export const createFeatureFlag = (
     app: IUnleashTest,
     postData: object,
     expectStatusCode = 201,

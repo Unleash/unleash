@@ -135,7 +135,7 @@ const RolloutSlider = ({
                             <Typography variant='body2'>
                                 The groupId is used as a seed for the hash
                                 function, ensuring consistent feature exposure
-                                across different feature toggles for a uniform
+                                across different feature flags for a uniform
                                 user experience.
                             </Typography>
                         </Box>

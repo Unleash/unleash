@@ -39,7 +39,7 @@ export const ArchivedFeatureReviveConfirm = ({
             setToastData({
                 type: 'success',
                 title: "And we're back!",
-                text: 'The feature toggles have been revived.',
+                text: 'The feature flags have been revived.',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -52,10 +52,10 @@ export const ArchivedFeatureReviveConfirm = ({
         setOpen(false);
     };
 
-    const title = `Revive feature toggle${
+    const title = `Revive feature flag${
         revivedFeatures.length > 1 ? 's' : ''
     }?`;
-    const primaryBtnText = `Revive feature toggle${
+    const primaryBtnText = `Revive feature flag${
         revivedFeatures.length > 1 ? 's' : ''
     }`;
 
@@ -69,7 +69,7 @@ export const ArchivedFeatureReviveConfirm = ({
             onClose={clearModal}
         >
             <Alert severity='info'>
-                Revived feature toggles will be automatically disabled in all
+                Revived feature flags will be automatically disabled in all
                 environments
             </Alert>
 
@@ -78,7 +78,7 @@ export const ArchivedFeatureReviveConfirm = ({
                 show={
                     <>
                         <StyledParagraph>
-                            You are about to revive feature toggles:
+                            You are about to revive feature flags:
                         </StyledParagraph>
                         <ul>
                             {revivedFeatures.map((name) => (
@@ -89,7 +89,7 @@ export const ArchivedFeatureReviveConfirm = ({
                 }
                 elseShow={
                     <StyledParagraph>
-                        You are about to revive feature toggle:{' '}
+                        You are about to revive feature flag:{' '}
                         {revivedFeatures[0]}
                     </StyledParagraph>
                 }

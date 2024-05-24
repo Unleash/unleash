@@ -32,7 +32,7 @@ export const InstanceStats: VFC = () => {
         { title: 'Instance Id', value: stats?.instanceId, offset: false },
         { title: versionTitle, value: version },
         { title: 'Users', value: stats?.users },
-        { title: 'Feature toggles', value: stats?.featureToggles },
+        { title: 'Feature flags', value: stats?.featureToggles },
         { title: 'Projects', value: stats?.projects },
         { title: 'Environments', value: stats?.environments },
         { title: 'Roles', value: stats?.roles },

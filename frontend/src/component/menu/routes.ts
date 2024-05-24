@@ -105,7 +105,7 @@ export const routes: IRoute[] = [
     {
         path: '/projects/:projectId/create-toggle',
         parent: '/projects/:projectId/features',
-        title: 'Create feature toggle',
+        title: 'Create feature flag',
         component: CreateFeature,
         type: 'protected',
         menu: {},
@@ -218,7 +218,7 @@ export const routes: IRoute[] = [
     // Feature types
     {
         path: '/feature-toggle-type/*',
-        title: 'Feature toggle types',
+        title: 'Feature flag types',
         component: FeatureTypesList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
@@ -427,7 +427,7 @@ export const routes: IRoute[] = [
     // Archive
     {
         path: '/archive',
-        title: 'Archived toggles',
+        title: 'Archived flags',
         component: FeaturesArchiveTable,
         type: 'protected',
         menu: {},

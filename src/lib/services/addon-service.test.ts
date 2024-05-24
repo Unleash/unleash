@@ -107,7 +107,7 @@ test('should trigger simple-addon eventHandler', async () => {
 
     await addonService.createAddon(config, TEST_AUDIT_USER);
 
-    // Feature toggle was created
+    // Feature flag was created
     await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: SYSTEM_USER.username!,

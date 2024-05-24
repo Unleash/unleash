@@ -14,7 +14,7 @@ export const unknownFeatureEvaluationResult = 'unevaluated' as const;
 export const playgroundFeatureSchema = {
     $id: '#/components/schemas/playgroundFeatureSchema',
     description:
-        'A simplified feature toggle model intended for the Unleash playground.',
+        'A simplified feature flag model intended for the Unleash playground.',
     type: 'object',
     additionalProperties: false,
     required: [
@@ -96,7 +96,7 @@ export const playgroundFeatureSchema = {
                 name: {
                     type: 'string',
                     description:
-                        "The variant's name. If there is no variant or if the toggle is disabled, this will be `disabled`",
+                        "The variant's name. If there is no variant or if the flag is disabled, this will be `disabled`",
                     example: 'red-variant',
                 },
                 enabled: {

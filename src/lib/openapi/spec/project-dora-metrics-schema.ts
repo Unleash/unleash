@@ -11,13 +11,13 @@ export const projectDoraMetricsSchema = {
         projectAverage: {
             type: 'number',
             description:
-                'The average time it takes a feature toggle to be enabled in production. The measurement unit is days.',
+                'The average time it takes a feature flag to be enabled in production. The measurement unit is days.',
         },
         features: {
             type: 'array',
             items: { $ref: '#/components/schemas/doraFeaturesSchema' },
             description:
-                'An array of objects containing feature toggle name and timeToProduction values. The measurement unit of timeToProduction is days.',
+                'An array of objects containing feature flag name and timeToProduction values. The measurement unit of timeToProduction is days.',
         },
     },
     components: {

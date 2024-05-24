@@ -186,7 +186,7 @@ const ProjectEnvironmentList = () => {
                         <PermissionSwitch
                             tooltip={
                                 original.projectVisible
-                                    ? 'Hide environment and disable feature toggles'
+                                    ? 'Hide environment and disable feature flags'
                                     : 'Make it visible'
                             }
                             size='medium'

@@ -83,14 +83,14 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
     const renderActiveToggles = () => (
         <StyledBoxActive>
             <CheckIcon />
-            <span>{healthReport.activeCount} active toggles</span>
+            <span>{healthReport.activeCount} active flags</span>
         </StyledBoxActive>
     );
 
     const renderStaleToggles = () => (
         <StyledBoxStale>
             <ReportProblemOutlinedIcon />
-            <span>{healthReport.staleCount} stale toggles</span>
+            <span>{healthReport.staleCount} stale flags</span>
         </StyledBoxStale>
     );
 
@@ -98,7 +98,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
         <StyledBoxStale>
             <ReportProblemOutlinedIcon />
             <span>
-                {healthReport.potentiallyStaleCount} potentially stale toggles
+                {healthReport.potentiallyStaleCount} potentially stale flags
             </span>
         </StyledBoxStale>
     );
@@ -107,8 +107,8 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
         <HtmlTooltip
             title={
                 <>
-                    If your toggle exceeds the expected lifetime of its toggle
-                    type it will be marked as potentially stale.
+                    If your flag exceeds the expected lifetime of its flag type
+                    it will be marked as potentially stale.
                     <Box sx={{ mt: 2 }}>
                         <a
                             href='https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles'
@@ -152,7 +152,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                 />
             </Box>
             <Box>
-                <StyledHeader>Toggle report</StyledHeader>
+                <StyledHeader>Flag report</StyledHeader>
                 <StyledList>
                     <li>
                         <ConditionallyRender
@@ -164,7 +164,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                         condition={Boolean(healthReport.activeCount)}
                         show={
                             <StyledAlignedItem>
-                                Also includes potentially stale toggles.
+                                Also includes potentially stale flags.
                             </StyledAlignedItem>
                         }
                     />
@@ -199,8 +199,8 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                     show={
                         <>
                             <StyledAlignedItem>
-                                Review your feature toggles and delete unused
-                                toggles.
+                                Review your feature flags and delete unused
+                                flags.
                             </StyledAlignedItem>
                             <Box sx={{ mt: 2 }}>
                                 <Link

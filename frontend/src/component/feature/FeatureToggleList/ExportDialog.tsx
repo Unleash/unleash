@@ -81,7 +81,7 @@ export const ExportDialog = ({
     return (
         <Dialogue
             open={showExportDialog}
-            title='Export feature toggle configuration'
+            title='Export feature flag configuration'
             onClose={onClose}
             onClick={onClick}
             primaryButtonText='Export selection'
@@ -93,14 +93,13 @@ export const ExportDialog = ({
                     show={
                         <span>
                             The current search filter will be used to export
-                            feature toggles. Currently {data.length} feature
-                            toggles will be exported.
+                            feature flags. Currently {data.length} feature flags
+                            will be exported.
                         </span>
                     }
                     elseShow={
                         <span>
-                            You will export all feature toggles from this
-                            project.
+                            You will export all feature flags from this project.
                         </span>
                     }
                 />
@@ -108,7 +107,7 @@ export const ExportDialog = ({
                 <br />
                 <br />
                 <Typography>
-                    Select which environment to export feature toggle
+                    Select which environment to export feature flag
                     configuration from:
                 </Typography>
                 <StyledSelect

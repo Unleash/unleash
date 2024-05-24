@@ -66,12 +66,12 @@ const EditEnvironment = () => {
             description='Environments allow you to manage your
             product lifecycle from local development
             through production. Your projects and
-            feature toggles are accessible in all your
+            feature flags are accessible in all your
             environments, but they can take different
             configurations per environment. This means
-            that you can enable a feature toggle in a
+            that you can enable a feature flag in a
             development or test environment without
-            enabling the feature toggle in the
+            enabling the feature flag in the
             production environment.'
             documentationLink='https://docs.getunleash.io/reference/environments'
             documentationLinkLabel='Environments documentation'

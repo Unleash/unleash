@@ -450,7 +450,7 @@ test('should grant user access to project', async () => {
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
     await accessService.addUserToRole(sUser.id, projectRole.id, project);
 
-    // // Should be able to update feature toggles inside the project
+    // // Should be able to update feature flags inside the project
     await hasCommonProjectAccess(sUser, project, true);
 
     // Should not be able to admin the project itself.
@@ -472,7 +472,7 @@ test('should not get access if not specifying project', async () => {
 
     await accessService.addUserToRole(sUser.id, projectRole.id, project);
 
-    // Should not be able to update feature toggles outside project
+    // Should not be able to update feature flags outside project
     await hasCommonProjectAccess(sUser, undefined, false);
 });
 
@@ -766,7 +766,7 @@ test('Should be denied access to delete a role that is in use', async () => {
     }
 });
 
-test('Should be denied move feature toggle to project where the user does not have access', async () => {
+test('Should be denied move feature flag to project where the user does not have access', async () => {
     const user = editorUser;
     const editorUser2 = await createUser(editorRole.id);
 
@@ -787,18 +787,18 @@ test('Should be denied move feature toggle to project where the user does not ha
         TEST_AUDIT_USER,
     );
 
-    const featureToggle = { name: 'moveableToggle' };
+    const featureFlag = { name: 'moveableFlag' };
 
     await featureToggleService.createFeatureToggle(
         projectOrigin.id,
-        featureToggle,
+        featureFlag,
         extractAuditInfoFromUser(user),
     );
 
     try {
         await projectService.changeProject(
             projectDest.id,
-            featureToggle.name,
+            featureFlag.name,
             user,
             projectOrigin.id,
             TEST_AUDIT_USER,
@@ -812,7 +812,7 @@ test('Should be denied move feature toggle to project where the user does not ha
     }
 });
 
-test('Should be allowed move feature toggle to project when the user has access', async () => {
+test('Should be allowed move feature flag to project when the user has access', async () => {
     const user = editorUser;
 
     const projectOrigin = {
@@ -836,17 +836,17 @@ test('Should be allowed move feature toggle to project when the user has access'
         extractAuditInfoFromUser(user),
     );
 
-    const featureToggle = { name: 'moveableToggle2' };
+    const featureFlag = { name: 'moveableFlag2' };
 
     await featureToggleService.createFeatureToggle(
         projectOrigin.id,
-        featureToggle,
+        featureFlag,
         extractAuditInfoFromUser(user),
     );
 
     await projectService.changeProject(
         projectDest.id,
-        featureToggle.name,
+        featureFlag.name,
         user,
         projectOrigin.id,
         extractAuditInfoFromUser(user),
@@ -921,7 +921,7 @@ test('Should not be allowed to delete a project role', async () => {
     }
 });
 
-test('Should be allowed move feature toggle to project when given access through group', async () => {
+test('Should be allowed move feature flag to project when given access through group', async () => {
     const project = {
         id: 'yet-another-project1',
         name: 'yet-another-project1',
@@ -976,13 +976,13 @@ test('Should not lose user role access when given permissions from a group', asy
 
 test('Should allow user to take multiple group roles and have expected permissions on each project', async () => {
     const projectForCreate = {
-        id: 'project-that-should-have-create-toggle-permission',
-        name: 'project-that-should-have-create-toggle-permission',
+        id: 'project-that-should-have-create-flag-permission',
+        name: 'project-that-should-have-create-flag-permission',
         description: 'Blah',
     };
     const projectForDelete = {
-        id: 'project-that-should-have-delete-toggle-permission',
-        name: 'project-that-should-have-delete-toggle-permission',
+        id: 'project-that-should-have-delete-flag-permission',
+        name: 'project-that-should-have-delete-flag-permission',
         description: 'Blah',
     };
 

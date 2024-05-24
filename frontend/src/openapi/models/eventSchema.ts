@@ -22,17 +22,17 @@ export interface EventSchema {
      */
     createdByUserId?: number | null;
     /**
-     * Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable.
+     * Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable.
      * @nullable
      */
     data?: EventSchemaData;
     /**
-     * The feature toggle environment the event relates to, if applicable.
+     * The feature flag environment the event relates to, if applicable.
      * @nullable
      */
     environment?: string | null;
     /**
-     * The name of the feature toggle the event relates to, if applicable.
+     * The name of the feature flag the event relates to, if applicable.
      * @nullable
      */
     featureName?: string | null;

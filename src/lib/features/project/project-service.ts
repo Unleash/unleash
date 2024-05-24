@@ -521,24 +521,24 @@ export default class ProjectService {
             );
         }
 
-        const toggles = await this.featureToggleStore.getAll({
+        const flags = await this.featureToggleStore.getAll({
             project: id,
             archived: false,
         });
 
-        if (toggles.length > 0) {
+        if (flags.length > 0) {
             throw new InvalidOperationError(
-                'You can not delete a project with active feature toggles',
+                'You can not delete a project with active feature flags',
             );
         }
 
-        const archivedToggles = await this.featureToggleStore.getAll({
+        const archivedFlags = await this.featureToggleStore.getAll({
             project: id,
             archived: true,
         });
 
         this.featureToggleService.deleteFeatures(
-            archivedToggles.map((toggle) => toggle.name),
+            archivedFlags.map((flag) => flag.name),
             id,
             auditUser,
         );
@@ -1041,34 +1041,34 @@ export default class ProjectService {
 
     /** @deprecated use projectInsightsService instead */
     async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
-        const activeFeatureToggles = (
+        const activeFeatureFlags = (
             await this.featureToggleStore.getAll({ project: projectId })
         ).map((feature) => feature.name);
 
-        const archivedFeatureToggles = (
+        const archivedFeatureFlags = (
             await this.featureToggleStore.getAll({
                 project: projectId,
                 archived: true,
             })
         ).map((feature) => feature.name);
 
-        const featureToggleNames = [
-            ...activeFeatureToggles,
-            ...archivedFeatureToggles,
+        const featureFlagNames = [
+            ...activeFeatureFlags,
+            ...archivedFeatureFlags,
         ];
 
         const projectAverage = calculateAverageTimeToProd(
             await this.projectStatsStore.getTimeToProdDates(projectId),
         );
 
-        const toggleAverage =
+        const flagAverage =
             await this.projectStatsStore.getTimeToProdDatesForFeatureToggles(
                 projectId,
-                featureToggleNames,
+                featureFlagNames,
             );
 
         return {
-            features: toggleAverage,
+            features: flagAverage,
             projectAverage: projectAverage,
         };
     }

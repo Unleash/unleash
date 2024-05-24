@@ -37,7 +37,7 @@ const ENVIRONMENT = 'dev';
 
 export const TOPICS: ITutorialTopic[] = [
     {
-        title: 'Enable/disable a feature toggle',
+        title: 'Enable/disable a feature flag',
         steps: [
             {
                 href: `/projects/${PROJECT}?sort=name`,
@@ -51,12 +51,12 @@ export const TOPICS: ITutorialTopic[] = [
                                 target='_blank'
                                 rel='noreferrer'
                             >
-                                Feature toggles
+                                Feature flags
                             </a>{' '}
                             are the central concept of Unleash.
                         </Description>
                         <Description sx={{ mt: 1 }}>
-                            Feature toggles are organized within{' '}
+                            Feature flags are organized within{' '}
                             <a
                                 href='https://docs.getunleash.io/reference/projects'
                                 target='_blank'
@@ -110,7 +110,7 @@ export const TOPICS: ITutorialTopic[] = [
                             enabled.
                         </Description>
                         <Description sx={{ mt: 1 }}>
-                            Let's try enabling a feature toggle only for a
+                            Let's try enabling a feature flag only for a
                             specific user.
                         </Description>
                     </>
@@ -122,7 +122,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
-                        First, open the feature toggle configuration for{' '}
+                        First, open the feature flag configuration for{' '}
                         <Badge as='span'>demoApp.step2</Badge> by using this
                         link.
                     </Description>
@@ -182,7 +182,7 @@ export const TOPICS: ITutorialTopic[] = [
                             >
                                 activation strategy
                             </a>{' '}
-                            to be evaluated for a feature toggle.
+                            to be evaluated for a feature flag.
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             Add a constraint by using this button.
@@ -204,7 +204,7 @@ export const TOPICS: ITutorialTopic[] = [
                                 Unleash context
                             </a>{' '}
                             contains information relating to the current feature
-                            toggle request.
+                            flag request.
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             Select the context field by using this dropdown.
@@ -335,8 +335,8 @@ export const TOPICS: ITutorialTopic[] = [
                             .
                         </Description>
                         <Description sx={{ mt: 1 }}>
-                            Let's try enabling a feature toggle only for a
-                            certain percentage of users.
+                            Let's try enabling a feature flag only for a certain
+                            percentage of users.
                         </Description>
                     </>
                 ),
@@ -347,7 +347,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
-                        First, open the feature toggle configuration for{' '}
+                        First, open the feature flag configuration for{' '}
                         <Badge as='span'>demoApp.step3</Badge> by using this
                         link.
                     </Description>
@@ -447,8 +447,8 @@ export const TOPICS: ITutorialTopic[] = [
                                 Strategy variants
                             </a>{' '}
                             allow you to define different values for a feature
-                            toggle. They can be used for A/B testing or
-                            segmenting your users.
+                            flag. They can be used for A/B testing or segmenting
+                            your users.
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             Let's try adding a variant to a strategy.
@@ -462,7 +462,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>
-                        First, open the feature toggle configuration for{' '}
+                        First, open the feature flag configuration for{' '}
                         <Badge as='span'>demoApp.step4</Badge> by using this
                         link.
                     </Description>
@@ -510,7 +510,7 @@ export const TOPICS: ITutorialTopic[] = [
                             >
                                 activation strategy
                             </a>{' '}
-                            to be evaluated for a feature toggle.
+                            to be evaluated for a feature flag.
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             Add a constraint by using this button.
@@ -532,7 +532,7 @@ export const TOPICS: ITutorialTopic[] = [
                                 Unleash context
                             </a>{' '}
                             contains information relating to the current feature
-                            toggle request.
+                            flag request.
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             Select the context field by using this dropdown.

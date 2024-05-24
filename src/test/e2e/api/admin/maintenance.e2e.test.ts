@@ -16,7 +16,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('should not allow to create feature toggles in maintenance mode', async () => {
+test('should not allow to create feature flags in maintenance mode', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {

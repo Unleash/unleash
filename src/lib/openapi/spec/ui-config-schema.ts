@@ -14,7 +14,7 @@ export const uiConfigSchema = {
         slogan: {
             type: 'string',
             description: 'The slogan to display in the UI footer.',
-            example: 'The enterprise-ready feature toggle service.',
+            example: 'The enterprise-ready feature flag service.',
         },
         name: {
             type: 'string',

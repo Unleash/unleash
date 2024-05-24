@@ -131,8 +131,6 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
             );
             setOverageCost(overageCostCalc);
             setTotalCost(finalPrice + overageCostCalc);
-        } else {
-            setTotalCost(finalPrice);
         }
     }, [traffic]);
 
@@ -313,7 +311,18 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                                 fontSize: '2rem',
                                             })}
                                         >
-                                            ${totalCost.toFixed(2)}
+                                            <ConditionallyRender
+                                                condition={
+                                                    flagEnabled &&
+                                                    includedTraffic > 0
+                                                }
+                                                show={`$${totalCost.toFixed(
+                                                    2,
+                                                )}`}
+                                                elseShow={`$${finalPrice.toFixed(
+                                                    2,
+                                                )}`}
+                                            />
                                         </Typography>
                                     </GridCol>
                                 </GridRow>

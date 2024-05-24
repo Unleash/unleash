@@ -1,6 +1,7 @@
 import { forwardRef, type ReactNode } from 'react';
 import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
 import Header from 'component/menu/Header/Header';
+import OldHeader from 'component/menu/Header/OldHeader';
 import Footer from 'component/menu/Footer/Footer';
 import Proclamation from 'component/common/Proclamation/Proclamation';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
@@ -110,7 +111,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <>
                 <SkipNavLink />
-                <Header />
+                <ConditionallyRender
+                    condition={sidebarNavigationEnabled}
+                    show={<Header />}
+                    elseShow={<OldHeader />}
+                />
+
                 <SkipNavTarget />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>

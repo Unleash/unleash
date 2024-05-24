@@ -2,8 +2,16 @@ import { useState, type VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import { AppBar, Box, IconButton, styled, Tooltip } from '@mui/material';
+import {
+    AppBar,
+    IconButton,
+    Tooltip,
+    styled,
+    type Theme,
+    Box,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import SettingsIcon from '@mui/icons-material/Settings';
 import UserProfile from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -15,16 +23,20 @@ import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleash
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { flexRow, focusable } from 'themes/themeStyles';
-import { getCondensedRoutes, getRoutes } from 'component/menu/routes';
+import { NavigationMenu } from './NavigationMenu/NavigationMenu';
+import { getRoutes, getCondensedRoutes } from 'component/menu/routes';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { filterByConfig, mapRouteLink } from 'component/common/util';
+import { useId } from 'hooks/useId';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { Badge } from '../../common/Badge/Badge';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -32,8 +44,9 @@ const HeaderComponent = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
     position: 'relative',
     zIndex: 300,
-    paddingRight: theme.spacing(9),
+    maxWidth: '1512px',
     [theme.breakpoints.down('lg')]: {
+        maxWidth: '1280px',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
     },
@@ -85,6 +98,23 @@ const StyledLinks = styled('div')(({ theme }) => ({
     },
 }));
 
+const StyledAdvancedNavButton = styled('button')(({ theme }) => ({
+    ...focusable(theme),
+    border: 'none',
+    background: 'transparent',
+    height: '100%',
+    display: 'flex',
+    fontSize: theme.fontSizes.bodySize,
+    fontFamily: theme.typography.fontFamily,
+    alignItems: 'center',
+    color: 'inherit',
+    cursor: 'pointer',
+}));
+
+const styledIconProps = (theme: Theme) => ({
+    color: theme.palette.neutral.main,
+});
+
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
 const StyledText = styled('div')(({ theme }) => ({
@@ -92,6 +122,17 @@ const StyledText = styled('div')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
 }));
+
+const StyledLinkWithBetaBadge = ({
+    title,
+    to,
+}: { title: string; to: string }) => (
+    <StyledLink to={to} sx={{ margin: 0 }}>
+        <StyledText>
+            <span>{title}</span> <Badge color='success'>Beta</Badge>
+        </StyledText>
+    </StyledLink>
+);
 
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
@@ -107,16 +148,23 @@ const StyledIconButton = styled(IconButton)<{
     },
 }));
 
-const Header: VFC = () => {
+const OldHeader: VFC = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
+    const adminId = useId();
+    const configId = useId();
+    const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
+    const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
     const disableNotifications = useUiFlag('disableNotifications');
     const { uiConfig, isOss } = useUiConfig();
-    const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
+    const onAdminClose = () => setAdminRef(null);
+    const onConfigureClose = () => setConfigRef(null);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
+    const insightsDashboard = useUiFlag('executiveDashboardUI');
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -189,6 +237,35 @@ const Header: VFC = () => {
                 </StyledLink>
 
                 <StyledNav>
+                    <StyledLinks>
+                        <StyledLink to='/projects'>Projects</StyledLink>
+                        <StyledLink to={'/search'}>Search</StyledLink>
+                        <StyledLink to='/playground'>Playground</StyledLink>
+                        <ConditionallyRender
+                            condition={insightsDashboard}
+                            show={
+                                <StyledLinkWithBetaBadge
+                                    to={'/insights'}
+                                    title={'Insights'}
+                                />
+                            }
+                        />
+                        <StyledAdvancedNavButton
+                            onClick={(e) => setConfigRef(e.currentTarget)}
+                            aria-controls={configRef ? configId : undefined}
+                            aria-expanded={Boolean(configRef)}
+                        >
+                            Configure
+                            <KeyboardArrowDown sx={styledIconProps} />
+                        </StyledAdvancedNavButton>
+                        <NavigationMenu
+                            id={configId}
+                            options={filteredMainRoutes.mainNavRoutes}
+                            anchorEl={configRef}
+                            handleClose={onConfigureClose}
+                            style={{ top: 10 }}
+                        />
+                    </StyledLinks>
                     <StyledUserContainer>
                         <InviteLinkButton />
                         <Tooltip
@@ -221,11 +298,30 @@ const Header: VFC = () => {
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 size='large'
-                                sx={{ mr: 1 }}
                             >
                                 <MenuBookIcon />
                             </StyledIconButton>
                         </Tooltip>
+                        <Tooltip title='Settings' arrow>
+                            <StyledIconButton
+                                onClick={(e) => setAdminRef(e.currentTarget)}
+                                aria-controls={adminRef ? adminId : undefined}
+                                aria-expanded={Boolean(adminRef)}
+                                size='large'
+                            >
+                                <SettingsIcon />
+                            </StyledIconButton>
+                        </Tooltip>
+                        <NavigationMenu
+                            id={adminId}
+                            options={filteredMainRoutes.adminRoutes}
+                            anchorEl={adminRef}
+                            handleClose={onAdminClose}
+                            style={{
+                                top: 5,
+                                left: -100,
+                            }}
+                        />{' '}
                         <UserProfile />
                     </StyledUserContainer>
                 </StyledNav>
@@ -234,4 +330,4 @@ const Header: VFC = () => {
     );
 };
 
-export default Header;
+export default OldHeader;

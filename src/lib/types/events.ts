@@ -1,7 +1,16 @@
-import type { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
+import type {
+    FeatureToggle,
+    IEnvironment,
+    IProject,
+    IStrategyConfig,
+    ITag,
+    IVariant,
+} from './model';
 import type { IApiToken } from './models/api-token';
 import type { IAuditUser, IUserWithRootRole } from './user';
 import type { FeatureLifecycleCompletedSchema } from '../openapi';
+import type { ITagType } from '../features/tag-type/tag-type-store-type';
+import type { IFeatureAndTag } from './stores/feature-tag-store';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -356,7 +365,8 @@ export interface IBaseEvent {
     tags?: ITag[];
 }
 
-export interface IEvent extends IBaseEvent {
+// This represents the read model for events
+export interface IEvent extends Omit<IBaseEvent, 'ip'> {
     id: number;
     createdAt: Date;
 }
@@ -366,7 +376,7 @@ export interface IEventList {
     events: IEvent[];
 }
 
-class BaseEvent implements IBaseEvent {
+export class BaseEvent implements IBaseEvent {
     readonly type: IEventType;
 
     readonly createdBy: string;
@@ -630,6 +640,83 @@ export class FeatureCreatedEvent extends BaseEvent {
         this.project = project;
         this.featureName = featureName;
         this.data = data;
+    }
+}
+
+export class ProjectImport extends BaseEvent {
+    readonly data: IProject;
+    constructor(p: {
+        project: IProject;
+        auditUser: IAuditUser;
+    }) {
+        super(PROJECT_IMPORT, p.auditUser);
+        this.data = p.project;
+    }
+}
+
+export class FeatureImport extends BaseEvent {
+    readonly data: any;
+    constructor(p: {
+        feature: any;
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURE_IMPORT, p.auditUser);
+        this.data = p.feature;
+    }
+}
+
+export class StrategyImport extends BaseEvent {
+    readonly data: any;
+    constructor(p: {
+        strategy: any;
+        auditUser: IAuditUser;
+    }) {
+        super(STRATEGY_IMPORT, p.auditUser);
+        this.data = p.strategy;
+    }
+}
+
+export class EnvironmentImport extends BaseEvent {
+    readonly data: IEnvironment;
+    constructor(p: {
+        env: IEnvironment;
+        auditUser: IAuditUser;
+    }) {
+        super(ENVIRONMENT_IMPORT, p.auditUser);
+        this.data = p.env;
+    }
+}
+
+export class TagTypeImport extends BaseEvent {
+    readonly data: ITagType;
+    constructor(p: {
+        tagType: ITagType;
+        auditUser: IAuditUser;
+    }) {
+        super(TAG_TYPE_IMPORT, p.auditUser);
+        this.data = p.tagType;
+    }
+}
+
+export class TagImport extends BaseEvent {
+    readonly data: ITag;
+    constructor(p: {
+        tag: ITag;
+        auditUser: IAuditUser;
+    }) {
+        super(TAG_IMPORT, p.auditUser);
+        this.data = p.tag;
+    }
+}
+
+export class FeatureTagImport extends BaseEvent {
+    readonly data: IFeatureAndTag;
+    constructor(p: {
+        featureTag: IFeatureAndTag;
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURE_TAG_IMPORT, p.auditUser);
+        this.data = p.featureTag;
     }
 }
 
@@ -1202,6 +1289,36 @@ export class ProjectAccessGroupRolesUpdated extends BaseEvent {
     }
 }
 
+export class GroupUserRemoved extends BaseEvent {
+    readonly preData: any;
+    constructor(p: {
+        userId: number;
+        groupId: number;
+        auditUser: IAuditUser;
+    }) {
+        super(GROUP_USER_REMOVED, p.auditUser);
+        this.preData = {
+            groupId: p.groupId,
+            userId: p.userId,
+        };
+    }
+}
+
+export class GroupUserAdded extends BaseEvent {
+    readonly data: any;
+    constructor(p: {
+        userId: number;
+        groupId: number;
+        auditUser: IAuditUser;
+    }) {
+        super(GROUP_USER_ADDED, p.auditUser);
+        this.data = {
+            groupId: p.groupId,
+            userId: p.userId,
+        };
+    }
+}
+
 export class ProjectAccessUserRolesDeleted extends BaseEvent {
     readonly project: string;
 
@@ -1555,6 +1672,83 @@ export class FeaturesExportedEvent extends BaseEvent {
     }) {
         super(FEATURES_EXPORTED, eventData.auditUser);
         this.data = eventData;
+    }
+}
+
+export class DropProjectsEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+    }) {
+        super(DROP_PROJECTS, eventData.auditUser);
+        this.data = { name: 'all-projects' };
+    }
+}
+
+export class DropFeaturesEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+    }) {
+        super(DROP_FEATURES, eventData.auditUser);
+        this.data = { name: 'all-features' };
+    }
+}
+
+export class DropStrategiesEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+    }) {
+        super(DROP_STRATEGIES, eventData.auditUser);
+        this.data = { name: 'all-strategies' };
+    }
+}
+
+export class DropEnvironmentsEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+    }) {
+        super(DROP_ENVIRONMENTS, eventData.auditUser);
+        this.data = { name: 'all-environments' };
+    }
+}
+
+export class DropFeatureTagsEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+    }) {
+        super(DROP_FEATURE_TAGS, eventData.auditUser);
+        this.data = { name: 'all-feature-tags' };
+    }
+}
+
+export class DropTagsEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+    }) {
+        super(DROP_TAGS, eventData.auditUser);
+        this.data = { name: 'all-tags' };
+    }
+}
+
+export class DropTagTypesEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+    }) {
+        super(DROP_TAG_TYPES, eventData.auditUser);
+        this.data = { name: 'all-tag-types' };
     }
 }
 

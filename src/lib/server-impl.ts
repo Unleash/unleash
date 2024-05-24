@@ -19,7 +19,7 @@ import {
     type IUnleashOptions,
     type IUnleashServices,
     RoleName,
-    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
 } from './types';
 
 import User, { type IAuditUser, type IUser } from './types/user';
@@ -101,7 +101,7 @@ async function createApp(
             dropBeforeImport: config.import.dropBeforeImport,
             userName: 'import',
             keepExisting: config.import.keepExisting,
-            userId: SYSTEM_USER.id,
+            auditUser: SYSTEM_USER_AUDIT,
         });
     }
 

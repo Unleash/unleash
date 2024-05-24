@@ -7,17 +7,17 @@ In our [.NET feature flag tutorial](/feature-flag-tutorials/dotnet), we implemen
 
 We built many features into Unleash, our open-source feature flag platform, to address the complexities of releasing code. This tutorial will explore the following:
 
-- [Gradual Rollouts for .NET Apps](#gradual-rollouts-for-net-apps)
-- [Canary Deployments in .NET](#canary-deployments-in-net)
-  - [What is a canary deployment?](#what-is-a-canary-deployment)
-  - [How to do canary deployments with a feature flag in .NET?](#how-to-do-canary-deployments-with-a-feature-flag-in-net)
-  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
-- [Server-side A/B Testing in .NET](#server-side-ab-testing-in-net)
-- [Feature Flag Analytics and Reporting in .NET](#feature-flag-analytics-and-reporting-in-net)
-  - [Enable impression data events in .NET](#enable-impression-data-events-in-net)
-- [Application Metrics and Monitoring for .NET apps](#application-metrics-and-monitoring-for-net-apps)
-- [Feature Flag Audit Logs in .NET](#feature-flag-audit-logs-in-net)
-- [Flag Automation and Workflow Integration for .NET Apps](#flag-automation-and-workflow-integration-for-net-apps)
+-   [Gradual Rollouts for .NET Apps](#gradual-rollouts-for-net-apps)
+-   [Canary Deployments in .NET](#canary-deployments-in-net)
+    -   [What is a canary deployment?](#what-is-a-canary-deployment)
+    -   [How to do canary deployments with a feature flag in .NET?](#how-to-do-canary-deployments-with-a-feature-flag-in-net)
+    -   [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+-   [Server-side A/B Testing in .NET](#server-side-ab-testing-in-net)
+-   [Feature Flag Analytics and Reporting in .NET](#feature-flag-analytics-and-reporting-in-net)
+    -   [Enable impression data events in .NET](#enable-impression-data-events-in-net)
+-   [Application Metrics and Monitoring for .NET apps](#application-metrics-and-monitoring-for-net-apps)
+-   [Feature Flag Audit Logs in .NET](#feature-flag-audit-logs-in-net)
+-   [Flag Automation and Workflow Integration for .NET Apps](#flag-automation-and-workflow-integration-for-net-apps)
 
 ## Gradual Rollouts for .NET Apps
 
@@ -36,7 +36,7 @@ You can achieve the same result using our API with the following code:
 ```csharp
 HttpClient client = new HttpClient();
 
-string url = "<your-unleash-url>/api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies";
+string url = $"{unleashUrl}/api/admin/projects/:{projectId}/features/:{featureName}/environments/:{environment}/strategies";
 var payload = new
 {
     name = "flexibleRollout",
@@ -116,7 +116,7 @@ Alternatively, you can send an API command to apply the same requirements:
 ```csharp
 HttpClient client = new HttpClient();
 
-string url = "<your-unleash-url>/api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies/:strategyId";
+string url = $"{unleashUrl}/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/{strategyId}";;
 
 var payload = new
 {
@@ -183,7 +183,7 @@ Alternatively, you can do that with a `PUT` request in .NET using our API:
 ```csharp
 HttpClient client = new HttpClient();
 
-string url = "<your-unleash-url>/api/admin/projects/<your-project-id>/features/<your-feature-flag>/environments/<your-environment>/strategies/3a76899f-582b-422f-be72-34c995388f77";
+string url = $"{unleashUrl}/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/{strategyId}";
 var payload = new
 {
     name = "flexibleRollout",
@@ -243,7 +243,7 @@ You can also use our API command to enable the impression data:
 ```csharp
 HttpClient client = new HttpClient();
 
-string url = "<your-unleash-url>/api/admin/projects/<your-project-id>/features/<your-feature-flag>";
+string url = $"{unleashUrl}/api/admin/projects/{projectId}/features/{featureName}";
 var payload = new[]
 {
     new
@@ -311,7 +311,7 @@ You can also retrieve event logs by using an API command, like below:
 ```csharp
 HttpClient client = new HttpClient();
 
-string url = "<your-unleash-url>/api/admin/events/:featureName";
+string url = $"{unleashUrl}/api/admin/events/:{featureName}";
 
 client.DefaultRequestHeaders.Add("Accept", "application/json");
 client.DefaultRequestHeaders.Add("Authorization", "<API_KEY_VALUE>");
@@ -338,7 +338,7 @@ Here’s how this can be done via our API:
 
     ```csharp
         HttpClient client = new HttpClient();
-        string url = "<your-unleash-url>/api/admin/projects/:projectId/features/:featureName/environments/:environment/on";
+        string url = $"{unleashUrl}/api/admin/projects/:{projectId}/features/:{featureName}/environments/:{environment}/on";
 
         client.DefaultRequestHeaders.Add("Accept", "application/json");
         client.DefaultRequestHeaders.Add("Authorization", "<API_KEY_VALUE>");
@@ -356,7 +356,7 @@ Here’s how this can be done via our API:
     ```csharp
         HttpClient client = new HttpClient();
 
-        string url = "<your-unleash-url>/api/admin/projects/:projectId/features/:featureName";
+        string url = $"{unleashUrl}/api/admin/projects/:{projectId}/features/:{featureName}";
         var payload = new
         {
             description = "Controls disabling of the comments section in case of an incident",
@@ -382,7 +382,7 @@ Here’s how this can be done via our API:
     ```csharp
         HttpClient client = new HttpClient();
 
-        string url = "<your-unleash-url>/api/admin/projects/:projectId/features/:featureName";
+        string url = $"{unleashUrl}/api/admin/projects/:{projectId}/features/:{featureName}";
 
         client.DefaultRequestHeaders.Add("Authorization", "<API_KEY_VALUE>");
 

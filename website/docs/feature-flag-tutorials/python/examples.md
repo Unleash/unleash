@@ -7,17 +7,17 @@ In our [Python feature flag tutorial](/feature-flag-tutorials/python), we implem
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
-- [Gradual Rollouts for Python Apps](#gradual-rollouts-for-python-apps)
-- [Canary Deployments in Python](#canary-deployments-in-python)
-  - [What is a canary deployment?](#what-is-a-canary-deployment)
-  - [How to do canary deployments with a Python feature flag?](#how-to-do-canary-deployments-with-a-python-feature-flag)
-  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
-- [Server-side A/B Testing in Python](#server-side-ab-testing-in-python)
-- [Feature Flag Analytics and Reporting in Python](#feature-flag-analytics-and-reporting-in-python)
-  - [Enable impression data events in Python](#enable-impression-data-events-in-python)
-- [Application Metrics \& Monitoring for Python](#application-metrics--monitoring-for-python)
-- [Feature Flag Audit Logs in Python](#feature-flag-audit-logs-in-python)
-- [Flag Automation \& Workflow Integration for Python Apps](#flag-automation--workflow-integration-for-python-apps)
+-   [Gradual Rollouts for Python Apps](#gradual-rollouts-for-python-apps)
+-   [Canary Deployments in Python](#canary-deployments-in-python)
+    -   [What is a canary deployment?](#what-is-a-canary-deployment)
+    -   [How to do canary deployments with a Python feature flag?](#how-to-do-canary-deployments-with-a-python-feature-flag)
+    -   [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+-   [Server-side A/B Testing in Python](#server-side-ab-testing-in-python)
+-   [Feature Flag Analytics and Reporting in Python](#feature-flag-analytics-and-reporting-in-python)
+    -   [Enable impression data events in Python](#enable-impression-data-events-in-python)
+-   [Application Metrics \& Monitoring for Python](#application-metrics--monitoring-for-python)
+-   [Feature Flag Audit Logs in Python](#feature-flag-audit-logs-in-python)
+-   [Flag Automation \& Workflow Integration for Python Apps](#flag-automation--workflow-integration-for-python-apps)
 
 ## Gradual Rollouts for Python Apps
 
@@ -271,11 +271,11 @@ At the flag level in Unleash, navigate to the Settings view.
 
 ![From your flag page in Unleash, you go to Settings and edit the settings for your flag called 'feature information'.](/img/python-ex-flag-settings.png)
 
-In the Settings view, there's an edit button with pencil icon. This will take us to the ‘Edit Feature toggle’ form.
+In the Settings view, there's an edit button with pencil icon. This will take us to the ‘Edit Feature flag’ form.
 
 Turn on the impression data and then save it. Events will now be emitted every time the feature flag is triggered.
 
-![There is a toggle that turns on the impression data events in your flag form.](/img/python-ex-enable-impression-data.png)
+![There is a flag that turns on the impression data events in your flag form.](/img/python-ex-enable-impression-data.png)
 
 You can also use our API command to enable the impression data:
 

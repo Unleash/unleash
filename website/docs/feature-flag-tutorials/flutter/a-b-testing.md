@@ -1,6 +1,6 @@
 ---
 title: A/B Testing in Flutter using Unleash and Mixpanel
-slug: '/feature-flag-tutorials/flutter/a-b-testing'
+slug: "/feature-flag-tutorials/flutter/a-b-testing"
 ---
 
 :::note
@@ -18,11 +18,11 @@ Here’s a screenshot of the application:
 
 ## Setup variants in Unleash
 
-In your Unleash instance, create a new feature flag called `likeOptionExperiment`. Choose the toggle type called `Experiment` and enable the [impression data](https://docs.getunleash.io/reference/impression-data). By default, the flag will be set to false.
+In your Unleash instance, create a new feature flag called `likeOptionExperiment`. Choose the flag type called `Experiment` and enable the [impression data](https://docs.getunleash.io/reference/impression-data). By default, the flag will be set to false.
 
 ![Set Up Variant in Unleash](/img/variant-setup-1.png)
 
-Now that you have created your feature toggle, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) “gridTile'' and “imageDetails” respectively. These variants will help you position your “like image” button.
+Now that you have created your feature flag, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) “gridTile'' and “imageDetails” respectively. These variants will help you position your “like image” button.
 
 ![Succesfully setting up variant in Unleash](/img/setup-variant-2.png)
 
@@ -381,9 +381,9 @@ A/B testing is a low-risk, high-returns approach that can help you make data-dri
 
 Some of the best practices for experimentation include:
 
-- You should be open to the results and avoid any hypotheses.
-- You should define the metrics for the success of the experimentation before you run the tests. Keep your success metrics simple and narrowed for better results.
-- Select a group of adequate size for the test to yield definitive results.
-- You should avoid running multiple tests simultaneously, as it may not give reasonable outcomes.
+-   You should be open to the results and avoid any hypotheses.
+-   You should define the metrics for the success of the experimentation before you run the tests. Keep your success metrics simple and narrowed for better results.
+-   Select a group of adequate size for the test to yield definitive results.
+-   You should avoid running multiple tests simultaneously, as it may not give reasonable outcomes.
 
 That’s it for today. I hope you found this helpful. Want to dive deep into the code used for this article? It’s all on [GitHub](https://github.com/AyushBherwani1998/unsplash_sample/).

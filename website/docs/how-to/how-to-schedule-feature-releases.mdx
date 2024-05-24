@@ -23,7 +23,7 @@ In this guide we'll schedule a feature for release at some point in time. The ex
 This guide assumes that you've got the following:
 - some basic experience with Unleash
 - a running instance of Unleash and connected clients (where applicable)
-- an existing feature toggle that you want to schedule the release for
+- an existing feature flag that you want to schedule the release for
 
 ## Schedule feature releases with strategy constraints {#strategy-constraints}
 
@@ -41,7 +41,7 @@ To schedule a feature release via the UI:
 
 #### Scheduling a release via the API
 
-To add an activation strategy via the Admin API, use the feature's `strategies` endpoint to add a new strategy (see the [API documentation for adding strategies to feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#add-strategy) for more details).
+To add an activation strategy via the Admin API, use the feature's `strategies` endpoint to add a new strategy (see the [API documentation for adding strategies to feature flags](/reference/api/legacy/unleash/admin/features-v2.md#add-strategy) for more details).
 
 The payload's `"name"` property should contain the name of the strategy to apply (see [activation strategies reference documentation](../reference/activation-strategies.md) for all built-in strategies' _modeling names_).
 
@@ -74,7 +74,7 @@ To schedule feature releases without using strategy constraints, you can use cus
 2. Give the strategy a required string parameter where the user can enter the time at which the feature should activate. Be sure to describe the format that the user must adhere to.
 3. Save the strategy
 
-[**Apply the strategy** to the feature toggle](../how-to/how-to-use-custom-strategies.md#step-2) you want to schedule.
+[**Apply the strategy** to the feature flag](../how-to/how-to-use-custom-strategies.md#step-2) you want to schedule.
 
 
 ![A custom activation strategy definition for a strategy called `enableAfter`. It takes a required parameter called `start time`: a string in a date format.](/img/custom-strategy-enable-after.png)

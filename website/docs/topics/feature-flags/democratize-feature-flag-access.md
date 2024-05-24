@@ -10,7 +10,7 @@ Allowing engineers, product owners, and even technical support to have open acce
 
 2. **Visibility into Configuration**:
 
-   - **Configuration Transparency**: Engineers, product owners, and even technical support should be able to view the feature toggle configuration. This transparency provides insights into which features are currently active, what conditions trigger them, and how they impact the application's behavior. It helps understand the system's state and behavior, which is crucial for making informed decisions.
+   - **Configuration Transparency**: Engineers, product owners, and even technical support should be able to view the feature flag configuration. This transparency provides insights into which features are currently active, what conditions trigger them, and how they impact the application's behavior. It helps understand the system's state and behavior, which is crucial for making informed decisions.
 
    - **Change History**: Access to a history of changes made to feature flags, including who made the changes and when, is invaluable. This audit trail allows teams to track changes to the system's behavior over time. It aids in accountability and can be instrumental in troubleshooting when unexpected behavior arises after a change.
 

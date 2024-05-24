@@ -2,7 +2,7 @@
 title: Unleash introductory overview
 ---
 
-One of the most important aspects of the architecture to understand is that feature toggles are evaluated in client SDKs which runs as part of your application. This makes toggle evaluations super-fast (_we're talking nano-seconds_), scalable and resilient against network disturbances. In order to achieve this Unleash incurs a small update-delay when you change your toggle configurations until it is fully propagated to your application (in terms of seconds and is configurable).
+One of the most important aspects of the architecture to understand is that feature flags are evaluated in client SDKs which runs as part of your application. This makes flag evaluations super-fast (_we're talking nano-seconds_), scalable and resilient against network disturbances. In order to achieve this Unleash incurs a small update-delay when you change your flag configurations until it is fully propagated to your application (in terms of seconds and is configurable).
 
 If you want more details you can read about [our unique architecture](https://www.getunleash.io/blog/our-unique-architecture).
 

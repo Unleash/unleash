@@ -2,7 +2,7 @@
 title: API Tokens and Client Keys
 ---
 
-For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks/index.md). More advanced use cases may call for multiple clients, automated feature toggle updates, the [Unleash proxy](../generated/unleash-proxy.md) and [Unleash proxy clients](../reference/sdks/index.md#front-end-sdks), and more. To facilitate communication between all these moving parts, Unleash uses a system of API tokens and client keys, all with a specific purpose in mind.
+For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks/index.md). More advanced use cases may call for multiple clients, automated feature flag updates, the [Unleash proxy](../generated/unleash-proxy.md) and [Unleash proxy clients](../reference/sdks/index.md#front-end-sdks), and more. To facilitate communication between all these moving parts, Unleash uses a system of API tokens and client keys, all with a specific purpose in mind.
 
 This document details the three kinds of tokens and keys that you will need to fully connect any Unleash system:
 
@@ -60,11 +60,11 @@ Similarly, any project members with the `CREATE_PROJECT_API_TOKEN` permission ca
 
 Use admin tokens to:
 
--   Automate Unleash behavior such as creating feature toggles, projects, etc.
+-   Automate Unleash behavior such as creating feature flags, projects, etc.
 -   Write custom Unleash UIs to replace the default Unleash admin UI.
 Do **not** use admin tokens for:
 
--   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
+-   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read flag data from multiple environments. Use [client tokens](#client-tokens) instead.
 
 Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
 
@@ -98,14 +98,14 @@ It is possible to set a token's expiration date to **never**. However, a token t
 
 Do **not** use personal access tokens for:
 
--   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
+-   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read flag data from multiple environments. Use [client tokens](#client-tokens) instead.
 -   Write custom Unleash UIs: Personal access tokens may expire and their permissions may change. It's better to use [admin tokens](#admin-tokens) tokens instead.
 
 ### Client tokens
 
 **Client tokens** are intended for use in [server-side client SDKs](../reference/sdks/index.md#server-side-sdks) (including the Unleash Proxy) and grant the user permissions to:
 
--   Read feature toggle information
+-   Read feature flag information
 -   Register applications with the Unleash server
 -   Send usage metrics
 
@@ -128,7 +128,7 @@ Do **not** use client tokens in:
 
 **Front-end tokens** are used with [front-end SDKs](../reference/sdks/index.md#front-end-sdks) when used with the [Unleash front-end API](./front-end-api.md). They grant the user permission to:
 
--   Read the enabled toggled for a given context
+-   Read the enabled flagd for a given context
 -   Register applications with the Unleash server
 -   Send usage metrics
 
@@ -180,15 +180,15 @@ Personal access tokens do not contain project or environment information, since 
 
 Some example client tokens are:
 
--   A token with access to toggles in the "development" environment of a single project, "project-a":
+-   A token with access to flags in the "development" environment of a single project, "project-a":
     ```
     project-a:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
     ```
--   A token with access to toggles in the "production" environment multiple projects:
+-   A token with access to flags in the "production" environment multiple projects:
     ```
     []:production.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
     ```
--   A token with access to toggles in the "development" environment of all projects:
+-   A token with access to flags in the "development" environment of all projects:
     ```
     *:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
     ```

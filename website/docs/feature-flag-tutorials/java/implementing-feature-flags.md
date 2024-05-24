@@ -18,7 +18,7 @@ Here are the steps we will cover in this tutorial:
 3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
 4. [Add Unleash to a Java app](#4-add-unleash-to-a-java-app)
 5. [Log a feature flag status in your Java app](#5-log-feature-flag-status-in-java-app)
-6. [Verify the toggle experience](#6-verify-the-toggle-experience)
+6. [Verify the feature flag experience](#6-verify-the-toggle-experience)
 
 Watch the video tutorial and follow along with the code from this documentation.
 
@@ -239,7 +239,7 @@ With the flag on, you should see the corresponding status in this screenshot:
 
 We will use Unleash to turn off the flag and view an updated status in the Terminal.
 
-In Unleash, toggle off the `endpointFlag` in the development environment.
+In Unleash, turn off the `endpointFlag` in the development environment.
 
 ![Turn off the flag in the development environment.](/img/java-tutorial-disable-flag.png)
 

@@ -18,7 +18,7 @@ Here are the steps we will cover in this tutorial:
 3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
 4. [Add Unleash to a Spring Boot app](#4-add-unleash-to-a-spring-boot-app)
 5. [Configure Spring Beans in your Spring Boot app](#5-configure-spring-beans-in-your-app)
-6. [Verify the toggle experience](#5-configure-spring-beans-in-your-app)
+6. [Verify the feature flag experience](#6-verify-the-feature-flag-experience)
 
 Watch the video tutorial and follow along with the code from this documentation.
 

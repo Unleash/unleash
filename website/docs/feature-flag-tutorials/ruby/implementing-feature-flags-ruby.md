@@ -8,14 +8,12 @@ Hello! In this tutorial we’ll show you how to add feature flags to your Ruby a
 
 In a classic tutorial fashion, we’ll get a list of planets from the [Star Wars API](https://swapi.dev/), with just Ruby (i.e., not Ruby on Rails). We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
--   [Prerequisites](#prerequisites)
--   [1. Best practices for backend apps with Unleash](#1-best-practices-for-backend-apps-with-unleash)
--   [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
--   [3. Grab a list of planets from the Star Wars API](#3-grab-a-list-of-planets-from-the-star-wars-api)
--   [4. Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
--   [5. Add Unleash to your Ruby app](#5-add-unleash-to-your-ruby-app)
--   [6. Verify the toggle experience](#6-verify-the-toggle-experience)
--   [Conclusion](#conclusion)
+1. [Best practices for backend apps with Unleash](#1-best-practices-for-backend-apps-with-unleash)
+2. [Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
+3. [Grab a list of planets from the Star Wars API](#3-grab-a-list-of-planets-from-the-star-wars-api)
+4. [Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
+5. [Add Unleash to your Ruby app](#5-add-unleash-to-your-ruby-app)
+6. [Verify the feature flag experience](#6-verify-the-toggle-experience)
 
 ## Prerequisites
 

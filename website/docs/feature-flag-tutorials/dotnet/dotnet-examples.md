@@ -232,11 +232,11 @@ At the flag level in Unleash, navigate to the Settings view.
 
 ![From your flag page in Unleash, you go to Settings and edit the settings for your flag called 'feature information'.](../ruby/flag-settings.png)
 
-In the Settings view, there's an edit button with pencil icon. This will take us to the ‘Edit Feature toggle’ form.
+In the Settings view, there's an edit button with pencil icon. This will take us to the ‘Edit Feature flag’ form.
 
 Turn on the impression data and then save it. Events will now be emitted every time the feature flag is triggered.
 
-![There is a toggle that turns on the impression data events in your flag form.](../ruby/enable-impression-data.png)
+![There is a flag that turns on the impression data events in your flag form.](../ruby/enable-impression-data.png)
 
 You can also use our API command to enable the impression data:
 

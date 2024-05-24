@@ -14,17 +14,17 @@ In order to access the admin API endpoints you need to identify yourself. Unless
 :::
 
 
-## Fetching Feature Toggles {#fetching-feature-toggles}
+## Fetching Feature Flags {#fetching-feature-toggles}
 
 :::caution Deprecation notice
 
-This endpoint was removed in Unleash v5. Please use the [project-based endpoint to fetch all toggles](/reference/api/legacy/unleash/admin/features-v2.md#fetching-toggles) instead.
+This endpoint was removed in Unleash v5. Please use the [project-based endpoint to fetch all flags](/reference/api/legacy/unleash/admin/features-v2.md#fetching-toggles) instead.
 
 :::
 
 `GET: http://unleash.host.com/api/admin/features`
 
-This endpoint is the one all admin ui should use to fetch all available feature toggles from the _unleash-server_. The response returns all active feature toggles and their current strategy configuration. A feature toggle will have _at least_ one configured strategy. A strategy will have a `name` and `parameters` map.
+This endpoint is the one all admin ui should use to fetch all available feature flags from the _unleash-server_. The response returns all active feature flags and their current strategy configuration. A feature flag will have _at least_ one configured strategy. A strategy will have a `name` and `parameters` map.
 
 **Example response:**
 
@@ -88,7 +88,7 @@ This endpoint is the one all admin ui should use to fetch all available feature 
 }
 ```
 
-### Filter feature toggles {#filter-feature-toggles}
+### Filter feature flags {#filter-feature-toggles}
 
 Supports three params for now
 
@@ -108,11 +108,11 @@ To filter for any feature belonging to project `myproject` use
 
 Response format is the same as `api/admin/features`
 
-## Fetch specific feature toggle {#fetch-specific-feature-toggle}
+## Fetch specific feature flag {#fetch-specific-feature-toggle}
 
 :::caution Removal notice
 
-This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to fetch specific toggles](/reference/api/legacy/unleash/admin/features-v2.md#get-toggle) instead.
+This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to fetch specific flags](/reference/api/legacy/unleash/admin/features-v2.md#get-toggle) instead.
 
 :::
 
@@ -138,11 +138,11 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
 }
 ```
 
-## Create a new Feature Toggle {#create-a-new-feature-toggle}
+## Create a new Feature Flag {#create-a-new-feature-toggle}
 
 :::caution Removal notice
 
-This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to create feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle) instead.
+This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to create feature flags](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle) instead.
 
 :::
 
@@ -168,19 +168,19 @@ This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [p
 }
 ```
 
-Used by the admin-dashboard to create a new feature toggles.
+Used by the admin-dashboard to create a new feature flags.
 
 **Notes:**
 
 - _name_ **must be globally unique**, otherwise you will get a _403-response_.
 - _type_ is optional. If not defined it defaults to `release`
 
-Returns 200-response if the feature toggle was created successfully.
+Returns 200-response if the feature flag was created successfully.
 
-## Update a Feature Toggle {#update-a-feature-toggle}
+## Update a Feature Flag {#update-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in Unleash v5. Please use the [project-based endpoint to update a feature toggle](/reference/api/legacy/unleash/admin/features-v2.md#update-toggle) instead.
+This endpoint was removed in Unleash v5. Please use the [project-based endpoint to update a feature flag](/reference/api/legacy/unleash/admin/features-v2.md#update-toggle) instead.
 :::
 
 
@@ -205,11 +205,11 @@ This endpoint was removed in Unleash v5. Please use the [project-based endpoint 
 }
 ```
 
-Used by the admin dashboard to update a feature toggles. The name has to match an existing features toggle.
+Used by the admin dashboard to update a feature flags. The name has to match an existing features flag.
 
-Returns 200-response if the feature toggle was updated successfully.
+Returns 200-response if the feature flag was updated successfully.
 
-## Tag a Feature Toggle {#tag-a-feature-toggle}
+## Tag a Feature Flag {#tag-a-feature-toggle}
 
 `POST https://unleash.host.com/api/admin/features/:featureName/tags`
 
@@ -235,11 +235,11 @@ If the tuple (type, value) does not already exist, it will be added to the list 
 
     - Returns _404-NOT-FOUND_ if the `type` was not found
 
-## Remove a tag from a Feature Toggle {#remove-a-tag-from-a-feature-toggle}
+## Remove a tag from a Feature Flag {#remove-a-tag-from-a-feature-toggle}
 
 `DELETE https://unleash.host.com/api/admin/features/:featureName/tags/:type/:value`
 
-Removes the specified tag from the `(type, value)` tuple from the Feature Toggle's list of tags.
+Removes the specified tag from the `(type, value)` tuple from the Feature Flag's list of tags.
 
 **Success**
 
@@ -250,27 +250,27 @@ Removes the specified tag from the `(type, value)` tuple from the Feature Toggle
     - Returns 404 if the tag does not exist
     - Returns 500 if the database could not be reached
 
-## Archive a Feature Toggle {#archive-a-feature-toggle}
+## Archive a Feature Flag {#archive-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to archive toggles](/reference/api/legacy/unleash/admin/features-v2.md#archive-toggle) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to archive flags](/reference/api/legacy/unleash/admin/features-v2.md#archive-toggle) instead.
 :::
 
 
 `DELETE: http://unleash.host.com/api/admin/features/:toggleName`
 
-Used to archive a feature toggle. A feature toggle can never be totally be deleted, but can be archived. This is a design decision to make sure that a old feature toggle does not suddenly reappear because someone else is re-using the same name.
+Used to archive a feature flag. A feature flag can never be totally be deleted, but can be archived. This is a design decision to make sure that a old feature flag does not suddenly reappear because someone else is re-using the same name.
 
-## Enable a Feature Toggle {#enable-a-feature-toggle}
+## Enable a Feature Flag {#enable-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to enable feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#enable-env) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to enable feature flags](/reference/api/legacy/unleash/admin/features-v2.md#enable-env) instead.
 :::
 
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/toggle/on`
 
-Used to enable a feature toggle. The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was enabled successfully.
+Used to enable a feature flag. The :featureName must match an existing Feature Flag. Returns 200-response if the feature flag was enabled successfully.
 
 **Body**
 
@@ -295,15 +295,15 @@ None
 }
 ```
 
-## Disable a Feature Toggle {#disable-a-feature-toggle}
+## Disable a Feature Flag {#disable-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to disable feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#disable-env) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to disable feature flags](/reference/api/legacy/unleash/admin/features-v2.md#disable-env) instead.
 :::
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/toggle/off`
 
-Used to disable a feature toggle. The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was disabled successfully.
+Used to disable a feature flag. The :featureName must match an existing Feature Flag. Returns 200-response if the feature flag was disabled successfully.
 
 **Body**
 
@@ -329,16 +329,16 @@ None
 }
 ```
 
-## Mark a Feature Toggle as "stale" {#mark-a-feature-toggle-as-stale}
+## Mark a Feature Flag as "stale" {#mark-a-feature-toggle-as-stale}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature toggle and mark it as stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature flag and mark it as stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
 :::
 
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/stale/on`
 
-Used to mark a feature toggle as stale (deprecated). The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was enabled successfully.
+Used to mark a feature flag as stale (deprecated). The :featureName must match an existing Feature Flag. Returns 200-response if the feature flag was enabled successfully.
 
 **Body**
 
@@ -364,15 +364,15 @@ None
 }
 ```
 
-## Mark a Feature Toggle as "active" {#mark-a-feature-toggle-as-active}
+## Mark a Feature Flag as "active" {#mark-a-feature-toggle-as-active}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature toggle and mark it as not stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature flag and mark it as not stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
 :::
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/stale/off`
 
-Used to mark a feature toggle active (remove stale marking). The :featureName must match an existing Feature Toggle. Returns 200-response if the feature toggle was disabled successfully.
+Used to mark a feature flag active (remove stale marking). The :featureName must match an existing Feature Flag. Returns 200-response if the feature flag was disabled successfully.
 
 **Body**
 

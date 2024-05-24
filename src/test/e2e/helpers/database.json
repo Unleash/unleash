@@ -34,7 +34,7 @@
         {
           "name": "groupId",
           "type": "string",
-          "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+          "description": "Used to define a activation groups, which allows you to correlate across feature flags.",
           "required": true
         }
       ]

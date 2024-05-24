@@ -30,7 +30,7 @@ features:
   - name: default
     parameters: {}
 - name: feature.with.variants
-  description: A feature toggle with watiants
+  description: A feature flag with variants
   enabled: true
   archived: false
   strategies:

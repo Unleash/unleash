@@ -12,8 +12,8 @@ import type { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { MobileNavigationSidebar } from '../../../layout/MainLayout/NavigationSidebar/NavigationSidebar';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledDrawerHeader = styled('div')(({ theme }) => ({

@@ -12,6 +12,7 @@ import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { HEADER_USER_AVATAR } from 'utils/testIds';
 
 const StyledProfileContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -51,7 +52,10 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
                     aria-expanded={showProfile}
                     onClick={() => setShowProfile((prev) => !prev)}
                 >
-                    <StyledUserAvatar user={profile} />
+                    <StyledUserAvatar
+                        user={profile}
+                        data-testid={HEADER_USER_AVATAR}
+                    />
                     <Box sx={{ mr: 3 }}>
                         <Typography>
                             {profile.name || profile.username}

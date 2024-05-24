@@ -167,14 +167,24 @@ module.exports = {
                     ],
                 },
                 {
-                    type: 'doc',
-                    label: 'Serverless',
-                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                    type: 'category',
+                    label: '.NET',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/dotnet/dotnet-examples',
+                        },
+                    ],
                 },
                 {
                     type: 'doc',
-                    label: '.NET',
-                    id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                    label: 'Serverless',
+                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
                 },
                 {
                     type: 'doc',

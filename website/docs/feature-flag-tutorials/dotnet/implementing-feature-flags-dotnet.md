@@ -291,5 +291,7 @@ All done! Now you know how to add feature flags with Unleash in .NET. You’ve l
 -   Install Unleash and create/enable a feature flag
 -   Initialise the Unleash client as part of your web api's services
 -   Grab the value of a feature flag with the .NET SDK
+  
+Feel free to checkout our [.NET Examples docs](/feature-flag-tutorials/dotnet/examples) for more use-cases.
 
 Thank you

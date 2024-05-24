@@ -2,7 +2,14 @@ import { useState, type VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import { AppBar, Box, IconButton, styled, Tooltip } from '@mui/material';
+import {
+    AppBar,
+    Box,
+    Divider,
+    IconButton,
+    styled,
+    Tooltip,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import UserProfile from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -226,6 +233,12 @@ const Header: VFC = () => {
                                 <MenuBookIcon />
                             </StyledIconButton>
                         </Tooltip>
+                        <Divider
+                            orientation='vertical'
+                            variant='middle'
+                            flexItem
+                            sx={{ ml: 1 }}
+                        />
                         <UserProfile />
                     </StyledUserContainer>
                 </StyledNav>

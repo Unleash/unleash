@@ -1,10 +1,9 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Button, Paper, Typography, styled, Link } from '@mui/material';
+import { Button, Link, Paper, styled } from '@mui/material';
 import { basePath } from 'utils/formatPath';
 import type { IUser } from 'interfaces/user';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Link as RouterLink } from 'react-router-dom';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     display: 'flex',
@@ -15,33 +14,13 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     boxShadow: theme.boxShadows.popup,
     position: 'absolute',
     zIndex: 5000,
-    minWidth: theme.spacing(37.5),
+    minWidth: theme.spacing(34),
     right: 0,
+    marginTop: theme.spacing(0.25),
     [theme.breakpoints.down('md')]: {
         width: '100%',
         padding: '1rem',
     },
-}));
-
-const StyledProfileInfo = styled('div')(({ theme }) => ({
-    alignSelf: 'flex-start',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
-    width: theme.spacing(4.75),
-    height: theme.spacing(4.75),
-    marginRight: theme.spacing(1.5),
-}));
-
-const StyledSubtitle = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    maxWidth: theme.spacing(35),
 }));
 
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
@@ -88,18 +67,6 @@ export const UserProfileContent = ({
         condition={showProfile}
         show={
             <StyledPaper className='dropdown-outline' id={id}>
-                <StyledProfileInfo>
-                    <StyledUserAvatar user={profile} />
-                    <div>
-                        <Typography>
-                            {profile.name || profile.username}
-                        </Typography>
-                        <StyledSubtitle variant='body2' title={profile.email}>
-                            {profile.email}
-                        </StyledSubtitle>
-                    </div>
-                </StyledProfileInfo>
-
                 <StyledLink
                     component={RouterLink}
                     to='/profile'

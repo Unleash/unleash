@@ -35,6 +35,7 @@ import * as eventType from './types/events';
 import { Db } from './db/db';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
 import { scheduleServices } from './features/scheduler/schedule-services';
+import { compareAndLogPostgresVersion } from './util/postgres-version-checker';
 
 async function createApp(
     config: IUnleashConfig,
@@ -45,6 +46,7 @@ async function createApp(
     const serverVersion = config.enterpriseVersion ?? version;
     const db = createDb(config);
     const stores = createStores(config, db);
+    await compareAndLogPostgresVersion(config, stores.settingStore);
     const services = createServices(stores, config, db);
     if (!config.disableScheduler) {
         await scheduleServices(services, config);

@@ -22,7 +22,7 @@ Along the way, you will:
 3. [Configure a feature flag](#3-create-enable-and-configure-a-feature-flag)
 4. [Clone an open-source React app](#4-clone-an-open-source-react-app)
 5. [Toggle the visibility of a feature component](#5-use-the-feature-flag-to-rollout-a-notifications-badge)
-6. [Verify the toggle experience](#6-verify-the-toggle-experience)
+6. [Verify the feature flag experience](#6-verify-the-toggle-experience)
 
 Watch the video tutorial and follow along with the code from this documentation.
 

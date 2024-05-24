@@ -8,13 +8,11 @@ Hello! In this tutorial we’ll show you how to add feature flags to your .NET a
 
 We’ll keep with the sci-fi theme of our previous tutorials and use the [Rick and Morty API](https://rickandmortyapi.com/documentation/#introduction), with a .NET web API project. We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
--   [Prerequisites](#prerequisites)
--   [1. Install a local feature flag provider](#1-install-a-local-feature-flag-provider)
--   [2. Grab a list of characters from the Rick and Morty API](#2-grab-a-list-of-characters-from-the-rick-and-morty-api)
--   [4. Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
--   [5. Add Unleash to your .NET app](#5-add-unleash-to-your-net-app)
--   [6. Verify the toggle experience](#6-verify-the-toggle-experience)
--   [Conclusion](#conclusion)
+1. [Install a local feature flag provider](#1-install-a-local-feature-flag-provider)
+2. [Grab a list of characters from the Rick and Morty API](#2-grab-a-list-of-characters-from-the-rick-and-morty-api)
+3. [Add the GraphQL endpoint](#3-add-the-graphql-endpoint)
+4. [Add Unleash to your .NET app](#4-add-unleash-to-your-net-app)
+5. [Verify the feature flag experience](#5-verify-the-toggle-experience)
 
 ## Prerequisites
 
@@ -150,7 +148,7 @@ dotnet watch --hotreload run
 
 You should see `There are 20 characters` in your terminal.
 
-## 4. Add the GraphQL endpoint
+## 3. Add the GraphQL endpoint
 
 The point of this tutorial is to mimic a real-world scenario where you would migrate from a REST API to GraphQL and rely on a boolean feature flag to toggle between the versions. There will be no change in functionality between the API versions.
 
@@ -211,7 +209,7 @@ You should see `Hello GraphQL`, followed by `There are 20 characters` in your te
 
 Feel free to change the `isGraphql` variable to try it out.
 
-## 5. Add Unleash to your .NET app
+## 4. Add Unleash to your .NET app
 
 Now, let’s connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a gradual rollout, use it for A/B testing, etc.
 
@@ -277,7 +275,7 @@ Now, let’s add our client to our project, grab the feature flag from Unleash, 
 
 See additional use cases in our [.NET SDK](https://docs.getunleash.io/reference/sdks/dotnet) documentation.
 
-## 6. Verify the toggle experience
+## 5. Verify the toggle experience
 
 Now that we’ve connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the `Hello GraphQL` message.
 

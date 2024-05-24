@@ -1,6 +1,6 @@
 import express from 'express';
 import { createTestConfig } from '../test/config/test-config';
-import { start, create } from './server-impl';
+import { create, start } from './server-impl';
 import FakeEventStore from '../test/fixtures/fake-event-store';
 
 jest.mock(
@@ -19,6 +19,9 @@ const eventStore = new FakeEventStore();
 const settingStore = {
     get: () => {
         Promise.resolve('secret');
+    },
+    postgresVersion: () => {
+        Promise.resolve('16.2');
     },
 };
 

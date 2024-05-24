@@ -61,6 +61,7 @@ test('Can filter by project', async () => {
         tags: [],
         createdBy: 'test-user',
         createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
@@ -70,6 +71,7 @@ test('Can filter by project', async () => {
         createdBy: 'test-user',
         environment: 'test',
         createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
     });
     await app.request
         .get('/api/admin/events?project=default')
@@ -89,6 +91,7 @@ test('can search for events', async () => {
             tags: [],
             createdBy: randomId(),
             createdByUserId: TEST_USER_ID,
+            ip: '127.0.0.1',
         },
         {
             type: FEATURE_CREATED,
@@ -98,6 +101,7 @@ test('can search for events', async () => {
             tags: [{ type: 'simple', value: randomId() }],
             createdBy: randomId(),
             createdByUserId: TEST_USER_ID,
+            ip: '127.0.0.1',
         },
     ];
 

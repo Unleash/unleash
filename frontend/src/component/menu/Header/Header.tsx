@@ -32,10 +32,8 @@ const HeaderComponent = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
     position: 'relative',
     zIndex: 300,
-    // maxWidth: '1512px',
     paddingRight: theme.spacing(9),
     [theme.breakpoints.down('lg')]: {
-        // maxWidth: '1280px',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
     },

@@ -38,23 +38,7 @@ const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
     position: 'relative',
 }));
 
-const MainLayoutContent = styled(Grid)(({ theme }) => ({
-    width: '1250px',
-    margin: '0 auto',
-    [theme.breakpoints.down('lg')]: {
-        width: '1024px',
-    },
-    [theme.breakpoints.down(1024)]: {
-        width: '100%',
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
-}));
-
-const SpaciousMainLayoutContent = styled(Grid)(({ theme }) => ({
+const OldMainLayoutContent = styled(Grid)(({ theme }) => ({
     width: '100%',
     maxWidth: '1512px',
     margin: '0 auto',
@@ -71,6 +55,19 @@ const SpaciousMainLayoutContent = styled(Grid)(({ theme }) => ({
     },
     [theme.breakpoints.down('sm')]: {
         minWidth: '100%',
+    },
+}));
+
+const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
+    width: '100%',
+    minWidth: 0, // this is a fix for overflowing flex
+    margin: theme.spacing(0, 7),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.down('lg')]: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+        margin: 0,
     },
 }));
 
@@ -103,10 +100,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
             projectId || '',
         );
 
-        const StyledMainLayoutContent = SpaciousMainLayoutContent;
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
+        const StyledMainLayoutContent = sidebarNavigationEnabled
+            ? NewMainLayoutContent
+            : OldMainLayoutContent;
         const theme = useTheme();
-        const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+        const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
         return (
             <>
@@ -122,6 +121,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             )}
                             show={<DraftBanner project={projectId || ''} />}
                         />
+
                         <Box
                             sx={(theme) => ({
                                 display: 'flex',
@@ -134,6 +134,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 }
                                 show={<NavigationSidebar />}
                             />
+
                             <StyledMainLayoutContent
                                 item
                                 xs={12}

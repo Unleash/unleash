@@ -15,7 +15,7 @@ Api admin state is deprecated from version 5. We recommend using the new [Enviro
 
 :::
 
-Unleash supports import and export of feature toggles and strategies at startup and during runtime. The main purpose of the import/export feature is to bootstrap new Unleash instances with feature toggles and their configuration. If you are looking for a granular way to keep separate Unleash instances in sync we strongly recommend that you take a look at the Unleash Admin APIs.
+Unleash supports import and export of feature flags and strategies at startup and during runtime. The main purpose of the import/export feature is to bootstrap new Unleash instances with feature flags and their configuration. If you are looking for a granular way to keep separate Unleash instances in sync we strongly recommend that you take a look at the Unleash Admin APIs.
 
 The import mechanism guarantees that:
 - all imported features will be non-archived
@@ -48,7 +48,7 @@ await stateService.importFile({file: 'exported-data.yml', userName: 'import', dr
 
 If you want the database to be cleaned before import (all strategies and features will be removed), set the `dropBeforeImport` parameter.
 
-It is also possible to not override existing feature toggles (and strategies) by using the `keepExisting` parameter.
+It is also possible to not override existing feature flags (and strategies) by using the `keepExisting` parameter.
 
 ### API Export {#api-export}
 
@@ -86,7 +86,7 @@ You can customize the import with query parameters:
 | Parameter | Default | Description |
 | --- | --- | --- |
 | drop | `false` | If the database should be cleaned before import (see comment below) |
-| keep | `true` | If true, the existing feature toggles and strategies will not be overridden |
+| keep | `true` | If true, the existing feature flags and strategies will not be overridden |
 
 If you want the database to be cleaned before import (**all strategies and features will be removed**), specify a `drop` query parameter.
 
@@ -98,11 +98,11 @@ You should be cautious about using the `drop` query parameter in production envi
 
 Example usage:
 
-<ApiRequest verb="post" url="api/admin/state/import" payload={{ "version": 3, "features": [{"name": "a-feature-toggle", "enabled": true, "description": "#1 feature-toggle"}] }} title="Import data into Unleash."/>
+<ApiRequest verb="post" url="api/admin/state/import" payload={{ "version": 3, "features": [{"name": "a-feature-flag", "enabled": true, "description": "#1 feature-flag"}] }} title="Import data into Unleash."/>
 
 ## Startup import {#startup-import}
 
-You can import toggles and strategies on startup by using an import file in JSON or YAML format. As with other forms of imports, you can also choose to remove the current toggle and strategy configuration in the database before importing.
+You can import flags and strategies on startup by using an import file in JSON or YAML format. As with other forms of imports, you can also choose to remove the current flag and strategy configuration in the database before importing.
 
 Unleash lets you do this both via configuration parameters and environment variables. The relevant parameters/variables are:
 
@@ -113,7 +113,7 @@ Unleash lets you do this both via configuration parameters and environment varia
 
 ### Importing files
 
-To import strategies and toggles from a file (called `configuration.yml` in the examples below), either
+To import strategies and flags from a file (called `configuration.yml` in the examples below), either
 - use the `importFile` parameter to point to the file (you can also pass this into the `unleash.start()` entry point)
    ``` shell
    unleash-server --databaseUrl [...] \
@@ -131,7 +131,7 @@ To import strategies and toggles from a file (called `configuration.yml` in the 
 You should never use this in production environments.
 :::
 
-To remove pre-existing feature toggles and strategies in the database before importing the new ones, either:
+To remove pre-existing feature flags and strategies in the database before importing the new ones, either:
 - add the `dropBeforeImport` flag to the `unleash-server` command (or to `unleash.start()`)
    ``` shell
    unleash-server --databaseUrl [...] \

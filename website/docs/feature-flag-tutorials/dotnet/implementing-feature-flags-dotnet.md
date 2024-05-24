@@ -1,5 +1,5 @@
 ---
-title: How to Implement Feature Flags in .net
+title: How to Implement Feature Flags in .NET
 description: "How to use Unleash feature flags with .NET."
 slug: /feature-flag-tutorials/dotnet
 ---
@@ -8,13 +8,13 @@ Hello! In this tutorial we’ll show you how to add feature flags to your .NET a
 
 We’ll keep with the sci-fi theme of our previous tutorials and use the [Rick and Morty API](https://rickandmortyapi.com/documentation/#introduction), with a .NET web API project. We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
-- [Prerequisites](#prerequisites)
-- [1. Install a local feature flag provider](#1-install-a-local-feature-flag-provider)
-- [2. Grab a list of characters from the Rick and Morty API](#2-grab-a-list-of-characters-from-the-rick-and-morty-api)
-- [4. Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
-- [5. Add Unleash to your .NET app](#5-add-unleash-to-your-net-app)
-- [6. Verify the toggle experience](#6-verify-the-toggle-experience)
-- [Conclusion](#conclusion)
+-   [Prerequisites](#prerequisites)
+-   [1. Install a local feature flag provider](#1-install-a-local-feature-flag-provider)
+-   [2. Grab a list of characters from the Rick and Morty API](#2-grab-a-list-of-characters-from-the-rick-and-morty-api)
+-   [4. Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
+-   [5. Add Unleash to your .NET app](#5-add-unleash-to-your-net-app)
+-   [6. Verify the toggle experience](#6-verify-the-toggle-experience)
+-   [Conclusion](#conclusion)
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ Username: admin
 Password: unleash4all
 ```
 
-Click the ‘New feature toggle’ button to create a new feature flag.
+Click the ‘New feature flag’ button to create a new feature flag.
 
 ![Create a new feature flag](../ruby/new-ff.png)
 

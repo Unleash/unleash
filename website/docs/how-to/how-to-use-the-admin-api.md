@@ -20,7 +20,7 @@ If you need an API token to use in a client SDK you should create a "client toke
 
 Now that you have an access token with admin privileges we can use that to perform changes in our Unleash instance.
 
-In the example below we will use the [Unleash Admin API](/reference/api/legacy/unleash/admin/features.md) to enable the “Demo” feature toggle using curl.
+In the example below we will use the [Unleash Admin API](/reference/api/legacy/unleash/admin/features.md) to enable the “Demo” feature flag using curl.
 
 ```sh
 curl -X POST -H "Content-Type: application/json" \
@@ -28,9 +28,9 @@ curl -X POST -H "Content-Type: application/json" \
      https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 ```
 
-**Great success!** We have now enabled the feature toggle. We can also verify that it was actually changed by the API user by navigating to the Event log (history) for this feature toggle.
+**Great success!** We have now enabled the feature flag. We can also verify that it was actually changed by the API user by navigating to the Event log (history) for this feature flag.
 
-![A feature toggle's event log showing that it was last updated by "admin-api".](/img/api_access_history.png)
+![A feature flag's event log showing that it was last updated by "admin-api".](/img/api_access_history.png)
 
 ## API overview {#api-overview}
 

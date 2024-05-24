@@ -15,14 +15,14 @@ When running Unleash, we collect the following data:
 **Feature Usage Data**: Starting from **Unleash 5.3**, we collect additional data related to feature usage in Unleash.
 
 This includes the following data points:
-- The number of active feature toggles in use
+- The number of active feature flags in use
 - The total number of users in the system
 - The total number of projects in the system
 - The number of custom context fields defined and in use
 - The number of user groups defined in the system
 - The number of custom roles defined in the system
 - The number of environments defined in the system
-- The number of segments in active use by feature toggles
+- The number of segments in active use by feature flags
 - The number of custom strategies defined and in use
 - The number of feature exports/imports made
 

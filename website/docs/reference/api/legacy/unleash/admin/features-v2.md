@@ -8,16 +8,16 @@ In order to access the admin API endpoints you need to identify yourself. Unless
 :::
 
 
-## Fetching Feature Toggles {#fetching-feature-toggles}
+## Fetching Feature Flags {#fetching-feature-toggles}
 
 
 **Available since Unleash v4.3**
 
-In this document we will guide you on how you can work with feature toggles and their configuration. Please remember the following details:
+In this document we will guide you on how you can work with feature flags and their configuration. Please remember the following details:
 
-- All feature toggles exists _inside a project_.
-- A feature toggle exists _across all environments_.
-- A feature toggle can take different configuration, activation strategies, per environment.
+- All feature flags exists _inside a project_.
+- A feature flag exists _across all environments_.
+- A feature flag can take different configuration, activation strategies, per environment.
 
 
 :::note
@@ -29,7 +29,7 @@ This document lists HTTP request data and [cURL](https://curl.se/) and [HTTPie](
 
 <ApiRequest verb="get" url="api/admin/projects/:project-id" title="Get a project overview"/>
 
-This endpoint will give you an general overview of a project. It will return essential details about a project, in addition it will return all feature toggles and high level environment details per feature toggle.
+This endpoint will give you an general overview of a project. It will return essential details about a project, in addition it will return all feature flags and high level environment details per feature flag.
 
 **Example Query**
 
@@ -91,15 +91,15 @@ http GET http://localhost:4242/api/admin/projects/default Authorization:$KEY
 }
 ```
 
-From the results we can see that we have received two feature toggles, _demo_, _demo.test_, and other useful metadata about the project.
+From the results we can see that we have received two feature flags, _demo_, _demo.test_, and other useful metadata about the project.
 
 
-### Get All Feature Toggles {#fetching-toggles}
+### Get All Feature Flags {#fetching-toggles}
 
 
-<ApiRequest verb="get" url="api/admin/projects/:projectId/features" title="Get all feature toggles in a project"/>
+<ApiRequest verb="get" url="api/admin/projects/:projectId/features" title="Get all feature flags in a project"/>
 
-This endpoint will return all feature toggles and high level environment details per feature toggle for a given _projectId_
+This endpoint will return all feature flags and high level environment details per feature flag for a given _projectId_
 
 **Example Query**
 
@@ -157,28 +157,28 @@ Authorization:$KEY
   "version": 1
 }
 ```
-### Create Feature Toggle {#create-toggle}
+### Create Feature Flag {#create-toggle}
 
-<ApiRequest verb="post" url="api/admin/projects/:projectId/features" title="Create a feature toggle with the specified details (example data)" payload={{ name: "my-feature-toggle" }}/>
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features" title="Create a feature flag with the specified details (example data)" payload={{ name: "my-feature-flag" }}/>
 
-This endpoint will accept HTTP POST request to create a new feature toggle for a given _projectId_
+This endpoint will accept HTTP POST request to create a new feature flag for a given _projectId_
 
-**Toggle options**
+**Flag options**
 
-This endpoint accepts the following toggle options:
+This endpoint accepts the following flag options:
 
 | Property name    | Required | Description                                                                                                  | Example value           |
 |------------------|----------|--------------------------------------------------------------------------------------------------------------|-------------------------|
-| `name`           | Yes      | The name of the feature toggle.                                                                              | `"my-feature-toggle"`   |
-| `description`    | No       | The feature toggle's description. Defaults to an empty string.                                               | `"Turn my feature on!"` |
-| `impressionData` | No       | Whether to enable [impression data](/reference/impression-data.md) for this toggle. Defaults to `false.` | `true`                  |
-| `type`           | No       | The [type of toggle](/reference/feature-toggle-types.md) you want to create. Defaults to `"release"`     | `"release"`             |
+| `name`           | Yes      | The name of the feature flag.                                                                              | `"my-feature-flag"`   |
+| `description`    | No       | The feature flag's description. Defaults to an empty string.                                               | `"Turn my feature on!"` |
+| `impressionData` | No       | Whether to enable [impression data](/reference/impression-data.md) for this flag. Defaults to `false.` | `true`                  |
+| `type`           | No       | The [type of flag](/reference/feature-toggle-types.md) you want to create. Defaults to `"release"`     | `"release"`             |
 
 
 **Example Query**
 
 ```bash
-echo '{"name": "demo2", "description": "A new feature toggle"}' | \
+echo '{"name": "demo2", "description": "A new feature flag"}' | \
 http POST http://localhost:4242/api/admin/projects/default/features \
 Authorization:$KEY`
 ```
@@ -199,7 +199,7 @@ Vary: Accept-Encoding
 
 {
     "createdAt": "2021-09-07T20:16:02.614Z",
-    "description": "A new feature toggle",
+    "description": "A new feature flag",
     "lastSeenAt": null,
     "name": "demo2",
     "project": "default",
@@ -211,15 +211,15 @@ Vary: Accept-Encoding
 
 Possible Errors:
 
-- _409 Conflict_ - A toggle with that name already exists
+- _409 Conflict_ - A flag with that name already exists
 
 
 
-### Get Feature Toggle {#get-toggle}
+### Get Feature Flag {#get-toggle}
 
-<ApiRequest verb="get" url="api/admin/projects/:projectId/features/:featureName" title="Retrieve a named feature toggle"/>
+<ApiRequest verb="get" url="api/admin/projects/:projectId/features/:featureName" title="Retrieve a named feature flag"/>
 
-This endpoint will return the feature toggles with the defined name and _projectId_. We will also see the list of environments and all activation strategies configured per environment.
+This endpoint will return the feature flags with the defined name and _projectId_. We will also see the list of environments and all activation strategies configured per environment.
 
 **Example Query**
 
@@ -265,18 +265,18 @@ Authorization:$KEY`
 
 Possible Errors:
 
-- _404 Not Found_ - Could not find feature toggle with the provided name.
+- _404 Not Found_ - Could not find feature flag with the provided name.
 
-### Update Feature Toggle {#update-toggle}
+### Update Feature Flag {#update-toggle}
 
-<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName" title="Update a feature toggle entry (example data)" payload={{ name: "demo", description: "An updated feature toggle description." }}/>
+<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName" title="Update a feature flag entry (example data)" payload={{ name: "demo", description: "An updated feature flag description." }}/>
 
-This endpoint will accept HTTP PUT request to update the feature toggle metadata.
+This endpoint will accept HTTP PUT request to update the feature flag metadata.
 
 **Example Query**
 
 ```bash
-echo '{"name": "demo", "description": "An update feature toggle", "type": "kill-switch"}' | \
+echo '{"name": "demo", "description": "An update feature flag", "type": "kill-switch"}' | \
 http PUT http://localhost:4242/api/admin/projects/default/features/demo \
 Authorization:$KEY`
 ```
@@ -287,7 +287,7 @@ Authorization:$KEY`
 ```json
 {
     "createdAt": "2021-09-07T20:16:02.614Z",
-    "description": "An update feature toggle",
+    "description": "An update feature flag",
     "lastSeenAt": null,
     "name": "demo",
     "project": "default",
@@ -304,12 +304,12 @@ Some fields is not possible to change via this endpoint:
 - createdAt
 - lastSeen
 
-## Patch Feature Toggle {#patch-toggle}
+## Patch Feature Flag {#patch-toggle}
 
 
-<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName" title="Patch a feature toggle (example data)" payload={[{op: "replace", path: "/description", value: "patched description"}]}/>
+<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName" title="Patch a feature flag (example data)" payload={[{op: "replace", path: "/description", value: "patched description"}]}/>
 
-This endpoint will accept HTTP PATCH request to update the feature toggle metadata.
+This endpoint will accept HTTP PATCH request to update the feature flag metadata.
 
 **Example Query**
 
@@ -343,11 +343,11 @@ Some fields is not possible to change via this endpoint:
 - lastSeen
 
 
-### Clone Feature Toggle {#clone-toggle}
+### Clone Feature Flag {#clone-toggle}
 
-<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/clone" title="Clone a feature toggle (example data)" payload={{ name: "newToggleName"}}/>
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/clone" title="Clone a feature flag (example data)" payload={{ name: "newFlagName"}}/>
 
-This endpoint will accept HTTP POST request to clone an existing feature toggle with all strategies and variants.  When cloning a toggle, you **must** provide a new name for it. You can not clone archived feature toggles. The newly created feature toggle will be disabled for all environments.
+This endpoint will accept HTTP POST request to clone an existing feature flag with all strategies and variants.  When cloning a flag, you **must** provide a new name for it. You can not clone archived feature flags. The newly created feature flag will be disabled for all environments.
 
 **Example Query**
 
@@ -394,14 +394,14 @@ Vary: Accept-Encoding
 
 Possible Errors:
 
-- _409 Conflict_ - A toggle with that name already exists
+- _409 Conflict_ - A flag with that name already exists
 
 
-### Archive Feature Toggle {#archive-toggle}
+### Archive Feature Flag {#archive-toggle}
 
-<ApiRequest verb="delete" url="api/admin/projects/:projectId/features/:featureName" title="Archive a named feature toggle"/>
+<ApiRequest verb="delete" url="api/admin/projects/:projectId/features/:featureName" title="Archive a named feature flag"/>
 
-This endpoint will accept HTTP DELETE requests to archive a feature toggle.
+This endpoint will accept HTTP DELETE requests to archive a feature flag.
 
 **Example Query**
 
@@ -423,9 +423,9 @@ Transfer-Encoding: chunked
 ```
 
 
-### Add strategy to Feature Toggle {#add-strategy}
+### Add strategy to Feature Flag {#add-strategy}
 
-<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies" title="Add a new strategy to the named feature toggle in the named environment (example data)" payload={{name: "flexibleRollout",
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies" title="Add a new strategy to the named feature flag in the named environment (example data)" payload={{name: "flexibleRollout",
         parameters: {
             rollout: 20,
             groupId: "demo",
@@ -433,7 +433,7 @@ Transfer-Encoding: chunked
           }
       }}/>
 
-This endpoint will allow you to add a new strategy to a feature toggle in a given environment.
+This endpoint will allow you to add a new strategy to a feature flag in a given environment.
 
 **Example Query**
 
@@ -467,7 +467,7 @@ Authorization:$KEY
 
 ### Update strategy configuration {#update-strategy}
 
-<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies/:strategy-id" title="Overwrite the specified strategy on the named feature toggle in the named environment (example data)" payload={{name: "flexibleRollout",
+<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies/:strategy-id" title="Overwrite the specified strategy on the named feature flag in the named environment (example data)" payload={{name: "flexibleRollout",
         parameters: {
             rollout: 25,
             groupId: "demo",
@@ -534,7 +534,7 @@ Authorization:$KEY
 ```
 
 
-### Delete strategy from Feature Toggle {#delete-strategy}
+### Delete strategy from Feature Flag {#delete-strategy}
 
 <ApiRequest verb="delete" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies/:strategyId" title="Delete the strategy with the given ID"/>
 
@@ -557,11 +557,11 @@ Transfer-Encoding: chunked
 Vary: Accept-Encoding
 ```
 
-## Enabling and disabling toggles
+## Enabling and disabling flags
 
-### Enable Feature Toggle in an Environment {#enable-env}
+### Enable Feature Flag in an Environment {#enable-env}
 
-<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/on" title="Activate the named toggle in the given environment"/>
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/on" title="Activate the named flag in the given environment"/>
 
 **Example Query**
 
@@ -585,9 +585,9 @@ Possible Errors:
 - _409 Conflict_ - You can not enable the environment before it has strategies.
 
 
-###  Disable Feature Toggle in an Environment {#disable-env}
+###  Disable Feature Flag in an Environment {#disable-env}
 
-<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/off" title="Disable the named toggle in the given environment"/>
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/off" title="Disable the named flag in the given environment"/>
 
 **Example Query**
 
@@ -609,7 +609,7 @@ Transfer-Encoding: chunked
 
 ## Feature Variants
 
-### Put variants for Feature Toggle {#update-variants}
+### Put variants for Feature Flag {#update-variants}
 
 :::caution 
 
@@ -619,7 +619,7 @@ This endpoint affects all environments at once. If you only want to update a sin
 
 :::
 
-<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/variants" title="Create (overwrite) variants for a feature toggle in all environments (example data)" payload={[
+<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/variants" title="Create (overwrite) variants for a feature flag in all environments (example data)" payload={[
 	{
 		"name": "variant1",
 		"weightType": "fix",
@@ -641,7 +641,7 @@ This endpoint affects all environments at once. If you only want to update a sin
 	}
 ]}/>
 
-This overwrites the current variants for the feature toggle specified in the :featureName parameter.
+This overwrites the current variants for the feature flag specified in the :featureName parameter.
 The backend will validate the input for the following invariants
 
 * If there are variants, there needs to be at least one variant with `weightType: variable`
@@ -703,7 +703,7 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-### PATCH variants for a feature toggle
+### PATCH variants for a feature flag
 
 :::caution
 
@@ -713,7 +713,7 @@ This endpoint affects all environments at once. If you only want to update a sin
 
 :::
 
-<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature toggle in all environments (example data)" payload={[{"op": "add", "path": "/1", "value": {
+<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature flag in all environments (example data)" payload={[{"op": "add", "path": "/1", "value": {
   "name": "new-variant",
   "weightType": "fix",
   "weight": 200

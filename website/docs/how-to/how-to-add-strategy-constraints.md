@@ -8,21 +8,21 @@ Before Unleash 4.16, strategy constraints were only available to Unleash Pro and
 
 :::
 
-This guide shows you how to add [strategy constraints](../reference/strategy-constraints.md) to your feature toggles via the admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../reference/sdks/index.md), visit the specific SDKs documentation or see [the relevant section in the strategy constraints documentation](../reference/strategy-constraints.md#sdks 'strategy constraints documentation, section on interacting with constraints from client SDKs').
+This guide shows you how to add [strategy constraints](../reference/strategy-constraints.md) to your feature flags via the admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../reference/sdks/index.md), visit the specific SDKs documentation or see [the relevant section in the strategy constraints documentation](../reference/strategy-constraints.md#sdks 'strategy constraints documentation, section on interacting with constraints from client SDKs').
 
 ## Prerequisites
 
-You'll need to have an existing feature toggle with a defined strategy to add a constraint. The rest of this guide assumes you have a specific strategy that you're working with.
+You'll need to have an existing feature flag with a defined strategy to add a constraint. The rest of this guide assumes you have a specific strategy that you're working with.
 
 ## Step 1: Open the constraints menu {#step-1}
 
 On the strategy you're working with, find and select the "edit strategy" button.
 
-![A feature toggle with one strategy. The "edit strategy" button is highlighted.](/img/create-toggle-edit-strategy.png)
+![A feature flag with one strategy. The "edit strategy" button is highlighted.](/img/create-toggle-edit-strategy.png)
 
 On the "edit strategy" screen, select the "add constraint" button to open the constraints menu.
 
-![A feature toggle strategy view showing a button labeled with add constraints.](/img/add-constraint.png)
+![A feature flag strategy view showing a button labeled with add constraints.](/img/add-constraint.png)
 
 ## Step 2: Add and configure the constraint {#step-2}
 
@@ -36,7 +36,7 @@ Refer to [the _constraint structure_ section of the strategy constraints referen
 
 ## Step 3: Save the strategy {#step-3}
 
-![A feature toggle strategy view showing a button at the end of the form labeled with save strategy.](/img/constraints-save-strategy.png)
+![A feature flag strategy view showing a button at the end of the form labeled with save strategy.](/img/constraints-save-strategy.png)
 
 ## How to update existing constraints
 

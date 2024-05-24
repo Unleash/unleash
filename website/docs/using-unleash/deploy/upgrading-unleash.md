@@ -43,7 +43,7 @@ This should only impact dev builds and initial setup. You should never use the d
 
 ### The /api/admin/features API is gone
 
-Most of the old features API was deprecated in v4.3 and superseded by the project API instead. In v5, the deprecated parts have been completely removed. The only operations on that API that are still active are the operations to add or remove a tag from a feature toggle.
+Most of the old features API was deprecated in v4.3 and superseded by the project API instead. In v5, the deprecated parts have been completely removed. The only operations on that API that are still active are the operations to add or remove a tag from a feature flag.
 
 ### Error message structure
 
@@ -130,7 +130,7 @@ req.session.user = user;
 
 Only relevant if you use the `enableLegacyRoutes` option.
 
-In v2 you could query feature toggles on `/api/features`. This was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to be able to optimize performance and security. In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
+In v2 you could query feature flags on `/api/features`. This was deprecated in v4 and we introduced two different endpoints (`/api/admin/features` and `/api/client/features`) to be able to optimize performance and security. In v3 you could still enable the legacy routes via the `enableLegacyRoutes` option. This was removed in v4.
 
 ### 5. Unleash CLI has been removed {#5-unleash-cli-has-been-removed}
 

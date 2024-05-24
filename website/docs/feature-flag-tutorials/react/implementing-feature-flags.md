@@ -5,7 +5,6 @@ slug: /feature-flag-tutorials/react
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
 
-
 [React](https://react.dev/) is a popular JavaScript library utilized by millions of developers across the world to build user interfaces for frontend, mobile, or server-side applications when paired with frameworks. Originally developed by Meta, React has a strong community and is best used for interactive, complex, SEO-friendly application development.
 
 Leveraging feature flags allows developers to toggle on and off new features, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. Feature flags can play a critical part in optimizing the entire software development lifecycle. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in React?
@@ -25,34 +24,29 @@ Along the way, you will:
 5. [Toggle the visibility of a feature component](#5-use-the-feature-flag-to-rollout-a-notifications-badge)
 6. [Verify the toggle experience](#6-verify-the-toggle-experience)
 
-
 Watch the video tutorial and follow along with the code from this documentation.
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/-VzI0wqLDuw?si=cxLojllkIrZD8sf5"]}/>
 
 ## Prerequisites
 
-
 In this tutorial, you will need the following:
 
-- A web browser like Chrome or Firefox
-- Git
-- Docker
-- NPM, Node and Yarn to install and run a React app
-- (Optional) A code editor like Visual Studio Code
-
+-   A web browser like Chrome or Firefox
+-   Git
+-   Docker
+-   NPM, Node and Yarn to install and run a React app
+-   (Optional) A code editor like Visual Studio Code
 
 ![React Feature Flag Architecture Diagram](/img/react-tutorial-architecture-diagram.png)
 
-
 ## 1. Architect to limit PII and configuration leakage
-
 
 Since React is a front-end framework, there are special security considerations to plan around when implementing feature flags.
 
 Most importantly, you must:
 
-a. Limit PII (personally identifiable information) leakage from the end-user device (e.g. browser or mobile device) to your central feature flag control service. 
+a. Limit PII (personally identifiable information) leakage from the end-user device (e.g. browser or mobile device) to your central feature flag control service.
 
 b. Avoid leakage of configuration information from the central feature flag control service to end-user devices.
 
@@ -64,9 +58,7 @@ Unleash, the open-source feature flag system used in this tutorial, evaluates fe
 
 For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices).
 
-
 ## 2. Install a local feature flag provider
-
 
 There are many feature flag tools available. In this section, you will install Unleash in order to run it, log in, and create a feature flag, but you can use other tools in place of Unleash if you prefer. You’ll need to edit the code accordingly, but the steps will probably be about the same.
 
@@ -88,27 +80,21 @@ Username: admin
 Password: unleash4all
 ```
 
-The unleash platform shows a list of feature flags that you’ve generated. Click on the ‘New Feature Toggle’ button to create a new feature flag.
+The unleash platform shows a list of feature flags that you’ve generated. Click on the ‘New Feature Flag' button to create a new feature flag.
 
 ![Create a new feature flag](/img/react-tutorial-create-new-flag.png)
 
-
 ## 3. Create, enable, and configure a feature flag
-
 
 Next, you will create a feature flag on the platform and turn it on for your React app.
 
-> **Note:** This document uses feature flags and feature toggles interchangeably. Some people prefer flag; others prefer toggle. We use both - they are synonyms for us.
+Give your feature flag a unique name and click ‘Create feature flag’.
 
-In the [Create Toggle view](http://localhost:4242/projects/default/create-toggle/), give your feature flag a unique name and click ‘Create toggle feature’.
-
-For the purpose of this tutorial, name the feature flag “newNotificationsBadge”. Use the default values in the rest of the feature flag form.
+For the purpose of this tutorial, name the feature flag `newNotificationsBadge`. Use the default values in the rest of the feature flag form.
 
 Your new feature flag is created and ready to be used. Enable the flag for your development environment, which makes it accessible to be used in the React app we will generate from your local environment.
 
-
 ![Create feature flag form](/img/react-tutorial-create-flag-form.png)
-
 
 Your new feature flag is created and ready to be used. Enable the flag for your development environment, which makes it accessible to be used in the React app we will generate from your local environment.
 
@@ -122,7 +108,7 @@ Click on the ‘New API token’ button.
 
 ![Create new API token](/img/react-tutorial-create-api-token.png)
 
-Name the API token and connect to the Client-side SDK. 
+Name the API token and connect to the Client-side SDK.
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
@@ -130,9 +116,7 @@ The token should have access to the “development” environment, as shown in t
 
 The API token you have generated can be managed in the API Access view in your project settings. This token will come in handy in Step 5.
 
-
 ## 4. Clone an open source React app
-
 
 In this section, you will clone an open source React application called [Cypress Real World App](https://github.com/cypress-io/cypress-realworld-app), which is meant to model what a more complex, real life use case would be for a fully-functioning app to experiment in.
 
@@ -144,8 +128,8 @@ Go to your Terminal and clone the repository with this command:
 git clone git@github.com:cypress-io/cypress-realworld-app.git
 ```
 
-> :triangular_flag_on_post: **Note:** 
-Since Yarn is required in order to run the app, make sure you have it installed globally. If you do not, run the command below.
+> :triangular_flag_on_post: **Note:**
+> Since Yarn is required in order to run the app, make sure you have it installed globally. If you do not, run the command below.
 
 ```
 npm install yarn@latest -g
@@ -170,7 +154,6 @@ Password: s3cret
 
 For more detailed instructions on the setup process for this app, review the [README](https://github.com/cypress-io/cypress-realworld-app?tab=readme-ov-file#getting-started).
 
-
 It’s time to pull in your newly created feature flag in your app. Run the following command to install the Unleash React SDK in your repo:
 
 ```
@@ -189,10 +172,10 @@ Paste in a configuration object:
 
 ```js
 const config = {
- url: "http://localhost:4242/api/frontend", // Your local instance Unleash API URL
- clientKey: "<client_key>", // Your client-side API token
- refreshInterval: 15, // How often (in seconds) the client should poll the proxy for updates
- appName: "cypress-realworld-app", // The name of your application. It's only used for identifying your application
+    url: "http://localhost:4242/api/frontend", // Your local instance Unleash API URL
+    clientKey: "<client_key>", // Your client-side API token
+    refreshInterval: 15, // How often (in seconds) the client should poll the proxy for updates
+    appName: "cypress-realworld-app", // The name of your application. It's only used for identifying your application
 };
 ```
 
@@ -200,16 +183,15 @@ In the `Router` section of this file, wrap the `FlagProvider` around the existin
 
 ```js
 <FlagProvider config={config}>
-  <App />
+    <App />
 </FlagProvider>
 ```
 
-Next, replace the `<client_key>` string in the config object with the API token you generated. You can do this by copying the API token into your clipboard from the API Access view table and pasting it into the code. 
+Next, replace the `<client_key>` string in the config object with the API token you generated. You can do this by copying the API token into your clipboard from the API Access view table and pasting it into the code.
 
 This configuration object is used to populate the `FlagProvider` component that comes from Unleash and wraps around the application, using the credentials to target the specific feature flag you created for the project.
 
 You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Client-Side SDK with React](/reference/sdks/react) documentation.
-
 
 ## 5. Use the feature flag to rollout a notifications badge
 
@@ -229,28 +211,28 @@ Within the `NavBar` component in the file, define and reference the flag you cre
 const notificationsBadgeEnabled = useFlag("newNotificationsBadge");
 ```
 
-This flag will be used to conditionally render the notification icon `Badge` that is pulled in from Material-UI. 
+This flag will be used to conditionally render the notification icon `Badge` that is pulled in from Material-UI.
 If the flag is enabled, the notification badge will display to users and will route them to the Notifications view.
 
 Find the `Badge` component in the file and wrap it in a boolean operator:
 
 ```js
-{notificationsBadgeEnabled && (
- <Badge
-   badgeContent={allNotifications?.length}
-   data-test="nav-top-notifications-count"
-   classes={{ badge: classes.customBadge }}
- >
-   <NotificationsIcon />
- </Badge>
-)}
+{
+    notificationsBadgeEnabled && (
+        <Badge
+            badgeContent={allNotifications?.length}
+            data-test="nav-top-notifications-count"
+            classes={{ badge: classes.customBadge }}
+        >
+            <NotificationsIcon />
+        </Badge>
+    );
+}
 ```
 
-> **Note:** Ensure you have the correct format in your file or the Prettier formatter will display an error. 
-
+> **Note:** Ensure you have the correct format in your file or the Prettier formatter will display an error.
 
 ## 6. Verify the toggle experience
-
 
 In your Unleash instance, you can toggle your feature flag on or off to verify that the different UI experiences load accordingly.
 
@@ -264,9 +246,7 @@ If you disable the flag, this results in a view of a navigation menu without the
 
 ![Notification icon badge not visible](/img/react-tutorial-rwa-feature-off.png)
 
-
 You've successfully implemented a feature flag using best practices to control the release of a notifications feature in a real world app!
-
 
 ## Conclusion
 

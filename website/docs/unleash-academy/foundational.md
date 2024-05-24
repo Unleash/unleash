@@ -26,19 +26,19 @@ An understanding of Unleash anatomy and architecture and how the different syste
 ---
 
 
-**Intro to Feature Flags/Toggles & Unleash**
+**Intro to Feature Flags & Unleash**
   - Feature flags - What they are & why to use them
   - What is Unleash?
 
 **Anatomy of Unleash**
-  - Covering the various components that exist within the Unleash system and how they interact with each other and with external applications. Components that include but not limited to: projects, environments, variants, feature toggles --> strategies, tokens, tags, context
+  - Covering the various components that exist within the Unleash system and how they interact with each other and with external applications. Components that include but not limited to: projects, environments, variants, feature flags --> strategies, tokens, tags, context
 
 **Architecture overview**
   - Unleash API, UI, SDKs, Proxy --> Edge (Proxy 2.0)
 
 **How to use Unleash**
 - Projects and Environments
-- Toggle creation and targeting
+- Flag creation and targeting
 - Strategies, constraints, segments
 - Variants (and environments), Strategy Variants
 - Introduction to A/B Testing

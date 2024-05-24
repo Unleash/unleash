@@ -1,5 +1,6 @@
 import {
     Box,
+    IconButton,
     List,
     ListItem,
     ListItemButton,
@@ -57,6 +58,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import type { INavigationMenuItem } from 'interfaces/route';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.neutral.main,
@@ -121,9 +124,11 @@ const MiniListItem: FC<{ href: string; text: string }> = ({
 
 export const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
-    pt: theme.spacing(3),
-    pb: theme.spacing(3),
-    minHeight: '95vh',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(6),
+    height: '100%',
+    position: 'absolute',
+    zIndex: theme.zIndex.sticky,
 }));
 
 const icons: Record<string, typeof SvgIcon> = {
@@ -161,6 +166,36 @@ const IconRenderer: FC<{ path: string }> = ({ path }) => {
     const IconComponent = findIconByPath(path); // Fallback to 'default' if the type is not found
 
     return <IconComponent />;
+};
+
+const ShowHide: FC<{ mode: 'full' | 'mini'; onChange: () => void }> = ({
+    mode,
+    onChange,
+}) => {
+    return (
+        <Box
+            sx={(theme) => ({
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                margin: theme.spacing(2, 1, 0, 2),
+            })}
+        >
+            {mode === 'full' && (
+                <Box
+                    sx={(theme) => ({
+                        color: theme.palette.neutral.main,
+                        fontSize: 'small',
+                    })}
+                >
+                    Hide (⌘ + B)
+                </Box>
+            )}
+            <IconButton onClick={onChange}>
+                {mode === 'full' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+        </Box>
+    );
 };
 
 const useRoutes = () => {
@@ -209,13 +244,13 @@ const useNavigationMode = () => {
         };
     }, [mode]);
 
-    return mode;
+    return [mode, setMode] as const;
 };
 
 export const NavigationSidebar = () => {
     const { routes, showBadge } = useRoutes();
 
-    const mode = useNavigationMode();
+    const [mode, setMode] = useNavigationMode();
 
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
@@ -295,6 +330,12 @@ export const NavigationSidebar = () => {
                     </List>
                 </AccordionDetails>
             </Accordion>
+            <ShowHide
+                mode={mode}
+                onChange={() => {
+                    setMode(mode === 'full' ? 'mini' : 'full');
+                }}
+            />
         </StyledBox>
     );
 };

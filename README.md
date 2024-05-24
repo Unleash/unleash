@@ -59,9 +59,9 @@ If you use the docker compose file from the previous step, here's the configurat
 
 If you use a different setup, your configuration details will most likely also be different.
 
-### Check a feature toggle
+### Check a feature flag
 
-Checking the state of a feature toggle in your code is easy! The syntax will vary depending on your language, but all you need is a simple function call to check whether a toggle is available. Here's how it might look in Java:
+Checking the state of a feature flag in your code is easy! The syntax will vary depending on your language, but all you need is a simple function call to check whether a flag is available. Here's how it might look in Java:
 
 ```java
 if (unleash.isEnabled("AwesomeFeature")) {
@@ -127,16 +127,16 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 
 ### Flexibility and adaptability
 
-- Get an easy overview of all feature toggles across all your environments, applications and services
+- Get an easy overview of all feature flags across all your environments, applications and services
 - Use included [activation strategies](https://docs.getunleash.io/reference/activation-strategies) for most common use cases, or use a [custom activation strategy](https://docs.getunleash.io/reference/custom-activation-strategies) to support any need you might have
-- Organise feature toggles by [feature toggle tags](https://docs.getunleash.io/reference/tags)
+- Organise feature flags by [feature flag tags](https://docs.getunleash.io/reference/tags)
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
 - Targeted releases: release features to specific [users](https://docs.getunleash.io/reference/activation-strategies#userids), [IPs](https://docs.getunleash.io/reference/activation-strategies#ips), or [hostnames](https://docs.getunleash.io/reference/activation-strategies#hostnames)
 - [Kill switches](https://docs.getunleash.io/reference/feature-toggle-types#feature-toggle-types)
 - [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/reference/environments)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
-- [Dashboard for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale toggles](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles)
+- [Dashboard for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale flags](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles)
 - API-first: _everything_ can be automated. No exceptions.
 - [12 official client SDKs](https://docs.getunleash.io/reference/sdks#official-sdks), and ten [community-contributed client SDKs](https://docs.getunleash.io/reference/sdks#community-sdks)
 - Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
@@ -156,7 +156,7 @@ If you're looking for one of the following features, please take a look at our [
 - [role-based access control (RBAC)](https://docs.getunleash.io/reference/rbac)
 - [single sign-on (SSO)](https://docs.getunleash.io/reference/sso)
 - more environments
-- [feature toggles project support](https://docs.getunleash.io/reference/projects)
+- [feature flags project support](https://docs.getunleash.io/reference/projects)
 - [advanced segmentation](https://docs.getunleash.io/reference/segments)
 - [additional strategy constraints](https://docs.getunleash.io/reference/strategy-constraints)
 - tighter security

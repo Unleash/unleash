@@ -158,7 +158,12 @@ const Header: VFC = () => {
 
     const disableNotifications = useUiFlag('disableNotifications');
     const { uiConfig, isOss } = useUiConfig();
-    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
+    const smallScreen = useMediaQuery(
+        sidebarNavigationEnabled
+            ? theme.breakpoints.down('lg')
+            : theme.breakpoints.down('md'),
+    );
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const onAdminClose = () => setAdminRef(null);

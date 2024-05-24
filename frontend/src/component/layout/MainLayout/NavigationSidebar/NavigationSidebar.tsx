@@ -170,9 +170,6 @@ export const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(6),
-    height: '100%',
-    position: 'absolute',
-    zIndex: theme.zIndex.sticky,
 }));
 
 const icons: Record<string, typeof SvgIcon> = {

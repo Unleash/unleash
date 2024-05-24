@@ -1,5 +1,5 @@
 ---
-title: How to Implement Feature Flags in .net
+title: How to Implement Feature Flags in .NET
 description: "How to use Unleash feature flags with .NET."
 slug: /feature-flag-tutorials/dotnet
 ---

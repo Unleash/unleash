@@ -29,6 +29,7 @@ import NameExistsError from '../error/name-exists-error';
 import type { IAccountStore } from '../types/stores/account-store';
 import type { IUser } from '../types/user';
 import type EventService from '../features/events/event-service';
+import { SSO_SYNC_USER } from '../db/group-store';
 
 export class GroupService {
     private groupStore: IGroupStore;
@@ -302,7 +303,7 @@ export class GroupService {
             await this.groupStore.addUserToGroups(
                 userId,
                 newGroups.map((g) => g.id),
-                auditUser.username,
+                SSO_SYNC_USER,
             );
             const oldGroups = await this.groupStore.getOldGroupsForExternalUser(
                 userId,

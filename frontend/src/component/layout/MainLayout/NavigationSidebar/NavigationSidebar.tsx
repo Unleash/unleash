@@ -60,6 +60,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { basePath } from 'utils/formatPath';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { Theme } from '@mui/material/styles/createTheme';
+import { unique } from 'utils/unique';
 
 export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.neutral.main,
@@ -226,7 +227,7 @@ const IconRenderer: FC<{ path: string }> = ({ path }) => {
 
 const ShowHideWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'mode',
-})<{ mode: 'mini' | 'full' }>(({ theme, mode }) => ({
+})<{ mode: NavigationMode }>(({ theme, mode }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -234,7 +235,7 @@ const ShowHideWrapper = styled(Box, {
     cursor: 'pointer',
 }));
 
-const ShowHide: FC<{ mode: 'full' | 'mini'; onChange: () => void }> = ({
+const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
     mode,
     onChange,
 }) => {
@@ -297,8 +298,10 @@ const useShowBadge = () => {
     return showBadge;
 };
 
+type NavigationMode = 'mini' | 'full';
+
 const useNavigationMode = () => {
-    const [mode, setMode] = useLocalStorageState<'mini' | 'full'>(
+    const [mode, setMode] = useLocalStorageState<NavigationMode>(
         'navigation-mode:v1',
         'full',
     );
@@ -320,7 +323,7 @@ const useNavigationMode = () => {
     return [mode, setMode] as const;
 };
 
-const MainNavigationList: FC<{ mode: 'mini' | 'full'; onClick?: () => void }> =
+const MainNavigationList: FC<{ mode: NavigationMode; onClick?: () => void }> =
     ({ mode, onClick }) => {
         const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
@@ -356,7 +359,7 @@ const MainNavigationList: FC<{ mode: 'mini' | 'full'; onClick?: () => void }> =
 
 const ConfigureNavigationList: FC<{
     routes: INavigationMenuItem[];
-    mode: 'mini' | 'full';
+    mode: NavigationMode;
     onClick?: () => void;
 }> = ({ routes, mode, onClick }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
@@ -378,7 +381,7 @@ const ConfigureNavigationList: FC<{
 
 const AdminNavigationList: FC<{
     routes: INavigationMenuItem[];
-    mode: 'mini' | 'full';
+    mode: NavigationMode;
     badge?: ReactNode;
     onClick?: () => void;
 }> = ({ routes, mode, onClick, badge }) => {
@@ -443,15 +446,40 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     );
 };
 
+const useExpanded = <T extends string>() => {
+    const [expanded, setExpanded] = useLocalStorageState<Array<T>>(
+        'navigation-expanded:v1',
+        [],
+    );
+
+    const changeExpanded = (key: T, expand: boolean) => {
+        if (expand) {
+            setExpanded(unique([...expanded, key]));
+        } else {
+            setExpanded(expanded.filter((name) => name !== key));
+        }
+    };
+
+    return [expanded, changeExpanded] as const;
+};
+
 export const NavigationSidebar = () => {
     const { routes } = useRoutes();
 
     const [mode, setMode] = useNavigationMode();
+    const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
 
     return (
         <StyledBox>
             <MainNavigationList mode={mode} />
-            <Accordion disableGutters={true} sx={{ boxShadow: 'none' }}>
+            <Accordion
+                disableGutters={true}
+                sx={{ boxShadow: 'none' }}
+                expanded={expanded.includes('configure')}
+                onChange={(_, expand) => {
+                    changeExpanded('configure', expand);
+                }}
+            >
                 {mode === 'full' && (
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -472,7 +500,14 @@ export const NavigationSidebar = () => {
                     />
                 </AccordionDetails>
             </Accordion>
-            <Accordion disableGutters={true} sx={{ boxShadow: 'none' }}>
+            <Accordion
+                disableGutters={true}
+                sx={{ boxShadow: 'none' }}
+                expanded={expanded.includes('admin')}
+                onChange={(_, expand) => {
+                    changeExpanded('admin', expand);
+                }}
+            >
                 {mode === 'full' && (
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}

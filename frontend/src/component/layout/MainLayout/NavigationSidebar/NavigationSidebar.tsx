@@ -216,7 +216,7 @@ const ShowHide: FC<{ mode: 'full' | 'mini'; onChange: () => void }> = ({
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                margin: theme.spacing(2, 1, 0, 2),
+                margin: theme.spacing(2, 1, 0, mode === 'mini' ? 1 : 2),
             })}
         >
             {mode === 'full' && (

@@ -1,37 +1,42 @@
 import { useState } from 'react';
-import { ClickAwayListener, IconButton, Tooltip, styled } from '@mui/material';
+import {
+    Box,
+    Button,
+    ClickAwayListener,
+    styled,
+    Typography,
+} from '@mui/material';
 import { UserProfileContent } from './UserProfileContent/UserProfileContent';
 import type { IUser } from 'interfaces/user';
-import { HEADER_USER_AVATAR } from 'utils/testIds';
 import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { flexRow, itemsCenter } from 'themes/themeStyles';
-
-const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
-    width: theme.spacing(4.5),
-    height: theme.spacing(4.5),
-}));
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { HEADER_USER_AVATAR } from 'utils/testIds';
 
 const StyledProfileContainer = styled('div')(({ theme }) => ({
     position: 'relative',
-}));
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    ...flexRow,
-    ...itemsCenter,
-    color: 'inherit',
-    padding: theme.spacing(1),
-    '&:focus-visible': {
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineColor: theme.palette.primary.main,
-        borderRadius: '100%',
-    },
+    marginLeft: theme.spacing(2),
+    cursor: 'pointer',
 }));
 
 interface IUserProfileProps {
     profile: IUser;
 }
+
+const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(4.75),
+    height: theme.spacing(4.75),
+    marginRight: theme.spacing(1.5),
+}));
+
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: theme.spacing(35),
+}));
 
 const UserProfile = ({ profile }: IUserProfileProps) => {
     const [showProfile, setShowProfile] = useState(false);
@@ -40,20 +45,28 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
     return (
         <ClickAwayListener onClickAway={() => setShowProfile(false)}>
             <StyledProfileContainer>
-                <Tooltip title='Profile' arrow>
-                    <StyledIconButton
-                        onClick={() => setShowProfile((prev) => !prev)}
-                        aria-controls={showProfile ? modalId : undefined}
-                        aria-expanded={showProfile}
-                        color='secondary'
-                        size='large'
-                    >
-                        <StyledUserAvatar
-                            user={profile}
-                            data-testid={HEADER_USER_AVATAR}
-                        />
-                    </StyledIconButton>
-                </Tooltip>
+                <Button
+                    component={Box}
+                    sx={{ display: 'flex', alignItems: 'center' }}
+                    aria-controls={showProfile ? modalId : undefined}
+                    aria-expanded={showProfile}
+                    onClick={() => setShowProfile((prev) => !prev)}
+                >
+                    <StyledUserAvatar
+                        user={profile}
+                        data-testid={HEADER_USER_AVATAR}
+                    />
+                    <Box sx={{ mr: 3 }}>
+                        <Typography>
+                            {profile.name || profile.username}
+                        </Typography>
+                        <StyledSubtitle variant='body2' title={profile.email}>
+                            {profile.email}
+                        </StyledSubtitle>
+                    </Box>
+                    {showProfile ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </Button>
+
                 <UserProfileContent
                     id={modalId}
                     showProfile={showProfile}

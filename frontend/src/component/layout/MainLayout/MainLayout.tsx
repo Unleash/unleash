@@ -70,6 +70,11 @@ const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
         paddingRight: theme.spacing(1),
         margin: 0,
     },
+    [theme.breakpoints.up('xl')]: {
+        maxWidth: '1920px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    },
     minHeight: '94vh',
 }));
 

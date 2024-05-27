@@ -83,14 +83,6 @@ const EnterprisePlanBadge = () => (
     </Tooltip>
 );
 
-const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
-    borderRadius: theme.spacing(0.5),
-    borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&:hover': {
-        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
-    },
-}));
-
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
@@ -232,19 +224,22 @@ const IconRenderer: FC<{ path: string }> = ({ path }) => {
     return <IconComponent />;
 };
 
+const ShowHideWrapper = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'mode',
+})<{ mode: 'mini' | 'full' }>(({ theme, mode }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: theme.spacing(2, 1, 0, mode === 'mini' ? 1.5 : 2),
+    cursor: 'pointer',
+}));
+
 const ShowHide: FC<{ mode: 'full' | 'mini'; onChange: () => void }> = ({
     mode,
     onChange,
 }) => {
     return (
-        <Box
-            sx={(theme) => ({
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                margin: theme.spacing(2, 1, 0, mode === 'mini' ? 1 : 2),
-            })}
-        >
+        <ShowHideWrapper onClick={onChange} mode={mode}>
             {mode === 'full' && (
                 <Box
                     sx={(theme) => ({
@@ -255,10 +250,16 @@ const ShowHide: FC<{ mode: 'full' | 'mini'; onChange: () => void }> = ({
                     Hide (⌘ + B)
                 </Box>
             )}
-            <IconButton onClick={onChange}>
-                {mode === 'full' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            <IconButton>
+                {mode === 'full' ? (
+                    <ChevronLeftIcon />
+                ) : (
+                    <Tooltip title='Expand (⌘ + B)' placement='right'>
+                        <ChevronRightIcon />
+                    </Tooltip>
+                )}
             </IconButton>
-        </Box>
+        </ShowHideWrapper>
     );
 };
 

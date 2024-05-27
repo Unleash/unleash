@@ -14,7 +14,7 @@ import Info from '@mui/icons-material/Info';
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
-import type React from 'react';
+import React from 'react';
 import { type ReactNode, useState } from 'react';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
 import { formTemplateSidebarWidth } from './FormTemplate.styles';
@@ -55,14 +55,20 @@ const StyledContainer = styled('section', {
     },
 }));
 
-const StyledMobileGuidanceWrapper = styled('div')(({ theme }) => ({
+const StyledMobileGuidanceWrapper = styled('div', {
+    shouldForwardProp: (prop) => !['guidanceHeight'].includes(prop.toString()),
+})<{ guidanceHeight?: string }>(({ theme, guidanceHeight }) => ({
     ...relative,
     // todo: review this. We're reaching down into a nested
     // component, but due to the component structure, it'd be a
     // lot of work to pass this down as a prop.
-    aside: {
-        height: '240px',
-    },
+    ...(guidanceHeight
+        ? {
+              aside: {
+                  height: '240px',
+              },
+          }
+        : {}),
 }));
 
 const StyledMain = styled('div')(({ theme }) => ({
@@ -287,12 +293,16 @@ const FormTemplate: React.FC<ICreateProps> = ({
         }
     };
 
+    const SidebarComponent = useFixedSidebar ? FixedGuidance : Guidance;
+
     return (
         <StyledContainer modal={modal} compact={compact}>
             <ConditionallyRender
                 condition={showGuidance && smallScreen}
                 show={
-                    <StyledMobileGuidanceWrapper>
+                    <StyledMobileGuidanceWrapper
+                        guidanceHeight={useFixedSidebar ? '240px' : undefined}
+                    >
                         <MobileGuidance
                             description={description}
                             documentationIcon={documentationIcon}
@@ -334,7 +344,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
             <ConditionallyRender
                 condition={showGuidance && !smallScreen}
                 show={
-                    <Guidance
+                    <SidebarComponent
                         documentationIcon={documentationIcon}
                         description={description}
                         documentationLink={documentationLink}
@@ -346,7 +356,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                             formatApiCode === undefined,
                             !(showDescription || showLink),
                         )}
-                    </Guidance>
+                    </SidebarComponent>
                 }
             />
         </StyledContainer>
@@ -435,7 +445,11 @@ interface IGuidanceProps {
     showLink?: boolean;
 }
 
-const Guidance: React.FC<IGuidanceProps> = ({
+const GuidanceContent: React.FC<
+    IGuidanceProps & {
+        fixedDocumentationHeight?: string;
+    }
+> = ({
     description,
     children,
     documentationLink,
@@ -443,10 +457,10 @@ const Guidance: React.FC<IGuidanceProps> = ({
     documentationLinkLabel = 'Learn more',
     showDescription = true,
     showLink = true,
+    fixedDocumentationHeight,
 }) => {
     const StyledDocumentationIconWrapper = styled('div')(({ theme }) => ({
         height: '2rem',
-        // aspectRatio: '1',
         display: 'grid',
         placeItems: 'center',
         svg: {
@@ -454,71 +468,18 @@ const Guidance: React.FC<IGuidanceProps> = ({
         },
     }));
 
-    return (
-        <StyledSidebar>
-            <ConditionallyRender
-                condition={showDescription}
-                show={
-                    <StyledDescriptionCard>
-                        <ConditionallyRender
-                            condition={!!documentationIcon}
-                            show={
-                                <StyledDocumentationIconWrapper>
-                                    {documentationIcon}
-                                </StyledDocumentationIconWrapper>
-                            }
-                        />
-                        <StyledDescription>{description}</StyledDescription>
-                    </StyledDescriptionCard>
-                }
-            />
-
-            <ConditionallyRender
-                condition={showLink && !!documentationLink}
-                show={
-                    <StyledLinkContainer>
-                        <StyledLinkIcon />
-                        <StyledDocumentationLink
-                            href={documentationLink}
-                            rel='noopener noreferrer'
-                            target='_blank'
-                        >
-                            {documentationLinkLabel}
-                        </StyledDocumentationLink>
-                    </StyledLinkContainer>
-                }
-            />
-            {children}
-        </StyledSidebar>
-    );
-};
-
-const FixedGuidance: React.FC<IGuidanceProps> = ({
-    description,
-    children,
-    documentationLink,
-    documentationIcon,
-    documentationLinkLabel = 'Learn more',
-    showDescription = true,
-    showLink = true,
-}) => {
-    const StyledDocumentationWrapper = styled('div')(({ theme }) => ({
-        height: '170px',
+    const StyledDocumentationWrapper = styled('div')({
+        height: fixedDocumentationHeight,
         overflowY: 'auto',
-    }));
+    });
 
-    const StyledDocumentationIconWrapper = styled('div')(({ theme }) => ({
-        height: '2rem',
-        display: 'grid',
-        placeItems: 'center',
-        svg: {
-            width: '100%',
-        },
-    }));
+    const DocsWrapper = fixedDocumentationHeight
+        ? StyledDocumentationWrapper
+        : React.Fragment;
 
     return (
-        <StyledSidebar sidebarWidth='420px' fixedCodeHeight='300px'>
-            <StyledDocumentationWrapper>
+        <>
+            <DocsWrapper>
                 <ConditionallyRender
                     condition={showDescription}
                     show={
@@ -551,8 +512,24 @@ const FixedGuidance: React.FC<IGuidanceProps> = ({
                         </StyledLinkContainer>
                     }
                 />
-            </StyledDocumentationWrapper>
+            </DocsWrapper>
             {children}
+        </>
+    );
+};
+
+const Guidance: React.FC<IGuidanceProps> = (props) => {
+    return (
+        <StyledSidebar>
+            <GuidanceContent {...props} />
+        </StyledSidebar>
+    );
+};
+
+const FixedGuidance: React.FC<IGuidanceProps> = (props) => {
+    return (
+        <StyledSidebar sidebarWidth='420px' fixedCodeHeight='300px'>
+            <GuidanceContent {...props} fixedDocumentationHeight='170px' />
         </StyledSidebar>
     );
 };

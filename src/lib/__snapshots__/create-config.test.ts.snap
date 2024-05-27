@@ -69,7 +69,6 @@ exports[`should create default config 1`] = `
     "_events": {},
     "_eventsCount": 0,
     "_maxListeners": undefined,
-    Symbol(shapeMode): false,
     Symbol(kCapture): false,
   },
   "feedbackUriPath": undefined,
@@ -101,7 +100,6 @@ exports[`should create default config 1`] = `
       "encryptEmails": false,
       "estimateTrafficDataCost": false,
       "executiveDashboard": false,
-      "executiveDashboardUI": false,
       "extendedUsageMetrics": false,
       "featureLifecycle": false,
       "featureSearchFeedback": {
@@ -124,6 +122,7 @@ exports[`should create default config 1`] = `
       },
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
+      "killInsightsUI": false,
       "killScheduledChangeRequestCache": false,
       "maintenanceMode": false,
       "manyStrategiesPagination": false,

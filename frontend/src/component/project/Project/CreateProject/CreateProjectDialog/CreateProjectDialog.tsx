@@ -29,12 +29,6 @@ const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
         backgroundColor: 'transparent',
     },
     padding: 0,
-    pre: {
-        // todo: review this. We're reaching deep down into a nested
-        // component, but due to the component structure, it'd be a
-        // lot of work to pass this down as a prop.
-        height: '300px',
-    },
 }));
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
@@ -149,7 +143,7 @@ export const CreateProjectDialogue = ({
                 documentationLink={documentation.link?.url}
                 documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}
-                sidebarWidth={'420px'}
+                useFixedSidebar
             >
                 <NewProjectForm
                     errors={errors}

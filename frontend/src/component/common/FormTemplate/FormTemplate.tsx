@@ -36,7 +36,6 @@ interface ICreateProps {
     footer?: ReactNode;
     compact?: boolean;
     showGuidance?: boolean;
-    sidebarWidth?: string;
     useFixedSidebar?: boolean;
 }
 
@@ -162,21 +161,31 @@ const StyledInfoIcon = styled(Info)(({ theme }) => ({
 }));
 
 const StyledSidebar = styled('aside', {
-    shouldForwardProp: (prop) => prop !== 'sidebarWidth',
-})<{ sidebarWidth?: string }>(({ theme, sidebarWidth }) => ({
-    backgroundColor: theme.palette.background.sidebar,
-    padding: theme.spacing(4),
-    flexGrow: 0,
-    flexShrink: 0,
-    width: sidebarWidth || formTemplateSidebarWidth,
-    [theme.breakpoints.down(1100)]: {
-        width: '100%',
-        color: 'red',
-    },
-    [theme.breakpoints.down(500)]: {
-        padding: theme.spacing(4, 2),
-    },
-}));
+    shouldForwardProp: (prop) =>
+        !['sidebarWidth', 'fixedCodeHeight'].includes(prop.toString()),
+})<{ sidebarWidth?: string; fixedCodeHeight?: string }>(
+    ({ theme, sidebarWidth, fixedCodeHeight }) => ({
+        backgroundColor: theme.palette.background.sidebar,
+        padding: theme.spacing(4),
+        flexGrow: 0,
+        flexShrink: 0,
+        width: sidebarWidth || formTemplateSidebarWidth,
+        [theme.breakpoints.down(1100)]: {
+            width: '100%',
+            color: 'red',
+        },
+        [theme.breakpoints.down(500)]: {
+            padding: theme.spacing(4, 2),
+        },
+        ...(fixedCodeHeight
+            ? {
+                  pre: {
+                      height: fixedCodeHeight,
+                  },
+              }
+            : {}),
+    }),
+);
 
 const StyledDescriptionCard = styled('article')(({ theme }) => ({
     display: 'flex',
@@ -230,7 +239,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     footer,
     compact,
     showGuidance = true,
-    sidebarWidth,
+    useFixedSidebar,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -332,7 +341,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         documentationLinkLabel={documentationLinkLabel}
                         showDescription={showDescription}
                         showLink={showLink}
-                        sidebarWidth={sidebarWidth}
                     >
                         {renderApiInfo(
                             formatApiCode === undefined,
@@ -425,7 +433,6 @@ interface IGuidanceProps {
     documentationLinkLabel?: string;
     showDescription?: boolean;
     showLink?: boolean;
-    sidebarWidth?: string;
 }
 
 const Guidance: React.FC<IGuidanceProps> = ({
@@ -436,13 +443,7 @@ const Guidance: React.FC<IGuidanceProps> = ({
     documentationLinkLabel = 'Learn more',
     showDescription = true,
     showLink = true,
-    sidebarWidth = undefined,
 }) => {
-    const StyledDocumentationWrapper = styled('div')(({ theme }) => ({
-        height: '170px',
-        overflowY: 'auto',
-    }));
-
     const StyledDocumentationIconWrapper = styled('div')(({ theme }) => ({
         height: '2rem',
         // aspectRatio: '1',
@@ -454,41 +455,39 @@ const Guidance: React.FC<IGuidanceProps> = ({
     }));
 
     return (
-        <StyledSidebar sidebarWidth={sidebarWidth}>
-            <StyledDocumentationWrapper>
-                <ConditionallyRender
-                    condition={showDescription}
-                    show={
-                        <StyledDescriptionCard>
-                            <ConditionallyRender
-                                condition={!!documentationIcon}
-                                show={
-                                    <StyledDocumentationIconWrapper>
-                                        {documentationIcon}
-                                    </StyledDocumentationIconWrapper>
-                                }
-                            />
-                            <StyledDescription>{description}</StyledDescription>
-                        </StyledDescriptionCard>
-                    }
-                />
+        <StyledSidebar>
+            <ConditionallyRender
+                condition={showDescription}
+                show={
+                    <StyledDescriptionCard>
+                        <ConditionallyRender
+                            condition={!!documentationIcon}
+                            show={
+                                <StyledDocumentationIconWrapper>
+                                    {documentationIcon}
+                                </StyledDocumentationIconWrapper>
+                            }
+                        />
+                        <StyledDescription>{description}</StyledDescription>
+                    </StyledDescriptionCard>
+                }
+            />
 
-                <ConditionallyRender
-                    condition={showLink && !!documentationLink}
-                    show={
-                        <StyledLinkContainer>
-                            <StyledLinkIcon />
-                            <StyledDocumentationLink
-                                href={documentationLink}
-                                rel='noopener noreferrer'
-                                target='_blank'
-                            >
-                                {documentationLinkLabel}
-                            </StyledDocumentationLink>
-                        </StyledLinkContainer>
-                    }
-                />
-            </StyledDocumentationWrapper>
+            <ConditionallyRender
+                condition={showLink && !!documentationLink}
+                show={
+                    <StyledLinkContainer>
+                        <StyledLinkIcon />
+                        <StyledDocumentationLink
+                            href={documentationLink}
+                            rel='noopener noreferrer'
+                            target='_blank'
+                        >
+                            {documentationLinkLabel}
+                        </StyledDocumentationLink>
+                    </StyledLinkContainer>
+                }
+            />
             {children}
         </StyledSidebar>
     );
@@ -518,7 +517,7 @@ const FixedGuidance: React.FC<IGuidanceProps> = ({
     }));
 
     return (
-        <StyledSidebar sidebarWidth={'420px'}>
+        <StyledSidebar sidebarWidth='420px' fixedCodeHeight='300px'>
             <StyledDocumentationWrapper>
                 <ConditionallyRender
                     condition={showDescription}

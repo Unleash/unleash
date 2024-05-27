@@ -65,7 +65,7 @@ const StyledMobileGuidanceWrapper = styled('div', {
     ...(guidanceHeight
         ? {
               aside: {
-                  height: '240px',
+                  height: guidanceHeight,
               },
           }
         : {}),

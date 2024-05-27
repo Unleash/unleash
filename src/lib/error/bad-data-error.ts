@@ -4,7 +4,6 @@ import getProp from 'lodash.get';
 import { type ApiErrorSchema, UnleashError } from './unleash-error';
 
 type ValidationErrorDescription = {
-    description?: string;
     message: string;
     path?: string;
 };
@@ -24,7 +23,7 @@ class BadDataError extends UnleashError {
         }`;
         super(topLevelMessage);
 
-        this.details = errors ?? [{ message: message, description: message }];
+        this.details = errors ?? [{ message: message }];
     }
 
     toJSON(): ApiErrorSchema {
@@ -45,11 +44,10 @@ const missingRequiredPropertyMessage = (
     missingPropertyName: string,
 ) => {
     const path = constructPath(pathToParentObject, missingPropertyName);
-    const description = `The \`${path}\` property is required. It was not present on the data you sent.`;
+    const message = `The \`${path}\` property is required. It was not present on the data you sent.`;
     return {
         path,
-        description,
-        message: description,
+        message,
     };
 };
 
@@ -58,14 +56,13 @@ const additionalPropertiesMessage = (
     additionalPropertyName: string,
 ) => {
     const path = constructPath(pathToParentObject, additionalPropertyName);
-    const description = `The ${
+    const message = `The ${
         pathToParentObject ? `\`${pathToParentObject}\`` : 'root'
     } object of the request body does not allow additional properties. Your request included the \`${path}\` property.`;
 
     return {
         path,
-        description,
-        message: description,
+        message,
     };
 };
 
@@ -77,10 +74,9 @@ const genericErrorMessage = (
     const input = getProp(requestBody, propertyName.split('/'));
 
     const youSent = JSON.stringify(input);
-    const description = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
+    const message = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
-        description,
-        message: description,
+        message,
         path: propertyName,
     };
 };
@@ -92,11 +88,10 @@ const oneOfMessage = (
     const errorPosition =
         propertyName === '' ? 'root object' : `"${propertyName}" property`;
 
-    const description = `The ${errorPosition} ${errorMessage}. The data you provided matches more than one option in the schema. These options are mutually exclusive. Please refer back to the schema and remove any excess properties.`;
+    const message = `The ${errorPosition} ${errorMessage}. The data you provided matches more than one option in the schema. These options are mutually exclusive. Please refer back to the schema and remove any excess properties.`;
 
     return {
-        description,
-        message: description,
+        message,
         path: propertyName,
     };
 };
@@ -107,7 +102,7 @@ const enumMessage = (
     allowedValues: string[],
     suppliedValue: string | null | undefined,
 ) => {
-    const description = `The \`${propertyName}\` property ${
+    const fullMessage = `The \`${propertyName}\` property ${
         message ?? 'must match one of the allowed values'
     }: ${allowedValues
         .map((value) => `"${value}"`)
@@ -116,8 +111,7 @@ const enumMessage = (
         )}. You provided "${suppliedValue}", which is not valid. Please use one of the allowed values instead..`;
 
     return {
-        description,
-        message: description,
+        message: fullMessage,
         path: propertyName,
     };
 };
@@ -176,10 +170,9 @@ export const fromJoiError = (err: ValidationError): BadDataError => {
         const messageEnd = detail.context?.value
             ? `. You provided ${JSON.stringify(detail.context.value)}.`
             : '.';
-        const description = detail.message + messageEnd;
+        const message = detail.message + messageEnd;
         return {
-            description,
-            message: description,
+            message,
         };
     });
 

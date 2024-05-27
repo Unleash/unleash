@@ -83,7 +83,7 @@ module.exports = {
                     docId: 'welcome',
                     html: '<span class="hide-when-active">Docs</span>',
                 },
-                   {
+                {
                     type: 'html',
                     value: '<a href="https://www.getunleash.io/enterprise-feature-management-platform" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Product</a>',
                     position: 'right',

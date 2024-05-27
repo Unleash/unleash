@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
@@ -16,9 +16,9 @@ import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { Badge } from 'component/common/Badge/Badge';
 import { GridColLink } from './GridColLink/GridColLink';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useTrafficDataEstimation } from 'hooks/useTrafficData';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 
 const StyledPlanBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(2.5),
@@ -104,18 +104,32 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
 
     const planPrice = price[instanceStatus.plan];
     const seats = instanceStatus.seats ?? 5;
-    const freeAssigned = Math.min(eligibleUsers.length, seats);
-    const paidAssigned = eligibleUsers.length - freeAssigned;
-    const paidAssignedPrice = price.user * paidAssigned;
-    const finalPrice = planPrice + paidAssignedPrice;
-    const inactive = instanceStatus.state !== InstanceState.ACTIVE;
+    const [freeAssigned, setFreeAssigned] = useState(0);
+    const [paidAssigned, setPaidAssigned] = useState(0);
+    const [paidAssignedPrice, setPaidAssignedPrice] = useState(0);
+    const [finalPrice, setFinalPrice] = useState(planPrice);
     const [totalCost, setTotalCost] = useState(0);
+    const includedTraffic = isPro() ? proPlanIncludedRequests : 0;
+    const [overageCost, setOverageCost] = useState(0);
+    const traffic = useInstanceTrafficMetrics(currentPeriod.key);
+
+    useEffect(() => {
+        setFreeAssigned(Math.min(eligibleUsers.length, seats));
+    }, [users]);
+
+    useEffect(() => {
+        setPaidAssigned(eligibleUsers.length - freeAssigned);
+    }, [freeAssigned]);
+
+    useEffect(() => {
+        setPaidAssignedPrice(price.user * paidAssigned);
+    }, [paidAssigned]);
+
+    useEffect(() => {
+        setFinalPrice(planPrice + paidAssignedPrice);
+    }, [paidAssignedPrice]);
 
     const flagEnabled = useUiFlag('displayTrafficDataUsage');
-    const [overageCost, setOverageCost] = useState(0);
-
-    const includedTraffic = isPro() ? proPlanIncludedRequests : 0;
-    const traffic = useInstanceTrafficMetrics(currentPeriod.key);
 
     useEffect(() => {
         if (flagEnabled && includedTraffic > 0) {
@@ -132,7 +146,9 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
             setOverageCost(overageCostCalc);
             setTotalCost(finalPrice + overageCostCalc);
         }
-    }, [traffic]);
+    }, [finalPrice, traffic]);
+
+    const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
     return (
         <Grid item xs={12} md={7}>

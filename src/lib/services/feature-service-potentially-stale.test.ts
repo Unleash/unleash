@@ -1,6 +1,6 @@
 import {
     FEATURE_POTENTIALLY_STALE_ON,
-    type IEvent,
+    type IBaseEvent,
     type IUnleashConfig,
     type IUnleashStores,
 } from '../types';
@@ -28,7 +28,7 @@ test('Should only store events for potentially stale on', async () => {
         {
             // @ts-expect-error
             eventStore: {
-                batchStore: async (events: IEvent[]) => {
+                batchStore: async (events: IBaseEvent[]) => {
                     expect(events.length).toBe(1);
                     const [event1] = events;
 

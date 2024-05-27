@@ -33,6 +33,8 @@ const GROUP_COLUMNS = [
     'scim_id',
 ];
 
+export const SSO_SYNC_USER = 'SSO';
+
 const rowToGroup = (row) => {
     if (!row) {
         throw new NotFoundError('No group found');
@@ -332,7 +334,7 @@ export default class GroupStore implements IGroupStore {
                     })
                     .orWhereRaw('jsonb_array_length(mappings_sso) = 0'),
             )
-            .where({ 'gu.user_id': userId, 'gu.created_by': 'SSO' });
+            .where({ 'gu.user_id': userId, 'gu.created_by': SSO_SYNC_USER });
 
         return rows.map(rowToGroupUser);
     }

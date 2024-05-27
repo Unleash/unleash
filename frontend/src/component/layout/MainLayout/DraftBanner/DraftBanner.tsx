@@ -40,9 +40,11 @@ const StyledDraftBanner = styled(Box)(({ theme }) => ({
     paddingRight: theme.spacing(9),
     marginLeft: 'auto',
     marginRight: 'auto',
-    [theme.breakpoints.down(1024)]: {
+    [theme.breakpoints.down('lg')]: {
         marginLeft: 0,
         marginRight: 0,
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
     },
     [theme.breakpoints.down('sm')]: {
         minWidth: '100%',

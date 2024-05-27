@@ -70,6 +70,7 @@ const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
         paddingRight: theme.spacing(1),
         margin: 0,
     },
+    minHeight: '94vh',
 }));
 
 const StyledImg = styled('img')(() => ({

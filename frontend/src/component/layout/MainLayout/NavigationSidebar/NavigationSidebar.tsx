@@ -59,6 +59,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { basePath } from 'utils/formatPath';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import type { Theme } from '@mui/material/styles/createTheme';
 
 export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.neutral.main,
@@ -82,6 +83,22 @@ const EnterprisePlanBadge = () => (
     </Tooltip>
 );
 
+const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
+    borderRadius: theme.spacing(0.5),
+    borderLeft: `${theme.spacing(0.5)} solid transparent`,
+    '&:hover': {
+        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
+    },
+}));
+
+const listItemButtonStyle = (theme: Theme) => ({
+    borderRadius: theme.spacing(0.5),
+    borderLeft: `${theme.spacing(0.5)} solid transparent`,
+    '&:hover': {
+        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
+    },
+});
+
 const FullListItem: FC<{
     href: string;
     text: string;
@@ -90,11 +107,16 @@ const FullListItem: FC<{
 }> = ({ href, text, badge, onClick, children }) => {
     return (
         <ListItem disablePadding onClick={onClick}>
-            <ListItemButton dense={true} component={Link} to={href}>
+            <ListItemButton
+                dense={true}
+                component={Link}
+                to={href}
+                sx={listItemButtonStyle}
+            >
                 <ListItemIcon sx={(theme) => ({ minWidth: theme.spacing(4) })}>
                     {children}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText sx={{ whiteSpace: 'nowrap' }} primary={text} />
                 {badge}
             </ListItemButton>
         </ListItem>
@@ -148,7 +170,12 @@ const MiniListItem: FC<{ href: string; text: string }> = ({
 }) => {
     return (
         <ListItem disablePadding>
-            <ListItemButton dense={true} component={Link} to={href}>
+            <ListItemButton
+                dense={true}
+                component={Link}
+                to={href}
+                sx={listItemButtonStyle}
+            >
                 <Tooltip title={text} placement='right'>
                     <ListItemIcon
                         sx={(theme) => ({ minWidth: theme.spacing(4) })}
@@ -163,8 +190,7 @@ const MiniListItem: FC<{ href: string; text: string }> = ({
 
 export const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(6),
+    padding: theme.spacing(2, 1, 6, 1),
 }));
 
 const icons: Record<string, typeof SvgIcon> = {

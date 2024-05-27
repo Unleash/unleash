@@ -35,7 +35,7 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
                     <ChevronLeftIcon />
                 ) : (
                     <Tooltip title='Expand (⌘ + B)' placement='right'>
-                        <ChevronRightIcon />
+                        <ChevronRightIcon data-testid='expand-navigation' />
                     </Tooltip>
                 )}
             </IconButton>

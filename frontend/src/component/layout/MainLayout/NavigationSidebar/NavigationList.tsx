@@ -59,6 +59,7 @@ export const ConfigureNavigationList: FC<{
         <List>
             {routes.map((route) => (
                 <DynamicListItem
+                    key={route.title}
                     href={route.path}
                     text={route.title}
                     onClick={onClick}
@@ -82,6 +83,7 @@ export const AdminNavigationList: FC<{
         <List>
             {routes.map((route) => (
                 <DynamicListItem
+                    key={route.title}
                     onClick={onClick}
                     href={route.path}
                     text={route.title}
@@ -104,7 +106,11 @@ export const OtherLinksList = () => {
     return (
         <List>
             {uiConfig.links.map((link) => (
-                <ExternalFullListItem href={link.href} text={link.value}>
+                <ExternalFullListItem
+                    href={link.href}
+                    text={link.value}
+                    key={link.value}
+                >
                     <IconRenderer path={link.value} />
                 </ExternalFullListItem>
             ))}

@@ -1,5 +1,5 @@
 import { Fragment, useMemo, type VFC } from 'react';
-import { Box, Chip, styled } from '@mui/material';
+import { Alert, Box, Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -17,6 +17,7 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { Badge } from 'component/common/Badge/Badge';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
+import { BuiltInStrategies } from 'utils/strategyNames';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
@@ -299,22 +300,36 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     ].filter(Boolean);
 
     return (
-        <ConditionallyRender
-            condition={listItems.length > 0}
-            show={
-                <StyledContainer disabled={Boolean(strategy.disabled)}>
-                    {listItems.map((item, index) => (
-                        <Fragment key={index}>
-                            <ConditionallyRender
-                                condition={index > 0}
-                                show={<StrategySeparator text='AND' />}
-                            />
-                            {item}
-                        </Fragment>
-                    ))}
-                </StyledContainer>
-            }
-            elseShow={<NoItems />}
-        />
+        <>
+            <ConditionallyRender
+                condition={
+                    !BuiltInStrategies.includes(strategy.name || 'default')
+                }
+                show={
+                    <Alert severity='warning' sx={{ mb: 2 }}>
+                        Custom strategies are deprecated and will be removed in
+                        a future major version.
+                    </Alert>
+                }
+            ></ConditionallyRender>
+
+            <ConditionallyRender
+                condition={listItems.length > 0}
+                show={
+                    <StyledContainer disabled={Boolean(strategy.disabled)}>
+                        {listItems.map((item, index) => (
+                            <Fragment key={index}>
+                                <ConditionallyRender
+                                    condition={index > 0}
+                                    show={<StrategySeparator text='AND' />}
+                                />
+                                {item}
+                            </Fragment>
+                        ))}
+                    </StyledContainer>
+                }
+                elseShow={<NoItems />}
+            />
+        </>
     );
 };

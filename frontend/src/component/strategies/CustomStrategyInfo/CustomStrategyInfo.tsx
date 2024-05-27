@@ -17,12 +17,19 @@ export const CustomStrategyInfo: FC<{ alert?: boolean }> = ({ alert }) => {
     const content = (
         <>
             <Paragraph>
-                We recommend you to use the predefined strategies like Gradual
-                rollout with constraints instead of creating a custom strategy.
+                Custom strategies are deprecated and will be removed in a future
+                major release. We recommend using the predefined strategies like
+                Gradual rollout with constraints instead of creating a custom
+                strategy.
             </Paragraph>
             <Paragraph>
-                If you decide to create a custom strategy be aware of:
+                If you decide to create a custom strategy be aware of the
+                following:
                 <ul>
+                    <li>
+                        You may have to migrate flags using custom strategies in
+                        a future release to use constraints instead.
+                    </li>
                     <li>
                         They require writing custom code and deployments for
                         each SDK you’re using.
@@ -32,8 +39,8 @@ export const CustomStrategyInfo: FC<{ alert?: boolean }> = ({ alert }) => {
                         to evaluate differently
                     </li>
                     <li>
-                        Requires a lot of configuration in both Unleash admin UI
-                        and the SDK.
+                        Custom strategies require a lot of configuration in both
+                        Unleash admin UI and the SDK.
                     </li>
                 </ul>
             </Paragraph>
@@ -48,7 +55,7 @@ export const CustomStrategyInfo: FC<{ alert?: boolean }> = ({ alert }) => {
     if (alert) {
         return (
             <Alert
-                severity='info'
+                severity='warning'
                 sx={(theme) => ({
                     marginBottom: theme.spacing(3),
                 })}

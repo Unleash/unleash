@@ -36,6 +36,17 @@ export const getFeatureStrategyIcon = (strategyName: string) => {
     }
 };
 
+export const BuiltInStrategies = [
+    'default',
+    'applicationHostname',
+    'flexibleRollout',
+    'gradualRolloutRandom',
+    'gradualRolloutSessionId',
+    'gradualRolloutUserId',
+    'remoteAddress',
+    'userWithId',
+];
+
 export const GetFeatureStrategyIcon: FC<{ strategyName: string }> = ({
     strategyName,
 }) => {

@@ -966,7 +966,7 @@ test('reject import with unknown context fields', async () => {
         400,
     );
 
-    expect(body.details[0].description).toMatch(/\bContextField1\b/);
+    expect(body.details[0].message).toMatch(/\bContextField1\b/);
 });
 
 test('reject import with unsupported strategies', async () => {
@@ -989,7 +989,7 @@ test('reject import with unsupported strategies', async () => {
         400,
     );
 
-    expect(body.details[0].description).toMatch(/\bcustomStrategy\b/);
+    expect(body.details[0].message).toMatch(/\bcustomStrategy\b/);
 });
 
 test('reject import with duplicate features', async () => {
@@ -1007,7 +1007,7 @@ test('reject import with duplicate features', async () => {
         409,
     );
 
-    expect(body.details[0].description).toBe(
+    expect(body.details[0].message).toBe(
         'A flag with that name already exists',
     );
 });

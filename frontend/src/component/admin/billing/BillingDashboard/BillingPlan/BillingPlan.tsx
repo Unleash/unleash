@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
@@ -78,9 +78,9 @@ interface IBillingPlanProps {
 const proPlanIncludedRequests = 53_000_000;
 
 export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
-    const { users } = useUsers();
+    const { users, loading } = useUsers();
     const expired = trialHasExpired(instanceStatus);
-    const { uiConfig, isPro } = useUiConfig();
+    const { isPro } = useUiConfig();
 
     const {
         currentPeriod,
@@ -104,51 +104,39 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
 
     const planPrice = price[instanceStatus.plan];
     const seats = instanceStatus.seats ?? 5;
-    const [freeAssigned, setFreeAssigned] = useState(0);
-    const [paidAssigned, setPaidAssigned] = useState(0);
-    const [paidAssignedPrice, setPaidAssignedPrice] = useState(0);
-    const [finalPrice, setFinalPrice] = useState(planPrice);
-    const [totalCost, setTotalCost] = useState(0);
+
+    const freeAssigned = Math.min(eligibleUsers.length, seats);
+    const paidAssigned = eligibleUsers.length - freeAssigned;
+    const paidAssignedPrice = price.user * paidAssigned;
+
+    const displayTrafficDataUsageEnabled = useUiFlag('displayTrafficDataUsage');
     const includedTraffic = isPro() ? proPlanIncludedRequests : 0;
-    const [overageCost, setOverageCost] = useState(0);
     const traffic = useInstanceTrafficMetrics(currentPeriod.key);
 
-    useEffect(() => {
-        setFreeAssigned(Math.min(eligibleUsers.length, seats));
-    }, [users]);
-
-    useEffect(() => {
-        setPaidAssigned(eligibleUsers.length - freeAssigned);
-    }, [freeAssigned]);
-
-    useEffect(() => {
-        setPaidAssignedPrice(price.user * paidAssigned);
-    }, [paidAssigned]);
-
-    useEffect(() => {
-        setFinalPrice(planPrice + paidAssignedPrice);
-    }, [paidAssignedPrice]);
-
-    const flagEnabled = useUiFlag('displayTrafficDataUsage');
-
-    useEffect(() => {
-        if (flagEnabled && includedTraffic > 0) {
-            const trafficData = toChartData(
-                getDayLabels(currentPeriod.dayCount),
-                traffic,
-                endpointsInfo,
-            );
-            const totalTraffic = toTrafficUsageSum(trafficData);
-            const overageCostCalc = calculateOverageCost(
-                totalTraffic,
-                includedTraffic,
-            );
-            setOverageCost(overageCostCalc);
-            setTotalCost(finalPrice + overageCostCalc);
+    const overageCost = useMemo(() => {
+        if (!displayTrafficDataUsageEnabled || !includedTraffic) {
+            return 0;
         }
-    }, [finalPrice, traffic]);
+        const trafficData = toChartData(
+            getDayLabels(currentPeriod.dayCount),
+            traffic,
+            endpointsInfo,
+        );
+        const totalTraffic = toTrafficUsageSum(trafficData);
+        return calculateOverageCost(totalTraffic, includedTraffic);
+    }, [
+        displayTrafficDataUsageEnabled,
+        includedTraffic,
+        traffic,
+        currentPeriod,
+        endpointsInfo,
+    ]);
+
+    const totalCost = planPrice + paidAssignedPrice + overageCost;
 
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
+
+    if (loading) return null;
 
     return (
         <Grid item xs={12} md={7}>
@@ -270,7 +258,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                     </GridCol>
                                 </GridRow>
                                 <ConditionallyRender
-                                    condition={flagEnabled && overageCost > 0}
+                                    condition={overageCost > 0}
                                     show={
                                         <GridRow>
                                             <GridCol vertical>
@@ -327,18 +315,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                                 fontSize: '2rem',
                                             })}
                                         >
-                                            <ConditionallyRender
-                                                condition={
-                                                    flagEnabled &&
-                                                    includedTraffic > 0
-                                                }
-                                                show={`$${totalCost.toFixed(
-                                                    2,
-                                                )}`}
-                                                elseShow={`$${finalPrice.toFixed(
-                                                    2,
-                                                )}`}
-                                            />
+                                            ${totalCost.toFixed(2)}
                                         </Typography>
                                     </GridCol>
                                 </GridRow>

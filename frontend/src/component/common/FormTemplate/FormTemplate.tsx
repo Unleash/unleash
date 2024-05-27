@@ -37,6 +37,7 @@ interface ICreateProps {
     compact?: boolean;
     showGuidance?: boolean;
     sidebarWidth?: string;
+    useFixedSidebar?: boolean;
 }
 
 const StyledContainer = styled('section', {
@@ -55,7 +56,15 @@ const StyledContainer = styled('section', {
     },
 }));
 
-const StyledRelativeDiv = styled('div')(({ theme }) => relative);
+const StyledMobileGuidanceWrapper = styled('div')(({ theme }) => ({
+    ...relative,
+    // todo: review this. We're reaching down into a nested
+    // component, but due to the component structure, it'd be a
+    // lot of work to pass this down as a prop.
+    aside: {
+        height: '240px',
+    },
+}));
 
 const StyledMain = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -274,14 +283,14 @@ const FormTemplate: React.FC<ICreateProps> = ({
             <ConditionallyRender
                 condition={showGuidance && smallScreen}
                 show={
-                    <StyledRelativeDiv>
+                    <StyledMobileGuidanceWrapper>
                         <MobileGuidance
                             description={description}
                             documentationIcon={documentationIcon}
                             documentationLink={documentationLink}
                             documentationLinkLabel={documentationLinkLabel}
                         />
-                    </StyledRelativeDiv>
+                    </StyledMobileGuidanceWrapper>
                 }
             />
             <StyledMain>
@@ -376,6 +385,39 @@ const MobileGuidance = ({
     );
 };
 
+const FixedMobileGuidance = ({
+    description,
+    documentationLink,
+    documentationLinkLabel,
+    documentationIcon,
+}: IMobileGuidance) => {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <StyledMobileGuidanceContainer>
+                <StyledMobileGuidanceBackground />
+            </StyledMobileGuidanceContainer>
+            <Tooltip title='Toggle help' arrow>
+                <StyledMobileGuidanceButton
+                    onClick={() => setOpen((prev) => !prev)}
+                    size='large'
+                >
+                    <StyledInfoIcon />
+                </StyledMobileGuidanceButton>
+            </Tooltip>
+            <Collapse in={open} timeout={500}>
+                <Guidance
+                    documentationIcon={documentationIcon}
+                    description={description}
+                    documentationLink={documentationLink}
+                    documentationLinkLabel={documentationLinkLabel}
+                />
+            </Collapse>
+        </>
+    );
+};
+
 interface IGuidanceProps {
     description: string;
     documentationIcon?: ReactNode;
@@ -396,36 +438,121 @@ const Guidance: React.FC<IGuidanceProps> = ({
     showLink = true,
     sidebarWidth = undefined,
 }) => {
+    const StyledDocumentationWrapper = styled('div')(({ theme }) => ({
+        height: '170px',
+        overflowY: 'auto',
+    }));
+
+    const StyledDocumentationIconWrapper = styled('div')(({ theme }) => ({
+        height: '2rem',
+        // aspectRatio: '1',
+        display: 'grid',
+        placeItems: 'center',
+        svg: {
+            width: '100%',
+        },
+    }));
+
     return (
         <StyledSidebar sidebarWidth={sidebarWidth}>
-            <ConditionallyRender
-                condition={showDescription}
-                show={
-                    <StyledDescriptionCard>
-                        <ConditionallyRender
-                            condition={!!documentationIcon}
-                            show={documentationIcon}
-                        />
-                        <StyledDescription>{description}</StyledDescription>
-                    </StyledDescriptionCard>
-                }
-            />
+            <StyledDocumentationWrapper>
+                <ConditionallyRender
+                    condition={showDescription}
+                    show={
+                        <StyledDescriptionCard>
+                            <ConditionallyRender
+                                condition={!!documentationIcon}
+                                show={
+                                    <StyledDocumentationIconWrapper>
+                                        {documentationIcon}
+                                    </StyledDocumentationIconWrapper>
+                                }
+                            />
+                            <StyledDescription>{description}</StyledDescription>
+                        </StyledDescriptionCard>
+                    }
+                />
 
-            <ConditionallyRender
-                condition={showLink && !!documentationLink}
-                show={
-                    <StyledLinkContainer>
-                        <StyledLinkIcon />
-                        <StyledDocumentationLink
-                            href={documentationLink}
-                            rel='noopener noreferrer'
-                            target='_blank'
-                        >
-                            {documentationLinkLabel}
-                        </StyledDocumentationLink>
-                    </StyledLinkContainer>
-                }
-            />
+                <ConditionallyRender
+                    condition={showLink && !!documentationLink}
+                    show={
+                        <StyledLinkContainer>
+                            <StyledLinkIcon />
+                            <StyledDocumentationLink
+                                href={documentationLink}
+                                rel='noopener noreferrer'
+                                target='_blank'
+                            >
+                                {documentationLinkLabel}
+                            </StyledDocumentationLink>
+                        </StyledLinkContainer>
+                    }
+                />
+            </StyledDocumentationWrapper>
+            {children}
+        </StyledSidebar>
+    );
+};
+
+const FixedGuidance: React.FC<IGuidanceProps> = ({
+    description,
+    children,
+    documentationLink,
+    documentationIcon,
+    documentationLinkLabel = 'Learn more',
+    showDescription = true,
+    showLink = true,
+}) => {
+    const StyledDocumentationWrapper = styled('div')(({ theme }) => ({
+        height: '170px',
+        overflowY: 'auto',
+    }));
+
+    const StyledDocumentationIconWrapper = styled('div')(({ theme }) => ({
+        height: '2rem',
+        display: 'grid',
+        placeItems: 'center',
+        svg: {
+            width: '100%',
+        },
+    }));
+
+    return (
+        <StyledSidebar sidebarWidth={'420px'}>
+            <StyledDocumentationWrapper>
+                <ConditionallyRender
+                    condition={showDescription}
+                    show={
+                        <StyledDescriptionCard>
+                            <ConditionallyRender
+                                condition={!!documentationIcon}
+                                show={
+                                    <StyledDocumentationIconWrapper>
+                                        {documentationIcon}
+                                    </StyledDocumentationIconWrapper>
+                                }
+                            />
+                            <StyledDescription>{description}</StyledDescription>
+                        </StyledDescriptionCard>
+                    }
+                />
+
+                <ConditionallyRender
+                    condition={showLink && !!documentationLink}
+                    show={
+                        <StyledLinkContainer>
+                            <StyledLinkIcon />
+                            <StyledDocumentationLink
+                                href={documentationLink}
+                                rel='noopener noreferrer'
+                                target='_blank'
+                            >
+                                {documentationLinkLabel}
+                            </StyledDocumentationLink>
+                        </StyledLinkContainer>
+                    }
+                />
+            </StyledDocumentationWrapper>
             {children}
         </StyledSidebar>
     );

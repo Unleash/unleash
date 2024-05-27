@@ -210,7 +210,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         className='description'
                         label='Description (optional)'
                         multiline
-                        maxRows={20}
+                        maxRows={3}
                         value={projectDesc}
                         onChange={(e) => setProjectDesc(e.target.value)}
                         data-testid={PROJECT_DESCRIPTION_INPUT}
@@ -285,6 +285,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             button={{
                                 label: projectMode,
                                 icon: <ProjectModeIcon />,
+                                labelWidth: `${`protected`.length}ch`,
                             }}
                             search={{
                                 label: 'Filter project mode options',

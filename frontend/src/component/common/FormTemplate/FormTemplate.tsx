@@ -403,39 +403,6 @@ const MobileGuidance = ({
     );
 };
 
-const FixedMobileGuidance = ({
-    description,
-    documentationLink,
-    documentationLinkLabel,
-    documentationIcon,
-}: IMobileGuidance) => {
-    const [open, setOpen] = useState(false);
-
-    return (
-        <>
-            <StyledMobileGuidanceContainer>
-                <StyledMobileGuidanceBackground />
-            </StyledMobileGuidanceContainer>
-            <Tooltip title='Toggle help' arrow>
-                <StyledMobileGuidanceButton
-                    onClick={() => setOpen((prev) => !prev)}
-                    size='large'
-                >
-                    <StyledInfoIcon />
-                </StyledMobileGuidanceButton>
-            </Tooltip>
-            <Collapse in={open} timeout={500}>
-                <Guidance
-                    documentationIcon={documentationIcon}
-                    description={description}
-                    documentationLink={documentationLink}
-                    documentationLinkLabel={documentationLinkLabel}
-                />
-            </Collapse>
-        </>
-    );
-};
-
 interface IGuidanceProps {
     description: string;
     documentationIcon?: ReactNode;

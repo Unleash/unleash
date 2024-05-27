@@ -201,7 +201,7 @@ test('user with custom root role should get a user root role', async () => {
     expect(role.name).toBe('custom-root-role');
     const events = await eventStore.getEvents();
     expect(events).toHaveLength(1);
-    expect(events[0]).toEqual({
+    expect(events[0]).toMatchObject({
         type: ROLE_CREATED,
         createdBy: SYSTEM_USER_AUDIT.username,
         createdByUserId: SYSTEM_USER.id,

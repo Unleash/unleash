@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import useApplications from 'hooks/api/getters/useApplications/useApplications';
 import { StrategyDetails } from './StrategyDetails/StrategyDetails';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -11,23 +10,12 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import Edit from '@mui/icons-material/Edit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type { FeatureSchema } from 'openapi/models';
 
 export const StrategyView = () => {
     const name = useRequiredPathParam('name');
     const { strategies } = useStrategies();
-    const { features = [] } = useFeatures();
     const { applications } = useApplications();
     const navigate = useNavigate();
-
-    // Has been broken since the migration to environments. We need to create an
-    // endpoint that returns all environments and strategies for all features to make this
-    // work properly OR alternatively create an endpoint that abstracts this logic into the backend
-    const toggles = features.filter((toggle: FeatureSchema) => {
-        return toggle?.environments
-            ?.flatMap((env) => env.strategies)
-            .some((strategy) => strategy && strategy.name === name);
-    });
 
     const strategy = strategies.find((strategy) => strategy.name === name);
 
@@ -64,7 +52,6 @@ export const StrategyView = () => {
                 <Grid item xs={12} sm={12}>
                     <StrategyDetails
                         strategy={strategy}
-                        toggles={toggles}
                         applications={applications}
                     />
                 </Grid>

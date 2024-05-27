@@ -162,7 +162,7 @@ test('should be favorited in admin endpoint', async () => {
     await favoriteFeature(featureName);
 
     const { body } = await app.request
-        .get('/api/admin/features')
+        .get('/api/admin/projects/default/features')
         .set('Content-Type', 'application/json')
         .expect(200);
 

@@ -10,13 +10,8 @@ import type { IFeatureToggleQuery } from '../../../types/model';
 import type FeatureTagService from '../../../services/feature-tag-service';
 import type { IAuthRequest } from '../../../routes/unleash-types';
 import { DEFAULT_ENV } from '../../../util/constants';
-import {
-    featuresSchema,
-    type FeaturesSchema,
-} from '../../../openapi/spec/features-schema';
 import type { TagSchema } from '../../../openapi/spec/tag-schema';
 import type { TagsSchema } from '../../../openapi/spec/tags-schema';
-import { serializeDates } from '../../../types/serialize-dates';
 import type { OpenApiService } from '../../../services/openapi-service';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import {
@@ -54,27 +49,6 @@ class FeatureController extends Controller {
         this.tagService = featureTagService;
         this.openApiService = openApiService;
         this.service = featureToggleServiceV2;
-
-        this.route({
-            method: 'get',
-            path: '',
-            handler: this.getAllToggles,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Features'],
-                    operationId: 'getAllToggles',
-                    responses: {
-                        200: createResponseSchema('featuresSchema'),
-                        ...getStandardResponses(401, 403),
-                    },
-                    summary: 'Get all feature flags (deprecated)',
-                    description:
-                        'Gets all feature flags with their full configuration. This endpoint is **deprecated**. You should  use the project-based endpoint instead (`/api/admin/projects/<project-id>/features`).',
-                    deprecated: true,
-                }),
-            ],
-        });
 
         this.route({
             method: 'post',
@@ -208,23 +182,6 @@ class FeatureController extends Controller {
             query.tag = query.tag.map((q) => q.split(':'));
         }
         return query;
-    }
-
-    async getAllToggles(
-        req: IAuthRequest,
-        res: Response<FeaturesSchema>,
-    ): Promise<void> {
-        const query = await this.prepQuery(req.query);
-
-        const { user } = req;
-        const features = await this.service.getFeatureToggles(query, user.id);
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            featuresSchema.$id,
-            { version, features: serializeDates(features) },
-        );
     }
 
     async getToggle(

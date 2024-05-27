@@ -42,6 +42,6 @@ test('creates new feature flag with createdBy', async () => {
 test('should require authenticated user', async () => {
     expect.assertions(0);
     const { request, destroy } = await setupAppWithAuth(db.stores);
-    await request.get('/api/admin/features').expect(401);
+    await request.get('/api/admin/projects/default/features').expect(401);
     await destroy();
 });

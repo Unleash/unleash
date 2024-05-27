@@ -12,7 +12,7 @@ export async function compareAndLogPostgresVersion(
     const pgSemVer = semver.coerce(postgresVersion); // Postgres usually reports Major.Minor, semver needs a patch version included in string
     if (pgSemVer !== null && lt(pgSemVer, MIN_SUPPORTED_POSTGRES_VERSION)) {
         logger.error(
-            `You are using PostgreSQL version ${postgresVersion}. Unleash only supports Postgres 13 and newer. Unleash might work, but database errors will not be supported`,
+            `You are running an unsupported version of PostgreSQL: ${postgresVersion}. You'll have to upgrade to Postgres 13 or newer to continue getting our support.`,
         );
     } else {
         logger.info(`Running PostgreSQL version ${postgresVersion}.`);

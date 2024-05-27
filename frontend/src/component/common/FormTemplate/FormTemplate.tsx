@@ -36,6 +36,7 @@ interface ICreateProps {
     footer?: ReactNode;
     compact?: boolean;
     showGuidance?: boolean;
+    sidebarWidth?: string;
 }
 
 const StyledContainer = styled('section', {
@@ -151,12 +152,14 @@ const StyledInfoIcon = styled(Info)(({ theme }) => ({
     fill: theme.palette.primary.contrastText,
 }));
 
-const StyledSidebar = styled('aside')(({ theme }) => ({
+const StyledSidebar = styled('aside', {
+    shouldForwardProp: (prop) => prop !== 'sidebarWidth',
+})<{ sidebarWidth?: string }>(({ theme, sidebarWidth }) => ({
     backgroundColor: theme.palette.background.sidebar,
     padding: theme.spacing(4),
     flexGrow: 0,
     flexShrink: 0,
-    width: formTemplateSidebarWidth,
+    width: sidebarWidth || formTemplateSidebarWidth,
     [theme.breakpoints.down(1100)]: {
         width: '100%',
         color: 'red',
@@ -218,6 +221,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     footer,
     compact,
     showGuidance = true,
+    sidebarWidth,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -319,6 +323,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         documentationLinkLabel={documentationLinkLabel}
                         showDescription={showDescription}
                         showLink={showLink}
+                        sidebarWidth={sidebarWidth}
                     >
                         {renderApiInfo(
                             formatApiCode === undefined,
@@ -378,6 +383,7 @@ interface IGuidanceProps {
     documentationLinkLabel?: string;
     showDescription?: boolean;
     showLink?: boolean;
+    sidebarWidth?: string;
 }
 
 const Guidance: React.FC<IGuidanceProps> = ({
@@ -388,9 +394,10 @@ const Guidance: React.FC<IGuidanceProps> = ({
     documentationLinkLabel = 'Learn more',
     showDescription = true,
     showLink = true,
+    sidebarWidth = undefined,
 }) => {
     return (
-        <StyledSidebar>
+        <StyledSidebar sidebarWidth={sidebarWidth}>
             <ConditionallyRender
                 condition={showDescription}
                 show={

@@ -164,7 +164,7 @@ const OldHeader: VFC = () => {
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const insightsDashboard = useUiFlag('executiveDashboardUI');
+    const killInsightsDashboard = useUiFlag('killInsightsUI');
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -242,7 +242,7 @@ const OldHeader: VFC = () => {
                         <StyledLink to={'/search'}>Search</StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
                         <ConditionallyRender
-                            condition={insightsDashboard}
+                            condition={!killInsightsDashboard}
                             show={
                                 <StyledLinkWithBetaBadge
                                     to={'/insights'}

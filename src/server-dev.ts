@@ -44,7 +44,7 @@ process.nextTick(async () => {
                         celebrateUnleash: true,
                         featureSearchFeedbackPosting: true,
                         executiveDashboard: true,
-                        executiveDashboardUI: true,
+                        killInsightsUI: false,
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,

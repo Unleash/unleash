@@ -83,44 +83,10 @@ module.exports = {
                     docId: 'welcome',
                     html: '<span class="hide-when-active">Docs</span>',
                 },
-                {
-                    type: 'dropdown',
+                   {
+                    type: 'html',
+                    value: '<a href="https://www.getunleash.io/enterprise-feature-management-platform" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Product</a>',
                     position: 'right',
-                    html: 'Product',
-                    items: [
-                        {
-                            label: 'Feature Management',
-                            to: 'https://www.getunleash.io/feature-management',
-                        },
-                        {
-                            label: 'Unique Architecture',
-                            to: 'https://www.getunleash.io/flexible-platform',
-                        },
-                        {
-                            label: 'Canary release',
-                            to: 'https://www.getunleash.io/segmentation',
-                        },
-                        {
-                            label: 'Security and Performance',
-                            to: 'https://www.getunleash.io/security-and-performance',
-                        },
-                        {
-                            label: 'Simplicity',
-                            to: 'https://www.getunleash.io/simplicity',
-                        },
-                        {
-                            label: 'Flexibility',
-                            to: 'https://www.getunleash.io/flexibility',
-                        },
-                        {
-                            label: 'Transparency',
-                            to: 'https://www.getunleash.io/transparency',
-                        },
-                        {
-                            label: 'Open-Source',
-                            to: 'https://www.getunleash.io/open-source',
-                        },
-                    ],
                 },
                 {
                     type: 'html',

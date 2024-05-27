@@ -34,7 +34,6 @@ export type IFlagKey =
     | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
-    | 'executiveDashboard'
     | 'killInsightsUI'
     | 'feedbackComments'
     | 'showInactiveUsers'
@@ -181,10 +180,6 @@ const flags: IFlags = {
     ),
     adminTokenKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
-        false,
-    ),
-    executiveDashboard: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
         false,
     ),
     killInsightsUI: parseEnvVarBoolean(

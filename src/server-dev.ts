@@ -43,7 +43,6 @@ process.nextTick(async () => {
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         featureSearchFeedbackPosting: true,
-                        executiveDashboard: true,
                         executiveDashboardUI: true,
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,

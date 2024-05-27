@@ -7,7 +7,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { basePath } from '../../../../utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import SignOutIcon from '@mui/icons-material/ExitToApp';
 import type { Theme } from '@mui/material/styles/createTheme';
 
@@ -18,6 +18,7 @@ const listItemButtonStyle = (theme: Theme) => ({
         borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
     },
 });
+
 export const FullListItem: FC<{
     href: string;
     text: string;
@@ -41,6 +42,7 @@ export const FullListItem: FC<{
         </ListItem>
     );
 };
+
 export const ExternalFullListItem: FC<{ href: string; text: string }> = ({
     href,
     text,
@@ -79,6 +81,7 @@ export const SignOutItem = () => {
         </form>
     );
 };
+
 export const MiniListItem: FC<{ href: string; text: string }> = ({
     href,
     text,

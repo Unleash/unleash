@@ -6,7 +6,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IDraftBannerProps {
     project: string;

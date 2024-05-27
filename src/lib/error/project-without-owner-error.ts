@@ -12,7 +12,6 @@ export default class ProjectWithoutOwnerError extends UnleashError {
             ...super.toJSON(),
             details: [
                 {
-                    description: this.message,
                     message: this.message,
                     validationErrors: [],
                 },

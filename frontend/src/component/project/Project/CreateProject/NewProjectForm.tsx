@@ -306,10 +306,11 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             description={
                                 selectionButtonData.changeRequests.text
                             }
-                            disabled={projectEnvironments.size === 0}
                             activeEnvironments={activeEnvironments
                                 .filter((env) =>
-                                    projectEnvironments.has(env.name),
+                                    projectEnvironments.size > 0
+                                        ? projectEnvironments.has(env.name)
+                                        : true,
                                 )
                                 .map((env) => ({
                                     name: env.name,
@@ -428,7 +429,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             disabled={projectEnvironments.size === 0}
                             activeEnvironments={activeEnvironments
                                 .filter((env) =>
-                                    projectEnvironments.has(env.name),
+                                    projectEnvironments.size > 0
+                                        ? projectEnvironments.has(env.name)
+                                        : true,
                                 )
                                 .map((env) => ({
                                     name: env.name,

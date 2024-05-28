@@ -57,7 +57,10 @@ const useProjectForm = (
         },
 
         enableChangeRequests: (env: string, approvals: number) => {
-            if (projectEnvironments.has(env)) {
+            if (
+                projectEnvironments.has(env) ||
+                projectEnvironments.size === 0
+            ) {
                 setProjectChangeRequestConfiguration((previousState) => ({
                     ...previousState,
                     [env]: { requiredApprovals: approvals },

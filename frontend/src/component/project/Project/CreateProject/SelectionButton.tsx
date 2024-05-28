@@ -332,7 +332,6 @@ export const MultiselectList2: FC<MultiselectListProps> = ({
 
 export const TableSelect2: FC<TableSelectProps> = ({
     button,
-    disabled,
     search,
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
@@ -665,11 +664,9 @@ type TableSelectProps = Pick<
         string,
         { requiredApprovals: number }
     >;
-    disabled: boolean;
 };
 export const TableSelect: FC<TableSelectProps> = ({
     button,
-    disabled,
     search,
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
@@ -754,7 +751,6 @@ export const TableSelect: FC<TableSelectProps> = ({
                     onClick={() => {
                         open();
                     }}
-                    disabled={disabled}
                 >
                     <ButtonLabel labelWidth={button.labelWidth}>
                         {button.label}

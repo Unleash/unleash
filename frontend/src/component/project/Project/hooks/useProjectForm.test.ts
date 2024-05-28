@@ -1,39 +1,54 @@
 import { renderHook } from '@testing-library/react-hooks';
 import useProjectForm from './useProjectForm';
 
-test('setting project environments removes any change request envs that are not in the new project env list', () => {
-    const { result } = renderHook(() => useProjectForm());
+describe('configuring change requests', () => {
+    test('setting project environments removes any change request envs that are not in the new project env list', () => {
+        const { result } = renderHook(() => useProjectForm());
 
-    result.current.setProjectEnvironments(new Set(['dev', 'prod']));
-    result.current.updateProjectChangeRequestConfig.enableChangeRequests(
-        'prod',
-        5,
-    );
+        result.current.setProjectEnvironments(new Set(['dev', 'prod']));
+        result.current.updateProjectChangeRequestConfig.enableChangeRequests(
+            'prod',
+            5,
+        );
 
-    expect(result.current.projectChangeRequestConfiguration).toMatchObject({
-        prod: { requiredApprovals: 5 },
+        expect(result.current.projectChangeRequestConfiguration).toMatchObject({
+            prod: { requiredApprovals: 5 },
+        });
+
+        result.current.setProjectEnvironments(new Set(['dev']));
+
+        expect(
+            'prod' in result.current.projectChangeRequestConfiguration,
+        ).toBeFalsy();
     });
 
-    result.current.setProjectEnvironments(new Set(['dev']));
+    test(`if specific project envs are selected, adding a change request config for an env not in the project envs doesn't work and the change request envs is not changed`, () => {
+        const { result } = renderHook(() => useProjectForm());
 
-    expect(
-        'prod' in result.current.projectChangeRequestConfiguration,
-    ).toBeFalsy();
-});
+        result.current.setProjectEnvironments(new Set(['prod']));
 
-test(`adding a change request config for an env not in the project envs doesn't work and the change request envs is not changed`, () => {
-    const { result } = renderHook(() => useProjectForm());
+        result.current.updateProjectChangeRequestConfig.enableChangeRequests(
+            'dev',
+            5,
+        );
 
-    result.current.setProjectEnvironments(new Set(['prod']));
+        expect(
+            'dev' in result.current.projectChangeRequestConfiguration,
+        ).toBeFalsy();
+    });
 
-    result.current.updateProjectChangeRequestConfig.enableChangeRequests(
-        'dev',
-        5,
-    );
+    test(`if no project envs are selected, you can add a change request for any env you want`, () => {
+        const { result } = renderHook(() => useProjectForm());
 
-    expect(
-        'dev' in result.current.projectChangeRequestConfiguration,
-    ).toBeFalsy();
+        result.current.updateProjectChangeRequestConfig.enableChangeRequests(
+            'dev',
+            5,
+        );
+
+        expect(
+            'dev' in result.current.projectChangeRequestConfiguration,
+        ).toBeTruthy();
+    });
 });
 
 describe('payload generation', () => {

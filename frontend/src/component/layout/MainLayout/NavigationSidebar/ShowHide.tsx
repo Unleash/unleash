@@ -49,9 +49,6 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
 };
 
 const ShowAdminWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     padding: theme.spacing(2, 1, 0, 1.5),
 }));
 

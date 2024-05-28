@@ -71,11 +71,11 @@ describe('displayUpgradeEdgeBanner', () => {
         expect(body.flags).toBeTruthy();
         expect(body.flags.displayUpgradeEdgeBanner).toBeTruthy();
     });
-    test('ui config should not get displayUpgradeEdgeBanner flag if edge >= 17.0.0 has been seen', async () => {
+    test('ui config should not get displayUpgradeEdgeBanner flag if edge >= 19.1.3 has been seen', async () => {
         await stores.clientInstanceStore.insert({
             appName: 'my-app',
             instanceId: 'some-instance',
-            sdkVersion: 'unleash-edge:17.1.0',
+            sdkVersion: 'unleash-edge:19.1.4',
         });
         const { body } = await request
             .get(`${base}/api/admin/ui-config`)

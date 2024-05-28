@@ -27,24 +27,24 @@ export const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
     stroke: theme.palette.primary.main,
 }));
 
-export const StyledHeader = styled(Typography)(({ theme }) => ({
+export const StyledHeader = styled(Typography)({
     gridArea: 'header',
     alignSelf: 'center',
     fontWeight: 'lighter',
-}));
+});
 
-export const ProjectNameContainer = styled('div')(({ theme }) => ({
+export const ProjectNameContainer = styled('div')({
     gridArea: 'project-name',
-}));
+});
 
-export const ProjectDescriptionContainer = styled('div')(({ theme }) => ({
+export const ProjectDescriptionContainer = styled('div')({
     gridArea: 'project-description',
-}));
+});
 
-export const StyledInput = styled(Input)(({ theme }) => ({
+export const StyledInput = styled(Input)({
     width: '100%',
     fieldset: { border: 'none' },
-}));
+});
 
 export const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',

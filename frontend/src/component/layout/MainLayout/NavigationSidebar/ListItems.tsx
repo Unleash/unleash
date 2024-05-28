@@ -14,7 +14,7 @@ import type { Theme } from '@mui/material/styles/createTheme';
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&:hover': {
+    '&.Mui-selected': {
         borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
     },
 });
@@ -23,8 +23,9 @@ export const FullListItem: FC<{
     href: string;
     text: string;
     badge?: ReactNode;
-    onClick?: () => void;
-}> = ({ href, text, badge, onClick, children }) => {
+    onClick: () => void;
+    selected?: boolean;
+}> = ({ href, text, badge, onClick, selected, children }) => {
     return (
         <ListItem disablePadding onClick={onClick}>
             <ListItemButton
@@ -32,6 +33,7 @@ export const FullListItem: FC<{
                 component={Link}
                 to={href}
                 sx={listItemButtonStyle}
+                selected={selected}
             >
                 <ListItemIcon sx={(theme) => ({ minWidth: theme.spacing(4) })}>
                     {children}
@@ -82,18 +84,20 @@ export const SignOutItem = () => {
     );
 };
 
-export const MiniListItem: FC<{ href: string; text: string }> = ({
-    href,
-    text,
-    children,
-}) => {
+export const MiniListItem: FC<{
+    href: string;
+    text: string;
+    selected?: boolean;
+    onClick: () => void;
+}> = ({ href, text, selected, onClick, children }) => {
     return (
-        <ListItem disablePadding>
+        <ListItem disablePadding onClick={onClick}>
             <ListItemButton
                 dense={true}
                 component={Link}
                 to={href}
                 sx={listItemButtonStyle}
+                selected={selected}
             >
                 <Tooltip title={text} placement='right'>
                     <ListItemIcon

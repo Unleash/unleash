@@ -1,16 +1,16 @@
 import { Box, styled } from '@mui/material';
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
 import { useNavigationMode } from './useNavigationMode';
 import { ShowHide } from './ShowHide';
 import { useRoutes } from './useRoutes';
 import { useExpanded } from './useExpanded';
 import {
-    AdminNavigationList,
-    ConfigureNavigationList,
     OtherLinksList,
     PrimaryNavigationList,
     SecondaryNavigation,
+    SecondaryNavigationList,
 } from './NavigationList';
+import { useInitialPathname } from './useInitialPathname';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,
@@ -20,7 +20,7 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     return (
         <>
             <PrimaryNavigationList mode='full' onClick={onClick} />
-            <ConfigureNavigationList
+            <SecondaryNavigationList
                 routes={routes.mainNavRoutes}
                 mode='full'
                 onClick={onClick}
@@ -45,29 +45,46 @@ export const NavigationSidebar = () => {
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
+    const initialPathname = useInitialPathname();
+
+    const [activeItem, setActiveItem] = useState(initialPathname);
 
     return (
         <StyledBox>
-            <PrimaryNavigationList mode={mode} />
+            <PrimaryNavigationList
+                mode={mode}
+                onClick={setActiveItem}
+                activeItem={activeItem}
+            />
             <SecondaryNavigation
                 expanded={expanded.includes('configure')}
-                onChange={(expand) => {
+                onExpandChange={(expand) => {
                     changeExpanded('configure', expand);
                 }}
                 mode={mode}
-                routes={routes.mainNavRoutes}
+                title='Configure'
             >
-                Configure
+                <SecondaryNavigationList
+                    routes={routes.mainNavRoutes}
+                    mode={mode}
+                    onClick={setActiveItem}
+                    activeItem={activeItem}
+                />
             </SecondaryNavigation>
             <SecondaryNavigation
                 expanded={expanded.includes('admin')}
-                onChange={(expand) => {
+                onExpandChange={(expand) => {
                     changeExpanded('admin', expand);
                 }}
                 mode={mode}
-                routes={routes.adminRoutes}
+                title='Admin'
             >
-                Admin
+                <SecondaryNavigationList
+                    routes={routes.adminRoutes}
+                    mode={mode}
+                    onClick={setActiveItem}
+                    activeItem={activeItem}
+                />
             </SecondaryNavigation>
             <ShowHide
                 mode={mode}

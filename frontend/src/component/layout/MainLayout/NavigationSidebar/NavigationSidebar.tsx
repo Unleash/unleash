@@ -39,8 +39,7 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
 
 export const StretchContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2, 2, 2, 2),
-    zIndex: theme.zIndex.tooltip,
+    padding: theme.spacing(2),
     alignSelf: 'stretch',
 }));
 
@@ -48,7 +47,7 @@ export const ScreenHeightBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
-    minHeight: '93vh',
+    zIndex: 1,
 }));
 
 export const NavigationSidebar = () => {

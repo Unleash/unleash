@@ -1,5 +1,5 @@
 import { Fragment, useMemo, type VFC } from 'react';
-import { Alert, Box, Chip, styled } from '@mui/material';
+import { Alert, Box, Chip, Link, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -41,6 +41,20 @@ const StyledContainer = styled(Box, {
             : theme.palette.common.white,
     },
 }));
+
+const CustomStrategyDeprecationWarning = () => (
+    <Alert severity='warning' sx={{ mb: 2 }}>
+        Custom strategies are deprecated and may be removed in a future major
+        version. Consider rewriting this strategy as a predefined strategy with{' '}
+        <Link
+            href={'https://docs.getunleash.io/reference/strategy-constraints'}
+            target='_blank'
+            variant='body2'
+        >
+            constraints.
+        </Link>
+    </Alert>
+);
 
 const NoItems: VFC = () => (
     <Box sx={{ px: 3, color: 'text.disabled' }}>
@@ -305,12 +319,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                 condition={
                     !BuiltInStrategies.includes(strategy.name || 'default')
                 }
-                show={
-                    <Alert severity='warning' sx={{ mb: 2 }}>
-                        Custom strategies are deprecated and may be removed in a
-                        future major version.
-                    </Alert>
-                }
+                show={<CustomStrategyDeprecationWarning />}
             />
 
             <ConditionallyRender

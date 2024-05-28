@@ -3,6 +3,7 @@ import type { NavigationMode } from './NavigationMode';
 import type { FC } from 'react';
 import HideIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import ExpandIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const ShowHideWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'mode',
@@ -44,5 +45,21 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
                 )}
             </IconButton>
         </ShowHideWrapper>
+    );
+};
+
+const ShowAdminWrapper = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2, 1, 0, 1.5),
+}));
+
+export const ShowAdmin: FC<{ onChange: () => void }> = ({ onChange }) => {
+    return (
+        <ShowAdminWrapper onClick={onChange}>
+            <IconButton>
+                <Tooltip title='Expand admin settings' placement='right'>
+                    <SettingsIcon data-testid='expand-admin-settings' />
+                </Tooltip>
+            </IconButton>
+        </ShowAdminWrapper>
     );
 };

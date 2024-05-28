@@ -170,6 +170,15 @@ export const NewProjectForm: React.FC<FormProps> = ({
             : numberOfConfiguredChangeRequestEnvironments === 1
               ? `1 environment  configured`
               : 'Configure change requests';
+
+    const availableChangeRequestEnvironments = (
+        projectEnvironments.size === 0
+            ? activeEnvironments
+            : activeEnvironments.filter((env) =>
+                  projectEnvironments.has(env.name),
+              )
+    ).map(({ name, type }) => ({ name, type }));
+
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -303,16 +312,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             description={
                                 selectionButtonData.changeRequests.text
                             }
-                            activeEnvironments={activeEnvironments
-                                .filter((env) =>
-                                    projectEnvironments.size > 0
-                                        ? projectEnvironments.has(env.name)
-                                        : true,
-                                )
-                                .map((env) => ({
-                                    name: env.name,
-                                    type: env.type,
-                                }))}
+                            activeEnvironments={
+                                availableChangeRequestEnvironments
+                            }
                             updateProjectChangeRequestConfiguration={
                                 updateProjectChangeRequestConfig
                             }

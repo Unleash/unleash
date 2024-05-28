@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
@@ -16,9 +16,9 @@ import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { Badge } from 'component/common/Badge/Badge';
 import { GridColLink } from './GridColLink/GridColLink';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useTrafficDataEstimation } from 'hooks/useTrafficData';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 
 const StyledPlanBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(2.5),
@@ -78,9 +78,9 @@ interface IBillingPlanProps {
 const proPlanIncludedRequests = 53_000_000;
 
 export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
-    const { users } = useUsers();
+    const { users, loading } = useUsers();
     const expired = trialHasExpired(instanceStatus);
-    const { uiConfig, isPro } = useUiConfig();
+    const { isPro } = useUiConfig();
 
     const {
         currentPeriod,
@@ -104,37 +104,39 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
 
     const planPrice = price[instanceStatus.plan];
     const seats = instanceStatus.seats ?? 5;
+
     const freeAssigned = Math.min(eligibleUsers.length, seats);
     const paidAssigned = eligibleUsers.length - freeAssigned;
     const paidAssignedPrice = price.user * paidAssigned;
-    const finalPrice = planPrice + paidAssignedPrice;
-    const inactive = instanceStatus.state !== InstanceState.ACTIVE;
-    const [totalCost, setTotalCost] = useState(0);
 
-    const flagEnabled = useUiFlag('displayTrafficDataUsage');
-    const [overageCost, setOverageCost] = useState(0);
-
+    const displayTrafficDataUsageEnabled = useUiFlag('displayTrafficDataUsage');
     const includedTraffic = isPro() ? proPlanIncludedRequests : 0;
     const traffic = useInstanceTrafficMetrics(currentPeriod.key);
 
-    useEffect(() => {
-        if (flagEnabled && includedTraffic > 0) {
-            const trafficData = toChartData(
-                getDayLabels(currentPeriod.dayCount),
-                traffic,
-                endpointsInfo,
-            );
-            const totalTraffic = toTrafficUsageSum(trafficData);
-            const overageCostCalc = calculateOverageCost(
-                totalTraffic,
-                includedTraffic,
-            );
-            setOverageCost(overageCostCalc);
-            setTotalCost(finalPrice + overageCostCalc);
-        } else {
-            setTotalCost(finalPrice);
+    const overageCost = useMemo(() => {
+        if (!displayTrafficDataUsageEnabled || !includedTraffic) {
+            return 0;
         }
-    }, [traffic]);
+        const trafficData = toChartData(
+            getDayLabels(currentPeriod.dayCount),
+            traffic,
+            endpointsInfo,
+        );
+        const totalTraffic = toTrafficUsageSum(trafficData);
+        return calculateOverageCost(totalTraffic, includedTraffic);
+    }, [
+        displayTrafficDataUsageEnabled,
+        includedTraffic,
+        traffic,
+        currentPeriod,
+        endpointsInfo,
+    ]);
+
+    const totalCost = planPrice + paidAssignedPrice + overageCost;
+
+    const inactive = instanceStatus.state !== InstanceState.ACTIVE;
+
+    if (loading) return null;
 
     return (
         <Grid item xs={12} md={7}>
@@ -256,7 +258,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                     </GridCol>
                                 </GridRow>
                                 <ConditionallyRender
-                                    condition={flagEnabled && overageCost > 0}
+                                    condition={overageCost > 0}
                                     show={
                                         <GridRow>
                                             <GridCol vertical>

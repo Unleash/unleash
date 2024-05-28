@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: build
     defaults:
       run:
         working-directory: frontend

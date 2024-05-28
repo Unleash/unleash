@@ -239,6 +239,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             projectEnvironments.size > 0
                                 ? `${projectEnvironments.size} selected`
                                 : 'All environments',
+                        labelWidth: `${'all environments'.length}ch`,
                         icon: <EnvironmentsIcon />,
                     }}
                     search={{

@@ -13,6 +13,24 @@ import { GO_BACK } from 'constants/navigate';
 import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
 import { Alert } from '@mui/material';
 
+const CreateStrategyDeprecationWarning = () => (
+    <Alert
+        severity='warning'
+        sx={(theme) => ({
+            marginBottom: theme.spacing(3),
+        })}
+    >
+        Custom strategies are deprecated and may be removed in a future major
+        release. We recommend using the predefined strategies like Gradual
+        rollout with{' '}
+        <Link to='https://docs.getunleash.io/reference/strategy-constraints'>
+            {' '}
+            constraints
+        </Link>{' '}
+        instead of creating a custom strategy.
+    </Alert>
+);
+
 export const CreateStrategy = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -78,21 +96,7 @@ export const CreateStrategy = () => {
             documentationLinkLabel='Custom strategies documentation'
             formatApiCode={formatApiCode}
         >
-            <Alert
-                severity='warning'
-                sx={(theme) => ({
-                    marginBottom: theme.spacing(3),
-                })}
-            >
-                Custom strategies are deprecated and may be removed in a future
-                major release. We recommend using the predefined strategies like
-                Gradual rollout with{' '}
-                <Link to='https://docs.getunleash.io/reference/strategy-constraints'>
-                    {' '}
-                    constraints
-                </Link>{' '}
-                instead of creating a custom strategy.
-            </Alert>
+            <CreateStrategyDeprecationWarning />
             <CustomStrategyInfo alert />
             <StrategyForm
                 errors={errors}

@@ -357,6 +357,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             projectEnvironments.size > 0
                                 ? `${projectEnvironments.size} selected`
                                 : 'All environments',
+                        labelWidth: `${'all environments'.length}ch`,
                         icon: <EnvironmentsIcon />,
                     }}
                     search={{
@@ -404,6 +405,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             button={{
                                 label: projectMode,
                                 icon: <ProjectModeIcon />,
+                                labelWidth: `${`protected`.length}ch`,
                             }}
                             search={{
                                 label: 'Filter project mode options',
@@ -436,17 +438,11 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 updateProjectChangeRequestConfig
                             }
                             button={{
-                                label:
-                                    Object.keys(
-                                        projectChangeRequestConfiguration,
-                                    ).length > 0
-                                        ? `${
-                                              Object.keys(
-                                                  projectChangeRequestConfiguration,
-                                              ).length
-                                          } selected`
-                                        : 'Configure change requests',
+                                label: changeRequestSelectorLabel,
                                 icon: <ChangeRequestIcon />,
+                                labelWidth: `${
+                                    'nn environments configured'.length
+                                }ch`,
                             }}
                             search={{
                                 label: 'Filter environments',

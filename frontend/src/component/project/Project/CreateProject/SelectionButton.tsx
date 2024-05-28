@@ -8,14 +8,7 @@ import {
     useMemo,
     type PropsWithChildren,
 } from 'react';
-import {
-    Box,
-    Button,
-    InputAdornment,
-    List,
-    ListItemText,
-    styled,
-} from '@mui/material';
+import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
 import {
     StyledCheckbox,
     StyledDropdown,
@@ -25,6 +18,7 @@ import {
     TableSearchInput,
     HiddenDescription,
     ScrollContainer,
+    ButtonLabel,
 } from './SelectionButton.styles';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
@@ -103,7 +97,7 @@ type CombinedSelectProps = {
 
 const CombinedSelectNoDropdown: FC<
     PropsWithChildren<{
-        button: { label: string; icon: ReactNode };
+        button: { label: string; icon: ReactNode; labelWidth?: string };
         onOpen?: () => void;
         onClose?: () => void;
         description: string; // visually hidden, for assistive tech
@@ -147,7 +141,9 @@ const CombinedSelectNoDropdown: FC<
                         }
                     }}
                 >
-                    {button.label}
+                    <ButtonLabel labelWidth={button.labelWidth}>
+                        {button.label}
+                    </ButtonLabel>
                 </Button>
             </Box>
             <StyledPopover
@@ -491,10 +487,6 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
         option.label.toLowerCase().includes(searchText.toLowerCase()),
     );
 
-    const ButtonLabel = styled('span')(() => ({
-        width: button.labelWidth || 'unset',
-    }));
-
     return (
         <>
             <Box ref={ref}>
@@ -508,7 +500,9 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
                         }
                     }}
                 >
-                    <ButtonLabel>{button.label}</ButtonLabel>
+                    <ButtonLabel labelWidth={button.labelWidth}>
+                        {button.label}
+                    </ButtonLabel>
                 </Button>
             </Box>
             <StyledPopover
@@ -750,10 +744,6 @@ export const TableSelect: FC<TableSelectProps> = ({
         }
     };
 
-    const ButtonLabel = styled('span')(() => ({
-        width: button.labelWidth || 'unset',
-    }));
-
     return (
         <>
             <Box ref={ref}>
@@ -766,7 +756,9 @@ export const TableSelect: FC<TableSelectProps> = ({
                     }}
                     disabled={disabled}
                 >
-                    <ButtonLabel>{button.label}</ButtonLabel>
+                    <ButtonLabel labelWidth={button.labelWidth}>
+                        {button.label}
+                    </ButtonLabel>
                 </Button>
             </Box>
             <StyledPopover

@@ -46,7 +46,8 @@ export const NavigationSidebar = () => {
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
-    const { pathname } = useLocation();
+    const { pathname, state } = useLocation();
+    console.log(pathname, state);
     const [activeItem, setActiveItem] = useState(pathname);
 
     return (

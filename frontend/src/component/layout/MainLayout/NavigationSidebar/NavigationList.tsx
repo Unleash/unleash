@@ -76,7 +76,7 @@ export const AdminNavigationList: FC<{
     routes: INavigationMenuItem[];
     mode: NavigationMode;
     badge?: ReactNode;
-    onClick?: () => void;
+    onClick: () => void;
 }> = ({ routes, mode, onClick, badge }) => {
     const showBadge = useShowBadge();
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;

@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useCallback } from 'react';
+import { type FC, useCallback } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode';
 import {
@@ -53,31 +53,7 @@ export const SecondaryNavigationList: FC<{
     mode: NavigationMode;
     onClick: (activeItem: string) => void;
     activeItem?: string;
-}> = ({ routes, mode, activeItem, onClick }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <List>
-            {routes.map((route) => (
-                <DynamicListItem
-                    key={route.title}
-                    href={route.path}
-                    text={route.title}
-                    onClick={() => onClick(route.path)}
-                    selected={activeItem === route.path}
-                >
-                    <IconRenderer path={route.path} />
-                </DynamicListItem>
-            ))}
-        </List>
-    );
-};
-export const AdminNavigationList: FC<{
-    routes: INavigationMenuItem[];
-    mode: NavigationMode;
-    badge?: ReactNode;
-    onClick: () => void;
-}> = ({ routes, mode, onClick, badge }) => {
+}> = ({ routes, mode, onClick, activeItem }) => {
     const showBadge = useShowBadge();
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
@@ -86,9 +62,10 @@ export const AdminNavigationList: FC<{
             {routes.map((route) => (
                 <DynamicListItem
                     key={route.title}
-                    onClick={onClick}
+                    onClick={() => onClick(route.path)}
                     href={route.path}
                     text={route.title}
+                    selected={activeItem === route.path}
                     badge={
                         showBadge(route?.menu?.mode) ? (
                             <EnterprisePlanBadge />

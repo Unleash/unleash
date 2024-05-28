@@ -100,7 +100,6 @@ exports[`should create default config 1`] = `
       "enableLicenseChecker": false,
       "encryptEmails": false,
       "estimateTrafficDataCost": false,
-      "executiveDashboardUI": false,
       "extendedUsageMetrics": false,
       "featureLifecycle": false,
       "featureSearchFeedback": {
@@ -123,6 +122,7 @@ exports[`should create default config 1`] = `
       },
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
+      "killInsightsUI": false,
       "killScheduledChangeRequestCache": false,
       "maintenanceMode": false,
       "manyStrategiesPagination": false,

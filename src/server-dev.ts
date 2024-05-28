@@ -43,7 +43,7 @@ process.nextTick(async () => {
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         featureSearchFeedbackPosting: true,
-                        executiveDashboardUI: true,
+                        killInsightsUI: false,
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,

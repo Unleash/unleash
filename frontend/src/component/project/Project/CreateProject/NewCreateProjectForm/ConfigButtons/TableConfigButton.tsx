@@ -6,7 +6,7 @@ import { InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
-type TableSelectProps = Pick<
+type ChangeRequestTableConfigButtonProps = Pick<
     CombinedSelectProps,
     'button' | 'onOpen' | 'onClose' | 'description'
 > &
@@ -28,7 +28,9 @@ type TableSelectProps = Pick<
         >;
     };
 
-export const TableSelect: FC<TableSelectProps> = ({
+export const ChangeRequestTableConfigButton: FC<
+    ChangeRequestTableConfigButtonProps
+> = ({
     button,
     search,
     projectChangeRequestConfiguration,

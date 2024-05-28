@@ -20,9 +20,9 @@ import {
     StyledInput,
     TopGrid,
 } from './NewProjectForm.styles';
-import { MultiSelectList } from './ConfigButtons/MultiSelectConfigButton';
-import { SingleSelectList } from './ConfigButtons/SingleSelectConfigButton';
-import { TableSelect } from './ConfigButtons/TableConfigButton';
+import { MultiSelectConfigButton } from './ConfigButtons/MultiSelectConfigButton';
+import { SingleSelectConfigButton } from './ConfigButtons/SingleSelectConfigButton';
+import { ChangeRequestTableConfigButton } from './ConfigButtons/TableConfigButton';
 
 type FormProps = {
     projectId: string;
@@ -179,7 +179,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
             </TopGrid>
 
             <OptionButtons>
-                <MultiSelectList
+                <MultiSelectConfigButton
                     description={configButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
@@ -205,7 +205,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     onClose={clearDocumentationOverride}
                 />
 
-                <SingleSelectList
+                <SingleSelectConfigButton
                     description={configButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
@@ -231,7 +231,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
-                        <SingleSelectList
+                        <SingleSelectConfigButton
                             description={configButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
@@ -256,7 +256,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
-                        <TableSelect
+                        <ChangeRequestTableConfigButton
                             description={configButtonData.changeRequests.text}
                             activeEnvironments={
                                 availableChangeRequestEnvironments

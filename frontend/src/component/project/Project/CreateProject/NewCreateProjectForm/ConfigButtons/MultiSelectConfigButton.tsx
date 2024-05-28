@@ -2,7 +2,7 @@ import { type FC, useState } from 'react';
 import { CombinedSelect, type CombinedSelectProps } from './CombinedSelect';
 import { DropdownList, type DropdownListProps } from './DropdownList';
 
-type MultiselectListProps = Pick<
+type MultiSelectConfigButtonProps = Pick<
     CombinedSelectProps,
     'button' | 'onOpen' | 'onClose' | 'description'
 > &
@@ -11,7 +11,7 @@ type MultiselectListProps = Pick<
         onChange: (values: Set<string>) => void;
     };
 
-export const MultiSelectList: FC<MultiselectListProps> = ({
+export const MultiSelectConfigButton: FC<MultiSelectConfigButtonProps> = ({
     selectedOptions,
     onChange,
     ...rest

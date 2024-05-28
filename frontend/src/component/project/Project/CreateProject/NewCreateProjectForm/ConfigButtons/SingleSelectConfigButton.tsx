@@ -2,13 +2,13 @@ import { type FC, useState } from 'react';
 import { CombinedSelect, type CombinedSelectProps } from './CombinedSelect';
 import { DropdownList, type DropdownListProps } from './DropdownList';
 
-type SingleSelectListProps = Pick<
+type SingleSelectConfigButtonProps = Pick<
     CombinedSelectProps,
     'button' | 'onOpen' | 'onClose' | 'description'
 > &
     Pick<DropdownListProps, 'search' | 'onChange' | 'options'>;
 
-export const SingleSelectList: FC<SingleSelectListProps> = ({
+export const SingleSelectConfigButton: FC<SingleSelectConfigButtonProps> = ({
     onChange,
     ...props
 }) => {

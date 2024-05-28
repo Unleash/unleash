@@ -143,6 +143,7 @@ export const CreateProjectDialogue = ({
                 documentationLink={documentation.link?.url}
                 documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}
+                useFixedSidebar
             >
                 <NewProjectForm
                     errors={errors}

@@ -60,14 +60,12 @@ export const CreateProjectDialog = ({
         projectEnvironments,
         projectChangeRequestConfiguration,
         setProjectMode,
-        setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectEnvironments,
         updateProjectChangeRequestConfig,
         getCreateProjectPayload,
         clearErrors,
-        validateProjectId,
         validateName,
         setProjectStickiness,
         projectStickiness,
@@ -151,7 +149,6 @@ export const CreateProjectDialog = ({
                     projectId={projectId}
                     projectEnvironments={projectEnvironments}
                     setProjectEnvironments={setProjectEnvironments}
-                    setProjectId={setProjectId}
                     projectName={projectName}
                     projectStickiness={projectStickiness}
                     projectChangeRequestConfiguration={
@@ -166,9 +163,6 @@ export const CreateProjectDialog = ({
                     setProjectName={setProjectName}
                     projectDesc={projectDesc}
                     setProjectDesc={setProjectDesc}
-                    mode='Create'
-                    clearErrors={clearErrors}
-                    validateProjectId={validateProjectId}
                     overrideDocumentation={setDocumentation}
                     clearDocumentationOverride={clearDocumentationOverride}
                 >

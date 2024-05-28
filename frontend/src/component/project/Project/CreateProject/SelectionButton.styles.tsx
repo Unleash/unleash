@@ -74,3 +74,9 @@ export const ScrollContainer = styled('div')(({ theme }) => ({
     width: '100%',
     overflow: 'auto',
 }));
+
+export const ButtonLabel = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'labelWidth',
+})<{ labelWidth?: string }>(({ labelWidth }) => ({
+    width: labelWidth || 'unset',
+}));

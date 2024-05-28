@@ -1,12 +1,12 @@
 import { Typography, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import {
     MultiSelectList,
     SingleSelectList,
     TableSelect,
-} from './SelectionButton';
+} from './ConfigButtons/SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';

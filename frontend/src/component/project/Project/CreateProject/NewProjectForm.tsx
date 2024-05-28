@@ -174,6 +174,15 @@ export const NewProjectForm: React.FC<FormProps> = ({
         },
     };
 
+    const numberOfConfiguredChangeRequestEnvironments = Object.keys(
+        projectChangeRequestConfiguration,
+    ).length;
+    const changeRequestSelectorLabel =
+        numberOfConfiguredChangeRequestEnvironments > 1
+            ? `${numberOfConfiguredChangeRequestEnvironments} environments configured`
+            : numberOfConfiguredChangeRequestEnvironments === 1
+              ? `1 environment  configured`
+              : 'Configure change requests';
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -320,17 +329,11 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 updateProjectChangeRequestConfig
                             }
                             button={{
-                                label:
-                                    Object.keys(
-                                        projectChangeRequestConfiguration,
-                                    ).length > 0
-                                        ? `${
-                                              Object.keys(
-                                                  projectChangeRequestConfiguration,
-                                              ).length
-                                          } environment configured`
-                                        : 'Configure change requests',
+                                label: changeRequestSelectorLabel,
                                 icon: <ChangeRequestIcon />,
+                                labelWidth: `${
+                                    'nn environments configured'.length
+                                }ch`,
                             }}
                             search={{
                                 label: 'Filter environments',

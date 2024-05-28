@@ -187,7 +187,7 @@ export const SecondaryNavigation: FC<{
     return (
         <Accordion
             disableGutters={true}
-            sx={{ boxShadow: 'none', mt: 2 }}
+            sx={{ boxShadow: 'none' }}
             expanded={expanded}
             onChange={(_, expand) => {
                 onExpandChange(expand);
@@ -205,7 +205,7 @@ export const RecentProjectsNavigation: FC<{
     onClick: () => void;
 }> = ({ mode, onClick, projectId }) => {
     return (
-        <Box sx={{ mt: 2 }}>
+        <Box>
             {mode === 'full' && (
                 <Typography
                     sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 1 }}

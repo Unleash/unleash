@@ -39,7 +39,11 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
 
 export const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2, 2, 6, 2),
+    padding: theme.spacing(2, 2, 2, 2),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    zIndex: theme.zIndex.tooltip,
 }));
 
 export const NavigationSidebar = () => {

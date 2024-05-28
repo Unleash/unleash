@@ -38,13 +38,16 @@ const useProjectForm = (
     ] = useState(initialProjectChangeRequestConfiguration);
 
     const updateProjectEnvironments = (newState: Set<string>) => {
-        const filteredChangeRequestEnvs = Object.fromEntries(
-            Object.entries(projectChangeRequestConfiguration).filter(([env]) =>
-                newState.has(env),
-            ),
-        );
+        if (newState.size !== 0) {
+            const filteredChangeRequestEnvs = Object.fromEntries(
+                Object.entries(projectChangeRequestConfiguration).filter(
+                    ([env]) => newState.has(env),
+                ),
+            );
 
-        setProjectChangeRequestConfiguration(filteredChangeRequestEnvs);
+            setProjectChangeRequestConfiguration(filteredChangeRequestEnvs);
+        }
+
         setProjectEnvironments(newState);
     };
 

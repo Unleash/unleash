@@ -4,7 +4,9 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    styled,
     Tooltip,
+    Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { basePath } from 'utils/formatPath';
@@ -17,6 +19,13 @@ const listItemButtonStyle = (theme: Theme) => ({
     '&.Mui-selected': {
         borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
     },
+});
+
+const CappedText = styled(Typography)({
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '160px',
 });
 
 export const FullListItem: FC<{
@@ -38,7 +47,9 @@ export const FullListItem: FC<{
                 <ListItemIcon sx={(theme) => ({ minWidth: theme.spacing(4) })}>
                     {children}
                 </ListItemIcon>
-                <ListItemText sx={{ whiteSpace: 'nowrap' }} primary={text} />
+                <ListItemText>
+                    <CappedText>{text}</CappedText>
+                </ListItemText>
                 {badge}
             </ListItemButton>
         </ListItem>

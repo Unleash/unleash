@@ -1,8 +1,8 @@
 import { Box, IconButton, styled, Tooltip } from '@mui/material';
 import type { NavigationMode } from './NavigationMode';
 import type { FC } from 'react';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import HideIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import ExpandIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 
 const ShowHideWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'mode',
@@ -10,7 +10,8 @@ const ShowHideWrapper = styled(Box, {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: theme.spacing(2, 1, 0, mode === 'mini' ? 1.5 : 2),
+    padding: theme.spacing(2, 1, 0, mode === 'mini' ? 1.5 : 2),
+    marginTop: 'auto',
     cursor: 'pointer',
 }));
 
@@ -32,10 +33,13 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
             )}
             <IconButton>
                 {mode === 'full' ? (
-                    <ChevronLeftIcon />
+                    <HideIcon color='primary' />
                 ) : (
                     <Tooltip title='Expand (⌘ + B)' placement='right'>
-                        <ChevronRightIcon data-testid='expand-navigation' />
+                        <ExpandIcon
+                            data-testid='expand-navigation'
+                            color='primary'
+                        />
                     </Tooltip>
                 )}
             </IconButton>

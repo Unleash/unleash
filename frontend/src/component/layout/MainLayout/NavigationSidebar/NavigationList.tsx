@@ -7,7 +7,7 @@ import {
     MiniListItem,
     SignOutItem,
 } from './ListItems';
-import { List, styled, Tooltip, Typography } from '@mui/material';
+import { Box, List, styled, Tooltip, Typography } from '@mui/material';
 import { IconRenderer, StyledProjectIcon } from './IconRenderer';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -98,6 +98,27 @@ export const OtherLinksList = () => {
     );
 };
 
+export const RecentProjectsList: FC<{
+    projectId: string;
+    mode: NavigationMode;
+    onClick: () => void;
+}> = ({ projectId, mode, onClick }) => {
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+
+    return (
+        <List>
+            <DynamicListItem
+                href={`/projects/${projectId}`}
+                text={projectId}
+                onClick={onClick}
+                selected={false}
+            >
+                <StyledProjectIcon />
+            </DynamicListItem>
+        </List>
+    );
+};
+
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
     onClick: (activeItem: string) => void;
@@ -175,5 +196,28 @@ export const SecondaryNavigation: FC<{
             {mode === 'full' && <AccordionHeader>{title}</AccordionHeader>}
             <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
         </Accordion>
+    );
+};
+
+export const RecentProjectsNavigation: FC<{
+    mode: NavigationMode;
+    projectId: string;
+    onClick: () => void;
+}> = ({ mode, onClick, projectId }) => {
+    return (
+        <Box>
+            {mode === 'full' && (
+                <Typography
+                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 1 }}
+                >
+                    Recent project
+                </Typography>
+            )}
+            <RecentProjectsList
+                projectId={projectId}
+                mode={mode}
+                onClick={onClick}
+            />
+        </Box>
     );
 };

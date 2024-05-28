@@ -750,6 +750,10 @@ export const TableSelect: FC<TableSelectProps> = ({
         }
     };
 
+    const ButtonLabel = styled('span')(() => ({
+        width: button.labelWidth || 'unset',
+    }));
+
     return (
         <>
             <Box ref={ref}>
@@ -762,7 +766,7 @@ export const TableSelect: FC<TableSelectProps> = ({
                     }}
                     disabled={disabled}
                 >
-                    {button.label}
+                    <ButtonLabel>{button.label}</ButtonLabel>
                 </Button>
             </Box>
             <StyledPopover

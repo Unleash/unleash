@@ -55,6 +55,31 @@ type FormProps = {
 const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
 const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
+const projectModeOptions = [
+    { value: 'open', label: 'open' },
+    { value: 'protected', label: 'protected' },
+    { value: 'private', label: 'private' },
+];
+
+const selectionButtonData = {
+    environments: {
+        icon: <EnvironmentsIcon />,
+        text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+    },
+    stickiness: {
+        icon: <StickinessIcon />,
+        text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+    },
+    mode: {
+        icon: <ProjectModeIcon />,
+        text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+    },
+    changeRequests: {
+        icon: <ChangeRequestIcon />,
+        text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+    },
+};
+
 export const NewProjectForm: React.FC<FormProps> = ({
     children,
     handleSubmit,
@@ -77,39 +102,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
     const { isEnterprise } = useUiConfig();
     const { environments: allEnvironments } = useEnvironments();
     const activeEnvironments = allEnvironments.filter((env) => env.enabled);
+    const stickinessOptions = useStickinessOptions(projectStickiness);
 
     const handleProjectNameUpdate = (
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const input = e.target.value;
         setProjectName(input);
-    };
-
-    const projectModeOptions = [
-        { value: 'open', label: 'open' },
-        { value: 'protected', label: 'protected' },
-        { value: 'private', label: 'private' },
-    ];
-
-    const stickinessOptions = useStickinessOptions(projectStickiness);
-
-    const selectionButtonData = {
-        environments: {
-            icon: <EnvironmentsIcon />,
-            text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
-        },
-        stickiness: {
-            icon: <StickinessIcon />,
-            text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
-        },
-        mode: {
-            icon: <ProjectModeIcon />,
-            text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
-        },
-        changeRequests: {
-            icon: <ChangeRequestIcon />,
-            text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
-        },
     };
 
     const numberOfConfiguredChangeRequestEnvironments = Object.keys(

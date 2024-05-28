@@ -1,17 +1,17 @@
 import { Box, styled } from '@mui/material';
-import { useState, type FC } from 'react';
+import { type FC, useState } from 'react';
 import { useNavigationMode } from './useNavigationMode';
 import { ShowHide } from './ShowHide';
 import { useRoutes } from './useRoutes';
 import { useExpanded } from './useExpanded';
 import {
     AdminNavigationList,
-    SecondaryNavigationList,
     OtherLinksList,
     PrimaryNavigationList,
     SecondaryNavigation,
+    SecondaryNavigationList,
 } from './NavigationList';
-import { useLocation } from 'react-router-dom';
+import { useInitialPathname } from './useInitialPathname';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,
@@ -46,9 +46,9 @@ export const NavigationSidebar = () => {
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
-    const { pathname, state } = useLocation();
-    console.log(pathname, state);
-    const [activeItem, setActiveItem] = useState(pathname);
+    const initialPathname = useInitialPathname();
+
+    const [activeItem, setActiveItem] = useState(initialPathname);
 
     return (
         <StyledBox>

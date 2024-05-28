@@ -17,6 +17,7 @@ import {
     StyledDropdownSearch,
     TableSearchInput,
     HiddenDescription,
+    ScrollContainer,
 } from './SelectionButton.styles';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
@@ -445,11 +446,13 @@ export const TableSelect: FC<TableSelectProps> = ({
                         }}
                         onKeyDown={toggleTopItem}
                     />
-                    <ChangeRequestTable
-                        environments={filteredEnvs}
-                        enableEnvironment={onEnable}
-                        disableEnvironment={onDisable}
-                    />
+                    <ScrollContainer>
+                        <ChangeRequestTable
+                            environments={filteredEnvs}
+                            enableEnvironment={onEnable}
+                            disableEnvironment={onDisable}
+                        />
+                    </ScrollContainer>
                 </StyledDropdown>
             </StyledPopover>
         </>

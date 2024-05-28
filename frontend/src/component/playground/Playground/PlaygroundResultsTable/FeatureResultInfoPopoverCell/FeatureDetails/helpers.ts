@@ -1,15 +1,5 @@
 import type { PlaygroundFeatureSchema } from 'openapi';
-
-export const DEFAULT_STRATEGIES = [
-    'default',
-    'applicationHostname',
-    'flexibleRollout',
-    'gradualRolloutRandom',
-    'gradualRolloutSessionId',
-    'gradualRolloutUserId',
-    'remoteAddress',
-    'userWithId',
-];
+import { BuiltInStrategies } from 'utils/strategyNames';
 
 export function checkForEmptyValues(object?: Object): boolean {
     if (object === undefined) {
@@ -22,7 +12,7 @@ export function checkForEmptyValues(object?: Object): boolean {
 
 export const hasCustomStrategies = (feature: PlaygroundFeatureSchema) => {
     return feature.strategies?.data?.find(
-        (strategy) => !DEFAULT_STRATEGIES.includes(strategy.name),
+        (strategy) => !BuiltInStrategies.includes(strategy.name),
     );
 };
 
@@ -30,7 +20,7 @@ export const hasOnlyCustomStrategies = (feature: PlaygroundFeatureSchema) => {
     return (
         feature.strategies?.data?.length > 0 &&
         !feature.strategies?.data?.find((strategy) =>
-            DEFAULT_STRATEGIES.includes(strategy.name),
+            BuiltInStrategies.includes(strategy.name),
         )
     );
 };

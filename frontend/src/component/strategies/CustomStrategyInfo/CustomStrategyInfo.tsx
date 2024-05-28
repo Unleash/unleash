@@ -17,11 +17,8 @@ export const CustomStrategyInfo: FC<{ alert?: boolean }> = ({ alert }) => {
     const content = (
         <>
             <Paragraph>
-                We recommend you to use the predefined strategies like Gradual
-                rollout with constraints instead of creating a custom strategy.
-            </Paragraph>
-            <Paragraph>
-                If you decide to create a custom strategy be aware of:
+                If you decide to create a custom strategy be aware of the
+                following:
                 <ul>
                     <li>
                         They require writing custom code and deployments for
@@ -32,8 +29,8 @@ export const CustomStrategyInfo: FC<{ alert?: boolean }> = ({ alert }) => {
                         to evaluate differently
                     </li>
                     <li>
-                        Requires a lot of configuration in both Unleash admin UI
-                        and the SDK.
+                        Custom strategies require a lot of configuration in both
+                        Unleash admin UI and the SDK.
                     </li>
                 </ul>
             </Paragraph>

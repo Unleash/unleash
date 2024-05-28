@@ -22,6 +22,22 @@ describe('configuring change requests', () => {
         ).toBeFalsy();
     });
 
+    test('setting project environments to an empty set preserves change request configuration', () => {
+        const { result } = renderHook(() => useProjectForm());
+
+        result.current.setProjectEnvironments(new Set(['dev', 'prod']));
+        result.current.updateProjectChangeRequestConfig.enableChangeRequests(
+            'prod',
+            5,
+        );
+
+        result.current.setProjectEnvironments(new Set([]));
+
+        expect(result.current.projectChangeRequestConfiguration).toMatchObject({
+            prod: { requiredApprovals: 5 },
+        });
+    });
+
     test(`if specific project envs are selected, adding a change request config for an env not in the project envs doesn't work and the change request envs is not changed`, () => {
         const { result } = renderHook(() => useProjectForm());
 

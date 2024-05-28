@@ -10,6 +10,7 @@ import {
     Box,
     Divider,
     Typography,
+    Link,
 } from '@mui/material';
 import type {
     IFeatureStrategy,
@@ -42,7 +43,7 @@ import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { formatStrategyName } from 'utils/strategyNames';
+import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 
@@ -387,6 +388,29 @@ export const FeatureStrategyForm = ({
                                 />
                             }
                         />
+                    }
+                />
+
+                <ConditionallyRender
+                    condition={
+                        !BuiltInStrategies.includes(strategy.name || 'default')
+                    }
+                    show={
+                        <Alert severity='warning'>
+                            Custom strategies are deprecated. We recommend not
+                            adding them to any flags going forward and using the
+                            predefined strategies like Gradual rollout with{' '}
+                            <Link
+                                href={
+                                    'https://docs.getunleash.io/reference/strategy-constraints'
+                                }
+                                target='_blank'
+                                variant='body2'
+                            >
+                                constraints
+                            </Link>{' '}
+                            instead.
+                        </Alert>
                     }
                 />
                 <FeatureStrategyEnabled

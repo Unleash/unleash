@@ -93,7 +93,6 @@ export const Project = () => {
             title: 'Insights',
             path: `${basePath}/insights`,
             name: 'insights',
-            new: true,
         },
         {
             title: 'Health',

@@ -30,6 +30,7 @@ import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg
 import type { FC } from 'react';
 import { styled } from '@mui/material';
 
+// TODO: move to routes
 const icons: Record<string, typeof SvgIcon> = {
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,

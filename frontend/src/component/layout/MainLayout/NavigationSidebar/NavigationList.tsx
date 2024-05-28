@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useCallback } from 'react';
+import { type FC, useCallback } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode';
 import {
@@ -48,34 +48,12 @@ const useShowBadge = () => {
     return showBadge;
 };
 
-export const ConfigureNavigationList: FC<{
+export const SecondaryNavigationList: FC<{
     routes: INavigationMenuItem[];
     mode: NavigationMode;
-    onClick?: () => void;
-}> = ({ routes, mode, onClick }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <List>
-            {routes.map((route) => (
-                <DynamicListItem
-                    key={route.title}
-                    href={route.path}
-                    text={route.title}
-                    onClick={onClick}
-                >
-                    <IconRenderer path={route.path} />
-                </DynamicListItem>
-            ))}
-        </List>
-    );
-};
-export const AdminNavigationList: FC<{
-    routes: INavigationMenuItem[];
-    mode: NavigationMode;
-    badge?: ReactNode;
-    onClick?: () => void;
-}> = ({ routes, mode, onClick, badge }) => {
+    onClick: (activeItem: string) => void;
+    activeItem?: string;
+}> = ({ routes, mode, onClick, activeItem }) => {
     const showBadge = useShowBadge();
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
@@ -84,9 +62,10 @@ export const AdminNavigationList: FC<{
             {routes.map((route) => (
                 <DynamicListItem
                     key={route.title}
-                    onClick={onClick}
+                    onClick={() => onClick(route.path)}
                     href={route.path}
                     text={route.title}
+                    selected={activeItem === route.path}
                     badge={
                         showBadge(route?.menu?.mode) ? (
                             <EnterprisePlanBadge />
@@ -121,26 +100,43 @@ export const OtherLinksList = () => {
 
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
-    onClick?: () => void;
-}> = ({ mode, onClick }) => {
+    onClick: (activeItem: string) => void;
+    activeItem?: string;
+}> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     return (
         <List>
-            <DynamicListItem href='/projects' text='Projects' onClick={onClick}>
+            <DynamicListItem
+                href='/projects'
+                text='Projects'
+                onClick={() => onClick('/projects')}
+                selected={activeItem === '/projects'}
+            >
                 <StyledProjectIcon />
             </DynamicListItem>
-            <DynamicListItem href='/search' text='Search' onClick={onClick}>
+            <DynamicListItem
+                href='/search'
+                text='Search'
+                onClick={() => onClick('/search')}
+                selected={activeItem === '/search'}
+            >
                 <SearchIcon />
             </DynamicListItem>
             <DynamicListItem
                 href='/playground'
                 text='Playground'
-                onClick={onClick}
+                onClick={() => onClick('/playground')}
+                selected={activeItem === '/playground'}
             >
                 <PlaygroundIcon />
             </DynamicListItem>
-            <DynamicListItem href='/insights' text='Insights' onClick={onClick}>
+            <DynamicListItem
+                href='/insights'
+                text='Insights'
+                onClick={() => onClick('/insights')}
+                selected={activeItem === '/insights'}
+            >
                 <InsightsIcon />
             </DynamicListItem>
         </List>
@@ -163,23 +159,21 @@ const AccordionHeader: FC = ({ children }) => {
 
 export const SecondaryNavigation: FC<{
     expanded: boolean;
-    onChange: (expanded: boolean) => void;
+    onExpandChange: (expanded: boolean) => void;
     mode: NavigationMode;
-    routes: INavigationMenuItem[];
-}> = ({ mode, expanded, onChange, routes, children }) => {
+    title: string;
+}> = ({ mode, expanded, onExpandChange, title, children }) => {
     return (
         <Accordion
             disableGutters={true}
             sx={{ boxShadow: 'none' }}
             expanded={expanded}
             onChange={(_, expand) => {
-                onChange(expand);
+                onExpandChange(expand);
             }}
         >
-            {mode === 'full' && <AccordionHeader>{children}</AccordionHeader>}
-            <AccordionDetails sx={{ p: 0 }}>
-                <ConfigureNavigationList routes={routes} mode={mode} />
-            </AccordionDetails>
+            {mode === 'full' && <AccordionHeader>{title}</AccordionHeader>}
+            <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
         </Accordion>
     );
 };

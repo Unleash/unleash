@@ -1,7 +1,6 @@
 import type { AccessService } from '../services/access-service';
 import type AddonService from '../services/addon-service';
 import type ProjectService from '../features/project/project-service';
-import type StateService from '../services/state-service';
 import type StrategyService from '../services/strategy-service';
 import type TagTypeService from '../features/tag-type/tag-type-service';
 import type TagService from '../services/tag-service';
@@ -84,7 +83,6 @@ export interface IUnleashServices {
     resetTokenService: ResetTokenService;
     sessionService: SessionService;
     settingService: SettingService;
-    stateService: StateService;
     strategyService: StrategyService;
     tagService: TagService;
     tagTypeService: TagTypeService;

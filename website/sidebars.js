@@ -250,6 +250,7 @@ module.exports = {
                         'reference/feature-toggle-variants',
                         'reference/front-end-api',
                         'reference/impression-data',
+                        'reference/insights',
                         'reference/login-history',
                         'reference/maintenance-mode',
                         'reference/network-view',

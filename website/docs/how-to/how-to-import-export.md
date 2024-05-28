@@ -31,6 +31,12 @@ Be careful when using the `drop` parameter in production environments: cleaning 
 
 ### State Service {#state-service}
 
+:::caution Removal notice
+
+State Service has been removed as of Unleash 6.0
+
+:::
+
 Unleash returns a StateService when started, you can use this to import and export data at any time.
 
 ```javascript

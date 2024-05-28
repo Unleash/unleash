@@ -167,7 +167,6 @@ export * from './set-ui-config-schema';
 export * from './sort-order-schema';
 export * from './splash-request-schema';
 export * from './splash-response-schema';
-export * from './state-schema';
 export * from './strategies-schema';
 export * from './strategy-schema';
 export * from './strategy-variant-schema';

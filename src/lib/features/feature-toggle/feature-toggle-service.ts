@@ -1951,6 +1951,11 @@ class FeatureToggleService {
         const eligibleFeatureNames = eligibleFeatures.map(
             (toggle) => toggle.name,
         );
+
+        if (eligibleFeatures.length === 0) {
+            return;
+        }
+
         const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
         await this.featureToggleStore.batchDelete(eligibleFeatureNames);
 

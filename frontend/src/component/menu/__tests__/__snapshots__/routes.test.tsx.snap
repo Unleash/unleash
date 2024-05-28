@@ -127,10 +127,10 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "enterprise": false,
-    "flag": "executiveDashboardUI",
     "menu": {
       "mobile": true,
     },
+    "notFlag": "killInsightsUI",
     "path": "/insights",
     "title": "Insights",
     "type": "protected",

@@ -1,7 +1,4 @@
-import { Typography, styled } from '@mui/material';
-import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../../hooks/useProjectEnterpriseSettingsForm';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import {
     MultiSelectList,
     SingleSelectList,
@@ -17,63 +14,17 @@ import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
 import type { ReactNode } from 'react';
 import theme from 'themes/theme';
-
-const StyledForm = styled('form')(({ theme }) => ({
-    background: theme.palette.background.default,
-}));
-
-const StyledFormSection = styled('div')(({ theme }) => ({
-    '& + *': {
-        borderBlockStart: `1px solid ${theme.palette.divider}`,
-    },
-
-    padding: theme.spacing(6),
-}));
-
-const TopGrid = styled(StyledFormSection)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateAreas:
-        '"icon header" "icon project-name" "icon project-description"',
-    gridTemplateColumns: 'auto 1fr',
-    gap: theme.spacing(4),
-}));
-
-const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
-    fill: theme.palette.primary.main,
-    stroke: theme.palette.primary.main,
-}));
-
-const StyledHeader = styled(Typography)(({ theme }) => ({
-    gridArea: 'header',
-    alignSelf: 'center',
-    fontWeight: 'lighter',
-}));
-
-const ProjectNameContainer = styled('div')(({ theme }) => ({
-    gridArea: 'project-name',
-}));
-
-const ProjectDescriptionContainer = styled('div')(({ theme }) => ({
-    gridArea: 'project-description',
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    fieldset: { border: 'none' },
-}));
-
-const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    gap: theme.spacing(2),
-}));
-
-const FormActions = styled(StyledFormSection)(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(5),
-    justifyContent: 'flex-end',
-    flexFlow: 'row wrap',
-}));
+import {
+    FormActions,
+    OptionButtons,
+    ProjectDescriptionContainer,
+    ProjectNameContainer,
+    StyledForm,
+    StyledHeader,
+    StyledIcon,
+    StyledInput,
+    TopGrid,
+} from './NewProjectForm.styles';
 
 type FormProps = {
     projectId: string;

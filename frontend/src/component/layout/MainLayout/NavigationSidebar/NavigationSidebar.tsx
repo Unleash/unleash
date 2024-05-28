@@ -25,7 +25,7 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
                 mode='full'
                 onClick={onClick}
             />
-            <AdminNavigationList
+            <SecondaryNavigationList
                 routes={routes.adminRoutes}
                 mode='full'
                 onClick={onClick}
@@ -37,7 +37,7 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
 
 export const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2, 1, 6, 1),
+    padding: theme.spacing(2, 2, 6, 2),
 }));
 
 export const NavigationSidebar = () => {

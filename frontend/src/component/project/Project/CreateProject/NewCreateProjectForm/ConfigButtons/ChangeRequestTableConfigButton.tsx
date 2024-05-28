@@ -1,6 +1,5 @@
 import { type FC, useState, useMemo } from 'react';
 import { CombinedSelect, type CombinedSelectProps } from './CombinedSelect';
-import type { DropdownListProps } from './DropdownList';
 import { TableSearchInput } from './ConfigButtons.styles';
 import { InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
@@ -9,24 +8,24 @@ import { ChangeRequestTable } from './ChangeRequestTable';
 type ChangeRequestTableConfigButtonProps = Pick<
     CombinedSelectProps,
     'button' | 'onOpen' | 'onClose' | 'description'
-> &
-    Pick<DropdownListProps, 'search'> & {
-        updateProjectChangeRequestConfiguration: {
-            disableChangeRequests: (env: string) => void;
-            enableChangeRequests: (
-                env: string,
-                requiredApprovals: number,
-            ) => void;
-        };
-        activeEnvironments: {
-            name: string;
-            type: string;
-        }[];
-        projectChangeRequestConfiguration: Record<
-            string,
-            { requiredApprovals: number }
-        >;
+> & {
+    search: {
+        label: string;
+        placeholder: string;
     };
+    updateProjectChangeRequestConfiguration: {
+        disableChangeRequests: (env: string) => void;
+        enableChangeRequests: (env: string, requiredApprovals: number) => void;
+    };
+    activeEnvironments: {
+        name: string;
+        type: string;
+    }[];
+    projectChangeRequestConfiguration: Record<
+        string,
+        { requiredApprovals: number }
+    >;
+};
 
 export const ChangeRequestTableConfigButton: FC<
     ChangeRequestTableConfigButtonProps

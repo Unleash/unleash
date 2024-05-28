@@ -153,7 +153,7 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { mobile: true },
         notFlag: 'killInsightsUI',
-        enterprise: false,
+        enterprise: true,
     },
 
     // Applications

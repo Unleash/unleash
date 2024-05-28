@@ -6,7 +6,7 @@ import {
     StyledPopover,
     HiddenDescription,
     ButtonLabel,
-} from './SelectionButton.styles';
+} from './ConfigButtons.styles';
 
 export type CombinedSelectProps = {
     button: { label: string; icon: ReactNode; labelWidth?: string };

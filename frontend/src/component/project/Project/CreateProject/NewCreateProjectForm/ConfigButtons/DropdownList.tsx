@@ -5,7 +5,7 @@ import {
     StyledCheckbox,
     StyledListItem,
     StyledDropdownSearch,
-} from './SelectionButton.styles';
+} from './ConfigButtons.styles';
 
 const useSelectionManagement = (
     handleToggle: (value: string) => () => void,

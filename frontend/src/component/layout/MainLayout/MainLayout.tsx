@@ -60,20 +60,23 @@ const OldMainLayoutContent = styled(Grid)(({ theme }) => ({
 }));
 
 const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
-    width: '100%',
     minWidth: 0, // this is a fix for overflowing flex
-    margin: theme.spacing(0, 7),
+    width: '100%',
+    maxWidth: '1512px',
+    margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     [theme.breakpoints.down('lg')]: {
+        maxWidth: '1250px',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
-        margin: 0,
     },
-    [theme.breakpoints.up('xl')]: {
-        maxWidth: '1920px',
-        marginLeft: 'auto',
-        marginRight: 'auto',
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
     },
     minHeight: '94vh',
 }));

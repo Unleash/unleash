@@ -61,7 +61,7 @@ const projectModeOptions = [
     { value: 'private', label: 'private' },
 ];
 
-const selectionButtonData = {
+const configButtonData = {
     environments: {
         icon: <EnvironmentsIcon />,
         text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
@@ -182,7 +182,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
 
             <OptionButtons>
                 <MultiSelectList
-                    description={selectionButtonData.environments.text}
+                    description={configButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
                         label: env.name,
@@ -202,13 +202,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select project environments',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(selectionButtonData.environments)
+                        overrideDocumentation(configButtonData.environments)
                     }
                     onClose={clearDocumentationOverride}
                 />
 
                 <SingleSelectList
-                    description={selectionButtonData.stickiness.text}
+                    description={configButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
                         ...rest,
@@ -225,7 +225,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select default stickiness',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(selectionButtonData.stickiness)
+                        overrideDocumentation(configButtonData.stickiness)
                     }
                     onClose={clearDocumentationOverride}
                 />
@@ -234,7 +234,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <SingleSelectList
-                            description={selectionButtonData.mode.text}
+                            description={configButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
                                 setProjectMode(value);
@@ -249,7 +249,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 placeholder: 'Select project mode',
                             }}
                             onOpen={() =>
-                                overrideDocumentation(selectionButtonData.mode)
+                                overrideDocumentation(configButtonData.mode)
                             }
                             onClose={clearDocumentationOverride}
                         />
@@ -259,9 +259,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <TableSelect
-                            description={
-                                selectionButtonData.changeRequests.text
-                            }
+                            description={configButtonData.changeRequests.text}
                             activeEnvironments={
                                 availableChangeRequestEnvironments
                             }
@@ -284,7 +282,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             }
                             onOpen={() =>
                                 overrideDocumentation(
-                                    selectionButtonData.changeRequests,
+                                    configButtonData.changeRequests,
                                 )
                             }
                             onClose={clearDocumentationOverride}

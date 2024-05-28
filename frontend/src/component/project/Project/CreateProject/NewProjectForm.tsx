@@ -3,8 +3,8 @@ import Input from 'component/common/Input/Input';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import {
-    MultiselectList,
-    SingleselectList,
+    MultiSelectList,
+    SingleSelectList,
     TableSelect,
 } from './SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
@@ -222,7 +222,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
             </TopGrid>
 
             <OptionButtons>
-                <MultiselectList
+                <MultiSelectList
                     description={selectionButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
@@ -248,7 +248,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     onClose={clearDocumentationOverride}
                 />
 
-                <SingleselectList
+                <SingleSelectList
                     description={selectionButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
@@ -274,7 +274,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
-                        <SingleselectList
+                        <SingleSelectList
                             description={selectionButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {

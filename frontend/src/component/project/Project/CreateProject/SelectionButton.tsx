@@ -273,7 +273,7 @@ type SingleSelectListProps = Pick<
     | 'description'
 >;
 
-export const SingleselectList: FC<SingleSelectListProps> = ({
+export const SingleSelectList: FC<SingleSelectListProps> = ({
     onChange,
     ...props
 }) => {
@@ -312,7 +312,7 @@ type MultiselectListProps = Pick<
     onChange: (values: Set<string>) => void;
 };
 
-export const MultiselectList: FC<MultiselectListProps> = ({
+export const MultiSelectList: FC<MultiselectListProps> = ({
     selectedOptions,
     onChange,
     ...rest

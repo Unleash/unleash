@@ -38,13 +38,16 @@ const useProjectForm = (
     ] = useState(initialProjectChangeRequestConfiguration);
 
     const updateProjectEnvironments = (newState: Set<string>) => {
-        const filteredChangeRequestEnvs = Object.fromEntries(
-            Object.entries(projectChangeRequestConfiguration).filter(([env]) =>
-                newState.has(env),
-            ),
-        );
+        if (newState.size !== 0) {
+            const filteredChangeRequestEnvs = Object.fromEntries(
+                Object.entries(projectChangeRequestConfiguration).filter(
+                    ([env]) => newState.has(env),
+                ),
+            );
 
-        setProjectChangeRequestConfiguration(filteredChangeRequestEnvs);
+            setProjectChangeRequestConfiguration(filteredChangeRequestEnvs);
+        }
+
         setProjectEnvironments(newState);
     };
 
@@ -57,7 +60,10 @@ const useProjectForm = (
         },
 
         enableChangeRequests: (env: string, approvals: number) => {
-            if (projectEnvironments.has(env)) {
+            if (
+                projectEnvironments.has(env) ||
+                projectEnvironments.size === 0
+            ) {
                 setProjectChangeRequestConfiguration((previousState) => ({
                     ...previousState,
                     [env]: { requiredApprovals: approvals },

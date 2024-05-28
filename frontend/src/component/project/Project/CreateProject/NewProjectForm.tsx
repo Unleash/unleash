@@ -327,7 +327,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                               Object.keys(
                                                   projectChangeRequestConfiguration,
                                               ).length
-                                          } selected`
+                                          } environment configured`
                                         : 'Configure change requests',
                                 icon: <ChangeRequestIcon />,
                             }}

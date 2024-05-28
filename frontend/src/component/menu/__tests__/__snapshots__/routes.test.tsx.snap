@@ -126,7 +126,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "enterprise": false,
+    "enterprise": true,
     "menu": {
       "mobile": true,
     },

@@ -22,7 +22,7 @@ import type {
 import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { chartInfo } from './chart-info';
-import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IChartsProps {
     flags: InstanceInsightsSchema['flags'];

@@ -22,7 +22,7 @@ import {
 } from './NewProjectForm.styles';
 import { MultiSelectConfigButton } from './ConfigButtons/MultiSelectConfigButton';
 import { SingleSelectConfigButton } from './ConfigButtons/SingleSelectConfigButton';
-import { ChangeRequestTableConfigButton } from './ConfigButtons/TableConfigButton';
+import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 
 type FormProps = {
     projectId: string;

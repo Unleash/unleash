@@ -303,7 +303,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             description={
                                 selectionButtonData.changeRequests.text
                             }
-                            disabled={projectEnvironments.size === 0}
                             activeEnvironments={activeEnvironments
                                 .filter((env) =>
                                     projectEnvironments.size > 0

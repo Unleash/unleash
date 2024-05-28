@@ -299,8 +299,6 @@ export const MultiselectList2: FC<MultiselectListProps> = ({
     onChange,
     ...rest
 }) => {
-    // todo: add "select all" and "deselect all"
-
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
 
     const handleToggle = (value: string) => {
@@ -374,17 +372,6 @@ export const TableSelect2: FC<TableSelectProps> = ({
 
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
-
-    const open = () => {
-        setSearchText('');
-        setAnchorEl(ref.current);
-        onOpen();
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        onClose();
-    };
 
     const filteredEnvs = tableEnvs.filter((env) =>
         env.name.toLowerCase().includes(searchText.toLowerCase()),

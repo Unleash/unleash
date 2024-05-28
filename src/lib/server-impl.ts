@@ -19,7 +19,6 @@ import {
     type IUnleashOptions,
     type IUnleashServices,
     RoleName,
-    SYSTEM_USER_AUDIT,
 } from './types';
 
 import User, { type IAuditUser, type IUser } from './types/user';
@@ -98,13 +97,7 @@ async function createApp(
     };
 
     if (config.import.file) {
-        await services.stateService.importFile({
-            file: config.import.file,
-            dropBeforeImport: config.import.dropBeforeImport,
-            userName: 'import',
-            keepExisting: config.import.keepExisting,
-            auditUser: SYSTEM_USER_AUDIT,
-        });
+        // TODO: stateservice was here
     }
 
     if (

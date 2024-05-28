@@ -1,12 +1,12 @@
 import { type FC, useState, useMemo } from 'react';
-import { CombinedSelect, type CombinedSelectProps } from './CombinedSelect';
+import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
 import { TableSearchInput } from './ConfigButtons.styles';
 import { InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
 type ChangeRequestTableConfigButtonProps = Pick<
-    CombinedSelectProps,
+    ConfigButtonProps,
     'button' | 'onOpen' | 'onClose' | 'description'
 > & {
     search: {
@@ -94,7 +94,7 @@ export const ChangeRequestTableConfigButton: FC<
     };
 
     return (
-        <CombinedSelect
+        <ConfigButton
             button={button}
             {...props}
             anchorEl={anchorEl}
@@ -123,6 +123,6 @@ export const ChangeRequestTableConfigButton: FC<
                 enableEnvironment={onEnable}
                 disableEnvironment={onDisable}
             />
-        </CombinedSelect>
+        </ConfigButton>
     );
 };

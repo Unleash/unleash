@@ -1,9 +1,9 @@
 import { type FC, useState } from 'react';
-import { CombinedSelect, type CombinedSelectProps } from './CombinedSelect';
+import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
 import { DropdownList, type DropdownListProps } from './DropdownList';
 
 type SingleSelectConfigButtonProps = Pick<
-    CombinedSelectProps,
+    ConfigButtonProps,
     'button' | 'onOpen' | 'onClose' | 'description'
 > &
     Pick<DropdownListProps, 'search' | 'onChange' | 'options'>;
@@ -28,13 +28,13 @@ export const SingleSelectConfigButton: FC<SingleSelectConfigButtonProps> = ({
     };
 
     return (
-        <CombinedSelect
+        <ConfigButton
             {...props}
             preventOpen={recentlyClosed}
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
         >
             <DropdownList {...props} onChange={handleChange} />
-        </CombinedSelect>
+        </ConfigButton>
     );
 };

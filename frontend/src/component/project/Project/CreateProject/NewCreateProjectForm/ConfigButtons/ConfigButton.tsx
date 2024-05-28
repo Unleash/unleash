@@ -8,7 +8,7 @@ import {
     ButtonLabel,
 } from './ConfigButtons.styles';
 
-export type CombinedSelectProps = {
+export type ConfigButtonProps = {
     button: { label: string; icon: ReactNode; labelWidth?: string };
     onOpen?: () => void;
     onClose?: () => void;
@@ -18,7 +18,7 @@ export type CombinedSelectProps = {
     setAnchorEl: (el: HTMLDivElement | null | undefined) => void;
 };
 
-export const CombinedSelect: FC<PropsWithChildren<CombinedSelectProps>> = ({
+export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     button,
     onOpen = () => {},
     onClose = () => {},

@@ -1,9 +1,9 @@
 import { type FC, useState } from 'react';
-import { CombinedSelect, type CombinedSelectProps } from './CombinedSelect';
+import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
 import { DropdownList, type DropdownListProps } from './DropdownList';
 
 type MultiSelectConfigButtonProps = Pick<
-    CombinedSelectProps,
+    ConfigButtonProps,
     'button' | 'onOpen' | 'onClose' | 'description'
 > &
     Pick<DropdownListProps, 'search' | 'options'> & {
@@ -29,7 +29,7 @@ export const MultiSelectConfigButton: FC<MultiSelectConfigButtonProps> = ({
     };
 
     return (
-        <CombinedSelect {...rest} anchorEl={anchorEl} setAnchorEl={setAnchorEl}>
+        <ConfigButton {...rest} anchorEl={anchorEl} setAnchorEl={setAnchorEl}>
             <DropdownList
                 multiselect={{
                     selectedOptions,
@@ -37,6 +37,6 @@ export const MultiSelectConfigButton: FC<MultiSelectConfigButtonProps> = ({
                 onChange={handleToggle}
                 {...rest}
             />
-        </CombinedSelect>
+        </ConfigButton>
     );
 };

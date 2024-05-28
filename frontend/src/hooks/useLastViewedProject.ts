@@ -5,7 +5,7 @@ import { basePath } from 'utils/formatPath';
 export const useLastViewedProject = () => {
     const key = `${basePath}:unleash-lastViewedProject`;
 
-    const [lastViewed, setLastViewed] = useState(() => {
+    const [lastViewed, setLastViewed] = useState<string | undefined>(() => {
         return getLocalStorageItem(key);
     });
 

@@ -7,10 +7,12 @@ import { useExpanded } from './useExpanded';
 import {
     OtherLinksList,
     PrimaryNavigationList,
+    RecentProjectsNavigation,
     SecondaryNavigation,
     SecondaryNavigationList,
 } from './NavigationList';
 import { useInitialPathname } from './useInitialPathname';
+import { useLastViewedProject } from 'hooks/useLastViewedProject';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,
@@ -49,6 +51,9 @@ export const NavigationSidebar = () => {
 
     const [activeItem, setActiveItem] = useState(initialPathname);
 
+    const { lastViewed } = useLastViewedProject();
+    const showRecentProject = mode === 'full' && lastViewed;
+
     return (
         <StyledBox>
             <PrimaryNavigationList
@@ -71,21 +76,32 @@ export const NavigationSidebar = () => {
                     activeItem={activeItem}
                 />
             </SecondaryNavigation>
-            <SecondaryNavigation
-                expanded={expanded.includes('admin')}
-                onExpandChange={(expand) => {
-                    changeExpanded('admin', expand);
-                }}
-                mode={mode}
-                title='Admin'
-            >
-                <SecondaryNavigationList
-                    routes={routes.adminRoutes}
+            {mode === 'full' && (
+                <SecondaryNavigation
+                    expanded={expanded.includes('admin')}
+                    onExpandChange={(expand) => {
+                        changeExpanded('admin', expand);
+                    }}
                     mode={mode}
-                    onClick={setActiveItem}
-                    activeItem={activeItem}
+                    title='Admin'
+                >
+                    <SecondaryNavigationList
+                        routes={routes.adminRoutes}
+                        mode={mode}
+                        onClick={setActiveItem}
+                        activeItem={activeItem}
+                    />
+                </SecondaryNavigation>
+            )}
+
+            {showRecentProject && (
+                <RecentProjectsNavigation
+                    mode={mode}
+                    projectId={lastViewed}
+                    onClick={() => setActiveItem('/projects')}
                 />
-            </SecondaryNavigation>
+            )}
+
             <ShowHide
                 mode={mode}
                 onChange={() => {

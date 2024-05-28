@@ -1,9 +1,4 @@
 import type { ProjectMode } from '../../hooks/useProjectEnterpriseSettingsForm';
-import {
-    MultiSelectList,
-    SingleSelectList,
-    TableSelect,
-} from './ConfigButtons/SelectionButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';
@@ -25,6 +20,9 @@ import {
     StyledInput,
     TopGrid,
 } from './NewProjectForm.styles';
+import { MultiSelectList } from './ConfigButtons/MultiSelectConfigButton';
+import { SingleSelectList } from './ConfigButtons/SingleSelectConfigButton';
+import { TableSelect } from './ConfigButtons/TableConfigButton';
 
 type FormProps = {
     projectId: string;

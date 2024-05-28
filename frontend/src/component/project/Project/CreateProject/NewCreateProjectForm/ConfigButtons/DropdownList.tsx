@@ -1,11 +1,8 @@
 import Search from '@mui/icons-material/Search';
 import { type FC, useRef, useState } from 'react';
 import { InputAdornment, List, ListItemText } from '@mui/material';
-import {
-    StyledCheckbox,
-    StyledListItem,
-    StyledDropdownSearch,
-} from './ConfigButtons.styles';
+import { StyledDropdownSearch } from './shared.styles';
+import { StyledCheckbox, StyledListItem } from './DropdownList.styles';
 
 const useSelectionManagement = (
     handleToggle: (value: string) => () => void,

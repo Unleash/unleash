@@ -1,9 +1,9 @@
 import { type FC, useState, useMemo } from 'react';
 import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
-import { TableSearchInput } from './ConfigButtons.styles';
 import { InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 import { ChangeRequestTable } from './ChangeRequestTable';
+import { TableSearchInput } from './ChangeRequestTableConfigButton.styles';
 
 type ChangeRequestTableConfigButtonProps = Pick<
     ConfigButtonProps,

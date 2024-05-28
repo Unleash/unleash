@@ -79,7 +79,7 @@ class ConfigController extends Controller {
             async () =>
                 this.clientInstanceService.usesSdkOlderThan(
                     'unleash-edge',
-                    '17.0.0',
+                    '19.1.3',
                 ),
             {
                 promise: true,

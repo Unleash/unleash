@@ -16,7 +16,7 @@ This endpoint has been deprecated
 
 `GET http://unleash.host.com/api/admin/metrics/seen-toggles`
 
-This enpoints returns a list of applications and what toogles unleash has seen for each application. It will only guarantee toggles reported by client applications within the last hour, but will in most cases remember seen toggles for applications longer.
+This enpoints returns a list of applications and what toogles unleash has seen for each application. It will only guarantee flags reported by client applications within the last hour, but will in most cases remember seen flags for applications longer.
 
 **Example response:**
 
@@ -24,12 +24,12 @@ This enpoints returns a list of applications and what toogles unleash has seen f
 [
   {
     "appName": "demo-app",
-    "seenToggles": ["add-feature-2", "toggle-2", "toggle-3"],
+    "seenToggles": ["add-feature-2", "flag-2", "flag-3"],
     "metricsCount": 127
   },
   {
     "appName": "demo-app-2",
-    "seenToggles": ["add-feature-2", "toggle-2", "toggle-3"],
+    "seenToggles": ["add-feature-2", "flag-2", "flag-3"],
     "metricsCount": 21
   }
 ]
@@ -39,13 +39,13 @@ This enpoints returns a list of applications and what toogles unleash has seen f
 
 - **appName** - Name of the application seen by unleash-server
 - **seenToggles** - array of toggles names seen by unleash-server for this application
-- **metricsCount** - number of metrics counted across all toggles for this application.
+- **metricsCount** - number of metrics counted across all flags for this application.
 
 ### Feature-Toggles metrics {#feature-toggles-metrics}
 
 `GET http://unleash.host.com/api/admin/metrics/feature-toggles`
 
-This endpoint gives _last minute_ and _last hour_ metrics for all active toggles. This is based on metrics reported by client applications. Yes is the number of times a given feature toggle was evaluated to enabled in a client application, and no is the number it was evaluated to false.
+This endpoint gives _last minute_ and _last hour_ metrics for all active flags. This is based on metrics reported by client applications. Yes is the number of times a given feature flag was evaluated to enabled in a client application, and no is the number it was evaluated to false.
 
 **Example response:**
 
@@ -56,11 +56,11 @@ This endpoint gives _last minute_ and _last hour_ metrics for all active toggles
       "yes": 0,
       "no": 527
     },
-    "toggle-2": {
+    "flag-2": {
       "yes": 265,
       "no": 85
     },
-    "toggle-3": {
+    "flag-3": {
       "yes": 257,
       "no": 93
     }
@@ -70,11 +70,11 @@ This endpoint gives _last minute_ and _last hour_ metrics for all active toggles
       "yes": 0,
       "no": 527
     },
-    "toggle-2": {
+    "flag-2": {
       "yes": 265,
       "no": 85
     },
-    "toggle-3": {
+    "flag-3": {
       "yes": 257,
       "no": 93
     }
@@ -84,8 +84,8 @@ This endpoint gives _last minute_ and _last hour_ metrics for all active toggles
 
 **Fields:**
 
-- **lastHour** - Hour projection collected metrics for all feature toggles.
-- **lastMinute** - Minute projection collected metrics for all feature toggles.
+- **lastHour** - Hour projection collected metrics for all feature flags.
+- **lastMinute** - Minute projection collected metrics for all feature flags.
 
 ### Applications {#applications}
 
@@ -126,7 +126,7 @@ You can also specify the query param: _strategyName_, which will return all appl
 
 `GET http://unleash.host.com/api/admin/metrics/applications/:appName`
 
-This endpoint gives insight into details about a client application, such as instances, strategies implemented and seen toggles.
+This endpoint gives insight into details about a client application, such as instances, strategies implemented and seen flags.
 
 ```json
 {
@@ -151,7 +151,7 @@ This endpoint gives insight into details about a client application, such as ins
       "strategies": ["default", "extra"]
     }
   ],
-  "seenToggles": ["add-feature-2", "toggle-2", "toggle-3"]
+  "seenToggles": ["add-feature-2", "flag-2", "flag-3"]
 }
 ```
 
@@ -165,7 +165,7 @@ This endpoint has been deprecated
 
 `GET http://unleash.host.com/api/admin/metrics/seen-apps`
 
-This endpoint gives insight into details about application seen per feature toggle.
+This endpoint gives insight into details about application seen per feature flag.
 
 ```json
 {

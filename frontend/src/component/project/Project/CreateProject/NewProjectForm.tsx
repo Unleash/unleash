@@ -72,6 +72,7 @@ const FormActions = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(5),
     justifyContent: 'flex-end',
+    flexFlow: 'row wrap',
 }));
 
 type FormProps = {
@@ -173,6 +174,15 @@ export const NewProjectForm: React.FC<FormProps> = ({
         },
     };
 
+    const numberOfConfiguredChangeRequestEnvironments = Object.keys(
+        projectChangeRequestConfiguration,
+    ).length;
+    const changeRequestSelectorLabel =
+        numberOfConfiguredChangeRequestEnvironments > 1
+            ? `${numberOfConfiguredChangeRequestEnvironments} environments configured`
+            : numberOfConfiguredChangeRequestEnvironments === 1
+              ? `1 environment  configured`
+              : 'Configure change requests';
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -210,7 +220,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         className='description'
                         label='Description (optional)'
                         multiline
-                        maxRows={20}
+                        maxRows={3}
                         value={projectDesc}
                         onChange={(e) => setProjectDesc(e.target.value)}
                         data-testid={PROJECT_DESCRIPTION_INPUT}
@@ -238,6 +248,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             projectEnvironments.size > 0
                                 ? `${projectEnvironments.size} selected`
                                 : 'All environments',
+                        labelWidth: `${'all environments'.length}ch`,
                         icon: <EnvironmentsIcon />,
                     }}
                     search={{
@@ -285,6 +296,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             button={{
                                 label: projectMode,
                                 icon: <ProjectModeIcon />,
+                                labelWidth: `${`protected`.length}ch`,
                             }}
                             search={{
                                 label: 'Filter project mode options',
@@ -317,17 +329,11 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 updateProjectChangeRequestConfig
                             }
                             button={{
-                                label:
-                                    Object.keys(
-                                        projectChangeRequestConfiguration,
-                                    ).length > 0
-                                        ? `${
-                                              Object.keys(
-                                                  projectChangeRequestConfiguration,
-                                              ).length
-                                          } selected`
-                                        : 'Configure change requests',
+                                label: changeRequestSelectorLabel,
                                 icon: <ChangeRequestIcon />,
+                                labelWidth: `${
+                                    'nn environments configured'.length
+                                }ch`,
                             }}
                             search={{
                                 label: 'Filter environments',

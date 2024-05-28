@@ -18,7 +18,6 @@ import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
-import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
 import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
 import { EditIntegration } from 'component/integrations/EditIntegration/EditIntegration';
 import { CopyFeatureToggle } from 'component/feature/CopyFeature/CopyFeature';
@@ -111,14 +110,6 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/features2/:featureId',
-        parent: '/features',
-        title: ':featureId',
-        component: RedirectFeatureView,
-        type: 'protected',
-        menu: {},
-    },
-    {
         path: '/projects/:projectId/*',
         parent: '/projects',
         title: ':projectId',
@@ -136,14 +127,6 @@ export const routes: IRoute[] = [
     },
 
     // Features
-    {
-        path: '/features/:activeTab/:featureId',
-        parent: '/features',
-        title: ':featureId',
-        component: RedirectFeatureView,
-        type: 'protected',
-        menu: {},
-    },
     {
         path: '/search',
         title: 'Search',
@@ -169,7 +152,7 @@ export const routes: IRoute[] = [
         component: Insights,
         type: 'protected',
         menu: { mobile: true },
-        flag: 'executiveDashboardUI',
+        notFlag: 'killInsightsUI',
         enterprise: false,
     },
 

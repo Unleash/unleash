@@ -167,14 +167,24 @@ module.exports = {
                     ],
                 },
                 {
-                    type: 'doc',
-                    label: 'Serverless',
-                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                    type: 'category',
+                    label: '.NET',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/dotnet/dotnet-examples',
+                        },
+                    ],
                 },
                 {
                     type: 'doc',
-                    label: '.NET',
-                    id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                    label: 'Serverless',
+                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
                 },
                 {
                     type: 'doc',
@@ -248,6 +258,7 @@ module.exports = {
                         'reference/public-signup',
                         'reference/projects',
                         'reference/project-collaboration-mode',
+                        'reference/provisioning',
                         'reference/rbac',
                         'reference/search-operators',
                         'reference/segments',
@@ -485,6 +496,19 @@ module.exports = {
                                 title: 'How-to: Single Sign-On',
                                 description: 'Single Sign-On how-to guides.',
                                 slug: '/how-to/sso',
+                            },
+                        },
+                        {
+                            label: 'Automatic provisioning',
+                            items: [
+                                'how-to/how-to-setup-provisioning-with-okta',
+                            ],
+                            type: 'category',
+                            link: {
+                                type: 'generated-index',
+                                title: 'How to: Provisioning',
+                                description: 'Provisioning how-to guides.',
+                                slug: '/how-to/provisioning',
                             },
                         },
                     ],

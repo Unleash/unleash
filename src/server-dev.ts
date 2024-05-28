@@ -43,8 +43,7 @@ process.nextTick(async () => {
                         stripHeadersOnAPI: true,
                         celebrateUnleash: true,
                         featureSearchFeedbackPosting: true,
-                        executiveDashboard: true,
-                        executiveDashboardUI: true,
+                        killInsightsUI: false,
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,
@@ -56,7 +55,7 @@ process.nextTick(async () => {
                         createProjectWithEnvironmentConfig: true,
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
-                        navigationSidebar: true,
+                        navigationSidebar: false,
                     },
                 },
                 authentication: {

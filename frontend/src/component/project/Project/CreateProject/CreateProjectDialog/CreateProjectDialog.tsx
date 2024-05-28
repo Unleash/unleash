@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, styled } from '@mui/material';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
-interface ICreateProjectDialogueProps {
+interface ICreateProjectDialogProps {
     open: boolean;
     onClose: () => void;
 }
@@ -42,10 +42,10 @@ const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     stroke: theme.palette.common.white,
 }));
 
-export const CreateProjectDialogue = ({
+export const CreateProjectDialog = ({
     open,
     onClose,
-}: ICreateProjectDialogueProps) => {
+}: ICreateProjectDialogProps) => {
     const { createProject, loading } = useProjectApi();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
@@ -143,6 +143,7 @@ export const CreateProjectDialogue = ({
                 documentationLink={documentation.link?.url}
                 documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}
+                useFixedSidebar
             >
                 <NewProjectForm
                     errors={errors}

@@ -1,29 +1,18 @@
 import type { Response } from 'express';
 import Controller from '../controller';
-import type {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
-} from '../../types';
+import type { IUnleashConfig, IUnleashServices } from '../../types';
 import type { Logger } from '../../logger';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import type { IAuthRequest, RequestBody } from '../unleash-types';
+import type { RequestBody } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     validatedEdgeTokensSchema,
     type ValidatedEdgeTokensSchema,
 } from '../../openapi/spec/validated-edge-tokens-schema';
-import type ClientInstanceService from '../../features/metrics/instance/instance-service';
 import type EdgeService from '../../services/edge-service';
 import type { OpenApiService } from '../../services/openapi-service';
-import {
-    emptyResponse,
-    getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
-import type ClientMetricsServiceV2 from '../../features/metrics/client-metrics/metrics-service-v2';
-import { clientMetricsEnvBulkSchema } from '../../features/metrics/shared/schema';
+import { getStandardResponses } from '../../openapi/util/standard-responses';
 import type { TokenStringListSchema } from '../../openapi';
 
 export default class EdgeController extends Controller {
@@ -33,34 +22,17 @@ export default class EdgeController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private metricsV2: ClientMetricsServiceV2;
-
-    private clientInstanceService: ClientInstanceService;
-
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         {
             edgeService,
             openApiService,
-            clientMetricsServiceV2,
-            clientInstanceService,
-        }: Pick<
-            IUnleashServices,
-            | 'edgeService'
-            | 'openApiService'
-            | 'clientMetricsServiceV2'
-            | 'clientInstanceService'
-        >,
+        }: Pick<IUnleashServices, 'edgeService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('edge-api/index.ts');
         this.edgeService = edgeService;
         this.openApiService = openApiService;
-        this.metricsV2 = clientMetricsServiceV2;
-        this.clientInstanceService = clientInstanceService;
-        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -83,26 +55,6 @@ export default class EdgeController extends Controller {
                 }),
             ],
         });
-
-        this.route({
-            method: 'post',
-            path: '/metrics',
-            handler: this.bulkMetrics,
-            permission: NONE, // should have a permission but not bound to any environment
-            middleware: [
-                this.openApiService.validPath({
-                    tags: ['Edge'],
-                    summary: 'Send metrics from Edge',
-                    description: `This operation accepts batched metrics from Edge. Metrics will be inserted into Unleash's metrics storage`,
-                    operationId: 'bulkMetrics',
-                    requestBody: createRequestSchema('bulkMetricsSchema'),
-                    responses: {
-                        202: emptyResponse,
-                        ...getStandardResponses(400, 413, 415),
-                    },
-                }),
-            ],
-        });
     }
 
     async getValidTokens(
@@ -116,43 +68,5 @@ export default class EdgeController extends Controller {
             validatedEdgeTokensSchema.$id,
             tokens,
         );
-    }
-
-    async bulkMetrics(
-        req: IAuthRequest<void, void, BulkMetricsSchema>,
-        res: Response<void>,
-    ): Promise<void> {
-        if (this.flagResolver.isEnabled('edgeBulkMetrics')) {
-            const { body, ip: clientIp } = req;
-            const { metrics, applications } = body;
-
-            try {
-                const promises: Promise<void>[] = [];
-                for (const app of applications) {
-                    promises.push(
-                        this.clientInstanceService.registerClient(
-                            app,
-                            clientIp,
-                        ),
-                    );
-                }
-                if (metrics && metrics.length > 0) {
-                    const data =
-                        await clientMetricsEnvBulkSchema.validateAsync(metrics);
-                    promises.push(this.metricsV2.registerBulkMetrics(data));
-                }
-                await Promise.all(promises);
-                res.status(202).end();
-            } catch (e) {
-                res.status(400).end();
-            }
-        } else {
-            // @ts-expect-error Expected result here is void, but since we want to communicate extra information in our 404, we allow this to avoid type-checking
-            res.status(404).json({
-                status: 'disabled',
-                reason: 'disabled by killswitch',
-                help: 'You should upgrade Edge to the most recent version to not lose metrics',
-            });
-        }
     }
 }

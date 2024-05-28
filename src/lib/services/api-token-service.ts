@@ -185,10 +185,6 @@ export class ApiTokenService {
         return this.store.getAll();
     }
 
-    public async getAllActiveTokens(): Promise<IApiToken[]> {
-        return this.store.getAllActive();
-    }
-
     private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
         const tokenCount = await this.store.count();
         if (tokenCount > 0) {

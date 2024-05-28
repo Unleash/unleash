@@ -5,7 +5,7 @@ title: Microsoft Teams
 
 > This feature was introduced in _Unleash v4.0.0_.
 
-The MicrosoftTeams integration allows Unleash to post Updates when a feature toggle is updated. To set up this integration, you need to set up a webhook connector for your channel. You can follow [Creating an Incoming Webhook for a channel](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) on how to do that.
+The MicrosoftTeams integration allows Unleash to post Updates when a feature flag is updated. To set up this integration, you need to set up a webhook connector for your channel. You can follow [Creating an Incoming Webhook for a channel](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) on how to do that.
 
 The Microsoft Teams integration will perform a single retry if the HTTP POST against the Microsoft Teams Webhook URL fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
 

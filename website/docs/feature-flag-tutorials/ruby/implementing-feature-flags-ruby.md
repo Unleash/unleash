@@ -8,24 +8,21 @@ Hello! In this tutorial we’ll show you how to add feature flags to your Ruby a
 
 In a classic tutorial fashion, we’ll get a list of planets from the [Star Wars API](https://swapi.dev/), with just Ruby (i.e., not Ruby on Rails). We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
-- [Prerequisites](#prerequisites)
-- [1. Best practices for backend apps with Unleash](#1-best-practices-for-backend-apps-with-unleash)
-- [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
-- [3. Grab a list of planets from the Star Wars API](#3-grab-a-list-of-planets-from-the-star-wars-api)
-- [4. Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
-- [5. Add Unleash to your Ruby app](#5-add-unleash-to-your-ruby-app)
-- [6. Verify the toggle experience](#6-verify-the-toggle-experience)
-- [Conclusion](#conclusion)
-
+1. [Best practices for backend apps with Unleash](#1-best-practices-for-backend-apps-with-unleash)
+2. [Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
+3. [Grab a list of planets from the Star Wars API](#3-grab-a-list-of-planets-from-the-star-wars-api)
+4. [Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
+5. [Add Unleash to your Ruby app](#5-add-unleash-to-your-ruby-app)
+6. [Verify the feature flag experience](#6-verify-the-toggle-experience)
 
 ## Prerequisites
 
 For this tutorial, you’ll need the following:
 
-- Ruby v3+
-- Git
-- Docker and Docker Compose
-- (Optional) Bundler, to manage your gemfile
+-   Ruby v3+
+-   Git
+-   Docker and Docker Compose
+-   (Optional) Bundler, to manage your gemfile
 
 ![architecture diagram for our implementation](./diagram.png)
 
@@ -37,8 +34,8 @@ Ruby is a backend language, so there are special considerations to plan around w
 
 Most importantly, you must:
 
-- Limit feature flag payloads for scalability, security, and efficiency
-- Use graceful degradation where possible to improve the resiliency of your architecture.
+-   Limit feature flag payloads for scalability, security, and efficiency
+-   Use graceful degradation where possible to improve the resiliency of your architecture.
 
 For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
@@ -64,7 +61,7 @@ Username: admin
 Password: unleash4all
 ```
 
-Click the ‘New feature toggle’ button to create a new feature flag.
+Click the ‘New feature flag’ button to create a new feature flag.
 
 ![Create a new feature flag](./new-ff.png)
 
@@ -177,8 +174,8 @@ Now, let’s connect our project to Unleash so that you can toggle that feature 
 
 You’ll need 2 things:
 
-- The URL of your Unleash instance’s API. So far it’s `[http://localhost:4242/api/](http://localhost:4242/api/)` for your local version. You’ll want to replace it with your remote instance.
-- The API token we created on our Unleash instance, feel free to create another one if you can’t find it.
+-   The URL of your Unleash instance’s API. So far it’s `[http://localhost:4242/api/](http://localhost:4242/api/)` for your local version. You’ll want to replace it with your remote instance.
+-   The API token we created on our Unleash instance, feel free to create another one if you can’t find it.
 
 With these 2, you can initialize your Unleash client as follows:
 
@@ -225,8 +222,8 @@ Now that we’ve connected our project to Unleash and grabbed our feature flag, 
 
 All done! Now you know how to add feature flags with Unleash in Ruby. You’ve learned how to:
 
-- Toggle between a REST and a GraphQL endpoint based on a feature flag
-- Install Unleash and create/enable a feature flag
-- Grab the value of a feature flag with the Ruby SDK
+-   Toggle between a REST and a GraphQL endpoint based on a feature flag
+-   Install Unleash and create/enable a feature flag
+-   Grab the value of a feature flag with the Ruby SDK
 
 Thank you

@@ -1099,41 +1099,6 @@ class FeatureToggleService {
         return features as FeatureConfigurationClient[];
     }
 
-    /**
-     * @deprecated Legacy!
-     *
-     * Used to retrieve metadata of all feature flags defined in Unleash.
-     * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
-     * @param userId - Used to find / mark features as favorite based on users preferences
-     * @param archived - Return archived or active flags
-     * @returns
-     */
-    async getFeatureToggles(
-        query?: IFeatureToggleQuery,
-        userId?: number,
-        archived: boolean = false,
-    ): Promise<FeatureToggle[]> {
-        // Remove with with feature flag
-        const features = await this.featureToggleStore.getFeatureToggleList(
-            query,
-            userId,
-            archived,
-        );
-
-        if (userId) {
-            const projectAccess =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-            return projectAccess.mode === 'all'
-                ? features
-                : features.filter((f) =>
-                      projectAccess.projects.includes(f.project),
-                  );
-        }
-        return features;
-    }
-
     async getFeatureOverview(
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
@@ -1949,10 +1914,6 @@ class FeatureToggleService {
         );
     }
 
-    async getArchivedFeatures(): Promise<FeatureToggle[]> {
-        return this.getFeatureToggles({}, undefined, true);
-    }
-
     // TODO: add project id.
     async deleteFeature(
         featureName: string,
@@ -1990,6 +1951,11 @@ class FeatureToggleService {
         const eligibleFeatureNames = eligibleFeatures.map(
             (toggle) => toggle.name,
         );
+
+        if (eligibleFeatures.length === 0) {
+            return;
+        }
+
         const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
         await this.featureToggleStore.batchDelete(eligibleFeatureNames);
 

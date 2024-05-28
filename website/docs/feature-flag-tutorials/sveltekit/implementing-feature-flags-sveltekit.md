@@ -41,11 +41,11 @@ First, a global store that will contain our habits and their completion dates. J
 import { writable } from "svelte/store";
 
 export const habitStore = writable([
-  {
-    id: 1,
-    name: "Walk 10k steps",
-    completedDays: [],
-  },
+    {
+        id: 1,
+        name: "Walk 10k steps",
+        completedDays: [],
+    },
 ]);
 ```
 
@@ -155,8 +155,8 @@ Now we have a fully functioning Svelte app in all its glory! Essentially, it's a
 
 We have the basics of the app set up, but we could make it more user-friendly. Let's add some more functionality:
 
-- Add the ability for users create their own habits
-- Limit the number of habits a user can create to a certain amount so we can turn this into a commercial product.
+-   Add the ability for users create their own habits
+-   Limit the number of habits a user can create to a certain amount so we can turn this into a commercial product.
 
 Let's do all of this in another component named `AddHabit.svelte`.
 
@@ -205,10 +205,10 @@ Let's do all of this in another component named `AddHabit.svelte`.
 
 What's happening here? A few things:
 
-- An input and a button to add new habits to the store, until an arbitrary limit is reached
-- A `maxHabits` prop is used to determine that limit
-- When this maximum limit is reached, a modal dialog opens
-- We reset the form after submission to clear the input
+-   An input and a button to add new habits to the store, until an arbitrary limit is reached
+-   A `maxHabits` prop is used to determine that limit
+-   When this maximum limit is reached, a modal dialog opens
+-   We reset the form after submission to clear the input
 
 <video
   width="600px"
@@ -232,7 +232,7 @@ Next, create a feature flag called `maxHabitsIncreased`.
 
 Based on whether this flag is enabled or not, we'll set the `maxHabits` value to either 6 or 2. You could set this directly in a flag value if you wanted as well.
 
-### Basic toggle
+### Configure your app with Svelke SDK
 
 We'll use the Svelte SDK to wrap a context provider around `App.svelte` like so:
 
@@ -269,6 +269,6 @@ Now that our SDK is setup, we can modify our `App.svelte` to set the value of th
 
 You now have a SvelteKit app with feature flags. More precisely, you've learned:
 
-- How to make a habit tracking app with SvelteKit
-- How to add a feature flag to a full stack app using Unleash
-- The different approaches to feature flagging on a static vs SSR context
+-   How to make a habit tracking app with SvelteKit
+-   How to add a feature flag to a full stack app using Unleash
+-   The different approaches to feature flagging on a static vs SSR context

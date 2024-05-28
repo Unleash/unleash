@@ -24,18 +24,18 @@ The event properties are described in short in the table below. For more info re
 | Property | Description |
 | --- | --- |
 | `createdAt` | The time the event happened as a RFC 3339-conformant timestamp. |
-| `data` | Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable. |
-| `environment` | The feature toggle environment the event relates to, if applicable. |
-| `featureName` | The name of the feature toggle the event relates to, if applicable. |
+| `data` | Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable. |
+| `environment` | The feature flag environment the event relates to, if applicable. |
+| `featureName` | The name of the feature flag the event relates to, if applicable. |
 | `id` | The ID of the event. An increasing natural number. |
 | `preData` | Data relating to the previous state of the event's subject. |
 | `project` | The project the event relates to, if applicable. |
 | `tags` | Any tags related to the event, if applicable. |
 | `type` | The event type, as described in the rest of this section. |
 
-## Feature toggle events
+## Feature flag events
 
-These events pertain to feature toggles and their life cycle.
+These events pertain to feature flags and their life cycle.
 
 ### `feature-created`
 
@@ -49,7 +49,7 @@ This event fires when you create a feature. The `data` property contains the det
   "createdAt": "2022-05-31T13:32:20.560Z",
   "data": {
     "name": "new-feature",
-    "description": "Toggle description",
+    "description": "Flag description",
     "type": "release",
     "project": "my-project",
     "stale": false,
@@ -74,7 +74,7 @@ This event type was replaced by more granular event types in Unleash 4.3. From U
 
 :::
 
-This event fires when a feature gets updated in some way. The `data` property contains the new state of the toggle. This is a legacy event, so it does not populate `preData` property.
+This event fires when a feature gets updated in some way. The `data` property contains the new state of the flag. This is a legacy event, so it does not populate `preData` property.
 
 ```json title="example event: feature-updated"
 {
@@ -84,7 +84,7 @@ This event fires when a feature gets updated in some way. The `data` property co
   "createdAt": "2022-05-31T13:32:20.560Z",
   "data": {
     "name": "new-feature",
-    "description": "Toggle description",
+    "description": "Flag description",
     "type": "release",
     "project": "my-project",
     "stale": false,
@@ -103,7 +103,7 @@ This event fires when a feature gets updated in some way. The `data` property co
 
 ### `feature-deleted`
 
-This event fires when you delete a feature toggle. The `preData` property contains the deleted toggle data.
+This event fires when you delete a feature flag. The `preData` property contains the deleted flag data.
 
 ```json title="example event: feature-deleted"
 {
@@ -120,7 +120,7 @@ This event fires when you delete a feature toggle. The `preData` property contai
     "variants": [],
     "createdAt": "2022-05-31T13:32:20.547Z",
     "lastSeenAt": null,
-    "description": "Toggle description",
+    "description": "Flag description",
     "impressionData": true
   },
   "tags": [],
@@ -132,7 +132,7 @@ This event fires when you delete a feature toggle. The `preData` property contai
 
 ### `feature-archived`
 
-This event fires when you archive a toggle.
+This event fires when you archive a flag.
 
 ```json title="example event: feature-archived"
 {
@@ -151,7 +151,7 @@ This event fires when you archive a toggle.
 
 ### `feature-revived`
 
-This event fires when you revive an archived feature toggle (when you take a toggle out from the archive).
+This event fires when you revive an archived feature flag (when you take a flag out from the archive).
 
 ```json title="example-event: feature-revived"
 {
@@ -170,9 +170,9 @@ This event fires when you revive an archived feature toggle (when you take a tog
 
 ### `feature-metadata-updated`
 
-This event fires when a feature's metadata (its description, toggle type, or impression data settings) are changed. The `data` property contains the new toggle data. The `preData` property contains the toggle's previous data.
+This event fires when a feature's metadata (its description, flag type, or impression data settings) are changed. The `data` property contains the new flag data. The `preData` property contains the flag's previous data.
 
-The below example changes the toggle's type from _release_ to _experiment_.
+The below example changes the flag's type from _release_ to _experiment_.
 
 ```json title="example event: feature-metadata-updated"
 {
@@ -182,7 +182,7 @@ The below example changes the toggle's type from _release_ to _experiment_.
   "createdAt": "2022-05-31T13:35:25.244Z",
   "data": {
     "name": "new-feature",
-    "description": "Toggle description",
+    "description": "Flag description",
     "type": "experiment",
     "project": "my-project",
     "stale": false,
@@ -199,7 +199,7 @@ The below example changes the toggle's type from _release_ to _experiment_.
     "variants": [],
     "createdAt": "2022-05-31T13:32:20.547Z",
     "lastSeenAt": null,
-    "description": "Toggle description",
+    "description": "Flag description",
     "impressionData": true
   },
   "tags": [],
@@ -284,7 +284,7 @@ This event fires when you add a tag to a feature. The `data` property contains t
 
 ### `feature-untagged`
 
-This event fires when you remove a tag from a toggle. The `data` property contains the tag that was removed.
+This event fires when you remove a tag from a flag. The `data` property contains the tag that was removed.
 
 ```json title="example event: feature-untagged"
 {
@@ -580,7 +580,7 @@ This event fires when you drop all existing tags as part of a configuration impo
 
 :::
 
-This event fires when Unleash marks a feature toggle as potentially stale. Feature toggles are marked as potentially stale when they exceed the expected lifetime of their [feature toggle type](/reference/feature-toggle-types.md).
+This event fires when Unleash marks a feature flag as potentially stale. Feature flags are marked as potentially stale when they exceed the expected lifetime of their [feature flag type](/reference/feature-toggle-types.md).
 
 ``` json title="Example event when my-feature is marked as potentially stale"
 {
@@ -724,7 +724,7 @@ This event fires when you import a strategy as part of an import job. The `data`
   "createdAt": "2022-06-03T11:30:40.583Z",
   "data": {
     "name": "gradualRolloutSessionId",
-    "description": "Gradually activate feature toggle. Stickiness based on session id.",
+    "description": "Gradually activate feature flag. Stickiness based on session id.",
     "parameters": [
       {
         "name": "percentage",
@@ -735,7 +735,7 @@ This event fires when you import a strategy as part of an import job. The `data`
       {
         "name": "groupId",
         "type": "string",
-        "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+        "description": "Used to define a activation groups, which allows you to correlate across feature flags.",
         "required": true
       }
     ],

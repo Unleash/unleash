@@ -188,7 +188,7 @@ test('Trying to reset password with same token twice does not work', async () =>
         })
         .expect(401)
         .expect((res) => {
-            expect(res.body.details[0].description).toBeTruthy();
+            expect(res.body.details[0].message).toBeTruthy();
         });
 });
 
@@ -206,7 +206,7 @@ test('Calling validate endpoint with already existing session should destroy ses
             email: 'user@mail.com',
         })
         .expect(200);
-    await request.get('/api/admin/features').expect(200);
+    await request.get('/api/admin/projects').expect(200);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
         adminUser.username!,
@@ -214,7 +214,7 @@ test('Calling validate endpoint with already existing session should destroy ses
     const relative = getBackendResetUrl(url);
 
     await request.get(relative).expect(200).expect('Content-Type', /json/);
-    await request.get('/api/admin/features').expect(401); // we no longer should have a valid session
+    await request.get('/api/admin/projects').expect(401); // we no longer should have a valid session
     await destroy();
 });
 
@@ -240,7 +240,7 @@ test('Calling reset endpoint with already existing session should logout/destroy
             email: 'user@mail.com',
         })
         .expect(200);
-    await request.get('/api/admin/features').expect(200); // If we login we can access features endpoint
+    await request.get('/api/admin/projects').expect(200); // If we login we can access projects endpoint
     await request
         .post('/auth/reset/password')
         .send({
@@ -248,7 +248,7 @@ test('Calling reset endpoint with already existing session should logout/destroy
             password,
         })
         .expect(200);
-    await request.get('/api/admin/features').expect(401); // we no longer have a valid session after using the reset password endpoint
+    await request.get('/api/admin/projects').expect(401); // we no longer have a valid session after using the reset password endpoint
     await destroy();
 });
 

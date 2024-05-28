@@ -289,7 +289,7 @@ test('should not create token for invalid projectId', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].description).toMatch(
+            expect(res.body.details[0].message).toMatch(
                 /bogus-project-something/,
             );
         });
@@ -306,7 +306,7 @@ test('should not create token for invalid environment', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].description).toMatch(
+            expect(res.body.details[0].message).toMatch(
                 /bogus-environment-something/,
             );
         });

@@ -24,7 +24,7 @@ Here are the steps we will cover in this tutorial:
 3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
 4. [Add Unleash to a Python Flask app](#4-add-unleash-to-a-python-app)
 5. [Toggle the database deletion route](#5-use-a-feature-flag-to-roll-out-a-delete-method)
-6. [Verify the toggle experience](#6-verify-the-toggle-experience)
+6. [Verify the feature flag experience](#6-verify-the-toggle-experience)
 7. [Improve feature flag error handling](#7-improve-a-feature-flag-implementation-with-error-handling)
 
 Watch the video tutorial and follow along with the code from this documentation.
@@ -82,7 +82,7 @@ Username: admin
 Password: unleash4all
 ```
 
-Click the ‘New feature toggle’ button to create a new feature flag. Once you have created a flag, you will see it here.
+Click the ‘New feature flag’ button to create a new feature flag. Once you have created a flag, you will see it here.
 
 ![Image of the Unleash platform to create a new feature flag](/img/tutorial-create-flag.png)
 
@@ -90,7 +90,7 @@ Click the ‘New feature toggle’ button to create a new feature flag. Once you
 
 Next, you will create a feature flag and turn it on for your Python app.
 
-In the Create Toggle view, give your feature flag a unique name and click ‘Create toggle feature’.
+In the Create Flag view, give your feature flag a unique name and click ‘Create feature flag’.
 
 For the purpose of this tutorial, name the feature flag `delete_survey_flag`. Use the default values in the rest of the feature flag form.
 

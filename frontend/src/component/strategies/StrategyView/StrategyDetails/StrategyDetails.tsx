@@ -12,20 +12,17 @@ import RadioButtonChecked from '@mui/icons-material/RadioButtonChecked';
 import { AppsLinkList } from 'component/common';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import styles from '../../strategies.module.scss';
-import { TogglesLinkList } from 'component/strategies/TogglesLinkList/TogglesLinkList';
 import type { IStrategy, IStrategyParameter } from 'interfaces/strategy';
-import type { ApplicationSchema, FeatureSchema } from 'openapi';
+import type { ApplicationSchema } from 'openapi';
 
 interface IStrategyDetailsProps {
     strategy: IStrategy;
     applications: ApplicationSchema[];
-    toggles: FeatureSchema[];
 }
 
 export const StrategyDetails = ({
     strategy,
     applications,
-    toggles,
 }: IStrategyDetailsProps) => {
     const theme = useTheme();
     const { parameters = [] } = strategy;
@@ -84,7 +81,7 @@ export const StrategyDetails = ({
                     <List>{renderParameters(parameters)}</List>
                 </Grid>
 
-                <Grid item sm={12} md={toggles.length > 0 ? 6 : 12}>
+                <Grid item sm={12} md={12}>
                     <h6>
                         Applications using this strategy{' '}
                         {applications.length >= 1000 && '(Capped at 1000)'}
@@ -92,17 +89,6 @@ export const StrategyDetails = ({
                     <hr />
                     <AppsLinkList apps={applications} />
                 </Grid>
-
-                <ConditionallyRender
-                    condition={toggles.length > 0}
-                    show={() => (
-                        <Grid item sm={12} md={6}>
-                            <h6>Toggles using this strategy</h6>
-                            <hr />
-                            <TogglesLinkList toggles={toggles} />
-                        </Grid>
-                    )}
-                />
             </Grid>
         </div>
     );

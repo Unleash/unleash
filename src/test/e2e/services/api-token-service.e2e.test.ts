@@ -7,7 +7,7 @@ import {
     type IApiToken,
 } from '../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import { addDays, subDays } from 'date-fns';
+import { addDays } from 'date-fns';
 import type ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EventService } from '../../../lib/services';
@@ -131,33 +131,6 @@ test('should update expiry of token', async () => {
     const [updatedToken] = await apiTokenService.getAllTokens();
 
     expect(updatedToken.expiresAt).toEqual(newTime);
-});
-
-test('should only return valid tokens', async () => {
-    const now = Date.now();
-    const yesterday = subDays(now, 1);
-    const tomorrow = addDays(now, 1);
-
-    await apiTokenService.createApiToken({
-        tokenName: 'default-expired',
-        type: ApiTokenType.CLIENT,
-        expiresAt: yesterday,
-        project: '*',
-        environment: DEFAULT_ENV,
-    });
-
-    const activeToken = await apiTokenService.createApiToken({
-        tokenName: 'default-valid',
-        type: ApiTokenType.CLIENT,
-        expiresAt: tomorrow,
-        project: '*',
-        environment: DEFAULT_ENV,
-    });
-
-    const tokens = await apiTokenService.getAllActiveTokens();
-
-    expect(tokens.length).toBe(1);
-    expect(activeToken.secret).toBe(tokens[0].secret);
 });
 
 test('should create client token with project list', async () => {

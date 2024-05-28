@@ -69,3 +69,8 @@ export const StyledDropdownSearch = styled(TextField, {
 export const TableSearchInput = styled(StyledDropdownSearch)(({ theme }) => ({
     maxWidth: '30ch',
 }));
+
+export const ScrollContainer = styled('div')(({ theme }) => ({
+    width: '100%',
+    overflow: 'auto',
+}));

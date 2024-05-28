@@ -239,7 +239,7 @@ test('should allow requests with an admin token', async () => {
 test('should not allow admin requests with a frontend token', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
-        .get('/api/admin/features')
+        .get('/api/admin/projects')
         .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(403);

@@ -6,6 +6,7 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import type {
     IConstraint,
+    IFeatureOverview,
     IFeatureToggleClient,
     ISegment,
 } from '../../types/model';
@@ -35,12 +36,22 @@ const fetchSegments = (): Promise<ISegment[]> => {
     return app.services.segmentService.getAll();
 };
 
-const fetchFeatures = (): Promise<IFeatureToggleClient[]> => {
+const fetchFeatures = (): Promise<IFeatureOverview[]> => {
     return app.request
-        .get(`/api/admin/features`)
+        .get(`/api/admin/projects/default/features`)
         .expect(200)
         .then((res) => res.body.features);
 };
+
+const getFeatureStrategiesPath = (featureName: string) => {
+    return `/api/admin/projects/default/features/${featureName}/environments/default/strategies`;
+};
+
+const fetchFeatureStrategies = (featureName: string) =>
+    app.request
+        .get(getFeatureStrategiesPath(featureName))
+        .expect(200)
+        .then((res) => res.body);
 
 const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
     return app.request
@@ -276,8 +287,11 @@ test('should clone feature strategy segments', async () => {
     await createFeatureToggle(mockFeatureToggle());
 
     const [feature1, feature2] = await fetchFeatures();
-    const strategy1 = feature1.strategies[0].id;
-    const strategy2 = feature2.strategies[0].id;
+    const [feature1Strategy] = await fetchFeatureStrategies(feature1.name);
+    const [feature2Strategy] = await fetchFeatureStrategies(feature2.name);
+
+    const strategy1 = feature1Strategy.id;
+    const strategy2 = feature2Strategy.id;
 
     let segments1 = await app.services.segmentService.getByStrategy(strategy1!);
     let segments2 = await app.services.segmentService.getByStrategy(strategy2!);
@@ -322,9 +336,14 @@ test('should inline segment constraints into features by default', async () => {
 
     // add segment3 to all features
     for (const feature of [feature1, feature2, feature3]) {
+        const [strt] = await fetchFeatureStrategies(feature.name);
         const strategy = {
-            ...feature.strategies[0],
-            segments: feature.strategies[0].segments ?? [],
+            id: strt.id,
+            name: strt.name,
+            constraints: strt.constraints,
+            parameters: strt.parameters,
+            variants: strt.variants,
+            segments: strt.segments ?? [],
         };
         await updateFeatureStrategy(feature.name, {
             ...strategy,

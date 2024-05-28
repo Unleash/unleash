@@ -74,14 +74,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
-    "menu": {},
-    "parent": "/features",
-    "path": "/projects/:projectId/features2/:featureId",
-    "title": ":featureId",
-    "type": "protected",
-  },
-  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],
@@ -104,14 +96,6 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/projects",
     "title": "Projects",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "menu": {},
-    "parent": "/features",
-    "path": "/features/:activeTab/:featureId",
-    "title": ":featureId",
     "type": "protected",
   },
   {
@@ -143,10 +127,10 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "enterprise": false,
-    "flag": "executiveDashboardUI",
     "menu": {
       "mobile": true,
     },
+    "notFlag": "killInsightsUI",
     "path": "/insights",
     "title": "Insights",
     "type": "protected",

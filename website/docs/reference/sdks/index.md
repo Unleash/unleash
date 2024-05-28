@@ -4,7 +4,7 @@ title: SDK overview
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-In order to connect your application to Unleash you will need a client SDK (software developer kit) for your programming language and an [API token](../how-to/how-to-create-api-tokens). The SDK will handle connecting to the Unleash server instance and retrieving feature toggles based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
+In order to connect your application to Unleash you will need a client SDK (software developer kit) for your programming language and an [API token](../how-to/how-to-create-api-tokens). The SDK will handle connecting to the Unleash server instance and retrieving feature flags based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
 
 Unleash provides official client SDKs for a number of programming language. Additionally, our community have developed and contributed SDKs for other languages. So if you can't find your favorite language in the list of official SDKs, check out the [list of clients written by our fantastic community](#community-sdks).
 
@@ -65,9 +65,9 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 30s | 15s |
 | Context provider | ✅ | N/A | N/A | N/A | N/A | ✅ | ✅ | N/A |
 | Global fallback function | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Toggle Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| Toggle Query: `tags` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| Toggle Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ |
+| Flag Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Flag Query: `tags` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Flag Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ |
 | **Category: Custom Headers** |  |  |  |  |  |  |  |  |
 | static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | function | ✅ | ✅ | ⭕ | ✅ | ✅ (4.3) | ✅ | ✅ | ⭕ |
@@ -148,19 +148,19 @@ When the SDK is initialized in the application, an in memory repository is setup
 
 2. When a page inside the application requests a feature flag, the SDK will return the flag state from memory. No network connection to the frontend API is performed.
    
-3. The SDK periodically syncs with the frontend API to retrieve the latest set of enabled toggles
+3. The SDK periodically syncs with the frontend API to retrieve the latest set of enabled flags
   
 ## Working offline
 
 Once they have been initialized, all Unleash clients will continue to work perfectly well without an internet connection or in the event that the Unleash Server has an outage.
 
-Because the SDKs and the Unleash Proxy/Edge cache their feature toggle states locally and only communicate with the Unleash server (in the case of the server-side SDKs and the Proxy) or the Proxy/Edge (in the case of front-end SDKs) at predetermined intervals, a broken connection only means that they won't get any new updates.
+Because the SDKs and the Unleash Proxy/Edge cache their feature flag states locally and only communicate with the Unleash server (in the case of the server-side SDKs and the Proxy) or the Proxy/Edge (in the case of front-end SDKs) at predetermined intervals, a broken connection only means that they won't get any new updates.
 
-Unless the SDK supports [bootstrapping](#bootstrapping), it _will_ need to connect to Unleash at startup to get its initial feature toggle data set. If the SDK doesn't have a feature toggle data set available, all toggles will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
+Unless the SDK supports [bootstrapping](#bootstrapping), it _will_ need to connect to Unleash at startup to get its initial feature flag data set. If the SDK doesn't have a feature flag data set available, all flags will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
 
 ### Bootstrapping
 
-By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally, some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support _bootstrapping_, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
+By default, all SDKs reach out to the Unleash Server at startup to fetch their flag configuration. Additionally, some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support _bootstrapping_, which allows them to get their flag configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
 
 Bootstrapping is also supported by the following front-end client SDKs:
 

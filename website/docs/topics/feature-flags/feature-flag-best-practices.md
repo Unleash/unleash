@@ -2,7 +2,7 @@
 title: 11 Principles for building and scaling feature flag systems
 ---
 
-Feature flags, sometimes called feature toggles or feature switches, are a software development technique that allows engineering teams to decouple the release of new functionality from software deployments. With feature flags, developers can turn specific features or code segments on or off at runtime, without the need for a code deployment or rollback. Organizations who adopt feature flags see improvements in all key operational metrics for DevOps: Lead time to changes, mean-time-to-recovery, deployment frequency, and change failure rate.
+Feature flags, sometimes called feature flags or feature switches, are a software development technique that allows engineering teams to decouple the release of new functionality from software deployments. With feature flags, developers can turn specific features or code segments on or off at runtime, without the need for a code deployment or rollback. Organizations who adopt feature flags see improvements in all key operational metrics for DevOps: Lead time to changes, mean-time-to-recovery, deployment frequency, and change failure rate.
 
 There are 11 principles for building a large-scale feature flag system. These principles have their roots in distributed systems architecture and pay particular attention to security, privacy, and scale that is required by most enterprise systems. If you follow these principles, your feature flag system is less likely to break under load and will be easier to evolve and maintain.
 

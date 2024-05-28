@@ -14,7 +14,6 @@ export default class IncompatibleProjectError extends UnleashError {
                 {
                     validationErrors: [],
                     message: this.message,
-                    description: this.message,
                 },
             ],
         };

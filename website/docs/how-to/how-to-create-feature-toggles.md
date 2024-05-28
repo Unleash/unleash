@@ -2,13 +2,13 @@
 title: How to create a feature flag
 ---
 
-:::info Feature flags or feature toggles?
+:::info Feature flags or feature flags?
 
-This document uses **feature flags** and **feature toggles** interchangeably. Some people prefer flag; others prefer toggle. We use both - they are synonyms for us.
+This document uses **feature flags** and **feature flags** interchangeably. Some people prefer flag; others prefer flag. We use both - they are synonyms for us.
 
 :::
 
-Feature Flags (or [Feature toggles](../reference/feature-toggles.mdx) in the UI) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature flags in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.
+Feature Flags (or [Feature flags](../reference/feature-toggles.mdx) in the UI) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature flags in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.
 
 You can perform every action both via the UI and the admin API. This guide includes screenshots to highlight the relevant UI controls and links to the relevant API methods for each step.
 
@@ -26,12 +26,12 @@ To perform all the steps in this guide, you will need:
 - A project to hold the flag
 - A user with an **editor** or **admin** role OR a user with the following permissions inside the target project:
   - **[project-level permissions](../reference/rbac.md#project-permissions)**
-    - create feature toggles
+    - create feature flags
   - **[environment-level permissions](../reference/rbac.md#environment-permissions)**
     - create/edit variants[^1]
     - create activation strategies
     - update activation strategies
-    - enable/disable toggles
+    - enable/disable flags
 
 :::info roles
 
@@ -41,17 +41,17 @@ Refer to [the documentation on role-based access control](../reference/rbac.md) 
 
 ## Required steps
 
-This section takes you through the required steps to create and activate a feature toggle. It assumes that you have all the prerequisites from the previous section done.
+This section takes you through the required steps to create and activate a feature flag. It assumes that you have all the prerequisites from the previous section done.
 
-### Step 1: Create a toggle {#step-1}
+### Step 1: Create a flag {#step-1}
 
-:::tip API: create a toggle
+:::tip API: create a flag
 
-Use the [Admin API endpoint for creating a feature toggle](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle). The payload accepts all the same fields as the Admin UI form. The Admin UI also displays the corresponding cURL command when you use the form.
+Use the [Admin API endpoint for creating a feature flag](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle). The payload accepts all the same fields as the Admin UI form. The Admin UI also displays the corresponding cURL command when you use the form.
 
 :::
 
-In the project that you want to create the toggle in, use the "new feature toggle" button and fill the form out with your desired configuration. Refer to the [feature toggle reference documentation](../reference/feature-toggles.mdx) for the full list of configuration options and explanations.
+In the project that you want to create the flag in, use the "new feature flag" button and fill the form out with your desired configuration. Refer to the [feature flag reference documentation](../reference/feature-toggles.mdx) for the full list of configuration options and explanations.
 
 ![](/img/create-toggle-new-toggle.png)
 
@@ -59,29 +59,29 @@ In the project that you want to create the toggle in, use the "new feature toggl
 
 :::tip API: Add a strategy
 
-Use the [API for adding a strategy to a feature toggle](/reference/api/legacy/unleash/admin/features-v2.md#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../reference/activation-strategies.md).
+Use the [API for adding a strategy to a feature flag](/reference/api/legacy/unleash/admin/features-v2.md#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../reference/activation-strategies.md).
 
 :::
 
-Decide which environment you want to enable the toggle in. Select that environment and add an activation strategy. Different activation strategies will act differently as described in the [activation strategy documentation](../reference/activation-strategies.md). The configuration for each strategy differs accordingly. After selecting a strategy, complete the steps to configure it.
+Decide which environment you want to enable the flag in. Select that environment and add an activation strategy. Different activation strategies will act differently as described in the [activation strategy documentation](../reference/activation-strategies.md). The configuration for each strategy differs accordingly. After selecting a strategy, complete the steps to configure it.
 
 ![](/img/create-toggle-add-strategy.png)
 
-### Step 3: Enable the toggle {#step-3}
+### Step 3: Enable the flag {#step-3}
 
-:::tip API: Enable a toggle
+:::tip API: Enable a flag
 
-Use the [API for enabling an environment for a toggle](/reference/api/legacy/unleash/admin/features-v2.md#enable-env) and specify the environment you'd like to enable.
+Use the [API for enabling an environment for a flag](/reference/api/legacy/unleash/admin/features-v2.md#enable-env) and specify the environment you'd like to enable.
 
 :::
 
-Use the environments toggles to switch on the environment that you chose above. Depending on the activation strategy you added in the previous step, the toggle should now evaluate to true or false depending on the Unleash context you provide it.
+Use the environments flags to switch on the environment that you chose above. Depending on the activation strategy you added in the previous step, the flag should now evaluate to true or false depending on the Unleash context you provide it.
 
 ![](/img/create-toggle-enable-env.png)
 
 ## Optional steps
 
-These optional steps allow you to further configure your feature toggles to add optional payloads, variants for A/B testing, more detailed user targeting and exceptions/overrides.
+These optional steps allow you to further configure your feature flags to add optional payloads, variants for A/B testing, more detailed user targeting and exceptions/overrides.
 
 ### Add constraints and segmentation
 
@@ -95,7 +95,7 @@ To add constraints and segmentation, use the "edit strategy" button for the desi
 
 :::info
 
-Constraints aren't fixed and can be changed later to further narrow your audience. You can add them either when you add a strategy to a toggle or at any point thereafter.
+Constraints aren't fixed and can be changed later to further narrow your audience. You can add them either when you add a strategy to a flag or at any point thereafter.
 
 :::
 
@@ -131,7 +131,7 @@ In the strategy configuration screen for the strategy that you want to configure
 
 :::info
 
-This can be done at any point after you've created your toggle.
+This can be done at any point after you've created your flag.
 
 :::
 
@@ -141,7 +141,7 @@ Use the [update variants endpoint](/reference/api/legacy/unleash/admin/features-
 
 :::
 
-[Variants](../reference/feature-toggle-variants.md) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the toggle overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
+[Variants](../reference/feature-toggle-variants.md) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the flag overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
 
 ![](/img/create-toggle-add-variants.png)
 

@@ -1,6 +1,5 @@
 import Search from '@mui/icons-material/Search';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
 import {
     type FC,
     type ReactNode,
@@ -10,6 +9,14 @@ import {
     type PropsWithChildren,
 } from 'react';
 import {
+    Box,
+    Button,
+    InputAdornment,
+    List,
+    ListItemText,
+    styled,
+} from '@mui/material';
+import {
     StyledCheckbox,
     StyledDropdown,
     StyledListItem,
@@ -17,6 +24,7 @@ import {
     StyledDropdownSearch,
     TableSearchInput,
     HiddenDescription,
+    ScrollContainer,
 } from './SelectionButton.styles';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
@@ -82,7 +90,7 @@ const useSelectionManagement = ({
 type CombinedSelectProps = {
     options: Array<{ label: string; value: string }>;
     onChange: (value: string) => void;
-    button: { label: string; icon: ReactNode };
+    button: { label: string; icon: ReactNode; labelWidth?: string };
     search: {
         label: string;
         placeholder: string;
@@ -482,6 +490,11 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
     const filteredOptions = options?.filter((option) =>
         option.label.toLowerCase().includes(searchText.toLowerCase()),
     );
+
+    const ButtonLabel = styled('span')(() => ({
+        width: button.labelWidth || 'unset',
+    }));
+
     return (
         <>
             <Box ref={ref}>
@@ -495,7 +508,7 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
                         }
                     }}
                 >
-                    {button.label}
+                    <ButtonLabel>{button.label}</ButtonLabel>
                 </Button>
             </Box>
             <StyledPopover
@@ -784,11 +797,13 @@ export const TableSelect: FC<TableSelectProps> = ({
                         }}
                         onKeyDown={toggleTopItem}
                     />
-                    <ChangeRequestTable
-                        environments={filteredEnvs}
-                        enableEnvironment={onEnable}
-                        disableEnvironment={onDisable}
-                    />
+                    <ScrollContainer>
+                        <ChangeRequestTable
+                            environments={filteredEnvs}
+                            enableEnvironment={onEnable}
+                            disableEnvironment={onDisable}
+                        />
+                    </ScrollContainer>
                 </StyledDropdown>
             </StyledPopover>
         </>

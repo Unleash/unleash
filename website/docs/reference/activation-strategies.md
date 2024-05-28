@@ -8,7 +8,7 @@ Unleash comes with a number of built-in strategies (described below) that can be
 
 All [server-side client SDKs](../reference/sdks/index.md#server-side-sdks) and the [Unleash Proxy](../generated/unleash-proxy.md) implement the default strategies (and allow you to add your own [custom strategy implementations](../reference/custom-activation-strategies.md#implementation)). The [front-end client SDKs](../reference/sdks/index.md#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../generated/unleash-proxy.md) to take care of the implementation and evaluation.
 
-Some activation strategies require the client to provide the current [Unleash context](unleash-context.md) to the toggle evaluation function for the evaluation to be done correctly.
+Some activation strategies require the client to provide the current [Unleash context](unleash-context.md) to the flag evaluation function for the evaluation to be done correctly.
 
 The following activation strategies are bundled with Unleash and always available:
 
@@ -32,7 +32,7 @@ Active for users with a `userId` defined in the `userIds` list. A typical use ca
 
 **Parameters**
 
-- userIds - _List of user IDs you want the feature toggle to be enabled for_
+- userIds - _List of user IDs you want the feature flag to be enabled for_
 
 This strategy has the following modelling name in the code:
 
@@ -49,8 +49,8 @@ A flexible rollout strategy which combines all gradual rollout strategies in to 
   - **userId** - guaranteed to be sticky on userId. If userId not present the behavior would be false
   - **sessionId** - guaranteed to be sticky on sessionId. If sessionId not present the behavior would be false.
   - **random** - no stickiness guaranteed. For every isEnabled call it will yield a random true/false based on the selected rollout percentage.
-- **groupId** is used to ensure that different toggles will **hash differently** for the same user. The groupId defaults to _feature toggle name_, but the user can override it to _correlate rollout_ of multiple feature toggles.
-- **rollout** The percentage (0-100) you want to enable the feature toggle for.
+- **groupId** is used to ensure that different flags will **hash differently** for the same user. The groupId defaults to _feature flag name_, but the user can override it to _correlate rollout_ of multiple feature flags.
+- **rollout** The percentage (0-100) you want to enable the feature flag for.
 
 This strategy has the following modelling name in the code:
 
@@ -68,7 +68,7 @@ By enabling the stickiness option on a custom context field you can use the cust
 
 ## IPs {#ips}
 
-The remote address strategy activates a feature toggle for remote addresses defined in the IP list. We occasionally use this strategy to enable a feature only for IPs in our office network.
+The remote address strategy activates a feature flag for remote addresses defined in the IP list. We occasionally use this strategy to enable a feature only for IPs in our office network.
 
 **Parameters**
 
@@ -80,11 +80,11 @@ This strategy has the following modelling name in the code:
 
 ## Hostnames {#hostnames}
 
-The application hostname strategy activates a feature toggle for client instances with a hostName in the `hostNames` list.
+The application hostname strategy activates a feature flag for client instances with a hostName in the `hostNames` list.
 
 **Parameters**
 
-- hostNames - _List of hostnames to enable the feature toggle for._
+- hostNames - _List of hostnames to enable the feature flag for._
 
 This strategy has the following modelling name in the code:
 
@@ -92,17 +92,17 @@ This strategy has the following modelling name in the code:
 
 ## Multiple activation strategies {#multiple-activation-strategies}
 
-You can apply as many activation strategies to a toggle as you want. When a toggle has multiple strategies, Unleash will check each strategy in isolation. If any one of the strategies would enable the toggle for the current user, then the toggle is enabled.
+You can apply as many activation strategies to a flag as you want. When a flag has multiple strategies, Unleash will check each strategy in isolation. If any one of the strategies would enable the flag for the current user, then the flag is enabled.
 
 As an example, consider a case where you want to roll a feature out to 75% of your users. However, you also want to make sure that you and your product lead get access to the feature. To achieve this, you would apply a **gradual rollout** strategy and set it to 75%. Additionally, you would add a **user IDs** strategy and add `engineer@mycompany.com` and `productlead@mycompany.com`.
 
-![A feature toggle with two active strategies: a user ID strategy and a gradual rollout strategy. The strategies are configured as described in the preceding paragraph.](/img/control_rollout_multiple_strategies.png)
+![A feature flag with two active strategies: a user ID strategy and a gradual rollout strategy. The strategies are configured as described in the preceding paragraph.](/img/control_rollout_multiple_strategies.png)
 
 ## Deprecated strategies
 
 ### gradualRolloutUserId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutuserid-deprecated-from-v4---use-gradual-rollout-instead}
 
-The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged-in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
+The `gradualRolloutUserId` strategy gradually activates a feature flag for logged-in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
 
 ![hash_and_normalise](/img/hash_and_normalise.png)
 
@@ -110,22 +110,22 @@ Starting from v3.x all clients should use the 32-bit [MurmurHash3](https://en.wi
 
 **Parameters**
 
-- percentage - _The percentage (0-100) you want to enable the feature toggle for._
-- groupId - _Used to define an activation group, which allows you to correlate rollout across feature toggles._
+- percentage - _The percentage (0-100) you want to enable the feature flag for._
+- groupId - _Used to define an activation group, which allows you to correlate rollout across feature flags._
 
 ### gradualRolloutSessionId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutsessionid-deprecated-from-v4---use-gradual-rollout-instead}
 
-Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature toggle, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged-in users), guaranteeing that a user will get the same experience within a session.
+Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature flag, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged-in users), guaranteeing that a user will get the same experience within a session.
 
 **Parameters**
 
-- percentage - _The percentage (0-100) you want to enable the feature toggle for._
-- groupId - _Used to define an activation group, which allows you to correlate rollout across feature toggles._
+- percentage - _The percentage (0-100) you want to enable the feature flag for._
+- groupId - _Used to define an activation group, which allows you to correlate rollout across feature flags._
 
 ### gradualRolloutRandom (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutrandom-deprecated-from-v4---use-gradual-rollout-instead}
 
-The `gradualRolloutRandom` strategy randomly activates a feature toggle and has no stickiness. We have found this rollout strategy very useful in some scenarios, especially when we enable a feature which is not visible to the user. It is also the strategy we use to sample metrics and error reports.
+The `gradualRolloutRandom` strategy randomly activates a feature flag and has no stickiness. We have found this rollout strategy very useful in some scenarios, especially when we enable a feature which is not visible to the user. It is also the strategy we use to sample metrics and error reports.
 
 **Parameters**
 
-- percentage - _The percentage (0-100) you want to enable the feature toggle for._
+- percentage - _The percentage (0-100) you want to enable the feature flag for._

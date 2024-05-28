@@ -64,7 +64,7 @@ test('Can create a new tag type', async () => {
         .send({
             name: 'slack',
             description:
-                'Tag your feature toggles with slack channel to post updates for toggle to',
+                'Tag your feature flags with slack channel to post updates for flag to',
             icon: 'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
         })
         .expect(201);
@@ -90,7 +90,7 @@ test('Invalid tag types gets rejected', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].description).toMatch(
+            expect(res.body.details[0].message).toMatch(
                 '"name" must be URL friendly',
             );
         });
@@ -164,7 +164,7 @@ test('Invalid tag-types get refused by validator', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].description).toMatch(
+            expect(res.body.details[0].message).toMatch(
                 '"name" must be URL friendly',
             );
         });

@@ -1,6 +1,7 @@
 import { forwardRef, type ReactNode } from 'react';
-import { Grid, styled } from '@mui/material';
+import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
 import Header from 'component/menu/Header/Header';
+import OldHeader from 'component/menu/Header/OldHeader';
 import Footer from 'component/menu/Footer/Footer';
 import Proclamation from 'component/common/Proclamation/Proclamation';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
@@ -14,6 +15,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -36,23 +39,7 @@ const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
     position: 'relative',
 }));
 
-const MainLayoutContent = styled(Grid)(({ theme }) => ({
-    width: '1250px',
-    margin: '0 auto',
-    [theme.breakpoints.down('lg')]: {
-        width: '1024px',
-    },
-    [theme.breakpoints.down(1024)]: {
-        width: '100%',
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
-}));
-
-const SpaciousMainLayoutContent = styled(Grid)(({ theme }) => ({
+const OldMainLayoutContent = styled(Grid)(({ theme }) => ({
     width: '100%',
     maxWidth: '1512px',
     margin: '0 auto',
@@ -70,6 +57,25 @@ const SpaciousMainLayoutContent = styled(Grid)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         minWidth: '100%',
     },
+}));
+
+const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
+    width: '100%',
+    minWidth: 0, // this is a fix for overflowing flex
+    margin: theme.spacing(0, 7),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.down('lg')]: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+        margin: 0,
+    },
+    [theme.breakpoints.up('xl')]: {
+        maxWidth: '1920px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    },
+    minHeight: '94vh',
 }));
 
 const StyledImg = styled('img')(() => ({
@@ -101,12 +107,22 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
             projectId || '',
         );
 
-        const StyledMainLayoutContent = SpaciousMainLayoutContent;
+        const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
+        const StyledMainLayoutContent = sidebarNavigationEnabled
+            ? NewMainLayoutContent
+            : OldMainLayoutContent;
+        const theme = useTheme();
+        const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
         return (
             <>
                 <SkipNavLink />
-                <Header />
+                <ConditionallyRender
+                    condition={sidebarNavigationEnabled}
+                    show={<Header />}
+                    elseShow={<OldHeader />}
+                />
+
                 <SkipNavTarget />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
@@ -117,13 +133,34 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             )}
                             show={<DraftBanner project={projectId || ''} />}
                         />
-                        <StyledMainLayoutContent item xs={12} sm={12} my={2}>
-                            <MainLayoutContentContainer ref={ref}>
-                                <BreadcrumbNav />
-                                <Proclamation toast={uiConfig.toast} />
-                                {children}
-                            </MainLayoutContentContainer>
-                        </StyledMainLayoutContent>
+
+                        <Box
+                            sx={(theme) => ({
+                                display: 'flex',
+                                mt: theme.spacing(0.25),
+                            })}
+                        >
+                            <ConditionallyRender
+                                condition={
+                                    sidebarNavigationEnabled && !isSmallScreen
+                                }
+                                show={<NavigationSidebar />}
+                            />
+
+                            <StyledMainLayoutContent
+                                item
+                                xs={12}
+                                sm={12}
+                                my={2}
+                            >
+                                <MainLayoutContentContainer ref={ref}>
+                                    <BreadcrumbNav />
+                                    <Proclamation toast={uiConfig.toast} />
+                                    {children}
+                                </MainLayoutContentContainer>
+                            </StyledMainLayoutContent>
+                        </Box>
+
                         <ThemeMode
                             darkmode={
                                 <StyledImg

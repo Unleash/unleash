@@ -165,13 +165,13 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 onBlur={validateToggleName}
             />
             <StyledInputDescription>
-                What kind of feature toggle do you want?
+                What kind of feature flag do you want?
             </StyledInputDescription>
             <FeatureTypeSelect
                 sx={styledSelectInput}
                 value={type}
                 onChange={setType}
-                label={'Toggle type'}
+                label={'Flag type'}
                 id='feature-type-select'
                 editable
                 data-testid={CF_TYPE_ID}
@@ -184,7 +184,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 condition={editable}
                 show={
                     <StyledInputDescription>
-                        In which project do you want to save the toggle?
+                        In which project do you want to save the flag?
                     </StyledInputDescription>
                 }
             />
@@ -206,7 +206,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             />
 
             <StyledInputDescription>
-                How would you describe your feature toggle?
+                How would you describe your feature flag?
             </StyledInputDescription>
             <StyledInput
                 multiline

@@ -24,7 +24,7 @@ export const featureSearchResponseSchema = {
         'environments',
         'segments',
     ],
-    description: 'A feature toggle definition',
+    description: 'A feature flag definition',
     properties: {
         name: {
             type: 'string',
@@ -35,7 +35,7 @@ export const featureSearchResponseSchema = {
             type: 'string',
             example: 'kill-switch',
             description:
-                'Type of the toggle e.g. experiment, kill-switch, release, operational, permission',
+                'Type of the flag e.g. experiment, kill-switch, release, operational, permission',
         },
         description: {
             type: 'string',

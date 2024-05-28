@@ -3,30 +3,36 @@ title: How to Implement Feature Flags in Java Spring Boot
 slug: /feature-flag-tutorials/spring-boot
 ---
 
+import VideoContent from '@site/src/components/VideoContent.jsx';
+
 Java [Spring Boot](https://spring.io/projects/spring-boot) is a popular Java framework for getting apps up and running with minimal configuration. It is often used to develop microservices for large enterprise software.
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in Java Spring Boot?
 
-In this tutorial, you will learn how to use a feature flag in a Java Spring Boot app. We will use the [Spring Pet Clinic app](https://github.com/spring-projects/spring-petclinic) and the [Unleash Spring Boot SDK](https://github.com/Unleash/unleash-spring-boot-starter) to control how a [Spring Bean](https://docs.spring.io/spring-framework/reference/core/beans/definition.html) is used for a new page. 
+In this tutorial, you will learn how to use a feature flag in a Java Spring Boot app. We will use the [Spring Pet Clinic app](https://github.com/spring-projects/spring-petclinic) and the [Unleash Spring Boot SDK](https://github.com/Unleash/unleash-spring-boot-starter) to control how a [Spring Bean](https://docs.spring.io/spring-framework/reference/core/beans/definition.html) is used for a new page.
 
 Here are the steps we will cover in this tutorial:
+
 1. [Feature flag best practices for back-end applications](#1-feature-flag-best-practices-for-server-side-apps)
 2. [Spin up a local flag provider](#2-install-a-local-feature-flag-provider)
 3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
 4. [Add Unleash to a Spring Boot app](#4-add-unleash-to-a-spring-boot-app)
 5. [Configure Spring Beans in your Spring Boot app](#5-configure-spring-beans-in-your-app)
-6. [Verify the toggle experience](#5-configure-spring-beans-in-your-app)
+6. [Verify the feature flag experience](#6-verify-the-feature-flag-experience)
 
+Watch the video tutorial and follow along with the code from this documentation.
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/01LUooiDTXQ?si=z7hAgGIm642Hw6MQ"]}/>
 
 ## Prerequisites
 
-
 In this tutorial, you will need the following:
-- A web browser like Chrome or Firefox
-- Git
-- Docker
-- Maven or Gradle for building Java
-- (Optional) a code editor like IntelliJ IDEA
+
+-   A web browser like Chrome or Firefox
+-   Git
+-   Docker
+-   Maven or Gradle for building Java
+-   (Optional) a code editor like IntelliJ IDEA
 
 ![Java Spring Boot Architectural Diagram](/img/spring-boot-tutorial-architectural-diagram.png)
 
@@ -36,15 +42,14 @@ The Unleash Server is a Feature Flag Control Service for managing and storing yo
 
 The Spring Boot SDK is an extension of the Java SDK, configured for Spring Boot-specific architecture and conventions.
 
-
 ## 1. Feature flag best practices for server-side apps
-
 
 Since Spring Boot is a framework used for Java backend apps, there are special security considerations to plan around when implementing feature flags.
 
 Most importantly, you must:
-- Limit feature flag payloads for scalability, security, and efficiency
-- Improve architectural resiliency with graceful degradation
+
+-   Limit feature flag payloads for scalability, security, and efficiency
+-   Improve architectural resiliency with graceful degradation
 
 As your application scales, performance and resiliency become more critical and costly if not addressed. A feature flagging system should not be why your app slows down or fails. That’s why we recommend you account for this by reducing the size of your feature flag payloads. For example, instead of making one large call to retrieve flag statuses for all users as part of your configuration, group your users by specific attributes as part of your targeting rules that would be most relevant to your application.
 
@@ -52,9 +57,7 @@ Additionally, you can cache your feature flag configuration to help reduce netwo
 
 For a complete list of architectural guidelines, see our [best practices for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices).
 
-
 ## 2. Install a local feature flag provider
-
 
 This section guides you through installing Unleash, setting up a local instance, logging in, and creating a feature flag.
 
@@ -70,19 +73,16 @@ You will now have Unleash installed onto your machine and running in the backgro
 
 Log in to the platform using these credentials:
 
-
 ```
 Username: admin
 Password: unleash4all
 ```
 
-Click the ‘New feature toggle’ button to create a new feature flag.
+Click the ‘New feature flag’ button to create a new feature flag.
 
 ![This is an image of the Unleash platform to create a new Spring Boot feature flag.](/img/tutorial-create-flag.png)
 
-
 ## 3. Create and configure the feature flag
-
 
 Next, you will create a feature flag and turn it on for your Spring Boot app.
 
@@ -91,7 +91,6 @@ For this tutorial, name the feature flag “productsPageFlag.” In the rest of 
 ![Create a flag in Unleash called "productsPageFlag".](/img/spring-boot-tutorial-create-flag.png)
 
 Your new feature flag has been created and is ready to be used. Enable the flag for your development environment, which makes it accessible for use in the Spring Boot app.
-
 
 ![Enable the flag in the development environment in Unleash.](/img/spring-boot-tutorial-enable-flag.png)
 
@@ -105,7 +104,7 @@ Select the ‘New API token’ button.
 
 ![Create a new API token in the API Access view for your Spring Boot application.](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Server-side SDK” token type since we’ll be doing our flag evaluation on the server using the Spring Boot SDK. You can read more about [Unleash API tokens](/reference/api-tokens-and-client-keys#client-tokens). 
+Name the API token and select the “Server-side SDK” token type since we’ll be doing our flag evaluation on the server using the Spring Boot SDK. You can read more about [Unleash API tokens](/reference/api-tokens-and-client-keys#client-tokens).
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
@@ -113,9 +112,7 @@ The token should have access to the “development” environment, as shown in t
 
 We will use the API token in Step 4.
 
-
 ## 4. Add Unleash to a Spring Boot app
-
 
 In this section, we will clone an open-source Spring Boot application called [Spring Pet Clinic](https://github.com/spring-projects/spring-petclinic). This is a sample pet clinic web app, featuring built-in customer data, their pets' data, and veternarian information.
 
@@ -170,7 +167,6 @@ In `pom.xml` on line 71, add the dependency to your code:
 </dependency>
 ```
 
-
 Next, we can add an Unleash configuration to the `application.properties` file so that the Spring Boot app can connect to the Unleash server.
 
 At the bottom of the `application.properties` file, add the following code snippet:
@@ -184,7 +180,6 @@ io.getunleash.api-url=http://localhost:4242/api
 io.getunleash.api-token=<API_KEY>
 ```
 
-
 Spring Boot allows us to access the key-value data configuration in this file across environments, [similar to an `application.yml` file](https://www.baeldung.com/spring-boot-yaml-vs-properties) found in typical Java applications.
 
 Read more about this particular configuration to get started with [Spring Boot Starter SDK](https://github.com/Unleash/unleash-spring-boot-starter?tab=readme-ov-file#getting-started).
@@ -195,9 +190,7 @@ Replace the `<API_KEY>` string in the configuration’s `apiKey` with the API to
 
 For more specifics, see our [API token and client keys documentation](/reference/api-tokens-and-client-keys). Our [Spring Boot Starter Usage documentation](https://github.com/Unleash/unleash-spring-boot-starter?tab=readme-ov-file#usage) includes additional use cases.
 
-
 ## 5. Configure Spring Beans in your app
-
 
 In the real world, you can incrementally introduce new features to a select group of users by adjusting the flag's deployment strategy.
 
@@ -207,10 +200,10 @@ All users will be able to see a new products page in the navigation once we crea
 
 To set this up in Spring Boot, we will need to create a few things:
 
-- A Java Interface
-- 2 Java classes that implement the interface that the flag will toggle between
-- A REST API controller for a new endpoint that will serve the product page
-- An HTML file for the product page that the endpoint will return
+-   A Java Interface
+-   2 Java classes that implement the interface that the flag will toggle between
+-   A REST API controller for a new endpoint that will serve the product page
+-   An HTML file for the product page that the endpoint will return
 
 Let’s create the interface inside the `/owner` directory called `PetProductsService.java`.
 
@@ -312,22 +305,25 @@ class PetProductsController {
 ```
 
 In the `PetProductsController` class, we have set up a few things:
-- A `/products` endpoint
-- We added the pet product service to the model that is injected into an HTML page we will create (`products.html`)
-- A method `getPetProducts` that invokes the pet product service
+
+-   A `/products` endpoint
+-   We added the pet product service to the model that is injected into an HTML page we will create (`products.html`)
+-   A method `getPetProducts` that invokes the pet product service
 
 Next, we will create the `products.html` page returned from the `/products` endpoint.
 
 In `resources/templates/`, create `products.html` and use this small code snippet:
 
-
 ```html
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'products')}">
-<body>
-   <h2>Clinic Products</h2>
-   <div th:text="${petProductsPage}"></div>
-</body>
+<html
+    xmlns:th="https://www.thymeleaf.org"
+    th:replace="~{fragments/layout :: layout (~{::body},'products')}"
+>
+    <body>
+        <h2>Clinic Products</h2>
+        <div th:text="${petProductsPage}"></div>
+    </body>
 </html>
 ```
 
@@ -336,7 +332,9 @@ Now that we have our services, controller, and an endpoint that maps to a page, 
 In `layout.html`, insert a new list item on line 62.
 
 ```html
-<li th:replace="~{::menuItem ('/products', 'products', 'view clinic products', 'th-list', 'Clinic products')}">
+<li
+    th:replace="~{::menuItem ('/products', 'products', 'view clinic products', 'th-list', 'Clinic products')}"
+>
     <span class="fa fa-th-list" aria-hidden="true"></span>
     <span>Clinic products</span>
 </li>
@@ -358,9 +356,7 @@ In the real world, separate data sources could be plugged into these different i
 
 You can toggle between the two service beans by turning the flag off, which we will experiment with in the next step.
 
-
 ## 6. Verify the feature flag experience
-
 
 You can verify that the Pet Clinic app will swap implementations on the product page by turning off your flag in Unleash.
 
@@ -376,9 +372,7 @@ Next, refresh your browser. With the flag turned off, you’ll see changes in th
 
 The message rendering in the browser confirms that the app is now targeting the `PetProductsServiceImpl` class instead of `PetPrescriptionServiceImpl`.
 
-
 ## Conclusion
-
 
 In this tutorial, we created a new feature flag in Unleash and built a new page in the Spring Pet Clinic app. From there, we created two service implementations within the app for the new page and toggled between them with the feature flag. The Unleash Spring Boot SDK gave us the proper annotations to automatically toggle between the two implementations with minimal configuration.
 

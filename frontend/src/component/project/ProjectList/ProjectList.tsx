@@ -24,7 +24,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { groupProjects } from './group-projects';
 import { ProjectGroup } from './ProjectGroup';
-import { CreateProjectDialogue } from '../Project/CreateProject/CreateProjectDialog/CreateProjectDialog';
+import { CreateProjectDialog } from '../Project/CreateProject/CreateProjectDialog/CreateProjectDialog';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -251,7 +251,7 @@ export const ProjectListNew = () => {
             <ConditionallyRender
                 condition={useNewProjectForm}
                 show={
-                    <CreateProjectDialogue
+                    <CreateProjectDialog
                         open={openCreateDialog}
                         onClose={() => setOpenCreateDialog(false)}
                     />

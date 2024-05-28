@@ -60,7 +60,7 @@ export abstract class UnleashError extends Error {
             id: this.id,
             name: this.name,
             message: this.message,
-            details: [{ message: this.message, description: this.message }],
+            details: [{ message: this.message }],
         };
     }
 

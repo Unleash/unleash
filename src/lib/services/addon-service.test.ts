@@ -107,7 +107,7 @@ test('should trigger simple-addon eventHandler', async () => {
 
     await addonService.createAddon(config, TEST_AUDIT_USER);
 
-    // Feature toggle was created
+    // Feature flag was created
     await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: SYSTEM_USER.username!,
@@ -117,6 +117,7 @@ test('should trigger simple-addon eventHandler', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
 
     const simpleProvider = addonService.addonProviders.simple;
@@ -144,7 +145,7 @@ test('should not trigger event handler if project of event is different from add
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: 'someotherproject',
         data: {
@@ -152,6 +153,7 @@ test('should not trigger event handler if project of event is different from add
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
@@ -178,7 +180,7 @@ test('should trigger event handler if project for event is one of the desired pr
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProject,
         data: {
@@ -186,10 +188,11 @@ test('should trigger event handler if project for event is one of the desired pr
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: otherProject,
         data: {
@@ -197,6 +200,7 @@ test('should trigger event handler if project for event is one of the desired pr
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
@@ -225,7 +229,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         data: {
@@ -233,10 +237,11 @@ test('should trigger events for multiple projects if addon is setup to filter mu
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: otherProject,
         data: {
@@ -244,10 +249,11 @@ test('should trigger events for multiple projects if addon is setup to filter mu
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[1],
         data: {
@@ -255,6 +261,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
@@ -286,7 +293,7 @@ test('should filter events on environment if addon is setup to filter for it', a
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredEnvironment,
         environment: desiredEnvironment,
@@ -295,10 +302,11 @@ test('should filter events on environment if addon is setup to filter for it', a
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         environment: otherEnvironment,
         data: {
@@ -306,6 +314,7 @@ test('should filter events on environment if addon is setup to filter for it', a
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
@@ -333,7 +342,7 @@ test('should not filter out global events (no specific environment) even if addo
 
     const globalEventWithNoEnvironment = {
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: 'some-project',
         data: {
@@ -341,6 +350,7 @@ test('should not filter out global events (no specific environment) even if addo
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     };
 
     await addonService.createAddon(config, TEST_AUDIT_USER);
@@ -371,13 +381,14 @@ test('should not filter out global events (no specific project) even if addon is
 
     const globalEventWithNoProject = {
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         data: {
             name: 'some-toggle',
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     };
 
     await addonService.createAddon(config, TEST_AUDIT_USER);
@@ -409,7 +420,7 @@ test('should support wildcard option for filtering addons', async () => {
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         data: {
@@ -417,10 +428,11 @@ test('should support wildcard option for filtering addons', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: otherProject,
         data: {
@@ -428,10 +440,11 @@ test('should support wildcard option for filtering addons', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[1],
         data: {
@@ -439,6 +452,7 @@ test('should support wildcard option for filtering addons', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
@@ -476,7 +490,7 @@ test('Should support filtering by both project and environment', async () => {
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         environment: desiredEnvironments[0],
@@ -485,10 +499,11 @@ test('Should support filtering by both project and environment', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[0],
         environment: 'wrongenvironment',
@@ -497,10 +512,11 @@ test('Should support filtering by both project and environment', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[2],
         environment: desiredEnvironments[1],
@@ -509,10 +525,11 @@ test('Should support filtering by both project and environment', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: desiredProjects[2],
         environment: desiredEnvironments[2],
@@ -521,10 +538,11 @@ test('Should support filtering by both project and environment', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
     await eventService.storeEvent({
         type: FEATURE_CREATED,
-        createdBy: SYSTEM_USER.username,
+        createdBy: SYSTEM_USER.username!,
         createdByUserId: SYSTEM_USER.id,
         project: 'wrongproject',
         environment: desiredEnvironments[0],
@@ -533,6 +551,7 @@ test('Should support filtering by both project and environment', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     });
 
     const simpleProvider = addonService.addonProviders.simple;

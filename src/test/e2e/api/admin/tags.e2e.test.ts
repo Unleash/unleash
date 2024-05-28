@@ -89,7 +89,7 @@ test('Can validate a tag', async () =>
         .expect(400)
         .expect((res) => {
             expect(res.body.details.length).toBe(1);
-            expect(res.body.details[0].description).toMatch(
+            expect(res.body.details[0].message).toMatch(
                 '"type" must be URL friendly',
             );
         }));

@@ -56,8 +56,8 @@ const defaultContext: ContextFieldSchema = {
 
 const defaultFeatureName = 'first_feature';
 
-const createToggle = async (
-    toggle: FeatureToggleDTO,
+const createFlag = async (
+    flag: FeatureToggleDTO,
     strategy: Omit<IStrategyConfig, 'id'> = defaultStrategy,
     tags: string[] = [],
     projectId: string = 'default',
@@ -66,7 +66,7 @@ const createToggle = async (
 ) => {
     await app.services.featureToggleServiceV2.createFeatureToggle(
         projectId,
-        toggle,
+        flag,
         TEST_AUDIT_USER,
     );
     if (strategy) {
@@ -74,7 +74,7 @@ const createToggle = async (
             strategy,
             {
                 projectId,
-                featureName: toggle.name,
+                featureName: flag.name,
                 environment: DEFAULT_ENV,
             },
             TEST_AUDIT_USER,
@@ -83,7 +83,7 @@ const createToggle = async (
     await Promise.all(
         tags.map(async (tag) => {
             return app.services.featureTagService.addTag(
-                toggle.name,
+                flag.name,
                 {
                     type: 'simple',
                     value: tag,
@@ -211,7 +211,7 @@ describe('import-export for project-specific segments', () => {
             ],
             segments: [segment.id],
         };
-        await createToggle(
+        await createFlag(
             {
                 name: defaultFeatureName,
                 description: 'the #1 feature',
@@ -276,14 +276,14 @@ test('exports features', async () => {
         ],
         segments: [segment.id],
     };
-    await createToggle(
+    await createFlag(
         {
             name: defaultFeatureName,
             description: 'the #1 feature',
         },
         strategy,
     );
-    await createToggle(
+    await createFlag(
         {
             name: 'second_feature',
             description: 'the #1 feature',
@@ -352,7 +352,7 @@ test('exports features by tag', async () => {
             },
         ],
     };
-    await createToggle(
+    await createFlag(
         {
             name: defaultFeatureName,
             description: 'the #1 feature',
@@ -360,7 +360,7 @@ test('exports features by tag', async () => {
         strategy,
         ['mytag'],
     );
-    await createToggle(
+    await createFlag(
         {
             name: 'second_feature',
             description: 'the #1 feature',
@@ -428,7 +428,7 @@ test('should export custom context fields from strategies and variants', async (
             },
         ],
     };
-    await createToggle(
+    await createFlag(
         {
             name: defaultFeatureName,
             description: 'the #1 feature',
@@ -502,7 +502,7 @@ test('should export custom context fields from strategies and variants', async (
 test('should export tags', async () => {
     const featureName = defaultFeatureName;
     await createProjects();
-    await createToggle(
+    await createFlag(
         {
             name: featureName,
             description: 'the #1 feature',
@@ -546,11 +546,11 @@ test('should export tags', async () => {
 
 test('returns all features, when no explicit feature was requested', async () => {
     await createProjects();
-    await createToggle({
+    await createFlag({
         name: defaultFeatureName,
         description: 'the #1 feature',
     });
-    await createToggle({
+    await createFlag({
         name: 'second_feature',
         description: 'the #1 feature',
     });
@@ -568,11 +568,11 @@ test('returns all features, when no explicit feature was requested', async () =>
 
 test('returns all project features', async () => {
     await createProjects();
-    await createToggle({
+    await createFlag({
         name: defaultFeatureName,
         description: 'the #1 feature',
     });
-    await createToggle({
+    await createFlag({
         name: 'second_feature',
         description: 'the #1 feature',
     });
@@ -966,7 +966,7 @@ test('reject import with unknown context fields', async () => {
         400,
     );
 
-    expect(body.details[0].description).toMatch(/\bContextField1\b/);
+    expect(body.details[0].message).toMatch(/\bContextField1\b/);
 });
 
 test('reject import with unsupported strategies', async () => {
@@ -989,7 +989,7 @@ test('reject import with unsupported strategies', async () => {
         400,
     );
 
-    expect(body.details[0].description).toMatch(/\bcustomStrategy\b/);
+    expect(body.details[0].message).toMatch(/\bcustomStrategy\b/);
 });
 
 test('reject import with duplicate features', async () => {
@@ -1007,8 +1007,8 @@ test('reject import with duplicate features', async () => {
         409,
     );
 
-    expect(body.details[0].description).toBe(
-        'A toggle with that name already exists',
+    expect(body.details[0].message).toBe(
+        'A flag with that name already exists',
     );
 });
 

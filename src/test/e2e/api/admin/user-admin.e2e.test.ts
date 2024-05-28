@@ -155,7 +155,7 @@ test('should require username or email on create', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].description).toEqual(
+            expect(res.body.details[0].message).toEqual(
                 'You must specify username or email',
             );
         });

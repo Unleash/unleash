@@ -8,21 +8,21 @@ The impression data feature was introduced in **Unleash 4.7**. It is available i
 
 :::
 
-Unleash can provide you with **impression data** about the toggles in your application. Impression data contains information about a specific feature toggle activation check: The client SDK will emit an **impression event** when it calls `isEnabled` or `getVariant`. Some front-end SDKs emit impression events only when a toggle is enabled.
+Unleash can provide you with **impression data** about the flags in your application. Impression data contains information about a specific feature flag activation check: The client SDK will emit an **impression event** when it calls `isEnabled` or `getVariant`. Some front-end SDKs emit impression events only when a flag is enabled.
 
-:::caution Front-end SDKs and disabled toggles
+:::caution Front-end SDKs and disabled flags
 
-Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../generated/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a toggle is disabled.
+Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../generated/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a flag is disabled.
 
-This is because impression data is a **per-toggle** setting and the Proxy and front-end API only transmit information about toggles that are enabled. As such, the SDK will never know that it should emit an impression event if a toggle is disabled.
+This is because impression data is a **per-flag** setting and the Proxy and front-end API only transmit information about flags that are enabled. As such, the SDK will never know that it should emit an impression event if a flag is disabled.
 
-Some of the front-end SDKs now include a include a configuration property that lets you turn on impression data for all toggles regardless of whether they're enabled or not.
+Some of the front-end SDKs now include a include a configuration property that lets you turn on impression data for all flags regardless of whether they're enabled or not.
 
 :::
 
-Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature toggle and the related [Unleash Context](../reference/unleash-context.md).
+Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature flag and the related [Unleash Context](../reference/unleash-context.md).
 
-Impression data is **opt-in on a per-toggle basis**. Unleash will not emit impression events for toggles not marked as such. Once you've turned impression data on for a toggle, you can start listening for impression events in your client SDK.
+Impression data is **opt-in on a per-flag basis**. Unleash will not emit impression events for flags not marked as such. Once you've turned impression data on for a flag, you can start listening for impression events in your client SDK.
 
 ## Impression event data
 
@@ -40,8 +40,8 @@ This table describes all the properties on the impression events:
 | `eventType` | The type of the event: `isEnabled` or `getVariant` | All |
 | `eventId` | A globally unique id (GUID) assigned to this event. | All |
 | `context` | A representation of the current [Unleash Context](../reference/unleash-context.md). | All |
-| `enabled` | Whether the toggle was enabled or not at when the client made the request. | All |
-| `featureName` | The name of the feature toggle. | All |
+| `enabled` | Whether the flag was enabled or not at when the client made the request. | All |
+| `featureName` | The name of the feature flag. | All |
 | `variant` | The name of the active variant | `getVariant` events only |
 
 ### Example `isEnabled` event {#example-isenabled}
@@ -56,7 +56,7 @@ This table describes all the properties on the impression events:
     environment: 'default'
   },
   enabled: true,
-  featureName: 'my-feature-toggle',
+  featureName: 'my-feature-flag',
 }
 ```
 
@@ -72,22 +72,22 @@ This table describes all the properties on the impression events:
     environment: 'default'
   },
   enabled: true,
-  featureName: 'my-feature-toggle',
+  featureName: 'my-feature-flag',
   variant: 'variantA'
 }
 ```
 
 ## Enabling impression data
 
-Impression data is strictly an **opt-in** feature and must be enabled on a **per-toggle basis**. You can enable and disable it both when you create a toggle and when you edit a toggle.
+Impression data is strictly an **opt-in** feature and must be enabled on a **per-flag basis**. You can enable and disable it both when you create a flag and when you edit a flag.
 
-You can enable impression data via the impression data toggle in the admin UI's toggle creation form. You can also go via the [the API, using the `impressionData` option](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle). For more detailed instructions, see [the section on enabling impression data in the how-to guide for capturing impression data](../how-to/how-to-capture-impression-data.mdx#step-1).
+You can enable impression data via the impression data flag in the admin UI's flag creation form. You can also go via the [the API, using the `impressionData` option](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle). For more detailed instructions, see [the section on enabling impression data in the how-to guide for capturing impression data](../how-to/how-to-capture-impression-data.mdx#step-1).
 
-![A feature toggle creation form. At the end of the form is a heading that says "Impression data", a short paragraph that describes the feature, and a toggle to opt in or out of it.](/img/create_feat_impression.png)
+![A feature flag creation form. At the end of the form is a heading that says "Impression data", a short paragraph that describes the feature, and a flag to opt in or out of it.](/img/create_feat_impression.png)
 
 ## Example setup
 
-The exact setup will vary depending on your [client SDK](../reference/sdks/index.md). The below example configures the [Unleash Proxy client../reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-toggle" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
+The exact setup will vary depending on your [client SDK](../reference/sdks/index.md). The below example configures the [Unleash Proxy client../reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-flag" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
 
 ```js
 const unleash = new UnleashClient({
@@ -99,7 +99,7 @@ const unleash = new UnleashClient({
 unleash.start();
 
 unleash.on('ready', () => {
-  unleash.isEnabled('my-feature-toggle');
+  unleash.isEnabled('my-feature-flag');
 });
 
 unleash.on('impression', (event) => {

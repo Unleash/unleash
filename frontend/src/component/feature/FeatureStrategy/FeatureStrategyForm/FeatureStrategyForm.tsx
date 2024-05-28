@@ -398,7 +398,7 @@ export const FeatureStrategyForm = ({
                         condition={Boolean(isChangeRequest)}
                         show={
                             <Alert severity='success'>
-                                This feature toggle is currently enabled in the{' '}
+                                This feature flag is currently enabled in the{' '}
                                 <strong>{environmentId}</strong> environment.
                                 Any changes made here will be available to users
                                 as soon as these changes are approved and
@@ -407,7 +407,7 @@ export const FeatureStrategyForm = ({
                         }
                         elseShow={
                             <Alert severity='success'>
-                                This feature toggle is currently enabled in the{' '}
+                                This feature flag is currently enabled in the{' '}
                                 <strong>{environmentId}</strong> environment.
                                 Any changes made here will be available to users
                                 as soon as you hit <strong>save</strong>.

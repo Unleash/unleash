@@ -48,7 +48,7 @@ export default class FakeApiTokenStore
 
     async getAllActive(): Promise<IApiToken[]> {
         return this.tokens.filter(
-            (token) => token.expiresAt === null || token.expiresAt > new Date(),
+            (token) => !token.expiresAt || token.expiresAt > new Date(),
         );
     }
 

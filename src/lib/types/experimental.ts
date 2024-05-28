@@ -34,8 +34,7 @@ export type IFlagKey =
     | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
-    | 'executiveDashboard'
-    | 'executiveDashboardUI'
+    | 'killInsightsUI'
     | 'feedbackComments'
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
@@ -63,7 +62,8 @@ export type IFlagKey =
     | 'manyStrategiesPagination'
     | 'newCreateProjectUI'
     | 'enableLegacyVariants'
-    | 'debugMetrics';
+    | 'debugMetrics'
+    | 'navigationSidebar';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -182,12 +182,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
         false,
     ),
-    executiveDashboard: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD,
-        false,
-    ),
-    executiveDashboardUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXECUTIVE_DASHBOARD_UI,
+    killInsightsUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_KILL_INSIGHTS_UI,
         false,
     ),
     outdatedSdksBanner: parseEnvVarBoolean(
@@ -302,6 +298,10 @@ const flags: IFlags = {
     ),
     debugMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DEBUG_METRICS,
+        false,
+    ),
+    navigationSidebar: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         false,
     ),
 };

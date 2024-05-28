@@ -123,7 +123,7 @@ class StateController extends Controller {
             userName,
             dropBeforeImport: paramToBool(drop, false),
             keepExisting: paramToBool(keep, true),
-            userId: req.user.id,
+            auditUser: req.audit,
         });
         res.sendStatus(202);
     }

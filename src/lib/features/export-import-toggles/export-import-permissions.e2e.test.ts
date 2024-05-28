@@ -55,7 +55,7 @@ const createFeature = async (featureName: string) => {
         .expect(201);
 };
 
-const createFeatureToggleWithStrategy = async (featureName: string) => {
+const createFeatureFlagWithStrategy = async (featureName: string) => {
     await createFeature(featureName);
     return app.request
         .post(
@@ -309,7 +309,7 @@ test('validate import data', async () => {
     await createFeature(archivedFeature);
     await archiveFeature(archivedFeature);
 
-    await createFeatureToggleWithStrategy(existingFeature);
+    await createFeatureFlagWithStrategy(existingFeature);
 
     await createContextField(contextField);
     const importPayloadWithContextFields: ImportTogglesSchema = {
@@ -372,12 +372,12 @@ test('validate import data', async () => {
                 message:
                     'We detected you are missing the following permissions:',
                 affectedItems: [
-                    'Create feature toggles',
-                    'Update feature toggles',
                     'Create context fields',
                     'Create activation strategies',
                     'Delete activation strategies',
                     'Update variants',
+                    'Create feature flags',
+                    'Update feature flags',
                     'Create tag types',
                 ],
             },

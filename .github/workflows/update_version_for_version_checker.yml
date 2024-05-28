@@ -5,6 +5,12 @@ permissions:
   contents: read
 
 on:
+  workflow_call:
+    inputs:
+      version:
+        description: "Which version should we set OSS to"
+        type: 'string'
+        required: true
   workflow_dispatch:
     inputs:
       version:

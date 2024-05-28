@@ -1,5 +1,5 @@
 import type { IEventStore } from '../../lib/types/stores/event-store';
-import type { IEvent } from '../../lib/types/events';
+import type { IBaseEvent, IEvent } from '../../lib/types/events';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter';
 import type { IQueryOperations } from '../../lib/features/events/event-store';
 import type { SearchEventsSchema } from '../../lib/openapi';
@@ -19,15 +19,23 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve(1);
     }
 
-    store(event: IEvent): Promise<void> {
-        this.events.push(event);
+    store(event: IBaseEvent): Promise<void> {
+        this.events.push({
+            ...event,
+            id: this.events.length,
+            createdAt: new Date(),
+        });
         this.eventEmitter.emit(event.type, event);
         return Promise.resolve();
     }
 
-    batchStore(events: IEvent[]): Promise<void> {
+    batchStore(events: IBaseEvent[]): Promise<void> {
         events.forEach((event) => {
-            this.events.push(event);
+            this.events.push({
+                ...event,
+                id: this.events.length,
+                createdAt: new Date(),
+            });
             this.eventEmitter.emit(event.type, event);
         });
         return Promise.resolve();

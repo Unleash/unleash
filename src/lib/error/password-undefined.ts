@@ -14,7 +14,6 @@ export default class PasswordUndefinedError extends UnleashError {
                 {
                     validationErrors: [],
                     message: this.message,
-                    description: this.message,
                 },
             ],
         };

@@ -1,9 +1,9 @@
 ---
-title: Feature Toggle Variants (deprecated)
+title: Feature Flag Variants (deprecated)
 ---
 :::warning
 
-Feature Toggle Variants at the environment level are deprecated in favor of the [strategy variants](./strategy-variants.md). 
+Feature Flag Variants at the environment level are deprecated in favor of the [strategy variants](./strategy-variants.md). 
 Only features that have existing feature environment variants will keep them. 
 If you'd like to keep the old variants in your hosted instance [contact us](https://slack.unleash.run) for further assistance.
 
@@ -11,23 +11,23 @@ If you'd like to keep the old variants in your hosted instance [contact us](http
 
 :::info Availability
 
-**Feature toggle variants** were first introduced in Unleash 3.2.
+**Feature flag variants** were first introduced in Unleash 3.2.
 In Unleash 4.21, variants were updated to be **environment-dependent**, meaning the same feature could have different variant configurations in different environments.
 
 :::
 
-Every toggle in Unleash can have something called _variants_. Where _feature toggles_ allow you to decide which users get access to a feature, _toggle variants_ allow you to further split those users into segments. Say, for instance, that you're testing out a new feature, such as an alternate sign-up form. The feature toggle would expose the form only to a select group of users. The variants could decide whether the user sees a blue or a green submit button on that form.
+Every flag in Unleash can have something called _variants_. Where _feature flags_ allow you to decide which users get access to a feature, _flag variants_ allow you to further split those users into segments. Say, for instance, that you're testing out a new feature, such as an alternate sign-up form. The feature flag would expose the form only to a select group of users. The variants could decide whether the user sees a blue or a green submit button on that form.
 
 Variants facilitate A/B testing and experimentation by letting you create controlled and measurable experiments. Check [our blog post on using Unleash for A/B/n experiments](https://www.getunleash.io/blog/a-b-n-experiments-in-3-simple-steps) for some more insights into how you can set it up.
 
 ## What are variants?
 
-Whenever you create a feature toggle, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better. A feature can have different variants in each of its environments.
+Whenever you create a feature flag, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better. A feature can have different variants in each of its environments.
 
 A variant has four components that define it:
 - a **name**:
 
-    This must be unique among the toggle's variants in the specified environment. When working with a feature with variants in a client, you will typically use the variant's name to find out which variant it is.
+    This must be unique among the flag's variants in the specified environment. When working with a feature with variants in a client, you will typically use the variant's name to find out which variant it is.
 
 - a **weight**:
 
@@ -42,7 +42,7 @@ A variant has four components that define it:
 
     Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](./stickiness.md) value) will always get this variant, regardless of the variant's weight.
 
-![A form for adding new variants. It has fields for name, weight, payload, and overrides.](/img/variant-creation-form.png 'Creating a new toggle variant')
+![A form for adding new variants. It has fields for name, weight, payload, and overrides.](/img/variant-creation-form.png 'Creating a new flag variant')
 
 ### Variant weight
 
@@ -108,11 +108,11 @@ Variant stickiness is calculated on the received user and context, as described 
 
 In the Unleash UI, you can configure variants by navigating to the feature view, and then choosing the 'Variants' tab.
 
-![toggle_variants](/img/variants.png 'Feature Toggle Variants')
+![flag_variants](/img/variants.png 'Feature Flag Variants')
 
 ## The `disabled` variant
 
-When a toggle has no variants or when a toggle is disabled for a user, Unleash will return it with variant data that looks like this:
+When a flag has no variants or when a flag is disabled for a user, Unleash will return it with variant data that looks like this:
 
 ```json
 {
@@ -127,7 +127,7 @@ Note: The actual representation of the built-in fallback variant in the client S
 
 ## Client SDK Support {#client-sdk-support}
 
-To make use of toggle variants, you need to use a compatible client. Client SDK with variant support:
+To make use of flag variants, you need to use a compatible client. Client SDK with variant support:
 
 - [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v3.2.0)
 - [unleash-client-java](https://github.com/Unleash/unleash-client-java) (from v3.2.0)

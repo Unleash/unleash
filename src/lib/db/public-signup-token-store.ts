@@ -142,15 +142,6 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
         return toTokens(rows);
     }
 
-    async getAllActive(): Promise<PublicSignupTokenSchema[]> {
-        const stopTimer = this.timer('getAllActive');
-        const rows = await this.makeTokenUsersQuery()
-            .where('expires_at', 'IS', null)
-            .orWhere('expires_at', '>', 'now()');
-        stopTimer();
-        return toTokens(rows);
-    }
-
     async addTokenUser(secret: string, userId: number): Promise<void> {
         await this.db<ITokenUserRow>(TOKEN_USERS_TABLE).insert(
             { user_id: userId, secret },

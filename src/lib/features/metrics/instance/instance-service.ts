@@ -115,9 +115,10 @@ export default class ClientInstanceService {
             if (appsToAnnounce.length > 0) {
                 const events = appsToAnnounce.map((app) => ({
                     type: APPLICATION_CREATED,
-                    createdBy: app.createdBy || SYSTEM_USER.username,
+                    createdBy: app.createdBy || SYSTEM_USER.username!,
                     data: app,
                     createdByUserId: app.createdByUserId || SYSTEM_USER.id,
+                    ip: '', // TODO: fix this, how do we get the ip from the client? This comes from a row in the DB
                 }));
                 await this.eventStore.batchStore(events);
             }

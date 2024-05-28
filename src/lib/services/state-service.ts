@@ -1,19 +1,19 @@
 import { stateSchema } from './state-schema';
 import {
-    DROP_ENVIRONMENTS,
-    DROP_FEATURE_TAGS,
-    DROP_FEATURES,
-    DROP_PROJECTS,
-    DROP_STRATEGIES,
-    DROP_TAG_TYPES,
-    DROP_TAGS,
-    ENVIRONMENT_IMPORT,
-    FEATURE_IMPORT,
-    FEATURE_TAG_IMPORT,
-    PROJECT_IMPORT,
-    STRATEGY_IMPORT,
-    TAG_IMPORT,
-    TAG_TYPE_IMPORT,
+    DropEnvironmentsEvent,
+    DropFeaturesEvent,
+    DropFeatureTagsEvent,
+    DropProjectsEvent,
+    DropStrategiesEvent,
+    DropTagsEvent,
+    DropTagTypesEvent,
+    EnvironmentImport,
+    FeatureImport,
+    FeatureTagImport,
+    ProjectImport,
+    StrategyImport,
+    TagImport,
+    TagTypeImport,
 } from '../types/events';
 
 import { filterEqual, filterExisting, parseFile, readFile } from './state-util';
@@ -53,6 +53,7 @@ import { GLOBAL_ENV } from '../types/environment';
 import type { ISegmentStore } from '../features/segment/segment-store-type';
 import type { PartialSome } from '../types/partial';
 import type EventService from '../features/events/event-service';
+import type { IAuditUser } from '../server-impl';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -117,8 +118,7 @@ export default class StateService {
     async importFile({
         file,
         dropBeforeImport = false,
-        userName = 'import-user',
-        userId,
+        auditUser,
         keepExisting = true,
     }: IImportFile): Promise<void> {
         return readFile(file)
@@ -126,10 +126,9 @@ export default class StateService {
             .then((data) =>
                 this.import({
                     data,
-                    userName,
+                    auditUser,
                     dropBeforeImport,
                     keepExisting,
-                    userId,
                 }),
             );
     }
@@ -169,8 +168,7 @@ export default class StateService {
 
     async import({
         data,
-        userName = 'importUser',
-        userId,
+        auditUser,
         dropBeforeImport = false,
         keepExisting = true,
     }: IImportData): Promise<void> {
@@ -186,10 +184,9 @@ export default class StateService {
         if (importData.environments) {
             importedEnvironments = await this.importEnvironments({
                 environments: data.environments,
-                userName,
                 dropBeforeImport,
                 keepExisting,
-                userId,
+                auditUser,
             });
         }
 
@@ -197,10 +194,9 @@ export default class StateService {
             await this.importProjects({
                 projects: data.projects,
                 importedEnvironments,
-                userName,
                 dropBeforeImport,
                 keepExisting,
-                userId,
+                auditUser,
             });
         }
 
@@ -217,11 +213,10 @@ export default class StateService {
 
             await this.importFeatures({
                 features,
-                userName,
                 dropBeforeImport,
                 keepExisting,
                 featureEnvironments,
-                userId,
+                auditUser,
             });
 
             if (featureEnvironments) {
@@ -240,10 +235,9 @@ export default class StateService {
         if (importData.strategies) {
             await this.importStrategies({
                 strategies: data.strategies,
-                userName,
                 dropBeforeImport,
                 keepExisting,
-                userId,
+                auditUser,
             });
         }
 
@@ -263,18 +257,16 @@ export default class StateService {
                             tagValue: t.tagValue || t.value,
                             tagType: t.tagType || t.type,
                         })) || [],
-                userName,
                 dropBeforeImport,
                 keepExisting,
-                userId,
+                auditUser,
             });
         }
 
         if (importData.segments) {
             await this.importSegments(
                 data.segments,
-                userName,
-                userId,
+                auditUser,
                 dropBeforeImport,
             );
         }
@@ -320,9 +312,7 @@ export default class StateService {
             ? []
             : await this.featureStrategiesStore.getAll();
         if (dropBeforeImport) {
-            this.logger.info(
-                'Dropping existing strategies for feature toggles',
-            );
+            this.logger.info('Dropping existing strategies for feature flags');
             await this.featureStrategiesStore.deleteAll();
         }
         const strategiesToImport = keepExisting
@@ -367,29 +357,24 @@ export default class StateService {
         };
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importFeatures({
         features,
-        userName,
-        userId,
         dropBeforeImport,
         keepExisting,
         featureEnvironments,
+        auditUser,
     }): Promise<void> {
-        this.logger.info(`Importing ${features.length} feature toggles`);
+        this.logger.info(`Importing ${features.length} feature flags`);
         const oldToggles = dropBeforeImport
             ? []
             : await this.toggleStore.getAll();
 
         if (dropBeforeImport) {
-            this.logger.info('Dropping existing feature toggles');
+            this.logger.info('Dropping existing feature flags');
             await this.toggleStore.deleteAll();
-            await this.eventService.storeEvent({
-                type: DROP_FEATURES,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: { name: 'all-features' },
-            });
+            await this.eventService.storeEvent(
+                new DropFeaturesEvent({ auditUser }),
+            );
         }
 
         await Promise.all(
@@ -398,7 +383,7 @@ export default class StateService {
                 .filter(filterEqual(oldToggles))
                 .map(async (feature) => {
                     await this.toggleStore.create(feature.project, {
-                        createdByUserId: userId,
+                        createdByUserId: auditUser.id,
                         ...feature,
                     });
                     await this.featureEnvironmentStore.connectFeatureToEnvironmentsForProject(
@@ -406,12 +391,12 @@ export default class StateService {
                         feature.project,
                         this.enabledIn(feature.name, featureEnvironments),
                     );
-                    await this.eventService.storeEvent({
-                        type: FEATURE_IMPORT,
-                        createdByUserId: userId,
-                        createdBy: userName,
-                        data: feature,
-                    });
+                    await this.eventService.storeEvent(
+                        new FeatureImport({
+                            feature,
+                            auditUser,
+                        }),
+                    );
                 }),
         );
     }
@@ -419,10 +404,9 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importStrategies({
         strategies,
-        userName,
-        userId,
         dropBeforeImport,
         keepExisting,
+        auditUser,
     }): Promise<void> {
         this.logger.info(`Importing ${strategies.length} strategies`);
         const oldStrategies = dropBeforeImport
@@ -432,12 +416,9 @@ export default class StateService {
         if (dropBeforeImport) {
             this.logger.info('Dropping existing strategies');
             await this.strategyStore.dropCustomStrategies();
-            await this.eventService.storeEvent({
-                type: DROP_STRATEGIES,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: { name: 'all-strategies' },
-            });
+            await this.eventService.storeEvent(
+                new DropStrategiesEvent({ auditUser }),
+            );
         }
 
         await Promise.all(
@@ -446,12 +427,9 @@ export default class StateService {
                 .filter(filterEqual(oldStrategies))
                 .map((strategy) =>
                     this.strategyStore.importStrategy(strategy).then(() => {
-                        this.eventService.storeEvent({
-                            type: STRATEGY_IMPORT,
-                            createdBy: userName,
-                            createdByUserId: userId,
-                            data: strategy,
-                        });
+                        this.eventService.storeEvent(
+                            new StrategyImport({ strategy, auditUser }),
+                        );
                     }),
                 ),
         );
@@ -460,8 +438,7 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async importEnvironments({
         environments,
-        userName,
-        userId,
+        auditUser,
         dropBeforeImport,
         keepExisting,
     }): Promise<IEnvironment[]> {
@@ -472,12 +449,9 @@ export default class StateService {
         if (dropBeforeImport) {
             this.logger.info('Dropping existing environments');
             await this.environmentStore.deleteAll();
-            await this.eventService.storeEvent({
-                type: DROP_ENVIRONMENTS,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: { name: 'all-environments' },
-            });
+            await this.eventService.storeEvent(
+                new DropEnvironmentsEvent({ auditUser }),
+            );
         }
         const envsImport = environments.filter((env) =>
             keepExisting ? !oldEnvs.some((old) => old.name === env.name) : true,
@@ -486,12 +460,9 @@ export default class StateService {
         if (envsImport.length > 0) {
             importedEnvs =
                 await this.environmentStore.importEnvironments(envsImport);
-            const importedEnvironmentEvents = importedEnvs.map((env) => ({
-                type: ENVIRONMENT_IMPORT,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: env,
-            }));
+            const importedEnvironmentEvents = importedEnvs.map(
+                (env) => new EnvironmentImport({ auditUser, env }),
+            );
             await this.eventService.storeEvents(importedEnvironmentEvents);
         }
         return importedEnvs;
@@ -501,8 +472,7 @@ export default class StateService {
     async importProjects({
         projects,
         importedEnvironments,
-        userName,
-        userId,
+        auditUser,
         dropBeforeImport,
         keepExisting,
     }): Promise<void> {
@@ -513,12 +483,9 @@ export default class StateService {
         if (dropBeforeImport) {
             this.logger.info('Dropping existing projects');
             await this.projectStore.deleteAll();
-            await this.eventService.storeEvent({
-                type: DROP_PROJECTS,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: { name: 'all-projects' },
-            });
+            await this.eventService.storeEvent(
+                new DropProjectsEvent({ auditUser }),
+            );
         }
         const projectsToImport = projects.filter((project) =>
             keepExisting
@@ -530,12 +497,9 @@ export default class StateService {
                 projectsToImport,
                 importedEnvironments,
             );
-            const importedProjectEvents = importedProjects.map((project) => ({
-                type: PROJECT_IMPORT,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: project,
-            }));
+            const importedProjectEvents = importedProjects.map(
+                (project) => new ProjectImport({ project, auditUser }),
+            );
             await this.eventService.storeEvents(importedProjectEvents);
         }
     }
@@ -545,8 +509,7 @@ export default class StateService {
         tagTypes,
         tags,
         featureTags,
-        userName,
-        userId,
+        auditUser,
         dropBeforeImport,
         keepExisting,
     }): Promise<void> {
@@ -568,40 +531,23 @@ export default class StateService {
             await this.tagStore.deleteAll();
             await this.tagTypeStore.deleteAll();
             await this.eventService.storeEvents([
-                {
-                    type: DROP_FEATURE_TAGS,
-                    createdBy: userName,
-                    createdByUserId: userId,
-                    data: { name: 'all-feature-tags' },
-                },
-                {
-                    type: DROP_TAGS,
-                    createdBy: userName,
-                    createdByUserId: userId,
-                    data: { name: 'all-tags' },
-                },
-                {
-                    type: DROP_TAG_TYPES,
-                    createdBy: userName,
-                    createdByUserId: userId,
-                    data: { name: 'all-tag-types' },
-                },
+                new DropFeatureTagsEvent({ auditUser }),
+                new DropTagsEvent({ auditUser }),
+                new DropTagTypesEvent({ auditUser }),
             ]);
         }
         await this.importTagTypes(
             tagTypes,
             keepExisting,
             oldTagTypes,
-            userName,
-            userId,
+            auditUser,
         );
-        await this.importTags(tags, keepExisting, oldTags, userName, userId);
+        await this.importTags(tags, keepExisting, oldTags, auditUser);
         await this.importFeatureTags(
             featureTags,
             keepExisting,
             oldFeatureTags,
-            userName,
-            userId,
+            auditUser,
         );
     }
 
@@ -617,8 +563,7 @@ export default class StateService {
         featureTags: IFeatureTag[],
         keepExisting: boolean,
         oldFeatureTags: IFeatureTag[],
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const featureTagsToInsert = featureTags
             .filter((tag) =>
@@ -629,18 +574,15 @@ export default class StateService {
                     : true,
             )
             .map((tag) => ({
-                createdByUserId: userId,
+                createdByUserId: auditUser.id,
                 ...tag,
             }));
         if (featureTagsToInsert.length > 0) {
             const importedFeatureTags =
                 await this.featureTagStore.tagFeatures(featureTagsToInsert);
-            const importedFeatureTagEvents = importedFeatureTags.map((tag) => ({
-                type: FEATURE_TAG_IMPORT,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: tag,
-            }));
+            const importedFeatureTagEvents = importedFeatureTags.map(
+                (featureTag) => new FeatureTagImport({ featureTag, auditUser }),
+            );
             await this.eventService.storeEvents(importedFeatureTagEvents);
         }
     }
@@ -652,8 +594,7 @@ export default class StateService {
         tags: ITag[],
         keepExisting: boolean,
         oldTags: ITag[],
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const tagsToInsert = tags.filter((tag) =>
             keepExisting
@@ -662,12 +603,9 @@ export default class StateService {
         );
         if (tagsToInsert.length > 0) {
             const importedTags = await this.tagStore.bulkImport(tagsToInsert);
-            const importedTagEvents = importedTags.map((tag) => ({
-                type: TAG_IMPORT,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: tag,
-            }));
+            const importedTagEvents = importedTags.map(
+                (tag) => new TagImport({ tag, auditUser }),
+            );
             await this.eventService.storeEvents(importedTagEvents);
         }
     }
@@ -676,8 +614,7 @@ export default class StateService {
         tagTypes: ITagType[],
         keepExisting: boolean,
         oldTagTypes: ITagType[],
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
     ): Promise<void> {
         const tagTypesToInsert = tagTypes.filter((tagType) =>
             keepExisting
@@ -687,20 +624,16 @@ export default class StateService {
         if (tagTypesToInsert.length > 0) {
             const importedTagTypes =
                 await this.tagTypeStore.bulkImport(tagTypesToInsert);
-            const importedTagTypeEvents = importedTagTypes.map((tagType) => ({
-                type: TAG_TYPE_IMPORT,
-                createdBy: userName,
-                createdByUserId: userId,
-                data: tagType,
-            }));
+            const importedTagTypeEvents = importedTagTypes.map(
+                (tagType) => new TagTypeImport({ tagType, auditUser }),
+            );
             await this.eventService.storeEvents(importedTagTypeEvents);
         }
     }
 
     async importSegments(
         segments: PartialSome<ISegment, 'id'>[],
-        userName: string,
-        userId: number,
+        auditUser: IAuditUser,
         dropBeforeImport: boolean,
     ): Promise<void> {
         if (dropBeforeImport) {
@@ -709,7 +642,9 @@ export default class StateService {
 
         await Promise.all(
             segments.map((segment) =>
-                this.segmentStore.create(segment, { username: userName }),
+                this.segmentStore.create(segment, {
+                    username: auditUser.username,
+                }),
             ),
         );
     }

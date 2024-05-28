@@ -52,7 +52,7 @@ beforeAll(async () => {
     await app.archiveFeature('featureArchivedZ');
     await app.createFeature({
         name: 'feature.with.variants',
-        description: 'A feature toggle with variants',
+        description: 'A feature flag with variants',
         variants: [
             { name: 'control', weight: 50 },
             { name: 'new', weight: 50 },
@@ -65,7 +65,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns three archived toggles', async () => {
+test('returns three archived flags', async () => {
     expect.assertions(1);
     return app.request
         .get('/api/admin/archive/features')
@@ -76,7 +76,7 @@ test('returns three archived toggles', async () => {
         });
 });
 
-test('returns three archived toggles with archivedAt', async () => {
+test('returns three archived flags with archivedAt', async () => {
     expect.assertions(2);
     return app.request
         .get('/api/admin/archive/features')
@@ -102,12 +102,12 @@ test('archived feature is not accessible via /features/:featureName', async () =
     await app.getProjectFeatures('default', 'featureArchivedZ', 404);
 });
 
-test('must set name when reviving toggle', async () => {
+test('must set name when reviving flag', async () => {
     expect.assertions(0);
     return app.request.post('/api/admin/archive/revive/').expect(404);
 });
 
-test('should be allowed to reuse deleted toggle name', async () => {
+test('should be allowed to reuse deleted flag name', async () => {
     expect.assertions(2);
     await app.request
         .post('/api/admin/projects/default/features')
@@ -134,7 +134,7 @@ test('should be allowed to reuse deleted toggle name', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 });
-test('Deleting an unarchived toggle should not take effect', async () => {
+test('Deleting an unarchived flag should not take effect', async () => {
     expect.assertions(2);
     await app.request
         .post('/api/admin/projects/default/features')

@@ -43,7 +43,7 @@ test('Using custom auth type without defining custom middleware causes default D
         undefined,
     );
     await request
-        .get('/api/admin/features')
+        .get('/api/admin/projects')
         .expect(401)
         .expect((res) => {
             expect(res.body.error).toBe(
@@ -56,6 +56,6 @@ test('Using custom auth type without defining custom middleware causes default D
 test('If actually configuring a custom middleware should configure the middleware', async () => {
     expect.assertions(0);
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
-    await request.get('/api/admin/features').expect(200);
+    await request.get('/api/admin/projects').expect(200);
     await destroy();
 });

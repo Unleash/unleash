@@ -12,7 +12,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('creates new feature toggle with createdBy', async () => {
+test('creates new feature flag with createdBy', async () => {
     expect.assertions(1);
 
     const { request, destroy } = await setupAppWithAuth(db.stores);
@@ -22,7 +22,7 @@ test('creates new feature toggle with createdBy', async () => {
         email: 'user@mail.com',
     });
 
-    // create toggle
+    // create flag
     await request
         .post('/api/admin/projects/default/features')
         .send({
@@ -42,6 +42,6 @@ test('creates new feature toggle with createdBy', async () => {
 test('should require authenticated user', async () => {
     expect.assertions(0);
     const { request, destroy } = await setupAppWithAuth(db.stores);
-    await request.get('/api/admin/features').expect(401);
+    await request.get('/api/admin/projects/default/features').expect(401);
     await destroy();
 });

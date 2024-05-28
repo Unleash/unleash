@@ -109,7 +109,7 @@ export default class VariantsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary:
-                        'Create (overwrite) variants for a feature toggle in all environments',
+                        'Create (overwrite) variants for a feature flag in all environments',
                     description: `This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
 
 The backend will validate the input for the following invariants
@@ -174,7 +174,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
                 openApiService.validPath({
                     summary:
                         'Create (overwrite) variants for a feature in an environment',
-                    description: `This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
+                    description: `This overwrites the current variants for the feature flag in the :featureName parameter for the :environment parameter.
 
 The backend will validate the input for the following invariants:
 
@@ -202,9 +202,9 @@ The backend will also distribute remaining weight up to 1000 after adding the va
                     tags: ['Features'],
                     operationId: 'overwriteFeatureVariantsOnEnvironments',
                     summary:
-                        'Create (overwrite) variants for a feature toggle in multiple environments',
+                        'Create (overwrite) variants for a feature flag in multiple environments',
                     description:
-                        'This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.',
+                        'This overwrites the current variants for the feature flag in the :featureName parameter for the :environment parameter.',
                     requestBody: createRequestSchema('pushVariantsSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),

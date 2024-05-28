@@ -36,11 +36,11 @@ test('should require authenticated user', async () => {
         );
     };
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
-    await request.get('/api/admin/features').expect(401);
+    await request.get('/api/admin/projects/default/features').expect(401);
     await destroy();
 });
 
-test('creates new feature toggle with createdBy', async () => {
+test('creates new feature flag with createdBy', async () => {
     expect.assertions(1);
     const email = 'custom-user@mail.com';
 
@@ -52,7 +52,7 @@ test('creates new feature toggle with createdBy', async () => {
     };
     const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
-    // create toggle
+    // create flag
     await request
         .post('/api/admin/projects/default/features')
         .send({

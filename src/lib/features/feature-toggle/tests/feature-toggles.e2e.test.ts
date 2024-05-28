@@ -172,7 +172,7 @@ async function addStrategies(featureName: string, envName: string) {
         .expect(200);
 }
 
-test('Trying to add a strategy configuration to environment not connected to toggle should fail', async () => {
+test('Trying to add a strategy configuration to environment not connected to flag should fail', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -603,11 +603,11 @@ test('Trying to get features for non-existing project also yields 404', async ()
         });
 });
 
-test('Can use new project feature toggle endpoint to create feature toggle without strategies', async () => {
+test('Can use new project feature flag endpoint to create feature flag without strategies', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: 'new.toggle.without.strategy',
+            name: 'new.flag.without.strategy',
         })
         .expect(201)
         .expect((res) => {
@@ -615,19 +615,19 @@ test('Can use new project feature toggle endpoint to create feature toggle witho
         });
 });
 
-test('Can create feature toggle without strategies', async () => {
-    const name = 'new.toggle.without.strategy.2';
+test('Can create feature flag without strategies', async () => {
+    const name = 'new.flag.without.strategy.2';
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name });
-    const { body: toggle } = await app.request.get(
+    const { body: flag } = await app.request.get(
         `/api/admin/projects/default/features/${name}`,
     );
-    expect(toggle.environments).toHaveLength(1);
-    expect(toggle.environments[0].strategies).toHaveLength(0);
+    expect(flag.environments).toHaveLength(1);
+    expect(flag.environments[0].strategies).toHaveLength(0);
 });
 
-test('Still validates feature toggle input when creating', async () => {
+test('Still validates feature flag input when creating', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -636,7 +636,7 @@ test('Still validates feature toggle input when creating', async () => {
         .expect(400);
 });
 
-test('Trying to create toggle that already exists yield 409 error', async () => {
+test('Trying to create flag that already exists yield 409 error', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
@@ -654,7 +654,7 @@ test('Trying to create toggle that already exists yield 409 error', async () => 
         .expect(409);
 });
 
-test('Trying to create toggle under project that does not exist should fail', async () => {
+test('Trying to create flag under project that does not exist should fail', async () => {
     await app.request
         .post('/api/admin/projects/non-existing-secondary/features')
         .send({
@@ -663,7 +663,7 @@ test('Trying to create toggle under project that does not exist should fail', as
         .expect(404);
 });
 
-test('Can get environment info for feature toggle', async () => {
+test('Can get environment info for feature flag', async () => {
     const envName = 'environment-info';
     // Create environment
     await db.stores.environmentStore.create({
@@ -706,20 +706,20 @@ test('Getting environment info for environment that does not exist yields 404', 
         .expect(404);
 });
 
-test('Trying to toggle environment that does not exist yields 404', async () => {
+test('Trying to flag environment that does not exist yields 404', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
-        .send({ name: 'toggle.env' })
+        .send({ name: 'flag.env' })
         .expect(201);
     await app.request
         .post(
-            '/api/admin/projects/default/features/toggle.env/environments/does-not-exist/on',
+            '/api/admin/projects/default/features/flag.env/environments/does-not-exist/on',
         )
         .send({})
         .expect(404);
     await app.request
         .post(
-            '/api/admin/projects/default/features/toggle.env/environments/does-not-exist/off',
+            '/api/admin/projects/default/features/flag.env/environments/does-not-exist/off',
         )
         .send({})
         .expect(404);
@@ -733,7 +733,7 @@ test('Getting feature that does not exist should yield 404', async () => {
 
 describe('Interacting with features using project IDs that belong to other projects', () => {
     const otherProject = 'project2';
-    const featureName = 'new-toggle';
+    const featureName = 'new-flag';
     const nonExistingProject = 'this-is-not-a-project';
 
     beforeAll(async () => {
@@ -761,7 +761,7 @@ describe('Interacting with features using project IDs that belong to other proje
             .get(`/api/admin/projects/${otherProject}`)
             .expect(200);
 
-        // create toggle in default project
+        // create flag in default project
         await app.request
             .post('/api/admin/projects/default/features')
             .send({ name: featureName })
@@ -823,9 +823,9 @@ describe('Interacting with features using project IDs that belong to other proje
     });
 });
 
-test('Should update feature toggle', async () => {
+test('Should update feature flag', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'new.toggle.update';
+    const name = 'new.flag.update';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release' })
@@ -835,17 +835,17 @@ test('Should update feature toggle', async () => {
         .send({ name, description: 'updated', type: 'kill-switch' })
         .expect(200);
 
-    const { body: toggle } = await app.request.get(`${url}/${name}`);
+    const { body: flag } = await app.request.get(`${url}/${name}`);
 
-    expect(toggle.name).toBe(name);
-    expect(toggle.description).toBe('updated');
-    expect(toggle.type).toBe('kill-switch');
-    expect(toggle.archived).toBeFalsy();
+    expect(flag.name).toBe(name);
+    expect(flag.description).toBe('updated');
+    expect(flag.type).toBe('kill-switch');
+    expect(flag.archived).toBeFalsy();
 });
 
-test('Should not change name of feature toggle', async () => {
+test('Should not change name of feature flag', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'new.toggle.update.2';
+    const name = 'new.flag.update.2';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release' })
@@ -856,9 +856,9 @@ test('Should not change name of feature toggle', async () => {
         .expect(400);
 });
 
-test('Should not change project of feature toggle even if it is part of body', async () => {
+test('Should not change project of feature flag even if it is part of body', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'new.toggle.update.3';
+    const name = 'new.flag.update.3';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release' })
@@ -876,9 +876,9 @@ test('Should not change project of feature toggle even if it is part of body', a
     expect(body.project).toBe('default');
 });
 
-test('Should patch feature toggle', async () => {
+test('Should patch feature flag', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'new.toggle.patch';
+    const name = 'new.flag.patch';
     await app.request
         .post(url)
         .send({
@@ -897,25 +897,25 @@ test('Should patch feature toggle', async () => {
         ])
         .expect(200);
 
-    const { body: toggle } = await app.request.get(`${url}/${name}`);
+    const { body: flag } = await app.request.get(`${url}/${name}`);
 
-    expect(toggle.name).toBe(name);
-    expect(toggle.description).toBe('New desc');
-    expect(toggle.type).toBe('kill-switch');
-    expect(toggle.impressionData).toBe(false);
-    expect(toggle.archived).toBeFalsy();
+    expect(flag.name).toBe(name);
+    expect(flag.description).toBe('New desc');
+    expect(flag.type).toBe('kill-switch');
+    expect(flag.impressionData).toBe(false);
+    expect(flag.archived).toBeFalsy();
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_METADATA_UPDATED,
     });
-    const updateForOurToggle = events.find((e) => e.data.name === name);
-    expect(updateForOurToggle).toBeTruthy();
-    expect(updateForOurToggle?.data.description).toBe('New desc');
-    expect(updateForOurToggle?.data.type).toBe('kill-switch');
+    const updateForOurFlag = events.find((e) => e.data.name === name);
+    expect(updateForOurFlag).toBeTruthy();
+    expect(updateForOurFlag?.data.description).toBe('New desc');
+    expect(updateForOurFlag?.data.type).toBe('kill-switch');
 });
 
-test('Should patch feature toggle and not remove variants', async () => {
+test('Should patch feature flag and not remove variants', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'new.toggle.variants';
+    const name = 'new.flag.variants';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release' })
@@ -945,17 +945,17 @@ test('Should patch feature toggle and not remove variants', async () => {
         ])
         .expect(200);
 
-    const { body: toggle } = await app.request.get(`${url}/${name}`);
+    const { body: flag } = await app.request.get(`${url}/${name}`);
 
-    expect(toggle.name).toBe(name);
-    expect(toggle.description).toBe('New desc');
-    expect(toggle.type).toBe('kill-switch');
-    expect(toggle.variants).toHaveLength(2);
+    expect(flag.name).toBe(name);
+    expect(flag.description).toBe('New desc');
+    expect(flag.type).toBe('kill-switch');
+    expect(flag.variants).toHaveLength(2);
 });
 
-test('Patching feature toggles to stale should trigger FEATURE_STALE_ON event', async () => {
+test('Patching feature flags to stale should trigger FEATURE_STALE_ON event', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'toggle.stale.on.patch';
+    const name = 'flag.stale.on.patch';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release', stale: false })
@@ -965,21 +965,21 @@ test('Patching feature toggles to stale should trigger FEATURE_STALE_ON event', 
         .send([{ op: 'replace', path: '/stale', value: true }])
         .expect(200);
 
-    const { body: toggle } = await app.request.get(`${url}/${name}`);
+    const { body: flag } = await app.request.get(`${url}/${name}`);
 
-    expect(toggle.name).toBe(name);
-    expect(toggle.archived).toBeFalsy();
-    expect(toggle.stale).toBeTruthy();
+    expect(flag.name).toBe(name);
+    expect(flag.archived).toBeFalsy();
+    expect(flag.stale).toBeTruthy();
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_STALE_ON,
     });
-    const updateForOurToggle = events.find((e) => e.featureName === name);
-    expect(updateForOurToggle).toBeTruthy();
+    const updateForOurFlag = events.find((e) => e.featureName === name);
+    expect(updateForOurFlag).toBeTruthy();
 });
 
-test('Trying to patch variants on a feature toggle should trigger an OperationDeniedError', async () => {
+test('Trying to patch variants on a feature flag should trigger an OperationDeniedError', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'toggle.variants.on.patch';
+    const name = 'flag.variants.on.patch';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release', stale: false });
@@ -1008,9 +1008,9 @@ test('Trying to patch variants on a feature toggle should trigger an OperationDe
         });
 });
 
-test('Patching feature toggles to active (turning stale to false) should trigger FEATURE_STALE_OFF event', async () => {
+test('Patching feature flags to active (turning stale to false) should trigger FEATURE_STALE_OFF event', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'toggle.stale.off.patch';
+    const name = 'flag.stale.off.patch';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release', stale: true })
@@ -1020,21 +1020,21 @@ test('Patching feature toggles to active (turning stale to false) should trigger
         .send([{ op: 'replace', path: '/stale', value: false }])
         .expect(200);
 
-    const { body: toggle } = await app.request.get(`${url}/${name}`);
+    const { body: flag } = await app.request.get(`${url}/${name}`);
 
-    expect(toggle.name).toBe(name);
-    expect(toggle.archived).toBeFalsy();
-    expect(toggle.stale).toBe(false);
+    expect(flag.name).toBe(name);
+    expect(flag.archived).toBeFalsy();
+    expect(flag.stale).toBe(false);
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_STALE_OFF,
     });
-    const updateForOurToggle = events.find((e) => e.featureName === name);
-    expect(updateForOurToggle).toBeTruthy();
+    const updateForOurFlag = events.find((e) => e.featureName === name);
+    expect(updateForOurFlag).toBeTruthy();
 });
 
-test('Should archive feature toggle', async () => {
+test('Should archive feature flag', async () => {
     const url = '/api/admin/projects/default/features';
-    const name = 'new.toggle.archive';
+    const name = 'new.flag.archive';
     await app.request
         .post(url)
         .send({ name, description: 'some', type: 'release' })
@@ -1046,13 +1046,13 @@ test('Should archive feature toggle', async () => {
         .get(`/api/admin/archive/features`)
         .expect(200);
 
-    const toggle = body.features.find((f) => f.name === name);
-    expect(toggle).toBeDefined();
+    const flag = body.features.find((f) => f.name === name);
+    expect(flag).toBeDefined();
 });
 
-test('Can add strategy to feature toggle to a "some-env-2"', async () => {
+test('Can add strategy to feature flag to a "some-env-2"', async () => {
     const envName = 'some-env-2';
-    const featureName = 'feature.strategy.toggle';
+    const featureName = 'feature.strategy.flag';
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
@@ -1084,13 +1084,13 @@ test('Can add strategy to feature toggle to a "some-env-2"', async () => {
         });
 });
 
-test('Can update strategy on feature toggle', async () => {
+test('Can update strategy on feature flag', async () => {
     const envName = 'default';
     const featureName = 'feature.strategy.update.strat';
     const projectPath = '/api/admin/projects/default';
     const featurePath = `${projectPath}/features/${featureName}`;
 
-    // create feature toggle
+    // create feature flag
     await app.request
         .post(`${projectPath}/features`)
         .send({ name: featureName })
@@ -1166,7 +1166,7 @@ test('Can NOT delete strategy with wrong projectId', async () => {
     const projectPath = '/api/admin/projects/default';
     const featurePath = `${projectPath}/features/${featureName}`;
 
-    // create feature toggle
+    // create feature flag
     await app.request
         .post(`${projectPath}/features`)
         .send({ name: featureName })
@@ -1195,7 +1195,7 @@ test('add strategy cannot use wrong projectId', async () => {
     const envName = 'default';
     const featureName = 'feature.strategy.add.strat.wrong.projectId';
 
-    // create feature toggle
+    // create feature flag
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
@@ -1215,14 +1215,14 @@ test('add strategy cannot use wrong projectId', async () => {
         .expect(404);
 });
 
-test('update strategy on feature toggle cannot use wrong projectId', async () => {
+test('update strategy on feature flag cannot use wrong projectId', async () => {
     const envName = 'default';
     const featureName = 'feature.strategy.update.strat.wrong.projectId';
 
     const projectPath = '/api/admin/projects/default';
     const featurePath = `${projectPath}/features/${featureName}`;
 
-    // create feature toggle
+    // create feature flag
     await app.request
         .post(`${projectPath}/features`)
         .send({ name: featureName })
@@ -1256,7 +1256,7 @@ test('update strategy on feature toggle cannot use wrong projectId', async () =>
 test('Environments are returned in sortOrder', async () => {
     const sortedSecond = 'sortedSecond';
     const sortedLast = 'sortedLast';
-    const featureName = 'feature.strategy.toggle.sortOrder';
+    const featureName = 'feature.strategy.flag.sortOrder';
     // Create environments
     await db.stores.environmentStore.create({
         name: sortedLast,
@@ -1282,12 +1282,12 @@ test('Environments are returned in sortOrder', async () => {
             environment: sortedLast,
         })
         .expect(200);
-    /* Create feature toggle */
+    /* Create feature flag */
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);
-    /* create strategies connected to feature toggle */
+    /* create strategies connected to feature flag */
     await app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${sortedSecond}/strategies`,
@@ -1767,9 +1767,9 @@ test('Returns 400 when toggling environment of archived feature', async () => {
         .expect(400);
 });
 
-test('Can delete strategy from feature toggle', async () => {
+test('Can delete strategy from feature flag', async () => {
     const envName = 'del-strategy';
-    const featureName = 'feature.strategy.toggle.delete.strategy';
+    const featureName = 'feature.strategy.flag.delete.strategy';
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,
@@ -2025,10 +2025,10 @@ test('Deleting strategy for feature environment should not disable that environm
         });
 });
 
-test('should clone feature toggle without strategies', async () => {
+test('should clone feature flag without strategies', async () => {
     const envName = 'some-env-3';
-    const featureName = 'feature.toggle.base';
-    const cloneName = 'feature.toggle.clone';
+    const featureName = 'feature.flag.base';
+    const cloneName = 'feature.flag.clone';
     const type = 'eExperiment';
     const description = 'Lorem ipsum...';
 
@@ -2064,10 +2064,10 @@ test('should clone feature toggle without strategies', async () => {
         });
 });
 
-test('should clone feature toggle WITH strategies', async () => {
+test('should clone feature flag WITH strategies', async () => {
     const envName = 'some-env-4';
-    const featureName = 'feature.toggle.base.2';
-    const cloneName = 'feature.toggle.clone.2';
+    const featureName = 'feature.flag.base.2';
+    const cloneName = 'feature.flag.clone.2';
     const type = 'eExperiment';
     const description = 'Lorem ipsum...';
 
@@ -2119,10 +2119,10 @@ test('should clone feature toggle WITH strategies', async () => {
         });
 });
 
-test('should clone feature toggle WITH variants', async () => {
+test('should clone feature flag WITH variants', async () => {
     const envName = 'some-env-5';
-    const featureName = 'feature.toggle.base.3';
-    const cloneName = 'feature.toggle.clone.3';
+    const featureName = 'feature.flag.base.3';
+    const cloneName = 'feature.flag.clone.3';
     const type = 'eExperiment';
     const description = 'Lorem ipsum...';
     const variants = [
@@ -2172,10 +2172,10 @@ test('should clone feature toggle WITH variants', async () => {
         });
 });
 
-test('should clone feature toggle without replacing groupId', async () => {
+test('should clone feature flag without replacing groupId', async () => {
     const envName = 'default';
-    const featureName = 'feature.toggle.base.4';
-    const cloneName = 'feature.toggle.clone.4';
+    const featureName = 'feature.flag.base.4';
+    const cloneName = 'feature.flag.clone.4';
 
     await app.request
         .post('/api/admin/projects/default/features')
@@ -2207,9 +2207,9 @@ test('should clone feature toggle without replacing groupId', async () => {
         });
 });
 
-test('should clone feature toggle WITHOUT createdAt field', async () => {
-    const featureName = 'feature.toggle.base.5';
-    const cloneName = 'feature.toggle.clone.5';
+test('should clone feature flag WITHOUT createdAt field', async () => {
+    const featureName = 'feature.flag.base.5';
+    const cloneName = 'feature.flag.clone.5';
     const type = 'eExperiment';
     const description = 'Lorem ipsum...';
     const originalCreatedAt = new Date(2011, 11, 11);
@@ -2449,7 +2449,7 @@ test(`a feature's variants should be sorted by name in increasing order`, async 
 });
 
 test('should validate context when calling update with PUT', async () => {
-    const name = 'new.toggle.validate.context';
+    const name = 'new.flag.validate.context';
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name, description: 'some', type: 'release' })
@@ -2465,7 +2465,7 @@ test('should validate context when calling update with PUT', async () => {
 });
 
 test('should validate context when calling update with PATCH', async () => {
-    const name = 'new.toggle.validate.context2';
+    const name = 'new.flag.validate.context2';
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name, description: 'some', type: 'release' })
@@ -2481,7 +2481,7 @@ test('should validate context when calling update with PATCH', async () => {
 });
 
 test('should not update project with PUT', async () => {
-    const name = 'new.toggle.validate.update.project.put';
+    const name = 'new.flag.validate.update.project.put';
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name, description: 'some', type: 'release' })
@@ -2502,7 +2502,7 @@ test('should not update project with PUT', async () => {
 });
 
 test('should not update project with PATCH', async () => {
-    const name = 'new.toggle.validate.update.project.patch';
+    const name = 'new.flag.validate.update.project.patch';
     await app.request
         .post('/api/admin/projects/default/features')
         .send({ name, description: 'some', type: 'release' })
@@ -2521,7 +2521,7 @@ test('Can create a feature with impression data', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: 'new.toggle.with.impressionData',
+            name: 'new.flag.with.impressionData',
             impressionData: true,
         })
         .expect(201)
@@ -2534,7 +2534,7 @@ test('Can create a feature without impression data', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: 'new.toggle.without.impressionData',
+            name: 'new.flag.without.impressionData',
         })
         .expect(201)
         .expect((res) => {
@@ -2543,28 +2543,28 @@ test('Can create a feature without impression data', async () => {
 });
 
 test('Can update impression data with PUT', async () => {
-    const toggle = {
-        name: 'update.toggle.with.impressionData',
+    const flag = {
+        name: 'update.flag.with.impressionData',
         impressionData: true,
     };
     await app.request
         .post('/api/admin/projects/default/features')
-        .send(toggle)
+        .send(flag)
         .expect(201)
         .expect((res) => {
             expect(res.body.impressionData).toBe(true);
         });
 
     await app.request
-        .put(`/api/admin/projects/default/features/${toggle.name}`)
-        .send({ ...toggle, impressionData: false })
+        .put(`/api/admin/projects/default/features/${flag.name}`)
+        .send({ ...flag, impressionData: false })
         .expect(200)
         .expect((res) => {
             expect(res.body.impressionData).toBe(false);
         });
 });
 
-test('Can create toggle with impression data on different project', async () => {
+test('Can create flag with impression data on different project', async () => {
     await db.stores.projectStore.create({
         id: 'impression-data',
         name: 'ImpressionData',
@@ -2572,22 +2572,22 @@ test('Can create toggle with impression data on different project', async () => 
         mode: 'open',
     });
 
-    const toggle = {
+    const flag = {
         name: 'project.impression.data',
         impressionData: true,
     };
 
     await app.request
         .post('/api/admin/projects/impression-data/features')
-        .send(toggle)
+        .send(flag)
         .expect(201)
         .expect((res) => {
             expect(res.body.impressionData).toBe(true);
         });
 
     await app.request
-        .put(`/api/admin/projects/impression-data/features/${toggle.name}`)
-        .send({ ...toggle, impressionData: false })
+        .put(`/api/admin/projects/impression-data/features/${flag.name}`)
+        .send({ ...flag, impressionData: false })
         .expect(200)
         .expect((res) => {
             expect(res.body.impressionData).toBe(false);
@@ -2676,7 +2676,7 @@ test('should reject invalid constraint values for multi-valued constraints', asy
         mode: 'open',
     });
 
-    const toggle = await db.stores.featureToggleStore.create(project.id, {
+    const flag = await db.stores.featureToggleStore.create(project.id, {
         name: uuidv4(),
         impressionData: true,
         createdByUserId: 9999,
@@ -2687,7 +2687,7 @@ test('should reject invalid constraint values for multi-valued constraints', asy
         constraints: [{ contextName: 'userId', operator: 'IN', values }],
     });
 
-    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`;
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/default/strategies`;
 
     await app.request
         .post(featureStrategiesPath)
@@ -2724,7 +2724,7 @@ test('should add default constraint values for single-valued constraints', async
         mode: 'open',
     });
 
-    const toggle = await db.stores.featureToggleStore.create(project.id, {
+    const flag = await db.stores.featureToggleStore.create(project.id, {
         name: uuidv4(),
         impressionData: true,
         createdByUserId: 9999,
@@ -2752,7 +2752,7 @@ test('should add default constraint values for single-valued constraints', async
         expect(res.body.constraints[0].values).toEqual(values);
     };
 
-    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`;
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/default/strategies`;
 
     await app.request
         .post(featureStrategiesPath)
@@ -2785,7 +2785,7 @@ test('should allow long parameter values', async () => {
         mode: 'open',
     });
 
-    const toggle = await db.stores.featureToggleStore.create(project.id, {
+    const flag = await db.stores.featureToggleStore.create(project.id, {
         name: uuidv4(),
         createdByUserId: 9999,
     });
@@ -2797,24 +2797,24 @@ test('should allow long parameter values', async () => {
 
     await app.request
         .post(
-            `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/${project.id}/features/${flag.name}/environments/default/strategies`,
         )
         .send(strategy)
         .expect(200);
 });
 
 test('should change strategy sort order when payload is valid', async () => {
-    const toggle = { name: uuidv4(), impressionData: false };
+    const flag = { name: uuidv4(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: toggle.name,
+            name: flag.name,
         })
         .expect(201);
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'default',
@@ -2826,7 +2826,7 @@ test('should change strategy sort order when payload is valid', async () => {
 
     const { body: strategyTwo } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2837,7 +2837,7 @@ test('should change strategy sort order when payload is valid', async () => {
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     expect(strategies[0].sortOrder).toBe(0);
@@ -2847,7 +2847,7 @@ test('should change strategy sort order when payload is valid', async () => {
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2862,7 +2862,7 @@ test('should change strategy sort order when payload is valid', async () => {
         .expect(200);
 
     const { body: strategiesOrdered } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     expect(strategiesOrdered[0].sortOrder).toBe(1);
@@ -2872,11 +2872,11 @@ test('should change strategy sort order when payload is valid', async () => {
 });
 
 test('should reject set sort order request when payload is invalid', async () => {
-    const toggle = { name: uuidv4(), impressionData: false };
+    const flag = { name: uuidv4(), impressionData: false };
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2890,17 +2890,17 @@ test('should reject set sort order request when payload is invalid', async () =>
 });
 
 test('should return strategies in correct order when new strategies are added', async () => {
-    const toggle = { name: uuidv4(), impressionData: false };
+    const flag = { name: uuidv4(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: toggle.name,
+            name: flag.name,
         })
         .expect(201);
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'default',
@@ -2912,7 +2912,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     const { body: strategyTwo } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2923,7 +2923,7 @@ test('should return strategies in correct order when new strategies are added', 
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     expect(strategies[0].sortOrder).toBe(0);
@@ -2933,7 +2933,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2949,7 +2949,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     const { body: strategyThree } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2961,7 +2961,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     const { body: strategyFour } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -2972,7 +2972,7 @@ test('should return strategies in correct order when new strategies are added', 
         .expect(200);
 
     const { body: strategiesOrdered } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     expect(strategiesOrdered[0].sortOrder).toBe(1);
@@ -2984,7 +2984,7 @@ test('should return strategies in correct order when new strategies are added', 
 
     await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/set-sort-order`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/set-sort-order`,
         )
         .send([
             {
@@ -2995,7 +2995,7 @@ test('should return strategies in correct order when new strategies are added', 
         .expect(200);
 
     const { body: strategiesReOrdered } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     // This block checks the order of the strategies retrieved from the endpoint. After partial update, the order should
@@ -3239,17 +3239,17 @@ test('Should batch stale features', async () => {
 });
 
 test('should return disabled strategies', async () => {
-    const toggle = { name: uuidv4(), impressionData: false };
+    const flag = { name: uuidv4(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: toggle.name,
+            name: flag.name,
         })
         .expect(201);
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'default',
@@ -3262,7 +3262,7 @@ test('should return disabled strategies', async () => {
 
     const { body: strategyTwo } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -3273,7 +3273,7 @@ test('should return disabled strategies', async () => {
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     expect(strategies[0].id).toBe(strategyOne.id);
@@ -3283,17 +3283,17 @@ test('should return disabled strategies', async () => {
 });
 
 test('should disable strategies in place', async () => {
-    const toggle = { name: uuidv4(), impressionData: false };
+    const flag = { name: uuidv4(), impressionData: false };
     await app.request
         .post('/api/admin/projects/default/features')
         .send({
-            name: toggle.name,
+            name: flag.name,
         })
         .expect(201);
 
     const { body: strategyOne } = await app.request
         .post(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
         )
         .send({
             name: 'flexibleRollout',
@@ -3307,7 +3307,7 @@ test('should disable strategies in place', async () => {
         .expect(200);
 
     const { body: strategies } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     expect(strategies[0].id).toBe(strategyOne.id);
@@ -3315,7 +3315,7 @@ test('should disable strategies in place', async () => {
 
     const { body: updatedStrategyOne } = await app.request
         .put(
-            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/${strategyOne.id}`,
+            `/api/admin/projects/default/features/${flag.name}/environments/default/strategies/${strategyOne.id}`,
         )
         .send({
             name: 'flexibleRollout',
@@ -3330,7 +3330,7 @@ test('should disable strategies in place', async () => {
         .expect(200);
 
     const { body: updatedStrategies } = await app.request.get(
-        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        `/api/admin/projects/default/features/${flag.name}/environments/default/strategies`,
     );
 
     expect(updatedStrategies[0].id).toBe(updatedStrategyOne.id);
@@ -3665,33 +3665,6 @@ test('should not be allowed to update with invalid strategy type name', async ()
         },
         400,
     );
-});
-
-test('should return correct data structure for /api/admin/features', async () => {
-    await app.createFeature('refactor-features');
-
-    const result = await app.request.get('/api/admin/features').expect(200);
-
-    expect(result.body.features).toBeInstanceOf(Array);
-
-    const feature = result.body.features.find(
-        (features) => features.name === 'refactor-features',
-    );
-
-    expect(feature).toMatchObject({
-        impressionData: false,
-        enabled: false,
-        name: 'refactor-features',
-        description: null,
-        project: 'default',
-        stale: false,
-        type: 'release',
-        lastSeenAt: null,
-        variants: [],
-        favorite: false,
-        createdAt: expect.anything(),
-        strategies: [],
-    });
 });
 
 test('can get evaluation metrics', async () => {

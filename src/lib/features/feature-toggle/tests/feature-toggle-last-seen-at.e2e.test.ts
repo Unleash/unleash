@@ -70,7 +70,7 @@ test('should return last seen at per env for /api/admin/features', async () => {
     await insertLastSeenAt('lastSeenAtPerEnv', db.rawDatabase, 'default');
 
     const response = await app.request
-        .get('/api/admin/features')
+        .get('/api/admin/projects/default/features')
         .expect('Content-Type', /json/)
         .expect(200);
 
@@ -88,7 +88,7 @@ test('response should include last seen at per environment for multiple environm
 
     await setupLastSeenAtTest(featureName);
     const { body } = await app.request
-        .get('/api/admin/features')
+        .get('/api/admin/projects/default/features')
         .expect('Content-Type', /json/)
         .expect(200);
 

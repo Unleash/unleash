@@ -100,6 +100,7 @@ test('Should be able to store multiple events at once', async () => {
             clientIp: '127.0.0.1',
             appName: 'test1',
         },
+        ip: '127.0.0.1',
     };
     const event2 = {
         type: APPLICATION_CREATED,
@@ -109,6 +110,7 @@ test('Should be able to store multiple events at once', async () => {
             clientIp: '127.0.0.1',
             appName: 'test2',
         },
+        ip: '127.0.0.1',
     };
     const event3 = {
         type: APPLICATION_CREATED,
@@ -119,6 +121,7 @@ test('Should be able to store multiple events at once', async () => {
             appName: 'test3',
         },
         tags: [{ type: 'simple', value: 'mytest' }],
+        ip: '127.0.0.1',
     };
     const seen: IEvent[] = [];
     eventStore.on(APPLICATION_CREATED, (e) => seen.push(e));
@@ -142,6 +145,7 @@ test('Should get all stored events', async () => {
             enabled: true,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     };
     await eventStore.store(event);
     const events = await eventStore.getAll();
@@ -161,6 +165,7 @@ test('Should delete stored event', async () => {
             enabled: true,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     };
     await eventStore.store(event);
     await eventStore.store(event);
@@ -185,6 +190,7 @@ test('Should get stored event by id', async () => {
             enabled: true,
             strategies: [{ name: 'default' }],
         },
+        ip: '127.0.0.1',
     };
     await eventStore.store(event);
     const events = await eventStore.getAll();

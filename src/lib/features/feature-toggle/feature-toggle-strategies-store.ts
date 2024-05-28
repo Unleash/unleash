@@ -532,7 +532,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             return featureToggle;
         }
         throw new NotFoundError(
-            `Could not find feature toggle with name ${featureName}`,
+            `Could not find feature flag with name ${featureName}`,
         );
     }
 

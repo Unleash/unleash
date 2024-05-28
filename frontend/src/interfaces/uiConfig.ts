@@ -68,7 +68,7 @@ export type UiFlags = {
     featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     adminTokenKillSwitch?: boolean;
-    executiveDashboardUI?: boolean;
+    killInsightsUI?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;
@@ -87,6 +87,7 @@ export type UiFlags = {
     newCreateProjectUI?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
+    navigationSidebar?: boolean;
 };
 
 export interface IVersionInfo {

@@ -14,7 +14,7 @@ import {
 import { GLOBAL_ENV } from '../types/environment';
 import variantsExportV3 from '../../test/examples/variantsexport_v3.json';
 import EventService from '../features/events/event-service';
-import { SYSTEM_USER_ID } from '../types';
+import { SYSTEM_USER_AUDIT } from '../types';
 import { EventEmitter } from 'stream';
 const oldExportExample = require('./state-service-export-v1.json');
 const TESTUSERID = 3333;
@@ -103,7 +103,7 @@ test('should import a feature', async () => {
         ],
     };
 
-    await stateService.import({ userId: SYSTEM_USER_ID, data });
+    await stateService.import({ auditUser: SYSTEM_USER_AUDIT, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(1);
@@ -130,7 +130,7 @@ test('should not import an existing feature', async () => {
     await stateService.import({
         data,
         keepExisting: true,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
     });
 
     const events = await stores.eventStore.getEvents();
@@ -157,7 +157,7 @@ test('should not keep existing feature if drop-before-import', async () => {
         data,
         keepExisting: true,
         dropBeforeImport: true,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
     });
 
     const events = await stores.eventStore.getEvents();
@@ -182,7 +182,7 @@ test('should drop feature before import if specified', async () => {
     await stateService.import({
         data,
         dropBeforeImport: true,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
     });
 
     const events = await stores.eventStore.getEvents();
@@ -204,7 +204,7 @@ test('should import a strategy', async () => {
         ],
     };
 
-    await stateService.import({ userId: SYSTEM_USER_ID, data });
+    await stateService.import({ auditUser: SYSTEM_USER_AUDIT, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(1);
@@ -228,7 +228,7 @@ test('should not import an existing strategy', async () => {
 
     await stateService.import({
         data,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         keepExisting: true,
     });
 
@@ -250,7 +250,7 @@ test('should drop strategies before import if specified', async () => {
 
     await stateService.import({
         data,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         dropBeforeImport: true,
     });
 
@@ -268,7 +268,7 @@ test('should drop neither features nor strategies when neither is imported', asy
 
     await stateService.import({
         data,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         dropBeforeImport: true,
     });
 
@@ -286,11 +286,11 @@ test('should not accept gibberish', async () => {
     const data2 = '{somerandomtext/';
 
     await expect(async () =>
-        stateService.import({ userId: SYSTEM_USER_ID, data: data1 }),
+        stateService.import({ auditUser: SYSTEM_USER_AUDIT, data: data1 }),
     ).rejects.toThrow();
 
     await expect(async () =>
-        stateService.import({ userId: SYSTEM_USER_ID, data: data2 }),
+        stateService.import({ auditUser: SYSTEM_USER_AUDIT, data: data2 }),
     ).rejects.toThrow();
 });
 
@@ -308,7 +308,7 @@ test('should export featureToggles', async () => {
     expect(data.features[0].name).toBe('a-feature');
 });
 
-test('archived feature toggles should not be included', async () => {
+test('archived feature flags should not be included', async () => {
     const { stateService, stores } = getSetup();
 
     await stores.featureToggleStore.create('default', {
@@ -321,7 +321,7 @@ test('archived feature toggles should not be included', async () => {
     expect(data.features).toHaveLength(0);
 });
 
-test('featureStrategy connected to an archived feature toggle should not be included', async () => {
+test('featureStrategy connected to an archived feature flag should not be included', async () => {
     const { stateService, stores } = getSetup();
     const featureName = 'fstrat-archived-feature';
     await stores.featureToggleStore.create('default', {
@@ -386,7 +386,7 @@ test('should import a tag and tag type', async () => {
         tags: [{ type: 'simple', value: 'test' }],
     };
 
-    await stateService.import({ userId: SYSTEM_USER_ID, data });
+    await stateService.import({ auditUser: SYSTEM_USER_AUDIT, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(2);
@@ -423,7 +423,7 @@ test('Should not import an existing tag', async () => {
     );
     await stateService.import({
         data,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         keepExisting: true,
     });
     const events = await stores.eventStore.getEvents();
@@ -460,7 +460,7 @@ test('Should not keep existing tags if drop-before-import', async () => {
     };
     await stateService.import({
         data,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         dropBeforeImport: true,
     });
     const tagTypes = await stores.tagTypeStore.getAll();
@@ -570,7 +570,7 @@ test('should import a project', async () => {
         ],
     };
 
-    await stateService.import({ userId: SYSTEM_USER_ID, data });
+    await stateService.import({ auditUser: SYSTEM_USER_AUDIT, data });
 
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(1);
@@ -595,13 +595,13 @@ test('Should not import an existing project', async () => {
 
     await stateService.import({
         data,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         keepExisting: true,
     });
     const events = await stores.eventStore.getEvents();
     expect(events).toHaveLength(0);
 
-    await stateService.import({ userId: SYSTEM_USER_ID, data });
+    await stateService.import({ auditUser: SYSTEM_USER_AUDIT, data });
 });
 
 test('Should drop projects before import if specified', async () => {
@@ -624,7 +624,7 @@ test('Should drop projects before import if specified', async () => {
     });
     await stateService.import({
         data,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         dropBeforeImport: true,
     });
     const hasProject = await stores.projectStore.hasProject('fancy');
@@ -773,8 +773,7 @@ test('featureStrategies can keep existing', async () => {
     const exported = await stateService.export({});
     await stateService.import({
         data: exported,
-        userId: SYSTEM_USER_ID,
-        userName: 'testing',
+        auditUser: SYSTEM_USER_AUDIT,
         keepExisting: true,
     });
     expect(await stores.featureStrategiesStore.getAll()).toHaveLength(1);
@@ -830,8 +829,7 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
     exported.featureStrategies = [];
     await stateService.import({
         data: exported,
-        userId: SYSTEM_USER_ID,
-        userName: 'testing',
+        auditUser: SYSTEM_USER_AUDIT,
         keepExisting: true,
         dropBeforeImport: true,
     });
@@ -842,9 +840,8 @@ test('Import v1 and exporting v2 should work', async () => {
     const { stateService } = getSetup();
     await stateService.import({
         data: oldExportExample,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         dropBeforeImport: true,
-        userName: 'testing',
     });
     const exported = await stateService.export({});
     const strategiesCount = oldExportExample.features.reduce(
@@ -879,8 +876,7 @@ test('Importing states with deprecated strategies should keep their deprecated s
     };
     await stateService.import({
         data: deprecatedStrategyExample,
-        userId: SYSTEM_USER_ID,
-        userName: 'strategy-importer',
+        auditUser: SYSTEM_USER_AUDIT,
         dropBeforeImport: true,
         keepExisting: false,
     });
@@ -894,9 +890,8 @@ test('Exporting a deprecated strategy and then importing it should keep correct 
     await stateService.import({
         data: variantsExportV3,
         keepExisting: false,
-        userId: SYSTEM_USER_ID,
+        auditUser: SYSTEM_USER_AUDIT,
         dropBeforeImport: true,
-        userName: 'strategy importer',
     });
     const rolloutRandom = await stores.strategyStore.get(
         'gradualRolloutRandom',

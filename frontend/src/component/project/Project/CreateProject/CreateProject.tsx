@@ -15,7 +15,6 @@ import { GO_BACK } from 'constants/navigate';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Button, styled } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useState } from 'react';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
@@ -35,14 +34,10 @@ const CreateProject = () => {
         projectName,
         projectDesc,
         projectMode,
-        projectEnvironments,
-        projectChangeRequestConfiguration,
         setProjectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
-        setProjectEnvironments,
-        updateProjectChangeRequestConfig,
         getCreateProjectPayload,
         clearErrors,
         validateProjectId,
@@ -55,14 +50,6 @@ const CreateProject = () => {
     if (useNewProjectForm) {
         return <Navigate to={`/projects?create=true`} replace />;
     }
-
-    const generalDocumentation =
-        'Projects allows you to group feature flags together in the management UI.';
-
-    const [documentation, setDocumentation] = useState(generalDocumentation);
-
-    const clearDocumentationOverride = () =>
-        setDocumentation(generalDocumentation);
 
     const { createProject, loading } = useProjectApi();
 

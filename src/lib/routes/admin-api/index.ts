@@ -11,7 +11,6 @@ import UserController from './user/user';
 import ConfigController from './config';
 import { ContextController } from './context';
 import ClientMetricsController from '../../features/metrics/client-metrics/client-metrics';
-import StateController from './state';
 import TagController from './tag';
 import TagTypeController from '../../features/tag-type/tag-type';
 import AddonController from './addon';
@@ -89,7 +88,6 @@ export class AdminApi extends Controller {
             '/context',
             new ContextController(config, services).router,
         );
-        this.app.use('/state', new StateController(config, services).router);
         this.app.use(
             '/features-batch',
             new ExportImportController(config, services).router,

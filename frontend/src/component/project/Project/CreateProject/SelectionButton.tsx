@@ -1,14 +1,14 @@
 import Search from '@mui/icons-material/Search';
 import { v4 as uuidv4 } from 'uuid';
 import {
-    Box,
-    Button,
-    InputAdornment,
-    List,
-    ListItemText,
-    styled,
-} from '@mui/material';
-import { type FC, type ReactNode, useRef, useState, useMemo } from 'react';
+    type FC,
+    type ReactNode,
+    useRef,
+    useState,
+    useMemo,
+    type PropsWithChildren,
+} from 'react';
+import { Box, Button, InputAdornment, List, ListItemText } from '@mui/material';
 import {
     StyledCheckbox,
     StyledDropdown,
@@ -17,7 +17,7 @@ import {
     StyledDropdownSearch,
     TableSearchInput,
     HiddenDescription,
-    ScrollContainer,
+    ButtonLabel,
 } from './SelectionButton.styles';
 import { ChangeRequestTable } from './ChangeRequestTable';
 
@@ -94,24 +94,30 @@ type CombinedSelectProps = {
     description: string; // visually hidden, for assistive tech
 };
 
-const CombinedSelect: FC<CombinedSelectProps> = ({
-    options,
-    onChange,
+const CombinedSelect: FC<
+    PropsWithChildren<{
+        button: { label: string; icon: ReactNode; labelWidth?: string };
+        onOpen?: () => void;
+        onClose?: () => void;
+        description: string;
+        preventOpen?: boolean;
+        anchorEl: HTMLDivElement | null | undefined;
+        setAnchorEl: (el: HTMLDivElement | null | undefined) => void;
+    }>
+> = ({
     button,
-    search,
-    multiselect,
     onOpen = () => {},
     onClose = () => {},
     description,
+    children,
+    preventOpen,
+    anchorEl,
+    setAnchorEl,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
-    const [searchText, setSearchText] = useState('');
     const descriptionId = uuidv4();
-    const [recentlyClosed, setRecentlyClosed] = useState(false);
 
     const open = () => {
-        setSearchText('');
         setAnchorEl(ref.current);
         onOpen();
     };
@@ -121,30 +127,6 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
         onClose();
     };
 
-    const onSelection = (selected: string) => {
-        onChange(selected);
-        if (!multiselect) {
-            handleClose();
-            setRecentlyClosed(true);
-            // this is a hack to prevent the button from being
-            // auto-clicked after you select an item by pressing enter
-            // in the search bar for single-select lists.
-            setTimeout(() => setRecentlyClosed(false), 1);
-        }
-    };
-
-    const { listRefs, handleSelection } = useSelectionManagement({
-        handleToggle: (selected: string) => () => onSelection(selected),
-    });
-
-    const filteredOptions = options?.filter((option) =>
-        option.label.toLowerCase().includes(searchText.toLowerCase()),
-    );
-
-    const ButtonLabel = styled('span')(() => ({
-        width: button.labelWidth || 'unset',
-    }));
-
     return (
         <>
             <Box ref={ref}>
@@ -153,12 +135,14 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
                     color='primary'
                     startIcon={button.icon}
                     onClick={() => {
-                        if (!recentlyClosed) {
+                        if (!preventOpen) {
                             open();
                         }
                     }}
                 >
-                    <ButtonLabel>{button.label}</ButtonLabel>
+                    <ButtonLabel labelWidth={button.labelWidth}>
+                        {button.label}
+                    </ButtonLabel>
                 </Button>
             </Box>
             <StyledPopover
@@ -178,115 +162,103 @@ const CombinedSelect: FC<CombinedSelectProps> = ({
                     {description}
                 </HiddenDescription>
                 <StyledDropdown aria-describedby={descriptionId}>
-                    <StyledDropdownSearch
-                        variant='outlined'
-                        size='small'
-                        value={searchText}
-                        onChange={(event) => setSearchText(event.target.value)}
-                        label={search.label}
-                        hideLabel
-                        placeholder={search.placeholder}
-                        autoFocus
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <Search fontSize='small' />
-                                </InputAdornment>
-                            ),
-                        }}
-                        inputRef={(el) => {
-                            listRefs.current[0] = el;
-                        }}
-                        onKeyDown={(event) =>
-                            handleSelection(event, 0, filteredOptions)
-                        }
-                    />
-                    <List sx={{ overflowY: 'auto' }} disablePadding>
-                        {filteredOptions.map((option, index) => {
-                            const labelId = `checkbox-list-label-${option.value}`;
-
-                            return (
-                                <StyledListItem
-                                    aria-describedby={labelId}
-                                    key={option.value}
-                                    dense
-                                    disablePadding
-                                    tabIndex={0}
-                                    onClick={() => {
-                                        onSelection(option.value);
-                                    }}
-                                    ref={(el) => {
-                                        listRefs.current[index + 1] = el;
-                                    }}
-                                    onKeyDown={(event) =>
-                                        handleSelection(
-                                            event,
-                                            index + 1,
-                                            filteredOptions,
-                                        )
-                                    }
-                                >
-                                    {multiselect ? (
-                                        <StyledCheckbox
-                                            edge='start'
-                                            checked={multiselect.selectedOptions.has(
-                                                option.value,
-                                            )}
-                                            tabIndex={-1}
-                                            inputProps={{
-                                                'aria-labelledby': labelId,
-                                            }}
-                                            size='small'
-                                            disableRipple
-                                        />
-                                    ) : null}
-                                    <ListItemText
-                                        id={labelId}
-                                        primary={option.label}
-                                    />
-                                </StyledListItem>
-                            );
-                        })}
-                    </List>
+                    {children}
                 </StyledDropdown>
             </StyledPopover>
         </>
     );
 };
 
-type MultiselectListProps = Pick<
-    CombinedSelectProps,
-    'options' | 'button' | 'search' | 'onOpen' | 'onClose' | 'description'
-> & {
-    selectedOptions: Set<string>;
-    onChange: (values: Set<string>) => void;
-};
-
-export const MultiselectList: FC<MultiselectListProps> = ({
-    selectedOptions,
+const DropdownList: FC<CombinedSelectProps> = ({
+    options,
     onChange,
-    ...rest
+    search,
+    multiselect,
 }) => {
-    // todo: add "select all" and "deselect all"
+    const [searchText, setSearchText] = useState('');
 
-    const handleToggle = (value: string) => {
-        if (selectedOptions.has(value)) {
-            selectedOptions.delete(value);
-        } else {
-            selectedOptions.add(value);
-        }
-
-        onChange(new Set(selectedOptions));
+    const onSelection = (selected: string) => {
+        onChange(selected);
     };
 
+    const { listRefs, handleSelection } = useSelectionManagement({
+        handleToggle: (selected: string) => () => onSelection(selected),
+    });
+
+    const filteredOptions = options?.filter((option) =>
+        option.label.toLowerCase().includes(searchText.toLowerCase()),
+    );
+
     return (
-        <CombinedSelect
-            {...rest}
-            onChange={handleToggle}
-            multiselect={{
-                selectedOptions,
-            }}
-        />
+        <>
+            <StyledDropdownSearch
+                variant='outlined'
+                size='small'
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+                label={search.label}
+                hideLabel
+                placeholder={search.placeholder}
+                autoFocus
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                            <Search fontSize='small' />
+                        </InputAdornment>
+                    ),
+                }}
+                inputRef={(el) => {
+                    listRefs.current[0] = el;
+                }}
+                onKeyDown={(event) =>
+                    handleSelection(event, 0, filteredOptions)
+                }
+            />
+            <List sx={{ overflowY: 'auto' }} disablePadding>
+                {filteredOptions.map((option, index) => {
+                    const labelId = `checkbox-list-label-${option.value}`;
+
+                    return (
+                        <StyledListItem
+                            aria-describedby={labelId}
+                            key={option.value}
+                            dense
+                            disablePadding
+                            tabIndex={0}
+                            onClick={() => {
+                                onSelection(option.value);
+                            }}
+                            ref={(el) => {
+                                listRefs.current[index + 1] = el;
+                            }}
+                            onKeyDown={(event) =>
+                                handleSelection(
+                                    event,
+                                    index + 1,
+                                    filteredOptions,
+                                )
+                            }
+                        >
+                            {multiselect ? (
+                                <StyledCheckbox
+                                    edge='start'
+                                    checked={multiselect.selectedOptions.has(
+                                        option.value,
+                                    )}
+                                    tabIndex={-1}
+                                    inputProps={{
+                                        'aria-labelledby': labelId,
+                                    }}
+                                    size='small'
+                                    disableRipple
+                                />
+                            ) : null}
+                            <ListItemText id={labelId} primary={option.label} />
+                        </StyledListItem>
+                    );
+                })}
+            </List>
+        </>
     );
 };
 
@@ -301,8 +273,73 @@ type SingleSelectListProps = Pick<
     | 'description'
 >;
 
-export const SingleSelectList: FC<SingleSelectListProps> = (props) => {
-    return <CombinedSelect {...props} />;
+export const SingleSelectList: FC<SingleSelectListProps> = ({
+    onChange,
+    ...props
+}) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+    const [recentlyClosed, setRecentlyClosed] = useState(false);
+
+    const handleChange = (value: any) => {
+        onChange(value);
+        setAnchorEl(null);
+        props.onClose && props.onClose();
+
+        setRecentlyClosed(true);
+        // this is a hack to prevent the button from being
+        // auto-clicked after you select an item by pressing enter
+        // in the search bar for single-select lists.
+        setTimeout(() => setRecentlyClosed(false), 1);
+    };
+
+    return (
+        <CombinedSelect
+            {...props}
+            preventOpen={recentlyClosed}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+        >
+            <DropdownList {...props} onChange={handleChange} />
+        </CombinedSelect>
+    );
+};
+
+type MultiselectListProps = Pick<
+    CombinedSelectProps,
+    'options' | 'button' | 'search' | 'onOpen' | 'onClose' | 'description'
+> & {
+    selectedOptions: Set<string>;
+    onChange: (values: Set<string>) => void;
+};
+
+export const MultiSelectList: FC<MultiselectListProps> = ({
+    selectedOptions,
+    onChange,
+    ...rest
+}) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+
+    const handleToggle = (value: string) => {
+        if (selectedOptions.has(value)) {
+            selectedOptions.delete(value);
+        } else {
+            selectedOptions.add(value);
+        }
+
+        onChange(new Set(selectedOptions));
+    };
+
+    return (
+        <CombinedSelect {...rest} anchorEl={anchorEl} setAnchorEl={setAnchorEl}>
+            <DropdownList
+                multiselect={{
+                    selectedOptions,
+                }}
+                onChange={handleToggle}
+                {...rest}
+            />
+        </CombinedSelect>
+    );
 };
 
 type TableSelectProps = Pick<
@@ -321,17 +358,17 @@ type TableSelectProps = Pick<
         string,
         { requiredApprovals: number }
     >;
-    disabled: boolean;
 };
+
 export const TableSelect: FC<TableSelectProps> = ({
     button,
-    disabled,
     search,
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
     activeEnvironments,
     onOpen = () => {},
     onClose = () => {},
+    ...props
 }) => {
     const configured = useMemo(() => {
         return Object.fromEntries(
@@ -365,20 +402,8 @@ export const TableSelect: FC<TableSelectProps> = ({
         updateProjectChangeRequestConfiguration.disableChangeRequests(name);
     };
 
-    const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
-
-    const open = () => {
-        setSearchText('');
-        setAnchorEl(ref.current);
-        onOpen();
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        onClose();
-    };
 
     const filteredEnvs = tableEnvs.filter((env) =>
         env.name.toLowerCase().includes(searchText.toLowerCase()),
@@ -399,66 +424,36 @@ export const TableSelect: FC<TableSelectProps> = ({
         }
     };
 
-    const ButtonLabel = styled('span')(() => ({
-        width: button.labelWidth || 'unset',
-    }));
-
     return (
-        <>
-            <Box ref={ref}>
-                <Button
-                    variant='outlined'
-                    color='primary'
-                    startIcon={button.icon}
-                    onClick={() => {
-                        open();
-                    }}
-                    disabled={disabled}
-                >
-                    <ButtonLabel>{button.label}</ButtonLabel>
-                </Button>
-            </Box>
-            <StyledPopover
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+        <CombinedSelect
+            button={button}
+            {...props}
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+        >
+            <TableSearchInput
+                variant='outlined'
+                size='small'
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+                hideLabel
+                label={search.label}
+                placeholder={search.placeholder}
+                autoFocus
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                            <Search fontSize='small' />
+                        </InputAdornment>
+                    ),
                 }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-            >
-                <StyledDropdown>
-                    <TableSearchInput
-                        variant='outlined'
-                        size='small'
-                        value={searchText}
-                        onChange={(event) => setSearchText(event.target.value)}
-                        hideLabel
-                        label={search.label}
-                        placeholder={search.placeholder}
-                        autoFocus
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <Search fontSize='small' />
-                                </InputAdornment>
-                            ),
-                        }}
-                        onKeyDown={toggleTopItem}
-                    />
-                    <ScrollContainer>
-                        <ChangeRequestTable
-                            environments={filteredEnvs}
-                            enableEnvironment={onEnable}
-                            disableEnvironment={onDisable}
-                        />
-                    </ScrollContainer>
-                </StyledDropdown>
-            </StyledPopover>
-        </>
+                onKeyDown={toggleTopItem}
+            />
+            <ChangeRequestTable
+                environments={filteredEnvs}
+                enableEnvironment={onEnable}
+                disableEnvironment={onDisable}
+            />
+        </CombinedSelect>
     );
 };

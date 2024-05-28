@@ -8,7 +8,6 @@ import EventService from '../features/events/event-service';
 import HealthService from './health-service';
 
 import ProjectService from '../features/project/project-service';
-import StateService from './state-service';
 import ClientInstanceService from '../features/metrics/instance/instance-service';
 import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2';
 import TagTypeService from '../features/tag-type/tag-type-service';
@@ -180,7 +179,6 @@ export const createServices = (
         eventService,
     );
     const resetTokenService = new ResetTokenService(stores, config);
-    const stateService = new StateService(stores, config, eventService);
     const strategyService = new StrategyService(stores, config, eventService);
     const tagService = new TagService(stores, config, eventService);
     const transactionalTagTypeService = db
@@ -379,7 +377,6 @@ export const createServices = (
         featureTypeService,
         healthService,
         projectService,
-        stateService,
         strategyService,
         tagTypeService,
         transactionalTagTypeService,
@@ -437,7 +434,6 @@ export {
     EventService,
     HealthService,
     ProjectService,
-    StateService,
     ClientInstanceService,
     ClientMetricsServiceV2,
     TagTypeService,

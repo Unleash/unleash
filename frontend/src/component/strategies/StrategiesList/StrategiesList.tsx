@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Link, Typography, styled } from '@mui/material';
+import { Alert, Box, Link, Typography, styled } from '@mui/material';
 import Extension from '@mui/icons-material/Extension';
 import {
     Table,
@@ -434,6 +434,24 @@ export const StrategiesList = () => {
                 }
             >
                 <Box>
+                    <Alert severity='warning' sx={{ mb: 2 }}>
+                        Custom strategies are deprecated and may be removed in a
+                        future major version. We recommend not using custom
+                        strategies going forward and instead using the
+                        predefined strategies with{' '}
+                        <Link
+                            href={
+                                'https://docs.getunleash.io/reference/strategy-constraints'
+                            }
+                            target='_blank'
+                            variant='body2'
+                        >
+                            constraints
+                        </Link>
+                        . If you have a need for custom strategies that you
+                        cannot support with constraints, please reach out to us.
+                    </Alert>
+
                     <Table {...customGetTableProps()}>
                         <SortableTableHeader
                             headerGroups={customHeaderGroups}

@@ -307,11 +307,11 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                 }
                 show={
                     <Alert severity='warning' sx={{ mb: 2 }}>
-                        Custom strategies are deprecated and will be removed in
-                        a future major version.
+                        Custom strategies are deprecated and may be removed in a
+                        future major version.
                     </Alert>
                 }
-            ></ConditionallyRender>
+            />
 
             <ConditionallyRender
                 condition={listItems.length > 0}

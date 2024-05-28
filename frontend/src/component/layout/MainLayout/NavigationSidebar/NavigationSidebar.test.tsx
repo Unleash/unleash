@@ -2,6 +2,8 @@ import { render } from 'utils/testRenderer';
 import { NavigationSidebar } from './NavigationSidebar';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { createLocalStorage } from 'utils/createLocalStorage';
+import { Route, Routes } from 'react-router-dom';
+import { listItemButtonClasses as classes } from '@mui/material/ListItemButton';
 
 beforeEach(() => {
     window.localStorage.clear();
@@ -53,4 +55,17 @@ test('persist navigation mode and expansion selection in storage', async () => {
         );
         expect(expanded).toEqual(['admin']);
     });
+});
+
+test('select active item', async () => {
+    render(
+        <Routes>
+            <Route path={'/search'} element={<NavigationSidebar />} />
+        </Routes>,
+        { route: '/search' },
+    );
+
+    const links = screen.getAllByRole('link');
+
+    expect(links[1]).toHaveClass(classes.selected);
 });

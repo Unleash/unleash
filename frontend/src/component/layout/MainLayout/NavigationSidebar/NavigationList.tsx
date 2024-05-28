@@ -48,11 +48,12 @@ const useShowBadge = () => {
     return showBadge;
 };
 
-export const ConfigureNavigationList: FC<{
+export const SecondaryNavigationList: FC<{
     routes: INavigationMenuItem[];
     mode: NavigationMode;
-    onClick?: () => void;
-}> = ({ routes, mode, onClick }) => {
+    onClick: (activeItem: string) => void;
+    activeItem?: string;
+}> = ({ routes, mode, activeItem, onClick }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     return (
@@ -62,7 +63,8 @@ export const ConfigureNavigationList: FC<{
                     key={route.title}
                     href={route.path}
                     text={route.title}
-                    onClick={onClick}
+                    onClick={() => onClick(route.path)}
+                    selected={activeItem === route.path}
                 >
                     <IconRenderer path={route.path} />
                 </DynamicListItem>
@@ -121,26 +123,43 @@ export const OtherLinksList = () => {
 
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
-    onClick?: () => void;
-}> = ({ mode, onClick }) => {
+    onClick: (activeItem: string) => void;
+    activeItem?: string;
+}> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     return (
         <List>
-            <DynamicListItem href='/projects' text='Projects' onClick={onClick}>
+            <DynamicListItem
+                href='/projects'
+                text='Projects'
+                onClick={() => onClick('/projects')}
+                selected={activeItem === '/projects'}
+            >
                 <StyledProjectIcon />
             </DynamicListItem>
-            <DynamicListItem href='/search' text='Search' onClick={onClick}>
+            <DynamicListItem
+                href='/search'
+                text='Search'
+                onClick={() => onClick('/search')}
+                selected={activeItem === '/search'}
+            >
                 <SearchIcon />
             </DynamicListItem>
             <DynamicListItem
                 href='/playground'
                 text='Playground'
-                onClick={onClick}
+                onClick={() => onClick('/playground')}
+                selected={activeItem === '/playground'}
             >
                 <PlaygroundIcon />
             </DynamicListItem>
-            <DynamicListItem href='/insights' text='Insights' onClick={onClick}>
+            <DynamicListItem
+                href='/insights'
+                text='Insights'
+                onClick={() => onClick('/insights')}
+                selected={activeItem === '/insights'}
+            >
                 <InsightsIcon />
             </DynamicListItem>
         </List>
@@ -163,23 +182,21 @@ const AccordionHeader: FC = ({ children }) => {
 
 export const SecondaryNavigation: FC<{
     expanded: boolean;
-    onChange: (expanded: boolean) => void;
+    onExpandChange: (expanded: boolean) => void;
     mode: NavigationMode;
-    routes: INavigationMenuItem[];
-}> = ({ mode, expanded, onChange, routes, children }) => {
+    title: string;
+}> = ({ mode, expanded, onExpandChange, title, children }) => {
     return (
         <Accordion
             disableGutters={true}
             sx={{ boxShadow: 'none' }}
             expanded={expanded}
             onChange={(_, expand) => {
-                onChange(expand);
+                onExpandChange(expand);
             }}
         >
-            {mode === 'full' && <AccordionHeader>{children}</AccordionHeader>}
-            <AccordionDetails sx={{ p: 0 }}>
-                <ConfigureNavigationList routes={routes} mode={mode} />
-            </AccordionDetails>
+            {mode === 'full' && <AccordionHeader>{title}</AccordionHeader>}
+            <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
         </Accordion>
     );
 };

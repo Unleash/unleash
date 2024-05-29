@@ -145,46 +145,38 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                         </ChartWidget>
                     }
                 />
+                <Widget {...chartInfo.totalFlags}>
+                    <FlagStats
+                        count={showAllProjects ? flags.total : summary.total}
+                        flagsPerUser={
+                            showAllProjects ? getFlagsPerUser(flags, users) : ''
+                        }
+                        isLoading={loading}
+                    />
+                </Widget>
+                <ConditionallyRender
+                    condition={showAllProjects}
+                    show={
+                        <ChartWidget {...chartInfo.flags}>
+                            <FlagsChart
+                                flagTrends={flagTrends}
+                                isLoading={loading}
+                            />
+                        </ChartWidget>
+                    }
+                    elseShow={
+                        <ChartWidget {...chartInfo.flagsPerProject}>
+                            <FlagsProjectChart
+                                projectFlagTrends={groupedProjectsData}
+                                isLoading={loading}
+                            />
+                        </ChartWidget>
+                    }
+                />
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
                         <>
-                            <Widget {...chartInfo.totalFlags}>
-                                <FlagStats
-                                    count={
-                                        showAllProjects
-                                            ? flags.total
-                                            : summary.total
-                                    }
-                                    flagsPerUser={
-                                        showAllProjects
-                                            ? getFlagsPerUser(flags, users)
-                                            : ''
-                                    }
-                                    isLoading={loading}
-                                />
-                            </Widget>
-                            <ConditionallyRender
-                                condition={showAllProjects}
-                                show={
-                                    <ChartWidget {...chartInfo.flags}>
-                                        <FlagsChart
-                                            flagTrends={flagTrends}
-                                            isLoading={loading}
-                                        />
-                                    </ChartWidget>
-                                }
-                                elseShow={
-                                    <ChartWidget {...chartInfo.flagsPerProject}>
-                                        <FlagsProjectChart
-                                            projectFlagTrends={
-                                                groupedProjectsData
-                                            }
-                                            isLoading={loading}
-                                        />
-                                    </ChartWidget>
-                                }
-                            />
                             <Widget {...chartInfo.averageHealth}>
                                 <HealthStats
                                     value={summary.averageHealth}

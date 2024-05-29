@@ -213,7 +213,7 @@ export const RecentProjectsNavigation: FC<{
         <Box>
             {mode === 'full' && (
                 <Typography
-                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 1 }}
+                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 2 }}
                 >
                     Recent project
                 </Typography>

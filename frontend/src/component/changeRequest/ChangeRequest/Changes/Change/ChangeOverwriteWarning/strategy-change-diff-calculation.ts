@@ -145,12 +145,18 @@ export function getStrategyChangesThatWouldBeOverwritten(
 
     const withSortedSegments = (() => {
         if (change.payload.segments && currentStrategyConfig?.segments) {
-            const changeCopy = { ...change };
-            changeCopy.payload.segments =
-                changeCopy.payload.segments?.toSorted();
+            const changeCopy = {
+                ...change,
+                payload: {
+                    ...change.payload,
+                    segments: [...(change.payload.segments ?? [])].sort(),
+                },
+            };
 
-            const currentCopy = { ...currentStrategyConfig };
-            currentCopy.segments = currentCopy.segments?.toSorted();
+            const currentCopy = {
+                ...currentStrategyConfig,
+                segments: [...currentStrategyConfig.segments].sort(),
+            };
 
             return { current: currentCopy, change: changeCopy };
         } else {

@@ -24,7 +24,7 @@ Styled components have better performance characteristics, but it's fairly minor
 ### Consequences: code sharing
 
 With makeStyles it was common to reuse CSS fragments via library utilities.
-In the styled components approach we use themeable functions and  object literals
+In the styled components approach we use themeable functions and object literals.
 
 ```ts
 import { Theme } from '@mui/material';

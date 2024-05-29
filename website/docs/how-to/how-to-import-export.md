@@ -9,9 +9,9 @@ The import and export API first appeared in Unleash 3.3.0.
 
 :::
 
-:::caution Deprecation notice
+:::caution Removal notice
 
-Api admin state is deprecated from version 5. We recommend using the new [Environment Import & Export](https://docs.getunleash.io/reference/deploy/environment-import-export).
+Api admin state is deprecated from version 5 and removed from version 6. We recommend using the new [Environment Import & Export](https://docs.getunleash.io/reference/deploy/environment-import-export).
 
 :::
 
@@ -33,7 +33,7 @@ Be careful when using the `drop` parameter in production environments: cleaning 
 
 :::caution Removal notice
 
-State Service has been removed as of Unleash 6.0
+State Service has been removed as of Unleash 6
 
 :::
 
@@ -58,6 +58,12 @@ It is also possible to not override existing feature flags (and strategies) by u
 
 ### API Export {#api-export}
 
+:::caution Removal notice
+
+State API has been removed as of Unleash 6
+
+:::
+
 The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.
 You can customize the export with query parameters:
 
@@ -75,6 +81,12 @@ For example if you want to download just feature-toggles as yaml:
 <ApiRequest verb="get" url="api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1" title="Export features (and nothing else) as YAML."/>
 
 ### API Import {#api-import}
+
+:::caution Removal notice
+
+State API has been removed as of Unleash 6
+
+:::
 
 :::caution Importing environments in Unleash 4.19 and below
 
@@ -107,6 +119,12 @@ Example usage:
 <ApiRequest verb="post" url="api/admin/state/import" payload={{ "version": 3, "features": [{"name": "a-feature-flag", "enabled": true, "description": "#1 feature-flag"}] }} title="Import data into Unleash."/>
 
 ## Startup import {#startup-import}
+
+:::caution Removal notice
+
+State service startup import has been removed as of Unleash 6
+
+:::
 
 You can import flags and strategies on startup by using an import file in JSON or YAML format. As with other forms of imports, you can also choose to remove the current flag and strategy configuration in the database before importing.
 

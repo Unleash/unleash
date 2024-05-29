@@ -14,7 +14,7 @@ import {
 } from './NavigationList';
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { useLastViewedFlags } from '../../../../hooks/useLastViewedFlags';
+import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,

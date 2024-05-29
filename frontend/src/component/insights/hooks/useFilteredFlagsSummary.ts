@@ -6,7 +6,10 @@ import type {
 
 const validTimeToProduction = (
     item: InstanceInsightsSchemaProjectFlagTrendsItem,
-) => Boolean(item) && typeof item.timeToProduction === 'number';
+) =>
+    Boolean(item) &&
+    typeof item.timeToProduction === 'number' &&
+    item.timeToProduction !== 0;
 
 // NOTE: should we move project filtering to the backend?
 export const useFilteredFlagsSummary = (

@@ -18,6 +18,7 @@ const ShowHideRow = styled(Box, {
     width: '100%',
 }));
 
+// This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
 const ShowHideContainer = styled(Box)(({ theme }) => ({
     flexGrow: 1,
     display: 'flex',

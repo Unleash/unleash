@@ -47,10 +47,6 @@ export const StretchContainer = styled(Box)(({ theme }) => ({
     zIndex: 1,
 }));
 
-export const ScreenHeightBox = styled(Box)(({ theme }) => ({
-    height: '100%',
-}));
-
 export const NavigationSidebar = () => {
     const { routes } = useRoutes();
 

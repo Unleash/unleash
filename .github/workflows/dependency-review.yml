@@ -1,0 +1,23 @@
+name: Dependency review
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  license_review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Dependency review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: medium
+          deny-licenses: GPL-1.0, GPL-2.0, GPL-3.0, LGPL-2.1, LGPL-3.0
+          comment-summary-in-pr: always

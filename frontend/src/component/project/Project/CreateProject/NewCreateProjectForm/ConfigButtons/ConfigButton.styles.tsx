@@ -22,6 +22,11 @@ export const HiddenDescription = styled('p')(() => ({
 
 export const ButtonLabel = styled('span', {
     shouldForwardProp: (prop) => prop !== 'labelWidth',
-})<{ labelWidth?: string }>(({ labelWidth }) => ({
+})<{ labelWidth?: string }>(({ labelWidth, theme }) => ({
     width: labelWidth || 'unset',
+    overflowX: 'hidden',
+    textOverflow: 'ellipsis',
+    [theme.breakpoints.down('sm')]: {
+        width: 'max-content',
+    },
 }));

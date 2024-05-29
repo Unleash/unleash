@@ -50,6 +50,15 @@ export const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
     gap: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+        flexFlow: 'column nowrap',
+        'div:has(button)': {
+            display: 'flex',
+            button: {
+                flex: 1,
+            },
+        },
+    },
 }));
 
 export const FormActions = styled(StyledFormSection)(({ theme }) => ({
@@ -57,4 +66,14 @@ export const FormActions = styled(StyledFormSection)(({ theme }) => ({
     gap: theme.spacing(5),
     justifyContent: 'flex-end',
     flexFlow: 'row wrap',
+    [theme.breakpoints.down('sm')]: {
+        flexFlow: 'column nowrap',
+        gap: theme.spacing(2),
+        '& > *': {
+            display: 'flex',
+            button: {
+                flex: 1,
+            },
+        },
+    },
 }));

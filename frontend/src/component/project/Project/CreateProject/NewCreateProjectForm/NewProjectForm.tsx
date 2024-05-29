@@ -217,6 +217,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     button={{
                         label: projectStickiness,
                         icon: <StickinessIcon />,
+                        labelWidth: '12ch',
                     }}
                     search={{
                         label: 'Filter stickiness options',

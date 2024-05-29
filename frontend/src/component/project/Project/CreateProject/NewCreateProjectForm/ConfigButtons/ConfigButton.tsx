@@ -6,7 +6,7 @@ import {
     StyledPopover,
     HiddenDescription,
     ButtonLabel,
-} from './ConfigButtons.styles';
+} from './ConfigButton.styles';
 
 export type ConfigButtonProps = {
     button: { label: string; icon: ReactNode; labelWidth?: string };

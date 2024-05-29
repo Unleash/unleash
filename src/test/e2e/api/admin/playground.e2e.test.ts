@@ -142,7 +142,7 @@ describe('Playground API E2E', () => {
         );
     };
 
-    test('Returned features should be a subset of the provided toggles', async () => {
+    test('Returned features should be a subset of the provided flags', async () => {
         await fc.assert(
             fc
                 .asyncProperty(

@@ -33,10 +33,6 @@ const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
-const StyledButton = styled(Button)(({ theme }) => ({
-    marginLeft: theme.spacing(3),
-}));
-
 const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.common.white,
     stroke: theme.palette.common.white,
@@ -166,7 +162,7 @@ export const CreateProjectDialog = ({
                     overrideDocumentation={setDocumentation}
                     clearDocumentationOverride={clearDocumentationOverride}
                 >
-                    <StyledButton onClick={onClose}>Cancel</StyledButton>
+                    <Button onClick={onClose}>Cancel</Button>
                     <CreateButton
                         name='project'
                         permission={CREATE_PROJECT}

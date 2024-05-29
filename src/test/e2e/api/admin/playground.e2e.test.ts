@@ -257,7 +257,7 @@ describe('Playground API E2E', () => {
 
                         if (features.length !== body.features.length) {
                             ctx.log(
-                                `I expected the number of mapped toggles (${body.features.length}) to be the same as the number of created toggles (${features.length}), but that was not the case.`,
+                                `I expected the number of mapped flags (${body.features.length}) to be the same as the number of created toggles (${features.length}), but that was not the case.`,
                             );
                             return false;
                         }

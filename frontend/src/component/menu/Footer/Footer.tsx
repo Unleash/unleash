@@ -13,6 +13,7 @@ const StyledFooter = styled('footer')(({ theme }) => ({
     flexGrow: 1,
     zIndex: 100,
     backgroundColor: theme.palette.background.paper,
+    overflowY: 'hidden',
 }));
 
 const StyledList = styled(List)({

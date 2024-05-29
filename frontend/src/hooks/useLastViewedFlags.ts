@@ -5,9 +5,9 @@ import { useCustomEvent } from './useCustomEvent';
 
 const MAX_ITEMS = 3;
 
-type Flag = { featureId: string; projectId: string };
+export type LastViewedFlag = { featureId: string; projectId: string };
 
-const removeIncorrect = (flags?: any[]): Flag[] => {
+const removeIncorrect = (flags?: any[]): LastViewedFlag[] => {
     if (!Array.isArray(flags)) return [];
     return flags.filter((flag) => flag.featureId && flag.projectId);
 };
@@ -18,7 +18,7 @@ const localStorageItems = (key: string) => {
 
 export const useLastViewedFlags = () => {
     const key = `${basePath}:unleash-lastViewedFlags`;
-    const [lastViewed, setLastViewed] = useState<Flag[]>(() =>
+    const [lastViewed, setLastViewed] = useState<LastViewedFlag[]>(() =>
         localStorageItems(key),
     );
 

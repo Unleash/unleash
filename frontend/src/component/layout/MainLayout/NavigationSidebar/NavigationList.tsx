@@ -135,6 +135,7 @@ export const RecentFlagsList: FC<{
                     text={flag.featureId}
                     onClick={onClick}
                     selected={false}
+                    key={flag.featureId}
                 >
                     <FlagIcon />
                 </DynamicListItem>

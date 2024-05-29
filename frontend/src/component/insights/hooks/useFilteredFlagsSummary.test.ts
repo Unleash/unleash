@@ -171,7 +171,7 @@ describe('useFilteredFlagTrends', () => {
             averageUsers: 0,
             averageHealth: undefined,
             flagsPerUser: '0.00',
-            medianTimeToProduction: 0,
+            medianTimeToProduction: undefined,
         });
     });
 

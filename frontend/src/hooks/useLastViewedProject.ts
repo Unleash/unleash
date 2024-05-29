@@ -19,7 +19,7 @@ export const useLastViewedProject = () => {
             setLocalStorageItem(key, lastViewed);
             emitEvent();
         }
-    }, [lastViewed, key]);
+    }, [lastViewed, key, emitEvent]);
 
     return {
         lastViewed,

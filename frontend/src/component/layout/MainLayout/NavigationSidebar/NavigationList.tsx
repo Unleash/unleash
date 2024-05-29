@@ -18,6 +18,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FlagIcon from '@mui/icons-material/OutlinedFlag';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -115,6 +116,29 @@ export const RecentProjectsList: FC<{
             >
                 <StyledProjectIcon />
             </DynamicListItem>
+        </List>
+    );
+};
+
+export const RecentFlagsList: FC<{
+    flags: { featureId: string; projectId: string }[];
+    mode: NavigationMode;
+    onClick: () => void;
+}> = ({ flags, mode, onClick }) => {
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+
+    return (
+        <List>
+            {flags.map((flag) => (
+                <DynamicListItem
+                    href={`/projects/${flag.projectId}/features/${flag.featureId}`}
+                    text={flag.featureId}
+                    onClick={onClick}
+                    selected={false}
+                >
+                    <FlagIcon />
+                </DynamicListItem>
+            ))}
         </List>
     );
 };
@@ -223,6 +247,25 @@ export const RecentProjectsNavigation: FC<{
                 mode={mode}
                 onClick={onClick}
             />
+        </Box>
+    );
+};
+
+export const RecentFlagsNavigation: FC<{
+    mode: NavigationMode;
+    flags: { featureId: string; projectId: string }[];
+    onClick: () => void;
+}> = ({ mode, onClick, flags }) => {
+    return (
+        <Box>
+            {mode === 'full' && (
+                <Typography
+                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 2 }}
+                >
+                    Recent flags
+                </Typography>
+            )}
+            <RecentFlagsList flags={flags} mode={mode} onClick={onClick} />
         </Box>
     );
 };

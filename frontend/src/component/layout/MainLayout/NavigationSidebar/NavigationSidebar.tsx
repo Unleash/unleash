@@ -7,12 +7,14 @@ import { useExpanded } from './useExpanded';
 import {
     OtherLinksList,
     PrimaryNavigationList,
+    RecentFlagsNavigation,
     RecentProjectsNavigation,
     SecondaryNavigation,
     SecondaryNavigationList,
 } from './NavigationList';
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
+import { useLastViewedFlags } from '../../../../hooks/useLastViewedFlags';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,
@@ -56,8 +58,11 @@ export const NavigationSidebar = () => {
 
     const [activeItem, setActiveItem] = useState(initialPathname);
 
-    const { lastViewed } = useLastViewedProject();
-    const showRecentProject = mode === 'full' && lastViewed;
+    const { lastViewed: lastViewedProject } = useLastViewedProject();
+    const showRecentProject = mode === 'full' && lastViewedProject;
+
+    const { lastViewed: lastViewedFlags } = useLastViewedFlags();
+    const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
 
     return (
         <StretchContainer>
@@ -111,7 +116,15 @@ export const NavigationSidebar = () => {
             {showRecentProject && (
                 <RecentProjectsNavigation
                     mode={mode}
-                    projectId={lastViewed}
+                    projectId={lastViewedProject}
+                    onClick={() => setActiveItem('/projects')}
+                />
+            )}
+
+            {showRecentFlags && (
+                <RecentFlagsNavigation
+                    mode={mode}
+                    flags={lastViewedFlags}
                     onClick={() => setActiveItem('/projects')}
                 />
             )}

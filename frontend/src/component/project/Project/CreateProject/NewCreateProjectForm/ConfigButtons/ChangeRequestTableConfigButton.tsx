@@ -35,8 +35,6 @@ export const ChangeRequestTableConfigButton: FC<
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
     activeEnvironments,
-    onOpen = () => {},
-    onClose = () => {},
     ...props
 }) => {
     const configured = useMemo(() => {

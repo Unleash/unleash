@@ -4,7 +4,8 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
+  pull-requests: write
 
 jobs:
   license_review:

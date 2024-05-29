@@ -2,14 +2,18 @@ import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMe
 import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import {
+    FeatureStrategyEdit,
+    formatFeaturePath,
+} from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { FeatureStrategyEdit } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { useEffect } from 'react';
+import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -37,6 +41,10 @@ const FeatureOverview = () => {
         useHiddenEnvironments();
     const onSidebarClose = () => navigate(featurePath);
     usePageTitle(featureId);
+    const { setLastViewed } = useLastViewedFlags();
+    useEffect(() => {
+        setLastViewed({ featureId, projectId });
+    }, [featureId]);
 
     return (
         <StyledContainer>

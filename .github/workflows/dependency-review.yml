@@ -1,9 +1,6 @@
 name: Dependency review
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 permissions:

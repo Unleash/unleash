@@ -66,4 +66,14 @@ export const FormActions = styled(StyledFormSection)(({ theme }) => ({
     gap: theme.spacing(5),
     justifyContent: 'flex-end',
     flexFlow: 'row wrap',
+
+    [theme.breakpoints.down('sm')]: {
+        flexFlow: 'column nowrap',
+        '& > *': {
+            display: 'flex',
+            button: {
+                flex: 1,
+            },
+        },
+    },
 }));

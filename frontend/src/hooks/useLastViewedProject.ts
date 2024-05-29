@@ -10,7 +10,7 @@ export const useLastViewedProject = () => {
         return getLocalStorageItem(key);
     });
 
-    const { emitEvent } = useCustomEvent('lastViewedUpdated', () => {
+    const { emitEvent } = useCustomEvent('lastViewedProjectUpdated', () => {
         setLastViewed(getLocalStorageItem(key));
     });
 

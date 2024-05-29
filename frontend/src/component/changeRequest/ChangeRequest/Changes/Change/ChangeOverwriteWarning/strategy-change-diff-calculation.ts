@@ -142,6 +142,11 @@ export function getStrategyChangesThatWouldBeOverwritten(
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null {
     const fallbacks = { segments: [], variants: [], title: '' };
+    if (change.payload.segments && currentStrategyConfig?.segments) {
+        change.payload.segments.sort();
+        currentStrategyConfig.segments.sort();
+    }
+
     return getChangesThatWouldBeOverwritten(
         omit(currentStrategyConfig, 'strategyName'),
         change,

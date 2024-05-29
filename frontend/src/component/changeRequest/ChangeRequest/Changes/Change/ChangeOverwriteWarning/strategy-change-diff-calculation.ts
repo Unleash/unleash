@@ -149,7 +149,7 @@ export function getStrategyChangesThatWouldBeOverwritten(
                 ...change,
                 payload: {
                     ...change.payload,
-                    segments: [...(change.payload.segments ?? [])].sort(),
+                    segments: [...change.payload.segments].sort(),
                 },
             };
 

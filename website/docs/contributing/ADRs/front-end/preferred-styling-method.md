@@ -19,7 +19,7 @@ supported natively in @material/ui and sparingly use the sx prop available on al
 
 As with everything else, whether to use styled components or the `sx` prop depends on the context.
 
-Styled components have better performance characteristics, but it's fairly minor. So unless you're rendering something a lot of times, it's not really a big deal. But when in doubt: Use styled components. And when using a styled component feels like too much overhead, consider using the `sx` prop.
+Styled components have better performance characteristics, but it's fairly minor (refer to Material UI's [performance tradeoffs](https://mui.com/system/getting-started/usage/#performance-tradeoffs) doc for more information). So unless you're rendering something a lot of times, it's not really a big deal. But when in doubt: Use styled components. And when using a styled component feels like too much overhead, consider using the `sx` prop.
 
 ### Consequences: code sharing
 

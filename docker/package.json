@@ -12,37 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@exlinc/keycloak-passport": "^1.0.2",
-    "@passport-next/passport": "^3.1.0",
-    "@passport-next/passport-google-oauth2": "^1.0.0",
-    "basic-auth": "^2.0.1",
-    "passport": "^0.7.0",
     "unleash-server": "file:../build"
   },
-  "resolutions": {
-    "async": "^3.2.4",
-    "db-migrate/rc/minimist": "^1.2.5",
-    "es5-ext": "0.10.64",
-    "knex/liftoff/object.map/**/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
-    "node-forge": "^1.0.0",
-    "set-value": "^4.0.1",
-    "ansi-regex": "^5.0.1",
-    "ssh2": "^1.4.0",
-    "json-schema": "^0.4.0",
-    "ip": "^2.0.1",
-    "minimatch": "^5.0.0",
-    "path-scurry": "1.10.2",
-    "semver": "^7.5.3"
-  },
-  "overrides": {
-    "set-value": "^4.0.1",
-    "ansi-regex": "^5.0.1",
-    "ssh2": "^1.4.0",
-    "json-schema": "^0.4.0",
-    "semver": "^7.5.3"
-  },
-  "version": "4.12.6"
+  "version": "5.12.4"
 }

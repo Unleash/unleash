@@ -174,4 +174,58 @@ describe('useFilteredFlagTrends', () => {
             medianTimeToProduction: 0,
         });
     });
+
+    it('should not use 0 timeToProduction projects for median calculation', () => {
+        const { result } = renderHook(() =>
+            useFilteredFlagsSummary(
+                [
+                    {
+                        week: '2024-01',
+                        project: 'project1',
+                        total: 0,
+                        active: 0,
+                        stale: 0,
+                        potentiallyStale: 0,
+                        users: 0,
+                        date: '',
+                        timeToProduction: 0,
+                    },
+                    {
+                        week: '2024-01',
+                        project: 'project2',
+                        total: 0,
+                        active: 0,
+                        stale: 0,
+                        potentiallyStale: 0,
+                        users: 0,
+                        date: '',
+                        timeToProduction: 0,
+                    },
+                    {
+                        week: '2024-01',
+                        project: 'project3',
+                        total: 0,
+                        active: 0,
+                        stale: 0,
+                        potentiallyStale: 0,
+                        users: 0,
+                        date: '',
+                        timeToProduction: 5,
+                    },
+                ],
+                { total: 1 } as unknown as InstanceInsightsSchemaUsers,
+            ),
+        );
+
+        expect(result.current).toEqual({
+            total: 0,
+            active: 0,
+            stale: 0,
+            potentiallyStale: 0,
+            averageUsers: 0,
+            averageHealth: undefined,
+            flagsPerUser: '0.00',
+            medianTimeToProduction: 5,
+        });
+    });
 });

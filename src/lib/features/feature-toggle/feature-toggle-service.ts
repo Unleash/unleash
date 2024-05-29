@@ -14,10 +14,8 @@ import {
     FeatureStrategyUpdateEvent,
     type FeatureToggle,
     type FeatureToggleDTO,
-    type FeatureToggleLegacy,
     type FeatureToggleView,
     type FeatureToggleWithEnvironment,
-    FeatureUpdatedEvent,
     FeatureVariantEvent,
     type IAuditUser,
     type IConstraint,
@@ -1813,67 +1811,6 @@ class FeatureToggleService {
             );
         }
         return feature;
-    }
-
-    // @deprecated
-    async storeFeatureUpdatedEventLegacy(
-        featureName: string,
-        auditUser: IAuditUser,
-    ): Promise<FeatureToggleLegacy> {
-        const feature = await this.getFeatureToggleLegacy(featureName);
-
-        // Legacy event. Will not be used from v4.3.
-        // We do not include 'preData' on purpose.
-        await this.eventService.storeEvent(
-            new FeatureUpdatedEvent({
-                featureName,
-                data: feature,
-                project: feature.project,
-                auditUser,
-            }),
-        );
-        return feature;
-    }
-
-    // @deprecated
-    async toggle(
-        projectId: string,
-        featureName: string,
-        environment: string,
-        auditUser: IAuditUser,
-    ): Promise<FeatureToggle> {
-        await this.featureToggleStore.get(featureName);
-        const isEnabled =
-            await this.featureEnvironmentStore.isEnvironmentEnabled(
-                featureName,
-                environment,
-            );
-        return this.updateEnabled(
-            projectId,
-            featureName,
-            environment,
-            !isEnabled,
-            auditUser,
-        );
-    }
-
-    // @deprecated
-    async getFeatureToggleLegacy(
-        featureName: string,
-    ): Promise<FeatureToggleLegacy> {
-        const feature =
-            await this.featureStrategiesStore.getFeatureToggleWithEnvs(
-                featureName,
-            );
-        const { environments, ...legacyFeature } = feature;
-        const defaultEnv = environments.find((e) => e.name === DEFAULT_ENV);
-        const strategies = defaultEnv?.strategies || [];
-        const enabled = defaultEnv?.enabled || false;
-        return {
-            ...legacyFeature,
-            enabled,
-            strategies,
-        };
     }
 
     async changeProject(

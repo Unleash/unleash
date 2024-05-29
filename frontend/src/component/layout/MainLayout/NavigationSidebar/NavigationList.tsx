@@ -187,7 +187,12 @@ export const SecondaryNavigation: FC<{
     return (
         <Accordion
             disableGutters={true}
-            sx={{ boxShadow: 'none' }}
+            sx={{
+                boxShadow: 'none',
+                '&:before': {
+                    display: 'none',
+                },
+            }}
             expanded={expanded}
             onChange={(_, expand) => {
                 onExpandChange(expand);

@@ -3,7 +3,10 @@ import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
 import { InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 import { ChangeRequestTable } from './ChangeRequestTable';
-import { TableSearchInput } from './ChangeRequestTableConfigButton.styles';
+import {
+    ScrollContainer,
+    TableSearchInput,
+} from './ChangeRequestTableConfigButton.styles';
 
 type ChangeRequestTableConfigButtonProps = Pick<
     ConfigButtonProps,
@@ -35,8 +38,6 @@ export const ChangeRequestTableConfigButton: FC<
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
     activeEnvironments,
-    onOpen = () => {},
-    onClose = () => {},
     ...props
 }) => {
     const configured = useMemo(() => {
@@ -118,11 +119,13 @@ export const ChangeRequestTableConfigButton: FC<
                 }}
                 onKeyDown={toggleTopItem}
             />
-            <ChangeRequestTable
-                environments={filteredEnvs}
-                enableEnvironment={onEnable}
-                disableEnvironment={onDisable}
-            />
+            <ScrollContainer>
+                <ChangeRequestTable
+                    environments={filteredEnvs}
+                    enableEnvironment={onEnable}
+                    disableEnvironment={onDisable}
+                />
+            </ScrollContainer>
         </ConfigButton>
     );
 };

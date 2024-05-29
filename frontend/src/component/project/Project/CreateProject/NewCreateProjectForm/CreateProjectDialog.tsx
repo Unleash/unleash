@@ -21,7 +21,7 @@ interface ICreateProjectDialogProps {
     onClose: () => void;
 }
 
-const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
+const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
         maxWidth: theme.spacing(170),
@@ -29,6 +29,9 @@ const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
         backgroundColor: 'transparent',
     },
     padding: 0,
+    '& .MuiPaper-root > section': {
+        overflowX: 'hidden',
+    },
 }));
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';

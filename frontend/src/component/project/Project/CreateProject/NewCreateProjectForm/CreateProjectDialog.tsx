@@ -2,7 +2,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { NewProjectForm } from '../NewProjectForm';
+import { NewProjectForm } from './NewProjectForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectForm, {

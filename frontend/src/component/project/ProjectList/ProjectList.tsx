@@ -24,7 +24,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { groupProjects } from './group-projects';
 import { ProjectGroup } from './ProjectGroup';
-import { CreateProjectDialog } from '../Project/CreateProject/CreateProjectDialog/CreateProjectDialog';
+import { CreateProjectDialog } from '../Project/CreateProject/NewCreateProjectForm/CreateProjectDialog';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',

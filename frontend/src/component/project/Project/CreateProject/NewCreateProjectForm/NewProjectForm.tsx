@@ -1,12 +1,4 @@
-import { Typography, styled } from '@mui/material';
-import Input from 'component/common/Input/Input';
-import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
-import {
-    MultiSelectList,
-    SingleSelectList,
-    TableSelect,
-} from './SelectionButton';
+import type { ProjectMode } from '../../hooks/useProjectEnterpriseSettingsForm';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';
@@ -17,63 +9,20 @@ import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
 import type { ReactNode } from 'react';
 import theme from 'themes/theme';
-
-const StyledForm = styled('form')(({ theme }) => ({
-    background: theme.palette.background.default,
-}));
-
-const StyledFormSection = styled('div')(({ theme }) => ({
-    '& + *': {
-        borderBlockStart: `1px solid ${theme.palette.divider}`,
-    },
-
-    padding: theme.spacing(6),
-}));
-
-const TopGrid = styled(StyledFormSection)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateAreas:
-        '"icon header" "icon project-name" "icon project-description"',
-    gridTemplateColumns: 'auto 1fr',
-    gap: theme.spacing(4),
-}));
-
-const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
-    fill: theme.palette.primary.main,
-    stroke: theme.palette.primary.main,
-}));
-
-const StyledHeader = styled(Typography)(({ theme }) => ({
-    gridArea: 'header',
-    alignSelf: 'center',
-    fontWeight: 'lighter',
-}));
-
-const ProjectNameContainer = styled('div')(({ theme }) => ({
-    gridArea: 'project-name',
-}));
-
-const ProjectDescriptionContainer = styled('div')(({ theme }) => ({
-    gridArea: 'project-description',
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    fieldset: { border: 'none' },
-}));
-
-const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    gap: theme.spacing(2),
-}));
-
-const FormActions = styled(StyledFormSection)(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(5),
-    justifyContent: 'flex-end',
-    flexFlow: 'row wrap',
-}));
+import {
+    FormActions,
+    OptionButtons,
+    ProjectDescriptionContainer,
+    ProjectNameContainer,
+    StyledForm,
+    StyledHeader,
+    StyledIcon,
+    StyledInput,
+    TopGrid,
+} from './NewProjectForm.styles';
+import { MultiSelectConfigButton } from './ConfigButtons/MultiSelectConfigButton';
+import { SingleSelectConfigButton } from './ConfigButtons/SingleSelectConfigButton';
+import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 
 type FormProps = {
     projectId: string;
@@ -104,6 +53,31 @@ type FormProps = {
 const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
 const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
+const projectModeOptions = [
+    { value: 'open', label: 'open' },
+    { value: 'protected', label: 'protected' },
+    { value: 'private', label: 'private' },
+];
+
+const configButtonData = {
+    environments: {
+        icon: <EnvironmentsIcon />,
+        text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+    },
+    stickiness: {
+        icon: <StickinessIcon />,
+        text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+    },
+    mode: {
+        icon: <ProjectModeIcon />,
+        text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+    },
+    changeRequests: {
+        icon: <ChangeRequestIcon />,
+        text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+    },
+};
+
 export const NewProjectForm: React.FC<FormProps> = ({
     children,
     handleSubmit,
@@ -126,39 +100,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
     const { isEnterprise } = useUiConfig();
     const { environments: allEnvironments } = useEnvironments();
     const activeEnvironments = allEnvironments.filter((env) => env.enabled);
+    const stickinessOptions = useStickinessOptions(projectStickiness);
 
     const handleProjectNameUpdate = (
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const input = e.target.value;
         setProjectName(input);
-    };
-
-    const projectModeOptions = [
-        { value: 'open', label: 'open' },
-        { value: 'protected', label: 'protected' },
-        { value: 'private', label: 'private' },
-    ];
-
-    const stickinessOptions = useStickinessOptions(projectStickiness);
-
-    const selectionButtonData = {
-        environments: {
-            icon: <EnvironmentsIcon />,
-            text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
-        },
-        stickiness: {
-            icon: <StickinessIcon />,
-            text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
-        },
-        mode: {
-            icon: <ProjectModeIcon />,
-            text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
-        },
-        changeRequests: {
-            icon: <ChangeRequestIcon />,
-            text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
-        },
     };
 
     const numberOfConfiguredChangeRequestEnvironments = Object.keys(
@@ -231,8 +179,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
             </TopGrid>
 
             <OptionButtons>
-                <MultiSelectList
-                    description={selectionButtonData.environments.text}
+                <MultiSelectConfigButton
+                    description={configButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
                         label: env.name,
@@ -252,13 +200,13 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select project environments',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(selectionButtonData.environments)
+                        overrideDocumentation(configButtonData.environments)
                     }
                     onClose={clearDocumentationOverride}
                 />
 
-                <SingleSelectList
-                    description={selectionButtonData.stickiness.text}
+                <SingleSelectConfigButton
+                    description={configButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
                         ...rest,
@@ -275,7 +223,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                         placeholder: 'Select default stickiness',
                     }}
                     onOpen={() =>
-                        overrideDocumentation(selectionButtonData.stickiness)
+                        overrideDocumentation(configButtonData.stickiness)
                     }
                     onClose={clearDocumentationOverride}
                 />
@@ -283,8 +231,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
-                        <SingleSelectList
-                            description={selectionButtonData.mode.text}
+                        <SingleSelectConfigButton
+                            description={configButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
                                 setProjectMode(value);
@@ -299,7 +247,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 placeholder: 'Select project mode',
                             }}
                             onOpen={() =>
-                                overrideDocumentation(selectionButtonData.mode)
+                                overrideDocumentation(configButtonData.mode)
                             }
                             onClose={clearDocumentationOverride}
                         />
@@ -308,10 +256,8 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
-                        <TableSelect
-                            description={
-                                selectionButtonData.changeRequests.text
-                            }
+                        <ChangeRequestTableConfigButton
+                            description={configButtonData.changeRequests.text}
                             activeEnvironments={
                                 availableChangeRequestEnvironments
                             }
@@ -334,7 +280,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                             }
                             onOpen={() =>
                                 overrideDocumentation(
-                                    selectionButtonData.changeRequests,
+                                    configButtonData.changeRequests,
                                 )
                             }
                             onClose={clearDocumentationOverride}

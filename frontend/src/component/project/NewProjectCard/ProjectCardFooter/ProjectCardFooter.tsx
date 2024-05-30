@@ -11,17 +11,17 @@ interface IProjectCardFooterProps {
 }
 
 const StyledFooter = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto 1fr auto',
+    display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(1.5, 3, 2.5, 3),
+    padding: theme.spacing(1.5, 3),
     background: theme.palette.envAccordion.expanded,
     boxShadow: theme.boxShadows.accordionFooter,
 }));
 
 const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
     marginRight: theme.spacing(-1),
-    marginBottom: theme.spacing(-1),
+    marginLeft: 'auto',
 }));
 
 export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({

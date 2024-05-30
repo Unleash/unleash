@@ -41,13 +41,15 @@ const useOwnersMap = () => {
     };
 };
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'flex-end',
+}));
+
 const StyledUserName = styled('p')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
     margin: theme.spacing(0, 0, 0.5, 0),
-    overflowX: 'hidden',
-    textOverflow: 'ellipsis',
-    textWrap: 'nowrap',
-    alignSelf: 'end',
 }));
 
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
@@ -55,7 +57,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     const users = owners.map(ownersMap);
 
     return (
-        <>
+        <StyledContainer>
             <GroupCardAvatars
                 header={owners.length === 1 ? 'Owner' : 'Owners'}
                 users={users}
@@ -68,6 +70,6 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
                     </StyledUserName>
                 }
             />
-        </>
+        </StyledContainer>
     );
 };

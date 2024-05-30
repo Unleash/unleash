@@ -33,10 +33,12 @@ test('can insert and read lifecycle stages', async () => {
     );
 
     function emitMetricsEvent(environment: string) {
-        eventBus.emit(CLIENT_METRICS, {
-            bucket: { toggles: { [featureName]: 'irrelevant' } },
-            environment,
-        });
+        eventBus.emit(CLIENT_METRICS, [
+            {
+                featureName,
+                environment,
+            },
+        ]);
     }
     function reachedStage(feature: string, name: StageName) {
         return new Promise((resolve) =>

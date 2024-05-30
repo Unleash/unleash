@@ -8,7 +8,6 @@ import {
     type IUnleashStores,
     type IUser,
     TEST_AUDIT_USER,
-    SYSTEM_USER_AUDIT,
 } from '../../../lib/types';
 
 let stores: IUnleashStores;
@@ -70,11 +69,7 @@ test('should have three group', async () => {
 });
 
 test('should add person to 2 groups', async () => {
-    await groupService.syncExternalGroupsWithAudit(
-        user.id,
-        ['dev', 'maintainer'],
-        SYSTEM_USER_AUDIT,
-    );
+    await groupService.syncExternalGroups(user.id, ['dev', 'maintainer']);
     const groups = await groupService.getGroupsForUser(user.id);
     expect(groups.length).toBe(2);
     const events = await getTestEvents();
@@ -99,11 +94,7 @@ test('should remove person from one group', async () => {
     const removedGroups = (await groupService.getGroupsForUser(user.id)).filter(
         (g) => !g.mappingsSSO?.includes('maintainer'),
     );
-    await groupService.syncExternalGroupsWithAudit(
-        user.id,
-        ['maintainer'],
-        SYSTEM_USER_AUDIT,
-    );
+    await groupService.syncExternalGroups(user.id, ['maintainer']);
     const groups = await groupService.getGroupsForUser(user.id);
     expect(groups.length).toBe(1);
     expect(groups[0].name).toEqual('maintainer_group');
@@ -124,11 +115,7 @@ test('should add person to completely new group with new name', async () => {
     const removedGroups = (await groupService.getGroupsForUser(user.id)).filter(
         (g) => !g.mappingsSSO?.includes('dev'),
     );
-    await groupService.syncExternalGroupsWithAudit(
-        user.id,
-        ['dev'],
-        SYSTEM_USER_AUDIT,
-    );
+    await groupService.syncExternalGroups(user.id, ['dev']);
     const groups = await groupService.getGroupsForUser(user.id);
     expect(groups.length).toBe(1);
     expect(groups[0].name).toEqual('dev_group');
@@ -153,11 +140,7 @@ test('should add person to completely new group with new name', async () => {
 
 test('should not update groups when not string array ', async () => {
     const beforeEvents = await getTestEvents();
-    await groupService.syncExternalGroupsWithAudit(
-        user.id,
-        'Everyone' as any,
-        SYSTEM_USER_AUDIT,
-    );
+    await groupService.syncExternalGroups(user.id, 'Everyone' as any);
     const groups = await groupService.getGroupsForUser(user.id);
     expect(groups.length).toBe(1);
     expect(groups[0].name).toEqual('dev_group');
@@ -168,11 +151,7 @@ test('should not update groups when not string array ', async () => {
 // this test depends on the other tests being executed
 test('should clear groups when empty array ', async () => {
     const removedGroups = await groupService.getGroupsForUser(user.id);
-    await groupService.syncExternalGroupsWithAudit(
-        user.id,
-        [],
-        SYSTEM_USER_AUDIT,
-    );
+    await groupService.syncExternalGroups(user.id, []);
     const groups = await groupService.getGroupsForUser(user.id);
     expect(groups.length).toBe(0);
     expect(removedGroups).toHaveLength(1);
@@ -193,11 +172,7 @@ test('should not remove user from no SSO definition group', async () => {
         description: 'no_mapping_group',
     });
     await groupStore.addUserToGroups(user.id, [group.id]);
-    await groupService.syncExternalGroupsWithAudit(
-        user.id,
-        [],
-        SYSTEM_USER_AUDIT,
-    );
+    await groupService.syncExternalGroups(user.id, []);
     const groups = await groupService.getGroupsForUser(user.id);
     expect(groups.length).toBe(1);
     expect(groups[0].name).toEqual('no_mapping_group');

@@ -10,6 +10,7 @@ import type {
 import {
     GroupDeletedEvent,
     GroupUpdatedEvent,
+    SYSTEM_USER_AUDIT,
     type IAuditUser,
     type IUnleashConfig,
     type IUnleashStores,
@@ -19,8 +20,6 @@ import type { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import {
     GROUP_CREATED,
-    GROUP_USER_ADDED,
-    GROUP_USER_REMOVED,
     GroupUserAdded,
     GroupUserRemoved,
     type IBaseEvent,
@@ -238,62 +237,11 @@ export class GroupService {
         return this.groupStore.getProjectGroupRoles(projectId);
     }
 
-    /** @deprecated use syncExternalGroupsWithAudit */
     async syncExternalGroups(
         userId: number,
         externalGroups: string[],
-        createdBy?: string,
-        createdByUserId?: number,
-    ): Promise<void> {
-        if (Array.isArray(externalGroups)) {
-            const newGroups = await this.groupStore.getNewGroupsForExternalUser(
-                userId,
-                externalGroups,
-            );
-            await this.groupStore.addUserToGroups(
-                userId,
-                newGroups.map((g) => g.id),
-                createdBy,
-            );
-            const oldGroups = await this.groupStore.getOldGroupsForExternalUser(
-                userId,
-                externalGroups,
-            );
-            await this.groupStore.deleteUsersFromGroup(oldGroups);
-
-            const events: IBaseEvent[] = [];
-            for (const group of newGroups) {
-                events.push({
-                    type: GROUP_USER_ADDED,
-                    createdBy: createdBy ?? 'unknown',
-                    createdByUserId: createdByUserId ?? -9999,
-                    data: {
-                        groupId: group.id,
-                        userId,
-                    },
-                });
-            }
-
-            for (const group of oldGroups) {
-                events.push({
-                    type: GROUP_USER_REMOVED,
-                    createdBy: createdBy ?? 'unknown',
-                    createdByUserId: createdByUserId ?? -9999,
-                    preData: {
-                        groupId: group.groupId,
-                        userId,
-                    },
-                });
-            }
-
-            await this.eventService.storeEvents(events);
-        }
-    }
-
-    async syncExternalGroupsWithAudit(
-        userId: number,
-        externalGroups: string[],
-        auditUser: IAuditUser,
+        createdBy?: string, // deprecated
+        createdByUserId?: number, // deprecated
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
             const newGroups = await this.groupStore.getNewGroupsForExternalUser(
@@ -317,7 +265,7 @@ export class GroupService {
                     new GroupUserAdded({
                         userId,
                         groupId: group.id,
-                        auditUser,
+                        auditUser: SYSTEM_USER_AUDIT,
                     }),
                 );
             }
@@ -327,7 +275,7 @@ export class GroupService {
                     new GroupUserRemoved({
                         userId,
                         groupId: group.groupId,
-                        auditUser,
+                        auditUser: SYSTEM_USER_AUDIT,
                     }),
                 );
             }

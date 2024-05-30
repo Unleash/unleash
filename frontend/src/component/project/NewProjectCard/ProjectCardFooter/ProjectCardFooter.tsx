@@ -14,7 +14,7 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
     alignItems: 'center',
-    padding: theme.spacing(1.5, 3, 2, 3),
+    padding: theme.spacing(1.5, 3, 2.5, 3),
     background: theme.palette.envAccordion.expanded,
     boxShadow: theme.boxShadows.accordionFooter,
 }));

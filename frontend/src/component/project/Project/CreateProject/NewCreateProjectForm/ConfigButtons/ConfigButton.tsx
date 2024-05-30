@@ -7,6 +7,7 @@ import {
     HiddenDescription,
     ButtonLabel,
 } from './ConfigButton.styles';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 export type ConfigButtonProps = {
     button: { label: string; icon: ReactNode; labelWidth?: string };
@@ -16,6 +17,7 @@ export type ConfigButtonProps = {
     preventOpen?: boolean;
     anchorEl: HTMLDivElement | null | undefined;
     setAnchorEl: (el: HTMLDivElement | null | undefined) => void;
+    tooltipHeader: string;
 };
 
 export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
@@ -27,6 +29,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     preventOpen,
     anchorEl,
     setAnchorEl,
+    tooltipHeader,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const descriptionId = uuidv4();
@@ -44,20 +47,30 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     return (
         <>
             <Box ref={ref}>
-                <Button
-                    variant='outlined'
-                    color='primary'
-                    startIcon={button.icon}
-                    onClick={() => {
-                        if (!preventOpen) {
-                            open();
-                        }
-                    }}
+                <TooltipResolver
+                    titleComponent={
+                        <article>
+                            <h3>{tooltipHeader}</h3>
+                            <p>{description}</p>
+                        </article>
+                    }
+                    variant='custom'
                 >
-                    <ButtonLabel labelWidth={button.labelWidth}>
-                        {button.label}
-                    </ButtonLabel>
-                </Button>
+                    <Button
+                        variant='outlined'
+                        color='primary'
+                        startIcon={button.icon}
+                        onClick={() => {
+                            if (!preventOpen) {
+                                open();
+                            }
+                        }}
+                    >
+                        <ButtonLabel labelWidth={button.labelWidth}>
+                            {button.label}
+                        </ButtonLabel>
+                    </Button>
+                </TooltipResolver>
             </Box>
             <StyledPopover
                 open={Boolean(anchorEl)}

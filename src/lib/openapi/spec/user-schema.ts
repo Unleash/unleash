@@ -15,7 +15,7 @@ export const userSchema = {
         },
         isAPI: {
             description:
-                '(Deprecated): Used internally to know which operations the user should be allowed to perform',
+                'Deprecated in v5. Used internally to know which operations the user should be allowed to perform',
             type: 'boolean',
             example: true,
             deprecated: true,

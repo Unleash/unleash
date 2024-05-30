@@ -180,6 +180,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
 
             <OptionButtons>
                 <MultiSelectConfigButton
+                    tooltipText='Select project environments'
                     description={configButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
@@ -206,6 +207,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 />
 
                 <SingleSelectConfigButton
+                    tooltipText='Set default project stickiness'
                     description={configButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
@@ -233,6 +235,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <SingleSelectConfigButton
+                            tooltipText='Set project mode'
                             description={configButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
@@ -258,6 +261,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <ChangeRequestTableConfigButton
+                            tooltipText='Configure change requests'
                             description={configButtonData.changeRequests.text}
                             activeEnvironments={
                                 availableChangeRequestEnvironments

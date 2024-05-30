@@ -21,7 +21,6 @@ const StyledFooter = styled(Box)(({ theme }) => ({
 
 const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
     marginRight: theme.spacing(-1),
-    marginLeft: 'auto',
     marginBottom: theme.spacing(-1),
 }));
 

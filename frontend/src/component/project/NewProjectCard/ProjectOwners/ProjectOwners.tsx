@@ -59,6 +59,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
             <GroupCardAvatars
                 header={owners.length === 1 ? 'Owner' : 'Owners'}
                 users={users}
+                avatarLimit={8}
             />
             <ConditionallyRender
                 condition={owners.length === 1}

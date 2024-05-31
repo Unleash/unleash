@@ -24,6 +24,10 @@ export const StyledProjectCard = styled(Card)(({ theme }) => ({
 
 export const StyledProjectCardBody = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1, 2, 2, 2),
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
 }));
 
 export const StyledDivHeader = styled('div')(({ theme }) => ({
@@ -83,6 +87,7 @@ export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
 export const StyledIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing(0.5, 0.5, 0.5, 0),
+    padding: theme.spacing(1, 0.5, 0.5, 0),
     marginRight: theme.spacing(2),
+    alignSelf: 'baseline',
 }));

@@ -99,6 +99,24 @@ describe('Strategy change conflict detection', () => {
         expect(resultMissing).toBeNull();
     });
 
+    test('It sorts segments before comparing (because their order is irrelevant)', () => {
+        const result = getStrategyChangesThatWouldBeOverwritten(
+            {
+                ...existingStrategy,
+                segments: [25, 26, 1],
+            },
+            {
+                ...change,
+                payload: {
+                    ...change.payload,
+                    segments: [26, 1, 25],
+                },
+            },
+        );
+
+        expect(result).toBeNull();
+    });
+
     test('It treats `undefined` or missing strategy variants in old config and change as equal to `[]`', () => {
         const undefinedVariantsExistingStrategy = {
             ...existingStrategy,

@@ -242,12 +242,9 @@ const OldHeader: VFC = () => {
                         <StyledLink to={'/search'}>Search</StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
                         <ConditionallyRender
-                            condition={!killInsightsDashboard}
+                            condition={!killInsightsDashboard && !isOss()}
                             show={
-                                <StyledLinkWithBetaBadge
-                                    to={'/insights'}
-                                    title={'Insights'}
-                                />
+                                <StyledLink to='/insights'>Insights</StyledLink>
                             }
                         />
                         <StyledAdvancedNavButton

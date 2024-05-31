@@ -87,7 +87,7 @@ export const featureSchema = {
             deprecated: true,
             example: '2023-01-28T16:21:39.975Z',
             description:
-                'The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema',
+                'The date when metrics where last collected for the feature. This field was deprecated in v5, use the one in featureEnvironmentSchema',
         },
         environments: {
             type: 'array',
@@ -110,7 +110,8 @@ export const featureSchema = {
             items: {
                 type: 'object',
             },
-            description: 'This is a legacy field that will be deprecated',
+            description:
+                'This was deprecated in v5 and will be removed in a future major version',
             deprecated: true,
         },
         tags: {

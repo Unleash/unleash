@@ -33,7 +33,7 @@ const usernameSchema = {
             deprecated: true,
             type: 'string',
             description:
-                'The name of the token. This property is deprecated. Use `tokenName` instead.',
+                'The name of the token. This property was deprecated in v5. Use `tokenName` instead.',
             example: 'token-64523',
         },
     },

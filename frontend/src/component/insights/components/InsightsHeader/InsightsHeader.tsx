@@ -10,7 +10,6 @@ import {
     useTheme,
 } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Badge } from 'component/common/Badge/Badge';
 import { ShareLink } from './ShareLink/ShareLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -82,7 +81,6 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
                         })}
                     >
                         <span>Insights</span>{' '}
-                        <Badge color='success'>Beta</Badge>
                     </Typography>
                 }
                 actions={

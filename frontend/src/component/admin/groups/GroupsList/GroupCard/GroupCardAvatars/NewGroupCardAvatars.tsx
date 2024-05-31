@@ -47,11 +47,13 @@ interface IGroupCardAvatarsProps {
         imageUrl?: string;
     }[];
     header?: ReactNode;
+    avatarLimit?: number;
 }
 
 export const GroupCardAvatars = ({
     users = [],
     header = null,
+    avatarLimit = 9,
 }: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>
@@ -68,7 +70,7 @@ export const GroupCardAvatars = ({
                     }
                     return 0;
                 })
-                .slice(0, 9),
+                .slice(0, avatarLimit),
         [users],
     );
 
@@ -109,7 +111,7 @@ export const GroupCardAvatars = ({
                     />
                 ))}
                 <ConditionallyRender
-                    condition={users.length > 9}
+                    condition={users.length > avatarLimit}
                     show={
                         <StyledAvatar>
                             +{users.length - shownUsers.length}

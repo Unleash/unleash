@@ -19,7 +19,7 @@ import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     position: 'fixed',
     bottom: 0,
-    left: 0,
+    right: 0,
     width: '100%',
     maxWidth: theme.spacing(30),
     zIndex: theme.zIndex.sticky,

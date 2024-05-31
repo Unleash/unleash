@@ -2,7 +2,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { NewProjectForm } from '../NewProjectForm';
+import { NewProjectForm } from './NewProjectForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectForm, {
@@ -21,7 +21,7 @@ interface ICreateProjectDialogProps {
     onClose: () => void;
 }
 
-const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
+const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
         maxWidth: theme.spacing(170),
@@ -29,13 +29,12 @@ const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
         backgroundColor: 'transparent',
     },
     padding: 0,
+    '& .MuiPaper-root > section': {
+        overflowX: 'hidden',
+    },
 }));
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    marginLeft: theme.spacing(3),
-}));
 
 const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.common.white,
@@ -166,7 +165,7 @@ export const CreateProjectDialog = ({
                     overrideDocumentation={setDocumentation}
                     clearDocumentationOverride={clearDocumentationOverride}
                 >
-                    <StyledButton onClick={onClose}>Cancel</StyledButton>
+                    <Button onClick={onClose}>Cancel</Button>
                     <CreateButton
                         name='project'
                         permission={CREATE_PROJECT}

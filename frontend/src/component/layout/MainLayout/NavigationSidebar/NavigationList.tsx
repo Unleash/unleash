@@ -18,6 +18,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FlagIcon from '@mui/icons-material/OutlinedFlag';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -119,6 +120,30 @@ export const RecentProjectsList: FC<{
     );
 };
 
+export const RecentFlagsList: FC<{
+    flags: { featureId: string; projectId: string }[];
+    mode: NavigationMode;
+    onClick: () => void;
+}> = ({ flags, mode, onClick }) => {
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+
+    return (
+        <List>
+            {flags.map((flag) => (
+                <DynamicListItem
+                    href={`/projects/${flag.projectId}/features/${flag.featureId}`}
+                    text={flag.featureId}
+                    onClick={onClick}
+                    selected={false}
+                    key={flag.featureId}
+                >
+                    <FlagIcon />
+                </DynamicListItem>
+            ))}
+        </List>
+    );
+};
+
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
     onClick: (activeItem: string) => void;
@@ -187,7 +212,12 @@ export const SecondaryNavigation: FC<{
     return (
         <Accordion
             disableGutters={true}
-            sx={{ boxShadow: 'none' }}
+            sx={{
+                boxShadow: 'none',
+                '&:before': {
+                    display: 'none',
+                },
+            }}
             expanded={expanded}
             onChange={(_, expand) => {
                 onExpandChange(expand);
@@ -208,7 +238,7 @@ export const RecentProjectsNavigation: FC<{
         <Box>
             {mode === 'full' && (
                 <Typography
-                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 1 }}
+                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 2 }}
                 >
                     Recent project
                 </Typography>
@@ -218,6 +248,25 @@ export const RecentProjectsNavigation: FC<{
                 mode={mode}
                 onClick={onClick}
             />
+        </Box>
+    );
+};
+
+export const RecentFlagsNavigation: FC<{
+    mode: NavigationMode;
+    flags: { featureId: string; projectId: string }[];
+    onClick: () => void;
+}> = ({ mode, onClick, flags }) => {
+    return (
+        <Box>
+            {mode === 'full' && (
+                <Typography
+                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 2 }}
+                >
+                    Recent flags
+                </Typography>
+            )}
+            <RecentFlagsList flags={flags} mode={mode} onClick={onClick} />
         </Box>
     );
 };

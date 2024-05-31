@@ -4,6 +4,12 @@ import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { Route, Routes } from 'react-router-dom';
 import { listItemButtonClasses as classes } from '@mui/material/ListItemButton';
+import {
+    type LastViewedFlag,
+    useLastViewedFlags,
+} from '../../../../hooks/useLastViewedFlags';
+import { type FC, useEffect } from 'react';
+import { useLastViewedProject } from '../../../../hooks/useLastViewedProject';
 
 beforeEach(() => {
     window.localStorage.clear();
@@ -68,4 +74,33 @@ test('select active item', async () => {
     const links = screen.getAllByRole('link');
 
     expect(links[1]).toHaveClass(classes.selected);
+});
+
+const SetupComponent: FC<{ project: string; flags: LastViewedFlag[] }> = ({
+    project,
+    flags,
+}) => {
+    const { setLastViewed: setProject } = useLastViewedProject();
+    const { setLastViewed: setFlag } = useLastViewedFlags();
+
+    useEffect(() => {
+        setProject(project);
+        flags.forEach((flag) => {
+            setFlag(flag);
+        });
+    }, []);
+
+    return <NavigationSidebar />;
+};
+
+test('print recent projects and flags', async () => {
+    render(
+        <SetupComponent
+            project={'projectA'}
+            flags={[{ featureId: 'featureA', projectId: 'projectB' }]}
+        />,
+    );
+
+    await screen.findByText('projectA');
+    await screen.findByText('featureA');
 });

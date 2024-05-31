@@ -23,7 +23,7 @@ export const clientFeaturesQuerySchema = {
                 type: 'string',
             },
             description:
-                'Features that are part of these projects are included in this response. (DEPRECATED) - Handled by API tokens',
+                'Features that are part of these projects are included in this response. This is now handled by API tokens and was marked as deprecated in v5',
             example: ['new.payment.flow'],
             deprecated: true,
         },
@@ -36,7 +36,7 @@ export const clientFeaturesQuerySchema = {
         environment: {
             type: 'string',
             description:
-                'Strategies for the feature flag configured for this environment are included. (DEPRECATED) - Handled by API tokens',
+                'Strategies for the feature flag configured for this environment are included. This is now handled by API tokens and was marked as deprecated in v5',
             deprecated: true,
         },
         inlineSegmentConstraints: {

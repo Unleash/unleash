@@ -7,12 +7,14 @@ import { useExpanded } from './useExpanded';
 import {
     OtherLinksList,
     PrimaryNavigationList,
+    RecentFlagsNavigation,
     RecentProjectsNavigation,
     SecondaryNavigation,
     SecondaryNavigationList,
 } from './NavigationList';
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
+import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,
@@ -41,9 +43,6 @@ export const StretchContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2),
     alignSelf: 'stretch',
-}));
-
-export const ScreenHeightBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
@@ -59,74 +58,83 @@ export const NavigationSidebar = () => {
 
     const [activeItem, setActiveItem] = useState(initialPathname);
 
-    const { lastViewed } = useLastViewedProject();
-    const showRecentProject = mode === 'full' && lastViewed;
+    const { lastViewed: lastViewedProject } = useLastViewedProject();
+    const showRecentProject = mode === 'full' && lastViewedProject;
+
+    const { lastViewed: lastViewedFlags } = useLastViewedFlags();
+    const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
 
     return (
         <StretchContainer>
-            <ScreenHeightBox>
-                <PrimaryNavigationList
+            <PrimaryNavigationList
+                mode={mode}
+                onClick={setActiveItem}
+                activeItem={activeItem}
+            />
+            <SecondaryNavigation
+                expanded={expanded.includes('configure')}
+                onExpandChange={(expand) => {
+                    changeExpanded('configure', expand);
+                }}
+                mode={mode}
+                title='Configure'
+            >
+                <SecondaryNavigationList
+                    routes={routes.mainNavRoutes}
                     mode={mode}
                     onClick={setActiveItem}
                     activeItem={activeItem}
                 />
+            </SecondaryNavigation>
+            {mode === 'full' && (
                 <SecondaryNavigation
-                    expanded={expanded.includes('configure')}
+                    expanded={expanded.includes('admin')}
                     onExpandChange={(expand) => {
-                        changeExpanded('configure', expand);
+                        changeExpanded('admin', expand);
                     }}
                     mode={mode}
-                    title='Configure'
+                    title='Admin'
                 >
                     <SecondaryNavigationList
-                        routes={routes.mainNavRoutes}
+                        routes={routes.adminRoutes}
                         mode={mode}
                         onClick={setActiveItem}
                         activeItem={activeItem}
                     />
                 </SecondaryNavigation>
-                {mode === 'full' && (
-                    <SecondaryNavigation
-                        expanded={expanded.includes('admin')}
-                        onExpandChange={(expand) => {
-                            changeExpanded('admin', expand);
-                        }}
-                        mode={mode}
-                        title='Admin'
-                    >
-                        <SecondaryNavigationList
-                            routes={routes.adminRoutes}
-                            mode={mode}
-                            onClick={setActiveItem}
-                            activeItem={activeItem}
-                        />
-                    </SecondaryNavigation>
-                )}
+            )}
 
-                {mode === 'mini' && (
-                    <ShowAdmin
-                        onChange={() => {
-                            changeExpanded('admin', true);
-                            setMode('full');
-                        }}
-                    />
-                )}
-
-                {showRecentProject && (
-                    <RecentProjectsNavigation
-                        mode={mode}
-                        projectId={lastViewed}
-                        onClick={() => setActiveItem('/projects')}
-                    />
-                )}
-
-                <ShowHide
-                    mode={mode}
+            {mode === 'mini' && (
+                <ShowAdmin
                     onChange={() => {
-                        setMode(mode === 'full' ? 'mini' : 'full');
+                        changeExpanded('admin', true);
+                        setMode('full');
                     }}
                 />
-            </ScreenHeightBox>
+            )}
+
+            {showRecentProject && (
+                <RecentProjectsNavigation
+                    mode={mode}
+                    projectId={lastViewedProject}
+                    onClick={() => setActiveItem('/projects')}
+                />
+            )}
+
+            {showRecentFlags && (
+                <RecentFlagsNavigation
+                    mode={mode}
+                    flags={lastViewedFlags}
+                    onClick={() => setActiveItem('/projects')}
+                />
+            )}
+
+            <ShowHide
+                mode={mode}
+                onChange={() => {
+                    setMode(mode === 'full' ? 'mini' : 'full');
+                }}
+            />
         </StretchContainer>
     );
 };

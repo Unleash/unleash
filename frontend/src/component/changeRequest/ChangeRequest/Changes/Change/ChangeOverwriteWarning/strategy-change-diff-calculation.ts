@@ -142,9 +142,31 @@ export function getStrategyChangesThatWouldBeOverwritten(
     change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null {
     const fallbacks = { segments: [], variants: [], title: '' };
+
+    const withSortedSegments = (() => {
+        if (!(change.payload.segments && currentStrategyConfig?.segments)) {
+            return { current: currentStrategyConfig, change: change };
+        }
+
+        const changeCopy = {
+            ...change,
+            payload: {
+                ...change.payload,
+                segments: [...change.payload.segments].sort(),
+            },
+        };
+
+        const currentCopy = {
+            ...currentStrategyConfig,
+            segments: [...currentStrategyConfig.segments].sort(),
+        };
+
+        return { current: currentCopy, change: changeCopy };
+    })();
+
     return getChangesThatWouldBeOverwritten(
-        omit(currentStrategyConfig, 'strategyName'),
-        change,
+        omit(withSortedSegments.current, 'strategyName'),
+        withSortedSegments.change,
         fallbacks,
     );
 }

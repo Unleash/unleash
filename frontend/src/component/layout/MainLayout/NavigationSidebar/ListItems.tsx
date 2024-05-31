@@ -28,6 +28,15 @@ const CappedText = styled(Typography)({
     maxWidth: '160px',
 });
 
+const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+    minWidth: theme.spacing(4),
+    margin: theme.spacing(0.25, 0),
+}));
+
+const StyledListItemText = styled(ListItemText)(({ theme }) => ({
+    margin: 0,
+}));
+
 export const FullListItem: FC<{
     href: string;
     text: string;
@@ -44,12 +53,10 @@ export const FullListItem: FC<{
                 sx={listItemButtonStyle}
                 selected={selected}
             >
-                <ListItemIcon sx={(theme) => ({ minWidth: theme.spacing(4) })}>
-                    {children}
-                </ListItemIcon>
-                <ListItemText>
+                <StyledListItemIcon>{children}</StyledListItemIcon>
+                <StyledListItemText>
                     <CappedText>{text}</CappedText>
-                </ListItemText>
+                </StyledListItemText>
                 {badge}
             </ListItemButton>
         </ListItem>
@@ -70,10 +77,8 @@ export const ExternalFullListItem: FC<{ href: string; text: string }> = ({
                 rel='noopener noreferrer'
                 target='_blank'
             >
-                <ListItemIcon sx={(theme) => ({ minWidth: theme.spacing(4) })}>
-                    {children}
-                </ListItemIcon>
-                <ListItemText primary={text} />
+                <StyledListItemIcon>{children}</StyledListItemIcon>
+                <StyledListItemText primary={text} />
             </ListItemButton>
         </ListItem>
     );
@@ -83,12 +88,10 @@ export const SignOutItem = () => {
         <form method='POST' action={`${basePath}/logout`}>
             <ListItem disablePadding>
                 <ListItemButton dense={true} component='button' type='submit'>
-                    <ListItemIcon
-                        sx={(theme) => ({ minWidth: theme.spacing(4) })}
-                    >
+                    <StyledListItemIcon>
                         <SignOutIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Sign out' />
+                    </StyledListItemIcon>
+                    <StyledListItemText primary='Sign out' />
                 </ListItemButton>
             </ListItem>
         </form>
@@ -111,11 +114,7 @@ export const MiniListItem: FC<{
                 selected={selected}
             >
                 <Tooltip title={text} placement='right'>
-                    <ListItemIcon
-                        sx={(theme) => ({ minWidth: theme.spacing(4) })}
-                    >
-                        {children}
-                    </ListItemIcon>
+                    <StyledListItemIcon>{children}</StyledListItemIcon>
                 </Tooltip>
             </ListItemButton>
         </ListItem>

@@ -171,7 +171,7 @@ export default class ClientMetricsServiceV2 {
             );
             await this.registerBulkMetrics(clientMetrics);
 
-            this.config.eventBus.emit(CLIENT_METRICS, value);
+            this.config.eventBus.emit(CLIENT_METRICS, clientMetrics);
         }
     }
 

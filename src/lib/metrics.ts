@@ -24,7 +24,6 @@ import type { IUnleashConfig } from './types/option';
 import type { ISettingStore, IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import type { ValidatedClientMetrics } from './features/metrics/shared/schema';
 import type { IEnvironment } from './types';
 import {
     createCounter,
@@ -33,6 +32,7 @@ import {
     createHistogram,
 } from './util/metrics';
 import type { SchedulerService } from './services';
+import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type';
 
 export default class MetricsMonitor {
     constructor() {}
@@ -617,30 +617,31 @@ export default class MetricsMonitor {
         });
 
         const logger = config.getLogger('metrics.ts');
-        eventBus.on(CLIENT_METRICS, (m: ValidatedClientMetrics) => {
+        eventBus.on(CLIENT_METRICS, (metrics: IClientMetricsEnv[]) => {
             try {
-                for (const entry of Object.entries(m.bucket.toggles)) {
+                for (const metric of metrics) {
                     featureFlagUsageTotal.increment(
                         {
-                            toggle: entry[0],
+                            toggle: metric.featureName,
                             active: 'true',
-                            appName: m.appName,
+                            appName: metric.appName,
                         },
-                        entry[1].yes,
+                        metric.yes,
                     );
                     featureFlagUsageTotal.increment(
                         {
-                            toggle: entry[0],
+                            toggle: metric.featureName,
                             active: 'false',
-                            appName: m.appName,
+                            appName: metric.appName,
                         },
-                        entry[1].no,
+                        metric.no,
                     );
                 }
             } catch (e) {
                 logger.warn('Metrics registration failed', e);
             }
         });
+
         eventStore.on(CLIENT_REGISTER, (m) => {
             if (m.sdkVersion && m.sdkVersion.indexOf(':') > -1) {
                 const [sdkName, sdkVersion] = m.sdkVersion.split(':');

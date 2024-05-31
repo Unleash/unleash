@@ -20,9 +20,10 @@ import type {
 import EventEmitter from 'events';
 import type { Logger } from '../../logger';
 import type EventService from '../events/event-service';
-import type { ValidatedClientMetrics } from '../metrics/shared/schema';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
 import { calculateStageDurations } from './calculate-stage-durations';
+import type { IClientMetricsEnv } from '../metrics/client-metrics/client-metrics-store-v2-type';
+import groupBy from 'lodash.groupby';
 
 export const STAGE_ENTERED = 'STAGE_ENTERED';
 
@@ -95,13 +96,20 @@ export class FeatureLifecycleService extends EventEmitter {
         });
         this.eventBus.on(
             CLIENT_METRICS,
-            async (event: ValidatedClientMetrics) => {
-                if (event.environment) {
-                    const features = Object.keys(event.bucket.toggles);
-                    const environment = event.environment;
-                    await this.checkEnabled(() =>
-                        this.featuresReceivedMetrics(features, environment),
-                    );
+            async (events: IClientMetricsEnv[]) => {
+                if (events.length > 0) {
+                    const groupedByEnvironment = groupBy(events, 'environment');
+
+                    for (const [environment, metrics] of Object.entries(
+                        groupedByEnvironment,
+                    )) {
+                        const features = metrics.map(
+                            (metric) => metric.featureName,
+                        );
+                        await this.checkEnabled(() =>
+                            this.featuresReceivedMetrics(features, environment),
+                        );
+                    }
                 }
             },
         );

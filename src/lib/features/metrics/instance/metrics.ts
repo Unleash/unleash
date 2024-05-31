@@ -1,9 +1,10 @@
 import type { Response } from 'express';
 import Controller from '../../../routes/controller';
-import type {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
+import {
+    CLIENT_METRICS,
+    type IFlagResolver,
+    type IUnleashConfig,
+    type IUnleashServices,
 } from '../../../types';
 import type ClientInstanceService from './instance-service';
 import type { Logger } from '../../../logger';
@@ -161,8 +162,10 @@ export default class ClientMetricsController extends Controller {
                     promises.push(
                         this.metricsV2.registerBulkMetrics(filteredData),
                     );
+                    this.config.eventBus.emit(CLIENT_METRICS, data);
                 }
                 await Promise.all(promises);
+
                 res.status(202).end();
             } catch (e) {
                 res.status(400).end();

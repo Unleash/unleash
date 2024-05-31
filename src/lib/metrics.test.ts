@@ -162,16 +162,13 @@ test('should set environmentType when toggle is flipped', async () => {
 });
 
 test('should collect metrics for client metric reports', async () => {
-    eventBus.emit(CLIENT_METRICS, {
-        bucket: {
-            toggles: {
-                TestToggle: {
-                    yes: 10,
-                    no: 5,
-                },
-            },
+    eventBus.emit(CLIENT_METRICS, [
+        {
+            featureName: 'TestToggle',
+            yes: 10,
+            no: 5,
         },
-    });
+    ]);
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(

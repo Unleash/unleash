@@ -46,13 +46,13 @@ export const usePlaceholderData = (
                               data:
                                   type === 'rising'
                                       ? [
-                                              3, 5, 15, 17, 25, 40, 47, 48, 55,
-                                              65, 62, 72, 75, 73, 80,
-                                          ]
+                                            3, 5, 15, 17, 25, 40, 47, 48, 55,
+                                            65, 62, 72, 75, 73, 80,
+                                        ]
                                       : [
-                                              54, 52, 53, 49, 54, 50, 47, 46,
-                                              51, 51, 50, 51, 49, 49, 51,
-                                          ],
+                                            54, 52, 53, 49, 54, 50, 47, 46, 51,
+                                            51, 50, 51, 49, 49, 51,
+                                        ],
                               borderColor: theme.palette.primary.light,
                               backgroundColor: fill
                                   ? fillGradientPrimary

@@ -26,9 +26,7 @@ export const UsersPerProjectChart: VFC<IUsersPerProjectChartProps> = ({
 
     const data = useProjectChartData(projectFlagTrends);
     const notEnoughData = useMemo(
-        () =>
-            !isLoading &&
-            (data.datasets.some((d) => d.data.length > 1) ? false : true),
+        () => !isLoading && !data.datasets.some((d) => d.data.length > 1),
         [data, isLoading],
     );
 

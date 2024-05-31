@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { type IUnleashTest, setupApp } from '../../helpers/test-helper';
 import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
@@ -84,10 +84,10 @@ test.skip('Should handle a massive bulk registration', async () => {
     while (clients.length < 2000) {
         const clientRegistration = {
             appName: faker.internet.domainName(),
-            instanceId: faker.datatype.uuid(),
+            instanceId: faker.string.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.datatype.number(),
+            interval: faker.number.int(),
             sdkVersion: version,
             icon: '',
             description: faker.company.catchPhrase(),

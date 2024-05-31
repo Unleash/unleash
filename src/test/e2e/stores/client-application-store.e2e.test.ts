@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import type {
@@ -24,10 +24,10 @@ afterAll(async () => {
 test("Should be able to keep track of what we've announced", async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.datatype.number(),
+        interval: faker.number.int(),
         sdkVersion: '3.11.2',
         icon: '',
         description: faker.company.catchPhrase(),

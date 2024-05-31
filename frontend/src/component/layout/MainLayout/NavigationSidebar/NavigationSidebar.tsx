@@ -45,8 +45,9 @@ export const StretchContainer = styled(Box)(({ theme }) => ({
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(3),
+    gap: theme.spacing(2),
     zIndex: 1,
+    overflowAnchor: 'none',
 }));
 
 export const NavigationSidebar = () => {

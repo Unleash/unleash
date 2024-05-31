@@ -11,7 +11,7 @@ const ShowHideRow = styled(Box, {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(2, 1, 0, mode === 'mini' ? 1.5 : 2),
+    padding: theme.spacing(0, 1, 0, mode === 'mini' ? 1.5 : 2),
     cursor: 'pointer',
     position: 'sticky',
     bottom: theme.spacing(2),

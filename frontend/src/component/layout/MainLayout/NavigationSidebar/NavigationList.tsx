@@ -238,7 +238,12 @@ export const RecentProjectsNavigation: FC<{
         <Box>
             {mode === 'full' && (
                 <Typography
-                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 2 }}
+                    sx={{
+                        fontWeight: 'bold',
+                        fontSize: 'small',
+                        ml: 2,
+                        mt: 1.5,
+                    }}
                 >
                     Recent project
                 </Typography>
@@ -261,7 +266,7 @@ export const RecentFlagsNavigation: FC<{
         <Box>
             {mode === 'full' && (
                 <Typography
-                    sx={{ fontWeight: 'bold', fontSize: 'small', mb: 1, ml: 2 }}
+                    sx={{ fontWeight: 'bold', fontSize: 'small', ml: 2 }}
                 >
                     Recent flags
                 </Typography>

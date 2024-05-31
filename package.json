@@ -164,7 +164,7 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.24.5",
+    "@babel/core": "7.24.6",
     "@biomejs/biome": "1.6.4",
     "@swc/core": "1.5.7",
     "@swc/jest": "0.2.36",

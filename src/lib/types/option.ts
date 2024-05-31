@@ -81,8 +81,8 @@ export interface IAuthOption {
 
 export interface IImportOption {
     file: string;
-    keepExisting: boolean;
-    dropBeforeImport: boolean;
+    project: string;
+    environment: string;
 }
 
 export interface IServerOption {

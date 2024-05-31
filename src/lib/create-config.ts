@@ -333,11 +333,8 @@ const defaultAuthentication: IAuthOption = {
 
 const defaultImport: WithOptional<IImportOption, 'file'> = {
     file: process.env.IMPORT_FILE,
-    dropBeforeImport: parseEnvVarBoolean(
-        process.env.IMPORT_DROP_BEFORE_IMPORT,
-        false,
-    ),
-    keepExisting: parseEnvVarBoolean(process.env.IMPORT_KEEP_EXISTING, false),
+    project: process.env.IMPORT_PROJECT ?? 'default',
+    environment: process.env.IMPORT_ENVIRONMENT ?? 'development',
 };
 
 const defaultEmail: IEmailOption = {

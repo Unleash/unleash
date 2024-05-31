@@ -142,7 +142,6 @@ exports[`should create default config 1`] = `
       "personalAccessTokensKillSwitch": false,
       "projectListFilterMyProjects": false,
       "projectOverviewRefactorFeedback": false,
-      "projectsListNewCards": false,
       "queryMissingTokens": false,
       "responseTimeMetricsFix": false,
       "responseTimeWithAppNameKillSwitch": false,

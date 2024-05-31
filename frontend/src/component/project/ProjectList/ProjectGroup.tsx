@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard as NewProjectCard } from '../NewProjectCard/NewProjectCard';
+import { ProjectCard } from '../NewProjectCard/NewProjectCard';
+
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
@@ -67,7 +68,7 @@ export const ProjectGroup: React.FC<{
                             condition={loading}
                             show={() =>
                                 loadingData.map((project: IProjectCard) => (
-                                    <NewProjectCard
+                                    <ProjectCard
                                         data-loading
                                         onHover={() => {}}
                                         key={project.id}

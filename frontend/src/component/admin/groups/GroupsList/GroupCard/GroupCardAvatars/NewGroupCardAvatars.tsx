@@ -27,12 +27,6 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     },
 }));
 
-const StyledUsername = styled('div')(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    color: theme.palette.text.primary,
-    marginLeft: theme.spacing(1),
-}));
-
 const StyledHeader = styled('h3')(({ theme }) => ({
     margin: theme.spacing(0, 0, 1),
     fontSize: theme.typography.caption.fontSize,

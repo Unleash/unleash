@@ -64,7 +64,9 @@
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",
     "preversion": "./scripts/check-release.sh",
-    "heroku-postbuild": "cd frontend && yarn && yarn build"
+    "heroku-postbuild": "cd frontend && yarn && yarn build",
+    "licenses:check": "license-checker --production --excludePackages 'dreamopt@0.8.0' --onlyAllow 'MIT; Apache 2.0; PSF; BSD-3-Clause; BSD-2-Clause; ISC; Python-2.0; Custom: https://github.com/douglascrockford/JSON-js; MPL-2.0 OR Apache-2.0; Apache-2.0; Apache*; BlueOak-1.0.0; WTFPL; Unlicense; BSD*;'",
+    "licenses:write": "license-checker --production --csv --out licenses.csv --excludePackages 'dreamopt@0.8.0' --onlyAllow 'MIT; Apache 2.0; PSF; BSD-3-Clause; BSD-2-Clause; ISC; Python-2.0; Custom: https://github.com/douglascrockford/JSON-js; MPL-2.0 OR Apache-2.0; Apache-2.0; Apache*; BlueOak-1.0.0; WTFPL; Unlicense; BSD*;'"
   },
   "jest-junit": {
     "suiteName": "Unleash Unit Tests",
@@ -200,6 +202,7 @@
     "husky": "^9.0.11",
     "jest": "29.7.0",
     "jest-junit": "^16.0.0",
+    "license-checker": "^25.0.1",
     "lint-staged": "15.2.2",
     "nock": "13.5.4",
     "openapi-enforcer": "1.23.0",

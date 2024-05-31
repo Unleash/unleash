@@ -42,6 +42,7 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn lint
+      - run: yarn licenses:check
       - run: yarn build:backend
       - run: yarn run test:report # This adds test results as github check to the workflow
         env:

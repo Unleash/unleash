@@ -5,6 +5,8 @@ import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-to
 import {
     FeaturesExportedEvent,
     FeaturesImportedEvent,
+    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
     type FeatureToggleDTO,
     type IAuditUser,
     type IContextFieldStore,
@@ -55,6 +57,7 @@ import type { IDependentFeaturesReadModel } from '../dependent-features/dependen
 import groupBy from 'lodash.groupby';
 import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type { ISegmentReadModel } from '../segment/segment-read-model-type';
+import { readFile } from './import-file-reader';
 
 export type IImportService = {
     validate(
@@ -66,6 +69,12 @@ export type IImportService = {
         dto: ImportTogglesSchema,
         user: IUser,
         auditUser: IAuditUser,
+    ): Promise<void>;
+
+    importFromFile(
+        file: string,
+        project: string,
+        environment: string,
     ): Promise<void>;
 };
 
@@ -291,16 +300,40 @@ export default class ExportImportService
         auditUser: IAuditUser,
     ): Promise<void> {
         const cleanedDto = await this.cleanData(dto);
-
         await this.importVerify(cleanedDto, user);
+        await this.processImport(cleanedDto, user, auditUser);
+    }
 
-        await this.importFeatureData(cleanedDto, auditUser);
+    async importFromFile(
+        file: string,
+        project: string,
+        environment: string,
+    ): Promise<void> {
+        const content = await readFile(file);
+        const data = JSON.parse(content);
+        const dto = {
+            project,
+            environment,
+            data,
+        };
+        const cleanedDto = await this.cleanData(dto);
 
-        await this.importEnvironmentData(cleanedDto, user, auditUser);
+        await this.fileImportVerify(cleanedDto);
+        await this.processImport(cleanedDto, SYSTEM_USER, SYSTEM_USER_AUDIT);
+    }
+
+    private async processImport(
+        dto: ImportTogglesSchema,
+        user: IUser,
+        auditUser: IAuditUser,
+    ) {
+        await this.importFeatureData(dto, auditUser);
+
+        await this.importEnvironmentData(dto, user, auditUser);
         await this.eventService.storeEvent(
             new FeaturesImportedEvent({
-                project: cleanedDto.project,
-                environment: cleanedDto.environment,
+                project: dto.project,
+                environment: dto.environment,
                 auditUser,
             }),
         );

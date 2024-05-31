@@ -49,7 +49,6 @@ process.nextTick(async () => {
                         disableShowContextFieldSelectionValues: false,
                         projectOverviewRefactorFeedback: true,
                         featureLifecycle: true,
-                        projectListFilterMyProjects: true,
                         projectsListNewCards: true,
                         parseProjectFromSession: true,
                         createProjectWithEnvironmentConfig: true,

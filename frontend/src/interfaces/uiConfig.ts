@@ -83,7 +83,6 @@ export type UiFlags = {
     scimApi?: boolean;
     projectListFilterMyProjects?: boolean;
     createProjectWithEnvironmentConfig?: boolean;
-    projectsListNewCards?: boolean;
     newCreateProjectUI?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;

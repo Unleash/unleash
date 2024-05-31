@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
     | 'featureLifecycleMetrics'
-    | 'projectListFilterMyProjects'
     | 'parseProjectFromSession'
     | 'createProjectWithEnvironmentConfig'
     | 'manyStrategiesPagination'
@@ -265,10 +264,6 @@ const flags: IFlags = {
     ),
     featureLifecycle: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_LIFECYCLE,
-        false,
-    ),
-    projectListFilterMyProjects: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_MY_PROJECTS,
         false,
     ),
     parseProjectFromSession: parseEnvVarBoolean(

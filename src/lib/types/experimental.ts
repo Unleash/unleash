@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'projectOverviewRefactorFeedback'
     | 'featureLifecycle'
     | 'featureLifecycleMetrics'
-    | 'projectsListNewCards'
     | 'parseProjectFromSession'
     | 'createProjectWithEnvironmentConfig'
     | 'manyStrategiesPagination'
@@ -273,10 +272,6 @@ const flags: IFlags = {
     ),
     createProjectWithEnvironmentConfig: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CREATE_PROJECT_WITH_ENVIRONMENT_CONFIG,
-        false,
-    ),
-    projectsListNewCards: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECTS_LIST_NEW_CARDS,
         false,
     ),
     newCreateProjectUI: parseEnvVarBoolean(

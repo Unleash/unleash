@@ -2,12 +2,12 @@ import { styled, Tooltip } from '@mui/material';
 import type { IGroup } from 'interfaces/group';
 import { Link, useNavigate } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { GroupCardAvatars } from './GroupCardAvatars/GroupCardAvatars';
 import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
+import { GroupCardAvatars } from './GroupCardAvatars/NewGroupCardAvatars';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',

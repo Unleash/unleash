@@ -1,23 +1,11 @@
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard as LegacyProjectCard } from '../ProjectCard/ProjectCard';
-import { ProjectCard as NewProjectCard } from '../NewProjectCard/NewProjectCard';
+import { ProjectCard } from '../NewProjectCard/NewProjectCard';
+
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
-
-/**
- * @deprecated Remove after with `projectsListNewCards` flag
- */
-const StyledDivContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
-    [theme.breakpoints.down('sm')]: {
-        justifyContent: 'center',
-    },
-}));
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -41,12 +29,6 @@ export const ProjectGroup: React.FC<{
     loading: boolean;
     searchValue: string;
 }> = ({ sectionTitle, projects, loading, searchValue }) => {
-    const useNewProjectCards = useUiFlag('projectsListNewCards');
-
-    const [StyledItemsContainer, ProjectCard] = useNewProjectCards
-        ? [StyledGridContainer, NewProjectCard]
-        : [StyledDivContainer, LegacyProjectCard];
-
     return (
         <article>
             <ConditionallyRender
@@ -81,7 +63,7 @@ export const ProjectGroup: React.FC<{
                     />
                 }
                 elseShow={
-                    <StyledItemsContainer>
+                    <StyledGridContainer>
                         <ConditionallyRender
                             condition={loading}
                             show={() =>
@@ -126,7 +108,7 @@ export const ProjectGroup: React.FC<{
                                 </>
                             )}
                         />
-                    </StyledItemsContainer>
+                    </StyledGridContainer>
                 }
             />
         </article>

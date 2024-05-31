@@ -41,7 +41,7 @@
     "@mui/icons-material": "5.15.3",
     "@mui/lab": "5.0.0-alpha.159",
     "@mui/material": "5.15.3",
-    "@mui/x-date-pickers": "^6.18.3",
+    "@mui/x-date-pickers": "^7.0.0",
     "@tanstack/react-table": "^8.10.7",
     "@testing-library/dom": "8.20.1",
     "@testing-library/jest-dom": "6.4.5",

@@ -349,9 +349,7 @@ export const IEventTypes = [
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
-/**
- * This type should only be used in the store layer but deprecated elsewhere
- */
+// this rerpresents the write model for events
 export interface IBaseEvent {
     type: IEventType;
     createdBy: string;
@@ -359,7 +357,7 @@ export interface IBaseEvent {
     project?: string;
     environment?: string;
     featureName?: string;
-    ip?: string;
+    ip: string;
     data?: any;
     preData?: any;
     tags?: ITag[];

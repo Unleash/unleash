@@ -41,7 +41,7 @@
     "@mui/icons-material": "5.15.3",
     "@mui/lab": "5.0.0-alpha.159",
     "@mui/material": "5.15.3",
-    "@mui/x-date-pickers": "^6.18.3",
+    "@mui/x-date-pickers": "^7.0.0",
     "@tanstack/react-table": "^8.10.7",
     "@testing-library/dom": "8.20.1",
     "@testing-library/jest-dom": "6.4.5",
@@ -66,7 +66,7 @@
     "@types/react-timeago": "4.1.7",
     "@types/semver": "7.5.8",
     "@types/uuid": "^9.0.0",
-    "@uiw/codemirror-theme-duotone": "4.21.25",
+    "@uiw/codemirror-theme-duotone": "4.22.1",
     "@uiw/react-codemirror": "4.21.25",
     "@vitejs/plugin-react": "4.2.1",
     "cartesian": "^1.0.1",
@@ -113,7 +113,7 @@
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.2.0",
     "sass": "1.74.1",
-    "semver": "7.6.0",
+    "semver": "7.6.2",
     "swr": "2.2.5",
     "tss-react": "4.9.10",
     "typescript": "5.4.2",
@@ -136,7 +136,7 @@
     "vite": "5.2.11",
     "@types/react": "17.0.80",
     "@types/react-dom": "17.0.25",
-    "semver": "7.6.0"
+    "semver": "7.6.2"
   },
   "jest": {
     "moduleNameMapper": {

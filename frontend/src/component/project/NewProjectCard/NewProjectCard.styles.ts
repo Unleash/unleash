@@ -87,6 +87,7 @@ export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
 export const StyledIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing(0.5, 0.5, 0.5, 0),
+    padding: theme.spacing(1, 0.5, 0.5, 0),
     marginRight: theme.spacing(2),
+    alignSelf: 'baseline',
 }));

@@ -264,6 +264,16 @@ export default class ExportImportService
         ]);
     }
 
+    async fileImportVerify(dto: ImportTogglesSchema): Promise<void> {
+        await allSettledWithRejection([
+            this.verifyStrategies(dto),
+            this.verifyContextFields(dto),
+            this.verifyFeatures(dto),
+            this.verifySegments(dto),
+            this.verifyDependencies(dto),
+        ]);
+    }
+
     async importFeatureData(
         dto: ImportTogglesSchema,
         auditUser: IAuditUser,

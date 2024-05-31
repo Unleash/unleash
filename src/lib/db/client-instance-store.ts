@@ -222,15 +222,22 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         projectId: string,
     ): Promise<{ sdkVersion: string; applications: string[] }[]> {
         const rows = await this.db
+            .with(
+                'instances',
+                this.db
+                    .select('app_name', 'sdk_version')
+                    .distinct()
+                    .from('client_instances'),
+            )
             .select([
-                'ci.sdk_version as sdkVersion',
+                'i.sdk_version as sdkVersion',
                 this.db.raw('ARRAY_AGG(DISTINCT cme.app_name) as applications'),
             ])
             .from('client_metrics_env as cme')
             .leftJoin('features as f', 'f.name', 'cme.feature_name')
-            .leftJoin('client_instances as ci', 'ci.app_name', 'cme.app_name')
+            .leftJoin('instances as i', 'i.app_name', 'cme.app_name')
             .where('f.project', projectId)
-            .groupBy('ci.sdk_version');
+            .groupBy('i.sdk_version');
 
         return rows;
     }

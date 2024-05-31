@@ -113,7 +113,7 @@
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.2.0",
     "sass": "1.74.1",
-    "semver": "7.6.0",
+    "semver": "7.6.2",
     "swr": "2.2.5",
     "tss-react": "4.9.10",
     "typescript": "5.4.2",
@@ -136,7 +136,7 @@
     "vite": "5.2.11",
     "@types/react": "17.0.80",
     "@types/react-dom": "17.0.25",
-    "semver": "7.6.0"
+    "semver": "7.6.2"
   },
   "jest": {
     "moduleNameMapper": {

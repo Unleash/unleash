@@ -99,7 +99,6 @@ export const ProjectListNew = () => {
         searchParams.get('search') || '',
     );
 
-    const splitProjectList = useUiFlag('projectListFilterMyProjects');
     const myProjects = new Set(useProfile().profile?.projects || []);
 
     const showCreateDialog = Boolean(searchParams.get('create'));
@@ -135,11 +134,8 @@ export const ProjectListNew = () => {
     }, [projects, searchValue]);
 
     const groupedProjects = useMemo(() => {
-        if (!splitProjectList) {
-            return { myProjects: [], otherProjects: filteredProjects };
-        }
         return groupProjects(myProjects, filteredProjects);
-    }, [filteredProjects, myProjects, splitProjectList]);
+    }, [filteredProjects, myProjects]);
 
     const createButtonData = resolveCreateButtonData(
         isOss(),
@@ -228,24 +224,14 @@ export const ProjectListNew = () => {
                         />
                     )}
                 />
-                <ConditionallyRender
-                    condition={splitProjectList}
-                    show={
-                        <>
-                            <ProjectGroupComponent
-                                sectionTitle='My projects'
-                                projects={groupedProjects.myProjects}
-                            />
+                <ProjectGroupComponent
+                    sectionTitle='My projects'
+                    projects={groupedProjects.myProjects}
+                />
 
-                            <ProjectGroupComponent
-                                sectionTitle='Other projects'
-                                projects={groupedProjects.otherProjects}
-                            />
-                        </>
-                    }
-                    elseShow={
-                        <ProjectGroupComponent projects={filteredProjects} />
-                    }
+                <ProjectGroupComponent
+                    sectionTitle='Other projects'
+                    projects={groupedProjects.otherProjects}
                 />
             </StyledContainer>
             <ConditionallyRender

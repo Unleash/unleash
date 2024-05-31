@@ -119,7 +119,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}?sort=name`,
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
+                target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
                         First, open the feature flag configuration for{' '}
@@ -344,7 +344,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}?sort=name`,
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
+                target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
                         First, open the feature flag configuration for{' '}
@@ -459,7 +459,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}?sort=name`,
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
+                target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>
                         First, open the feature flag configuration for{' '}

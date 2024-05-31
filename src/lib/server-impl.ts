@@ -97,7 +97,11 @@ async function createApp(
     };
 
     if (config.import.file) {
-        // TODO: stateservice was here
+        await services.importService.importFromFile(
+            config.import.file,
+            config.import.project,
+            config.import.environment,
+        );
     }
 
     if (

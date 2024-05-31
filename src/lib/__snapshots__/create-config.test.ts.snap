@@ -164,9 +164,9 @@ exports[`should create default config 1`] = `
   ],
   "getLogger": [Function],
   "import": {
-    "dropBeforeImport": false,
+    "environment": "development",
     "file": undefined,
-    "keepExisting": false,
+    "project": "default",
   },
   "inlineSegmentConstraints": true,
   "isEnterprise": false,

@@ -24,6 +24,10 @@ export const StyledProjectCard = styled(Card)(({ theme }) => ({
 
 export const StyledProjectCardBody = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1, 2, 2, 2),
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
 }));
 
 export const StyledDivHeader = styled('div')(({ theme }) => ({

@@ -2187,16 +2187,16 @@
     svg-parser "^2.0.4"
 
 "@tanstack/react-table@^8.10.7":
-  version "8.15.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.15.3.tgz#9933222642d5d5bdaea5a78cf6c5d42aa86a1c22"
-  integrity sha512-aocQ4WpWiAh7R+yxNp+DGQYXeVACh5lv2kk96DjYgFiHDCB0cOFoYMT/pM6eDOzeMXR9AvPoLeumTgq8/0qX+w==
+  version "8.17.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.17.3.tgz#4e10b4cf5355a40d6d72a83d3f4b3ecd32f56bf4"
+  integrity sha512-5gwg5SvPD3lNAXPuJJz1fOCEZYk9/GeBFH3w/hCgnfyszOIzwkwgp5I7Q4MJtn0WECp84b5STQUDdmvGi8m3nA==
   dependencies:
-    "@tanstack/table-core" "8.15.3"
+    "@tanstack/table-core" "8.17.3"
 
-"@tanstack/table-core@8.15.3":
-  version "8.15.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.15.3.tgz#1a11cef82a458e90694bedfb40dcff610e69460e"
-  integrity sha512-wOgV0HfEvuMOv8RlqdR9MdNNqq0uyvQtP39QOvGlggHvIObOE4exS+D5LGO8LZ3LUXxId2IlUKcHDHaGujWhUg==
+"@tanstack/table-core@8.17.3":
+  version "8.17.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.17.3.tgz#d7a9830abb29cd369b52b2a7159dc0360af646fd"
+  integrity sha512-mPBodDGVL+fl6d90wUREepHa/7lhsghg2A3vFpakEhrhtbIlgNAZiMr7ccTgak5qbHqF14Fwy+W1yFWQt+WmYQ==
 
 "@testing-library/dom@8.20.1":
   version "8.20.1"

@@ -140,7 +140,6 @@ exports[`should create default config 1`] = `
       "outdatedSdksBanner": false,
       "parseProjectFromSession": false,
       "personalAccessTokensKillSwitch": false,
-      "projectListFilterMyProjects": false,
       "projectOverviewRefactorFeedback": false,
       "projectsListNewCards": false,
       "queryMissingTokens": false,

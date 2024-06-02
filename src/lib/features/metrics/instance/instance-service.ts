@@ -103,7 +103,7 @@ export default class ClientInstanceService {
     ): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
-        value.createdBy = clientIp;
+        value.createdBy = SYSTEM_USER.username!;
         this.seenClients[this.clientKey(value)] = value;
         this.eventStore.emit(CLIENT_REGISTER, value);
     }

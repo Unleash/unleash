@@ -77,6 +77,9 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     strategy,
 }) => {
     const { parameters, constraints = [] } = strategy;
+    const stickiness = parameters?.stickiness;
+    const explainStickiness =
+        typeof stickiness === 'string' && stickiness !== 'default';
     const { strategies } = useStrategies();
     const { segments } = useSegments();
     const strategySegments = segments?.filter((segment) => {
@@ -112,6 +115,15 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             <div>
                                 <Badge color={badgeType}>{percentage}%</Badge>{' '}
                                 <span>of your base</span>{' '}
+                                <span>
+                                    {explainStickiness ? (
+                                        <>
+                                            with <strong>{stickiness}</strong>
+                                        </>
+                                    ) : (
+                                        ''
+                                    )}{' '}
+                                </span>
                                 <span>
                                     {constraints.length > 0
                                         ? 'who match constraints'

@@ -10,7 +10,7 @@ import {
 
 type ChangeRequestTableConfigButtonProps = Pick<
     ConfigButtonProps,
-    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltipHeader'
+    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip'
 > & {
     search: {
         label: string;

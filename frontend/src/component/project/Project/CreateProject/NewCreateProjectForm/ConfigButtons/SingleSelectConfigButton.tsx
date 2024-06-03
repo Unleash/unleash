@@ -4,7 +4,7 @@ import { DropdownList, type DropdownListProps } from './DropdownList';
 
 type SingleSelectConfigButtonProps = Pick<
     ConfigButtonProps,
-    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltipHeader'
+    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip'
 > &
     Pick<DropdownListProps, 'search' | 'onChange' | 'options'>;
 

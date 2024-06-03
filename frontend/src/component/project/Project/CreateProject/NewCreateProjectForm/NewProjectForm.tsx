@@ -204,7 +204,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
 
             <OptionButtons>
                 <MultiSelectConfigButton
-                    tooltipHeader='Select project environments'
+                    tooltip={{ header: 'Select project environments' }}
                     description={configButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
@@ -231,7 +231,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 />
 
                 <SingleSelectConfigButton
-                    tooltipHeader='Set default project stickiness'
+                    tooltip={{ header: 'Set default project stickiness' }}
                     description={configButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
@@ -259,7 +259,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <SingleSelectConfigButton
-                            tooltipHeader='Set project collaboration mode'
+                            tooltip={{
+                                header: 'Set project collaboration mode',
+                                additionalContent:
+                                    configButtonData.mode
+                                        .additionalTooltipContent,
+                            }}
                             description={configButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
@@ -269,9 +274,6 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 label: projectMode,
                                 icon: <ProjectModeIcon />,
                                 labelWidth: `${`protected`.length}ch`,
-                                additionalTooltipContent:
-                                    configButtonData.mode
-                                        .additionalTooltipContent,
                             }}
                             search={{
                                 label: 'Filter project mode options',
@@ -288,7 +290,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <ChangeRequestTableConfigButton
-                            tooltipHeader='Configure change requests'
+                            tooltip={{ header: 'Configure change requests' }}
                             description={configButtonData.changeRequests.text}
                             activeEnvironments={
                                 availableChangeRequestEnvironments

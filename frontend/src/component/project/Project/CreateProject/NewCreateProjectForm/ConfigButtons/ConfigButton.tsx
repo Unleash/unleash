@@ -23,7 +23,10 @@ export type ConfigButtonProps = {
     preventOpen?: boolean;
     anchorEl: HTMLDivElement | null | undefined;
     setAnchorEl: (el: HTMLDivElement | null | undefined) => void;
-    tooltipHeader: string;
+    tooltip: {
+        header: string;
+        additionalContent?: ReactNode;
+    };
 };
 
 export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
@@ -35,7 +38,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     preventOpen,
     anchorEl,
     setAnchorEl,
-    tooltipHeader,
+    tooltip,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const descriptionId = uuidv4();
@@ -56,9 +59,9 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                 <TooltipResolver
                     titleComponent={
                         <StyledTooltipContent>
-                            <h3>{tooltipHeader}</h3>
+                            <h3>{tooltip.header}</h3>
                             <p>{description}</p>
-                            {button.additionalTooltipContent}
+                            {tooltip.additionalContent}
                         </StyledTooltipContent>
                     }
                     variant='custom'

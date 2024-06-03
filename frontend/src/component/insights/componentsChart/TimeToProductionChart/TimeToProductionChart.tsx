@@ -76,12 +76,6 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
                               yAxisKey: 'timeToProduction',
                               xAxisKey: 'date',
                           },
-                          scales: {
-                              y: {
-                                  min: 0,
-                                  max: 100,
-                              },
-                          },
                       }
             }
             cover={notEnoughData ? <NotEnoughData /> : isLoading}

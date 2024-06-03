@@ -113,6 +113,12 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
                     ? {}
                     : {
                           parsing: { yAxisKey: 'health', xAxisKey: 'date' },
+                          scales: {
+                              y: {
+                                  min: 0,
+                                  max: 100,
+                              },
+                          },
                       }
             }
             cover={notEnoughData ? <NotEnoughData /> : isLoading}

@@ -74,11 +74,14 @@ export const ExternalFullListItem: FC<{ href: string; text: string }> = ({
                 dense={true}
                 component={Link}
                 to={href}
+                sx={listItemButtonStyle}
                 rel='noopener noreferrer'
                 target='_blank'
             >
                 <StyledListItemIcon>{children}</StyledListItemIcon>
-                <StyledListItemText primary={text} />
+                <StyledListItemText>
+                    <CappedText>{text}</CappedText>
+                </StyledListItemText>
             </ListItemButton>
         </ListItem>
     );
@@ -87,11 +90,18 @@ export const SignOutItem = () => {
     return (
         <form method='POST' action={`${basePath}/logout`}>
             <ListItem disablePadding>
-                <ListItemButton dense={true} component='button' type='submit'>
+                <ListItemButton
+                    dense={true}
+                    component='button'
+                    type='submit'
+                    sx={listItemButtonStyle}
+                >
                     <StyledListItemIcon>
                         <SignOutIcon />
                     </StyledListItemIcon>
-                    <StyledListItemText primary='Sign out' />
+                    <StyledListItemText>
+                        <CappedText>Sign out</CappedText>
+                    </StyledListItemText>
                 </ListItemButton>
             </ListItem>
         </form>

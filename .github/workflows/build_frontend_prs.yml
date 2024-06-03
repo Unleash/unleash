@@ -8,18 +8,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: build
     defaults:
       run:
         working-directory: frontend
-    strategy:
-      matrix:
-        node-version: [18.x]
+
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
       - run: yarn run lint:material:icons
       - run: yarn --frozen-lockfile
       - run: yarn run lint:check

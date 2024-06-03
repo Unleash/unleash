@@ -7,12 +7,6 @@ on:
     paths-ignore:
       - website/**
       - coverage/**
-# not sure if we will have all the payload as the push to main has.
-#  workflow_run:
-#    workflows: [ 'Publish to npm' ]
-#    types: [ completed ]
-#    branches:
-#      - 'main'
 
 jobs:
   build:

@@ -17,9 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     name: build
 
-    strategy:
-      matrix:
-        node-version: [18.x]
     services:
       # Label used to access the service container
       postgres:
@@ -38,10 +35,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
           cache: 'yarn'
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn lint

@@ -17,6 +17,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - name: Setup to npm
         uses: actions/setup-node@v4
         with:

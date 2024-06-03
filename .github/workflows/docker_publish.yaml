@@ -21,7 +21,13 @@ jobs:
       matrix:
         version: [18.18.2-alpine]
     steps:
+      - name: Checkout tag v${{ inputs.version }}
+        if: ${{ inputs.version != '' }}
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - name: Checkout
+        if: ${{ inputs.version == '' }}
         uses: actions/checkout@v4
       - name: Setup QEmu so we can build multiplatform
         uses: docker/setup-qemu-action@v2

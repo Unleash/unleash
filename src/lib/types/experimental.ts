@@ -292,7 +292,7 @@ const flags: IFlags = {
     ),
     navigationSidebar: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
-        false,
+        true,
     ),
 };
 

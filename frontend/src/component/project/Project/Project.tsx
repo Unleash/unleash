@@ -20,7 +20,7 @@ import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
-import ProjectOverview from './ProjectOverview';
+import ProjectFlags from './ProjectFlags';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -85,9 +85,9 @@ export const Project = () => {
 
     const tabs: ITab[] = [
         {
-            title: 'Overview',
+            title: 'Flags',
             path: basePath,
-            name: 'overview',
+            name: 'flags',
         },
         {
             title: 'Insights',
@@ -323,7 +323,7 @@ export const Project = () => {
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='applications' element={<ProjectApplications />} />
-                <Route path='*' element={<ProjectOverview />} />
+                <Route path='*' element={<ProjectFlags />} />
             </Routes>
             <ImportModal
                 open={modalOpen}

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.6] - 2024-06-03
+
+### Miscellaneous Tasks
+
+- Inherit secrets for workflow calls ([#7251](https://github.com/Unleash/unleash/issues/7251))
+
+
 ## [5.12.5] - 2024-06-03
 
 ### Bug Fixes

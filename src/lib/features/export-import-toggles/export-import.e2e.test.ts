@@ -1280,3 +1280,31 @@ test(`should give errors with flag names if the flags don't match the project pa
     expect(body.message).toContain(pattern);
     expect(body.message).toContain(flagName);
 });
+
+test('should import features from file', async () => {
+    await db.stores.environmentStore.create({
+        name: DEFAULT_ENV,
+        type: 'production',
+    });
+
+    await db.stores.projectStore.create({
+        name: DEFAULT_PROJECT,
+        description: '',
+        id: DEFAULT_PROJECT,
+        mode: 'open' as const,
+    });
+    await app.linkProjectToEnvironment(DEFAULT_PROJECT, DEFAULT_ENV);
+
+    await app.services.importService.importFromFile(
+        'src/lib/features/export-import-toggles/import-data.json',
+        DEFAULT_PROJECT,
+        DEFAULT_ENV,
+    );
+    const { body: importedFeature } = await getFeature(defaultFeatureName);
+    expect(importedFeature).toMatchObject({
+        name: defaultFeatureName,
+        project: DEFAULT_PROJECT,
+        type: 'release',
+        variants,
+    });
+});

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.5] - 2024-06-03
+
+### Bug Fixes
+
+- 5.12 remove 404 feature view ([#7246](https://github.com/Unleash/unleash/issues/7246))
+
+
+### Miscellaneous Tasks
+
+- Apply a linter after updating the version in package.json  ([#7073](https://github.com/Unleash/unleash/issues/7073))
+
+- Bumped node version to 18.20.3 ([#7222](https://github.com/Unleash/unleash/issues/7222))
+
+
 ## [5.12.4] - 2024-05-17
 
 ### Miscellaneous Tasks

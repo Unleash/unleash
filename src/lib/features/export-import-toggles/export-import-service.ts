@@ -57,7 +57,7 @@ import type { IDependentFeaturesReadModel } from '../dependent-features/dependen
 import groupBy from 'lodash.groupby';
 import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type { ISegmentReadModel } from '../segment/segment-read-model-type';
-import { readFile } from './import-file-reader';
+import { readFile } from '../../util/read-file';
 
 export type IImportService = {
     validate(

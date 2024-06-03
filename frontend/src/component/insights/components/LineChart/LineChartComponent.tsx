@@ -112,7 +112,6 @@ const LineChartComponent: VFC<{
         }),
         [theme, locationSettings, overrideOptions, cover],
     );
-    console.log(options.scales);
 
     return (
         <StyledContainer>

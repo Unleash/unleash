@@ -68,7 +68,7 @@
     "@types/uuid": "^9.0.0",
     "@uiw/codemirror-theme-duotone": "4.22.1",
     "@uiw/react-codemirror": "4.22.1",
-    "@vitejs/plugin-react": "4.2.1",
+    "@vitejs/plugin-react": "4.3.0",
     "cartesian": "^1.0.1",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "3.0.0",

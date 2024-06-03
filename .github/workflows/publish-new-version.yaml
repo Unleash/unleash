@@ -113,12 +113,14 @@ jobs:
   publish-docker:
     needs: build
     uses: ./.github/workflows/docker_publish.yaml
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
   
   publish-npm:
     needs: build
     uses: ./.github/workflows/release.yaml
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
 
@@ -132,5 +134,6 @@ jobs:
     needs: publish-docker
     if: ${{ github.event.inputs.update-version-function == 'true' }}
     uses: ./.github/workflows/update_version_for_version_checker.yml
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}

@@ -14,6 +14,7 @@ import {
     OptionButtons,
     ProjectDescriptionContainer,
     ProjectNameContainer,
+    StyledDefinitionList,
     StyledForm,
     StyledHeader,
     StyledIcon,
@@ -70,7 +71,30 @@ const configButtonData = {
     },
     mode: {
         icon: <ProjectModeIcon />,
-        text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+        text: "A project's collaboration mode defines who should be allowed see your project and create change requests in it.",
+        additionalTooltipContent: (
+            <>
+                <p>The modes and their functions are:</p>
+                <StyledDefinitionList>
+                    <dt>Open</dt>
+                    <dd>
+                        Anyone can see the project and anyone can create change
+                        requests.
+                    </dd>
+                    <dt>Protected</dt>
+                    <dd>
+                        Anyone can see the project, but only admins and project
+                        members can submit change requests.
+                    </dd>
+                    <dt>Private</dt>
+                    <dd>
+                        Hides the project from users with the "viewer" root role
+                        who are not members of the project. Only project members
+                        and admins can submit change requests.
+                    </dd>
+                </StyledDefinitionList>
+            </>
+        ),
     },
     changeRequests: {
         icon: <ChangeRequestIcon />,
@@ -235,7 +259,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <SingleSelectConfigButton
-                            tooltipHeader='Set project mode'
+                            tooltipHeader='Set project collaboration mode'
                             description={configButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
@@ -245,6 +269,9 @@ export const NewProjectForm: React.FC<FormProps> = ({
                                 label: projectMode,
                                 icon: <ProjectModeIcon />,
                                 labelWidth: `${`protected`.length}ch`,
+                                additionalTooltipContent:
+                                    configButtonData.mode
+                                        .additionalTooltipContent,
                             }}
                             search={{
                                 label: 'Filter project mode options',

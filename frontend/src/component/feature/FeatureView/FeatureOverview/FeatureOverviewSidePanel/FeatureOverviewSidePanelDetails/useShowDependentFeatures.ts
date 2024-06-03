@@ -5,5 +5,5 @@ export const useShowDependentFeatures = (project: string) => {
     const { dependenciesExist } = useCheckDependenciesExist(project);
     const { isOss } = useUiConfig();
 
-    return Boolean(isOss() ? dependenciesExist : true);
+    return Boolean(project) && Boolean(isOss() ? dependenciesExist : true);
 };

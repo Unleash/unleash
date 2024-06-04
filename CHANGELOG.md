@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.12.7] - 2024-06-04
+
+### Miscellaneous Tasks
+
+- Improve release process ([#7254](https://github.com/Unleash/unleash/issues/7254))
+
+
 ## [5.12.6] - 2024-06-03
 
 ### Miscellaneous Tasks

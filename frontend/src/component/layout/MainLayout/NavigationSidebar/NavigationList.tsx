@@ -19,8 +19,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),

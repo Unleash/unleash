@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC, VFC } from 'react';
 import TimeAgo from 'react-timeago';
 import { styled, Tooltip, useTheme } from '@mui/material';
@@ -71,11 +72,11 @@ interface IFeatureSeenCellProps {
     value?: string | Date | null;
 }
 
-const Wrapper: FC<{ unit?: string; tooltip: string }> = ({
-    unit,
-    tooltip,
-    children,
-}) => {
+const Wrapper: FC<{
+    unit?: string;
+    tooltip: string;
+    children?: React.ReactNode;
+}> = ({ unit, tooltip, children }) => {
     const getColor = useFeatureColor();
 
     return (

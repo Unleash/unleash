@@ -1,3 +1,4 @@
+import type React from 'react';
 import {
     type FC,
     type MouseEventHandler,
@@ -32,6 +33,7 @@ interface ICellSortableProps {
     isFlexGrow?: boolean;
     onClick?: MouseEventHandler<HTMLButtonElement>;
     styles?: React.CSSProperties;
+    children?: React.ReactNode;
 }
 
 export const CellSortable: FC<ICellSortableProps> = ({

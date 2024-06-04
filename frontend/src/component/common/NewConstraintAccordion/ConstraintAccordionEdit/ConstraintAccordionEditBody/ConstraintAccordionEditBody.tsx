@@ -14,6 +14,7 @@ interface IConstraintAccordionBody {
     setValue: (value: string) => void;
     setAction: React.Dispatch<React.SetStateAction<string>>;
     onSubmit: () => void;
+    children?: React.ReactNode;
 }
 
 const StyledInputContainer = styled('div')(({ theme }) => ({

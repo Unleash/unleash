@@ -20,6 +20,7 @@ interface IProjectEnterpriseSettingsForm {
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    children?: React.ReactNode;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({

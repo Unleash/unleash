@@ -16,6 +16,7 @@ interface IResponsiveButtonProps {
     environmentId?: string;
     maxWidth: string;
     className?: string;
+    children?: React.ReactNode;
 }
 
 const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({

@@ -20,6 +20,7 @@ interface IStrategyFormProps {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+    children?: React.ReactNode;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({

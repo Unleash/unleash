@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC } from 'react';
 import { Box, styled, TextField, Tooltip } from '@mui/material';
 import { StyledAvatar } from './StyledAvatar';
@@ -13,6 +14,7 @@ export const AddCommentField: FC<{
     user: IUser | undefined;
     commentText: string;
     onTypeComment: (text: string) => void;
+    children?: React.ReactNode;
 }> = ({ user, commentText, onTypeComment, children }) => (
     <>
         <AddCommentWrapper>

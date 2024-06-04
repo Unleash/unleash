@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC } from 'react';
 import { Box, styled, type SxProps, type Theme } from '@mui/material';
 
@@ -6,6 +7,7 @@ interface ITextCellProps {
     lineClamp?: number;
     'data-testid'?: string;
     sx?: SxProps<Theme>;
+    children?: React.ReactNode;
 }
 
 const StyledWrapper = styled(Box, {

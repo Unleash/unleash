@@ -5,6 +5,7 @@ import { styled } from '@mui/material';
 interface IStandaloneLayout {
     BannerComponent?: JSX.Element;
     showMenu?: boolean;
+    children?: React.ReactNode;
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({

@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC } from 'react';
 
 import CheckBox from '@mui/icons-material/Check';
@@ -12,6 +13,7 @@ export const ApplyButton: FC<{
     onSchedule: () => void;
     onApply: () => void;
     variant?: 'create' | 'update';
+    children?: React.ReactNode;
 }> = ({ disabled, onSchedule, onApply, variant = 'create', children }) => {
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');

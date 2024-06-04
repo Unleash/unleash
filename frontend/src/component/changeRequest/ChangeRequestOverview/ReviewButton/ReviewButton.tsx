@@ -1,3 +1,4 @@
+import type React from 'react';
 import { type FC, useContext } from 'react';
 
 import CheckBox from '@mui/icons-material/Check';
@@ -13,6 +14,7 @@ export const ReviewButton: FC<{
     disabled: boolean;
     onReject: () => void;
     onApprove: () => void;
+    children?: React.ReactNode;
 }> = ({ disabled, onReject, onApprove, children }) => {
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');

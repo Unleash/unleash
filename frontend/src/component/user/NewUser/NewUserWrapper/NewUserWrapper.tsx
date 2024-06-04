@@ -8,6 +8,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 interface INewUserWrapperProps {
     loading?: boolean;
     title?: string;
+    children?: React.ReactNode;
 }
 
 export const NewUserWrapper: FC<INewUserWrapperProps> = ({

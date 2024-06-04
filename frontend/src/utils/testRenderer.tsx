@@ -31,7 +31,7 @@ export const render = (
 
     window.history.pushState({}, 'Test page', route);
 
-    const Wrapper: FC = ({ children }) => (
+    const Wrapper: FC<{ children?: React.ReactNode }> = ({ children }) => (
         <UIProviderContainer>
             <FeedbackProvider>
                 <SWRConfig

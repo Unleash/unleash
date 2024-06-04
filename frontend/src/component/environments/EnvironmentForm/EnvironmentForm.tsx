@@ -15,6 +15,7 @@ interface IEnvironmentForm {
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
+    children?: React.ReactNode;
 }
 
 const StyledForm = styled('form')({

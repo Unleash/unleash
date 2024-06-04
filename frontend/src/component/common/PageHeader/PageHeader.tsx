@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { ReactNode, FC, VFC } from 'react';
 import classnames from 'classnames';
 
@@ -66,6 +67,7 @@ interface IPageHeaderProps {
     actions?: ReactNode;
     className?: string;
     secondary?: boolean;
+    children?: React.ReactNode;
 }
 
 const PageHeaderComponent: FC<IPageHeaderProps> & {

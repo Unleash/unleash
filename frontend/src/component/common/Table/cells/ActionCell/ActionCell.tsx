@@ -18,7 +18,7 @@ const ActionCellDivider: VFC = () => (
     <StyledDivider orientation='vertical' variant='middle' />
 );
 
-const ActionCellComponent: FC & {
+const ActionCellComponent: FC<{ children?: React.ReactNode }> & {
     Divider: typeof ActionCellDivider;
 } = ({ children }) => {
     return <StyledContainer>{children}</StyledContainer>;

@@ -10,7 +10,9 @@ export const muiCache = createCache({
     prepend: true,
 });
 
-export const ThemeProvider: FC = ({ children }) => {
+export const ThemeProvider: FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => {
     const { resolveTheme } = useThemeMode();
 
     return (

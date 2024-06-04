@@ -10,6 +10,7 @@ interface IApiTokenFormProps {
     handleCancel: () => void;
     mode: 'Create' | 'Edit';
     actions?: ReactNode;
+    children?: React.ReactNode;
 }
 
 const ApiTokenForm: React.FC<IApiTokenFormProps> = ({

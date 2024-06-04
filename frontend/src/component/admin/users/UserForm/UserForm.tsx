@@ -60,6 +60,7 @@ interface IUserForm {
     errors: { [key: string]: string };
     clearErrors: () => void;
     mode?: string;
+    children?: React.ReactNode;
 }
 
 const UserForm: React.FC<IUserForm> = ({

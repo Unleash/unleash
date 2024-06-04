@@ -7,9 +7,9 @@ import { listItemButtonClasses as classes } from '@mui/material/ListItemButton';
 import {
     type LastViewedFlag,
     useLastViewedFlags,
-} from '../../../../hooks/useLastViewedFlags';
+} from 'hooks/useLastViewedFlags';
 import { type FC, useEffect } from 'react';
-import { useLastViewedProject } from '../../../../hooks/useLastViewedProject';
+import { useLastViewedProject } from 'hooks/useLastViewedProject';
 
 beforeEach(() => {
     window.localStorage.clear();

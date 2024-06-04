@@ -6317,10 +6317,10 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-react-archer@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/react-archer/-/react-archer-4.3.0.tgz#77279e6be9b1fd0d83706482a97926fa6a974358"
-  integrity sha512-DXSTq/1oKEL7g5zLsvw+1WeE5Ofwd9CBooqCxcG1/0OOd5j7k5uXMRHa8Wf/8sAbUm/8cW6v1nAwHnFdFEhF6g==
+react-archer@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-archer/-/react-archer-4.4.0.tgz#b7a7f47820d75212cc5aa5460bfeef62ceaf4b5e"
+  integrity sha512-m9mEpGHphwWZW7mzk7UVGJVwom353lAbDQ/DJIYH59LnEpEVyaE3KxZKBChB5WYipyOl3HhRlVQk+TknJbGfSQ==
   dependencies:
     react-fast-compare "^2.0.4"
     resize-observer-polyfill "1.5.0"

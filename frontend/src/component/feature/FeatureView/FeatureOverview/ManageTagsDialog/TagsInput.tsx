@@ -108,15 +108,16 @@ export const TagsInput = ({
         options: TagOption[],
         params: FilterOptionsState<TagOption>,
     ) => {
+        const inputValue = params.inputValue.trim();
+
         const filtered = filter(options, {
             ...params,
-            inputValue: params.inputValue.trim(),
+            inputValue,
         });
 
-        const inputValue = params.inputValue.trim();
         // Suggest the creation of a new value
         const isExisting = options.some(
-            (option) => inputValue.trim() === option.title,
+            (option) => inputValue === option.title,
         );
 
         if (inputValue.length >= 2 && !isExisting) {

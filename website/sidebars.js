@@ -51,25 +51,9 @@ module.exports = {
             },
             items: [
                 {
-                    type: 'category',
+                    type: 'doc',
                     label: '11 Principles for Building and Scaling Feature Flag Systems',
-                    link: {
-                        type: 'doc',
-                        id: 'topics/feature-flags/feature-flag-best-practices',
-                    },
-                    items: [
-                        'topics/feature-flags/runtime-control',
-                        'topics/feature-flags/never-expose-pii',
-                        'topics/feature-flags/evaluate-flags-close-to-user',
-                        'topics/feature-flags/scale-horizontally',
-                        'topics/feature-flags/limit-payloads',
-                        'topics/feature-flags/availability-over-consistency',
-                        'topics/feature-flags/short-lived-feature-flags',
-                        'topics/feature-flags/unique-names',
-                        'topics/feature-flags/democratize-feature-flag-access',
-                        'topics/feature-flags/prioritize-ux',
-                        'topics/feature-flags/enable-traceability',
-                    ],
+                    id: 'topics/feature-flags/feature-flag-best-practices',
                 },
                 {
                     type: 'category',

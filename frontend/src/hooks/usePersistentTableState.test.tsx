@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { createLocalStorage } from '../utils/createLocalStorage';
 import { ArrayParam, NumberParam, StringParam } from 'use-query-params';
 import { FilterItemParam } from '../utils/serializeQueryParams';
+import { act } from 'react-test-renderer';
 
 type TestComponentProps = {
     keyName: string;
@@ -146,7 +147,9 @@ describe('usePersistentTableState', () => {
 
         expect(screen.getByTestId('state-value').textContent).toBe('before');
 
-        screen.getByText('Update State').click();
+        act(() => {
+            screen.getByText('Update State').click();
+        });
 
         expect(screen.getByTestId('state-value').textContent).toBe('after');
         expect(window.location.href).toContain(

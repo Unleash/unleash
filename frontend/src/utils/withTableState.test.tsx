@@ -4,6 +4,7 @@ import { useReactTable } from '@tanstack/react-table';
 import { withTableState } from './withTableState';
 import { useState } from 'react';
 import { render } from '@testing-library/react';
+import { act } from 'react-test-renderer';
 
 describe('withTableState', () => {
     it('should create paginated and sorted table state', () => {
@@ -287,20 +288,28 @@ describe('withTableState', () => {
         expect(getByTestId('pageSize')).toHaveValue('5');
         expect(getByTestId('sort')).toHaveValue('name');
 
-        getByRole('button', { name: 'Next page' }).click();
+        act(() => {
+            getByRole('button', { name: 'Next page' }).click();
+        });
 
         expect(getByTestId('page')).toHaveValue('9');
 
-        getByRole('button', { name: 'Previous page' }).click();
+        act(() => {
+            getByRole('button', { name: 'Previous page' }).click();
+        });
 
         expect(getByTestId('page')).toHaveValue('8');
 
-        getByRole('button', { name: 'Paginate' }).click();
+        act(() => {
+            getByRole('button', { name: 'Paginate' }).click();
+        });
 
         expect(getByTestId('page')).toHaveValue('2');
         expect(getByTestId('pageSize')).toHaveValue('10');
 
-        getByRole('button', { name: 'Sort' }).click();
+        act(() => {
+            getByRole('button', { name: 'Sort' }).click();
+        });
 
         expect(getByTestId('sort')).toHaveValue('createdAt');
     });

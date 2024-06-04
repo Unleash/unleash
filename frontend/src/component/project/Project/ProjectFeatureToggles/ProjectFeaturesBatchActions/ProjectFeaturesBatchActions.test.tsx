@@ -3,6 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { act } from 'react-test-renderer';
 
 const server = testServerSetup();
 
@@ -33,7 +34,7 @@ test('batch archive', async () => {
     const archiveButton = screen.getByText('Archive');
     expect(archiveButton).toBeEnabled();
 
-    archiveButton.click();
+    act(() => {});
 
     screen.getByText('Archive feature flags');
     screen.getByText('featureA');

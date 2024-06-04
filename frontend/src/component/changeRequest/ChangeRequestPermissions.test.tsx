@@ -219,7 +219,7 @@ const getDeleteButtons = async () => {
     await Promise.all(
         removeMenus.map(async (menu) => {
             menu.click();
-            const removeButton = screen.getAllByTestId(
+            const removeButton = await screen.findAllByTestId(
                 'STRATEGY_FORM_REMOVE_ID',
             );
             deleteButtons.push(...removeButton);

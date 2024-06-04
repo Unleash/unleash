@@ -33,7 +33,7 @@ test('should read saved query from local storage', async () => {
 
     screen.getByText('oldquery').click(); // click history hint
 
-    expect(screen.getByDisplayValue('oldquery')).toBeInTheDocument(); // check if input updates
+    expect(await screen.findByDisplayValue('oldquery')).toBeInTheDocument(); // check if input updates
 
     fireEvent.change(input, { target: { value: 'newquery' } });
 

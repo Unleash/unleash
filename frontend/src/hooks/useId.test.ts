@@ -9,13 +9,7 @@ test('useId', () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
-        "all": [
-          "useId-0",
-          "useId-0",
-          "useId-0",
-        ],
         "current": "useId-0",
-        "error": undefined,
       }
     `);
 });

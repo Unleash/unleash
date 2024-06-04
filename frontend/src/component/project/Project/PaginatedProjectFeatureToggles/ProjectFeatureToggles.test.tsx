@@ -2,7 +2,7 @@ import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { BATCH_SELECTED_COUNT } from 'utils/testIds';
 
 const server = testServerSetup();
@@ -37,24 +37,23 @@ test('selects project features', async () => {
     await screen.findByText('featureB');
     await screen.findByText('Feature flags (2)');
 
-    const [selectAll, selectFeatureA, selectFeatureB] =
-        screen.queryAllByRole('checkbox');
+    const [selectAll, selectFeatureA] = screen.queryAllByRole('checkbox');
 
     // batch select
     selectAll.click();
-    let selectedCount = screen.getByTestId(BATCH_SELECTED_COUNT);
+    let selectedCount = await screen.findByTestId(BATCH_SELECTED_COUNT);
     expect(selectedCount.textContent).toBe('2');
 
     // batch deselect
-    selectAll.click();
+    fireEvent.click(selectAll);
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
 
     // select a single item
     selectFeatureA.click();
-    selectedCount = screen.getByTestId(BATCH_SELECTED_COUNT);
+    selectedCount = await screen.findByTestId(BATCH_SELECTED_COUNT);
     expect(selectedCount.textContent).toBe('1');
 
     // deselect a single item
-    selectFeatureA.click();
+    fireEvent.click(selectFeatureA);
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
 });

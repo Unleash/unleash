@@ -110,12 +110,13 @@ export const TagsInput = ({
     ) => {
         const filtered = filter(options, params);
 
-        const { inputValue } = params;
+        const inputValue = params.inputValue.trim();
         // Suggest the creation of a new value
         const isExisting = options.some(
-            (option) => inputValue === option.title,
+            (option) => inputValue.trim() === option.title,
         );
-        if (inputValue !== '' && !isExisting) {
+
+        if (inputValue.length >= 2 && !isExisting) {
             filtered.push({
                 inputValue,
                 title: `Create new value "${inputValue}"`,

@@ -19,6 +19,23 @@ describe('tag value validation', () => {
         expect(validationResult).toBeUndefined();
     });
 
+    test(`names can not be only whitespace`, () => {
+        const space = ' '.repeat(TAG_MIN_LENGTH);
+        const data = {
+            value: space,
+            type: 'simple',
+        };
+
+        const validationResult = validateSchema(
+            '#/components/schemas/tagSchema',
+            data,
+        );
+
+        expect(validationResult).toMatchObject({
+            errors: [{ keyword: 'pattern', instancePath: '/value' }],
+        });
+    });
+
     test(`names must be at least ${TAG_MIN_LENGTH} characters long, not counting leading and trailing whitespace`, () => {
         const space = ' '.repeat(TAG_MIN_LENGTH);
         const data = {

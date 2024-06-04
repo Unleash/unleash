@@ -8,12 +8,18 @@ import { BATCH_SELECTED_COUNT } from 'utils/testIds';
 const server = testServerSetup();
 
 const setupApi = () => {
-    const features = [{ name: 'featureA' }, { name: 'featureB' }];
+    const features = [
+        { name: 'featureA', tags: [{ type: 'backend', value: 'sdk' }] },
+        { name: 'featureB' },
+    ];
     testServerRoute(server, '/api/admin/search/features', {
         features,
         total: features.length,
     });
     testServerRoute(server, '/api/admin/ui-config', {});
+    testServerRoute(server, '/api/admin/tags', {
+        tags: [{ type: 'backend', value: 'sdk' }],
+    });
 };
 
 test('selects project features', async () => {
@@ -36,6 +42,7 @@ test('selects project features', async () => {
     await screen.findByText('featureA');
     await screen.findByText('featureB');
     await screen.findByText('Feature flags (2)');
+    await screen.findByText('backend:sdk');
 
     const [selectAll, selectFeatureA, selectFeatureB] =
         screen.queryAllByRole('checkbox');
@@ -57,4 +64,29 @@ test('selects project features', async () => {
     // deselect a single item
     selectFeatureA.click();
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
+});
+
+test('filters by tag', async () => {
+    setupApi();
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+    const tag = await screen.findByText('backend:sdk');
+
+    tag.click();
+
+    await screen.findByText('include');
+    expect(screen.getAllByText('backend:sdk')).toHaveLength(2);
 });

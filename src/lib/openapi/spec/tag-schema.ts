@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../services/tag-schema';
+import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../util';
 
 export const tagSchema = {
     $id: '#/components/schemas/tagSchema',
@@ -11,16 +11,14 @@ export const tagSchema = {
     properties: {
         value: {
             type: 'string',
-            minLength: TAG_MIN_LENGTH,
-            maxLength: TAG_MAX_LENGTH,
-            description: 'The value of the tag',
+            pattern: `^\\s*.{${TAG_MIN_LENGTH},${TAG_MAX_LENGTH}}\\s*$`,
+            description: `The value of the tag. The value must be between ${TAG_MIN_LENGTH} and ${TAG_MAX_LENGTH} characters long. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.`,
             example: 'a-tag-value',
         },
         type: {
             type: 'string',
             minLength: TAG_MIN_LENGTH,
             maxLength: TAG_MAX_LENGTH,
-            default: 'simple',
             description:
                 'The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag',
             example: 'simple',

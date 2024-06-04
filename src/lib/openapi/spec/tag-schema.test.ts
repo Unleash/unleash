@@ -1,10 +1,10 @@
-import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../services/tag-schema';
+import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../util';
 import { validateSchema } from '../validate';
 
 describe('tag value validation', () => {
     test.each([
         ['minimum', TAG_MIN_LENGTH],
-        ['maximum', TAG_MIN_LENGTH],
+        ['maximum', TAG_MAX_LENGTH],
     ])(`names with the %s length are valid`, (_, length) => {
         const data = {
             value: 'a'.repeat(length),
@@ -49,5 +49,19 @@ describe('tag value validation', () => {
         console.log(validationResult);
 
         expect(validationResult).not.toBeUndefined();
+    });
+
+    test(`tag names can contain spaces`, () => {
+        const data = {
+            value: 'tag name with spaces',
+            type: 'simple',
+        };
+
+        const validationResult = validateSchema(
+            '#/components/schemas/tagSchema',
+            data,
+        );
+
+        expect(validationResult).toBeUndefined();
     });
 });

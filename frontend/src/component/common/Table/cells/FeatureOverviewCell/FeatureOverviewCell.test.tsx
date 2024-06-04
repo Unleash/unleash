@@ -1,8 +1,10 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureOverviewCell } from './FeatureOverviewCell';
+import { FeatureOverviewCell as makeFeatureOverviewCell } from './FeatureOverviewCell';
 
 test('Display full overview information', () => {
+    const FeatureOverviewCell = makeFeatureOverviewCell(() => {});
+
     render(
         <FeatureOverviewCell
             row={{
@@ -38,6 +40,8 @@ test('Display full overview information', () => {
 });
 
 test('Display minimal overview information', () => {
+    const FeatureOverviewCell = makeFeatureOverviewCell(() => {});
+
     render(
         <FeatureOverviewCell
             row={{

@@ -131,7 +131,6 @@ export const TagsInput = ({
             id='checkboxes-tag'
             sx={{ marginTop: (theme) => theme.spacing(2), width: 500 }}
             disableCloseOnSelect
-            placeholder='Select Values'
             options={options}
             value={selectedOptions}
             renderTags={renderTags}

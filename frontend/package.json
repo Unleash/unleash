@@ -133,7 +133,8 @@
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
     "vite": "5.2.11",
-    "semver": "7.6.2"
+    "semver": "7.6.2",
+    "@types/react": "^18.0.0"
   },
   "jest": {
     "moduleNameMapper": {

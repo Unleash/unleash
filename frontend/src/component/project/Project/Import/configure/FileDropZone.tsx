@@ -36,7 +36,7 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
     onDragStatusChange,
     ...props
 }) => {
-    const onDrop = useCallback(([file]) => {
+    const onDrop = useCallback(([file]: Array<Blob>) => {
         const reader = new FileReader();
         reader.onload = onFileDropped({ onSuccess, onError });
         reader.readAsText(file);

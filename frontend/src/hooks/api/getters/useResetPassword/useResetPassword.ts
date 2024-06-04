@@ -35,11 +35,10 @@ const useResetPassword = (options: SWRConfiguration = {}) => {
         setLoading(!error && !data);
     }, [data, error]);
 
-    const isValidToken =
+    const isValidToken = !(
         (!loading && data?.name === INVALID_TOKEN_ERROR) ||
         data?.name === USED_TOKEN_ERROR
-            ? false
-            : true;
+    );
 
     return {
         token,

@@ -18,7 +18,7 @@ export const SingleSelectConfigButton: FC<SingleSelectConfigButtonProps> = ({
     const handleChange = (value: any) => {
         onChange(value);
         setAnchorEl(null);
-        props.onClose && props.onClose();
+        props.onClose?.();
 
         setRecentlyClosed(true);
         // this is a hack to prevent the button from being

@@ -446,11 +446,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 ? ''
                 : !preData
                   ? ` ${propertyName} to ${userIdText(
-                          data?.parameters[propertyName],
-                      )}`
+                        data?.parameters[propertyName],
+                    )}`
                   : ` ${propertyName} from ${userIdText(
-                          preData.parameters[propertyName],
-                      )} to ${userIdText(data?.parameters[propertyName])}`;
+                        preData.parameters[propertyName],
+                    )} to ${userIdText(data?.parameters[propertyName])}`;
         const constraintText = this.constraintChangeText(
             preData?.constraints,
             data?.constraints,

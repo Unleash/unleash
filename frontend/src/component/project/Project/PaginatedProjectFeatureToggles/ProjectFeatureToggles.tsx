@@ -93,6 +93,24 @@ export const ProjectFeatureToggles = ({
 
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
 
+    const onTagClick = (tag: string) => {
+        if (
+            tableState.tag &&
+            tableState.tag.values.length > 0 &&
+            !tableState.tag.values.includes(tag)
+        ) {
+            setTableState({
+                tag: {
+                    operator: tableState.tag.operator,
+                    values: [...tableState.tag.values, tag],
+                },
+            });
+        }
+        if (!tableState.tag) {
+            setTableState({ tag: { operator: 'INCLUDE', values: [tag] } });
+        }
+    };
+
     const columns = useMemo(
         () => [
             columnHelper.display({
@@ -144,7 +162,7 @@ export const ProjectFeatureToggles = ({
             columnHelper.accessor('name', {
                 id: 'name',
                 header: 'Name',
-                cell: FeatureOverviewCell,
+                cell: FeatureOverviewCell(onTagClick),
                 enableHiding: false,
                 meta: {
                     width: '50%',

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import type { FeatureSearchResponseSchema } from '../../../../../openapi';
 import { Box, styled } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
@@ -32,7 +32,7 @@ const StyledFeatureLink = styled(Link)({
     },
 });
 
-const Tag = styled('div')(({ theme }) => ({
+const Tag = styled('button')(({ theme }) => ({
     marginRight: theme.spacing(0.5),
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
@@ -42,6 +42,9 @@ const Tag = styled('div')(({ theme }) => ({
     textWrap: 'nowrap',
     maxWidth: '250px',
     padding: theme.spacing(0.25, 0.5),
+    cursor: 'pointer',
+    background: 'inherit',
+    color: 'inherit',
 }));
 
 const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
@@ -73,16 +76,15 @@ const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
     );
 };
 
-const CappedTag: FC<{ tag: string }> = ({ tag }) => {
+const CappedTag: FC<{ tag: string; children: ReactElement }> = ({
+    tag,
+    children,
+}) => {
     return (
         <ConditionallyRender
             condition={tag.length > 30}
-            show={
-                <HtmlTooltip title={tag}>
-                    <Tag>{tag}</Tag>
-                </HtmlTooltip>
-            }
-            elseShow={<Tag>{tag}</Tag>}
+            show={<HtmlTooltip title={tag}>{children}</HtmlTooltip>}
+            elseShow={children}
         />
     );
 };
@@ -135,27 +137,55 @@ const FeatureName: FC<{
     );
 };
 
-const RestTags: FC<{ tags: string[] }> = ({ tags }) => {
+const RestTags: FC<{ tags: string[]; onClick: (tag: string) => void }> = ({
+    tags,
+    onClick,
+}) => {
     return (
-        <HtmlTooltip title={tags.map((tag) => <div key={tag}>{tag}</div>)}>
-            <Tag>{tags.length} more...</Tag>
+        <HtmlTooltip
+            title={tags.map((tag) => (
+                <Box
+                    sx={{ cursor: 'pointer' }}
+                    onClick={() => onClick(tag)}
+                    key={tag}
+                >
+                    {tag}
+                </Box>
+            ))}
+        >
+            <Tag sx={{ cursor: 'initial' }}>{tags.length} more...</Tag>
         </HtmlTooltip>
     );
 };
 
-const Tags: FC<{ tags: FeatureSearchResponseSchema['tags'] }> = ({ tags }) => {
+const Tags: FC<{
+    tags: FeatureSearchResponseSchema['tags'];
+    onClick: (tag: string) => void;
+}> = ({ tags, onClick }) => {
     const [tag1, tag2, tag3, ...restTags] = (tags || []).map(
         ({ type, value }) => `${type}:${value}`,
     );
 
     return (
         <TagsContainer>
-            {tag1 && <CappedTag tag={tag1} />}
-            {tag2 && <CappedTag tag={tag2} />}
-            {tag3 && <CappedTag tag={tag3} />}
+            {tag1 && (
+                <CappedTag tag={tag1}>
+                    <Tag onClick={() => onClick(tag1)}>{tag1}</Tag>
+                </CappedTag>
+            )}
+            {tag2 && (
+                <CappedTag tag={tag2}>
+                    <Tag onClick={() => onClick(tag2)}>{tag2}</Tag>
+                </CappedTag>
+            )}
+            {tag3 && (
+                <CappedTag tag={tag3}>
+                    <Tag onClick={() => onClick(tag3)}>{tag3}</Tag>
+                </CappedTag>
+            )}
             <ConditionallyRender
                 condition={restTags.length > 0}
-                show={<RestTags tags={restTags} />}
+                show={<RestTags tags={restTags} onClick={onClick} />}
             />
         </TagsContainer>
     );
@@ -228,23 +258,25 @@ const SecondaryFeatureInfo: FC<{
     );
 };
 
-export const FeatureOverviewCell: FC<IFeatureNameCellProps> = ({ row }) => {
-    const { searchQuery } = useSearchHighlightContext();
+export const FeatureOverviewCell =
+    (onClick: (tag: string) => void): FC<IFeatureNameCellProps> =>
+    ({ row }) => {
+        const { searchQuery } = useSearchHighlightContext();
 
-    return (
-        <Container>
-            <PrimaryFeatureInfo
-                project={row.original.project || ''}
-                feature={row.original.name}
-                searchQuery={searchQuery}
-                type={row.original.type || ''}
-                dependencyType={row.original.dependencyType || ''}
-            />
-            <SecondaryFeatureInfo
-                description={row.original.description || ''}
-                searchQuery={searchQuery}
-            />
-            <Tags tags={row.original.tags} />
-        </Container>
-    );
-};
+        return (
+            <Container>
+                <PrimaryFeatureInfo
+                    project={row.original.project || ''}
+                    feature={row.original.name}
+                    searchQuery={searchQuery}
+                    type={row.original.type || ''}
+                    dependencyType={row.original.dependencyType || ''}
+                />
+                <SecondaryFeatureInfo
+                    description={row.original.description || ''}
+                    searchQuery={searchQuery}
+                />
+                <Tags tags={row.original.tags} onClick={onClick} />
+            </Container>
+        );
+    };

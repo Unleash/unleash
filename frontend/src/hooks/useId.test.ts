@@ -22,13 +22,7 @@ test('useId prefix', () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
-        "all": [
-          "prefix-1",
-          "prefix-1",
-          "prefix-1",
-        ],
         "current": "prefix-1",
-        "error": undefined,
       }
     `);
 });

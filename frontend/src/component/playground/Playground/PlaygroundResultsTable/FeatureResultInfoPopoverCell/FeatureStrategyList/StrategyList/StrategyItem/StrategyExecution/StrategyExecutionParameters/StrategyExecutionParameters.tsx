@@ -34,6 +34,9 @@ export const PlaygroundResultStrategyExecutionParameters = ({
     input,
     disabled = false,
 }: PlaygroundResultStrategyExecutionParametersProps) => {
+    const stickiness = parameters?.stickiness;
+    const explainStickiness =
+        typeof stickiness === 'string' && stickiness !== 'default';
     return (
         <>
             {Object.keys(parameters).map((key) => {
@@ -81,6 +84,16 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                         {percentage}%
                                     </Badge>{' '}
                                     of your base{' '}
+                                    <span>
+                                        {explainStickiness ? (
+                                            <>
+                                                with{' '}
+                                                <strong>{stickiness}</strong>
+                                            </>
+                                        ) : (
+                                            ''
+                                        )}{' '}
+                                    </span>
                                     {constraints.length > 0
                                         ? 'who match constraints'
                                         : ''}{' '}

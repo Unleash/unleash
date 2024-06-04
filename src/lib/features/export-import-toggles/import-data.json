@@ -1,0 +1,64 @@
+{
+  "features": [
+    { "project": "old_project", "name": "first_feature", "type": "release" }
+  ],
+  "featureStrategies": [
+    {
+      "featureName": "first_feature",
+      "id": "798cb25a-2abd-47bd-8a95-40ec13472309",
+      "name": "default",
+      "parameters": {},
+      "constraints": [
+        {
+          "values": ["conduit"],
+          "inverted": false,
+          "operator": "IN",
+          "contextName": "appName",
+          "caseInsensitive": false
+        }
+      ]
+    }
+  ],
+  "featureEnvironments": [
+    {
+      "enabled": true,
+      "environment": "irrelevant",
+      "featureName": "first_feature",
+      "name": "first_feature",
+      "variants": [
+        {
+          "name": "variantA",
+          "weight": 500,
+          "payload": { "type": "string", "value": "payloadA" },
+          "overrides": [],
+          "stickiness": "default",
+          "weightType": "variable"
+        },
+        {
+          "name": "variantB",
+          "weight": 500,
+          "payload": { "type": "string", "value": "payloadB" },
+          "overrides": [],
+          "stickiness": "default",
+          "weightType": "variable"
+        }
+      ]
+    }
+  ],
+  "featureTags": [
+    { "featureName": "first_feature", "tagType": "simple", "tagValue": "tag1" },
+    { "featureName": "first_feature", "tagType": "simple", "tagValue": "tag2" },
+    {
+      "featureName": "first_feature",
+      "tagType": "special_tag",
+      "tagValue": "feature_tagged"
+    }
+  ],
+  "tagTypes": [
+    { "name": "bestt", "description": "test" },
+    { "name": "special_tag", "description": "this is my special tag" },
+    { "name": "special_tag", "description": "this is my special tag" }
+  ],
+  "contextFields": [],
+  "segments": []
+}

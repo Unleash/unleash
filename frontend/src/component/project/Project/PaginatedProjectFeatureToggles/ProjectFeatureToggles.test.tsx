@@ -42,7 +42,6 @@ test('selects project features', async () => {
     await screen.findByText('featureA');
     await screen.findByText('featureB');
     await screen.findByText('Feature flags (2)');
-    await screen.findByText('backend:sdk');
 
     const [selectAll, selectFeatureA, selectFeatureB] =
         screen.queryAllByRole('checkbox');

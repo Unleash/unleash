@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { ImportModal } from './ImportModal';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
@@ -71,7 +71,7 @@ test('Import happy path', async () => {
     const importButton = await screen.findByText('Import configuration');
     expect(importButton).toBeEnabled();
 
-    importButton.click();
+    fireEvent.click(importButton);
 
     // import stage
     await screen.findByText('Importing...');
@@ -92,7 +92,7 @@ test('Block when importing non json content', async () => {
 
     const codeEditorLabel = screen.getByText('Code editor');
     codeEditorLabel.click();
-    const editor = screen.getByLabelText('Exported toggles');
+    const editor = await screen.findByLabelText('Exported toggles');
     userEvent.type(editor, 'invalid non json');
 
     const validateButton = screen.getByText('Validate');

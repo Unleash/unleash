@@ -19,6 +19,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
+import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -150,6 +152,8 @@ export const PrimaryNavigationList: FC<{
     activeItem?: string;
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+    const killInsightsDashboard = useUiFlag('killInsightsUI');
+    const { isOss } = useUiConfig();
 
     return (
         <List>
@@ -177,14 +181,19 @@ export const PrimaryNavigationList: FC<{
             >
                 <PlaygroundIcon />
             </DynamicListItem>
-            <DynamicListItem
-                href='/insights'
-                text='Insights'
-                onClick={() => onClick('/insights')}
-                selected={activeItem === '/insights'}
-            >
-                <InsightsIcon />
-            </DynamicListItem>
+            <ConditionallyRender
+                condition={!killInsightsDashboard && !isOss()}
+                show={
+                    <DynamicListItem
+                        href='/insights'
+                        text='Insights'
+                        onClick={() => onClick('/insights')}
+                        selected={activeItem === '/insights'}
+                    >
+                        <InsightsIcon />
+                    </DynamicListItem>
+                }
+            />
         </List>
     );
 };

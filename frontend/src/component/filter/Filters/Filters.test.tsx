@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FILTER_ITEM } from 'utils/testIds';
 import {
@@ -83,7 +83,7 @@ test('should keep filters order when adding a new filter', async () => {
     const stateElement = await screen.findByText('State');
     expect(stateElement).toBeInTheDocument();
 
-    stateElement.click();
+    fireEvent.click(stateElement);
 
     const filterItems = await screen.findAllByTestId(FILTER_ITEM);
     const filterTexts = filterItems.map((item) => item.textContent);
@@ -124,11 +124,11 @@ test('should remove selected item from the add filter list', async () => {
     addFilterButton.click();
     expect((await screen.findByRole('menu')).textContent).toBe('StateTags');
 
-    screen.getByText('State').click();
+    (await screen.findByText('State')).click();
 
     // reduced selection list
-    addFilterButton.click();
-    expect(screen.getByRole('menu').textContent).toBe('Tags');
+    fireEvent.click(addFilterButton);
+    expect((await screen.findByRole('menu')).textContent).toBe('Tags');
 });
 
 test('should render filters in the order defined by the initial state', async () => {

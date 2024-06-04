@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import { FilterDateItem, type IFilterDateItemProps } from './FilterDateItem';
 
-const getDate = (option: string) => screen.getByText(option);
+const getDate = async (option: string) => screen.findByText(option);
 
 const setup = (initialState: FilterItemParams | null) => {
     const recordedChanges: FilterItemParams[] = [];
@@ -38,11 +38,11 @@ describe('FilterDateItem Component', () => {
 
         valuesElement.click();
 
-        const selectedDate = getDate('21');
+        const selectedDate = await getDate('21');
 
         expect(selectedDate).toHaveAttribute('aria-selected', 'true');
 
-        getDate('22').click();
+        (await getDate('22')).click();
 
         expect(recordedChanges).toEqual([
             {

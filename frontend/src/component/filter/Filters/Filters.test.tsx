@@ -85,7 +85,7 @@ test('should keep filters order when adding a new filter', async () => {
 
     stateElement.click();
 
-    const filterItems = screen.getAllByTestId(FILTER_ITEM);
+    const filterItems = await screen.findAllByTestId(FILTER_ITEM);
     const filterTexts = filterItems.map((item) => item.textContent);
 
     expect(filterTexts).toEqual(['Tags', 'State']);
@@ -122,7 +122,7 @@ test('should remove selected item from the add filter list', async () => {
     // initial selection list
     const addFilterButton = screen.getByText('Add Filter');
     addFilterButton.click();
-    expect(screen.getByRole('menu').textContent).toBe('StateTags');
+    expect((await screen.findByRole('menu')).textContent).toBe('StateTags');
 
     screen.getByText('State').click();
 

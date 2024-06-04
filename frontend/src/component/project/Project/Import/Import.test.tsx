@@ -65,11 +65,12 @@ test('Import happy path', async () => {
     screen.getByText('Validate').click();
 
     // validate stage
-    screen.getByText('You are importing this configuration in:');
-    screen.getByText('development');
-    screen.getByText('default');
-    const importButton = screen.getByText('Import configuration');
+    await screen.findByText('You are importing this configuration in:');
+    await screen.findByText('development');
+    await screen.findByText('default');
+    const importButton = await screen.findByText('Import configuration');
     expect(importButton).toBeEnabled();
+
     importButton.click();
 
     // import stage

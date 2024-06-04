@@ -1,5 +1,5 @@
 import { useId } from 'hooks/useId';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 test('useId', () => {
     const { result, rerender } = renderHook(() => useId());

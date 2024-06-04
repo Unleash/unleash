@@ -2,7 +2,7 @@ import 'whatwg-fetch';
 import 'themes/app.css';
 import 'regenerator-runtime/runtime';
 
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
@@ -74,4 +74,5 @@ const ApplicationRoot = () => {
     );
 };
 
-ReactDOM.render(<ApplicationRoot />, document.getElementById('app'));
+const root = ReactDOM.createRoot(document.getElementById('app'));
+root.render(<ApplicationRoot />);

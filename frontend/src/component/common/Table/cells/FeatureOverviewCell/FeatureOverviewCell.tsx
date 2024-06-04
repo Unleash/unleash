@@ -197,7 +197,8 @@ const PrimaryFeatureInfo: FC<{
     searchQuery: string;
     type: string;
     dependencyType: string;
-}> = ({ project, feature, type, searchQuery, dependencyType }) => {
+    onTypeClick: (type: string) => void;
+}> = ({ project, feature, type, searchQuery, dependencyType, onTypeClick }) => {
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
     const typeName = featureTypes.find(
@@ -207,7 +208,14 @@ const PrimaryFeatureInfo: FC<{
 
     const TypeIcon = () => (
         <HtmlTooltip arrow title={title} describeChild>
-            <IconComponent sx={(theme) => ({ fontSize: theme.spacing(2) })} />
+            <IconComponent
+                data-testid='feature-type-icon'
+                sx={(theme) => ({
+                    cursor: 'pointer',
+                    fontSize: theme.spacing(2),
+                })}
+                onClick={() => onTypeClick(type)}
+            />
         </HtmlTooltip>
     );
 
@@ -259,7 +267,10 @@ const SecondaryFeatureInfo: FC<{
 };
 
 export const FeatureOverviewCell =
-    (onClick: (tag: string) => void): FC<IFeatureNameCellProps> =>
+    (
+        onTagClick: (tag: string) => void,
+        onFlagTypeClick: (type: string) => void,
+    ): FC<IFeatureNameCellProps> =>
     ({ row }) => {
         const { searchQuery } = useSearchHighlightContext();
 
@@ -271,12 +282,13 @@ export const FeatureOverviewCell =
                     searchQuery={searchQuery}
                     type={row.original.type || ''}
                     dependencyType={row.original.dependencyType || ''}
+                    onTypeClick={onFlagTypeClick}
                 />
                 <SecondaryFeatureInfo
                     description={row.original.description || ''}
                     searchQuery={searchQuery}
                 />
-                <Tags tags={row.original.tags} onClick={onClick} />
+                <Tags tags={row.original.tags} onClick={onTagClick} />
             </Container>
         );
     };

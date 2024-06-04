@@ -93,7 +93,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
         {
             userId,
             searchParams,
-            type,
             status,
             offset,
             limit,
@@ -174,10 +173,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'features.name',
                     'features.description',
                 ]);
-
-                if (type) {
-                    query.whereIn('features.type', type);
-                }
 
                 if (status && status.length > 0) {
                     query.where((builder) => {

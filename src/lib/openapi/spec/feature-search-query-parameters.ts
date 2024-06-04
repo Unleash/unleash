@@ -37,13 +37,13 @@ export const featureSearchQueryParameters = [
     {
         name: 'type',
         schema: {
-            type: 'array',
-            items: {
-                type: 'string',
-                example: 'release',
-            },
+            type: 'string',
+            example: 'IS:release',
+            pattern:
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
-        description: 'The list of feature types to filter by',
+        description:
+            'The feature flag type to filter by. The type can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
         in: 'query',
     },
     {

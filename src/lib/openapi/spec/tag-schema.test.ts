@@ -30,9 +30,27 @@ describe('tag value validation', () => {
             '#/components/schemas/tagSchema',
             data,
         );
-        console.log(validationResult);
 
-        expect(validationResult).not.toBeUndefined();
+        expect(validationResult).toMatchObject({
+            errors: [{ keyword: 'pattern', instancePath: '/value' }],
+        });
+    });
+
+    test(`spaces within a tag value counts towards its maximum length`, () => {
+        const space = ' '.repeat(TAG_MAX_LENGTH);
+        const data = {
+            value: `a${space}z`,
+            type: 'simple',
+        };
+
+        const validationResult = validateSchema(
+            '#/components/schemas/tagSchema',
+            data,
+        );
+
+        expect(validationResult).toMatchObject({
+            errors: [{ keyword: 'pattern', instancePath: '/value' }],
+        });
     });
 
     test(`leading and trailing whitespace does not count towards a name's maximum length`, () => {
@@ -46,9 +64,8 @@ describe('tag value validation', () => {
             '#/components/schemas/tagSchema',
             data,
         );
-        console.log(validationResult);
 
-        expect(validationResult).not.toBeUndefined();
+        expect(validationResult).toBeUndefined();
     });
 
     test(`tag names can contain spaces`, () => {

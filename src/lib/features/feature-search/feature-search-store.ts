@@ -188,7 +188,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                                     envName,
                                 ).andWhere(
                                     'feature_environments.enabled',
-                                    envStatus === 'enabled' ? true : false,
+                                    envStatus === 'enabled',
                                 );
                             });
                         }

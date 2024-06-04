@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { FeatureView } from '../feature/FeatureView/FeatureView';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -218,7 +218,7 @@ const getDeleteButtons = async () => {
 
     await Promise.all(
         removeMenus.map(async (menu) => {
-            menu.click();
+            fireEvent.click(menu);
             const removeButton = await screen.findAllByTestId(
                 'STRATEGY_FORM_REMOVE_ID',
             );
@@ -263,7 +263,7 @@ const deleteButtonsInactiveInChangeRequestEnv = async () => {
 };
 
 const copyButtonsActiveInOtherEnv = async () => {
-    const copyButtons = screen.getAllByTestId('STRATEGY_FORM_COPY_ID');
+    const copyButtons = await screen.findAllByTestId('STRATEGY_FORM_COPY_ID');
     expect(copyButtons.length).toBe(2);
 
     // production

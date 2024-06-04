@@ -13,7 +13,7 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 *If you're not using the official open source image, you can safely ignore this change.* 
 
-The [official open source docker image](https://hub.docker.com/r/unleashorg/unleash-server) stop including these libraries which are required for SSO configuration. If you're using this feature, there is a [community image](https://github.com/Unleash/unleash-docker-community) which adds these dependencies. 
+The [official open source docker image](https://hub.docker.com/r/unleashorg/unleash-server) stop including these libraries which are custom authentication. If you're using this feature, there is a [community image](https://github.com/Unleash/unleash-docker-community) which adds these dependencies. 
 
 ### Drop support for postgres versions 10, 11 and 12
 

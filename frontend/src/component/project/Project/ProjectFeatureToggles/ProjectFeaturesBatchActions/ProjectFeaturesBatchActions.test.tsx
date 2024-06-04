@@ -3,7 +3,6 @@ import { screen, waitFor } from '@testing-library/react';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { act } from 'react-test-renderer';
 
 const server = testServerSetup();
 
@@ -34,11 +33,11 @@ test('batch archive', async () => {
     const archiveButton = screen.getByText('Archive');
     expect(archiveButton).toBeEnabled();
 
-    act(() => {});
+    archiveButton.click();
 
-    screen.getByText('Archive feature flags');
-    screen.getByText('featureA');
-    screen.getByText('featureB');
+    screen.findByText('Archive feature flags');
+    screen.findByText('featureA');
+    screen.findByText('featureB');
 });
 
 test('batch mark as stale', async () => {

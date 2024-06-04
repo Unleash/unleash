@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import {
     ListItem,
@@ -43,6 +44,7 @@ export const FullListItem: FC<{
     badge?: ReactNode;
     onClick: () => void;
     selected?: boolean;
+    children?: React.ReactNode;
 }> = ({ href, text, badge, onClick, selected, children }) => {
     return (
         <ListItem disablePadding onClick={onClick}>
@@ -63,11 +65,11 @@ export const FullListItem: FC<{
     );
 };
 
-export const ExternalFullListItem: FC<{ href: string; text: string }> = ({
-    href,
-    text,
-    children,
-}) => {
+export const ExternalFullListItem: FC<{
+    href: string;
+    text: string;
+    children?: React.ReactNode;
+}> = ({ href, text, children }) => {
     return (
         <ListItem disablePadding>
             <ListItemButton
@@ -113,6 +115,7 @@ export const MiniListItem: FC<{
     text: string;
     selected?: boolean;
     onClick: () => void;
+    children?: React.ReactNode;
 }> = ({ href, text, selected, onClick, children }) => {
     return (
         <ListItem disablePadding onClick={onClick}>

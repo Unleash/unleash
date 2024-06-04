@@ -16,6 +16,7 @@ const StyledNavLink = styled(NavLink)(({ theme }) => ({
     },
 }));
 
-export const CenteredNavLink: FC<{ to: string }> = ({ to, children }) => {
-    return <StyledNavLink to={to}>{children}</StyledNavLink>;
-};
+export const CenteredNavLink: FC<{ to: string; children?: React.ReactNode }> =
+    ({ to, children }) => {
+        return <StyledNavLink to={to}>{children}</StyledNavLink>;
+    };

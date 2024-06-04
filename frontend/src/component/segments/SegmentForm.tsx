@@ -23,6 +23,7 @@ interface ISegmentProps {
     errors: { [key: string]: string };
     clearErrors: () => void;
     mode: SegmentFormMode;
+    children?: React.ReactNode;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({

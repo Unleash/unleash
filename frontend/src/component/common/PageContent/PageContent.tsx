@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import classnames from 'classnames';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -37,10 +38,10 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     boxShadow: 'none',
 }));
 
-const PageContentLoading: FC<{ isLoading: boolean }> = ({
-    children,
-    isLoading,
-}) => {
+const PageContentLoading: FC<{
+    isLoading: boolean;
+    children?: React.ReactNode;
+}> = ({ children, isLoading }) => {
     const ref = useLoading(isLoading);
 
     return (

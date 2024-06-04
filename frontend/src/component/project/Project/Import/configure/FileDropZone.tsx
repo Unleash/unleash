@@ -1,3 +1,4 @@
+import type React from 'react';
 import { type FC, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
@@ -8,6 +9,7 @@ interface IFileDropZoneProps {
     onSuccess: (message: string) => void;
     onError: (error: string) => void;
     onDragStatusChange: (dragOn: boolean) => void;
+    children?: React.ReactNode;
 }
 
 const onFileDropped =

@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC } from 'react';
 import { styled } from '@mui/material';
 
@@ -28,7 +29,9 @@ const SeparatorContent = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-export const SectionSeparator: FC = ({ children }) => (
+export const SectionSeparator: FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => (
     <SeparatorContainer>
         <SeparatorContent>{children}</SeparatorContent>
     </SeparatorContainer>

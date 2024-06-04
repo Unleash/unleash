@@ -39,6 +39,7 @@ interface ISegmentFormPartTwoProps {
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
     mode: SegmentFormMode;
+    children?: React.ReactNode;
 }
 
 const StyledForm = styled('div')(({ theme }) => ({

@@ -27,6 +27,7 @@ export const MultiActionButton: FC<{
     projectId?: string;
     environmentId?: string;
     ariaLabel?: string;
+    children?: React.ReactNode;
 }> = ({
     disabled,
     children,

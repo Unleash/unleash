@@ -1,5 +1,6 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
 import type { TooltipItem } from 'chart.js';
+import type React from 'react';
 import type { FC, VFC } from 'react';
 import { objectId } from 'utils/objectId';
 
@@ -18,6 +19,7 @@ export type TooltipState = {
 
 interface IChartTooltipProps {
     tooltip: TooltipState | null;
+    children?: React.ReactNode;
 }
 
 const StyledList = styled('ul')(({ theme }) => ({

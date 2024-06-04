@@ -1,7 +1,8 @@
 import { Alert, Box, Typography } from '@mui/material';
+import type React from 'react';
 import type { FC } from 'react';
 
-const Paragraph: FC = ({ children }) => (
+const Paragraph: FC<{ children?: React.ReactNode }> = ({ children }) => (
     <Typography
         component={'span'}
         variant='body2'

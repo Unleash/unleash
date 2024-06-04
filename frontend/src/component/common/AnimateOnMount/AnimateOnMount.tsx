@@ -1,3 +1,4 @@
+import type React from 'react';
 import {
     type CSSProperties,
     useEffect,
@@ -14,6 +15,7 @@ interface IAnimateOnMountProps {
     leave?: CSSProperties;
     onStart?: () => void;
     onEnd?: () => void;
+    children?: React.ReactNode;
 }
 
 const AnimateOnMount: FC<IAnimateOnMountProps> = ({

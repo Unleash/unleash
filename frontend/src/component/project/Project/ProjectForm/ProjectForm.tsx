@@ -29,6 +29,7 @@ interface IProjectForm {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateProjectId: () => void;
+    children?: React.ReactNode;
 }
 
 const PROJECT_STICKINESS_SELECT = 'PROJECT_STICKINESS_SELECT';

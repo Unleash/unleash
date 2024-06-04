@@ -6,6 +6,7 @@ import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
 import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import type React from 'react';
 import type { FC } from 'react';
 import type { IPermission } from '../../interfaces/user';
 import { SWRConfig } from 'swr';
@@ -176,11 +177,11 @@ const featureEnvironments = (
     });
 };
 
-const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
-    children,
-    path,
-    pathTemplate,
-}) => (
+const UnleashUiSetup: FC<{
+    path: string;
+    pathTemplate: string;
+    children?: React.ReactNode;
+}> = ({ children, path, pathTemplate }) => (
     <SWRConfig value={{ provider: () => new Map() }}>
         <UIProviderContainer>
             <AccessProvider>

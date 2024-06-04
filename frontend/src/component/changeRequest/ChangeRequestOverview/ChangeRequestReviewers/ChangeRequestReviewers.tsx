@@ -1,4 +1,5 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
+import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestRejections } from './ChangeRequestRejections';
@@ -23,10 +24,10 @@ export const ChangeRequestReviewersHeader: FC<{
     );
 };
 
-export const ChangeRequestReviewersWrapper: FC<{ header: ReactNode }> = ({
-    header,
-    children,
-}) => {
+export const ChangeRequestReviewersWrapper: FC<{
+    header: ReactNode;
+    children?: React.ReactNode;
+}> = ({ header, children }) => {
     return (
         <Paper
             elevation={0}

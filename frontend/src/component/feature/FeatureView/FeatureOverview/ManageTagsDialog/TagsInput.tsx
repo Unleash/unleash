@@ -108,7 +108,10 @@ export const TagsInput = ({
         options: TagOption[],
         params: FilterOptionsState<TagOption>,
     ) => {
-        const filtered = filter(options, params);
+        const filtered = filter(options, {
+            ...params,
+            inputValue: params.inputValue.trim(),
+        });
 
         const inputValue = params.inputValue.trim();
         // Suggest the creation of a new value

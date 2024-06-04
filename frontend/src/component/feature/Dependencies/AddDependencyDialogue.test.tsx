@@ -129,7 +129,10 @@ test('Edit dependency', async () => {
     // Open the dropdown by selecting the role.
     const [featureDropdown, featureStatusDropdown] =
         screen.queryAllByRole('combobox');
-    expect(featureDropdown.innerHTML).toBe('parentB');
+
+    await waitFor(() => {
+        expect(featureDropdown.innerHTML).toBe('parentB');
+    });
     userEvent.click(featureDropdown);
 
     // select parent

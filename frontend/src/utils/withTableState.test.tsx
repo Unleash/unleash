@@ -212,7 +212,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('works end-to-end with useReactTable', () => {
+    it('works end-to-end with useReactTable', async () => {
         const Component = () => {
             const [state, setState] = useState({
                 limit: 5,
@@ -282,7 +282,9 @@ describe('withTableState', () => {
             );
         };
 
-        const { getByTestId, getByRole } = render(<Component />);
+        const { getByTestId, findByTestId, getByRole, findByRole } = render(
+            <Component />,
+        );
 
         expect(getByTestId('page')).toHaveValue('8');
         expect(getByTestId('pageSize')).toHaveValue('5');
@@ -307,11 +309,11 @@ describe('withTableState', () => {
         expect(getByTestId('page')).toHaveValue('2');
         expect(getByTestId('pageSize')).toHaveValue('10');
 
-        act(() => {
-            getByRole('button', { name: 'Sort' }).click();
-        });
+        const button = await findByRole('button', { name: 'Sort' });
+        button.click();
 
-        expect(getByTestId('sort')).toHaveValue('createdAt');
+        const sort = await findByTestId('sort');
+        expect(sort).toHaveValue('createdAt');
     });
 
     it('always shows columns that have `enableHiding: false`', () => {

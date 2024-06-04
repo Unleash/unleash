@@ -101,9 +101,7 @@ test('show dependency dialogue', async () => {
 
     addParentButton.click();
 
-    expect(
-        screen.getByText('Add parent feature dependency'),
-    ).toBeInTheDocument();
+    await screen.findByText('Add parent feature dependency');
 });
 
 test('show dependency dialogue for OSS with dependencies', async () => {
@@ -133,9 +131,7 @@ test('show dependency dialogue for OSS with dependencies', async () => {
 
     addParentButton.click();
 
-    expect(
-        screen.getByText('Add parent feature dependency'),
-    ).toBeInTheDocument();
+    await screen.findByText('Add parent feature dependency');
 });
 
 test('show child', async () => {

@@ -5,9 +5,6 @@ describe('feature', () => {
     const featureToggleName = `unleash-e2e-${randomId}`;
     const projectName = `unleash-e2e-project-${randomId}`;
 
-    const variant1 = 'variant1';
-    const variant2 = 'variant2';
-
     before(() => {
         cy.runBefore();
         cy.login_UI();

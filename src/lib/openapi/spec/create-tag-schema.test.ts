@@ -12,7 +12,7 @@ describe('tag value validation', () => {
         };
 
         const validationResult = validateSchema(
-            '#/components/schemas/tagSchema',
+            '#/components/schemas/createTagSchema',
             data,
         );
 
@@ -27,7 +27,7 @@ describe('tag value validation', () => {
         };
 
         const validationResult = validateSchema(
-            '#/components/schemas/tagSchema',
+            '#/components/schemas/createTagSchema',
             data,
         );
 
@@ -44,7 +44,7 @@ describe('tag value validation', () => {
         };
 
         const validationResult = validateSchema(
-            '#/components/schemas/tagSchema',
+            '#/components/schemas/createTagSchema',
             data,
         );
 
@@ -61,7 +61,7 @@ describe('tag value validation', () => {
         };
 
         const validationResult = validateSchema(
-            '#/components/schemas/tagSchema',
+            '#/components/schemas/createTagSchema',
             data,
         );
 
@@ -78,7 +78,7 @@ describe('tag value validation', () => {
         };
 
         const validationResult = validateSchema(
-            '#/components/schemas/tagSchema',
+            '#/components/schemas/createTagSchema',
             data,
         );
 
@@ -92,7 +92,7 @@ describe('tag value validation', () => {
         };
 
         const validationResult = validateSchema(
-            '#/components/schemas/tagSchema',
+            '#/components/schemas/createTagSchema',
             data,
         );
 

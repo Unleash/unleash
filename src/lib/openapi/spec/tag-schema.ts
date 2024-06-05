@@ -11,10 +11,9 @@ export const tagSchema = {
     properties: {
         value: {
             type: 'string',
-            pattern: `^\\s*\\S.{${TAG_MIN_LENGTH - 2},${
-                TAG_MAX_LENGTH - 2
-            }}\\S\\s*$`,
-            description: `The value of the tag. The value must be between ${TAG_MIN_LENGTH} and ${TAG_MAX_LENGTH} characters long. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.`,
+            description: `The value of the tag.`,
+            minLength: TAG_MIN_LENGTH,
+            maxLength: TAG_MAX_LENGTH,
             example: 'a-tag-value',
         },
         type: {

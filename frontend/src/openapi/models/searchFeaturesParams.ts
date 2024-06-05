@@ -18,7 +18,7 @@ export type SearchFeaturesParams = {
      */
     state?: string;
     /**
-     * The list of feature types to filter by
+     * The feature flag type to filter by. The type can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      */
     type?: string;
     /**

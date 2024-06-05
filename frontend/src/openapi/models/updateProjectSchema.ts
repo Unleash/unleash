@@ -15,6 +15,9 @@ export interface UpdateProjectSchema {
     description?: string;
     /** A mode of the project affecting what actions are possible in this project */
     mode?: UpdateProjectSchemaMode;
-    /** The new name of the project */
+    /**
+     * The new name of the project. The name must contain at least one non-whitespace character.
+     * @pattern ^(?!\s*$).+
+     */
     name: string;
 }

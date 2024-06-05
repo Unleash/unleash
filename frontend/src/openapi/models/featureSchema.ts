@@ -44,7 +44,7 @@ export interface FeatureSchema {
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;
     /**
-     * The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema
+     * The date when metrics where last collected for the feature. This field was deprecated in v5, use the one in featureEnvironmentSchema
      * @deprecated
      * @nullable
      */
@@ -58,7 +58,7 @@ export interface FeatureSchema {
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
     stale?: boolean;
     /**
-     * This is a legacy field that will be deprecated
+     * This was deprecated in v5 and will be removed in a future major version
      * @deprecated
      */
     strategies?: FeatureSchemaStrategiesItem[];

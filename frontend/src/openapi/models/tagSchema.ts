@@ -8,8 +8,16 @@
  * Representation of a [tag](https://docs.getunleash.io/reference/tags)
  */
 export interface TagSchema {
-    /** The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag */
+    /**
+     * The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag
+     * @minLength 2
+     * @maxLength 50
+     */
     type: string;
-    /** The value of the tag */
+    /**
+     * The value of the tag.
+     * @minLength 2
+     * @maxLength 50
+     */
     value: string;
 }

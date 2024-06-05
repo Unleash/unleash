@@ -181,7 +181,7 @@ export const featureSearchResponseSchema = {
             type: 'object',
             description: 'User who created the feature flag',
             additionalProperties: false,
-            required: ['id', 'name'],
+            required: ['id', 'name', 'imageUrl'],
             properties: {
                 id: {
                     description: 'The user id',
@@ -197,6 +197,7 @@ export const featureSearchResponseSchema = {
                     description: `URL used for the user profile image`,
                     type: 'string',
                     example: 'https://example.com/242x200.png',
+                    nullable: true,
                 },
             },
         },

@@ -54,6 +54,7 @@ export * from './create-invited-user-schema';
 export * from './create-pat-schema';
 export * from './create-strategy-schema';
 export * from './create-strategy-variant-schema';
+export * from './create-tag-schema';
 export * from './create-user-response-schema';
 export * from './create-user-schema';
 export * from './date-schema';

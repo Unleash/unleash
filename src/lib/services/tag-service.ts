@@ -52,7 +52,11 @@ export default class TagService {
     }
 
     async createTag(tag: ITag, auditUser: IAuditUser): Promise<ITag> {
-        const data = await this.validate(tag);
+        const trimmedTag = {
+            ...tag,
+            value: tag.value.trim(),
+        };
+        const data = await this.validate(trimmedTag);
         await this.tagStore.createTag(data);
         await this.eventService.storeEvent(
             new TagCreatedEvent({

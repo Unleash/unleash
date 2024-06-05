@@ -27,6 +27,7 @@ import {
 } from '../../openapi/util/standard-responses';
 import type FeatureTagService from '../../services/feature-tag-service';
 import type { IFlagResolver } from '../../types';
+import type { CreateTagSchema } from '../../openapi';
 
 const version = 1;
 
@@ -94,7 +95,7 @@ class TagController extends Controller {
                         ),
                         ...getStandardResponses(400, 401, 403, 409, 415),
                     },
-                    requestBody: createRequestSchema('tagSchema'),
+                    requestBody: createRequestSchema('createTagSchema'),
                 }),
             ],
         });
@@ -196,7 +197,7 @@ class TagController extends Controller {
     }
 
     async createTag(
-        req: IAuthRequest<unknown, unknown, TagSchema>,
+        req: IAuthRequest<unknown, unknown, CreateTagSchema>,
         res: Response<TagWithVersionSchema>,
     ): Promise<void> {
         const userName = extractUsername(req);

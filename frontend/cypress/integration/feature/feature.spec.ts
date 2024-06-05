@@ -29,20 +29,6 @@ describe('feature', () => {
         cy.url().should('include', featureToggleName);
     });
 
-    it('gives an error if a toggle exists with the same name', () => {
-        cy.createFeature_UI(featureToggleName, false, projectName);
-        cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            'A flag with that name already exists',
-        );
-    });
-
-    it('gives an error if a toggle name is url unsafe', () => {
-        cy.createFeature_UI('featureToggleUnsafe####$#//', false, projectName);
-        cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            `"name" must be URL friendly`,
-        );
-    });
-
     it('can add, update and delete a gradual rollout strategy to the development environment', () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,

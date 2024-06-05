@@ -1,6 +1,6 @@
 import type { FC, ReactElement } from 'react';
 import type { FeatureSearchResponseSchema } from '../../../../../openapi';
-import { Box, styled } from '@mui/material';
+import { Box, IconButton, styled } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext';
@@ -9,7 +9,8 @@ import { StyledDescription, StyledTitle } from '../LinkCell/LinkCell.styles';
 import { Link } from 'react-router-dom';
 import { Badge } from '../../../Badge/Badge';
 import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip';
-import { ConditionallyRender } from '../../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IFeatureNameCellProps {
     row: {
@@ -191,14 +192,64 @@ const Tags: FC<{
     );
 };
 
-const PrimaryFeatureInfo: FC<{
+const StyledDependencyLink = styled(Link)({
+    display: 'block',
+});
+
+const DependencyPreview: FC<{ feature: string; project: string }> = ({
+    feature,
+    project,
+}) => {
+    const { feature: fetchedFeature } = useFeature(project, feature);
+    const children = fetchedFeature.children;
+    const parents = fetchedFeature.dependencies;
+
+    if (children.length > 0) {
+        return (
+            <>
+                <Box>Children</Box>
+
+                {children.map((child) => (
+                    <StyledDependencyLink
+                        to={`/projects/${project}/features/${child}`}
+                        key={child}
+                    >
+                        {child}
+                    </StyledDependencyLink>
+                ))}
+            </>
+        );
+    } else if (parents[0]) {
+        const parentFeature = parents[0].feature;
+        return (
+            <>
+                <Box>Parent</Box>
+                <Link to={`/projects/${project}/features/${parentFeature}`}>
+                    {parentFeature}
+                </Link>
+            </>
+        );
+    }
+    return <>Loading...</>;
+};
+
+export const PrimaryFeatureInfo: FC<{
     project: string;
     feature: string;
     searchQuery: string;
     type: string;
     dependencyType: string;
     onTypeClick: (type: string) => void;
-}> = ({ project, feature, type, searchQuery, dependencyType, onTypeClick }) => {
+    delay?: number;
+}> = ({
+    project,
+    feature,
+    type,
+    searchQuery,
+    dependencyType,
+    onTypeClick,
+    delay = 500,
+}) => {
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
     const typeName = featureTypes.find(
@@ -208,14 +259,16 @@ const PrimaryFeatureInfo: FC<{
 
     const TypeIcon = () => (
         <HtmlTooltip arrow title={title} describeChild>
-            <IconComponent
-                data-testid='feature-type-icon'
-                sx={(theme) => ({
-                    cursor: 'pointer',
-                    fontSize: theme.spacing(2),
-                })}
+            <IconButton
+                sx={{ p: 0 }}
+                aria-label={`add ${type} flag to filter`}
                 onClick={() => onTypeClick(type)}
-            />
+            >
+                <IconComponent
+                    sx={(theme) => ({ fontSize: theme.spacing(2) })}
+                    data-testid='feature-type-icon'
+                />
+            </IconButton>
         </HtmlTooltip>
     );
 
@@ -230,15 +283,26 @@ const PrimaryFeatureInfo: FC<{
             <ConditionallyRender
                 condition={Boolean(dependencyType)}
                 show={
-                    <DependencyBadge
-                        color={
-                            dependencyType === 'parent'
-                                ? 'warning'
-                                : 'secondary'
+                    <HtmlTooltip
+                        title={
+                            <DependencyPreview
+                                feature={feature}
+                                project={project}
+                            />
                         }
+                        enterDelay={delay}
+                        enterNextDelay={delay}
                     >
-                        {dependencyType}
-                    </DependencyBadge>
+                        <DependencyBadge
+                            color={
+                                dependencyType === 'parent'
+                                    ? 'warning'
+                                    : 'secondary'
+                            }
+                        >
+                            {dependencyType}
+                        </DependencyBadge>
+                    </HtmlTooltip>
                 }
             />
         </FeatureNameAndType>

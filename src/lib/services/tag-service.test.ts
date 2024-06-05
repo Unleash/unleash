@@ -6,7 +6,7 @@ import TagService from './tag-service';
 
 const config: IUnleashConfig = createTestConfig();
 
-test('should trim tag names before saving them', async () => {
+test('should trim tag values before saving them', async () => {
     const tagStore = new FakeTagStore();
     const service = new TagService({ tagStore }, config, {
         storeEvent: async () => {},

@@ -2,7 +2,7 @@ name: e2e:frontend
 on: [deployment_status]
 jobs:
   e2e:
-    if: true
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.target_url, 'unleash-monorepo-frontend')
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -7,45 +7,46 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 ## Upgrading to v6 from v5
 
-[Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you followed the previous migration guides in this page. We're removing some features that were deprecated in version 5, new deprecated features that will continue to be supported during v6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:
+[Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you have followed the previous migration guides on this page. We're removing some features that were deprecated in version 5, and deprecating some features that will continue to be supported during v6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:
 
-### Remove passport libs from the official Open Source Docker distribution
+### Remove Passport libs from the official open source Docker distribution
 
 *If you're not using the official open source image, you can safely ignore this change.* 
 
 The [official open source docker image](https://hub.docker.com/r/unleashorg/unleash-server) stop including these libraries which are custom authentication. If you're using this feature, there is a [community image](https://github.com/Unleash/unleash-docker-community) which adds these dependencies. 
 
-### Drop support for postgres versions 10, 11 and 12
+### Drop support for PostgreSQL versions 10, 11 and 12
 
-*If you're using postgres 13 or above you can safely ignore this change*
+*If you're using PostgreSQL 13 or above you can safely ignore this change.*
 
-Unleash v6 will output an error message when starting with an unsuported version but will continue to run. We recommend upgrading to a supported version as soon as possible.
+Unleash v6 will output an error message when starting with an unsupported version but continue to run. We recommend upgrading to a supported version as soon as possible.
 
 ### Update to Node.js version 20+
 
-Unleash v6 drops support Node.js versions below 20, which is the [current active LTS at the time of release](https://github.com/nodejs/Release/blob/6209d04302e62156b964a605f619283582334c95/README.md#release-schedule).
+Unleash v6 drops support for Node.js versions below 20, which is the [active LTS at the time of release](https://github.com/nodejs/Release/blob/6209d04302e62156b964a605f619283582334c95/README.md#release-schedule).
 
 ### Remove /edge/metrics endpoint
 
-*If you're not using edge, you can safely ignore this change*
+*If you're not using Unleash Edge, you can safely ignore this change.*
 
-If you're using edge to connect to Unleash, make sure to first upgrade unleash-edge to version 19.1.3 or above.
+If you're using Unleash Edge to connect to Unleash, make sure to first upgrade Unleash Edge to version 19.1.3 or above.
 
-### Remove legacy "/api/feature
+### Remove legacy `/api/feature` endpoint
 
-If you're still using this endpoint, checkout the [deprecation notice in v4](#4-legacy-v2-routes-removed)
+If you're still using this endpoint, check out the [deprecation notice in v4](#4-legacy-v2-routes-removed)
 
-### Remove deprecated [old import service](../../how-to/how-to-import-export)
+### Remove deprecated [import service](../../how-to/how-to-import-export)
 
-Unleash v6 drops support for file based import at startup. If you're using this functionality, please check out the issue about adding this functionality to the current import service ([#7128](https://github.com/Unleash/unleash/issues/7128))
+Unleash v6 drops support for file based import at startup. If you're using this functionality, please check out the issue about adding this functionality to the current import service ([#7128](https://github.com/Unleash/unleash/issues/7128)).
 
-If you're using that endpoint for a custom integration, you should migrate to the [new import service](../../how-to/how-to-environment-import-export) (api docs are [here](../../reference/api/unleash/import-export)). For a comparisson between the two, please check the notes at the bottom of [this page](../../how-to/how-to-environment-import-export#environment-importexport-vs-the-instance-importexport-api)
+If you're using that endpoint for a custom integration, you should migrate to the [new import service](../../how-to/how-to-environment-import-export) ([new import/export api docs](../../reference/api/unleash/import-export)). 
+For a comparison between the two, refer to the [environment import/export vs instance import/export](../../how-to/how-to-environment-import-export#environment-importexport-vs-the-instance-importexport-api) section at the bottom of this page.
 
-### Custom strategies deprecation
+### Deprecate custom strategies
 
-The downside of using a custom strategies is that you need to distribute the code of your strategy with Unleash client SDK while on the other hand, [strategy constraints](../../reference/strategy-constraints) work without any extra code or maintenance. In most cases [strategy constraints](../../reference/strategy-constraints) provides enough control without the additional complexity. 
+The downside of using a custom strategies is that you need to write and distribute the code for your strategy to your Unleash client SDKs. On the other hand, [strategy constraints](../../reference/strategy-constraints) work without any extra code or maintenance. In most cases [strategy constraints](../../reference/strategy-constraints) provides all the control you need without the additional complexity. 
 
-If you can't accomplish the same functionality with strategy constraints, please, let us know about your use case on [Slack](https://slack.unleash.run/)
+If you can't accomplish the same functionality with strategy constraints, please let us know about your use case on [Slack](https://slack.unleash.run/).
 
 ### Dropping Internet Explorer (IE) Support
 

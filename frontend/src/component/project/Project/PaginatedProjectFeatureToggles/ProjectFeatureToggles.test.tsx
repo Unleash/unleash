@@ -59,7 +59,7 @@ test('selects project features', async () => {
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
 
     // select a single item
-    selectFeatureA.click();
+    fireEvent.click(selectFeatureA);
     selectedCount = await screen.findByTestId(BATCH_SELECTED_COUNT);
     expect(selectedCount.textContent).toBe('1');
 

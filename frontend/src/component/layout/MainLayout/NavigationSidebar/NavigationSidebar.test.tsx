@@ -23,7 +23,8 @@ test('switch full mode and mini mode', () => {
     expect(screen.queryByText('Users')).toBeInTheDocument();
 
     const hide = screen.getByText('Hide (⌘ + B)');
-    hide.click();
+
+    fireEvent.click(hide);
 
     expect(screen.queryByText('Projects')).not.toBeInTheDocument();
     expect(screen.queryByText('Applications')).not.toBeInTheDocument();

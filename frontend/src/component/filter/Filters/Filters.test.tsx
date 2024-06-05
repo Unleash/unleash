@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FILTER_ITEM } from 'utils/testIds';
+import { FILTER_ITEM, FILTERS_MENU } from 'utils/testIds';
 import {
     type FilterItemParamHolder,
     Filters,
@@ -120,15 +120,17 @@ test('should remove selected item from the add filter list', async () => {
     );
 
     // initial selection list
-    const addFilterButton = screen.getByText('Add Filter');
-    addFilterButton.click();
-    expect((await screen.findByRole('menu')).textContent).toBe('StateTags');
+    const addFilterButton = await screen.findByText('Add Filter');
+    fireEvent.click(addFilterButton);
+    expect((await screen.findByTestId(FILTERS_MENU)).textContent).toBe(
+        'StateTags',
+    );
 
     (await screen.findByText('State')).click();
 
     // reduced selection list
     fireEvent.click(addFilterButton);
-    expect((await screen.findByRole('menu')).textContent).toBe('Tags');
+    expect((await screen.findByTestId(FILTERS_MENU)).textContent).toBe('Tags');
 });
 
 test('should render filters in the order defined by the initial state', async () => {

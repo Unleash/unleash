@@ -250,7 +250,7 @@ export type IFeatureSearchOverview = Exclude<
     createdBy: {
         id: number;
         name: string;
-        imageUrl?: string;
+        imageUrl: string | null;
     };
 };
 

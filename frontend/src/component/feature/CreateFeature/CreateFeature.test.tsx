@@ -7,6 +7,20 @@ import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();
 
+const renderForm = () => {
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId/create-toggle'
+                element={<CreateFeature />}
+            />
+        </Routes>,
+        {
+            route: '/projects/default/create-toggle',
+        },
+    );
+};
+
 describe('flag name validation', () => {
     test('it gives an error if a flag name is not URL-friendly', async () => {
         const user = userEvent.setup();
@@ -29,17 +43,7 @@ describe('flag name validation', () => {
             'post',
             400,
         );
-        render(
-            <Routes>
-                <Route
-                    path='/projects/:projectId/create-toggle'
-                    element={<CreateFeature />}
-                />
-            </Routes>,
-            {
-                route: '/projects/default/create-toggle',
-            },
-        );
+        renderForm();
 
         const nameInput = await screen.findByLabelText(/name/i);
         fireEvent.change(nameInput, {
@@ -74,17 +78,7 @@ describe('flag name validation', () => {
             400,
         );
 
-        render(
-            <Routes>
-                <Route
-                    path='/projects/:projectId/create-toggle'
-                    element={<CreateFeature />}
-                />
-            </Routes>,
-            {
-                route: '/projects/default/create-toggle',
-            },
-        );
+        renderForm();
 
         const nameInput = await screen.findByLabelText(/name/i);
         fireEvent.change(nameInput, {

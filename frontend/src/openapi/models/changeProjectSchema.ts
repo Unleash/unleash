@@ -5,9 +5,9 @@
  */
 
 /**
- * Data required to move a feature toggle to a project.
+ * Data required to move a feature flag to a project.
  */
 export interface ChangeProjectSchema {
-    /** The project to move the feature toggle to. */
+    /** The project to move the feature flag to. */
     newProjectId: string;
 }

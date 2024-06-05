@@ -9,7 +9,7 @@
  */
 export interface ClientFeaturesQuerySchema {
     /**
-     * Strategies for the feature flag configured for this environment are included. (DEPRECATED) - Handled by API tokens
+     * Strategies for the feature flag configured for this environment are included. This is now handled by API tokens and was marked as deprecated in v5
      * @deprecated
      */
     environment?: string;
@@ -18,7 +18,7 @@ export interface ClientFeaturesQuerySchema {
     /** Features are filtered to only include features whose name starts with this prefix */
     namePrefix?: string;
     /**
-     * Features that are part of these projects are included in this response. (DEPRECATED) - Handled by API tokens
+     * Features that are part of these projects are included in this response. This is now handled by API tokens and was marked as deprecated in v5
      * @deprecated
      */
     project?: string[];

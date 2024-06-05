@@ -54,6 +54,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     const ownersMap = useOwnersMap();
     const users = owners.map(ownersMap);
 
+    // this is just here to make sure we trigger the tests. Delete before merging!
     return (
         <>
             <GroupCardAvatars

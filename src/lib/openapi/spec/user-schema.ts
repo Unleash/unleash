@@ -38,7 +38,7 @@ export const userSchema = {
             nullable: true,
         },
         imageUrl: {
-            description: `URL used for the userprofile image`,
+            description: `URL used for the user profile image`,
             type: 'string',
             example: 'https://example.com/242x200.png',
         },

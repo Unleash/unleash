@@ -172,7 +172,16 @@ test('should search matching features by name', async () => {
     const { body } = await searchFeatures({ query: 'feature' });
 
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+        features: [
+            {
+                name: 'my_feature_a',
+                createdBy: { id: 1, name: 'user@getunleash.io' },
+            },
+            {
+                name: 'my_feature_b',
+                createdBy: { id: 1, name: 'user@getunleash.io' },
+            },
+        ],
         total: 2,
     });
 });

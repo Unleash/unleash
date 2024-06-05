@@ -3131,7 +3131,7 @@ saxes@^6.0.0:
   dependencies:
     xmlchars "^2.2.0"
 
-semver@^5.3.0, semver@^7.3.5, semver@^7.5.3, semver@^7.5.4:
+semver@^5.3.0, semver@^7.3.5, semver@^7.5.3, semver@^7.5.4, semver@^7.6.2:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.0.tgz#1a46a4db4bffcccd97b743b5005c8325f23d4e2d"
   integrity sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==
@@ -3695,7 +3695,7 @@ unleash-client@5.5.3:
     semver "^7.5.3"
 
 "unleash-server@file:../build":
-  version "5.12.5"
+  version "5.12.7"
   dependencies:
     "@slack/web-api" "^6.10.0"
     "@wesleytodd/openapi" "^0.3.0"
@@ -3750,7 +3750,7 @@ unleash-client@5.5.3:
     prom-client "^14.0.0"
     response-time "^2.3.2"
     sanitize-filename "^1.6.3"
-    semver "^7.5.4"
+    semver "^7.6.2"
     serve-favicon "^2.5.0"
     slug "^9.0.0"
     stoppable "^1.1.0"

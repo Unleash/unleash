@@ -35,7 +35,10 @@ import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
 import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useProjectFeatureSearch } from './useProjectFeatureSearch';
+import {
+    useProjectFeatureSearch,
+    useProjectFeatureSearchActions,
+} from './useProjectFeatureSearch';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -62,9 +65,15 @@ export const ProjectFeatureToggles = ({
         setTableState,
     } = useProjectFeatureSearch(projectId);
 
+    const { onFlagTypeClick, onTagClick } = useProjectFeatureSearchActions(
+        tableState,
+        setTableState,
+    );
+
     const filterState = {
         tag: tableState.tag,
         createdAt: tableState.createdAt,
+        type: tableState.type,
     };
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -144,7 +153,7 @@ export const ProjectFeatureToggles = ({
             columnHelper.accessor('name', {
                 id: 'name',
                 header: 'Name',
-                cell: FeatureOverviewCell,
+                cell: FeatureOverviewCell(onTagClick, onFlagTypeClick),
                 enableHiding: false,
                 meta: {
                     width: '50%',

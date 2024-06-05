@@ -86,6 +86,7 @@ export type UiFlags = {
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;
+    commandBarUI?: boolean;
 };
 
 export interface IVersionInfo {

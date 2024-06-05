@@ -20,7 +20,7 @@ export type SearchFeaturesParams = {
     /**
      * The list of feature types to filter by
      */
-    type?: string[];
+    type?: string;
     /**
      * The list of feature tags to filter by. Feature tag has to specify a type and a value joined with a colon.
      */

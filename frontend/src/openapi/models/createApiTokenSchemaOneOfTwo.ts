@@ -13,7 +13,7 @@ export type CreateApiTokenSchemaOneOfTwo = {
      */
     type: string;
     /**
-     * The name of the token. This property is deprecated. Use `tokenName` instead.
+     * The name of the token. This property was deprecated in v5. Use `tokenName` instead.
      * @deprecated
      */
     username: string;

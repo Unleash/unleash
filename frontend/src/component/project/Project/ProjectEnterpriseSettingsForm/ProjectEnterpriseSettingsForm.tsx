@@ -118,232 +118,231 @@ const useFeatureNamePatternTracking = () => {
     return { trackPattern, setPreviousPattern };
 };
 
-const ProjectEnterpriseSettingsForm: React.FC<IProjectEnterpriseSettingsForm> =
-    ({
-        children,
-        handleSubmit,
-        projectId,
-        projectMode,
-        featureNamingExample,
-        featureNamingPattern,
-        featureNamingDescription,
-        setFeatureNamingExample,
-        setFeatureNamingPattern,
-        setFeatureNamingDescription,
-        setProjectMode,
-        errors,
+const ProjectEnterpriseSettingsForm: React.FC<
+    IProjectEnterpriseSettingsForm
+> = ({
+    children,
+    handleSubmit,
+    projectId,
+    projectMode,
+    featureNamingExample,
+    featureNamingPattern,
+    featureNamingDescription,
+    setFeatureNamingExample,
+    setFeatureNamingPattern,
+    setFeatureNamingDescription,
+    setProjectMode,
+    errors,
+}) => {
+    const { setPreviousPattern, trackPattern } =
+        useFeatureNamePatternTracking();
+
+    const projectModeOptions = [
+        { key: 'open', label: 'open' },
+        { key: 'protected', label: 'protected' },
+        { key: 'private', label: 'private' },
+    ];
+
+    useEffect(() => {
+        setPreviousPattern(featureNamingPattern || '');
+    }, [projectId]);
+
+    const updateNamingExampleError = ({
+        example,
+        pattern,
+    }: {
+        example: string;
+        pattern: string;
     }) => {
-        const { setPreviousPattern, trackPattern } =
-            useFeatureNamePatternTracking();
-
-        const projectModeOptions = [
-            { key: 'open', label: 'open' },
-            { key: 'protected', label: 'protected' },
-            { key: 'private', label: 'private' },
-        ];
-
-        useEffect(() => {
-            setPreviousPattern(featureNamingPattern || '');
-        }, [projectId]);
-
-        const updateNamingExampleError = ({
-            example,
+        const validationResult = validateFeatureNamingExample({
             pattern,
-        }: {
-            example: string;
-            pattern: string;
-        }) => {
-            const validationResult = validateFeatureNamingExample({
-                pattern,
-                example,
-                featureNamingPatternError: errors.featureNamingPattern,
-            });
+            example,
+            featureNamingPatternError: errors.featureNamingPattern,
+        });
 
-            switch (validationResult.state) {
-                case 'invalid':
-                    errors.namingExample = validationResult.reason;
-                    break;
-                case 'valid':
-                    delete errors.namingExample;
-                    break;
+        switch (validationResult.state) {
+            case 'invalid':
+                errors.namingExample = validationResult.reason;
+                break;
+            case 'valid':
+                delete errors.namingExample;
+                break;
+        }
+    };
+
+    const onSetFeatureNamingPattern = (regex: string) => {
+        const disallowedStrings = [
+            ' ',
+            '\\t',
+            '\\s',
+            '\\n',
+            '\\r',
+            '\\f',
+            '\\v',
+        ];
+        if (
+            disallowedStrings.some((blockedString) =>
+                regex.includes(blockedString),
+            )
+        ) {
+            errors.featureNamingPattern =
+                'Whitespace is not allowed in the expression';
+        } else {
+            try {
+                new RegExp(regex);
+                delete errors.featureNamingPattern;
+            } catch (e) {
+                errors.featureNamingPattern = 'Invalid regular expression';
             }
-        };
+        }
+        setFeatureNamingPattern?.(regex);
+        updateNamingExampleError({
+            pattern: regex,
+            example: featureNamingExample || '',
+        });
+    };
 
-        const onSetFeatureNamingPattern = (regex: string) => {
-            const disallowedStrings = [
-                ' ',
-                '\\t',
-                '\\s',
-                '\\n',
-                '\\r',
-                '\\f',
-                '\\v',
-            ];
-            if (
-                disallowedStrings.some((blockedString) =>
-                    regex.includes(blockedString),
-                )
-            ) {
-                errors.featureNamingPattern =
-                    'Whitespace is not allowed in the expression';
-            } else {
-                try {
-                    new RegExp(regex);
-                    delete errors.featureNamingPattern;
-                } catch (e) {
-                    errors.featureNamingPattern = 'Invalid regular expression';
-                }
-            }
-            setFeatureNamingPattern?.(regex);
-            updateNamingExampleError({
-                pattern: regex,
-                example: featureNamingExample || '',
-            });
-        };
+    const onSetFeatureNamingExample = (example: string) => {
+        setFeatureNamingExample?.(example);
+        updateNamingExampleError({
+            pattern: featureNamingPattern || '',
+            example,
+        });
+    };
 
-        const onSetFeatureNamingExample = (example: string) => {
-            setFeatureNamingExample?.(example);
-            updateNamingExampleError({
-                pattern: featureNamingPattern || '',
-                example,
-            });
-        };
+    const onSetFeatureNamingDescription = (description: string) => {
+        setFeatureNamingDescription?.(description);
+    };
 
-        const onSetFeatureNamingDescription = (description: string) => {
-            setFeatureNamingDescription?.(description);
-        };
-
-        return (
-            <StyledForm
-                onSubmit={(submitEvent) => {
-                    handleSubmit(submitEvent);
-                    trackPattern(featureNamingPattern);
-                }}
-            >
-                <>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 1,
-                            gap: 1,
+    return (
+        <StyledForm
+            onSubmit={(submitEvent) => {
+                handleSubmit(submitEvent);
+                trackPattern(featureNamingPattern);
+            }}
+        >
+            <>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: 1,
+                        gap: 1,
+                    }}
+                >
+                    <p>What is your project collaboration mode?</p>
+                    <CollaborationModeTooltip />
+                </Box>
+                <StyledSelect
+                    id='project-mode'
+                    value={projectMode}
+                    label='Project collaboration mode'
+                    name='Project collaboration mode'
+                    onChange={(e) => {
+                        setProjectMode?.(e.target.value as ProjectMode);
+                    }}
+                    options={projectModeOptions}
+                />
+            </>
+            <StyledFieldset>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: 1,
+                        gap: 1,
+                    }}
+                >
+                    <legend>Feature flag naming pattern?</legend>
+                    <FeatureFlagNamingTooltip />
+                </Box>
+                <StyledSubtitle>
+                    <StyledPatternNamingExplanation id='pattern-naming-description'>
+                        <p>
+                            Define a{' '}
+                            <a
+                                href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                JavaScript RegEx
+                            </a>{' '}
+                            used to enforce feature flag names within this
+                            project. The regex will be surrounded by a leading{' '}
+                            <code>^</code> and a trailing <code>$</code>.
+                        </p>
+                        <p>
+                            Leave it empty if you don’t want to add a naming
+                            pattern.
+                        </p>
+                    </StyledPatternNamingExplanation>
+                </StyledSubtitle>
+                <StyledFlagNamingContainer>
+                    <StyledInput
+                        label={'Naming Pattern'}
+                        name='feature flag naming pattern'
+                        aria-describedby='pattern-naming-description'
+                        placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    ^
+                                </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment position='end'>
+                                    $
+                                </InputAdornment>
+                            ),
                         }}
-                    >
-                        <p>What is your project collaboration mode?</p>
-                        <CollaborationModeTooltip />
-                    </Box>
-                    <StyledSelect
-                        id='project-mode'
-                        value={projectMode}
-                        label='Project collaboration mode'
-                        name='Project collaboration mode'
-                        onChange={(e) => {
-                            setProjectMode?.(e.target.value as ProjectMode);
-                        }}
-                        options={projectModeOptions}
+                        type={'text'}
+                        value={featureNamingPattern || ''}
+                        error={Boolean(errors.featureNamingPattern)}
+                        errorText={errors.featureNamingPattern}
+                        onChange={(e) =>
+                            onSetFeatureNamingPattern(e.target.value)
+                        }
                     />
-                </>
-                <StyledFieldset>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 1,
-                            gap: 1,
-                        }}
-                    >
-                        <legend>Feature flag naming pattern?</legend>
-                        <FeatureFlagNamingTooltip />
-                    </Box>
                     <StyledSubtitle>
-                        <StyledPatternNamingExplanation id='pattern-naming-description'>
-                            <p>
-                                Define a{' '}
-                                <a
-                                    href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    JavaScript RegEx
-                                </a>{' '}
-                                used to enforce feature flag names within this
-                                project. The regex will be surrounded by a
-                                leading <code>^</code> and a trailing{' '}
-                                <code>$</code>.
-                            </p>
-                            <p>
-                                Leave it empty if you don’t want to add a naming
-                                pattern.
-                            </p>
-                        </StyledPatternNamingExplanation>
+                        <p id='pattern-additional-description'>
+                            The example and description will be shown to users
+                            when they create a new feature flag in this project.
+                        </p>
                     </StyledSubtitle>
-                    <StyledFlagNamingContainer>
-                        <StyledInput
-                            label={'Naming Pattern'}
-                            name='feature flag naming pattern'
-                            aria-describedby='pattern-naming-description'
-                            placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position='start'>
-                                        ^
-                                    </InputAdornment>
-                                ),
-                                endAdornment: (
-                                    <InputAdornment position='end'>
-                                        $
-                                    </InputAdornment>
-                                ),
-                            }}
-                            type={'text'}
-                            value={featureNamingPattern || ''}
-                            error={Boolean(errors.featureNamingPattern)}
-                            errorText={errors.featureNamingPattern}
-                            onChange={(e) =>
-                                onSetFeatureNamingPattern(e.target.value)
-                            }
-                        />
-                        <StyledSubtitle>
-                            <p id='pattern-additional-description'>
-                                The example and description will be shown to
-                                users when they create a new feature flag in
-                                this project.
-                            </p>
-                        </StyledSubtitle>
 
-                        <StyledInput
-                            label={'Naming Example'}
-                            name='feature flag naming example'
-                            type={'text'}
-                            aria-describedby='pattern-additional-description'
-                            value={featureNamingExample || ''}
-                            placeholder='dx.feature1.1-135'
-                            error={Boolean(errors.namingExample)}
-                            errorText={errors.namingExample}
-                            onChange={(e) =>
-                                onSetFeatureNamingExample(e.target.value)
-                            }
-                        />
-                        <StyledTextField
-                            label={'Naming pattern description'}
-                            name='feature flag naming description'
-                            type={'text'}
-                            aria-describedby='pattern-additional-description'
-                            placeholder={`<project>.<featureName>.<ticket>
+                    <StyledInput
+                        label={'Naming Example'}
+                        name='feature flag naming example'
+                        type={'text'}
+                        aria-describedby='pattern-additional-description'
+                        value={featureNamingExample || ''}
+                        placeholder='dx.feature1.1-135'
+                        error={Boolean(errors.namingExample)}
+                        errorText={errors.namingExample}
+                        onChange={(e) =>
+                            onSetFeatureNamingExample(e.target.value)
+                        }
+                    />
+                    <StyledTextField
+                        label={'Naming pattern description'}
+                        name='feature flag naming description'
+                        type={'text'}
+                        aria-describedby='pattern-additional-description'
+                        placeholder={`<project>.<featureName>.<ticket>
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}
-                            multiline
-                            minRows={5}
-                            value={featureNamingDescription || ''}
-                            onChange={(e) =>
-                                onSetFeatureNamingDescription(e.target.value)
-                            }
-                        />
-                    </StyledFlagNamingContainer>
-                </StyledFieldset>
-                <StyledButtonContainer>{children}</StyledButtonContainer>
-            </StyledForm>
-        );
-    };
+                        multiline
+                        minRows={5}
+                        value={featureNamingDescription || ''}
+                        onChange={(e) =>
+                            onSetFeatureNamingDescription(e.target.value)
+                        }
+                    />
+                </StyledFlagNamingContainer>
+            </StyledFieldset>
+            <StyledButtonContainer>{children}</StyledButtonContainer>
+        </StyledForm>
+    );
+};
 
 export default ProjectEnterpriseSettingsForm;

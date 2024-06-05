@@ -93,7 +93,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
         {
             userId,
             searchParams,
-            type,
             status,
             offset,
             limit,
@@ -175,10 +174,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'features.description',
                 ]);
 
-                if (type) {
-                    query.whereIn('features.type', type);
-                }
-
                 if (status && status.length > 0) {
                     query.where((builder) => {
                         for (const [envName, envStatus] of status) {
@@ -188,7 +183,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                                     envName,
                                 ).andWhere(
                                     'feature_environments.enabled',
-                                    envStatus === 'enabled' ? true : false,
+                                    envStatus === 'enabled',
                                 );
                             });
                         }

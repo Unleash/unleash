@@ -12,7 +12,7 @@ export type NotificationsSchemaItem = {
     createdBy: NotificationsSchemaItemCreatedBy;
     /** The id of this notification */
     id: number;
-    /** The link to change request or feature toggle the notification refers to */
+    /** The link to change request or feature flag the notification refers to */
     link: string;
     /** The actual notification message */
     message: string;

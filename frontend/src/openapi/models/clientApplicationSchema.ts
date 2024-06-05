@@ -12,7 +12,7 @@ export interface ClientApplicationSchema {
     /** An identifier for the app that uses the sdk, should be static across SDK restarts */
     appName: string;
     /**
-     * The SDK's configured 'environment' property. Deprecated. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.
+     * The SDK's configured 'environment' property. This property was deprecated in v5. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.
      * @deprecated
      */
     environment?: string;

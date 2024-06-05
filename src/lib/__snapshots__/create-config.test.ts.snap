@@ -81,6 +81,7 @@ exports[`should create default config 1`] = `
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
       "collectTrafficDataUsage": false,
+      "commandBarUI": false,
       "createProjectWithEnvironmentConfig": false,
       "debugMetrics": false,
       "demo": false,

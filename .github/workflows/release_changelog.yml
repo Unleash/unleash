@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - name: Build changelog
         id: github_release
         uses: metcalfc/changelog-generator@v4.3.1

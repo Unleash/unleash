@@ -24,7 +24,7 @@ export interface CreateUserResponseSchema {
     /** If the user is actively inviting other users, this is the link that can be shared with other users */
     inviteLink?: string;
     /**
-     * (Deprecated): Used internally to know which operations the user should be allowed to perform
+     * Deprecated in v5. Used internally to know which operations the user should be allowed to perform
      * @deprecated
      */
     isAPI?: boolean;

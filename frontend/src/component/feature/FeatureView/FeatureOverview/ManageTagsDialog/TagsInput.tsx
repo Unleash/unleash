@@ -2,7 +2,6 @@ import {
     Autocomplete,
     type AutocompleteProps,
     Checkbox,
-    Chip,
     createFilterOptions,
     type FilterOptionsState,
     TextField,
@@ -14,7 +13,6 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import type { ITag, ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Add from '@mui/icons-material/Add';
-import type { AutocompleteRenderGetTagProps } from '@mui/material/Autocomplete/Autocomplete';
 
 export type TagOption = {
     title: string;
@@ -88,34 +86,23 @@ export const TagsInput = ({
         );
     };
 
-    const renderTags = (
-        tagValue: TagOption[],
-        getTagProps: AutocompleteRenderGetTagProps,
-    ) =>
-        tagValue.map((option, index) => {
-            const exists = existingTags.some(
-                (existingTag) =>
-                    existingTag.value === option.title &&
-                    existingTag.type === tagType.name,
-            );
-            if (exists && indeterminateOptions === undefined) {
-                return null;
-            }
-            return <Chip {...getTagProps({ index })} label={option.title} />;
-        });
-
     const filterOptions = (
         options: TagOption[],
         params: FilterOptionsState<TagOption>,
     ) => {
-        const filtered = filter(options, params);
+        const inputValue = params.inputValue.trim();
 
-        const { inputValue } = params;
+        const filtered = filter(options, {
+            ...params,
+            inputValue,
+        });
+
         // Suggest the creation of a new value
         const isExisting = options.some(
             (option) => inputValue === option.title,
         );
-        if (inputValue !== '' && !isExisting) {
+
+        if (inputValue.length >= 2 && !isExisting) {
             filtered.push({
                 inputValue,
                 title: `Create new value "${inputValue}"`,
@@ -133,7 +120,6 @@ export const TagsInput = ({
             disableCloseOnSelect
             options={options}
             value={selectedOptions}
-            renderTags={renderTags}
             isOptionEqualToValue={(option, value) => {
                 if (value.inputValue && value.inputValue !== '') {
                     return option.title === value.inputValue;

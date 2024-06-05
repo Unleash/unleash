@@ -57,6 +57,7 @@ export const useDefaultColumnVisibility = (allColumnIds: string[]) => {
         'lastSeenAt',
         ...(featureLifecycleEnabled ? ['lifecycle'] : []),
         'createdAt',
+        'createdBy',
         'type',
         'tags',
         ...showEnvironments(3),

@@ -19,6 +19,7 @@ import type {
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams, applySearchFilters } from './search-utils';
 import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
+import { generateImageUrl } from '../../util';
 
 const sortEnvironments = (overview: IFeatureOverview[]) => {
     return overview.map((data: IFeatureOverview) => ({
@@ -404,6 +405,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
             if (!entry) {
                 // Create a new entry
+                const name =
+                    row.user_name ||
+                    row.user_username ||
+                    row.user_email ||
+                    'unknown';
                 entry = {
                     type: row.type,
                     description: row.description,
@@ -419,12 +425,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     segments: row.segment_name ? [row.segment_name] : [],
                     createdBy: {
                         id: Number(row.user_id),
-                        name:
-                            row.user_name ||
-                            row.user_username ||
-                            row.user_email ||
-                            'unknown',
-                        imageUrl: row.user_image_url,
+                        name: name,
+                        imageUrl: generateImageUrl({
+                            id: row.user_id,
+                            email: row.user_email,
+                            username: name,
+                        }),
                     },
                 };
                 if (featureLifecycleEnabled) {

@@ -21,6 +21,7 @@ export const featureSearchResponseSchema = {
         'favorite',
         'impressionData',
         'createdAt',
+        'createdBy',
         'environments',
         'segments',
     ],

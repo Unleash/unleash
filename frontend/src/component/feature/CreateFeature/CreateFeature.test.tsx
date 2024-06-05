@@ -32,6 +32,7 @@ describe('flag name validation', () => {
                 },
             ],
         };
+
         testServerRoute(
             server,
             '/api/admin/features/validate',
@@ -39,6 +40,7 @@ describe('flag name validation', () => {
             'post',
             400,
         );
+
         renderForm();
 
         const nameInput = await screen.findByLabelText(/name/i);

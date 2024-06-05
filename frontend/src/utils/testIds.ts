@@ -101,3 +101,4 @@ export const MORE_BATCH_ACTIONS = 'MORE_BATCH_ACTIONS';
 
 /* FILTERS */
 export const FILTERS_MENU = 'FILTERS_MENU';
+export const FILTER_ITEM = 'FILTER_ITEM';

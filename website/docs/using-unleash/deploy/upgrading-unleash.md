@@ -7,13 +7,13 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 ## Upgrading to v6 from v5
 
-[Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you have followed the previous migration guides on this page. We're removing some features that were deprecated in version 5, and deprecating some features that will continue to be supported during v6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:
+[Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you have followed the previous migration guides on this page. We're removing some features that were deprecated in version 5 and marking some features as deprecated, but these will continue to be supported during version 6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:
 
 ### Remove Passport libs from the official open source Docker distribution
 
 *If you're not using the official open source image, you can safely ignore this change.* 
 
-The [official open source docker image](https://hub.docker.com/r/unleashorg/unleash-server) stop including these libraries which are custom authentication. If you're using this feature, there is a [community image](https://github.com/Unleash/unleash-docker-community) which adds these dependencies. 
+The [official open source Docker image](https://hub.docker.com/r/unleashorg/unleash-server) no longer includes these custom authentication libraries. If you're using this feature, there is a [community image](https://github.com/Unleash/unleash-docker-community) that contains (and will continue to contain) these dependencies. 
 
 ### Drop support for PostgreSQL versions 10, 11 and 12
 
@@ -29,11 +29,11 @@ Unleash v6 drops support for Node.js versions below 20, which is the [active LTS
 
 *If you're not using Unleash Edge, you can safely ignore this change.*
 
-If you're using Unleash Edge to connect to Unleash, make sure to first upgrade Unleash Edge to version 19.1.3 or above.
+If you're using Unleash Edge to connect to Unleash, make sure to first upgrade Unleash Edge to version 19.1.3 or above. If you're using an older version of Edge, the core feature flag functionality will still work, but you will not be able to gather any metrics.
 
 ### Remove legacy `/api/feature` endpoint
 
-If you're still using this endpoint, check out the [deprecation notice in v4](#4-legacy-v2-routes-removed)
+If you're still using this endpoint, check out the [deprecation notice in v4](#4-legacy-v2-routes-removed).
 
 ### Remove deprecated [import service](../../how-to/how-to-import-export)
 
@@ -44,7 +44,7 @@ For a comparison between the two, refer to the [environment import/export vs ins
 
 ### Deprecate custom strategies
 
-The downside of using a custom strategies is that you need to write and distribute the code for your strategy to your Unleash client SDKs. On the other hand, [strategy constraints](../../reference/strategy-constraints) work without any extra code or maintenance. In most cases [strategy constraints](../../reference/strategy-constraints) provides all the control you need without the additional complexity. 
+Using custom strategies has the drawback of requiring you to distribute the strategy's code with the Unleash client SDK. In contrast, [strategy constraints](../../reference/strategy-constraints) function without needing additional code or maintenance. In most cases, [strategy constraints](../../reference/strategy-constraints) offer sufficient control you need without added complexity. 
 
 If you can't accomplish the same functionality with strategy constraints, please let us know about your use case on [Slack](https://slack.unleash.run/).
 

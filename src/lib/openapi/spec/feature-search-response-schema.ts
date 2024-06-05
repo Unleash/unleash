@@ -198,7 +198,6 @@ export const featureSearchResponseSchema = {
                     description: `URL used for the user profile image`,
                     type: 'string',
                     example: 'https://example.com/242x200.png',
-                    nullable: true,
                 },
             },
         },

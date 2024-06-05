@@ -177,8 +177,7 @@ export const ProjectFeatureToggles = ({
                             user={{
                                 id: original.createdBy.id,
                                 name: original.createdBy.name,
-                                imageUrl:
-                                    original.createdBy.imageUrl ?? undefined,
+                                imageUrl: original.createdBy.imageUrl,
                             }}
                         />
                     );
@@ -330,7 +329,7 @@ export const ProjectFeatureToggles = ({
                     createdBy: {
                         id: 0,
                         name: '',
-                        imageUrl: null,
+                        imageUrl: '',
                     },
                     dependencyType: null,
                     favorite: false,

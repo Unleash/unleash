@@ -14,7 +14,7 @@ export type FeatureSearchResponseSchemaCreatedBy = {
      * URL used for the user profile image
      * @nullable
      */
-    imageUrl: string | null;
+    imageUrl: string;
     /** Name of the user */
     name: string;
 };

@@ -35,6 +35,7 @@ export const GroupPopover = ({
             anchorEl={anchorEl}
             onClose={onPopoverClose}
             disableScrollLock={true}
+            disableRestoreFocus={true}
             anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'left',

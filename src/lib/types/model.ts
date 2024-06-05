@@ -247,6 +247,11 @@ export type IFeatureSearchOverview = Exclude<
 > & {
     dependencyType: 'parent' | 'child' | null;
     environments: FeatureSearchEnvironmentSchema[];
+    createdBy: {
+        id: number;
+        name: string;
+        imageUrl?: string;
+    };
 };
 
 export interface IFeatureTypeCount {

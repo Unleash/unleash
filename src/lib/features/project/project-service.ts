@@ -78,6 +78,7 @@ import type {
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
 } from './project-store-type';
+import type { IProjectWithCountAndOwners } from './project-owners-read-model.type';
 
 type Days = number;
 type Count = number;
@@ -225,7 +226,7 @@ export default class ProjectService {
 
     async addOwnersToProjects(
         projects: IProjectWithCount[],
-    ): Promise<IProjectWithCount[]> {
+    ): Promise<IProjectWithCountAndOwners[]> {
         return this.projectOwnersReadModel.addOwners(projects);
     }
 

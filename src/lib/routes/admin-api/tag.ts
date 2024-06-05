@@ -95,7 +95,7 @@ class TagController extends Controller {
                         ),
                         ...getStandardResponses(400, 401, 403, 409, 415),
                     },
-                    requestBody: createRequestSchema('tagSchema'),
+                    requestBody: createRequestSchema('createTagSchema'),
                 }),
             ],
         });

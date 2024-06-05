@@ -47,6 +47,10 @@ The downside of using a custom strategies is that you need to distribute the cod
 
 If you can't accomplish the same functionality with strategy constraints, please, let us know about your use case on [Slack](https://slack.unleash.run/)
 
+### Dropping Internet Explorer (IE) Support
+
+With Unleash v6, Internet Explorer is no longer supported. React v18, used in Unleash, has dropped support for IE, aligning with Microsoft's end of support for IE on June 15, 2022. Users are encouraged to switch to modern browsers for the best experience.
+
 ## Upgrading to 5.7 and later from versions < 5.6.11
 
 When running on high-availability (multiple Unleash instances), upgrading from versions lower than 5.6.11 to version 5.7 or higher will cause a temporary UI unavailability while old versions and new versions are both serving traffic, due to a compatibility issue. If you can afford having a small period of time with the UI unavailable (note the SDKs will not be affected), then  you can safely upgrade.

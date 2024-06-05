@@ -33,8 +33,8 @@ export interface CreateProjectSchema {
     /** A mode of the project affecting what actions are possible in this project */
     mode?: CreateProjectSchemaMode;
     /**
-     * The project's name.
-     * @minLength 1
+     * The project's name. The name must contain at least one non-whitespace character.
+     * @pattern ^(?!\s*$).+
      */
     name: string;
 }

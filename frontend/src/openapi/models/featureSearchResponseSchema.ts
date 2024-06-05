@@ -43,7 +43,7 @@ export interface FeatureSearchResponseSchema {
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData: boolean;
     /**
-     * The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema
+     * The date when metrics where last collected for the feature. This field was deprecated in v5 and will be removed in a future release, use the one in featureEnvironmentSchema
      * @deprecated
      * @nullable
      */
@@ -59,7 +59,7 @@ export interface FeatureSearchResponseSchema {
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
     stale: boolean;
     /**
-     * This is a legacy field that will be deprecated
+     * This is a legacy field that was deprecated in v5
      * @deprecated
      */
     strategies?: FeatureSearchResponseSchemaStrategiesItem[];
@@ -71,7 +71,7 @@ export interface FeatureSearchResponseSchema {
     /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type: string;
     /**
-     * The list of feature variants
+     * The list of feature variants. This field was deprecated in v5
      * @deprecated
      */
     variants?: VariantSchema[];

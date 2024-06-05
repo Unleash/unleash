@@ -549,6 +549,7 @@ export * from './featureSchemaLifecycleStage';
 export * from './featureSchemaStrategiesItem';
 export * from './featureSearchEnvironmentSchema';
 export * from './featureSearchResponseSchema';
+export * from './featureSearchResponseSchemaCreatedBy';
 export * from './featureSearchResponseSchemaDependencyType';
 export * from './featureSearchResponseSchemaLifecycle';
 export * from './featureSearchResponseSchemaLifecycleStage';

@@ -2,6 +2,520 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.0] - 2024-06-06
+
+### Bug Fixes
+
+- Badge should render children 0 value ([#6981](https://github.com/Unleash/unleash/issues/6981))
+
+- Duplicate column name in search query ([#6989](https://github.com/Unleash/unleash/issues/6989))
+
+- Remove columns from the search api query ([#6996](https://github.com/Unleash/unleash/issues/6996))
+
+- Update dependencies in OSS docker file
+
+- Optimize table placeholder loading ([#7002](https://github.com/Unleash/unleash/issues/7002))
+
+- Move slug to real deps ([#7004](https://github.com/Unleash/unleash/issues/7004))
+
+- Removed dupliacted component ([#7013](https://github.com/Unleash/unleash/issues/7013))
+
+- Fix prometheus metrics for lifecycle ([#7030](https://github.com/Unleash/unleash/issues/7030))
+
+- Adjust meta data icons ([#7026](https://github.com/Unleash/unleash/issues/7026))
+
+- Center last seen column ([#7035](https://github.com/Unleash/unleash/issues/7035))
+
+- Make the project submission work from the project creation modal ([#7040](https://github.com/Unleash/unleash/issues/7040))
+
+- Lifecycle improvements/fixes ([#7044](https://github.com/Unleash/unleash/issues/7044))
+
+- Make name validation work properly. ([#7042](https://github.com/Unleash/unleash/issues/7042))
+
+- Omit yes no from stale data comparison ([#7052](https://github.com/Unleash/unleash/issues/7052))
+
+- Add appropriate response headers to SPA entry point HTML response ([#6992](https://github.com/Unleash/unleash/issues/6992))
+
+- Loading is causing a glitch that changes the size of the dialog for a split second ([#7062](https://github.com/Unleash/unleash/issues/7062))
+
+- Disable the create button when api call is made ([#7063](https://github.com/Unleash/unleash/issues/7063))
+
+- Bearer tokens with base-path ([#7065](https://github.com/Unleash/unleash/issues/7065))
+
+- Reached stage should emit feature name ([#7068](https://github.com/Unleash/unleash/issues/7068))
+
+- New strategy using default strategy ([#7075](https://github.com/Unleash/unleash/issues/7075))
+
+- Refresh project after import ([#7082](https://github.com/Unleash/unleash/issues/7082))
+
+- Make numbers in chart to locale string ([#7084](https://github.com/Unleash/unleash/issues/7084))
+
+- Deprecate useProjectNameOrId ([#7086](https://github.com/Unleash/unleash/issues/7086))
+
+- Small improvements ([#7090](https://github.com/Unleash/unleash/issues/7090))
+
+- Also check includedTraffic before calculating overage and showing warning ([#7091](https://github.com/Unleash/unleash/issues/7091))
+
+- No requests before project loaded ([#7096](https://github.com/Unleash/unleash/issues/7096))
+
+- Don't send change request info unless using the new form ([#7102](https://github.com/Unleash/unleash/issues/7102))
+
+- Make dialog the right height and make it scroll if it's smaller ([#7103](https://github.com/Unleash/unleash/issues/7103))
+
+- Set min-height on dropdown item list ([#7106](https://github.com/Unleash/unleash/issues/7106))
+
+- Prevent single-select lists from reopening when you select an item from the search bar ([#7111](https://github.com/Unleash/unleash/issues/7111))
+
+- Add accessible descriptions to the dropdowns ([#7112](https://github.com/Unleash/unleash/issues/7112))
+
+- Minor UI adjustments ([#7117](https://github.com/Unleash/unleash/issues/7117))
+
+- Make CR button wider always ([#7173](https://github.com/Unleash/unleash/issues/7173))
+
+- Change request environment selector button label ([#7176](https://github.com/Unleash/unleash/issues/7176))
+
+- Attempt a react friendly fix of summing ([#7151](https://github.com/Unleash/unleash/issues/7151))
+
+- Use a fixed-width button label for CR selector in new project creation form ([#7179](https://github.com/Unleash/unleash/issues/7179))
+
+- Fix empty events when no features need to be deleted ([#7181](https://github.com/Unleash/unleash/issues/7181))
+
+- CR button shows docs for change requests when selected ([#7196](https://github.com/Unleash/unleash/issues/7196))
+
+- Get rid of horizontal scrollbar on narrow screens in CreateProjectDialog ([#7198](https://github.com/Unleash/unleash/issues/7198))
+
+- Footer overflow ([#7203](https://github.com/Unleash/unleash/issues/7203))
+
+- Show 2 insights components to pro ([#7207](https://github.com/Unleash/unleash/issues/7207))
+
+- Sort segments before comparing in cr diff calculations ([#7202](https://github.com/Unleash/unleash/issues/7202))
+
+- When finding median time to production, ignore 0s ([#7200](https://github.com/Unleash/unleash/issues/7200))
+
+- Handle long owner names for projects ([#7215](https://github.com/Unleash/unleash/issues/7215))
+
+- Handle long names in new project card footers ([#7216](https://github.com/Unleash/unleash/issues/7216))
+
+- Handle overflowing avatars in the new project card ([#7217](https://github.com/Unleash/unleash/issues/7217))
+
+- Correctly align project card info when some cards have multi-line names ([#7223](https://github.com/Unleash/unleash/issues/7223))
+
+- Increase performance of outdated SDK query ([#7226](https://github.com/Unleash/unleash/issues/7226))
+
+- Demo steps should search the main table ([#7227](https://github.com/Unleash/unleash/issues/7227))
+
+- Created by on application-created adds the ip as created by ([#7231](https://github.com/Unleash/unleash/issues/7231))
+
+- Update dependency memoizee to v0.4.17 ([#7236](https://github.com/Unleash/unleash/issues/7236))
+
+- Update dependency unleash-client to v5.5.3 ([#7237](https://github.com/Unleash/unleash/issues/7237))
+
+- Prevent jumping content navbar switch ([#7232](https://github.com/Unleash/unleash/issues/7232))
+
+- Mobile menu font size ([#7252](https://github.com/Unleash/unleash/issues/7252))
+
+- Resolve tar to 6.2.1 ([#7256](https://github.com/Unleash/unleash/issues/7256))
+
+- Hide insights from sidebar for oss and kill switch ([#7270](https://github.com/Unleash/unleash/issues/7270))
+
+- Import export pointing to new docs ([#7274](https://github.com/Unleash/unleash/issues/7274))
+
+- Display previously selected tags in dialog ([#7271](https://github.com/Unleash/unleash/issues/7271))
+
+- Disallow invalid tag values ([#7268](https://github.com/Unleash/unleash/issues/7268))
+
+- Trying to create a tag that's too short gives errors ([#7269](https://github.com/Unleash/unleash/issues/7269))
+
+- Involuntarily scrolled to the top when mousing off group/project avatars ([#7287](https://github.com/Unleash/unleash/issues/7287))
+
+- Trim sso URL fields ([#7301](https://github.com/Unleash/unleash/issues/7301)) ([#7303](https://github.com/Unleash/unleash/issues/7303))
+
+
+### Chore
+
+- Visually hide labels in the create project form ([#7015](https://github.com/Unleash/unleash/issues/7015))
+
+
+### Docs
+
+- Add Java YouTube Tutorial Video ([#7059](https://github.com/Unleash/unleash/issues/7059))
+
+
+### Documentation
+
+- Update feature availability ([#6971](https://github.com/Unleash/unleash/issues/6971))
+
+- Make sure we use latest axios
+
+- Add Python YouTube Video tutorial ([#7033](https://github.com/Unleash/unleash/issues/7033))
+
+- Feature lifecycle ([#7034](https://github.com/Unleash/unleash/issues/7034))
+
+- Optimizing AWS Lambda Documentation ([#6991](https://github.com/Unleash/unleash/issues/6991))
+
+- Add spring boot video to tutorial ([#7098](https://github.com/Unleash/unleash/issues/7098))
+
+- Update quickstart and tutorials with flag reference ([#7142](https://github.com/Unleash/unleash/issues/7142))
+
+- Okta SCIM setup ([#7130](https://github.com/Unleash/unleash/issues/7130))
+
+- Add more clarification on when to use sx vs styled ([#7209](https://github.com/Unleash/unleash/issues/7209))
+
+
+### Features
+
+- Add completed event as webhook event ([#6968](https://github.com/Unleash/unleash/issues/6968))
+
+- Search order by final ([#6976](https://github.com/Unleash/unleash/issues/6976))
+
+- Merge feature toggle details with feature meta info box ([#6977](https://github.com/Unleash/unleash/issues/6977))
+
+- Configure CRs when creating projects ([#6979](https://github.com/Unleash/unleash/issues/6979))
+
+- Start exposing environment metrics from feature endpoint ([#6986](https://github.com/Unleash/unleash/issues/6986))
+
+- Show documentation relating to the specific thing your configuring in the new project form ([#6993](https://github.com/Unleash/unleash/issues/6993))
+
+- Create initial stages for features ([#6983](https://github.com/Unleash/unleash/issues/6983))
+
+- Pass metrics to feature component ([#6994](https://github.com/Unleash/unleash/issues/6994))
+
+- Increase possible number range for yes/no metrics ([#6995](https://github.com/Unleash/unleash/issues/6995))
+
+- Allow to use CA certificate file path for DB ([#6985](https://github.com/Unleash/unleash/issues/6985))
+
+- Duration in stage, add feature lifecycle prometheus metrics ([#6973](https://github.com/Unleash/unleash/issues/6973))
+
+- Generate project ids if they're missing ([#7003](https://github.com/Unleash/unleash/issues/7003))
+
+- Completed stage lists all environments ([#7007](https://github.com/Unleash/unleash/issues/7007))
+
+- Lifecycle is now navigatable by tab ([#7005](https://github.com/Unleash/unleash/issues/7005))
+
+- Add project id to prometheus and feature flag ([#7008](https://github.com/Unleash/unleash/issues/7008))
+
+- Front end can create projects without ids ([#7009](https://github.com/Unleash/unleash/issues/7009))
+
+- Add status fields for feature lifecycle table ([#7014](https://github.com/Unleash/unleash/issues/7014))
+
+- Feature lifecycle completed schema ([#7021](https://github.com/Unleash/unleash/issues/7021))
+
+- Expose lifecycle stage in project overview search ([#7017](https://github.com/Unleash/unleash/issues/7017))
+
+- Add completed status backend ([#7022](https://github.com/Unleash/unleash/issues/7022))
+
+- Lifecycle in project overview ([#7024](https://github.com/Unleash/unleash/issues/7024))
+
+- Mark completed ui selector ([#7025](https://github.com/Unleash/unleash/issues/7025))
+
+- Create project dialog ([#7012](https://github.com/Unleash/unleash/issues/7012))
+
+- Pre-live should include disabled prod ([#7031](https://github.com/Unleash/unleash/issues/7031))
+
+- Lifecycle prometheus metrics per project ([#7032](https://github.com/Unleash/unleash/issues/7032))
+
+- Webhook data for completed ([#7043](https://github.com/Unleash/unleash/issues/7043))
+
+- Kept and discarded read model ([#7045](https://github.com/Unleash/unleash/issues/7045))
+
+- Expose postgres version ([#7041](https://github.com/Unleash/unleash/issues/7041))
+
+- Track complete event ([#7047](https://github.com/Unleash/unleash/issues/7047))
+
+- Lifecycle column extracted ([#7049](https://github.com/Unleash/unleash/issues/7049))
+
+- Uncomplete tracking ([#7053](https://github.com/Unleash/unleash/issues/7053))
+
+- Backfill current stage on startup ([#7057](https://github.com/Unleash/unleash/issues/7057))
+
+- Move SCIM config into separate tab ([#7055](https://github.com/Unleash/unleash/issues/7055))
+
+- Deprecate feature toggle variants at environment level ([#7058](https://github.com/Unleash/unleash/issues/7058))
+
+- Deprecate feature toggle environment variants api ([#7066](https://github.com/Unleash/unleash/issues/7066))
+
+- Refactor data usage into hooks, estimate monthly added fees ([#7048](https://github.com/Unleash/unleash/issues/7048))
+
+- Outdated sdks project level ([#7080](https://github.com/Unleash/unleash/issues/7080))
+
+- Project level outdated sdks, project level banner ([#7083](https://github.com/Unleash/unleash/issues/7083))
+
+- Switch to hook without features list ([#7085](https://github.com/Unleash/unleash/issues/7085))
+
+- Add global isAdmin method for access service ([#7088](https://github.com/Unleash/unleash/issues/7088))
+
+- Add prometheus metrics error logging ([#7105](https://github.com/Unleash/unleash/issues/7105))
+
+- Debug metrics flag ([#7108](https://github.com/Unleash/unleash/issues/7108))
+
+- Show docs with icons in sidebar ([#7109](https://github.com/Unleash/unleash/issues/7109))
+
+- Rename toggle to flag with db migration ([#7118](https://github.com/Unleash/unleash/issues/7118))
+
+- Navigation sidebar stub ([#7121](https://github.com/Unleash/unleash/issues/7121))
+
+- Plan specific navigation ([#7126](https://github.com/Unleash/unleash/issues/7126))
+
+- Mini navigation sidebar ([#7131](https://github.com/Unleash/unleash/issues/7131))
+
+- Navigation switch ([#7132](https://github.com/Unleash/unleash/issues/7132))
+
+- New mobile sidebar ([#7135](https://github.com/Unleash/unleash/issues/7135))
+
+- Add ip to state-service and group-service ([#7120](https://github.com/Unleash/unleash/issues/7120))
+
+- More spacious layout ([#7138](https://github.com/Unleash/unleash/issues/7138))
+
+- Hide top nav ([#7140](https://github.com/Unleash/unleash/issues/7140))
+
+- Persist navigation settings ([#7144](https://github.com/Unleash/unleash/issues/7144))
+
+- Upgrade make fetch happen ([#7147](https://github.com/Unleash/unleash/issues/7147))
+
+- Error log on unsupported pg ([#7139](https://github.com/Unleash/unleash/issues/7139))
+
+- Adjust change request banner for new layout ([#7160](https://github.com/Unleash/unleash/issues/7160))
+
+- Add remote ip to all events (2) ([#7149](https://github.com/Unleash/unleash/issues/7149))
+
+- User profile preview ([#7150](https://github.com/Unleash/unleash/issues/7150))
+
+- UI tweak new sidebar ([#7165](https://github.com/Unleash/unleash/issues/7165))
+
+- Persist expand collapse ([#7169](https://github.com/Unleash/unleash/issues/7169))
+
+- Currently selected nav item ([#7182](https://github.com/Unleash/unleash/issues/7182))
+
+- Sidebar nav tweaks ([#7185](https://github.com/Unleash/unleash/issues/7185))
+
+- Content padding matches top nav ([#7187](https://github.com/Unleash/unleash/issues/7187))
+
+- Project insights out of beta ([#7188](https://github.com/Unleash/unleash/issues/7188))
+
+- Last viewed project ([#7191](https://github.com/Unleash/unleash/issues/7191))
+
+- Expand admin settings ([#7192](https://github.com/Unleash/unleash/issues/7192))
+
+- Insights docs ([#7189](https://github.com/Unleash/unleash/issues/7189))
+
+- Smart sticky expand/hide button ([#7201](https://github.com/Unleash/unleash/issues/7201))
+
+- Insights out of beta and expose 2 widgets to pro ([#7177](https://github.com/Unleash/unleash/issues/7177))
+
+- Remove accordion line ([#7205](https://github.com/Unleash/unleash/issues/7205))
+
+- Synced last viewed projects ([#7208](https://github.com/Unleash/unleash/issues/7208))
+
+- Move demo to the right ([#7212](https://github.com/Unleash/unleash/issues/7212))
+
+- Recent flags ([#7211](https://github.com/Unleash/unleash/issues/7211))
+
+- Add tooltips to new project creation form config buttons ([#7213](https://github.com/Unleash/unleash/issues/7213))
+
+- Now CLIENT_METRICS event will be emitted with new structure ([#7210](https://github.com/Unleash/unleash/issues/7210))
+
+- File import ([#7219](https://github.com/Unleash/unleash/issues/7219))
+
+- Align list items on mode switch ([#7229](https://github.com/Unleash/unleash/issues/7229))
+
+- New sidebar by default for OSS ([#7239](https://github.com/Unleash/unleash/issues/7239))
+
+- Explain stickiness ([#7248](https://github.com/Unleash/unleash/issues/7248))
+
+- Project health chart now goes from 0 to 100 to give perspective ([#7249](https://github.com/Unleash/unleash/issues/7249))
+
+- Clickable tags in project overview ([#7263](https://github.com/Unleash/unleash/issues/7263))
+
+- More powerful feature search by type ([#7267](https://github.com/Unleash/unleash/issues/7267))
+
+- Filter by feature type ([#7273](https://github.com/Unleash/unleash/issues/7273))
+
+- Adds information about project modes to the project creation form ([#7250](https://github.com/Unleash/unleash/issues/7250))
+
+- Preview dependency ([#7284](https://github.com/Unleash/unleash/issues/7284))
+
+
+### Fix
+
+- Overflow sidebar cr banner ([#7193](https://github.com/Unleash/unleash/issues/7193))
+
+
+### Miscellaneous Tasks
+
+- Fix failing test; don't rely on a single item only ([#6974](https://github.com/Unleash/unleash/issues/6974))
+
+- Version in package.json
+
+- Remove project overview refactor flag ([#6897](https://github.com/Unleash/unleash/issues/6897))
+
+- Add automatic ID generation algorithm ([#7001](https://github.com/Unleash/unleash/issues/7001))
+
+- Update orval schemas ([#7010](https://github.com/Unleash/unleash/issues/7010))
+
+- Update documentation for feature toggle variants ([#7064](https://github.com/Unleash/unleash/issues/7064))
+
+- Bump version to 5.12.4+main
+
+- Remove e2e tests for legacy env variants ([#7071](https://github.com/Unleash/unleash/issues/7071))
+
+- Linter update ([#7072](https://github.com/Unleash/unleash/issues/7072))
+
+- Bring workflow changes from 5.12 ([#7074](https://github.com/Unleash/unleash/issues/7074))
+
+- Update workflows ([#7076](https://github.com/Unleash/unleash/issues/7076))
+
+- Update app.json ([#7078](https://github.com/Unleash/unleash/issues/7078))
+
+- Rename toggle to flag #1 ([#7092](https://github.com/Unleash/unleash/issues/7092))
+
+- Rename toggle to flag #2 ([#7097](https://github.com/Unleash/unleash/issues/7097))
+
+- Change toggle to flag #3 ([#7101](https://github.com/Unleash/unleash/issues/7101))
+
+- Update input field text sizes ([#7107](https://github.com/Unleash/unleash/issues/7107))
+
+- Rename toggle to flag #4 ([#7114](https://github.com/Unleash/unleash/issues/7114))
+
+- Rename feature toggle to feature flag #5 ([#7115](https://github.com/Unleash/unleash/issues/7115))
+
+- Rename toggle to flag #6 ([#7122](https://github.com/Unleash/unleash/issues/7122))
+
+- Rename roles toggles to flag ([#7123](https://github.com/Unleash/unleash/issues/7123))
+
+- Remove e2e that is not needed anymore ([#7124](https://github.com/Unleash/unleash/issues/7124))
+
+- Rename toggle to flag #7 ([#7125](https://github.com/Unleash/unleash/issues/7125))
+
+- Update orval types after renaming ([#7127](https://github.com/Unleash/unleash/issues/7127))
+
+- Make it build again
+
+- Workflows call workflows ([#7089](https://github.com/Unleash/unleash/issues/7089))
+
+- Bump to @types/node 20 as well as updating frontend .nvmrc ([#7137](https://github.com/Unleash/unleash/issues/7137))
+
+- Rename toggle to flag docs #1 ([#7136](https://github.com/Unleash/unleash/issues/7136))
+
+- Rename toggle to flags in docs #2 ([#7141](https://github.com/Unleash/unleash/issues/7141))
+
+- Rename toggle to flags in docs #3 ([#7143](https://github.com/Unleash/unleash/issues/7143))
+
+- Update anchor toggle titles ([#7145](https://github.com/Unleash/unleash/issues/7145))
+
+- Rename toggle to flag #final ([#7146](https://github.com/Unleash/unleash/issues/7146))
+
+- Edge active tokens cache flag removal ([#7094](https://github.com/Unleash/unleash/issues/7094))
+
+- Remove deprecated legacy features endpoint ([#7129](https://github.com/Unleash/unleash/issues/7129))
+
+- Remove toggle reference apart from existing links ([#7148](https://github.com/Unleash/unleash/issues/7148))
+
+- [**breaking**] [v6] remove error.description in error messages ([#7157](https://github.com/Unleash/unleash/issues/7157))
+
+- Update illustrations for unleash anatomy ([#7163](https://github.com/Unleash/unleash/issues/7163))
+
+- New create project dialog UI fixes ([#7167](https://github.com/Unleash/unleash/issues/7167))
+
+- Fix create project form environment selector button width ([#7175](https://github.com/Unleash/unleash/issues/7175))
+
+- Rename component to match file name and american spelling ([#7174](https://github.com/Unleash/unleash/issues/7174))
+
+- Switch insights ui flag to kill switch ([#7166](https://github.com/Unleash/unleash/issues/7166))
+
+- Update unleash banner in readme ([#7178](https://github.com/Unleash/unleash/issues/7178))
+
+- Upgrade edge banner version ([#7180](https://github.com/Unleash/unleash/issues/7180))
+
+- Removed edge bulk metrics endpoint ([#7161](https://github.com/Unleash/unleash/issues/7161))
+
+- Allow CR selection when no envs are enabled ([#7183](https://github.com/Unleash/unleash/issues/7183))
+
+- Deprecate custom strategies ([#7186](https://github.com/Unleash/unleash/issues/7186))
+
+- New project dialog code cleanup 1 ([#7113](https://github.com/Unleash/unleash/issues/7113))
+
+- Remove state service ([#7184](https://github.com/Unleash/unleash/issues/7184))
+
+- Code cleanup for new project form pt 2 ([#7190](https://github.com/Unleash/unleash/issues/7190))
+
+- Remove unused artillery scripts referencing state api ([#7194](https://github.com/Unleash/unleash/issues/7194))
+
+- Additional removal notices of state api/service ([#7197](https://github.com/Unleash/unleash/issues/7197))
+
+- Fix button design on narrow screens for new project form ([#7195](https://github.com/Unleash/unleash/issues/7195))
+
+- Remove unused and deprecated methods in feature toggle legacy controller and in feature toggle service ([#7199](https://github.com/Unleash/unleash/issues/7199))
+
+- Removed passport from docker package.json file ([#7159](https://github.com/Unleash/unleash/issues/7159))
+
+- Sync user groups is a system action ([#7214](https://github.com/Unleash/unleash/issues/7214))
+
+- Added dependency review ([#7206](https://github.com/Unleash/unleash/issues/7206))
+
+- Mark deprecations with version ([#7218](https://github.com/Unleash/unleash/issues/7218))
+
+- Remove project list split feature flags ([#7224](https://github.com/Unleash/unleash/issues/7224))
+
+- Remove flag for new project cards ([#7225](https://github.com/Unleash/unleash/issues/7225))
+
+- Bump node 20 version in docker image ([#7221](https://github.com/Unleash/unleash/issues/7221))
+
+- Make ip mandatory ([#7220](https://github.com/Unleash/unleash/issues/7220))
+
+- Change deny list to allow list ([#7242](https://github.com/Unleash/unleash/issues/7242))
+
+- Change to fs/promises and add an import from file e2e test ([#7240](https://github.com/Unleash/unleash/issues/7240))
+
+- Upgrade deps ([#7245](https://github.com/Unleash/unleash/issues/7245))
+
+- Bump version to 5.12.5+main
+
+- Bump version to 5.12.6+main
+
+- Readded resolutions for our docker package file ([#7253](https://github.com/Unleash/unleash/issues/7253))
+
+- Update project overview to flags ([#7247](https://github.com/Unleash/unleash/issues/7247))
+
+- Bump version to 5.12.7+main
+
+- Add a flag+ui flag for commandBarUI ([#7264](https://github.com/Unleash/unleash/issues/7264))
+
+- Backport changed made in the workflow ([#7255](https://github.com/Unleash/unleash/issues/7255))
+
+- Upgraded semver dependency (and biome) ([#7272](https://github.com/Unleash/unleash/issues/7272))
+
+- Regenerate orval with new changes ([#7283](https://github.com/Unleash/unleash/issues/7283))
+
+
+### Refactor
+
+- Extract feature lifecycle component ([#7023](https://github.com/Unleash/unleash/issues/7023))
+
+- Replace useProject with useProjectOverview ([#7087](https://github.com/Unleash/unleash/issues/7087))
+
+- Navigation sidebar ([#7171](https://github.com/Unleash/unleash/issues/7171))
+
+
+### Testing
+
+- Move import test from cypress to RTL to make it less flaky ([#6982](https://github.com/Unleash/unleash/issues/6982))
+
+- Move 2 table tests from cypress to rtl ([#6984](https://github.com/Unleash/unleash/issues/6984))
+
+- Move tests from cypress to rtl ([#6987](https://github.com/Unleash/unleash/issues/6987))
+
+- Test how the project form deals with project envs and cr env interaction ([#6997](https://github.com/Unleash/unleash/issues/6997))
+
+- Fix flaky lifecycle test ([#7093](https://github.com/Unleash/unleash/issues/7093))
+
+- Navigation sidebar ([#7172](https://github.com/Unleash/unleash/issues/7172))
+
+
+### Poc
+
+- Many strategies pagination ([#7011](https://github.com/Unleash/unleash/issues/7011))
+
+
 ## [5.6.0] - 2023-10-26
 
 ### Bug Fixes

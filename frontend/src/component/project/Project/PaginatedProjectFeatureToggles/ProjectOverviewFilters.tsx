@@ -5,23 +5,34 @@ import {
     Filters,
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
+import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectOverviewFilters {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
+    project: string;
 }
 
 export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
     state,
     onChange,
+    project,
 }) => {
     const { tags } = useAllTags();
+    const { flagCreators } = useProjectFlagCreators(project);
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     useEffect(() => {
         const tagsOptions = (tags || []).map((tag) => ({
             label: `${tag.type}:${tag.value}`,
             value: `${tag.type}:${tag.value}`,
+        }));
+
+        const flagCreatorsOptions = flagCreators.map((creator) => ({
+            label: creator.name,
+            value: String(creator.id),
         }));
 
         const availableFilters: IFilterItem[] = [
@@ -60,9 +71,19 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
         ];
+        if (flagCreatorEnabled) {
+            availableFilters.push({
+                label: 'Created by',
+                icon: 'person',
+                options: flagCreatorsOptions,
+                filterKey: 'createdBy',
+                singularOperators: ['IS', 'IS_NOT'],
+                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            });
+        }
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(tags)]);
+    }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
 
     return (
         <Filters

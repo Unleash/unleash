@@ -15,6 +15,7 @@ import {
 } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
@@ -25,6 +26,7 @@ export const useProjectFeatureSearch = (
     storageKey = 'project-overview-v2',
     refreshInterval = 15 * 1000,
 ) => {
+    const flagCreatorEnabled = useUiFlag('flagCreator');
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
@@ -36,6 +38,7 @@ export const useProjectFeatureSearch = (
         tag: FilterItemParam,
         createdAt: FilterItemParam,
         type: FilterItemParam,
+        ...(flagCreatorEnabled ? { createdBy: FilterItemParam } : {}),
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,

@@ -55,6 +55,8 @@ export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
+    const featureLifecycleEnabled = useUiFlag('featureLifecycle');
+    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const {
         features,
@@ -75,6 +77,7 @@ export const ProjectFeatureToggles = ({
         tag: tableState.tag,
         createdAt: tableState.createdAt,
         type: tableState.type,
+        ...(flagCreatorEnabled ? { createdBy: tableState.createdBy } : {}),
     };
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -100,9 +103,6 @@ export const ProjectFeatureToggles = ({
     } = useRowActions(refetch, projectId);
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
-
-    const featureLifecycleEnabled = useUiFlag('featureLifecycle');
-    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const columns = useMemo(
         () => [
@@ -490,6 +490,7 @@ export const ProjectFeatureToggles = ({
                     aria-live='polite'
                 >
                     <ProjectOverviewFilters
+                        project={projectId}
                         onChange={setTableState}
                         state={filterState}
                     />

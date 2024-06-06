@@ -108,6 +108,15 @@ const filterFeaturesByType = async (typeParams: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const filterFeaturesByCreatedBy = async (
+    createdByParams: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(`/api/admin/search/features?createdBy=${createdByParams}`)
+        .expect(expectedCode);
+};
+
 const filterFeaturesByTag = async (tag: string, expectedCode = 200) => {
     return app.request
         .get(`/api/admin/search/features?tag=${tag}`)
@@ -243,6 +252,29 @@ test('should filter features by type', async () => {
 
     expect(body).toMatchObject({
         features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should filter features by created by', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        type: 'release',
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        type: 'experimental',
+    });
+
+    const { body } = await filterFeaturesByCreatedBy('IS:1');
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+
+    const { body: emptyResults } = await filterFeaturesByCreatedBy('IS:2');
+
+    expect(emptyResults).toMatchObject({
+        features: [],
     });
 });
 

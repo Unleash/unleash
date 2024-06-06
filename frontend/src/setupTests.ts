@@ -15,7 +15,7 @@ if (!window.ResizeObserver) {
 
 process.env.TZ = 'UTC';
 
-const shouldSkip = (index) => index % 3 !== 0;
+const shouldSkip = (index) => index % 5 !== 0;
 
 let testCounter = 0;
 

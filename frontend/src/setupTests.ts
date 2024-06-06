@@ -21,7 +21,9 @@ let testCounter = 0;
 
 // @ts-ignore
 global.test = (name, fn, options) => {
-    const fnToUse = shouldSkip(testCounter) ? originalTest : originalTest;
+    const fnToUse = shouldSkip(testCounter)
+        ? originalTest.skip
+        : originalTest.skip;
     testCounter++;
     return fnToUse(name, fn, options);
 };

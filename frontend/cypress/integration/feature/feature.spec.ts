@@ -12,22 +12,6 @@ describe('feature', () => {
     });
 
     after(() => {
-        cy.on('uncaught:exception', (err) => {
-            if (
-                err.message.includes(
-                    'ResizeObserver loop completed with undelivered notifications',
-                )
-            ) {
-                console.log(
-                    'Ignored an uncaught resize observer error:',
-                    err.message,
-                );
-                // ignore resize observer errors
-                // returning false here prevents Cypress from failing the test
-                return false;
-            }
-        });
-
         cy.deleteFeature_API(featureToggleName, projectName);
         cy.deleteProject_API(projectName);
     });

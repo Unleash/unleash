@@ -23,9 +23,11 @@ export class ProjectFlagCreatorsReadModel
                 'users.username',
                 'users.email',
             ]);
-        return result.map((row) => ({
-            id: Number(row.id),
-            name: String(row.name || row.username || row.email),
-        }));
+        return result
+            .filter((row) => row.name || row.username || row.email)
+            .map((row) => ({
+                id: Number(row.id),
+                name: String(row.name || row.username || row.email),
+            }));
     }
 }

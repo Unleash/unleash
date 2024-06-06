@@ -18,7 +18,6 @@ describe('segments', () => {
     });
 
     it('can create a segment', () => {
-        cy.wait(500);
         cy.createSegment_UI(segmentName);
         cy.contains(segmentName);
     });

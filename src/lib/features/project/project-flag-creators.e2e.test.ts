@@ -40,14 +40,14 @@ test('should return flag creators', async () => {
             email: 'user1@getunleash.io',
         })
         .expect(200);
-    await app.createFeature('toggle-name-1');
+    await app.createFeature('flag-name-1');
     await app.request
         .post(`/auth/demo/login`)
         .send({
             email: 'user2@getunleash.io',
         })
         .expect(200);
-    await app.createFeature('toggle-name-2');
+    await app.createFeature('flag-name-2');
 
     const { body } = await app.request
         .get('/api/admin/projects/default/flag-creators')

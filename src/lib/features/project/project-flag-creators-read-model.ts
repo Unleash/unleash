@@ -17,6 +17,7 @@ export class ProjectFlagCreatorsReadModel
             .distinct('users.id')
             .join('features', 'users.id', '=', 'features.created_by_user_id')
             .where('features.project', project)
+            .where('features.archived_at', null)
             .select([
                 'users.id',
                 'users.name',

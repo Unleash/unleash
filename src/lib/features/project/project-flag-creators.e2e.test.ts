@@ -48,14 +48,12 @@ test('should return flag creators', async () => {
         })
         .expect(200);
     await app.createFeature('flag-name-2');
+    await app.archiveFeature('flag-name-2');
 
     const { body } = await app.request
         .get('/api/admin/projects/default/flag-creators')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body).toEqual([
-        { id: 1, name: 'user1@getunleash.io' },
-        { id: 2, name: 'user2@getunleash.io' },
-    ]);
+    expect(body).toEqual([{ id: 1, name: 'user1@getunleash.io' }]);
 });

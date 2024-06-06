@@ -18,7 +18,7 @@ describe('feature', () => {
                     'ResizeObserver loop completed with undelivered notifications',
                 )
             ) {
-                cy.log(
+                console.log(
                     'Ignored an uncaught resize observer error:',
                     err.message,
                 );

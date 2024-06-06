@@ -13,8 +13,13 @@ const setupApi = () => {
             name: 'featureA',
             tags: [{ type: 'backend', value: 'sdk' }],
             type: 'operational',
+            createdBy: { id: 1, name: 'author' },
         },
-        { name: 'featureB', type: 'release' },
+        {
+            name: 'featureB',
+            type: 'release',
+            createdBy: { id: 1, name: 'author' },
+        },
     ];
     testServerRoute(server, '/api/admin/search/features', {
         features,

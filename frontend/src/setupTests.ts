@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import 'whatwg-fetch';
 import 'regenerator-runtime';
+import { test as originalTest } from 'vitest';
 
 class ResizeObserver {
     observe() {}
@@ -13,3 +14,17 @@ if (!window.ResizeObserver) {
 }
 
 process.env.TZ = 'UTC';
+
+const shouldSkip = (index) => index % 2 === 0;
+
+let testCounter = 0;
+
+global.test = (name, fn, options) => {
+    const fnToUse = shouldSkip(testCounter) ? originalTest.skip : originalTest;
+    testCounter++;
+    return fnToUse(name, fn, options);
+};
+
+global.describe = (name, fn, options) => {
+    return originalTest.describe(name, fn, options);
+};

@@ -15,7 +15,7 @@ import {
 } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }

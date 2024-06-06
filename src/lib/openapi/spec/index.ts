@@ -139,6 +139,7 @@ export * from './project-application-sdk-schema';
 export * from './project-applications-schema';
 export * from './project-dora-metrics-schema';
 export * from './project-environment-schema';
+export * from './project-flag-creators-schema';
 export * from './project-insights-schema';
 export * from './project-overview-schema';
 export * from './project-schema';

@@ -45,6 +45,7 @@ import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage
 import { FakeSegmentReadModel } from '../../lib/features/segment/fake-segment-read-model';
 import { FakeProjectOwnersReadModel } from '../../lib/features/project/fake-project-owners-read-model';
 import { FakeFeatureLifecycleStore } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-store';
+import { FakeProjectFlagCreatorsReadModel } from '../../lib/features/project/fake-project-flag-creators-read-model';
 
 const db = {
     select: () => ({
@@ -98,6 +99,7 @@ const createStores: () => IUnleashStores = () => {
         trafficDataUsageStore: new FakeTrafficDataUsageStore(),
         segmentReadModel: new FakeSegmentReadModel(),
         projectOwnersReadModel: new FakeProjectOwnersReadModel(),
+        projectFlagCreatorsReadModel: new FakeProjectFlagCreatorsReadModel(),
         featureLifecycleStore: new FakeFeatureLifecycleStore(),
     };
 };

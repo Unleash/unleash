@@ -78,6 +78,7 @@ import type {
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
 } from './project-store-type';
+import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
 
 type Days = number;
 type Count = number;
@@ -113,6 +114,8 @@ export default class ProjectService {
     private projectStore: IProjectStore;
 
     private projectOwnersReadModel: IProjectOwnersReadModel;
+
+    private projectFlagCreatorsReadModel: IProjectFlagCreatorsReadModel;
 
     private accessService: AccessService;
 
@@ -150,6 +153,7 @@ export default class ProjectService {
         {
             projectStore,
             projectOwnersReadModel,
+            projectFlagCreatorsReadModel,
             eventStore,
             featureToggleStore,
             environmentStore,
@@ -161,6 +165,7 @@ export default class ProjectService {
             IUnleashStores,
             | 'projectStore'
             | 'projectOwnersReadModel'
+            | 'projectFlagCreatorsReadModel'
             | 'eventStore'
             | 'featureToggleStore'
             | 'environmentStore'
@@ -179,6 +184,7 @@ export default class ProjectService {
     ) {
         this.projectStore = projectStore;
         this.projectOwnersReadModel = projectOwnersReadModel;
+        this.projectFlagCreatorsReadModel = projectFlagCreatorsReadModel;
         this.environmentStore = environmentStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.accessService = accessService;
@@ -1081,6 +1087,10 @@ export default class ProjectService {
         return applications;
     }
 
+    async getProjectFlagCreators(projectId: string) {
+        return this.projectFlagCreatorsReadModel.getFlagCreators(projectId);
+    }
+
     async changeRole(
         projectId: string,
         roleId: number,
@@ -1189,6 +1199,8 @@ export default class ProjectService {
     async getMembers(projectId: string): Promise<number> {
         return this.projectStore.getMembersCountByProject(projectId);
     }
+
+    async getProjectUsersWithFlag() {}
 
     async getProjectUsers(
         projectId: string,

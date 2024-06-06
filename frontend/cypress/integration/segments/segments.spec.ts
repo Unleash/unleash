@@ -19,15 +19,13 @@ describe('segments', () => {
 
     it('can create a segment', () => {
         cy.createSegment_UI(segmentName);
-        cy.contains(segmentName, { timeout: 100000 });
+        cy.contains(segmentName);
     });
 
     it('gives an error if a segment exists with the same name', () => {
         cy.get("[data-testid='NAVIGATE_TO_CREATE_SEGMENT']").click();
         cy.get("[data-testid='SEGMENT_NAME_ID']").type(segmentName);
-        cy.get("[data-testid='SEGMENT_NEXT_BTN_ID']", {
-            timeout: 100000,
-        }).should('be.disabled');
+        cy.get("[data-testid='SEGMENT_NEXT_BTN_ID']").should('be.disabled');
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
             'Segment name already exists',
         );
@@ -35,6 +33,6 @@ describe('segments', () => {
 
     it('can delete a segment', () => {
         cy.deleteSegment_UI(segmentName, segmentId);
-        cy.contains(segmentName, { timeout: 100000 }).should('not.exist');
+        cy.contains(segmentName).should('not.exist');
     });
 });

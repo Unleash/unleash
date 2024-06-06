@@ -12,6 +12,7 @@ import type { IPermission } from '../../interfaces/user';
 import { SWRConfig } from 'swr';
 import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
+import { test } from 'vitest';
 
 const server = testServerSetup();
 

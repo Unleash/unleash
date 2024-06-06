@@ -28,7 +28,7 @@ export interface FeatureSearchResponseSchema {
      */
     createdAt: string | null;
     /** User who created the feature flag */
-    createdBy?: FeatureSearchResponseSchemaCreatedBy;
+    createdBy: FeatureSearchResponseSchemaCreatedBy;
     /**
      * The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.
      * @nullable

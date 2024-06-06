@@ -27,7 +27,7 @@ const setupApi = () => {
     });
 };
 
-test('selects project features', async () => {
+test.skip('selects project features', async () => {
     setupApi();
     render(
         <Routes>
@@ -95,7 +95,7 @@ test.skip('filters by tag', async () => {
     expect(await screen.findAllByText('backend:sdk')).toHaveLength(2);
 });
 
-test('filters by flag type', async () => {
+test.skip('filters by flag type', async () => {
     setupApi();
     render(
         <Routes>

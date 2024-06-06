@@ -15,13 +15,13 @@ if (!window.ResizeObserver) {
 
 process.env.TZ = 'UTC';
 
-const shouldSkip = (index: any) => index % 20 !== 0;
+const shouldSkip = (index: any) => index % 100 !== 0;
 
 let testCounter = 0;
 
 // @ts-ignore
 global.test = (name, fn, options) => {
-    const fnToUse = shouldSkip(testCounter) ? originalTest.skip : originalTest;
+    const fnToUse = shouldSkip(testCounter) ? originalTest : originalTest;
     testCounter++;
     return fnToUse(name, fn, options);
 };

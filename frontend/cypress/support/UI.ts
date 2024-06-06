@@ -101,7 +101,8 @@ export const createSegment_UI = (segmentName: string): Chainable<any> => {
 
     cy.intercept('POST', '/api/admin/segments').as('createSegment');
 
-    cy.get("[data-testid='SEGMENT_NAME_ID']").wait(0).type(segmentName);
+    cy.get("[data-testid='SEGMENT_NAME_ID']").type(segmentName);
+    cy.get("[data-testid='SEGMENT_NAME_ID']").should('have.value', segmentName);
     cy.get("[data-testid='SEGMENT_DESC_ID']").type('hello-world');
     cy.get("[data-testid='SEGMENT_NEXT_BTN_ID']").click();
     cy.get("[data-testid='SEGMENT_CREATE_BTN_ID']").click();

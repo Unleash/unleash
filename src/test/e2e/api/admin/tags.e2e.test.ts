@@ -210,11 +210,9 @@ test('Can bulk remove tags', async () => {
         .expect(200);
 });
 
-describe('backward compatibility', () => {
-    test('should return invalid tag names if they exist', async () => {
-        const tag = { value: '  ', type: 'simple' };
-        await db.stores.tagStore.createTag(tag);
-        const { body } = await app.request.get('/api/admin/tags').expect(200);
-        expect(body.tags).toMatchObject([tag]);
-    });
+test('backward compatibility: the API should return invalid tag names if they exist', async () => {
+    const tag = { value: '  ', type: 'simple' };
+    await db.stores.tagStore.createTag(tag);
+    const { body } = await app.request.get('/api/admin/tags').expect(200);
+    expect(body.tags).toMatchObject([tag]);
 });

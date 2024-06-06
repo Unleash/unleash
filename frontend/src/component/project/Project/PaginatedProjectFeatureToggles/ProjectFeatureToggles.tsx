@@ -102,6 +102,7 @@ export const ProjectFeatureToggles = ({
     const isPlaceholder = Boolean(initialLoad || (loading && total));
 
     const featureLifecycleEnabled = useUiFlag('featureLifecycle');
+    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const columns = useMemo(
         () => [
@@ -168,26 +169,30 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
-            columnHelper.accessor('createdBy', {
-                id: 'createdBy',
-                header: 'By',
-                cell: ({ row: { original } }) => {
-                    return (
-                        <UserAvatar
-                            user={{
-                                id: original.createdBy.id,
-                                name: original.createdBy.name,
-                                imageUrl: original.createdBy.imageUrl,
-                            }}
-                        />
-                    );
-                },
-                enableSorting: false,
-                meta: {
-                    width: '1%',
-                    align: 'center',
-                },
-            }),
+            ...(flagCreatorEnabled
+                ? [
+                      columnHelper.accessor('createdBy', {
+                          id: 'createdBy',
+                          header: 'By',
+                          cell: ({ row: { original } }) => {
+                              return (
+                                  <UserAvatar
+                                      user={{
+                                          id: original.createdBy.id,
+                                          name: original.createdBy.name,
+                                          imageUrl: original.createdBy.imageUrl,
+                                      }}
+                                  />
+                              );
+                          },
+                          enableSorting: false,
+                          meta: {
+                              width: '1%',
+                              align: 'center',
+                          },
+                      }),
+                  ]
+                : []),
             columnHelper.accessor('lastSeenAt', {
                 id: 'lastSeenAt',
                 header: 'Last seen',
@@ -430,11 +435,16 @@ export const ProjectFeatureToggles = ({
                                         id: 'createdAt',
                                         isVisible: columnVisibility.createdAt,
                                     },
-                                    {
-                                        header: 'By',
-                                        id: 'createdBy',
-                                        isVisible: columnVisibility.createdBy,
-                                    },
+                                    ...(flagCreatorEnabled
+                                        ? [
+                                              {
+                                                  header: 'By',
+                                                  id: 'createdBy',
+                                                  isVisible:
+                                                      columnVisibility.createdBy,
+                                              },
+                                          ]
+                                        : []),
                                     {
                                         header: 'Last seen',
                                         id: 'lastSeenAt',

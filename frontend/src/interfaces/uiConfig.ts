@@ -87,6 +87,7 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;
     commandBarUI?: boolean;
+    flagCreator?: boolean;
 };
 
 export interface IVersionInfo {

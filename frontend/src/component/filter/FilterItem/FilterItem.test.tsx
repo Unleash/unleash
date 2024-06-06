@@ -43,7 +43,7 @@ const setup = (initialState: FilterItemParams | null) => {
 };
 
 describe('FilterItem Component', () => {
-    it('renders initial state correctly', async () => {
+    test('renders initial state correctly', async () => {
         const mockState = {
             operator: 'IS_ANY_OF',
             values: ['1', '3'],
@@ -72,7 +72,7 @@ describe('FilterItem Component', () => {
         ]);
     });
 
-    it('renders initial popover when no existing value', async () => {
+    test('renders initial popover when no existing value', async () => {
         const mockState = null;
 
         const recordedChanges = setup(mockState);
@@ -80,7 +80,7 @@ describe('FilterItem Component', () => {
         await screen.findByPlaceholderText('Search');
     });
 
-    it('renders explicit and extra options', async () => {
+    test('renders explicit and extra options', async () => {
         const mockState = {
             operator: 'IS_ANY_OF',
             values: ['1', '3', '2'],
@@ -93,7 +93,7 @@ describe('FilterItem Component', () => {
         expect(valuesElement).toBeInTheDocument();
     });
 
-    it('adjusts operator to match singular item', async () => {
+    test('adjusts operator to match singular item', async () => {
         const mockState = {
             operator: 'IS_ANY_OF',
             values: ['1'],
@@ -109,7 +109,7 @@ describe('FilterItem Component', () => {
         ]);
     });
 
-    it('adjusts operator to match plural items', async () => {
+    test('adjusts operator to match plural items', async () => {
         const mockState = {
             operator: 'IS',
             values: ['1', '2'],
@@ -125,7 +125,7 @@ describe('FilterItem Component', () => {
         ]);
     });
 
-    it('switches operator', async () => {
+    test('switches operator', async () => {
         const mockState = {
             operator: 'IS_ANY_OF',
             values: ['1', '3'],
@@ -148,7 +148,7 @@ describe('FilterItem Component', () => {
         ]);
     });
 
-    it('deletes all values', async () => {
+    test('deletes all values', async () => {
         const mockState = {
             operator: 'IS_ANY_OF',
             values: ['1', '3'],
@@ -168,7 +168,7 @@ describe('FilterItem Component', () => {
         ]);
     });
 
-    it('navigates between items with arrow keys', async () => {
+    test('navigates between items with arrow keys', async () => {
         setup(null);
 
         const searchInput = await screen.findByPlaceholderText('Search');
@@ -181,7 +181,7 @@ describe('FilterItem Component', () => {
         expect(document.activeElement).toBe(searchInput);
     });
 
-    it('selects an item with the Enter key', async () => {
+    test('selects an item with the Enter key', async () => {
         const recordedChanges = setup(null);
 
         const searchInput = await screen.findByPlaceholderText('Search');

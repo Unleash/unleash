@@ -3,7 +3,6 @@ import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureArchiveDialog } from './FeatureArchiveDialog';
-import { test } from 'vitest';
 
 const server = testServerSetup();
 const setupHappyPathForChangeRequest = () => {

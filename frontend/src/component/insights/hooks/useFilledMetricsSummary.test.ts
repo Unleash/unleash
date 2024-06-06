@@ -32,7 +32,7 @@ beforeEach(() => {
 });
 
 describe('useFilledMetricsSummary', () => {
-    it('returns datasets with normalized data for each project', () => {
+    test('returns datasets with normalized data for each project', () => {
         const { result } = renderHook(() =>
             useFilledMetricsSummary(
                 mockFilteredMetricsSummaryTrends,

@@ -19,7 +19,7 @@ const defaultGetBoundingClientRect = {
 describe('StickyProvider component', () => {
     afterEach(cleanup);
 
-    it('provides the sticky context with expected functions', () => {
+    test('provides the sticky context with expected functions', () => {
         let receivedContext = null;
         render(
             <StickyProvider>
@@ -39,7 +39,7 @@ describe('StickyProvider component', () => {
         expect(receivedContext).toHaveProperty('getTopOffset');
     });
 
-    it('registers and unregisters sticky items', () => {
+    test('registers and unregisters sticky items', () => {
         let contextValues: IStickyContext | undefined;
         const refMock = { current: document.createElement('div') };
 
@@ -83,7 +83,7 @@ describe('StickyProvider component', () => {
         expect(contextValues?.stickyItems).not.toContain(refMock);
     });
 
-    it('sorts sticky items based on their DOM position', () => {
+    test('sorts sticky items based on their DOM position', () => {
         let contextValues: IStickyContext | undefined;
 
         const refMockA = { current: document.createElement('div') };
@@ -118,7 +118,7 @@ describe('StickyProvider component', () => {
         expect(contextValues?.stickyItems[1]).toBe(refMockA);
     });
 
-    it('calculates top offset correctly', () => {
+    test('calculates top offset correctly', () => {
         let contextValues: IStickyContext | undefined;
         const refMockA = { current: document.createElement('div') };
         const refMockB = { current: document.createElement('div') };

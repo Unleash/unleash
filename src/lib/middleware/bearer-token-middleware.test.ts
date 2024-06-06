@@ -19,7 +19,7 @@ describe('bearerTokenMiddleware', () => {
         });
     });
 
-    it('should call next', () => {
+    test('should call next', () => {
         const middleware = bearerTokenMiddleware(config);
 
         middleware(req, res, next);
@@ -27,7 +27,7 @@ describe('bearerTokenMiddleware', () => {
         expect(next).toHaveBeenCalled();
     });
 
-    it('should leave Unleash tokens intact', () => {
+    test('should leave Unleash tokens intact', () => {
         const middleware = bearerTokenMiddleware(config);
 
         req.headers = { authorization: exampleSignalToken };
@@ -37,7 +37,7 @@ describe('bearerTokenMiddleware', () => {
         expect(req.headers.authorization).toBe(exampleSignalToken);
     });
 
-    it('should convert Bearer token to Unleash token', () => {
+    test('should convert Bearer token to Unleash token', () => {
         const middleware = bearerTokenMiddleware(config);
 
         const bearerToken = `Bearer ${exampleSignalToken}`;
@@ -48,7 +48,7 @@ describe('bearerTokenMiddleware', () => {
         expect(req.headers.authorization).toBe(exampleSignalToken);
     });
 
-    it('should be case insensitive in the scheme', () => {
+    test('should be case insensitive in the scheme', () => {
         const middleware = bearerTokenMiddleware(config);
 
         const bearerToken = `bEaReR ${exampleSignalToken}`;
@@ -59,7 +59,7 @@ describe('bearerTokenMiddleware', () => {
         expect(req.headers.authorization).toBe(exampleSignalToken);
     });
 
-    it('should always run for signal endpoint, without base path', () => {
+    test('should always run for signal endpoint, without base path', () => {
         const configWithBearerTokenMiddlewareFlagDisabled = createTestConfig({
             getLogger,
         });
@@ -78,7 +78,7 @@ describe('bearerTokenMiddleware', () => {
         expect(req.headers.authorization).toBe(exampleSignalToken);
     });
 
-    it('should always run for signal endpoint, regardless of the flag, with base path', () => {
+    test('should always run for signal endpoint, regardless of the flag, with base path', () => {
         const configWithBearerTokenMiddlewareFlagDisabled = createTestConfig({
             getLogger,
             server: {

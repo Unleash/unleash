@@ -4,7 +4,7 @@ import {
 } from './playground-view-model';
 
 describe('playground result to view model', () => {
-    it('adds edit links to playground models', () => {
+    test('adds edit links to playground models', () => {
         const input = {
             environment: 'development',
             projects: '*' as const,
@@ -64,7 +64,7 @@ describe('playground result to view model', () => {
         expect(viewModel).toMatchObject({ input, features: [featureResult] });
     });
 
-    it('adds edit links to advanced playground models', () => {
+    test('adds edit links to advanced playground models', () => {
         const input = {
             environments: ['development'],
             projects: '*' as const,

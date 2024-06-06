@@ -27,7 +27,7 @@ describe('useLocalStorageState', () => {
         window.localStorage.clear();
     });
 
-    it('should initialize with the initial value if local storage is empty', () => {
+    test('should initialize with the initial value if local storage is empty', () => {
         render(<TestComponent keyName='testKey' initialValue='initialValue' />);
 
         expect(screen.getByTestId('storedValue').textContent).toBe(
@@ -35,7 +35,7 @@ describe('useLocalStorageState', () => {
         );
     });
 
-    it('updates the local storage and state when value changes', async () => {
+    test('updates the local storage and state when value changes', async () => {
         render(<TestComponent keyName='testKey' initialValue='initialValue' />);
 
         screen.getByTestId('updateButton').click();
@@ -49,7 +49,7 @@ describe('useLocalStorageState', () => {
         });
     });
 
-    it('initializes with the value from local storage if available', async () => {
+    test('initializes with the value from local storage if available', async () => {
         createLocalStorage('testKey', {}).setValue('storedValue');
 
         render(<TestComponent keyName='testKey' initialValue='initialValue' />);

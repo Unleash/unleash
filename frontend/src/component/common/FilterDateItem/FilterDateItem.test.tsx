@@ -24,7 +24,7 @@ const setup = (initialState: FilterItemParams | null) => {
 };
 
 describe('FilterDateItem Component', () => {
-    it('renders initial state correctly', async () => {
+    test('renders initial state correctly', async () => {
         const mockState = {
             operator: 'IS_ON_OR_AFTER',
             values: ['2015-01-21'],
@@ -52,7 +52,7 @@ describe('FilterDateItem Component', () => {
         ]);
     });
 
-    it('renders initial popover when no existing value', async () => {
+    test('renders initial popover when no existing value', async () => {
         const mockState = null;
 
         setup(mockState);
@@ -65,7 +65,7 @@ describe('FilterDateItem Component', () => {
         expect(results.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('switches operator', async () => {
+    test('switches operator', async () => {
         const mockState = {
             operator: 'IS_ON_OR_AFTER',
             values: ['2020-01-01'],

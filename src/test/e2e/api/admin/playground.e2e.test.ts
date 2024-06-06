@@ -326,7 +326,7 @@ describe('Playground API E2E', () => {
     });
 
     describe('context application', () => {
-        it('applies appName constraints correctly', async () => {
+        test('applies appName constraints correctly', async () => {
             const appNames = ['A', 'B', 'C'];
 
             // Choose one of the app names at random
@@ -410,7 +410,7 @@ describe('Playground API E2E', () => {
             );
         });
 
-        it('applies dynamic context fields correctly', async () => {
+        test('applies dynamic context fields correctly', async () => {
             const contextValue = () =>
                 fc.oneof(
                     fc.record({
@@ -503,7 +503,7 @@ describe('Playground API E2E', () => {
             );
         });
 
-        it('applies custom context fields correctly', async () => {
+        test('applies custom context fields correctly', async () => {
             const environment = 'default';
             const contextValue = () =>
                 fc.record({

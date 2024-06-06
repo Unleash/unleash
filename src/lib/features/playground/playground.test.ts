@@ -27,7 +27,7 @@ async function getSetup() {
     return { base, request: supertest(app) };
 }
 describe('toggle generator', () => {
-    it('generates toggles with unique names', () => {
+    test('generates toggles with unique names', () => {
         fc.assert(
             fc.property(
                 clientFeatures({ minLength: 2 }),

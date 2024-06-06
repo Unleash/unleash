@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { render } from '@testing-library/react';
 
 describe('withTableState', () => {
-    it('should create paginated and sorted table state', () => {
+    test('should create paginated and sorted table state', () => {
         const mockTableState = {
             limit: 10,
             offset: 10,
@@ -36,7 +36,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('sets default options', () => {
+    test('sets default options', () => {
         expect(
             withTableState(
                 {
@@ -62,7 +62,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('should update page index and size', () => {
+    test('should update page index and size', () => {
         const mockTableState = {
             limit: 10,
             offset: 10,
@@ -89,7 +89,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('should update sorting', () => {
+    test('should update sorting', () => {
         const mockTableState = {
             limit: 10,
             offset: 10,
@@ -118,7 +118,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('should handle column visibility', () => {
+    test('should handle column visibility', () => {
         const mockTableState = {
             limit: 10,
             offset: 10,
@@ -158,7 +158,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('is always using external state', () => {
+    test('is always using external state', () => {
         const initialProps = {
             limit: 5,
             offset: 40,
@@ -211,7 +211,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('works end-to-end with useReactTable', async () => {
+    test('works end-to-end with useReactTable', async () => {
         const Component = () => {
             const [state, setState] = useState({
                 limit: 5,
@@ -309,7 +309,7 @@ describe('withTableState', () => {
         expect(sort).toHaveValue('createdAt');
     });
 
-    it('always shows columns that have `enableHiding: false`', () => {
+    test('always shows columns that have `enableHiding: false`', () => {
         const mockTableState = {
             limit: 10,
             offset: 10,

@@ -4,13 +4,13 @@ import type { IFeatureToggle } from '../../../../../interfaces/featureToggle';
 const enteredStageAt = 'date';
 
 describe('populateCurrentStage', () => {
-    it('should return undefined if lifecycle is not defined', () => {
+    test('should return undefined if lifecycle is not defined', () => {
         const feature = {};
         const result = populateCurrentStage(feature as IFeatureToggle);
         expect(result).toBeUndefined();
     });
 
-    it('should return initial stage when lifecycle stage is initial', () => {
+    test('should return initial stage when lifecycle stage is initial', () => {
         const feature = {
             lifecycle: { stage: 'initial', enteredStageAt },
         };
@@ -19,7 +19,7 @@ describe('populateCurrentStage', () => {
         expect(result).toEqual(expected);
     });
 
-    it('should correctly populate pre-live stage with dev environments', () => {
+    test('should correctly populate pre-live stage with dev environments', () => {
         const feature = {
             lifecycle: { stage: 'pre-live', enteredStageAt },
             environments: [
@@ -51,7 +51,7 @@ describe('populateCurrentStage', () => {
         expect(result).toEqual(expected);
     });
 
-    it('should handle live stage with production environments', () => {
+    test('should handle live stage with production environments', () => {
         const feature = {
             lifecycle: { stage: 'live', enteredStageAt },
             environments: [
@@ -78,7 +78,7 @@ describe('populateCurrentStage', () => {
         expect(result).toEqual(expected);
     });
 
-    it('should return completed stage with production environments', () => {
+    test('should return completed stage with production environments', () => {
         const feature = {
             lifecycle: { stage: 'completed', enteredStageAt },
             environments: [
@@ -99,7 +99,7 @@ describe('populateCurrentStage', () => {
         expect(result).toEqual(expected);
     });
 
-    it('should return archived stage when lifecycle stage is archived', () => {
+    test('should return archived stage when lifecycle stage is archived', () => {
         const feature = {
             lifecycle: { stage: 'archived', enteredStageAt },
         } as IFeatureToggle;

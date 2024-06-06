@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { NameWithChangeInfo } from './NameWithChangeInfo';
-import { test } from 'vitest';
 
 test.each(['', undefined])(
     'Should render only the new name if the previous name was %s',

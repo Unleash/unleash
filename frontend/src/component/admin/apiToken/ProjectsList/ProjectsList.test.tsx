@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 
 describe('ProjectsList', () => {
-    it('should prioritize new "projects" array over deprecated "project"', async () => {
+    test('should prioritize new "projects" array over deprecated "project"', async () => {
         render(
             <ProjectsList
                 project='project'
@@ -19,7 +19,7 @@ describe('ProjectsList', () => {
         expect(links[1]).toHaveAttribute('href', '/projects/project2');
     });
 
-    it('should render correctly with single "project"', async () => {
+    test('should render correctly with single "project"', async () => {
         render(<ProjectsList project='project' />);
 
         const links = await screen.findAllByRole('link');
@@ -27,19 +27,19 @@ describe('ProjectsList', () => {
         expect(links[0]).toHaveTextContent('project');
     });
 
-    it('should have comma between project links', async () => {
+    test('should have comma between project links', async () => {
         const { container } = render(<ProjectsList projects={['a', 'b']} />);
 
         expect(container.textContent).toContain(', ');
     });
 
-    it('should render asterisk if no projects are passed', async () => {
+    test('should render asterisk if no projects are passed', async () => {
         const { container } = render(<ProjectsList />);
 
         expect(container.textContent).toEqual('*');
     });
 
-    it('should render asterisk if empty projects array is passed', async () => {
+    test('should render asterisk if empty projects array is passed', async () => {
         const { container } = render(<ProjectsList projects={[]} />);
 
         expect(container.textContent).toEqual('*');

@@ -2,7 +2,7 @@ import { medianTimeToProduction } from './median-time-to-production';
 import type { InstanceInsightsSchema } from 'openapi';
 
 describe('medianTimeToProduction', () => {
-    it('calculates the median with a single date and an odd number of projects', () => {
+    test('calculates the median with a single date and an odd number of projects', () => {
         const projectsData = [
             { date: '2023-03-21', timeToProduction: 10 },
             { date: '2023-03-21', timeToProduction: 20 },
@@ -12,7 +12,7 @@ describe('medianTimeToProduction', () => {
         expect(medianTimeToProduction(projectsData)).toEqual(expected);
     });
 
-    it('calculates the median with a single date and an even number of projects', () => {
+    test('calculates the median with a single date and an even number of projects', () => {
         const projectsData = [
             { date: '2023-03-22', timeToProduction: 10 },
             { date: '2023-03-22', timeToProduction: 20 },
@@ -23,7 +23,7 @@ describe('medianTimeToProduction', () => {
         expect(medianTimeToProduction(projectsData)).toEqual(expected);
     });
 
-    it('calculates the median for multiple dates with varying numbers of projects', () => {
+    test('calculates the median for multiple dates with varying numbers of projects', () => {
         const projectsData = [
             { date: '2023-03-23', timeToProduction: 5 },
             { date: '2023-03-23', timeToProduction: 15 },

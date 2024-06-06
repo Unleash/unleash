@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { SegmentDeleteUsedSegment } from './SegmentDeleteUsedSegment';
 
 describe('SegmentDeleteUsedSegment', () => {
-    it('should link to change requests for change request strategies', async () => {
+    test('should link to change requests for change request strategies', async () => {
         const projectId = 'project1';
 
         const crStrategies = [

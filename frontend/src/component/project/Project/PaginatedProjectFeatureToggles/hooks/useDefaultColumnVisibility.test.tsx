@@ -4,7 +4,6 @@ import { useDefaultColumnVisibility } from './useDefaultColumnVisibility';
 import { render } from 'utils/testRenderer';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import mediaQuery from 'css-mediaquery';
-import { test } from 'vitest';
 
 const createMatchMedia = (width: number) => {
     return (query: string) => {

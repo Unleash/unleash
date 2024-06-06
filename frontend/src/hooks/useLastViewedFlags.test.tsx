@@ -62,7 +62,7 @@ describe('Last three unique flags are persisted and duplicates are skipped', () 
         );
     });
 
-    it('only persists the last three unique flags across components and skips duplicates', async () => {
+    test('only persists the last three unique flags across components and skips duplicates', async () => {
         fireEvent.click(screen.getByTestId('update-component1'));
         fireEvent.click(screen.getByTestId('update-component2'));
         fireEvent.click(screen.getByTestId('update-component1')); // duplicate

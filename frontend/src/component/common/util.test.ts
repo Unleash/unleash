@@ -11,7 +11,7 @@ const variantTemplate = {
 };
 
 describe('updateWeightEdit', () => {
-    it('can assign weight to one only variant', () => {
+    test('can assign weight to one only variant', () => {
         const variants = [variantTemplate];
         expect(updateWeightEdit(variants, 100)).toMatchInlineSnapshot(`
           [
@@ -28,7 +28,7 @@ describe('updateWeightEdit', () => {
         `);
     });
 
-    it('can distribute weight between 2 variants evenly', () => {
+    test('can distribute weight between 2 variants evenly', () => {
         const variants = [
             variantTemplate,
             { ...variantTemplate, id: '2', name: 'B' },
@@ -38,7 +38,7 @@ describe('updateWeightEdit', () => {
         });
     });
 
-    it('can distribute weight between 8 variants evenly', () => {
+    test('can distribute weight between 8 variants evenly', () => {
         const variants = Array.from({ length: 8 }, (_, i) => ({
             ...variantTemplate,
             id: `${i}`,
@@ -50,7 +50,7 @@ describe('updateWeightEdit', () => {
         });
     });
 
-    it('can distribute weight between 8 variants evenly and assign the remainder to the last variant', () => {
+    test('can distribute weight between 8 variants evenly and assign the remainder to the last variant', () => {
         const variants = Array.from({ length: 8 }, (_, i) => ({
             ...variantTemplate,
             id: `${i}`,
@@ -63,7 +63,7 @@ describe('updateWeightEdit', () => {
         expect(weights).toEqual([13, 12, 13, 12, 13, 12, 13, 12]);
     });
 
-    it('can adjust variable weight to get correct sum', () => {
+    test('can adjust variable weight to get correct sum', () => {
         const variants = [
             { ...variantTemplate, weightType: 'fix' as const, weight: 333 },
             { ...variantTemplate, id: '2', name: 'B' },
@@ -74,7 +74,7 @@ describe('updateWeightEdit', () => {
         expect(weights).toEqual([333, 667]);
     });
 
-    it('can deal with complex example', () => {
+    test('can deal with complex example', () => {
         const variants = [
             { ...variantTemplate, weightType: 'fix' as const, weight: 333 },
             { ...variantTemplate, id: '2', name: 'B' },
@@ -97,7 +97,7 @@ describe('updateWeightEdit', () => {
         expect(weights).toEqual([333, 93, 93, 93, 92, 111, 93, 92]);
     });
 
-    it('can deal with 0-weight variable variant', () => {
+    test('can deal with 0-weight variable variant', () => {
         const variants = [
             { ...variantTemplate, weightType: 'fix' as const, weight: 500 },
             {

@@ -18,6 +18,10 @@ describe('feature', () => {
                     'ResizeObserver loop completed with undelivered notifications',
                 )
             ) {
+                cy.log(
+                    'Ignored an uncaught resize observer error:',
+                    err.message,
+                );
                 // ignore resize observer errors
                 // returning false here prevents Cypress from failing the test
                 return false;

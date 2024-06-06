@@ -23,6 +23,7 @@ describe('feature', () => {
                     err.message,
                 );
                 // ignore resize observer errors
+                // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
                 // returning false here prevents Cypress from failing the test
                 return false;
             }

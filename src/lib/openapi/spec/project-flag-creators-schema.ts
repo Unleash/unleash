@@ -15,7 +15,7 @@ export const projectFlagCreatorsSchema = {
                 description: 'The user id.',
             },
             name: {
-                description: 'Name of the user',
+                description: 'Name of the user. If the user has no set name, the API falls back to using the user's username (if they have one) or email (if neither name or username is set).',
                 type: 'string',
                 example: 'User',
             },

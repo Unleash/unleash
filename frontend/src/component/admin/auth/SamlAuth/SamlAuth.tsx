@@ -54,6 +54,10 @@ export const SamlAuth = () => {
         setValue(event.target.name, event.target.value);
     };
 
+    const trimAndUpdateField = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.name, event.target.value.trim());
+    };
+
     const updateEnabled = () => {
         setData({ ...data, enabled: !data.enabled });
     };
@@ -137,7 +141,7 @@ export const SamlAuth = () => {
                     </Grid>
                     <Grid item md={6}>
                         <TextField
-                            onChange={updateField}
+                            onChange={trimAndUpdateField}
                             label='Entity ID'
                             name='entityId'
                             value={data.entityId}
@@ -159,7 +163,7 @@ export const SamlAuth = () => {
                     </Grid>
                     <Grid item md={6}>
                         <TextField
-                            onChange={updateField}
+                            onChange={trimAndUpdateField}
                             label='Single Sign-On URL'
                             name='signOnUrl'
                             value={data.signOnUrl}
@@ -213,7 +217,7 @@ export const SamlAuth = () => {
                     </Grid>
                     <Grid item md={6}>
                         <TextField
-                            onChange={updateField}
+                            onChange={trimAndUpdateField}
                             label='Single Sign-out URL'
                             name='signOutUrl'
                             value={data.signOutUrl}

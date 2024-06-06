@@ -1200,8 +1200,6 @@ export default class ProjectService {
         return this.projectStore.getMembersCountByProject(projectId);
     }
 
-    async getProjectUsersWithFlag() {}
-
     async getProjectUsers(
         projectId: string,
     ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {

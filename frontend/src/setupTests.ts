@@ -24,7 +24,3 @@ global.test = (name, fn, options) => {
     testCounter++;
     return fnToUse(name, fn, options);
 };
-
-global.describe = (name, fn, options) => {
-    return originalTest.describe(name, fn, options);
-};

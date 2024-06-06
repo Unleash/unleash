@@ -11,7 +11,7 @@ Provisioning is only available in Unleash Enterprise. This feature is in beta, p
 
 Unleash supports provisioning through the [SCIM Protocol](https://scim.cloud/), making it easy to manage users and groups directly through your SSO provider. Users and groups that are assigned or unassigned in your Unleash SSO application will automatically be synced to Unleash. Our provisioning implementation only supports soft deletes so your audit log will be preserved when users are deprovisioned.
 
-See our how to guides on setting up provisioning for [Okta](../how-to/how-to-setup-provisioning-with-okta.md).
+See our how to guides on setting up provisioning for [Okta](../how-to/how-to-setup-provisioning-with-okta.md) or [Entra](../how-to/how-to-setup-provisioning-with-entra.md) (formerly known as Azure).
 
 ## Advantages
 

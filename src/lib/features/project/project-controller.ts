@@ -353,7 +353,7 @@ export default class ProjectController extends Controller {
     }
 
     async getProjectFlagCreators(
-        req: IAuthRequest,
+        req: IAuthRequest<IProjectParam>,
         res: Response<ProjectFlagCreatorsSchema>,
     ): Promise<void> {
         const { projectId } = req.params;

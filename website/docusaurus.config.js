@@ -194,13 +194,13 @@ module.exports = {
                 variant: 'requests',
             },
             {
+                highlight: 'go',
+                language: 'go',
+            },
+            {
                 highlight: 'javascript',
                 language: 'nodejs',
                 variant: 'native',
-            },
-            {
-                highlight: 'go',
-                language: 'go',
             },
             {
                 highlight: 'ruby',

@@ -42,6 +42,7 @@ import { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-d
 import { ISegmentReadModel } from '../features/segment/segment-read-model-type';
 import { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type';
 import { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type';
+import { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -87,6 +88,7 @@ export interface IUnleashStores {
     trafficDataUsageStore: ITrafficDataUsageStore;
     segmentReadModel: ISegmentReadModel;
     projectOwnersReadModel: IProjectOwnersReadModel;
+    projectFlagCreatorsReadModel: IProjectFlagCreatorsReadModel;
     featureLifecycleStore: IFeatureLifecycleStore;
 }
 
@@ -133,4 +135,5 @@ export {
     ISegmentReadModel,
     IProjectOwnersReadModel,
     IFeatureLifecycleStore,
+    IProjectFlagCreatorsReadModel,
 };

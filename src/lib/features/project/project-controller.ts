@@ -44,6 +44,10 @@ import { normalizeQueryParams } from '../feature-search/search-utils';
 import ProjectInsightsController from '../project-insights/project-insights-controller';
 import FeatureLifecycleController from '../feature-lifecycle/feature-lifecycle-controller';
 import type ClientInstanceService from '../metrics/instance/instance-service';
+import {
+    projectFlagCreatorsSchema,
+    type ProjectFlagCreatorsSchema,
+} from '../../openapi/spec/project-flag-creators-schema';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -160,6 +164,26 @@ export default class ProjectController extends Controller {
                     parameters: [...projectApplicationsQueryParameters],
                     responses: {
                         200: createResponseSchema('projectApplicationsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/flag-creators',
+            handler: this.getProjectFlagCreators,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'getProjectFlagCreators',
+                    summary: 'Get a list of all flag creators for a project.',
+                    description:
+                        'This endpoint returns every user who created a flag in the project.',
+                    responses: {
+                        200: createResponseSchema('projectFlagCreatorsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -327,6 +351,24 @@ export default class ProjectController extends Controller {
             serializeDates(applications),
         );
     }
+
+    async getProjectFlagCreators(
+        req: IAuthRequest<IProjectParam>,
+        res: Response<ProjectFlagCreatorsSchema>,
+    ): Promise<void> {
+        const { projectId } = req.params;
+
+        const flagCreators =
+            await this.projectService.getProjectFlagCreators(projectId);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            projectFlagCreatorsSchema.$id,
+            serializeDates(flagCreators),
+        );
+    }
+
     async getOutdatedProjectSdks(
         req: IAuthRequest<IProjectParam>,
         res: Response<OutdatedSdksSchema>,

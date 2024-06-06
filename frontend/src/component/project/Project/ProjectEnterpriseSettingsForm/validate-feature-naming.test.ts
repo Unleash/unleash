@@ -1,4 +1,5 @@
 import { validateFeatureNamingExample } from './ProjectEnterpriseSettingsForm';
+import { test } from 'vitest';
 
 describe('validateFeatureNaming', () => {
     test.each(['+', 'valid regex$'])(

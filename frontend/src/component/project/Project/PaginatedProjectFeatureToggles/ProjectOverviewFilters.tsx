@@ -83,7 +83,11 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
         }
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
+    }, [
+        JSON.stringify(tags),
+        JSON.stringify(flagCreators),
+        flagCreatorEnabled,
+    ]);
 
     return (
         <Filters

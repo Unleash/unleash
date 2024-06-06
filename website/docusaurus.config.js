@@ -183,6 +183,47 @@ module.exports = {
                 'swift',
             ],
         },
+        languageTabs: [
+            {
+                highlight: 'bash',
+                language: 'curl',
+            },
+            {
+                highlight: 'python',
+                language: 'python',
+                variant: 'requests',
+            },
+            {
+                highlight: 'javascript',
+                language: 'nodejs',
+                variant: 'native',
+            },
+            {
+                highlight: 'go',
+                language: 'go',
+            },
+            {
+                highlight: 'ruby',
+                language: 'ruby',
+            },
+            {
+                highlight: 'csharp',
+                language: 'csharp',
+                variant: 'httpclient',
+            },
+            {
+                highlight: 'php',
+                language: 'php',
+            },
+            {
+                highlight: 'java',
+                language: 'java',
+            },
+            {
+                highlight: 'powershell',
+                language: 'powershell',
+            },
+        ],
         footer: {
             style: 'dark',
             links: [

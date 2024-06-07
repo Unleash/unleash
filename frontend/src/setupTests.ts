@@ -35,7 +35,9 @@ customTest.each = (cases: any) => {
             const fnToUse = shouldSkip(testCounter + index)
                 ? originalTest.skip
                 : originalTest;
-            fnToUse(testName, () => fn(...testCase));
+            fnToUse(testName, () =>
+                fn(...(Array.isArray(testCase) ? testCase : [testCase])),
+            );
         });
         testCounter += cases.length;
     };

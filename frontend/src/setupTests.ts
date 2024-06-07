@@ -41,5 +41,6 @@ customTest.each = (cases: any) => (name: string, fn: Function) => {
         return fnToUse(`${name} - ${testName}`, () => fn(testCase));
     });
 };
+customTest.skip = originalTest.skip;
 //@ts-ignore
 global.test = customTest;

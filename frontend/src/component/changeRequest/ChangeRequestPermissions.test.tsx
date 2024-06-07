@@ -282,7 +282,7 @@ const openEnvironments = async (envNames: string[]) => {
     }
 };
 
-test.skip('open mode + non-project member can perform basic change request actions', async () => {
+test('open mode + non-project member can perform basic change request actions', async () => {
     const project = 'default';
     const featureName = 'test';
     featureEnvironments(featureName, [
@@ -312,7 +312,7 @@ test.skip('open mode + non-project member can perform basic change request actio
     await copyButtonsActiveInOtherEnv();
 });
 
-test.skip('protected mode + project member can perform basic change request actions', async () => {
+test('protected mode + project member can perform basic change request actions', async () => {
     const project = 'default';
     const featureName = 'test';
     featureEnvironments(featureName, [
@@ -342,7 +342,7 @@ test.skip('protected mode + project member can perform basic change request acti
     await copyButtonsActiveInOtherEnv();
 });
 
-test.skip('protected mode + non-project member cannot perform basic change request actions', async () => {
+test('protected mode + non-project member cannot perform basic change request actions', async () => {
     const project = 'default';
     const featureName = 'test';
     featureEnvironments(featureName, [

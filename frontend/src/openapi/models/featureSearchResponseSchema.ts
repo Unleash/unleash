@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy';
 import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
 import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
 import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
@@ -26,6 +27,8 @@ export interface FeatureSearchResponseSchema {
      * @nullable
      */
     createdAt: string | null;
+    /** User who created the feature flag */
+    createdBy: FeatureSearchResponseSchemaCreatedBy;
     /**
      * The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.
      * @nullable

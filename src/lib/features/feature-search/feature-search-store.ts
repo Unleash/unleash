@@ -19,6 +19,7 @@ import type {
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams, applySearchFilters } from './search-utils';
 import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
+import { generateImageUrl } from '../../util';
 
 const sortEnvironments = (overview: IFeatureOverview[]) => {
     return overview.map((data: IFeatureOverview) => ({
@@ -133,6 +134,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
                     'segments.name as segment_name',
+                    'users.id as user_id',
+                    'users.name as user_name',
+                    'users.username as user_username',
+                    'users.email as user_email',
+                    'users.image_url as user_image_url',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -232,7 +238,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                             '=',
                             'features.name',
                         );
-                    });
+                    })
+                    .leftJoin(
+                        'users',
+                        'users.id',
+                        'features.created_by_user_id',
+                    );
 
                 query.leftJoin('last_seen_at_metrics', function () {
                     this.on(
@@ -394,6 +405,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
             if (!entry) {
                 // Create a new entry
+                const name =
+                    row.user_name ||
+                    row.user_username ||
+                    row.user_email ||
+                    'unknown';
                 entry = {
                     type: row.type,
                     description: row.description,
@@ -407,6 +423,15 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     dependencyType: row.dependency,
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
+                    createdBy: {
+                        id: Number(row.user_id),
+                        name: name,
+                        imageUrl: generateImageUrl({
+                            id: row.user_id,
+                            email: row.user_email,
+                            username: name,
+                        }),
+                    },
                 };
                 if (featureLifecycleEnabled) {
                     entry.lifecycle = row.latest_stage

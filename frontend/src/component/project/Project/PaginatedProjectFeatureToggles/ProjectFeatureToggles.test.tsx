@@ -13,17 +13,30 @@ const setupApi = () => {
             name: 'featureA',
             tags: [{ type: 'backend', value: 'sdk' }],
             type: 'operational',
+            createdBy: { id: 1, name: 'author' },
         },
-        { name: 'featureB', type: 'release' },
+        {
+            name: 'featureB',
+            type: 'release',
+            createdBy: { id: 1, name: 'author' },
+        },
     ];
     testServerRoute(server, '/api/admin/search/features', {
         features,
         total: features.length,
     });
-    testServerRoute(server, '/api/admin/ui-config', {});
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            flagCreator: true,
+        },
+    });
     testServerRoute(server, '/api/admin/tags', {
         tags: [{ type: 'backend', value: 'sdk' }],
     });
+    testServerRoute(server, '/api/admin/projects/default/flag-creators', [
+        { id: 1, name: 'AuthorA' },
+        { id: 2, name: 'AuthorB' },
+    ]);
 };
 
 test('selects project features', async () => {
@@ -118,4 +131,33 @@ test('filters by flag type', async () => {
 
     await screen.findByText('Flag type');
     await screen.findByText('Operational');
+});
+
+test('filters by flag author', async () => {
+    setupApi();
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+    const addFilter = await screen.findByText('Add Filter');
+    fireEvent.click(addFilter);
+
+    const createdBy = await screen.findByText('Created by');
+    fireEvent.click(createdBy);
+
+    const authorA = await screen.findByText('AuthorA');
+    fireEvent.click(authorA);
+
+    expect(window.location.href).toContain('createdBy=IS%3A1');
 });

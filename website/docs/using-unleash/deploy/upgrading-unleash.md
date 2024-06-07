@@ -5,6 +5,53 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 Generally, the intention is that `unleash-server` should always provide support for clients one major version lower than the current one. This should make it possible to upgrade `unleash` gradually.
 
+## Upgrading to v6 from v5
+
+[Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you have followed the previous migration guides on this page. We're removing some features that were deprecated in version 5 and marking some features as deprecated, but these will continue to be supported during version 6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:
+
+### Remove Passport libs from the official open source Docker distribution
+
+*If you're not using the official open source image, you can safely ignore this change.* 
+
+The [official open source Docker image](https://hub.docker.com/r/unleashorg/unleash-server) no longer includes these custom authentication libraries. If you're using this feature, there is a [community image](https://github.com/Unleash/unleash-docker-community) that contains (and will continue to contain) these dependencies. 
+
+### Drop support for PostgreSQL versions 10, 11 and 12
+
+*If you're using PostgreSQL 13 or above you can safely ignore this change.*
+
+Unleash v6 will output an error message when starting with an unsupported version but continue to run. We recommend upgrading to a supported version as soon as possible.
+
+### Update to Node.js version 20+
+
+Unleash v6 drops support for Node.js versions below 20, which is the [active LTS at the time of release](https://github.com/nodejs/Release/blob/6209d04302e62156b964a605f619283582334c95/README.md#release-schedule).
+
+### Remove /edge/metrics endpoint
+
+*If you're not using Unleash Edge, you can safely ignore this change.*
+
+If you're using Unleash Edge to connect to Unleash, make sure to first upgrade Unleash Edge to version 19.1.3 or above. If you're using an older version of Edge, the core feature flag functionality will still work, but you will not be able to gather any metrics.
+
+### Remove legacy `/api/feature` endpoint
+
+If you're still using this endpoint, check out the [deprecation notice in v4](#4-legacy-v2-routes-removed).
+
+### Remove deprecated [import service](../../how-to/how-to-import-export)
+
+Unleash v6 drops support for file based import at startup. If you're using this functionality, please check out the issue about adding this functionality to the current import service ([#7128](https://github.com/Unleash/unleash/issues/7128)).
+
+If you're using that endpoint for a custom integration, you should migrate to the [new import service](../../how-to/how-to-environment-import-export) ([new import/export api docs](../../reference/api/unleash/import-export)). 
+For a comparison between the two, refer to the [environment import/export vs instance import/export](../../how-to/how-to-environment-import-export#environment-importexport-vs-the-instance-importexport-api) section at the bottom of this page.
+
+### Deprecate custom strategies
+
+Using custom strategies has the drawback of requiring you to distribute the strategy's code with the Unleash client SDK. In contrast, [strategy constraints](../../reference/strategy-constraints) function without needing additional code or maintenance. In most cases, [strategy constraints](../../reference/strategy-constraints) offer sufficient control you need without added complexity. 
+
+If you can't accomplish the same functionality with strategy constraints, please let us know about your use case on [Slack](https://slack.unleash.run/).
+
+### Dropping Internet Explorer (IE) Support
+
+With Unleash v6, Internet Explorer is no longer supported. React v18, used in Unleash, has dropped support for IE, aligning with Microsoft's end of support for IE on June 15, 2022. Users are encouraged to switch to modern browsers for the best experience.
+
 ## Upgrading to 5.7 and later from versions < 5.6.11
 
 When running on high-availability (multiple Unleash instances), upgrading from versions lower than 5.6.11 to version 5.7 or higher will cause a temporary UI unavailability while old versions and new versions are both serving traffic, due to a compatibility issue. If you can afford having a small period of time with the UI unavailable (note the SDKs will not be affected), then  you can safely upgrade.

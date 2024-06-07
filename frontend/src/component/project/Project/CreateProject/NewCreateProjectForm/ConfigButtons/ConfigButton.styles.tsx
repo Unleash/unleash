@@ -30,3 +30,14 @@ export const ButtonLabel = styled('span', {
         width: 'max-content',
     },
 }));
+
+export const StyledTooltipContent = styled('article')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+    paddingBlock: theme.spacing(1),
+
+    '& > *': {
+        margin: 0,
+    },
+}));

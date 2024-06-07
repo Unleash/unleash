@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'enableLegacyVariants'
     | 'debugMetrics'
     | 'navigationSidebar'
-    | 'commandBarUI';
+    | 'commandBarUI'
+    | 'flagCreator';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -297,6 +298,10 @@ const flags: IFlags = {
     ),
     commandBarUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
+        false,
+    ),
+    flagCreator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_CREATOR,
         false,
     ),
 };

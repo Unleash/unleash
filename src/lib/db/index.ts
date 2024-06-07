@@ -45,6 +45,7 @@ import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-da
 import { SegmentReadModel } from '../features/segment/segment-read-model';
 import { ProjectOwnersReadModel } from '../features/project/project-owners-read-model';
 import { FeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store';
+import { ProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -156,6 +157,7 @@ export const createStores = (
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
         projectOwnersReadModel: new ProjectOwnersReadModel(db),
+        projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
         featureLifecycleStore: new FeatureLifecycleStore(db),
     };
 };

@@ -4,7 +4,7 @@ import { VerticalTab } from './VerticalTab/VerticalTab';
 const StyledTabPage = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(3),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xl')]: {
         flexDirection: 'column',
     },
 }));
@@ -21,7 +21,7 @@ const StyledTabs = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     width: theme.spacing(30),
     flexShrink: 0,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xl')]: {
         width: '100%',
     },
 }));

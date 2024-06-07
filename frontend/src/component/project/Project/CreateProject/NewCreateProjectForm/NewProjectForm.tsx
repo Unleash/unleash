@@ -15,6 +15,7 @@ import {
     OptionButtons,
     ProjectDescriptionContainer,
     ProjectNameContainer,
+    StyledDefinitionList,
     StyledForm,
     StyledHeader,
     StyledIcon,
@@ -72,7 +73,30 @@ const configButtonData = {
     },
     mode: {
         icon: <ProjectModeIcon />,
-        text: 'Mode defines who should be allowed to interact and see your project. Private mode hides the project from anyone except the project owner and members.',
+        text: "A project's collaboration mode defines who should be allowed see your project and create change requests in it.",
+        additionalTooltipContent: (
+            <>
+                <p>The modes and their functions are:</p>
+                <StyledDefinitionList>
+                    <dt>Open</dt>
+                    <dd>
+                        Anyone can see the project and anyone can create change
+                        requests.
+                    </dd>
+                    <dt>Protected</dt>
+                    <dd>
+                        Anyone can see the project, but only admins and project
+                        members can submit change requests.
+                    </dd>
+                    <dt>Private</dt>
+                    <dd>
+                        Hides the project from users with the "viewer" root role
+                        who are not members of the project. Only project members
+                        and admins can submit change requests.
+                    </dd>
+                </StyledDefinitionList>
+            </>
+        ),
     },
     changeRequests: {
         icon: <ChangeRequestIcon />,
@@ -182,7 +206,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
 
             <OptionButtons>
                 <MultiSelectConfigButton
-                    tooltipHeader='Select project environments'
+                    tooltip={{ header: 'Select project environments' }}
                     description={configButtonData.environments.text}
                     selectedOptions={projectEnvironments}
                     options={activeEnvironments.map((env) => ({
@@ -209,7 +233,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                 />
 
                 <SingleSelectConfigButton
-                    tooltipHeader='Set default project stickiness'
+                    tooltip={{ header: 'Set default project stickiness' }}
                     description={configButtonData.stickiness.text}
                     options={stickinessOptions.map(({ key, ...rest }) => ({
                         value: key,
@@ -237,7 +261,12 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <SingleSelectConfigButton
-                            tooltipHeader='Set project mode'
+                            tooltip={{
+                                header: 'Set project collaboration mode',
+                                additionalContent:
+                                    configButtonData.mode
+                                        .additionalTooltipContent,
+                            }}
                             description={configButtonData.mode.text}
                             options={projectModeOptions}
                             onChange={(value: any) => {
@@ -263,7 +292,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     condition={isEnterprise()}
                     show={
                         <ChangeRequestTableConfigButton
-                            tooltipHeader='Configure change requests'
+                            tooltip={{ header: 'Configure change requests' }}
                             description={configButtonData.changeRequests.text}
                             activeEnvironments={
                                 availableChangeRequestEnvironments

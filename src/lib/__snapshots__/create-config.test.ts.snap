@@ -122,6 +122,7 @@ exports[`should create default config 1`] = `
         },
       },
       "filterInvalidClientMetrics": false,
+      "flagCreator": false,
       "googleAuthEnabled": false,
       "killInsightsUI": false,
       "killScheduledChangeRequestCache": false,

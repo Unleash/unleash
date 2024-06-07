@@ -503,6 +503,7 @@ module.exports = {
                             label: 'Automatic provisioning',
                             items: [
                                 'how-to/how-to-setup-provisioning-with-okta',
+                                'how-to/how-to-setup-provisioning-with-entra',
                             ],
                             type: 'category',
                             link: {

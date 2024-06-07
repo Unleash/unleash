@@ -43,6 +43,8 @@ import FeatureTypeStore from '../../db/feature-type-store';
 import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 import { ProjectOwnersReadModel } from './project-owners-read-model';
 import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model';
+import { FakeProjectFlagCreatorsReadModel } from './fake-project-flag-creators-read-model';
+import { ProjectFlagCreatorsReadModel } from './project-flag-creators-read-model';
 
 export const createProjectService = (
     db: Db,
@@ -57,6 +59,7 @@ export const createProjectService = (
         flagResolver,
     );
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
+    const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
     const groupStore = new GroupStore(db);
     const featureToggleStore = new FeatureToggleStore(
         db,
@@ -119,6 +122,7 @@ export const createProjectService = (
             accountStore,
             projectStatsStore,
             projectOwnersReadModel,
+            projectFlagCreatorsReadModel,
         },
         config,
         accessService,
@@ -136,6 +140,7 @@ export const createFakeProjectService = (
     const { getLogger } = config;
     const eventStore = new FakeEventStore();
     const projectOwnersReadModel = new FakeProjectOwnersReadModel();
+    const projectFlagCreatorsReadModel = new FakeProjectFlagCreatorsReadModel();
     const projectStore = new FakeProjectStore();
     const groupStore = new FakeGroupStore();
     const featureToggleStore = new FakeFeatureToggleStore();
@@ -175,6 +180,7 @@ export const createFakeProjectService = (
         {
             projectStore,
             projectOwnersReadModel,
+            projectFlagCreatorsReadModel,
             eventStore,
             featureToggleStore,
             environmentStore,

@@ -6,18 +6,27 @@ import {
     StyledPopover,
     HiddenDescription,
     ButtonLabel,
+    StyledTooltipContent,
 } from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 export type ConfigButtonProps = {
-    button: { label: string; icon: ReactNode; labelWidth?: string };
+    button: {
+        label: string;
+        icon: ReactNode;
+        labelWidth?: string;
+        additionalTooltipContent?: ReactNode;
+    };
     onOpen?: () => void;
     onClose?: () => void;
     description: string;
     preventOpen?: boolean;
     anchorEl: HTMLDivElement | null | undefined;
     setAnchorEl: (el: HTMLDivElement | null | undefined) => void;
-    tooltipHeader: string;
+    tooltip: {
+        header: string;
+        additionalContent?: ReactNode;
+    };
 };
 
 export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
@@ -29,7 +38,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     preventOpen,
     anchorEl,
     setAnchorEl,
-    tooltipHeader,
+    tooltip,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const descriptionId = uuidv4();
@@ -49,10 +58,11 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
             <Box ref={ref}>
                 <TooltipResolver
                     titleComponent={
-                        <article>
-                            <h3>{tooltipHeader}</h3>
+                        <StyledTooltipContent>
+                            <h3>{tooltip.header}</h3>
                             <p>{description}</p>
-                        </article>
+                            {tooltip.additionalContent}
+                        </StyledTooltipContent>
                     }
                     variant='custom'
                 >

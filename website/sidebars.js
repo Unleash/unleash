@@ -50,26 +50,8 @@ module.exports = {
                 slug: '/topics',
             },
             items: [
-                {
-                    type: 'doc',
-                    label: '11 Principles for Building and Scaling Feature Flag Systems',
-                    id: 'topics/feature-flags/feature-flag-best-practices',
-                },
-                {
-                    type: 'category',
-                    label: 'Feature Flag Migrations',
-                    link: {
-                        type: 'doc',
-                        id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
-                    },
-                    items: [
-                        'topics/feature-flag-migration/feature-flag-migration-scope',
-                        'topics/feature-flag-migration/business-case-feature-flag-migration',
-                        'topics/feature-flag-migration/planning-feature-flag-migration',
-                        'topics/feature-flag-migration/how-to-execute-feature-flag-migration',
-                        'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
-                    ],
-                },
+                'topics/feature-flags/feature-flag-best-practices',
+                'topics/feature-flag-migration/feature-flag-migration-best-practices',
                 'topics/a-b-testing',
             ],
         },

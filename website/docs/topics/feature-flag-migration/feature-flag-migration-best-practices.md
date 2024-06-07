@@ -8,11 +8,11 @@ This guide outlines Best Practices for feature flag migrations. Approaching the 
 
 Based on our work with organizations having millions of flags and thousands of users, there are five phases of a feature flag migration:
 
--   [Defining the scope of the feature flag migration](#defining-the-scope-of-the-feature-flag-migration)
--   [Make the business case for feature flag migration](#make-the-business-case-for-feature-flag-migration)
--   [Planning Feature Flag Migration](#planning-feature-flag-migration)
--   [Migration Execution](#migration-execution)
--   [Onboarding users](#onboarding-users)
+1.  [Defining the scope of the feature flag migration](#defining-the-scope-of-the-feature-flag-migration)
+2.  [Make the business case for feature flag migration](#make-the-business-case-for-feature-flag-migration)
+3.  [Planning Feature Flag Migration](#planning-feature-flag-migration)
+4.  [Migration Execution](#migration-execution)
+5.  [Onboarding users](#onboarding-users)
 
 This guide provides a summary of each topic as well as a detailed Feature Flag Migration template that you can use to plan your migration.
 

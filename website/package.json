@@ -34,8 +34,8 @@
     "git-url-parse": "^14.0.0",
     "plugin-image-zoom": "flexanalytics/plugin-image-zoom",
     "prism-svelte": "^0.5.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "url-loader": "4.1.1"
   },
   "resolutions": {
@@ -54,7 +54,11 @@
     "semver": "^7.5.3"
   },
   "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -70,5 +74,6 @@
     "react-router": "6.23.1",
     "replace-in-file": "7.2.0",
     "typescript": "4.8.4"
-  }
+  },
+  "packageManager": "yarn@4.2.2"
 }

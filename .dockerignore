@@ -11,3 +11,6 @@
 !README.md
 !frontend
 frontend/node_modules
+!.yarn/**
+!.yarnrc.yml
+!frontend/.yarn/**

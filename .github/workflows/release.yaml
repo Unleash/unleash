@@ -27,7 +27,7 @@ jobs:
           cache: 'yarn'
       - name: Build
         run: |
-          yarn install --frozen-lockfile
+          yarn install --immutable
       - name: Publish to npm
         run: |
           LATEST=$(npm show unleash-server version)

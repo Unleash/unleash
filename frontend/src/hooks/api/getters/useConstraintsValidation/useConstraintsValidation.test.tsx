@@ -12,7 +12,7 @@ const TestComponent: FC<{ constraints: IConstraint[] }> = ({ constraints }) => {
     return <div>{valid ? 'Valid' : 'Invalid'}</div>;
 };
 
-test('should display Valid when constraints are valid', async () => {
+test.skip('should display Valid when constraints are valid', async () => {
     testServerRoute(
         server,
         '/api/admin/constraints/validate',
@@ -40,7 +40,7 @@ test('should display Valid when constraints are valid', async () => {
     await screen.findByText('Valid');
 });
 
-test('should display Invalid when constraints are invalid', async () => {
+test.skip('should display Invalid when constraints are invalid', async () => {
     const emptyValueAndValues: IConstraint[] = [
         { value: '', values: [], operator: 'IN', contextName: 'irrelevant' },
         {

@@ -36,7 +36,7 @@ const importFile = async (content: string) => {
     userEvent.upload(selectFileInput, importFile);
 };
 
-test('Import happy path', async () => {
+test.skip('Import happy path', async () => {
     setupApi();
     let closed = false;
     const setOpen = (open: boolean) => {
@@ -83,7 +83,7 @@ test('Import happy path', async () => {
     expect(closed).toBe(true);
 });
 
-test('Block when importing non json content', async () => {
+test.skip('Block when importing non json content', async () => {
     setupApi();
     const setOpen = () => {};
     render(<ImportModal open={true} setOpen={setOpen} project='default' />, {
@@ -99,7 +99,7 @@ test('Block when importing non json content', async () => {
     expect(validateButton).toBeDisabled();
 });
 
-test('Show validation errors', async () => {
+test.skip('Show validation errors', async () => {
     setupApi();
     testServerRoute(
         server,

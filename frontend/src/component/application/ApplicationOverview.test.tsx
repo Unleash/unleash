@@ -16,7 +16,7 @@ const setupApi = (application: ApplicationOverviewSchema) => {
     testServerRoute(server, '/api/admin/ui-config', {});
 };
 
-test.skip('Display application overview with environments', async () => {
+test('Display application overview with environments', async () => {
     setupApi({
         environments: [
             {
@@ -54,7 +54,7 @@ test.skip('Display application overview with environments', async () => {
     await screen.findByText('0 seconds ago');
 });
 
-test.skip('Display application overview without environments', async () => {
+test('Display application overview without environments', async () => {
     setupApi({
         environments: [],
         featureCount: 0,

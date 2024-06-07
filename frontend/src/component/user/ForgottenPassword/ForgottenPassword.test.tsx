@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();
 
-test.skip('should render password auth', async () => {
+test('should render password auth', async () => {
     render(<ForgottenPassword />);
     const user = userEvent.setup();
 

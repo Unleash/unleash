@@ -5,6 +5,7 @@ import styles from './contributors.module.scss';
 
 const unleashTeam = new Map([
     ['alvinometric', 'developer advocate, Unleash'],
+    ['ardeche07', 'head of marketing, Unleash'],
     ['andreas-unleash', 'developer, Unleash'],
     ['chriswk', 'principal developer, Unleash'],
     ['daveleek', 'developer, Unleash'],

@@ -797,6 +797,16 @@ module.exports = {
                         ],
                         to: '/topics/feature-flags/feature-flag-best-practices',
                     },
+                    {
+                        from: [
+                            '/topics/feature-flag-migration/feature-flag-migration-scope',
+                            '/topics/feature-flag-migration/business-case-feature-flag-migration',
+                            '/topics/feature-flag-migration/planning-feature-flag-migration',
+                            '/topics/feature-flag-migration/how-to-execute-feature-flag-migration',
+                            '/topics/feature-flag-migration/onbording-users-to-feature-flag-service',
+                        ],
+                        to: '/topics/feature-flag-migration/feature-flag-migration-best-practices',
+                    },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: (toPath) => {
                     if (

@@ -14,3 +14,4 @@ frontend/node_modules
 !.yarn/**
 !.yarnrc.yml
 !frontend/.yarn/**
+node_modules

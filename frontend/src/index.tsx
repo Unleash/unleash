@@ -21,6 +21,7 @@ import { PlausibleProvider } from 'component/providers/PlausibleProvider/Plausib
 import { Error as LayoutError } from './component/layout/Error/Error';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
+import { StrictMode } from 'react';
 
 window.global ||= window;
 
@@ -75,4 +76,8 @@ const ApplicationRoot = () => {
 };
 
 const root = ReactDOM.createRoot(document.getElementById('app')!);
-root.render(<ApplicationRoot />);
+root.render(
+    <StrictMode>
+        <ApplicationRoot />
+    </StrictMode>,
+);

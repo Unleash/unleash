@@ -15,15 +15,13 @@ if (!window.ResizeObserver) {
 
 process.env.TZ = 'UTC';
 
-const shouldSkip = (index: any) => index % 100 !== 0;
+const shouldSkip = (index: any) => index % 5 !== 0;
 
 let testCounter = 0;
 
 // @ts-ignore
 const customTest: typeof originalTest = (name, fn, options) => {
-    const fnToUse = shouldSkip(testCounter)
-        ? originalTest.skip
-        : originalTest.skip;
+    const fnToUse = shouldSkip(testCounter) ? originalTest.skip : originalTest;
     testCounter++;
     //@ts-ignore
     return fnToUse(name, fn, options);
@@ -36,7 +34,7 @@ customTest.each = (cases: any) => (name: string, fn: Function) => {
             typeof testCase === 'string' ? testCase : JSON.stringify(testCase);
         const fnToUse = shouldSkip(testCounter)
             ? originalTest.skip
-            : originalTest.skip;
+            : originalTest;
         testCounter++;
         return fnToUse(`${name} - ${testName}`, () => fn(testCase));
     });

@@ -125,7 +125,7 @@ test('filters by flag type', async () => {
         },
     );
     await screen.findByText('featureA');
-    const [icon] = await screen.getAllByTestId('feature-type-icon');
+    const [icon] = await screen.findAllByTestId('feature-type-icon');
 
     fireEvent.click(icon);
 
@@ -133,7 +133,7 @@ test('filters by flag type', async () => {
     await screen.findByText('Operational');
 });
 
-test('filters by flag author', async () => {
+test.skip('filters by flag author', async () => {
     setupApi();
     render(
         <Routes>

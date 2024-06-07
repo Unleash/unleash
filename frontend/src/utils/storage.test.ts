@@ -127,4 +127,9 @@ describe('localStorage with TTL', () => {
         vi.advanceTimersByTime(60);
         expect(getSessionStorageItem('sessionTTL')).toBeUndefined();
     });
+
+    afterEach(() => {
+        // restoring date after each test run
+        vi.useRealTimers();
+    });
 });

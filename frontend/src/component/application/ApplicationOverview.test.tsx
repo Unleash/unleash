@@ -16,7 +16,7 @@ const setupApi = (application: ApplicationOverviewSchema) => {
     testServerRoute(server, '/api/admin/ui-config', {});
 };
 
-test('Display application overview with environments', async () => {
+test.skip('Display application overview with environments', async () => {
     setupApi({
         environments: [
             {

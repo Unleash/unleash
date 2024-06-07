@@ -13,6 +13,14 @@ if (!window.ResizeObserver) {
 }
 
 process.env.TZ = 'UTC';
+
+afterEach(async () => {
+    await new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('done');
+        }, 100);
+    });
+});
 //
 // const shouldSkip = (index: any) => index % 5 !== 0;
 //

@@ -41,6 +41,15 @@ typings
 # We use yarn.lock
 package-lock.json
 
+## Yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # Website stuff
 /website/build
 /website/backers.json

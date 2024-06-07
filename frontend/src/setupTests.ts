@@ -28,16 +28,17 @@ const customTest: typeof originalTest = (name, fn, options) => {
 };
 
 //@ts-ignore
-customTest.each = (cases: any) => (name: string, fn: Function) => {
-    cases.forEach((testCase: any) => {
-        const testName =
-            typeof testCase === 'string' ? testCase : JSON.stringify(testCase);
-        const fnToUse = shouldSkip(testCounter)
-            ? originalTest.skip
-            : originalTest;
-        testCounter++;
-        return fnToUse(`${name} - ${testName}`, () => fn(testCase));
-    });
+customTest.each = (cases: any) => {
+    return (name: string, fn: Function) => {
+        cases.forEach((testCase: any, index: number) => {
+            const testName = `${name} - ${JSON.stringify(testCase)}`;
+            const fnToUse = shouldSkip(testCounter + index)
+                ? originalTest.skip
+                : originalTest;
+            fnToUse(testName, () => fn(...testCase));
+        });
+        testCounter += cases.length;
+    };
 };
 customTest.skip = originalTest.skip;
 //@ts-ignore

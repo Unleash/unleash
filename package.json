@@ -36,21 +36,18 @@
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "build:backend": "tsc --pretty --strictNullChecks false",
     "build:frontend": "yarn --cwd ./frontend run build",
-    "build:frontend:if-needed": "if [ ! -d ./frontend/build ]; then yarn install --cwd ./frontend --frozen-lockfile --ignore-scripts && yarn build:frontend; fi",
-    "build": "concurrently \"yarn:copy-templates\" \"yarn:build:frontend\" \"yarn:build:backend\"",
+    "build:frontend:if-needed": "if [ ! -d ./frontend/build ]; then yarn install --cwd ./frontend --frozen-lockfile  && yarn build:frontend; fi",
+    "build": "yarn run clean && concurrently \"yarn:copy-templates\" \"yarn:build:frontend\" \"yarn:build:backend\"",
     "dev:backend": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "dev:frontend": "wait-on tcp:4242 && yarn --cwd ./frontend run dev",
     "dev": "concurrently \"yarn:dev:backend\" \"yarn:dev:frontend\"",
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
-    "prestart:dev": "yarn run clean",
-    "start:dev": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
+    "start:dev": "yarn run clean && TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
-    "prebuild:watch": "yarn run clean",
-    "build:watch": "tsc -w --strictNullChecks false",
-    "prebuild": "yarn run clean",
+    "build:watch": "yarn run clean && tsc -w --strictNullChecks false",
     "prepare": "husky && yarn --cwd ./frontend install && if [ ! -d ./dist ]; then yarn build; fi",
     "test": "NODE_ENV=test PORT=4243 node --trace-warnings node_modules/.bin/jest",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
@@ -82,7 +79,9 @@
     "testTimeout": 10000,
     "globalSetup": "./scripts/jest-setup.js",
     "transform": {
-      "^.+\\.tsx?$": ["@swc/jest"]
+      "^.+\\.tsx?$": [
+        "@swc/jest"
+      ]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "testPathIgnorePatterns": [
@@ -91,7 +90,13 @@
       "/frontend/",
       "/website/"
     ],
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/dist/",
@@ -214,12 +219,7 @@
   },
   "resolutions": {
     "async": "^3.2.4",
-    "db-migrate/rc/minimist": "^1.2.5",
     "es5-ext": "0.10.64",
-    "knex/liftoff/object.map/**/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
-    "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
     "node-forge": "^1.0.0",
     "set-value": "^4.0.1",
     "ansi-regex": "^5.0.1",
@@ -232,8 +232,12 @@
     "tough-cookie": "4.1.4"
   },
   "lint-staged": {
-    "*.{js,ts}": ["biome check --write --no-errors-on-unmatched"],
-    "*.{jsx,tsx}": ["biome check --write --no-errors-on-unmatched"],
-    "*.json": ["biome format --write --no-errors-on-unmatched"]
-  }
+    "*.{js,ts}": [
+      "biome check --write --no-errors-on-unmatched"
+    ],
+    "*.{jsx,tsx}": [
+      "biome check --write --no-errors-on-unmatched"
+    ]
+  },
+  "packageManager": "yarn@4.2.2"
 }

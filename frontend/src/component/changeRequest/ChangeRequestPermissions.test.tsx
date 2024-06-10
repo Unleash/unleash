@@ -182,7 +182,14 @@ const UnleashUiSetup: FC<{
     pathTemplate: string;
     children?: React.ReactNode;
 }> = ({ children, path, pathTemplate }) => (
-    <SWRConfig value={{ provider: () => new Map() }}>
+    <SWRConfig
+        value={{
+            provider: () => new Map(),
+            isVisible() {
+                return true;
+            },
+        }}
+    >
         <UIProviderContainer>
             <AccessProvider>
                 <MemoryRouter initialEntries={[path]}>

@@ -35,7 +35,13 @@ export const render = (
         <UIProviderContainer>
             <FeedbackProvider>
                 <SWRConfig
-                    value={{ provider: () => new Map(), dedupingInterval: 0 }}
+                    value={{
+                        provider: () => new Map(),
+                        isVisible() {
+                            return true;
+                        },
+                        dedupingInterval: 0,
+                    }}
                 >
                     <AccessProviderMock permissions={permissions}>
                         <BrowserRouter>

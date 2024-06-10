@@ -243,7 +243,7 @@ module.exports = {
                         'reference/public-signup',
                         'reference/projects',
                         'reference/project-collaboration-mode',
-                        'reference/provisioning',
+                        'reference/scim',
                         'reference/rbac',
                         'reference/search-operators',
                         'reference/segments',

@@ -1,5 +1,5 @@
 ---
-id: provisioning
+id: scim
 title: Provisioning
 ---
 

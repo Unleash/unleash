@@ -5,7 +5,7 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import {
-    CLIENT_METRICS,
+    CLIENT_METRICS_ADDED,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
@@ -121,7 +121,7 @@ test('should return lifecycle stages', async () => {
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_a' });
     await reachedStage('my_feature_a', 'initial');
     await expectFeatureStage('my_feature_a', 'initial');
-    eventBus.emit(CLIENT_METRICS, [
+    eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName: 'my_feature_a',
             environment: 'default',
@@ -133,7 +133,7 @@ test('should return lifecycle stages', async () => {
     ]);
 
     // missing feature
-    eventBus.emit(CLIENT_METRICS, [
+    eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             environment: 'default',
             yes: 0,
@@ -141,7 +141,7 @@ test('should return lifecycle stages', async () => {
         },
     ]);
     // non existent env
-    eventBus.emit(CLIENT_METRICS, [
+    eventBus.emit(CLIENT_METRICS_ADDED, [
         {
             featureName: 'my_feature_a',
             environment: 'non-existent',

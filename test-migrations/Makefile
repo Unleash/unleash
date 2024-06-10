@@ -46,7 +46,7 @@ default:
 .PHONY: prepare
 prepare: 
 	@echo "Preparing the environment..."
-	@yarn --cwd .. install --frozen-lockfile 
+	@yarn --cwd .. install --frozen-lockfile --ignore-scripts
 
 
 .PHONY: apply-migrations

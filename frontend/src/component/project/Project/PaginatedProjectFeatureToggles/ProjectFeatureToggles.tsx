@@ -182,6 +182,7 @@ export const ProjectFeatureToggles = ({
                                           name: original.createdBy.name,
                                           imageUrl: original.createdBy.imageUrl,
                                       }}
+                                      avatarWidth={(theme) => theme.spacing(3)}
                                   />
                               );
                           },

@@ -18,8 +18,8 @@ jobs:
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
-          cache: 'yarn'
+            node-version: 20.x
+            cache: 'yarn'
       - name: Start database
         working-directory: test-migrations
         run: docker compose up db -d --wait -t 90
@@ -29,18 +29,16 @@ jobs:
       # add some data with terraform
       - name: Apply migrations
         env:
-          DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
-          DATABASE_SSL: false
-          YARN_ENABLE_SCRIPTS: false
+            DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
+            DATABASE_SSL: false
         run: |
-          yarn install --immutable
+          yarn install --frozen-lockfile --ignore-scripts
           yarn db-migrate up
       # run ui tests against previous version of Unleash
       - name: Run Cypress
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v5
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:4242
           spec: cypress/oss/**/*.spec.ts
-          install-command: yarn --immutable

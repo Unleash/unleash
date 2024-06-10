@@ -12,13 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [20.x]
+
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: 'yarn'
       - name: Trigger sync
         uses: actions/github-script@v7
         env:
@@ -43,7 +42,7 @@ jobs:
       - name: Build static assets
         run: |
           cd frontend
-          yarn install --immutable
+          yarn install --frozen-lockfile
           yarn build
       - uses: aws-actions/configure-aws-credentials@v2
         with:

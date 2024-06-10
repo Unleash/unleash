@@ -165,7 +165,7 @@ describe('NewFeatureStrategyCreate', () => {
 
         expect(screen.getByText(expectedSegmentName)).toBeInTheDocument();
         expect(screen.getByText(expectedConstraintValue)).toBeInTheDocument();
-    }, 10000);
+    });
 
     test('should change variants settings', async () => {
         const { expectedVariantName } = setupComponent();

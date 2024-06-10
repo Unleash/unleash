@@ -214,7 +214,7 @@
     "supertest": "7.0.0",
     "ts-node": "10.9.2",
     "tsc-watch": "6.2.0",
-    "typescript": "5.4.2",
+    "typescript": "5.4.5",
     "wait-on": "^7.2.0"
   },
   "resolutions": {

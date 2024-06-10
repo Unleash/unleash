@@ -62,5 +62,11 @@ website/docs/reference/api/**/**.info.mdx
 website/docs/generated
 reports/jest-junit.xml
 
-# Yarn stuff
-.yarn/install-state.gz
+# Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -23,3 +23,12 @@ yarn-error.log*
 docs/reference/api/**/sidebar.js
 *.api.mdx
 *.tag.mdx
+
+# Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

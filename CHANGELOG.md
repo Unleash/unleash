@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.1] - 2024-06-10
+
+### Bug Fixes
+
+- Lifecycle metrics on metrics insert ([#7322](https://github.com/Unleash/unleash/issues/7322)) ([#7330](https://github.com/Unleash/unleash/issues/7330))
+
+
 ## [6.0.0] - 2024-06-06
 
 ### Bug Fixes

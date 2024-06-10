@@ -14,18 +14,8 @@ export type LastViewedPage = {
     pathName?: string;
 };
 
-const removeIncorrect = (flags?: any[]): LastViewedPage[] => {
-    if (!Array.isArray(flags)) return [];
-    return flags.filter(
-        (flag) =>
-            (flag.featureId && flag.projectId) ||
-            flag.projectId ||
-            flag.pathName,
-    );
-};
-
-const localStorageItems = (key: string) => {
-    return removeIncorrect(getLocalStorageItem(key) || []);
+const localStorageItems = (key: string): LastViewedPage[] => {
+    return getLocalStorageItem(key) || [];
 };
 
 export const useRecentlyVisited = () => {
@@ -51,20 +41,16 @@ export const useRecentlyVisited = () => {
 
         const path = routes.find((r) => r.path === location.pathname);
         if (path) {
-            setCappedLastVisited([{ pathName: path.path }]);
-        } else {
-            if (featureMatch?.params.featureId) {
-                setCappedLastVisited([
-                    {
-                        featureId: featureMatch?.params.featureId,
-                        projectId: featureMatch?.params.projectId,
-                    },
-                ]);
-            } else if (projectMatch?.params.projectId) {
-                setCappedLastVisited([
-                    { projectId: projectMatch?.params.projectId },
-                ]);
-            }
+            setCappedLastVisited({ pathName: path.path });
+        } else if (featureMatch?.params.featureId) {
+            setCappedLastVisited({
+                featureId: featureMatch?.params.featureId,
+                projectId: featureMatch?.params.projectId,
+            });
+        } else if (projectMatch?.params.projectId) {
+            setCappedLastVisited({
+                projectId: projectMatch?.params.projectId,
+            });
         }
     }, [location, featureMatch, projectMatch]);
 
@@ -76,43 +62,36 @@ export const useRecentlyVisited = () => {
     }, [JSON.stringify(lastVisited), key, emitEvent]);
 
     const setCappedLastVisited = useCallback(
-        (pages: LastViewedPage[]) => {
-            const filtered = pages.filter((page) => {
-                if (page.featureId && !page.projectId) return false;
-                if (
-                    lastVisited.find(
-                        (item) =>
-                            item.featureId && item.featureId === page.featureId,
-                    )
+        (page: LastViewedPage) => {
+            if (page.featureId && !page.projectId) return;
+            if (
+                lastVisited.find(
+                    (item) =>
+                        item.featureId && item.featureId === page.featureId,
                 )
-                    return false;
-                if (
-                    lastVisited.find(
-                        (item) =>
-                            item.pathName && item.pathName === page.pathName,
-                    )
+            )
+                return;
+            if (
+                lastVisited.find(
+                    (item) => item.pathName && item.pathName === page.pathName,
                 )
-                    return false;
-                if (
-                    lastVisited.find(
-                        (item) =>
-                            item.projectId &&
-                            !item.featureId &&
-                            !page.featureId &&
-                            item.projectId === page.projectId,
-                    )
+            )
+                return;
+            if (
+                lastVisited.find(
+                    (item) =>
+                        item.projectId &&
+                        !item.featureId &&
+                        !page.featureId &&
+                        item.projectId === page.projectId,
                 )
-                    return false;
-                return true;
-            });
+            )
+                return;
 
-            const updatedLastVisited = removeIncorrect([
-                ...lastVisited,
-                ...filtered,
-            ]);
+            const updatedLastVisited = [page, ...lastVisited];
             const sliced =
                 updatedLastVisited.length > MAX_ITEMS
-                    ? updatedLastVisited.slice(-MAX_ITEMS)
+                    ? updatedLastVisited.slice(0, MAX_ITEMS)
                     : updatedLastVisited;
             setLastVisited(sliced);
         },

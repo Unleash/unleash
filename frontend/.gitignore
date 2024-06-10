@@ -53,3 +53,12 @@ cypress/videos/*
 cypress/downloads/*
 cypress/screenshots/*
 .env.local
+
+# Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [20.13.1-alpine]
+        version: [ 20.14.0-alpine ]
     steps:
       - name: Checkout tag v${{ inputs.version }}
         if: ${{ inputs.version != '' }}
@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build frontend
         run: |
-          yarn --cwd ./frontend install
+          yarn --cwd ./frontend install --immutable
           yarn build:frontend
       - name: Build tag and push image to Docker hub
         uses: docker/build-push-action@v5

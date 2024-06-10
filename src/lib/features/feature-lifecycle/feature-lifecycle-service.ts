@@ -1,5 +1,5 @@
 import {
-    CLIENT_METRICS,
+    CLIENT_METRICS_ADDED,
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
@@ -9,8 +9,8 @@ import {
     type IEnvironmentStore,
     type IEventStore,
     type IFeatureEnvironmentStore,
-    type IProjectLifecycleStageDuration,
     type IFlagResolver,
+    type IProjectLifecycleStageDuration,
     type IUnleashConfig,
 } from '../../types';
 import type {
@@ -95,7 +95,7 @@ export class FeatureLifecycleService extends EventEmitter {
             );
         });
         this.eventBus.on(
-            CLIENT_METRICS,
+            CLIENT_METRICS_ADDED,
             async (events: IClientMetricsEnv[]) => {
                 if (events.length > 0) {
                     const groupedByEnvironment = groupBy(events, 'environment');

@@ -14,7 +14,7 @@ Based on our work with organizations having millions of flags and thousands of u
 4.  [Migration Execution](#migration-execution)
 5.  [Onboarding users](#onboarding-users)
 
-This guide provides a summary of each topic as well as a detailed Feature Flag Migration template that you can use to plan your migration.
+This guide provides a summary of each topic as well as a detailed [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) that you can use to plan your migration.
 
 ## Defining the scope of the feature flag migration
 
@@ -42,7 +42,7 @@ Making feature flag migration dependent on breaking down mission-critical monoli
 
 Rather, enable feature flags for all codebases, independent of your state of modernization. Even monolithic applications can benefit from feature flags in some instances. When this monolith is broken down, the accrued benefits will be even greater, and you will ship your new feature management system a lot faster.
 
-Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your project scope.
+If you're using our [template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264), now fill in details about your project scope.
 
 ## Make the business case for feature flag migration
 
@@ -57,7 +57,7 @@ To structure your thinking, ask yourself:
 -   What business outcomes are you looking to drive?
 -   After the migration, what does "better" look like?
 
-Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your business case.
+If you're using our [template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264), now fill in details about your business case.
 
 ## Planning Feature Flag Migration
 
@@ -108,7 +108,7 @@ When planning your migration, it is important to understand who will be managing
 
 From our experience, looping all key stakeholders into the project early on means that all eventualities can be planned for in advance, reducing the risk of project implementation delays due to unforeseen sign-off requirements. Decision makers can help assign and gather resources needed for the migration, as well as advise on the correct business processes that need to be followed at the various project stages.
 
-System Architecture
+**System Architecture**
 
 You will also need to plan how you set up Unleash itself as part of your migration planning process. Unleash is extremely flexible with lots of hosting and security configuration options to align with the unique requirements of large enterprises.
 
@@ -141,7 +141,7 @@ Other areas of system architecture to investigate during the planning phase are:
 -   Do we consume feature flag data, such as events, in any other systems downstream?
     -   For example, Jira Cloud for issue management, Datadog for real-time telemetry, Slack or Microsoft Teams for notifications or Google Analytics for user interactions.
 
-Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your project planning.
+If you're using our [template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264), now fill in details about your project planning.
 
 ## Migration Execution
 
@@ -171,7 +171,7 @@ Next up is risk handling. **Are there any perceived risks to the timelines that 
 
 Every step of the way, it can help to conduct reviews and look-backs at each rollout stage as well as what lies ahead.
 
-Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your project plan execution.
+If you're using our [template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264), now fill in details about your project plan execution.
 
 ## Onboarding users
 

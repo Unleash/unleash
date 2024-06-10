@@ -63,4 +63,4 @@ website/docs/generated
 reports/jest-junit.xml
 
 # Yarn stuff
-.yarn
+.yarn/install-state.gz

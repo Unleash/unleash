@@ -104,6 +104,20 @@ export const FeatureToggleFilters: VFC<IFeatureToggleFiltersProps> = ({
                 filterKey: 'createdAt',
                 dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
             },
+            {
+                label: 'Flag type',
+                icon: 'flag',
+                options: [
+                    { label: 'Release', value: 'release' },
+                    { label: 'Experiment', value: 'experiment' },
+                    { label: 'Operational', value: 'operational' },
+                    { label: 'Kill switch', value: 'kill-switch' },
+                    { label: 'Permission', value: 'permission' },
+                ],
+                filterKey: 'type',
+                singularOperators: ['IS', 'IS_NOT'],
+                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            },
         ];
 
         setAvailableFilters(availableFilters);

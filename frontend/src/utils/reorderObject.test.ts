@@ -1,7 +1,7 @@
 import { reorderObject } from './reorderObject';
 
 describe('reorderObject', () => {
-    test('correctly reorders the object based on provided keys', () => {
+    it('correctly reorders the object based on provided keys', () => {
         const myObj = { a: 1, b: 2, c: 3, d: 4 };
         const order = ['b', 'a'];
         const result = reorderObject(myObj, order);
@@ -9,7 +9,7 @@ describe('reorderObject', () => {
         expect(result).toEqual(expected);
     });
 
-    test('ignores non-existent keys in the order array', () => {
+    it('ignores non-existent keys in the order array', () => {
         const myObj = { a: 1, b: 2, c: 3 };
         const order = ['c', 'z', 'a']; // 'z' does not exist in myObj
         const result = reorderObject(myObj, order);
@@ -17,21 +17,21 @@ describe('reorderObject', () => {
         expect(result).toEqual(expected);
     });
 
-    test('returns the original object when order array is empty', () => {
+    it('returns the original object when order array is empty', () => {
         const myObj = { a: 1, b: 2, c: 3 };
         const order: string[] = [];
         const result = reorderObject(myObj, order);
         expect(result).toEqual(myObj);
     });
 
-    test('returns the object with the same order when order array contains all object keys', () => {
+    it('returns the object with the same order when order array contains all object keys', () => {
         const myObj = { a: 1, b: 2, c: 3 };
         const order = ['a', 'b', 'c'];
         const result = reorderObject(myObj, order);
         expect(result).toEqual(myObj);
     });
 
-    test('does not modify the original object', () => {
+    it('does not modify the original object', () => {
         const myObj = { a: 1, b: 2, c: 3 };
         const order = ['b', 'a'];
         const result = reorderObject(myObj, order);

@@ -33,7 +33,7 @@ describe('AddonMultiSelector', () => {
         testServerRoute(server, '/api/admin/ui-config', {});
     });
 
-    test('renders with default state', () => {
+    it('renders with default state', () => {
         render(<IntegrationMultiSelector {...mockProps} />);
 
         const selectInputContainer = screen.getByTestId('select-project-input');
@@ -41,7 +41,7 @@ describe('AddonMultiSelector', () => {
         expect(input).toBeEnabled();
     });
 
-    test('can filter options', async () => {
+    it('can filter options', async () => {
         const user = userEvent.setup();
         render(
             <IntegrationMultiSelector

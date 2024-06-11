@@ -2,7 +2,7 @@ import { isSafeToArchive } from './isSafeToArchive'; // Update the import path a
 import { subDays } from 'date-fns';
 
 describe('isSafeToArchive', () => {
-    test('should return true if all environments were last seen more than two days ago', () => {
+    it('should return true if all environments were last seen more than two days ago', () => {
         const now = new Date();
         const environments = [
             { name: 'Production', lastSeenAt: subDays(now, 3).toISOString() },
@@ -13,7 +13,7 @@ describe('isSafeToArchive', () => {
         expect(result).toBe(true);
     });
 
-    test('should return false if any environment was seen within the last two days', () => {
+    it('should return false if any environment was seen within the last two days', () => {
         const now = new Date();
         const environments = [
             { name: 'Production', lastSeenAt: subDays(now, 3).toISOString() },
@@ -24,7 +24,7 @@ describe('isSafeToArchive', () => {
         expect(result).toBe(false);
     });
 
-    test('should return false if all environments were seen within the last two days', () => {
+    it('should return false if all environments were seen within the last two days', () => {
         const now = new Date();
         const environments = [
             { name: 'Production', lastSeenAt: subDays(now, 0).toISOString() },
@@ -35,7 +35,7 @@ describe('isSafeToArchive', () => {
         expect(result).toBe(false);
     });
 
-    test('should return true for an empty array of environments', () => {
+    it('should return true for an empty array of environments', () => {
         const environments: Array<{ name: string; lastSeenAt: string }> = [];
 
         const result = isSafeToArchive(environments);

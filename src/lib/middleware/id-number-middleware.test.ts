@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import idNumberMiddleware from './id-number-middleware';
 
 describe('idNumberMiddleware', () => {
-    test('should pass when id is a valid integer', async () => {
+    it('should pass when id is a valid integer', async () => {
         const app = express();
         app.use('/:id', idNumberMiddleware());
         app.get('/:id', (req, res) => {
@@ -17,7 +17,7 @@ describe('idNumberMiddleware', () => {
                 expect(res.text).toBe('Valid ID');
             });
     });
-    test('should throw BadDataError when id is not a valid integer', async () => {
+    it('should throw BadDataError when id is not a valid integer', async () => {
         const app = express();
         app.use('/:id', idNumberMiddleware());
         app.get('/:id', (req, res) => {

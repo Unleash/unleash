@@ -31,7 +31,7 @@ describe('Sticky component', () => {
         console.error = originalConsoleError;
     });
 
-    test('renders correctly within StickyContext', () => {
+    it('renders correctly within StickyContext', () => {
         render(
             <StickyContext.Provider value={mockContextValue}>
                 <Sticky>Content</Sticky>
@@ -41,7 +41,7 @@ describe('Sticky component', () => {
         expect(screen.getByText('Content')).toBeInTheDocument();
     });
 
-    test('throws error when not wrapped in StickyContext', () => {
+    it('throws error when not wrapped in StickyContext', () => {
         console.error = vi.fn();
 
         expect(() => render(<Sticky>Content</Sticky>)).toThrow(
@@ -49,7 +49,7 @@ describe('Sticky component', () => {
         );
     });
 
-    test('applies sticky positioning', () => {
+    it('applies sticky positioning', () => {
         render(
             <StickyContext.Provider value={mockContextValue}>
                 <Sticky>Content</Sticky>
@@ -60,7 +60,7 @@ describe('Sticky component', () => {
         expect(stickyElement).toHaveStyle({ position: 'sticky' });
     });
 
-    test('registers and unregisters sticky item on mount/unmount', () => {
+    it('registers and unregisters sticky item on mount/unmount', () => {
         const { unmount } = render(
             <StickyContext.Provider value={mockContextValue}>
                 <Sticky>Content</Sticky>
@@ -74,7 +74,7 @@ describe('Sticky component', () => {
         expect(mockUnregisterStickyItem).toHaveBeenCalledTimes(1);
     });
 
-    test('correctly sets the top value when mounted', async () => {
+    it('correctly sets the top value when mounted', async () => {
         render(
             <StickyContext.Provider value={mockContextValue}>
                 <Sticky>Content</Sticky>
@@ -85,7 +85,7 @@ describe('Sticky component', () => {
         expect(stickyElement).toHaveStyle({ top: '10px' });
     });
 
-    test('updates top offset when stickyItems changes', async () => {
+    it('updates top offset when stickyItems changes', async () => {
         const { rerender } = render(
             <StickyContext.Provider value={mockContextValue}>
                 <Sticky>Content</Sticky>

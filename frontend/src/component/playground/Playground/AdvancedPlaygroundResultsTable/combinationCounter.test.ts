@@ -72,7 +72,7 @@ const generateInput = (
     }));
 };
 
-test('counts the correct number of combinations', () => {
+it('counts the correct number of combinations', () => {
     const assertCount = (
         numberOfFeatures: number,
         envs: string[],

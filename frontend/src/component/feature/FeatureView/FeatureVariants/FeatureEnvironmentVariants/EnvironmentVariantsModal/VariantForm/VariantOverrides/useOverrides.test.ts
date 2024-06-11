@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useOverrides } from './useOverrides';
 
 describe('useOverrides', () => {
-    test('should return initial value', () => {
+    it('should return initial value', () => {
         const { result } = renderHook(() =>
             useOverrides([{ contextName: 'context', values: ['a', 'b'] }]),
         );
@@ -12,7 +12,7 @@ describe('useOverrides', () => {
         ]);
     });
 
-    test('should set value with an action', () => {
+    it('should set value with an action', () => {
         const { result } = renderHook(() =>
             useOverrides([
                 { contextName: 'X', values: ['a', 'b'] },
@@ -33,7 +33,7 @@ describe('useOverrides', () => {
         ]);
     });
 
-    test('should clear all overrides with an action', () => {
+    it('should clear all overrides with an action', () => {
         const { result } = renderHook(() =>
             useOverrides([
                 { contextName: 'X', values: ['a', 'b'] },
@@ -51,7 +51,7 @@ describe('useOverrides', () => {
         expect(result.current[0]).toEqual([]);
     });
 
-    test('should add value with an action', () => {
+    it('should add value with an action', () => {
         const { result } = renderHook(() =>
             useOverrides([
                 { contextName: 'X', values: ['a'] },
@@ -74,7 +74,7 @@ describe('useOverrides', () => {
         ]);
     });
 
-    test('should remove override at index with an action', () => {
+    it('should remove override at index with an action', () => {
         const { result } = renderHook(() =>
             useOverrides([
                 { contextName: '1', values: [] },
@@ -104,7 +104,7 @@ describe('useOverrides', () => {
         ]);
     });
 
-    test('should update at index with an action', () => {
+    it('should update at index with an action', () => {
         const { result } = renderHook(() =>
             useOverrides([
                 { contextName: '1', values: [] },
@@ -128,7 +128,7 @@ describe('useOverrides', () => {
         ]);
     });
 
-    test('should change context at index with an action', () => {
+    it('should change context at index with an action', () => {
         const { result } = renderHook(() =>
             useOverrides([
                 { contextName: '1', values: ['x'] },

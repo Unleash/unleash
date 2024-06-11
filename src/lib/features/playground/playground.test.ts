@@ -27,7 +27,7 @@ async function getSetup() {
     return { base, request: supertest(app) };
 }
 describe('toggle generator', () => {
-    test('generates toggles with unique names', () => {
+    it('generates toggles with unique names', () => {
         fc.assert(
             fc.property(
                 clientFeatures({ minLength: 2 }),
@@ -44,7 +44,7 @@ const testParams = {
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
 };
 describe('the playground API', () => {
-    test('should return the provided input arguments as part of the response', async () => {
+    it('should return the provided input arguments as part of the response', async () => {
         await fc.assert(
             fc.asyncProperty(
                 generateRequest(),
@@ -65,7 +65,7 @@ describe('the playground API', () => {
         );
     });
 
-    test('should return 400 if any of the required query properties are missing', async () => {
+    it('should return 400 if any of the required query properties are missing', async () => {
         await fc.assert(
             fc.asyncProperty(
                 generateRequest(),

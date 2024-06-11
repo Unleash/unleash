@@ -77,7 +77,7 @@ describe('Use in scheduled change requests', () => {
         },
     );
 
-    test('should not render scheduled change requests warning when there are no scheduled change requests', async () => {
+    it('should not render scheduled change requests warning when there are no scheduled change requests', async () => {
         render(
             <SuggestFeatureStrategyRemoveDialogue
                 onRemove={async () => {}}

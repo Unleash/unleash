@@ -10,7 +10,7 @@ const mockFeatureType = {
 };
 
 describe('FeatureTypeForm', () => {
-    test('should render component', () => {
+    it('should render component', () => {
         render(
             <FeatureTypeForm featureType={mockFeatureType} loading={false} />,
         );
@@ -18,12 +18,12 @@ describe('FeatureTypeForm', () => {
         expect(screen.getByText('Expected lifetime')).toBeInTheDocument();
     });
 
-    test('should render 404 if feature type is not found', () => {
+    it('should render 404 if feature type is not found', () => {
         render(<FeatureTypeForm featureType={undefined} loading={false} />);
         expect(screen.getByTestId('404_NOT_FOUND')).toBeInTheDocument();
     });
 
-    test('should not enable inputs and submit button when loading', () => {
+    it('should not enable inputs and submit button when loading', () => {
         render(
             <FeatureTypeForm featureType={mockFeatureType} loading={true} />,
         );
@@ -32,7 +32,7 @@ describe('FeatureTypeForm', () => {
         expect(screen.getByText('Save feature flag type')).toBeDisabled();
     });
 
-    test('should check "doesn\'t expire" when lifetime is 0', () => {
+    it('should check "doesn\'t expire" when lifetime is 0', () => {
         render(
             <FeatureTypeForm
                 featureType={{
@@ -47,7 +47,7 @@ describe('FeatureTypeForm', () => {
         expect(screen.getByLabelText('Expected lifetime')).toBeDisabled();
     });
 
-    test('should disable lifetime input when "doesn\'t expire" is checked', () => {
+    it('should disable lifetime input when "doesn\'t expire" is checked', () => {
         render(
             <FeatureTypeForm featureType={mockFeatureType} loading={false} />,
         );
@@ -58,7 +58,7 @@ describe('FeatureTypeForm', () => {
         expect(lifetime).toBeDisabled();
     });
 
-    test('restores lifetime input when "doesn\'t expire" is unchecked', () => {
+    it('restores lifetime input when "doesn\'t expire" is unchecked', () => {
         render(
             <FeatureTypeForm
                 featureType={{
@@ -77,7 +77,7 @@ describe('FeatureTypeForm', () => {
         expect(lifetime).toHaveValue(7);
     });
 
-    test('should disable submit button when form is invalid', () => {
+    it('should disable submit button when form is invalid', () => {
         render(
             <FeatureTypeForm
                 featureType={{

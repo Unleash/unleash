@@ -1,7 +1,7 @@
 import { allSettledWithRejection } from './allSettledWithRejection';
 
 describe('allSettledWithRejection', () => {
-    test('should resolve if all promises resolve', async () => {
+    it('should resolve if all promises resolve', async () => {
         const promises = [
             Promise.resolve(1),
             Promise.resolve(2),
@@ -12,7 +12,7 @@ describe('allSettledWithRejection', () => {
         ]);
     });
 
-    test('should reject with the reason of the first rejected promise', async () => {
+    it('should reject with the reason of the first rejected promise', async () => {
         const error = new Error('First rejection');
         const promises = [
             Promise.reject(error),
@@ -22,7 +22,7 @@ describe('allSettledWithRejection', () => {
         await expect(allSettledWithRejection(promises)).rejects.toEqual(error);
     });
 
-    test('should reject with the reason of the first rejected promise, even with multiple rejections', async () => {
+    it('should reject with the reason of the first rejected promise, even with multiple rejections', async () => {
         const firstError = new Error('First rejection');
         const secondError = new Error('Second rejection');
         const promises = [
@@ -35,7 +35,7 @@ describe('allSettledWithRejection', () => {
         );
     });
 
-    test('should reject with the reason of the first rejected promise in mixed scenarios', async () => {
+    it('should reject with the reason of the first rejected promise in mixed scenarios', async () => {
         const error = new Error('Rejection');
         const promises = [
             Promise.resolve(1),

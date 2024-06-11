@@ -3,7 +3,7 @@ import { useFilteredFlagsSummary } from './useFilteredFlagsSummary';
 import type { InstanceInsightsSchemaUsers } from 'openapi';
 
 describe('useFilteredFlagTrends', () => {
-    test('should summarize only last week of project flag trends', () => {
+    it('should summarize only last week of project flag trends', () => {
         const { result } = renderHook(() =>
             useFilteredFlagsSummary(
                 [
@@ -68,7 +68,7 @@ describe('useFilteredFlagTrends', () => {
         });
     });
 
-    test('should work with project with zero users', () => {
+    it('should work with project with zero users', () => {
         const { result, rerender } = renderHook(() =>
             useFilteredFlagsSummary(
                 [
@@ -100,7 +100,7 @@ describe('useFilteredFlagTrends', () => {
         });
     });
 
-    test('should work with projects where some have with zero users', () => {
+    it('should work with projects where some have with zero users', () => {
         const { result } = renderHook(() =>
             useFilteredFlagsSummary(
                 [
@@ -143,7 +143,7 @@ describe('useFilteredFlagTrends', () => {
         });
     });
 
-    test('should set health of a project without feature flags to undefined', () => {
+    it('should set health of a project without feature flags to undefined', () => {
         const { result } = renderHook(() =>
             useFilteredFlagsSummary(
                 [
@@ -175,7 +175,7 @@ describe('useFilteredFlagTrends', () => {
         });
     });
 
-    test('should not use 0 timeToProduction projects for median calculation', () => {
+    it('should not use 0 timeToProduction projects for median calculation', () => {
         const { result } = renderHook(() =>
             useFilteredFlagsSummary(
                 [

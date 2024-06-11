@@ -31,9 +31,5 @@ export const useApiGetter = <T>(
 export const fetcher = (path: string, errorTarget: string) => {
     return fetch(path)
         .then(handleErrorResponses(errorTarget))
-        .then((res) => res.json())
-        .catch((error) => {
-            console.error(`Error fetching ${errorTarget}:`, error);
-            throw error;
-        });
+        .then((res) => res.json());
 };

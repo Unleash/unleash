@@ -407,7 +407,6 @@ describe('NewFeatureStrategyCreate', () => {
         });
 
         const addBtn = await screen.findByText('Add values');
-        // addBtn.click();
         fireEvent.click(addBtn);
 
         expect(screen.queryByText('6')).toBeInTheDocument();

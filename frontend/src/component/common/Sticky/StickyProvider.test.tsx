@@ -2,7 +2,6 @@ import { render, cleanup } from '@testing-library/react';
 import { StickyProvider } from './StickyProvider';
 import { type IStickyContext, StickyContext } from './StickyContext';
 import { expect } from 'vitest';
-import { act } from 'react-test-renderer';
 
 const defaultGetBoundingClientRect = {
     width: 0,
@@ -19,7 +18,7 @@ const defaultGetBoundingClientRect = {
 describe('StickyProvider component', () => {
     afterEach(cleanup);
 
-    test('provides the sticky context with expected functions', () => {
+    it('provides the sticky context with expected functions', () => {
         let receivedContext = null;
         render(
             <StickyProvider>
@@ -39,7 +38,7 @@ describe('StickyProvider component', () => {
         expect(receivedContext).toHaveProperty('getTopOffset');
     });
 
-    test('registers and unregisters sticky items', () => {
+    it('registers and unregisters sticky items', () => {
         let contextValues: IStickyContext | undefined;
         const refMock = { current: document.createElement('div') };
 
@@ -83,7 +82,7 @@ describe('StickyProvider component', () => {
         expect(contextValues?.stickyItems).not.toContain(refMock);
     });
 
-    test('sorts sticky items based on their DOM position', () => {
+    it('sorts sticky items based on their DOM position', () => {
         let contextValues: IStickyContext | undefined;
 
         const refMockA = { current: document.createElement('div') };
@@ -109,16 +108,14 @@ describe('StickyProvider component', () => {
             </StickyProvider>,
         );
 
-        act(() => {
-            contextValues?.registerStickyItem(refMockA);
-            contextValues?.registerStickyItem(refMockB);
-        });
+        contextValues?.registerStickyItem(refMockA);
+        contextValues?.registerStickyItem(refMockB);
 
         expect(contextValues?.stickyItems[0]).toBe(refMockB);
         expect(contextValues?.stickyItems[1]).toBe(refMockA);
     });
 
-    test('calculates top offset correctly', () => {
+    it('calculates top offset correctly', () => {
         let contextValues: IStickyContext | undefined;
         const refMockA = { current: document.createElement('div') };
         const refMockB = { current: document.createElement('div') };

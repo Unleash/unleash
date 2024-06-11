@@ -81,7 +81,6 @@ test('selects project features', async () => {
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
 });
 
-// TODO: needs to be fixed after react v18 upgrade
 test('filters by tag', async () => {
     setupApi();
     render(

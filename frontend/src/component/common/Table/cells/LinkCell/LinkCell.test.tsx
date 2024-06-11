@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { LinkCell } from './LinkCell';
 
 describe('LinkCell Component', () => {
-    test('renders the subtitle in an HtmlTooltip when length is greater than 40 characters', async () => {
+    it('renders the subtitle in an HtmlTooltip when length is greater than 40 characters', async () => {
         const longSubtitle =
             'This is a long subtitle that should trigger tooltip rendering.';
         render(<LinkCell title='Test Title' subtitle={longSubtitle} />);

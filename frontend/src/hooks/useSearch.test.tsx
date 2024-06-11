@@ -89,7 +89,7 @@ const data = [
 ];
 
 describe('isValidFilter', () => {
-    test('should accept a filter with a value', () => {
+    it('should accept a filter with a value', () => {
         const input = 'project:default';
         const match = 'project';
 
@@ -98,7 +98,7 @@ describe('isValidFilter', () => {
         expect(result).toBe(true);
     });
 
-    test('should not accept a filter without a value', () => {
+    it('should not accept a filter without a value', () => {
         const input = 'project:';
         const match = 'project';
 
@@ -107,7 +107,7 @@ describe('isValidFilter', () => {
         expect(result).toBe(false);
     });
 
-    test('should return false when match is not included in search string', () => {
+    it('should return false when match is not included in search string', () => {
         const input = 'project:default';
         const match = 'state';
 
@@ -120,7 +120,7 @@ describe('isValidFilter', () => {
 describe('getSearchText', () => {
     const getSearchText = getSearchTextGenerator(columns);
 
-    test('should return search value without filters', () => {
+    it('should return search value without filters', () => {
         const tests = [
             { input: 'project:textsearch default', expectation: 'default' },
             {
@@ -148,7 +148,7 @@ describe('getSearchText', () => {
         });
     });
 
-    test('should return search value without multiple filters', () => {
+    it('should return search value without multiple filters', () => {
         const input = 'project:default state:active feature-flag';
         const result = getSearchText(input);
 
@@ -157,7 +157,7 @@ describe('getSearchText', () => {
 });
 
 describe('searchInFilteredData', () => {
-    test('should search in searchable columns', () => {
+    it('should search in searchable columns', () => {
         const tests = [
             {
                 input: 'project',
@@ -205,7 +205,7 @@ describe('searchInFilteredData', () => {
         });
     });
 
-    test('should use column accessor function to search when defined', () => {
+    it('should use column accessor function to search when defined', () => {
         const result = searchInFilteredData(columns, 'experiment', data);
 
         expect(result).toEqual([
@@ -220,7 +220,7 @@ describe('searchInFilteredData', () => {
         ]);
     });
 
-    test('should use custom search function to search when defined', () => {
+    it('should use custom search function to search when defined', () => {
         const result = searchInFilteredData(columns, 'never', data);
 
         expect(result).toEqual([
@@ -245,7 +245,7 @@ describe('searchInFilteredData', () => {
 });
 
 describe('filter', () => {
-    test('should filter in filterable columns', () => {
+    it('should filter in filterable columns', () => {
         const tests = [
             {
                 input: 'project:default',
@@ -307,7 +307,7 @@ describe('filter', () => {
         });
     });
 
-    test('should use column accessor function to filter when defined', () => {
+    it('should use column accessor function to filter when defined', () => {
         const result = filter(columns, 'project:my-project', data);
 
         expect(result).toEqual([
@@ -330,7 +330,7 @@ describe('filter', () => {
         ]);
     });
 
-    test('should use custom filter function to filter when defined', () => {
+    it('should use custom filter function to filter when defined', () => {
         const result = filter(columns, 'state:stale', data);
 
         expect(result).toEqual([
@@ -367,19 +367,19 @@ const SearchText: FC<{ searchValue: string }> = ({ searchValue }) => {
 };
 
 describe('Search and filter data', () => {
-    test('should filter single value', () => {
+    it('should filter single value', () => {
         render(<SearchData searchValue={'project:my-project'} />);
 
         screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
-    test('should filter multiple values', () => {
+    it('should filter multiple values', () => {
         render(<SearchData searchValue={'project:my-project,another-value'} />);
 
         screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
-    test('should filter multiple values with spaces', () => {
+    it('should filter multiple values with spaces', () => {
         render(
             <SearchData searchValue={'project:my-project  ,  another-value'} />,
         );
@@ -387,7 +387,7 @@ describe('Search and filter data', () => {
         screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
-    test('should handle multiple filters', () => {
+    it('should handle multiple filters', () => {
         render(
             <SearchData
                 searchValue={'project:my-project ,another-value state:active'}
@@ -397,7 +397,7 @@ describe('Search and filter data', () => {
         screen.getByText('my-feature-flag-3');
     });
 
-    test('should handle multiple filters with long spaces', () => {
+    it('should handle multiple filters with long spaces', () => {
         render(
             <SearchData
                 searchValue={
@@ -409,7 +409,7 @@ describe('Search and filter data', () => {
         screen.getByText('my-feature-flag-3,my-feature-flag-4');
     });
 
-    test('should handle multiple filters and search string in between', () => {
+    it('should handle multiple filters and search string in between', () => {
         render(
             <SearchData
                 searchValue={
@@ -421,7 +421,7 @@ describe('Search and filter data', () => {
         screen.getByText('my-feature-flag-3');
     });
 
-    test('should handle multiple filters and search string at the end', () => {
+    it('should handle multiple filters and search string at the end', () => {
         render(
             <SearchData
                 searchValue={
@@ -433,7 +433,7 @@ describe('Search and filter data', () => {
         screen.getByText('my-feature-flag-3');
     });
 
-    test('should handle multiple filters and search string at the beginning', () => {
+    it('should handle multiple filters and search string at the beginning', () => {
         render(
             <SearchData
                 searchValue={
@@ -445,13 +445,13 @@ describe('Search and filter data', () => {
         screen.getByText('my-feature-flag-3');
     });
 
-    test('should return basic search text', () => {
+    it('should return basic search text', () => {
         render(<SearchText searchValue={'flag-3'} />);
 
         screen.getByText('flag-3');
     });
 
-    test('should return advanced search text', () => {
+    it('should return advanced search text', () => {
         render(
             <SearchText
                 searchValue={
@@ -463,31 +463,31 @@ describe('Search and filter data', () => {
         screen.getByText('flag-3');
     });
 
-    test('should support custom filter and accessor', () => {
+    it('should support custom filter and accessor', () => {
         render(<SearchData searchValue={'tags:simple:tag'} />);
 
         screen.getByText('my-feature-flag');
     });
 
-    test('should support search on top of filter', () => {
+    it('should support search on top of filter', () => {
         render(<SearchText searchValue={'tags:simple:tag simple:tag'} />);
 
         screen.getByText('simple:tag');
     });
 
-    test('should support custom filter with spaces', () => {
+    it('should support custom filter with spaces', () => {
         render(<SearchData searchValue={'tags:"simple:some space",tag'} />);
 
         screen.getByText('my-feature-flag');
     });
 
-    test('should support custom filter with spaces - space in second term', () => {
+    it('should support custom filter with spaces - space in second term', () => {
         render(<SearchData searchValue={'tags:tag,"simple:some space"'} />);
 
         screen.getByText('my-feature-flag');
     });
 
-    test('should support quotes in filter and search', () => {
+    it('should support quotes in filter and search', () => {
         render(
             <SearchData
                 searchValue={'tags:tag,"simple:some space" "my-feature-flag"'}

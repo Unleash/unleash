@@ -49,7 +49,7 @@ function TestComponent({ keyName, queryParamsDefinition }: TestComponentProps) {
 }
 
 describe('usePersistentTableState', () => {
-    test('initializes correctly from URL', async () => {
+    it('initializes correctly from URL', async () => {
         createLocalStorage('testKey', {});
 
         render(
@@ -66,7 +66,7 @@ describe('usePersistentTableState', () => {
         expect(window.location.href).toContain('my-url?query=initialUrl');
     });
 
-    test('initializes correctly from localStorage', async () => {
+    it('initializes correctly from localStorage', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'initialStorage' });
 
         render(
@@ -83,7 +83,7 @@ describe('usePersistentTableState', () => {
         expect(window.location.href).toContain('my-url?query=initialStorage');
     });
 
-    test('initializes correctly from localStorage with complex decoder', async () => {
+    it('initializes correctly from localStorage with complex decoder', async () => {
         createLocalStorage('testKey', {}).setValue({
             query: 'initialStorage',
             filterItem: {
@@ -113,7 +113,7 @@ describe('usePersistentTableState', () => {
         );
     });
 
-    test('initializes correctly from localStorage and URL', async () => {
+    it('initializes correctly from localStorage and URL', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'initialStorage' });
 
         render(
@@ -130,7 +130,7 @@ describe('usePersistentTableState', () => {
         expect(window.location.href).toContain('my-url?query=initialUrl');
     });
 
-    test('partially updates the state on button click', async () => {
+    it('partially updates the state on button click', async () => {
         createLocalStorage('testKey', {}).setValue({
             query: 'before',
             other: 'other',
@@ -167,7 +167,7 @@ describe('usePersistentTableState', () => {
         });
     });
 
-    test('omits offset in local storage', async () => {
+    it('omits offset in local storage', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'before' });
 
         render(
@@ -192,7 +192,7 @@ describe('usePersistentTableState', () => {
         });
     });
 
-    test('resets offset to 0 on state update', async () => {
+    it('resets offset to 0 on state update', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'before' });
 
         render(
@@ -218,7 +218,7 @@ describe('usePersistentTableState', () => {
         });
     });
 
-    test('does not reset offset to 0 without offset decoder', async () => {
+    it('does not reset offset to 0 without offset decoder', async () => {
         createLocalStorage('testKey', {}).setValue({ query: 'before' });
 
         render(
@@ -242,7 +242,7 @@ describe('usePersistentTableState', () => {
         });
     });
 
-    test('maintains key order', async () => {
+    it('maintains key order', async () => {
         createLocalStorage('testKey', {});
 
         render(

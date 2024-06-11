@@ -1,7 +1,7 @@
 import { aggregateDataPerDate } from './aggregate-metrics-by-day';
 
 describe('aggregateDataPerDate', () => {
-    test('should correctly aggregate data for a single item', () => {
+    it('should correctly aggregate data for a single item', () => {
         const items = [
             {
                 date: '2024-03-19',
@@ -28,7 +28,7 @@ describe('aggregateDataPerDate', () => {
         expect(aggregateDataPerDate(items)).toEqual(expected);
     });
 
-    test('should aggregate multiple items for the same date correctly', () => {
+    it('should aggregate multiple items for the same date correctly', () => {
         const items = [
             {
                 date: '2024-03-19',
@@ -66,7 +66,7 @@ describe('aggregateDataPerDate', () => {
         expect(aggregateDataPerDate(items)).toEqual(expected);
     });
 
-    test('should aggregate items across different dates correctly', () => {
+    it('should aggregate items across different dates correctly', () => {
         const items = [
             {
                 date: '2024-03-18',
@@ -110,7 +110,7 @@ describe('aggregateDataPerDate', () => {
         expect(aggregateDataPerDate(items)).toEqual(expected);
     });
 
-    test('should correctly handle items with all metrics at zero', () => {
+    it('should correctly handle items with all metrics at zero', () => {
         const items = [
             {
                 date: '2024-03-19',
@@ -137,12 +137,12 @@ describe('aggregateDataPerDate', () => {
         expect(aggregateDataPerDate(items)).toEqual(expected);
     });
 
-    test('should return an empty object for an empty array input', () => {
+    it('should return an empty object for an empty array input', () => {
         expect(aggregateDataPerDate([])).toEqual({});
     });
 
     // Test for immutability of input
-    test('should not mutate the input array', () => {
+    it('should not mutate the input array', () => {
         const items = [
             {
                 date: '2024-03-19',

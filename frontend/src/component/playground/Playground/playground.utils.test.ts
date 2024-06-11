@@ -79,45 +79,45 @@ test('should add multiple standard properties without breaking custom properties
 });
 
 describe('validateTokenFormat', () => {
-    test('should throw an error for invalid token format without colon', () => {
+    it('should throw an error for invalid token format without colon', () => {
         const invalidToken = 'invalidToken';
         expect(() => validateTokenFormat(invalidToken)).toThrow(
             'Invalid token format',
         );
     });
 
-    test('should not throw an error for invalid token format without period', () => {
+    it('should not throw an error for invalid token format without period', () => {
         const invalidToken = 'project:environment';
         expect(() => validateTokenFormat(invalidToken)).not.toThrow();
     });
 
-    test('should throw an error for tokens with an empty project', () => {
+    it('should throw an error for tokens with an empty project', () => {
         const invalidToken = ':environment.abc123';
         expect(() => validateTokenFormat(invalidToken)).toThrow(
             'Invalid token format',
         );
     });
 
-    test('should throw an error for tokens with an empty environment', () => {
+    it('should throw an error for tokens with an empty environment', () => {
         const invalidToken = 'project:.abc123';
         expect(() => validateTokenFormat(invalidToken)).toThrow(
             'Invalid token format',
         );
     });
 
-    test('should throw an error for admin tokens', () => {
+    it('should throw an error for admin tokens', () => {
         const adminToken = 'project:*.abc123';
         expect(() => validateTokenFormat(adminToken)).toThrow(
             'Admin tokens are not supported in the playground',
         );
     });
 
-    test('should not throw an error for valid token formats', () => {
+    it('should not throw an error for valid token formats', () => {
         const validToken = 'project:environment.abc123';
         expect(() => validateTokenFormat(validToken)).not.toThrow();
     });
 
-    test('should not throw an error for valid token format and all projects', () => {
+    it('should not throw an error for valid token format and all projects', () => {
         const validToken = '*:environment.abc123';
         expect(() => validateTokenFormat(validToken)).not.toThrow();
     });

@@ -1,7 +1,7 @@
 import { findOutdatedSDKs } from './findOutdatedSdks';
 
 describe('findOutdatedSDKs', () => {
-    test('should return an empty array when all SDKs are up to date', () => {
+    it('should return an empty array when all SDKs are up to date', () => {
         const sdkVersions = [
             'unleash-client-node:6.0.0',
             'unleash-client-php:3.0.0',
@@ -10,7 +10,7 @@ describe('findOutdatedSDKs', () => {
         expect(result).toEqual([]);
     });
 
-    test('should return an array with outdated SDKs', () => {
+    it('should return an array with outdated SDKs', () => {
         const sdkVersions = [
             'unleash-client-node:3.9.9',
             'unleash-client-php:0.9.9',
@@ -22,13 +22,13 @@ describe('findOutdatedSDKs', () => {
         ]);
     });
 
-    test('should ignore SDKs not in the config', () => {
+    it('should ignore SDKs not in the config', () => {
         const sdkVersions = ['unleash-client-pony:2.0.0'];
         const result = findOutdatedSDKs(sdkVersions);
         expect(result).toEqual([]);
     });
 
-    test('should handle and remove duplicate SDK versions', () => {
+    it('should handle and remove duplicate SDK versions', () => {
         const sdkVersions = [
             'unleash-client-node:3.8.0',
             'unleash-client-node:3.8.0',
@@ -42,7 +42,7 @@ describe('findOutdatedSDKs', () => {
         ]);
     });
 
-    test('should correctly handle semver versions', () => {
+    it('should correctly handle semver versions', () => {
         const sdkVersions = [
             'unleash-client-node:6.1.0',
             'unleash-client-php:3.20.3-beta.0',
@@ -51,7 +51,7 @@ describe('findOutdatedSDKs', () => {
         expect(result).toEqual([]);
     });
 
-    test('should ignore invalid SDK versions', () => {
+    it('should ignore invalid SDK versions', () => {
         const sdkVersions = [
             'unleash-client-node',
             '1.2.3',

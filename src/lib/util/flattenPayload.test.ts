@@ -1,7 +1,7 @@
 import { flattenPayload } from './flattenPayload';
 
 describe('flattenPayload', () => {
-    test('should flatten a payload', () => {
+    it('should flatten a payload', () => {
         const payload = {
             a: 1,
             b: {
@@ -21,7 +21,7 @@ describe('flattenPayload', () => {
         });
     });
 
-    test('should handle conflicting keys gracefully by prioritizing later keys', () => {
+    it('should handle conflicting keys gracefully by prioritizing later keys', () => {
         const payload = {
             a: {
                 b: 1,

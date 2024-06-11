@@ -1,7 +1,7 @@
 import { groupByDateAndFillMissingDatapoints } from './UpdatesPerEnvironmentTypeChart';
 
 describe('groupByDate', () => {
-    test('correctly groups items by date and includes all environment types', () => {
+    it('correctly groups items by date and includes all environment types', () => {
         const items = [
             {
                 date: '2023-01-01',
@@ -57,7 +57,7 @@ describe('groupByDate', () => {
         ]);
     });
 
-    test('inserts placeholder items for missing environmentType data on some dates', () => {
+    it('inserts placeholder items for missing environmentType data on some dates', () => {
         const items = [
             {
                 date: '2023-01-01',

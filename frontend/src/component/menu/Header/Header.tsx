@@ -32,6 +32,7 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { CommandBar } from 'component/commandBar/CommandBar';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -119,6 +120,7 @@ const Header: VFC = () => {
     const theme = useTheme();
 
     const disableNotifications = useUiFlag('disableNotifications');
+    const commandBarUI = useUiFlag('commandBarUI');
     const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -197,6 +199,7 @@ const Header: VFC = () => {
 
                 <StyledNav>
                     <StyledUserContainer>
+                        {commandBarUI && <CommandBar />}
                         <InviteLinkButton />
                         <Tooltip
                             title={

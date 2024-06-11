@@ -80,7 +80,15 @@ export class FeatureSearchService {
                 'users.id',
                 params.createdBy,
             );
-            if (parsed) queryParams.push(parsed);
+            if (parsed) {
+                parsed.values = parsed.values.map((value) => {
+                    if (value === '0') {
+                        return null;
+                    }
+                    return value;
+                });
+                queryParams.push(parsed);
+            }
         }
 
         if (params.type) {

@@ -38,6 +38,9 @@ export const applyGenericQueryParams = (
             case 'IS':
             case 'IS_ANY_OF':
                 query.whereIn(param.field, param.values);
+                if (param.values.includes(null)) {
+                    query.or.whereNull(param.field);
+                }
                 break;
             case 'IS_NOT':
             case 'IS_NONE_OF':

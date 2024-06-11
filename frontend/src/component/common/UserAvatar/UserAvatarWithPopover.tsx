@@ -50,7 +50,8 @@ type UserAvatarWithPopoverProps = Omit<
 > & {
     user: {
         name: string;
-        imageUrl: string;
+        id?: number;
+        imageUrl?: string;
     };
 };
 

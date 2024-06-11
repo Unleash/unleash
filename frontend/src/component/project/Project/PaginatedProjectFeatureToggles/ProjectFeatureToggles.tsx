@@ -39,7 +39,7 @@ import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
-import { UserAvatarWithPopover } from '../../../common/UserAvatar/UserAvatar';
+import { UserAvatarWithPopover } from '../../../common/UserAvatar/UserAvatarWithPopover';
 import type { Theme } from '@mui/material';
 
 interface IPaginatedProjectFeatureTogglesProps {

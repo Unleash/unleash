@@ -53,7 +53,9 @@
       "src/test/examples/*.json",
       ".docusaurus",
       "coverage",
-      "CHANGELOG.md"
+      "CHANGELOG.md",
+      "./package.json",
+      "./frontend/package.json"
     ]
   },
   "organizeImports": {
@@ -74,7 +76,9 @@
       "coverage",
       "website/build",
       "website/global.js",
-      ".docusaurus"
+      ".docusaurus",
+      "./package.json",
+      "./frontend/package.json"
     ],
     "indentWidth": 4
   },

@@ -781,6 +781,32 @@ module.exports = {
                         ],
                         to: '/how-to/how-to-environment-import-export',
                     },
+                    {
+                        from: [
+                            '/topics/feature-flags/runtime-control',
+                            '/topics/feature-flags/never-expose-pii',
+                            '/topics/feature-flags/evaluate-flags-close-to-user',
+                            '/topics/feature-flags/scale-horizontally',
+                            '/topics/feature-flags/limit-payloads',
+                            '/topics/feature-flags/availability-over-consistency',
+                            '/topics/feature-flags/short-lived-feature-flags',
+                            '/topics/feature-flags/unique-names',
+                            '/topics/feature-flags/democratize-feature-flag-access',
+                            '/topics/feature-flags/prioritize-ux',
+                            '/topics/feature-flags/enable-traceability',
+                        ],
+                        to: '/topics/feature-flags/feature-flag-best-practices',
+                    },
+                    {
+                        from: [
+                            '/topics/feature-flag-migration/feature-flag-migration-scope',
+                            '/topics/feature-flag-migration/business-case-feature-flag-migration',
+                            '/topics/feature-flag-migration/planning-feature-flag-migration',
+                            '/topics/feature-flag-migration/how-to-execute-feature-flag-migration',
+                            '/topics/feature-flag-migration/onbording-users-to-feature-flag-service',
+                        ],
+                        to: '/topics/feature-flag-migration/feature-flag-migration-best-practices',
+                    },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: (toPath) => {
                     if (

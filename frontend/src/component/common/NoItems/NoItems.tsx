@@ -37,7 +37,7 @@ const StyledIcon = styled(NoItemsIcon)(({ theme }) => ({
     },
 }));
 
-const NoItems: React.FC = ({ children }) => {
+const NoItems: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     return (
         <StyledContainer>
             <StyledTextContainer>{children}</StyledTextContainer>

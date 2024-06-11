@@ -60,9 +60,9 @@ export type IFlagKey =
     | 'manyStrategiesPagination'
     | 'newCreateProjectUI'
     | 'enableLegacyVariants'
-    | 'debugMetrics'
     | 'navigationSidebar'
-    | 'commandBarUI';
+    | 'commandBarUI'
+    | 'flagCreator';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -287,16 +287,16 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENABLE_LEGACY_VARIANTS,
         false,
     ),
-    debugMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DEBUG_METRICS,
-        false,
-    ),
     navigationSidebar: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         true,
     ),
     commandBarUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
+        false,
+    ),
+    flagCreator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_CREATOR,
         false,
     ),
 };

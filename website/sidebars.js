@@ -50,42 +50,8 @@ module.exports = {
                 slug: '/topics',
             },
             items: [
-                {
-                    type: 'category',
-                    label: '11 Principles for Building and Scaling Feature Flag Systems',
-                    link: {
-                        type: 'doc',
-                        id: 'topics/feature-flags/feature-flag-best-practices',
-                    },
-                    items: [
-                        'topics/feature-flags/runtime-control',
-                        'topics/feature-flags/never-expose-pii',
-                        'topics/feature-flags/evaluate-flags-close-to-user',
-                        'topics/feature-flags/scale-horizontally',
-                        'topics/feature-flags/limit-payloads',
-                        'topics/feature-flags/availability-over-consistency',
-                        'topics/feature-flags/short-lived-feature-flags',
-                        'topics/feature-flags/unique-names',
-                        'topics/feature-flags/democratize-feature-flag-access',
-                        'topics/feature-flags/prioritize-ux',
-                        'topics/feature-flags/enable-traceability',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Feature Flag Migrations',
-                    link: {
-                        type: 'doc',
-                        id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
-                    },
-                    items: [
-                        'topics/feature-flag-migration/feature-flag-migration-scope',
-                        'topics/feature-flag-migration/business-case-feature-flag-migration',
-                        'topics/feature-flag-migration/planning-feature-flag-migration',
-                        'topics/feature-flag-migration/how-to-execute-feature-flag-migration',
-                        'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
-                    ],
-                },
+                'topics/feature-flags/feature-flag-best-practices',
+                'topics/feature-flag-migration/feature-flag-migration-best-practices',
                 'topics/a-b-testing',
             ],
         },
@@ -259,7 +225,7 @@ module.exports = {
                         'reference/public-signup',
                         'reference/projects',
                         'reference/project-collaboration-mode',
-                        'reference/provisioning',
+                        'reference/scim',
                         'reference/rbac',
                         'reference/search-operators',
                         'reference/segments',
@@ -503,6 +469,7 @@ module.exports = {
                             label: 'Automatic provisioning',
                             items: [
                                 'how-to/how-to-setup-provisioning-with-okta',
+                                'how-to/how-to-setup-provisioning-with-entra',
                             ],
                             type: 'category',
                             link: {

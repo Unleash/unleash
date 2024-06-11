@@ -94,10 +94,7 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
         : projectsData;
     const notEnoughData = useMemo(
         () =>
-            !isLoading &&
-            (projectsData.datasets.some((d) => d.data.length > 1)
-                ? false
-                : true),
+            !isLoading && !projectsData.datasets.some((d) => d.data.length > 1),
         [projectsData, isLoading],
     );
     const data =

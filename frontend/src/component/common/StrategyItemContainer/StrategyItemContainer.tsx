@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { DragEventHandler, FC, ReactNode } from 'react';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, styled } from '@mui/material';
@@ -21,6 +22,7 @@ interface IStrategyItemContainerProps {
     className?: string;
     style?: React.CSSProperties;
     description?: string;
+    children?: React.ReactNode;
 }
 
 const DragIcon = styled(IconButton)({
@@ -105,7 +107,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
 }) => {
     const Icon = getFeatureStrategyIcon(strategy.name);
 
-    const StrategyHeaderLink: React.FC =
+    const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
         'links' in strategy
             ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
             : ({ children }) => <> {children} </>;

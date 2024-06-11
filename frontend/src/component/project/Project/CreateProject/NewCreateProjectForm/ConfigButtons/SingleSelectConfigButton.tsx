@@ -4,7 +4,7 @@ import { DropdownList, type DropdownListProps } from './DropdownList';
 
 type SingleSelectConfigButtonProps = Pick<
     ConfigButtonProps,
-    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltipHeader'
+    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip'
 > &
     Pick<DropdownListProps, 'search' | 'onChange' | 'options'>;
 
@@ -18,7 +18,7 @@ export const SingleSelectConfigButton: FC<SingleSelectConfigButtonProps> = ({
     const handleChange = (value: any) => {
         onChange(value);
         setAnchorEl(null);
-        props.onClose && props.onClose();
+        props.onClose?.();
 
         setRecentlyClosed(true);
         // this is a hack to prevent the button from being

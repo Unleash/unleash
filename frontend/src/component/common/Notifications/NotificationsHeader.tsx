@@ -1,4 +1,5 @@
 import { Typography, styled, Box } from '@mui/material';
+import type React from 'react';
 import type { FC } from 'react';
 
 const StyledOuterContainerBox = styled(Box)(({ theme }) => ({
@@ -10,7 +11,9 @@ const StyledOuterContainerBox = styled(Box)(({ theme }) => ({
     boxShadow: theme.boxShadows.separator,
 }));
 
-export const NotificationsHeader: FC = ({ children }) => {
+export const NotificationsHeader: FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => {
     return (
         <>
             <StyledOuterContainerBox>

@@ -29,6 +29,7 @@ export const ChangeRequestTitle: FC<{
     environmentChangeRequest: ChangeRequestType;
     title: string;
     setTitle: React.Dispatch<React.SetStateAction<string>>;
+    children?: React.ReactNode;
 }> = ({ environmentChangeRequest, title, setTitle, children }) => {
     const [isDisabled, setIsDisabled] = useState(true);
     const { updateTitle } = useChangeRequestApi();

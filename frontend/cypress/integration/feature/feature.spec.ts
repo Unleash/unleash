@@ -5,9 +5,6 @@ describe('feature', () => {
     const featureToggleName = `unleash-e2e-${randomId}`;
     const projectName = `unleash-e2e-project-${randomId}`;
 
-    const variant1 = 'variant1';
-    const variant2 = 'variant2';
-
     before(() => {
         cy.runBefore();
         cy.login_UI();
@@ -15,6 +12,22 @@ describe('feature', () => {
     });
 
     after(() => {
+        cy.on('uncaught:exception', (err) => {
+            if (
+                err.message.includes(
+                    'ResizeObserver loop completed with undelivered notifications',
+                )
+            ) {
+                console.log(
+                    'Ignored an uncaught resize observer error:',
+                    err.message,
+                );
+                // ignore resize observer errors
+                // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
+                // returning false here prevents Cypress from failing the test
+                return false;
+            }
+        });
         cy.deleteFeature_API(featureToggleName, projectName);
         cy.deleteProject_API(projectName);
     });

@@ -129,6 +129,7 @@ export const PROJECT_ENVIRONMENT_REMOVED =
 export const DEFAULT_STRATEGY_UPDATED = 'default-strategy-updated' as const;
 
 export const CLIENT_METRICS = 'client-metrics' as const;
+export const CLIENT_METRICS_ADDED = 'client-metrics-added' as const;
 export const CLIENT_REGISTER = 'client-register' as const;
 
 export const PAT_CREATED = 'pat-created' as const;

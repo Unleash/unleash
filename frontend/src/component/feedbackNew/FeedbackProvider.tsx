@@ -7,7 +7,9 @@ import {
 import { type FC, useState } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-export const FeedbackProvider: FC = ({ children }) => {
+export const FeedbackProvider: FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => {
     const [feedbackData, setFeedbackData] = useState<
         FeedbackData | undefined
     >();

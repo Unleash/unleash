@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy';
 import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
 import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
 import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
@@ -26,6 +27,8 @@ export interface FeatureSearchResponseSchema {
      * @nullable
      */
     createdAt: string | null;
+    /** User who created the feature flag */
+    createdBy: FeatureSearchResponseSchemaCreatedBy;
     /**
      * The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.
      * @nullable
@@ -43,7 +46,7 @@ export interface FeatureSearchResponseSchema {
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData: boolean;
     /**
-     * The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema
+     * The date when metrics where last collected for the feature. This field was deprecated in v5 and will be removed in a future release, use the one in featureEnvironmentSchema
      * @deprecated
      * @nullable
      */
@@ -59,7 +62,7 @@ export interface FeatureSearchResponseSchema {
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
     stale: boolean;
     /**
-     * This is a legacy field that will be deprecated
+     * This is a legacy field that was deprecated in v5
      * @deprecated
      */
     strategies?: FeatureSearchResponseSchemaStrategiesItem[];
@@ -71,7 +74,7 @@ export interface FeatureSearchResponseSchema {
     /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type: string;
     /**
-     * The list of feature variants
+     * The list of feature variants. This field was deprecated in v5
      * @deprecated
      */
     variants?: VariantSchema[];

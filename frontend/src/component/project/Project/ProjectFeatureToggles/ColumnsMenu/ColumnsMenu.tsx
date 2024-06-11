@@ -188,10 +188,13 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                                 show={() => (
                                                     <>{column.Header}</>
                                                 )}
-                                                elseShow={() =>
-                                                    columnNameMap[column.id] ||
-                                                    column.id
-                                                }
+                                                elseShow={() => (
+                                                    <>
+                                                        {columnNameMap[
+                                                            column.id
+                                                        ] || column.id}
+                                                    </>
+                                                )}
                                             />
                                         </Typography>
                                     }

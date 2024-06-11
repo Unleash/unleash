@@ -75,6 +75,22 @@ export class FeatureSearchService {
             if (parsed) queryParams.push(parsed);
         }
 
+        if (params.createdBy) {
+            const parsed = this.parseOperatorValue(
+                'users.id',
+                params.createdBy,
+            );
+            if (parsed) queryParams.push(parsed);
+        }
+
+        if (params.type) {
+            const parsed = this.parseOperatorValue(
+                'features.type',
+                params.type,
+            );
+            if (parsed) queryParams.push(parsed);
+        }
+
         ['tag', 'segment', 'project'].forEach((field) => {
             if (params[field]) {
                 const parsed = this.parseOperatorValue(field, params[field]);

@@ -17,6 +17,7 @@ interface ILinkCellProps {
     to?: string;
     onClick?: () => void;
     subtitle?: string;
+    children?: React.ReactNode;
 }
 
 export const LinkCell: React.FC<ILinkCellProps> = ({

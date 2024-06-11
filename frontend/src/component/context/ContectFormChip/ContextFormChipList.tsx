@@ -18,4 +18,5 @@ const StyledContainer = styled('ul')(({ theme }) => ({
     },
 }));
 
-export const ContextFormChipList: React.FC = StyledContainer;
+export const ContextFormChipList: React.FC<{ children?: React.ReactNode }> =
+    StyledContainer;

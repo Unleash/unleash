@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "5.12.7+main",
+  "version": "6.0.1+main",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -46,7 +46,7 @@
     "start:dev": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "biome check .",
-    "lint:fix": "biome check . --apply",
+    "lint:fix": "biome check . --write",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "prebuild:watch": "yarn run clean",
     "build:watch": "tsc -w --strictNullChecks false",
@@ -153,7 +153,7 @@
     "prom-client": "^14.0.0",
     "response-time": "^2.3.2",
     "sanitize-filename": "^1.6.3",
-    "semver": "^7.5.4",
+    "semver": "^7.6.2",
     "serve-favicon": "^2.5.0",
     "slug": "^9.0.0",
     "stoppable": "^1.1.0",
@@ -165,8 +165,8 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.24.6",
-    "@biomejs/biome": "1.6.4",
-    "@swc/core": "1.5.7",
+    "@biomejs/biome": "1.8.1",
+    "@swc/core": "1.5.24",
     "@swc/jest": "0.2.36",
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",
@@ -180,7 +180,7 @@
     "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.11",
     "@types/mime": "3.0.4",
-    "@types/node": "20.12.13",
+    "@types/node": "20.14.1",
     "@types/nodemailer": "6.4.15",
     "@types/owasp-password-strength-test": "1.3.2",
     "@types/pg": "8.11.6",
@@ -209,7 +209,7 @@
     "supertest": "7.0.0",
     "ts-node": "10.9.2",
     "tsc-watch": "6.2.0",
-    "typescript": "5.4.2",
+    "typescript": "5.4.5",
     "wait-on": "^7.2.0"
   },
   "resolutions": {
@@ -228,12 +228,12 @@
     "ip": "^2.0.1",
     "tar": "6.2.1",
     "minimatch": "^5.0.0",
-    "semver": "^7.5.3",
+    "semver": "^7.6.2",
     "tough-cookie": "4.1.4"
   },
   "lint-staged": {
-    "*.{js,ts}": ["biome check --apply --no-errors-on-unmatched"],
-    "*.{jsx,tsx}": ["biome check --apply --no-errors-on-unmatched"],
+    "*.{js,ts}": ["biome check --write --no-errors-on-unmatched"],
+    "*.{jsx,tsx}": ["biome check --write --no-errors-on-unmatched"],
     "*.json": ["biome format --write --no-errors-on-unmatched"]
   }
 }

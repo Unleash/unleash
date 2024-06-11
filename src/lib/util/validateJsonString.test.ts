@@ -6,7 +6,6 @@ test('should return true for valid json string', () => {
 });
 
 test('should return false for invalid json string (missing starting {)', () => {
-    // missing starting {
     const input = '"test":1,"nested":[{"test1":{"testinner":true}}]}';
     expect(validateJsonString(input)).toBe(false);
 });

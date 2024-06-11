@@ -69,6 +69,7 @@ const StyledTooltipActions = styled('div')(({ theme }) => ({
     },
 }));
 
+// @ts-ignore
 export interface IDemoStepTooltipProps extends TooltipRenderProps {
     step: ITutorialTopicStep;
     topic: number;

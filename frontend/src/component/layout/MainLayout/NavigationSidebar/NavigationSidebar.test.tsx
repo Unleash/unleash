@@ -7,9 +7,9 @@ import { listItemButtonClasses as classes } from '@mui/material/ListItemButton';
 import {
     type LastViewedFlag,
     useLastViewedFlags,
-} from '../../../../hooks/useLastViewedFlags';
+} from 'hooks/useLastViewedFlags';
 import { type FC, useEffect } from 'react';
-import { useLastViewedProject } from '../../../../hooks/useLastViewedProject';
+import { useLastViewedProject } from 'hooks/useLastViewedProject';
 
 beforeEach(() => {
     window.localStorage.clear();
@@ -23,7 +23,8 @@ test('switch full mode and mini mode', () => {
     expect(screen.queryByText('Users')).toBeInTheDocument();
 
     const hide = screen.getByText('Hide (⌘ + B)');
-    hide.click();
+
+    fireEvent.click(hide);
 
     expect(screen.queryByText('Projects')).not.toBeInTheDocument();
     expect(screen.queryByText('Applications')).not.toBeInTheDocument();

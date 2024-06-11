@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { VFC, FC, ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
@@ -25,14 +26,16 @@ export const ChangeItemWrapper = styled(Box)({
     alignItems: 'center',
 });
 
-const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '150px auto',
-    gridAutoFlow: 'column',
-    alignItems: 'center',
-    flexGrow: 1,
-    gap: theme.spacing(1),
-}));
+const ChangeItemInfo: FC<{ children?: React.ReactNode }> = styled(Box)(
+    ({ theme }) => ({
+        display: 'grid',
+        gridTemplateColumns: '150px auto',
+        gridAutoFlow: 'column',
+        alignItems: 'center',
+        flexGrow: 1,
+        gap: theme.spacing(1),
+    }),
+);
 
 const SegmentContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'conflict',

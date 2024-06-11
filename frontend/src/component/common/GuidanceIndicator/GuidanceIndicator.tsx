@@ -1,4 +1,5 @@
 import { styled, useTheme } from '@mui/material';
+import type React from 'react';
 import type { FC } from 'react';
 
 const StyledIndicator = styled('div')(({ style, theme }) => ({
@@ -16,6 +17,7 @@ const StyledIndicator = styled('div')(({ style, theme }) => ({
 interface IGuidanceIndicatorProps {
     style?: React.CSSProperties;
     type?: guidanceIndicatorType;
+    children?: React.ReactNode;
 }
 
 type guidanceIndicatorType = 'primary' | 'secondary';

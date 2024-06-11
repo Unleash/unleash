@@ -1,5 +1,9 @@
 import type { Logger } from '../../../logger';
-import type { IFlagResolver, IUnleashConfig } from '../../../types';
+import {
+    CLIENT_METRICS_ADDED,
+    type IFlagResolver,
+    type IUnleashConfig,
+} from '../../../types';
 import type { IUnleashStores } from '../../../types';
 import type { ToggleMetricsSummary } from '../../../types/models/metrics';
 import type {
@@ -137,10 +141,6 @@ export default class ClientMetricsServiceV2 {
         data: ClientMetricsSchema,
         clientIp: string,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('debugMetrics')) {
-            this.logger.debug(`Metrics received: ${JSON.stringify(data)}`);
-        }
-
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles).filter(
             (name) =>
@@ -182,6 +182,7 @@ export default class ClientMetricsServiceV2 {
             const copy = [...this.unsavedMetrics];
             this.unsavedMetrics = [];
             await this.clientMetricsStoreV2.batchInsertMetrics(copy);
+            this.config.eventBus.emit(CLIENT_METRICS_ADDED, copy);
         }
     }
 

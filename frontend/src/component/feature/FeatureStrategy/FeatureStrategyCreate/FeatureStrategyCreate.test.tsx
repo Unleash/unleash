@@ -119,7 +119,7 @@ describe('NewFeatureStrategyCreate', () => {
         expect(titleEl).toBeInTheDocument();
 
         const slider = await screen.findByRole('slider', { name: /rollout/i });
-        const groupIdInput = await screen.getByLabelText('groupId');
+        const groupIdInput = await screen.findByLabelText('groupId');
 
         expect(slider).toHaveValue('100');
         expect(groupIdInput).toHaveValue(featureName);
@@ -407,7 +407,7 @@ describe('NewFeatureStrategyCreate', () => {
         });
 
         const addBtn = await screen.findByText('Add values');
-        addBtn.click();
+        fireEvent.click(addBtn);
 
         expect(screen.queryByText('6')).toBeInTheDocument();
         expect(screen.queryByText('7')).toBeInTheDocument();
@@ -416,7 +416,8 @@ describe('NewFeatureStrategyCreate', () => {
         const undoBtn = await screen.findByTestId(
             'UNDO_CONSTRAINT_CHANGE_BUTTON',
         );
-        undoBtn.click();
+
+        fireEvent.click(undoBtn);
 
         expect(screen.queryByText('6')).not.toBeInTheDocument();
         expect(screen.queryByText('7')).not.toBeInTheDocument();

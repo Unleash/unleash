@@ -1,5 +1,5 @@
 import {
-    CLIENT_METRICS,
+    CLIENT_METRICS_ADDED,
     FEATURE_ARCHIVED,
     FEATURE_COMPLETED,
     FEATURE_CREATED,
@@ -33,7 +33,7 @@ test('can insert and read lifecycle stages', async () => {
     );
 
     function emitMetricsEvent(environment: string) {
-        eventBus.emit(CLIENT_METRICS, [
+        eventBus.emit(CLIENT_METRICS_ADDED, [
             {
                 featureName,
                 environment,
@@ -120,7 +120,7 @@ test('ignores lifecycle state updates when flag disabled', async () => {
 
     await eventStore.emit(FEATURE_CREATED, { featureName });
     await eventStore.emit(FEATURE_COMPLETED, { featureName });
-    await eventBus.emit(CLIENT_METRICS, {
+    await eventBus.emit(CLIENT_METRICS_ADDED, {
         bucket: { toggles: { [featureName]: 'irrelevant' } },
         environment: 'development',
     });

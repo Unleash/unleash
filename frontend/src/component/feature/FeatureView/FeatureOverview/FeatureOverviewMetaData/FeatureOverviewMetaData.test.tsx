@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import FeatureOverviewMetaData from './FeatureOverviewMetaData';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -101,9 +101,7 @@ test('show dependency dialogue', async () => {
 
     addParentButton.click();
 
-    expect(
-        screen.getByText('Add parent feature dependency'),
-    ).toBeInTheDocument();
+    await screen.findByText('Add parent feature dependency');
 });
 
 test('show dependency dialogue for OSS with dependencies', async () => {
@@ -133,9 +131,7 @@ test('show dependency dialogue for OSS with dependencies', async () => {
 
     addParentButton.click();
 
-    expect(
-        screen.getByText('Add parent feature dependency'),
-    ).toBeInTheDocument();
+    await screen.findByText('Add parent feature dependency');
 });
 
 test('show child', async () => {
@@ -216,10 +212,10 @@ test('delete dependency', async () => {
     const actionsButton = screen.getByRole('button', {
         name: /Dependency actions/i,
     });
-    userEvent.click(actionsButton);
+    fireEvent.click(actionsButton);
 
     const deleteButton = await screen.findByText('Delete');
-    userEvent.click(deleteButton);
+    fireEvent.click(deleteButton);
 
     await screen.findByText('Dependency removed');
 });
@@ -254,10 +250,10 @@ test('delete dependency with change request', async () => {
     const actionsButton = await screen.findByRole('button', {
         name: /Dependency actions/i,
     });
-    userEvent.click(actionsButton);
+    fireEvent.click(actionsButton);
 
     const deleteButton = await screen.findByText('Delete');
-    userEvent.click(deleteButton);
+    fireEvent.click(deleteButton);
 
     await screen.findByText('Change added to a draft');
 });
@@ -290,10 +286,10 @@ test('edit dependency', async () => {
     const actionsButton = await screen.findByRole('button', {
         name: /Dependency actions/i,
     });
-    userEvent.click(actionsButton);
+    fireEvent.click(actionsButton);
 
     const editButton = await screen.findByText('Edit');
-    userEvent.click(editButton);
+    fireEvent.click(editButton);
 
     await screen.findByText('Add parent feature dependency');
 });
@@ -321,7 +317,7 @@ test('show variant dependencies', async () => {
 
     const variants = await screen.findByText('2 variants');
 
-    userEvent.hover(variants);
+    await userEvent.hover(variants);
 
     await screen.findByText('variantA');
     await screen.findByText('variantB');

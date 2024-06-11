@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -10,6 +11,7 @@ interface IFeatureStrategyEnabledProps {
     projectId: string;
     featureId: string;
     environmentId: string;
+    children?: React.ReactNode;
 }
 
 export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({

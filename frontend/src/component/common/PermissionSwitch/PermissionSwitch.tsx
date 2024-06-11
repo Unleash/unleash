@@ -64,7 +64,11 @@ const BasePermissionSwitch = React.forwardRef<
     } = props;
 
     return (
-        <TooltipResolver title={formatAccessText(access, tooltip)} arrow>
+        <TooltipResolver
+            title={formatAccessText(access, tooltip)}
+            arrow
+            variant='custom'
+        >
             <span data-loading>
                 <Switch
                     data-testid='toggle-switch'

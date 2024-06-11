@@ -38,7 +38,7 @@ export const VisuallyHiddenButtonText = styled('span')(() => ({
 }));
 
 export const AvatarCell =
-    (onAvatarClick: (name: string) => void): FC<AvatarCellProps> =>
+    (onAvatarClick: (userId: number) => void): FC<AvatarCellProps> =>
     ({ row: { original } }) => {
         return (
             <StyledContainer>
@@ -48,7 +48,7 @@ export const AvatarCell =
                     title={original.createdBy.name}
                 >
                     <StyledAvatarButton
-                        onClick={() => onAvatarClick(original.createdBy.name)}
+                        onClick={() => onAvatarClick(original.createdBy.id)}
                     >
                         <SrOnly>
                             <span>

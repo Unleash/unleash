@@ -19,7 +19,8 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
-    | { key: 'type'; operator: 'IS' };
+    | { key: 'type'; operator: 'IS' }
+    | { key: 'createdBy'; operator: 'IS' };
 
 export const useProjectFeatureSearch = (
     projectId: string,
@@ -76,12 +77,14 @@ export const useProjectFeatureSearchActions = (
 ) => {
     const onAttributeClick = (attribute: Attribute, value: string) => {
         const attributeState = tableState[attribute.key];
+        console.log('using this attribute state', attributeState);
 
         if (
             attributeState &&
             attributeState.values.length > 0 &&
             !attributeState.values.includes(value)
         ) {
+            console.log('adding to attribute state', attribute, value);
             setTableState({
                 [attribute.key]: {
                     operator: attributeState.operator,
@@ -89,6 +92,7 @@ export const useProjectFeatureSearchActions = (
                 },
             });
         } else if (!attributeState) {
+            console.log('setting new attribute state', attribute, value);
             setTableState({
                 [attribute.key]: {
                     operator: attribute.operator,
@@ -102,8 +106,11 @@ export const useProjectFeatureSearchActions = (
         onAttributeClick({ key: 'tag', operator: 'INCLUDE' }, tag);
     const onFlagTypeClick = (type: string) =>
         onAttributeClick({ key: 'type', operator: 'IS' }, type);
-    const onAvatarClick = (name: string) =>
-        onAttributeClick({ key: 'type', operator: 'IS' }, type);
+    const onAvatarClick = (userId: number) =>
+        onAttributeClick(
+            { key: 'createdBy', operator: 'IS' },
+            userId.toString(),
+        );
 
     return {
         onFlagTypeClick,

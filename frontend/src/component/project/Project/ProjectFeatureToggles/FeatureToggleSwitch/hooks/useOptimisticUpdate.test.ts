@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useOptimisticUpdate } from './useOptimisticUpdate';
 
 describe('useOptimisticUpdate', () => {
-    test('should return state, setter, and rollback function', () => {
+    it('should return state, setter, and rollback function', () => {
         const { result } = renderHook(() => useOptimisticUpdate(true));
 
         expect(result.current).toEqual([
@@ -12,7 +12,7 @@ describe('useOptimisticUpdate', () => {
         ]);
     });
 
-    test('should have working setter', () => {
+    it('should have working setter', () => {
         const { result } = renderHook((state) => useOptimisticUpdate(state), {
             initialProps: 'initial',
         });
@@ -24,7 +24,7 @@ describe('useOptimisticUpdate', () => {
         expect(result.current[0]).toEqual('updated');
     });
 
-    test('should update reset state if input changed', () => {
+    it('should update reset state if input changed', () => {
         const { result, rerender } = renderHook(
             (state) => useOptimisticUpdate(state),
             {
@@ -37,7 +37,7 @@ describe('useOptimisticUpdate', () => {
         expect(result.current[0]).toEqual('B');
     });
 
-    test('should have working rollback', () => {
+    it('should have working rollback', () => {
         const { result } = renderHook((state) => useOptimisticUpdate(state), {
             initialProps: 'initial',
         });

@@ -1,7 +1,7 @@
 import { getHighestChangeRequestEnv } from './useHighestPermissionChangeRequestEnvironment';
 
 describe('Get the right change request env', () => {
-    test('gets a production env if present', () => {
+    it('gets a production env if present', () => {
         const data = [
             {
                 environment: 'x',
@@ -22,7 +22,7 @@ describe('Get the right change request env', () => {
         expect(result).toBe('y');
     });
 
-    test('gets a non-production env if no production envs have change requests enabled', () => {
+    it('gets a non-production env if no production envs have change requests enabled', () => {
         const data = [
             {
                 environment: 'x',
@@ -43,7 +43,7 @@ describe('Get the right change request env', () => {
         expect(result).toBe('x');
     });
 
-    test('returns undefined if no envs have change requests enabled', () => {
+    it('returns undefined if no envs have change requests enabled', () => {
         const data = [
             {
                 environment: 'x',

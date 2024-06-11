@@ -2,7 +2,7 @@ import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
 
 describe('aggregateFeatureMetrics', () => {
-    test('should aggregate yes and no values for identical timestamps', () => {
+    it('should aggregate yes and no values for identical timestamps', () => {
         const data: IFeatureMetricsRaw[] = [
             {
                 featureName: 'Feature1',
@@ -38,7 +38,7 @@ describe('aggregateFeatureMetrics', () => {
         ]);
     });
 
-    test('should handle undefined variants correctly', () => {
+    it('should handle undefined variants correctly', () => {
         const data: IFeatureMetricsRaw[] = [
             {
                 featureName: 'Feature2',

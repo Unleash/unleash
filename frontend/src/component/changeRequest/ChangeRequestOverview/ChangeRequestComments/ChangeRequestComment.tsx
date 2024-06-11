@@ -1,10 +1,10 @@
 import type { FC } from 'react';
+import { Markdown } from 'component/common/Markdown/Markdown';
 import Paper from '@mui/material/Paper';
 import { Box, styled, Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { StyledAvatar } from './StyledAvatar';
 import type { IChangeRequestComment } from '../../changeRequest.types';
-import Linkify from 'react-linkify';
 
 const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -46,7 +46,7 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
                 </Box>
             </CommentHeader>
             <Box sx={{ paddingTop: 2.5 }}>
-                <Linkify>{comment.text}</Linkify>
+                <Markdown>{comment.text}</Markdown>
             </Box>
         </CommentPaper>
     </ChangeRequestCommentWrapper>

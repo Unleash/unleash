@@ -213,8 +213,7 @@ export const CommandBar = ({
                     Boolean(hasFilters && getSearchContext) && showSuggestions
                 }
                 show={
-                    {
-                        /*
+                    /*
                     <SearchSuggestions
                         onSuggestion={(suggestion) => {
                             onSearchChange(suggestion);
@@ -224,7 +223,7 @@ export const CommandBar = ({
                         getSearchContext={getSearchContext!}
                     />
                         */
-                    }
+                    <>yousearched</>
                 }
                 elseShow={
                     showSuggestions && (

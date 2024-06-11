@@ -54,6 +54,7 @@ process.nextTick(async () => {
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         flagCreator: true,
+                        commandBarUI: true,
                     },
                 },
                 authentication: {

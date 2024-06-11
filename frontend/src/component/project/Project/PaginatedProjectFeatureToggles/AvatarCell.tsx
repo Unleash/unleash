@@ -1,8 +1,9 @@
 import { type Theme, styled } from '@mui/material';
 import type { FC } from 'react';
-import { UserAvatarWithPopover } from '../../../common/UserAvatar/UserAvatarWithPopover';
 import { visuallyHiddenStyles } from '../CreateProject/NewCreateProjectForm/ConfigButtons/shared.styles';
 import { SrOnly } from 'component/common/SrOnly/SrOnly';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 type AvatarCellProps = {
     row: {
@@ -41,24 +42,31 @@ export const AvatarCell =
     ({ row: { original } }) => {
         return (
             <StyledContainer>
-                <StyledAvatarButton
-                    onClick={() => onAvatarClick(original.createdBy.name)}
+                <HtmlTooltip
+                    arrow
+                    describeChild
+                    title={original.createdBy.name}
                 >
-                    <SrOnly>
-                        <span>
-                            Show only flags created by {original.createdBy.name}
-                        </span>
-                    </SrOnly>
+                    <StyledAvatarButton
+                        onClick={() => onAvatarClick(original.createdBy.name)}
+                    >
+                        <SrOnly>
+                            <span>
+                                Show only flags created by{' '}
+                                {original.createdBy.name}
+                            </span>
+                        </SrOnly>
 
-                    <UserAvatarWithPopover
-                        user={{
-                            id: original.createdBy.id,
-                            name: original.createdBy.name,
-                            imageUrl: original.createdBy.imageUrl,
-                        }}
-                        avatarWidth={(theme: Theme) => theme.spacing(3)}
-                    />
-                </StyledAvatarButton>
+                        <UserAvatar
+                            user={{
+                                id: original.createdBy.id,
+                                name: original.createdBy.name,
+                                imageUrl: original.createdBy.imageUrl,
+                            }}
+                            avatarWidth={(theme: Theme) => theme.spacing(3)}
+                        />
+                    </StyledAvatarButton>
+                </HtmlTooltip>
             </StyledContainer>
         );
     };

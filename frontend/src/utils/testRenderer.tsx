@@ -41,6 +41,11 @@ export const render = (
                             return true;
                         },
                         dedupingInterval: 0,
+                        isOnline() {
+                            return true;
+                        },
+                        initFocus(callback) {},
+                        initReconnect(callback) {},
                     }}
                 >
                     <AccessProviderMock permissions={permissions}>

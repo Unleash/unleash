@@ -1,7 +1,7 @@
 import { type Theme, styled } from '@mui/material';
 import type { FC } from 'react';
 import { visuallyHiddenStyles } from '../CreateProject/NewCreateProjectForm/ConfigButtons/shared.styles';
-import { SrOnly } from 'component/common/SrOnly/SrOnly';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
@@ -50,12 +50,12 @@ export const AvatarCell =
                     <StyledAvatarButton
                         onClick={() => onAvatarClick(original.createdBy.id)}
                     >
-                        <SrOnly>
+                        <ScreenReaderOnly>
                             <span>
                                 Show only flags created by{' '}
                                 {original.createdBy.name}
                             </span>
-                        </SrOnly>
+                        </ScreenReaderOnly>
 
                         <UserAvatar
                             hideTitle

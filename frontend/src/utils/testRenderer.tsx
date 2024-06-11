@@ -32,22 +32,22 @@ export const render = (
     window.history.pushState({}, 'Test page', route);
 
     const Wrapper: FC<{ children?: React.ReactNode }> = ({ children }) => (
-        <UIProviderContainer>
-            <FeedbackProvider>
-                <SWRConfig
-                    value={{
-                        provider: () => new Map(),
-                        isVisible() {
-                            return true;
-                        },
-                        dedupingInterval: 0,
-                        isOnline() {
-                            return true;
-                        },
-                        initFocus(callback) {},
-                        initReconnect(callback) {},
-                    }}
-                >
+        <SWRConfig
+            value={{
+                provider: () => new Map(),
+                isVisible() {
+                    return true;
+                },
+                dedupingInterval: 0,
+                isOnline() {
+                    return true;
+                },
+                initFocus(callback) {},
+                initReconnect(callback) {},
+            }}
+        >
+            <UIProviderContainer>
+                <FeedbackProvider>
                     <AccessProviderMock permissions={permissions}>
                         <BrowserRouter>
                             <QueryParamProvider adapter={ReactRouter6Adapter}>
@@ -59,9 +59,9 @@ export const render = (
                             </QueryParamProvider>
                         </BrowserRouter>
                     </AccessProviderMock>
-                </SWRConfig>
-            </FeedbackProvider>
-        </UIProviderContainer>
+                </FeedbackProvider>
+            </UIProviderContainer>
+        </SWRConfig>
     );
 
     return rtlRender(ui, {

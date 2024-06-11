@@ -31,7 +31,7 @@ describe('SelectProjectInput', () => {
         testServerRoute(server, '/api/admin/ui-config', {});
     });
 
-    test('renders with default state', () => {
+    it('renders with default state', () => {
         render(<SelectProjectInput {...mockProps} />);
 
         const checkbox = screen.getByLabelText(
@@ -44,7 +44,7 @@ describe('SelectProjectInput', () => {
         expect(input).toBeDisabled();
     });
 
-    test('can toggle "ALL" checkbox', async () => {
+    it('can toggle "ALL" checkbox', async () => {
         const user = userEvent.setup();
         render(<SelectProjectInput {...mockProps} />);
 
@@ -65,7 +65,7 @@ describe('SelectProjectInput', () => {
         expect(screen.getByLabelText('Projects')).toBeDisabled();
     });
 
-    test('renders with autocomplete enabled if default value is not a wildcard', () => {
+    it('renders with autocomplete enabled if default value is not a wildcard', () => {
         render(
             <SelectProjectInput {...mockProps} defaultValue={['project1']} />,
         );
@@ -81,7 +81,7 @@ describe('SelectProjectInput', () => {
     });
 
     describe('Select/Deselect projects in dropdown', () => {
-        test('selects and deselects all options', async () => {
+        it('selects and deselects all options', async () => {
             const user = userEvent.setup();
             render(<SelectProjectInput {...mockProps} defaultValue={[]} />);
             await user.click(screen.getByLabelText('Projects'));
@@ -127,7 +127,7 @@ describe('SelectProjectInput', () => {
         });
     });
 
-    test('can filter options', async () => {
+    it('can filter options', async () => {
         const user = userEvent.setup();
         render(
             <SelectProjectInput

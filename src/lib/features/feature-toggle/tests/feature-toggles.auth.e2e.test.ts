@@ -132,3 +132,37 @@ test('Should not be possible auto-enable feature flag without CREATE_FEATURE_STR
         .post(`${url}/${name}/environments/default/on`)
         .expect(403);
 });
+
+test('Should read flag creator', async () => {
+    const email = 'user@getunleash.io';
+    const url = '/api/admin/projects/default/features/';
+    const name = 'creator.flag';
+
+    const user = await app.services.userService.createUser(
+        {
+            email,
+            rootRole: RoleName.EDITOR,
+        },
+        TEST_AUDIT_USER,
+    );
+
+    await db.stores.featureToggleStore.create('default', {
+        name,
+        createdByUserId: user.id,
+    });
+
+    await app.request.post('/auth/demo/login').send({
+        email,
+    });
+
+    const { body: feature } = await app.request
+        .get(`${url}/${name}`)
+        .expect(200);
+
+    expect(feature.createdBy).toEqual({
+        id: 1,
+        name: 'user@getunleash.io',
+        imageUrl:
+            'https://gravatar.com/avatar/3957b71c0a6d2528f03b423f432ed2efe855d263400f960248a1080493d9d68a?s=42&d=retro&r=g',
+    });
+});

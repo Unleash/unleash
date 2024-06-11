@@ -61,6 +61,11 @@ export interface FeatureToggleDTO {
     impressionData?: boolean;
     variants?: IVariant[];
     createdByUserId?: number;
+    createdBy?: {
+        id: number;
+        name: string;
+        imageUrl: string;
+    };
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {

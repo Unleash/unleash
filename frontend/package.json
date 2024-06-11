@@ -56,8 +56,8 @@
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
     "@types/node": "^20.12.12",
-    "@types/react": "18.2.79",
-    "@types/react-dom": "18.2.25",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.20",
     "@types/react-test-renderer": "18.3.0",
@@ -95,11 +95,11 @@
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.9",
     "prop-types": "15.8.1",
-    "react": "18.2.0",
+    "react": "18.3.1",
     "react-archer": "4.4.0",
     "react-chartjs-2": "4.3.1",
     "react-confetti": "^6.1.0",
-    "react-dom": "18.2.0",
+    "react-dom": "18.3.1",
     "react-dropzone": "14.2.3",
     "react-error-boundary": "3.1.4",
     "react-hooks-global-state": "2.1.0",
@@ -107,7 +107,7 @@
     "react-markdown": "^8.0.4",
     "react-router-dom": "6.16.0",
     "react-table": "7.8.0",
-    "react-test-renderer": "18.2.0",
+    "react-test-renderer": "18.3.1",
     "react-timeago": "7.2.0",
     "sass": "1.77.4",
     "semver": "7.6.2",
@@ -132,7 +132,7 @@
     "json5": "^2.2.2",
     "vite": "5.2.12",
     "semver": "7.6.2",
-    "@types/react": "^18.0.0"
+    "@types/react": "18.3.3"
   },
   "jest": {
     "moduleNameMapper": {

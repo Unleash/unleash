@@ -67,7 +67,7 @@ test('should allow client to register multiple times', async () => {
     jest.useRealTimers();
 });
 
-test.skip('Should handle a massive bulk registration', async () => {
+test('Should handle a massive bulk registration', async () => {
     const { clientInstanceStore, clientApplicationsStore } = db.stores;
 
     const clients: {

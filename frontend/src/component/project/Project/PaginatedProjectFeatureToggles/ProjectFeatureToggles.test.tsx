@@ -82,7 +82,7 @@ test('selects project features', async () => {
 });
 
 // TODO: needs to be fixed after react v18 upgrade
-test.skip('filters by tag', async () => {
+test('filters by tag', async () => {
     setupApi();
     render(
         <Routes>
@@ -133,7 +133,7 @@ test('filters by flag type', async () => {
     await screen.findByText('Operational');
 });
 
-test.skip('filters by flag author', async () => {
+test('filters by flag author', async () => {
     setupApi();
     render(
         <Routes>

@@ -93,7 +93,7 @@ test('Delete dependency', async () => {
     });
 });
 
-test.skip('Edit dependency', async () => {
+test('Edit dependency', async () => {
     let closed = false;
     let dependency: IDependency;
     setupApi();

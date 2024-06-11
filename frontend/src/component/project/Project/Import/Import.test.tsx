@@ -83,7 +83,7 @@ test('Import happy path', async () => {
     expect(closed).toBe(true);
 });
 
-test.skip('Block when importing non json content', async () => {
+test('Block when importing non json content', async () => {
     setupApi();
     const setOpen = () => {};
     render(<ImportModal open={true} setOpen={setOpen} project='default' />, {

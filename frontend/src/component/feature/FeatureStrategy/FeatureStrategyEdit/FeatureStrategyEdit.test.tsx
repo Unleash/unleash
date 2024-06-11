@@ -122,7 +122,7 @@ describe('NewFeatureStrategyEdit', () => {
     `);
     });
 
-    test.skip('should change general settings', async () => {
+    test('should change general settings', async () => {
         const { expectedGroupId, expectedSliderValue } = setupComponent();
 
         await waitFor(() => {

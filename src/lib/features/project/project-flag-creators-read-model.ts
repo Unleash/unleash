@@ -24,6 +24,17 @@ export class ProjectFlagCreatorsReadModel
                 'users.username',
                 'users.email',
             ]);
+
+        const hasUnknownCreators = await this.db('features')
+            .where('features.project', project)
+            .where('features.archived_at', null)
+            .whereNull('features.created_by_user_id')
+            .first();
+
+        if (hasUnknownCreators) {
+            result.push({ id: 0, name: 'unknown' });
+        }
+
         return result
             .filter((row) => row.name || row.username || row.email)
             .map((row) => ({

@@ -102,9 +102,12 @@ export const useProjectFeatureSearchActions = (
         onAttributeClick({ key: 'tag', operator: 'INCLUDE' }, tag);
     const onFlagTypeClick = (type: string) =>
         onAttributeClick({ key: 'type', operator: 'IS' }, type);
+    const onAvatarClick = (name: string) =>
+        onAttributeClick({ key: 'type', operator: 'IS' }, type);
 
     return {
         onFlagTypeClick,
         onTagClick,
+        onAvatarClick,
     };
 };

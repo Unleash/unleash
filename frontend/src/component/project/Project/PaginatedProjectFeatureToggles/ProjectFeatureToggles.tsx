@@ -39,8 +39,7 @@ import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
-import { UserAvatarWithPopover } from '../../../common/UserAvatar/UserAvatarWithPopover';
-import type { Theme } from '@mui/material';
+import { AvatarCell } from './AvatarCell';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -69,10 +68,8 @@ export const ProjectFeatureToggles = ({
         setTableState,
     } = useProjectFeatureSearch(projectId);
 
-    const { onFlagTypeClick, onTagClick } = useProjectFeatureSearchActions(
-        tableState,
-        setTableState,
-    );
+    const { onFlagTypeClick, onTagClick, onAvatarClick } =
+        useProjectFeatureSearchActions(tableState, setTableState);
 
     const filterState = {
         tag: tableState.tag,
@@ -175,20 +172,7 @@ export const ProjectFeatureToggles = ({
                       columnHelper.accessor('createdBy', {
                           id: 'createdBy',
                           header: 'By',
-                          cell: ({ row: { original } }) => {
-                              return (
-                                  <UserAvatarWithPopover
-                                      user={{
-                                          id: original.createdBy.id,
-                                          name: original.createdBy.name,
-                                          imageUrl: original.createdBy.imageUrl,
-                                      }}
-                                      avatarWidth={(theme: Theme) =>
-                                          theme.spacing(3)
-                                      }
-                                  />
-                              );
-                          },
+                          cell: AvatarCell(onAvatarClick),
                           enableSorting: false,
                           meta: {
                               width: '1%',

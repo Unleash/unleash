@@ -40,6 +40,7 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
 import { UserAvatarWithPopover } from '../../../common/UserAvatar/UserAvatar';
+import type { Theme } from '@mui/material';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -182,7 +183,9 @@ export const ProjectFeatureToggles = ({
                                           name: original.createdBy.name,
                                           imageUrl: original.createdBy.imageUrl,
                                       }}
-                                      avatarWidth={(theme) => theme.spacing(3)}
+                                      avatarWidth={(theme: Theme) =>
+                                          theme.spacing(3)
+                                      }
                                   />
                               );
                           },

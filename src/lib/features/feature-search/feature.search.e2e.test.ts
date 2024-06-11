@@ -1097,3 +1097,30 @@ test('should return dependencyType', async () => {
         ],
     });
 });
+
+test('returns flags with unknown creators if you set createdBy to 0', async () => {
+    const flagName = 'feature_without_creator';
+    await app.createFeature(flagName);
+    await db.rawDatabase.table('features').update({ createdBy: null }).where({
+        name: flagName,
+    });
+
+    const { body: checkBody } = await searchFeatures({});
+
+    console.log(checkBody);
+
+    const { body } = await filterFeaturesByCreatedBy('IS:0');
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: flagName,
+                createdBy: {
+                    id: 0,
+                    name: 'unknown',
+                    imageUrl: null,
+                },
+            },
+        ],
+    });
+});

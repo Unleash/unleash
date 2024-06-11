@@ -161,32 +161,3 @@ test('filters by flag author', async () => {
 
     expect(window.location.href).toContain('createdBy=IS%3A1');
 });
-
-test("uses flag author's id to filter", async () => {
-    setupApi();
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={
-                    <ProjectFeatureToggles
-                        environments={['development', 'production']}
-                    />
-                }
-            />
-        </Routes>,
-        {
-            route: '/projects/default',
-        },
-    );
-    const addFilter = await screen.findByText('Add Filter');
-    fireEvent.click(addFilter);
-
-    const createdBy = await screen.findByText('Created by');
-    fireEvent.click(createdBy);
-
-    const authorA = await screen.findByText('AuthorA');
-    fireEvent.click(authorA);
-
-    expect(window.location.href).toContain('createdBy=IS%3A1');
-});

@@ -188,6 +188,11 @@ const UnleashUiSetup: FC<{
             isVisible() {
                 return true;
             },
+            isOnline() {
+                return true;
+            },
+            initFocus(callback) {},
+            initReconnect(callback) {},
         }}
     >
         <UIProviderContainer>

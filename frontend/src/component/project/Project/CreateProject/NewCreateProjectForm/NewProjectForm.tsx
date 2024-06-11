@@ -7,6 +7,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
+import type React from 'react';
 import type { ReactNode } from 'react';
 import theme from 'themes/theme';
 import {
@@ -49,6 +50,7 @@ type FormProps = {
     errors: { [key: string]: string };
     overrideDocumentation: (args: { text: string; icon: ReactNode }) => void;
     clearDocumentationOverride: () => void;
+    children?: React.ReactNode;
 };
 
 const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';

@@ -57,6 +57,7 @@ interface IDialogue {
     formId?: string;
     permissionButton?: React.JSX.Element;
     customButton?: React.JSX.Element;
+    children?: React.ReactNode;
 }
 
 export const Dialogue: React.FC<IDialogue> = ({

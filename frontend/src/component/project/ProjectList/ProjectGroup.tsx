@@ -66,21 +66,25 @@ export const ProjectGroup: React.FC<{
                     <StyledGridContainer>
                         <ConditionallyRender
                             condition={loading}
-                            show={() =>
-                                loadingData.map((project: IProjectCard) => (
-                                    <ProjectCard
-                                        data-loading
-                                        onHover={() => {}}
-                                        key={project.id}
-                                        name={project.name}
-                                        id={project.id}
-                                        mode={project.mode}
-                                        memberCount={2}
-                                        health={95}
-                                        featureCount={4}
-                                    />
-                                ))
-                            }
+                            show={() => (
+                                <>
+                                    {loadingData.map(
+                                        (project: IProjectCard) => (
+                                            <ProjectCard
+                                                data-loading
+                                                onHover={() => {}}
+                                                key={project.id}
+                                                name={project.name}
+                                                id={project.id}
+                                                mode={project.mode}
+                                                memberCount={2}
+                                                health={95}
+                                                featureCount={4}
+                                            />
+                                        ),
+                                    )}
+                                </>
+                            )}
                             elseShow={() => (
                                 <>
                                     {projects.map((project: IProjectCard) => (

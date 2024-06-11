@@ -1,4 +1,5 @@
 import { styled } from '@mui/material';
+import type React from 'react';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,6 +19,7 @@ const StyledTabLink = styled(Link)(({ theme }) => ({
 
 interface ICenteredTabLinkProps {
     to: string;
+    children?: React.ReactNode;
 }
 
 export const TabLink: FC<ICenteredTabLinkProps> = ({ to, children }) => (

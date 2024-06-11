@@ -3,6 +3,7 @@ import type {
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
+import type React from 'react';
 import type { FC } from 'react';
 import {
     formatStrategyName,
@@ -55,15 +56,18 @@ interface IStrategyTooltipLinkProps {
         | IChangeRequestUpdateStrategy
         | IChangeRequestDeleteStrategy;
     previousTitle?: string;
+    children?: React.ReactNode;
 }
 
-const StyledContainer: FC = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridAutoFlow: 'column',
-    gridTemplateColumns: 'auto 1fr',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-}));
+const StyledContainer: FC<{ children?: React.ReactNode }> = styled('div')(
+    ({ theme }) => ({
+        display: 'grid',
+        gridAutoFlow: 'column',
+        gridTemplateColumns: 'auto 1fr',
+        gap: theme.spacing(1),
+        alignItems: 'center',
+    }),
+);
 
 const Truncated = styled('div')(() => ({
     ...textTruncated,

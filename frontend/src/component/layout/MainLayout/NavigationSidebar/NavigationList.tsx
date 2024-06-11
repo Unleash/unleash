@@ -1,3 +1,4 @@
+import type React from 'react';
 import { type FC, useCallback } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode';
@@ -198,7 +199,7 @@ export const PrimaryNavigationList: FC<{
     );
 };
 
-const AccordionHeader: FC = ({ children }) => {
+const AccordionHeader: FC<{ children?: React.ReactNode }> = ({ children }) => {
     return (
         <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -217,6 +218,7 @@ export const SecondaryNavigation: FC<{
     onExpandChange: (expanded: boolean) => void;
     mode: NavigationMode;
     title: string;
+    children?: React.ReactNode;
 }> = ({ mode, expanded, onExpandChange, title, children }) => {
     return (
         <Accordion

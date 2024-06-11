@@ -12,7 +12,7 @@ describe('LinkCell Component', () => {
         const subtitleElement = screen.getByText(longSubtitle);
         expect(subtitleElement).toBeInTheDocument();
 
-        userEvent.hover(subtitleElement);
+        await userEvent.hover(subtitleElement);
 
         const tooltip = await screen.findByRole('tooltip');
         expect(tooltip).toBeInTheDocument();

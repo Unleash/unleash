@@ -16,6 +16,7 @@ interface ITagTypeForm {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
+    children?: React.ReactNode;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({

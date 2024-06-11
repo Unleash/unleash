@@ -85,8 +85,6 @@ test('Should select all', async () => {
 
     const selectedAllButton = await screen.findByText(/Select all/i);
 
-    console.log(selectedAllButton);
-
     fireEvent.click(selectedAllButton);
     expect(localValues).toEqual(['value1', 'value2']);
 });
@@ -115,8 +113,6 @@ test('Should unselect all', async () => {
     );
 
     const selectedAllButton = await screen.findByText(/Unselect all/i);
-
-    console.log(selectedAllButton);
 
     fireEvent.click(selectedAllButton);
     expect(localValues).toEqual([]);

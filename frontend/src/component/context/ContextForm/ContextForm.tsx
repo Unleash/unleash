@@ -32,6 +32,7 @@ interface IContextForm {
     clearErrors: (key?: string) => void;
     validateContext?: () => void;
     setErrors: React.Dispatch<React.SetStateAction<Object>>;
+    children?: React.ReactNode;
 }
 
 const ENTER = 'Enter';

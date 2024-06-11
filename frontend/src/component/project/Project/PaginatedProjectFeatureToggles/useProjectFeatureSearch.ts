@@ -19,7 +19,8 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
-    | { key: 'type'; operator: 'IS' };
+    | { key: 'type'; operator: 'IS' }
+    | { key: 'createdBy'; operator: 'IS' };
 
 export const useProjectFeatureSearch = (
     projectId: string,
@@ -102,9 +103,15 @@ export const useProjectFeatureSearchActions = (
         onAttributeClick({ key: 'tag', operator: 'INCLUDE' }, tag);
     const onFlagTypeClick = (type: string) =>
         onAttributeClick({ key: 'type', operator: 'IS' }, type);
+    const onAvatarClick = (userId: number) =>
+        onAttributeClick(
+            { key: 'createdBy', operator: 'IS' },
+            userId.toString(),
+        );
 
     return {
         onFlagTypeClick,
         onTagClick,
+        onAvatarClick,
     };
 };

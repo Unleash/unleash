@@ -9,12 +9,11 @@ const server = testServerSetup();
 
 test('should render password auth', async () => {
     render(<ForgottenPassword />);
-    const user = userEvent.setup();
 
     const submitButton = screen.getByText('Submit');
     const emailField = screen.getByTestId(FORGOTTEN_PASSWORD_FIELD);
 
-    userEvent.type(emailField, 'user@example.com');
+    await userEvent.type(emailField, 'user@example.com');
     testServerRoute(server, '/auth/reset/password-email', {}, 'post', 200);
     submitButton.click();
 

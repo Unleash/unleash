@@ -1,3 +1,4 @@
+import type React from 'react';
 import { type FC, useState } from 'react';
 import Close from '@mui/icons-material/Close';
 import HelpOutline from '@mui/icons-material/HelpOutline';
@@ -13,6 +14,7 @@ import { Feedback } from 'component/common/Feedback/Feedback';
 
 interface IHelpPopperProps {
     id: string;
+    children?: React.ReactNode;
 }
 
 const StyledPaper = styled(Paper)(({ theme }) => ({

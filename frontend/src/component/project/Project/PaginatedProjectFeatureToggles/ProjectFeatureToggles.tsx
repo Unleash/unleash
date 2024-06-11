@@ -39,7 +39,8 @@ import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
-import { UserAvatar } from '../../../common/UserAvatar/UserAvatar';
+import { UserAvatarWithPopover } from '../../../common/UserAvatar/UserAvatarWithPopover';
+import type { Theme } from '@mui/material';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -176,13 +177,15 @@ export const ProjectFeatureToggles = ({
                           header: 'By',
                           cell: ({ row: { original } }) => {
                               return (
-                                  <UserAvatar
+                                  <UserAvatarWithPopover
                                       user={{
                                           id: original.createdBy.id,
                                           name: original.createdBy.name,
                                           imageUrl: original.createdBy.imageUrl,
                                       }}
-                                      avatarWidth={(theme) => theme.spacing(3)}
+                                      avatarWidth={(theme: Theme) =>
+                                          theme.spacing(3)
+                                      }
                                   />
                               );
                           },

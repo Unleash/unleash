@@ -25,7 +25,7 @@ const StyledAvatar = styled(Avatar, {
     };
 });
 
-interface IUserAvatarProps extends AvatarProps {
+export interface IUserAvatarProps extends AvatarProps {
     user?: Partial<
         Pick<IUser, 'id' | 'name' | 'email' | 'username' | 'imageUrl'>
     >;
@@ -77,7 +77,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
             sx={sx}
             {...props}
             data-loading
-            alt='Gravatar'
+            alt={user?.name || user?.email || user?.username || 'Gravatar'}
             src={src}
             title={title}
             onMouseEnter={onMouseEnter}

@@ -60,7 +60,6 @@ export type IFlagKey =
     | 'manyStrategiesPagination'
     | 'newCreateProjectUI'
     | 'enableLegacyVariants'
-    | 'debugMetrics'
     | 'navigationSidebar'
     | 'commandBarUI'
     | 'flagCreator';
@@ -286,10 +285,6 @@ const flags: IFlags = {
     ),
     enableLegacyVariants: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENABLE_LEGACY_VARIANTS,
-        false,
-    ),
-    debugMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DEBUG_METRICS,
         false,
     ),
     navigationSidebar: parseEnvVarBoolean(

@@ -141,10 +141,6 @@ export default class ClientMetricsServiceV2 {
         data: ClientMetricsSchema,
         clientIp: string,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('debugMetrics')) {
-            this.logger.debug(`Metrics received: ${JSON.stringify(data)}`);
-        }
-
         const value = await clientMetricsSchema.validateAsync(data);
         const toggleNames = Object.keys(value.bucket.toggles).filter(
             (name) =>

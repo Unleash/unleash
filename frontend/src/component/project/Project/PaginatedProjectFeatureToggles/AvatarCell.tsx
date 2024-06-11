@@ -58,6 +58,7 @@ export const AvatarCell =
                         </SrOnly>
 
                         <UserAvatar
+                            hideTitle
                             user={{
                                 id: original.createdBy.id,
                                 name: original.createdBy.name,

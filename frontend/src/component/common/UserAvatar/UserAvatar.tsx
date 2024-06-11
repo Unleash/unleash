@@ -36,6 +36,7 @@ export interface IUserAvatarProps extends AvatarProps {
     className?: string;
     sx?: SxProps<Theme>;
     avatarWidth?: (theme: Theme) => string;
+    hideTitle?: boolean;
 }
 
 export const UserAvatar: FC<IUserAvatarProps> = ({
@@ -47,9 +48,10 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
     className,
     sx,
     children,
+    hideTitle,
     ...props
 }) => {
-    if (!title && !onMouseEnter && user) {
+    if (!hideTitle && !title && !onMouseEnter && user) {
         title = `${user?.name || user?.email || user?.username} (id: ${
             user?.id
         })`;

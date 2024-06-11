@@ -73,6 +73,29 @@ export const featureSchema = {
             example: '2023-01-28T15:21:39.975Z',
             description: 'The date the feature was created',
         },
+        createdBy: {
+            type: 'object',
+            description: 'User who created the feature flag',
+            additionalProperties: false,
+            required: ['id', 'name', 'imageUrl'],
+            properties: {
+                id: {
+                    description: 'The user id',
+                    type: 'integer',
+                    example: 123,
+                },
+                name: {
+                    description: 'Name of the user',
+                    type: 'string',
+                    example: 'User',
+                },
+                imageUrl: {
+                    description: `URL used for the user profile image`,
+                    type: 'string',
+                    example: 'https://example.com/242x200.png',
+                },
+            },
+        },
         archivedAt: {
             type: 'string',
             format: 'date-time',

@@ -12,7 +12,7 @@ Applications evolve, and teams must manage all aspects of this evolution, includ
     -   [What is a canary deployment?](#what-is-a-canary-deployment)
     -   [Why use canary deployments?](#why-use-canary-deployments)
     -   [How to leverage feature flags for canary deployments in React?](#how-to-leverage-feature-flags-for-canary-deployments-in-react)
-        -   [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
+    -   [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
 -   [A/B Testing in React](#ab-testing-in-react)
 -   [Feature Flag Analytics and Reporting in React](#feature-flag-analytics-and-reporting-in-react)
     -   [Enable feature flag impression data](#enable-feature-flag-impression-data)
@@ -74,13 +74,25 @@ Learn more about [gradual rollouts in our docs](/reference/activation-strategies
 
 ### What is a canary deployment?
 
-Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to.
+Canary deployments are a foundational approach for deploying new software versions with high confidence and low risk by exposing the new version to a limited audience. Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to.
 
 ### Why use canary deployments?
 
 Canary deployments are a safer and more gradual way to make changes in software development. They help find any abnormalities and align with the agile process for faster releases and quick reversions.
 
 ### How to leverage feature flags for canary deployments in React?
+
+Feature flags provide the same benefits as canary deployments but with more granular control:
+
+-   Precisely target specific user segments for feature rollouts.
+
+-   Maintain session consistency (stickiness) if needed.
+
+-   Test multiple features independently on different user groups simultaneously.
+
+-   With feature flags, you can separate feature releases from deployments.
+
+Often, canary deployments are managed at the load balancer level while feature flags act at the application level. In some instances, rolling out groups of features together behind a feature flag can serve the purpose of a canary deployment.
 
 Unleash has a few ways to help manage canary deployments for React apps at scale:
 
@@ -92,7 +104,7 @@ Unleash has a few ways to help manage canary deployments for React apps at scale
 
 Let’s walk through how to utilize strategy constraints in our React app through the Unleash platform.
 
-#### Configure strategy constraints for canary deployments
+### Configure strategy constraints for canary deployments
 
 We will build a strategy constraint on top of our existing gradual rollout strategy. This will allow us to target a subset of users to rollout to.
 

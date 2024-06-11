@@ -71,19 +71,33 @@ Learn more about [gradual rollouts in our docs](/reference/activation-strategies
 
 ### What is a canary deployment?
 
-Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to.
+Canary deployments are a foundational approach for deploying new software versions with high confidence and low risk by exposing the new version to a limited audience. Canary releases are a way to test and release code in different environments for a subset of your audience, which determines which features or versions of the platform people have access to.
+
+### Why use canary deployments?
+
+Canary deployments are a safer and more gradual way to make changes in software development. They help find any abnormalities and align with the agile process for faster releases and quick reversions.
 
 ### How to do canary deployments with a Python feature flag?
 
-Canary deployments are a safer and more gradual way to make changes in software development. They help find abnormalities and align with the agile process for faster releases and quick reversions.
+Feature flags provide the same benefits as canary deployments but with more granular control:
+
+-   Precisely target specific user segments for feature rollouts.
+
+-   Maintain session consistency (stickiness) if needed.
+
+-   Test multiple features independently on different user groups simultaneously.
+
+-   With feature flags, you can separate feature releases from deployments.
+
+Often, canary deployments are managed at the load balancer level while feature flags act at the application level. In some instances, rolling out groups of features together behind a feature flag can serve the purpose of a canary deployment.
 
 Unleash has a few ways to help manage canary deployments for Python apps at scale:
 
--   Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we implemented in a [previous section](#gradual-rollouts-for-python-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+-   Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in a previous section](#gradual-rollouts-for-python-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
--   Using either [strategy constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) to determine which user receives which version for more control than a gradual rollout.
+-   Using either [constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
--   [Strategy variants](/reference/strategy-variants) are for more advanced use cases. For example, if you want to test 2 different versions of a feature to see which will perform better with your users, you can use strategy variants to split your population of users and conduct an A/B test with them.
+-   [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk through how to utilize **strategy constraints** in our Python app.
 

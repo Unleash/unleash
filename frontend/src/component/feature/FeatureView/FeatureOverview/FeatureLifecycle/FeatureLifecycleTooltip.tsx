@@ -241,7 +241,9 @@ const Environments: FC<{
     );
 };
 
-const PreLiveStageDescription: FC = ({ children }) => {
+const PreLiveStageDescription: FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => {
     return (
         <>
             <InfoText>
@@ -263,6 +265,7 @@ const BoldTitle = styled(Typography)(({ theme }) => ({
 const LiveStageDescription: FC<{
     onComplete: () => void;
     loading: boolean;
+    children?: React.ReactNode;
 }> = ({ children, onComplete, loading }) => {
     return (
         <>
@@ -347,6 +350,7 @@ const SafeToArchive: FC<{
 const ActivelyUsed: FC<{
     onUncomplete: () => void;
     loading: boolean;
+    children?: React.ReactNode;
 }> = ({ children, onUncomplete, loading }) => (
     <>
         <InfoText
@@ -391,6 +395,7 @@ const CompletedStageDescription: FC<{
         name: string;
         lastSeenAt: string;
     }>;
+    children?: React.ReactNode;
 }> = ({ children, environments, onArchive, onUncomplete, loading }) => {
     return (
         <ConditionallyRender

@@ -4,7 +4,7 @@ import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyO
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+const StyledAutocomplete = styled(Autocomplete<string, true>)(({ theme }) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1.5),
 }));

@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { VFC, FC, ReactNode } from 'react';
 import { Box, styled, Tooltip, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
@@ -36,22 +37,28 @@ const ChangeItemCreateEditDeleteWrapper = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
-const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '150px auto',
-    gridAutoFlow: 'column',
-    alignItems: 'center',
-    flexGrow: 1,
-    gap: theme.spacing(1),
-}));
+const ChangeItemInfo: FC<{ children?: React.ReactNode }> = styled(Box)(
+    ({ theme }) => ({
+        display: 'grid',
+        gridTemplateColumns: '150px auto',
+        gridAutoFlow: 'column',
+        alignItems: 'center',
+        flexGrow: 1,
+        gap: theme.spacing(1),
+    }),
+);
 
-const StyledBox: FC = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(2),
-}));
+const StyledBox: FC<{ children?: React.ReactNode }> = styled(Box)(
+    ({ theme }) => ({
+        marginTop: theme.spacing(2),
+    }),
+);
 
-const StyledTypography: FC = styled(Typography)(({ theme }) => ({
-    margin: `${theme.spacing(1)} 0`,
-}));
+const StyledTypography: FC<{ children?: React.ReactNode }> = styled(Typography)(
+    ({ theme }) => ({
+        margin: `${theme.spacing(1)} 0`,
+    }),
+);
 
 const hasNameField = (payload: unknown): payload is { name: string } =>
     typeof payload === 'object' && payload !== null && 'name' in payload;

@@ -86,7 +86,10 @@ describe('usePersistentTableState', () => {
     it('initializes correctly from localStorage with complex decoder', async () => {
         createLocalStorage('testKey', {}).setValue({
             query: 'initialStorage',
-            filterItem: { operator: 'IS', values: ['default'] },
+            filterItem: {
+                operator: 'IS',
+                values: ['default'],
+            },
             columns: ['a', 'b'],
         });
 
@@ -146,16 +149,21 @@ describe('usePersistentTableState', () => {
 
         expect(screen.getByTestId('state-value').textContent).toBe('before');
 
-        screen.getByText('Update State').click();
+        (await screen.findByText('Update State')).click();
 
-        expect(screen.getByTestId('state-value').textContent).toBe('after');
+        expect((await screen.findByTestId('state-value')).textContent).toBe(
+            'after',
+        );
         expect(window.location.href).toContain(
             'my-url?query=after&other=other',
         );
 
         await waitFor(() => {
             const { value } = createLocalStorage('testKey', {});
-            expect(value).toStrictEqual({ query: 'after', other: 'other' });
+            expect(value).toStrictEqual({
+                query: 'after',
+                other: 'other',
+            });
         });
     });
 

@@ -90,6 +90,7 @@ interface IGroupForm {
     handleCancel: () => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
+    children?: React.ReactNode;
 }
 
 export const GroupForm: FC<IGroupForm> = ({

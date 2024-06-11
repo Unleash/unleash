@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
@@ -8,6 +9,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 interface IProjectCardFooterProps {
     id: string;
     isFavorite?: boolean;
+    children?: React.ReactNode;
 }
 
 const StyledFooter = styled(Box)(({ theme }) => ({

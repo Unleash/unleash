@@ -31,12 +31,18 @@ export const render = (
 
     window.history.pushState({}, 'Test page', route);
 
-    const Wrapper: FC = ({ children }) => (
-        <UIProviderContainer>
-            <FeedbackProvider>
-                <SWRConfig
-                    value={{ provider: () => new Map(), dedupingInterval: 0 }}
-                >
+    const Wrapper: FC<{ children?: React.ReactNode }> = ({ children }) => (
+        <SWRConfig
+            value={{
+                provider: () => new Map(),
+                isVisible() {
+                    return true;
+                },
+                dedupingInterval: 0,
+            }}
+        >
+            <UIProviderContainer>
+                <FeedbackProvider>
                     <AccessProviderMock permissions={permissions}>
                         <BrowserRouter>
                             <QueryParamProvider adapter={ReactRouter6Adapter}>
@@ -48,9 +54,9 @@ export const render = (
                             </QueryParamProvider>
                         </BrowserRouter>
                     </AccessProviderMock>
-                </SWRConfig>
-            </FeedbackProvider>
-        </UIProviderContainer>
+                </FeedbackProvider>
+            </UIProviderContainer>
+        </SWRConfig>
     );
 
     return rtlRender(ui, {

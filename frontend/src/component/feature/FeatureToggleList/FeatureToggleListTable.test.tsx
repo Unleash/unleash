@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureToggleListTable } from './FeatureToggleListTable';
@@ -87,7 +87,7 @@ const filterFeaturesByProject = async (projectName: string) => {
     addFilterButton.click();
 
     const projectItem = await screen.findByText('Project');
-    projectItem.click();
+    fireEvent.click(projectItem);
 
     await screen.findByPlaceholderText('Search');
     const anotherProjectCheckbox = await screen.findByText(projectName);

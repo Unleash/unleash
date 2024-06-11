@@ -375,7 +375,7 @@ export const ProjectFeatureToggles = ({
 
     const { columnVisibility, rowSelection } = table.getState();
     const onToggleColumnVisibility = useCallback(
-        (columnId) => {
+        (columnId: string) => {
             const isVisible = columnVisibility[columnId];
             const newColumnVisibility: Record<string, boolean> = {
                 ...columnVisibility,

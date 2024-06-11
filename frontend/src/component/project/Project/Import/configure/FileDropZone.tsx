@@ -1,3 +1,4 @@
+import type React from 'react';
 import { type FC, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/material';
@@ -8,6 +9,7 @@ interface IFileDropZoneProps {
     onSuccess: (message: string) => void;
     onError: (error: string) => void;
     onDragStatusChange: (dragOn: boolean) => void;
+    children?: React.ReactNode;
 }
 
 const onFileDropped =
@@ -34,7 +36,7 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
     onDragStatusChange,
     ...props
 }) => {
-    const onDrop = useCallback(([file]) => {
+    const onDrop = useCallback(([file]: Array<Blob>) => {
         const reader = new FileReader();
         reader.onload = onFileDropped({ onSuccess, onError });
         reader.readAsText(file);

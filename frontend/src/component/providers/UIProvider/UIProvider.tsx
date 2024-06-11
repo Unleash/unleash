@@ -20,7 +20,7 @@ const resolveMode = (): themeMode => {
     return 'light';
 };
 
-const UIProvider: React.FC = ({ children }) => {
+const UIProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const [toastData, setToast] = useState<IToast>(createEmptyToast());
     const [showFeedback, setShowFeedback] = useState(false);
     const [themeMode, setThemeMode] = useState(resolveMode());

@@ -18,7 +18,7 @@ test('should render correctly when using basic options', () => {
     expect(screen.getByTestId('WarningAmberIcon')).toBeInTheDocument();
 });
 
-test('should render correctly when using advanced options', () => {
+test('should render correctly when using advanced options', async () => {
     render(
         <Banner
             banner={{
@@ -42,7 +42,7 @@ test('should render correctly when using advanced options', () => {
     expect(link).toBeInTheDocument();
     link.click();
 
-    expect(screen.getByText('Dialog title')).toBeInTheDocument();
+    expect(await screen.findByText('Dialog title')).toBeInTheDocument();
     expect(screen.getByText('Dialog content')).toBeInTheDocument();
 });
 

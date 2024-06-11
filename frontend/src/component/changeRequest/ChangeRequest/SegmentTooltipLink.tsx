@@ -2,6 +2,7 @@ import type {
     IChangeRequestDeleteSegment,
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
+import type React from 'react';
 import type { FC } from 'react';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
@@ -42,15 +43,18 @@ export const SegmentDiff: FC<{
 };
 interface IStrategyTooltipLinkProps {
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
+    children?: React.ReactNode;
 }
 
-const StyledContainer: FC = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridAutoFlow: 'column',
-    gridTemplateColumns: 'auto 1fr',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-}));
+const StyledContainer: FC<{ children?: React.ReactNode }> = styled('div')(
+    ({ theme }) => ({
+        display: 'grid',
+        gridAutoFlow: 'column',
+        gridTemplateColumns: 'auto 1fr',
+        gap: theme.spacing(1),
+        alignItems: 'center',
+    }),
+);
 
 const Truncated = styled('div')(() => ({
     ...textTruncated,

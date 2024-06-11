@@ -2,6 +2,7 @@ import { render, cleanup } from '@testing-library/react';
 import { StickyProvider } from './StickyProvider';
 import { type IStickyContext, StickyContext } from './StickyContext';
 import { expect } from 'vitest';
+import { act } from 'react-test-renderer';
 
 const defaultGetBoundingClientRect = {
     width: 0,
@@ -108,8 +109,10 @@ describe('StickyProvider component', () => {
             </StickyProvider>,
         );
 
-        contextValues?.registerStickyItem(refMockA);
-        contextValues?.registerStickyItem(refMockB);
+        act(() => {
+            contextValues?.registerStickyItem(refMockA);
+            contextValues?.registerStickyItem(refMockB);
+        });
 
         expect(contextValues?.stickyItems[0]).toBe(refMockB);
         expect(contextValues?.stickyItems[1]).toBe(refMockA);

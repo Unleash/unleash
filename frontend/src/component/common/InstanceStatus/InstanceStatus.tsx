@@ -110,7 +110,9 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
     );
 };
 
-export const InstanceStatus: FC = ({ children }) => {
+export const InstanceStatus: FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => {
     const { instanceStatus, refetchInstanceStatus } = useInstanceStatus();
     const { extendTrial } = useInstanceStatusApi();
     const { setToastApiError } = useToast();

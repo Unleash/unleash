@@ -1,5 +1,5 @@
 import { useGroupedProjectTrends } from './useGroupedProjectTrends';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 describe('useGroupedProjectTrends', () => {
     test('returns an empty object when input data is empty', () => {

@@ -1,5 +1,5 @@
 import { useId } from 'hooks/useId';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 test('useId', () => {
     const { result, rerender } = renderHook(() => useId());
@@ -9,13 +9,7 @@ test('useId', () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
-        "all": [
-          "useId-0",
-          "useId-0",
-          "useId-0",
-        ],
         "current": "useId-0",
-        "error": undefined,
       }
     `);
 });
@@ -28,13 +22,7 @@ test('useId prefix', () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
-        "all": [
-          "prefix-1",
-          "prefix-1",
-          "prefix-1",
-        ],
         "current": "prefix-1",
-        "error": undefined,
       }
     `);
 });

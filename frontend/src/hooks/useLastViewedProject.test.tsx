@@ -33,7 +33,7 @@ describe('Synchronization between multiple components using useLastViewedProject
         );
     });
 
-    test('updates both components when one updates its last viewed project', async () => {
+    it('updates both components when one updates its last viewed project', async () => {
         expect(screen.getByTestId('component1').textContent).toBe('');
         expect(screen.getByTestId('component2').textContent).toBe('');
 

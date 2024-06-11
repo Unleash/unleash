@@ -27,7 +27,7 @@ const exampleFeatureTypes: IFeatureType[] = [
 ];
 
 describe('calculateProjectHealth', () => {
-    test('works with empty features', () => {
+    it('works with empty features', () => {
         expect(calculateProjectHealth([], exampleFeatureTypes)).toEqual({
             activeCount: 0,
             staleCount: 0,
@@ -35,7 +35,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    test('counts active flags', () => {
+    it('counts active flags', () => {
         const features = [{ stale: false }, {}];
 
         expect(calculateProjectHealth(features, exampleFeatureTypes)).toEqual({
@@ -45,7 +45,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    test('counts stale flags', () => {
+    it('counts stale flags', () => {
         const features = [{ stale: true }, { stale: false }, {}];
 
         expect(calculateProjectHealth(features, exampleFeatureTypes)).toEqual({
@@ -55,7 +55,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    test('takes feature type into account when calculating potentially stale flags', () => {
+    it('takes feature type into account when calculating potentially stale flags', () => {
         expect(
             calculateProjectHealth(
                 [
@@ -129,7 +129,7 @@ describe('calculateProjectHealth', () => {
         });
     });
 
-    test('counts non-expiring types properly', () => {
+    it('counts non-expiring types properly', () => {
         const features = [
             {
                 createdAt: subDays(Date.now(), 366),
@@ -150,11 +150,11 @@ describe('calculateProjectHealth', () => {
 });
 
 describe('calculateHealthRating', () => {
-    test('works with empty feature flags', () => {
+    it('works with empty feature flags', () => {
         expect(calculateHealthRating([], exampleFeatureTypes)).toEqual(100);
     });
 
-    test('works with stale and active feature flags', () => {
+    it('works with stale and active feature flags', () => {
         expect(
             calculateHealthRating(
                 [{ stale: true }, { stale: true }],
@@ -175,7 +175,7 @@ describe('calculateHealthRating', () => {
         ).toEqual(67);
     });
 
-    test('counts potentially stale flags', () => {
+    it('counts potentially stale flags', () => {
         expect(
             calculateHealthRating(
                 [

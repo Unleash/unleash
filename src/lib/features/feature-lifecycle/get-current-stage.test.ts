@@ -4,7 +4,7 @@ import type { IFeatureLifecycleStage } from '../../types';
 const irrelevantDate = new Date('2024-04-22T10:00:00Z');
 
 describe('getCurrentStage', () => {
-    test('should return the first matching stage based on the preferred order', () => {
+    it('should return the first matching stage based on the preferred order', () => {
         const stages: IFeatureLifecycleStage[] = [
             {
                 stage: 'initial',
@@ -30,7 +30,7 @@ describe('getCurrentStage', () => {
         });
     });
 
-    test('should handle an empty stages array', () => {
+    it('should handle an empty stages array', () => {
         const stages: IFeatureLifecycleStage[] = [];
 
         const result = getCurrentStage(stages);

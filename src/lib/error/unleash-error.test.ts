@@ -32,7 +32,7 @@ describe('v5 deprecation: backwards compatibility', () => {
 });
 
 describe('Standard/legacy error conversion', () => {
-    test('Moves message to the details list for baddataerror', () => {
+    it('Moves message to the details list for baddataerror', () => {
         const message = `: message!`;
         const result = fromLegacyError(new BadDataError(message)).toJSON();
 
@@ -45,7 +45,7 @@ describe('Standard/legacy error conversion', () => {
 });
 
 describe('OpenAPI error conversion', () => {
-    test('Gives useful error messages for missing properties', () => {
+    it('Gives useful error messages for missing properties', () => {
         const error = {
             keyword: 'required',
             instancePath: '/body',
@@ -69,7 +69,7 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain(error.params.missingProperty);
     });
 
-    test('Gives useful error messages for type errors', () => {
+    it('Gives useful error messages for type errors', () => {
         const error = {
             keyword: 'type',
             instancePath: '/body/parameters',
@@ -134,7 +134,7 @@ describe('OpenAPI error conversion', () => {
         },
     );
 
-    test('Gives useful pattern error messages', () => {
+    it('Gives useful pattern error messages', () => {
         const error = {
             keyword: 'pattern',
             instancePath: '/body/description',
@@ -158,7 +158,7 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain('description');
     });
 
-    test('Gives useful enum error messages', () => {
+    it('Gives useful enum error messages', () => {
         const error = {
             instancePath: '/body/0/weightType',
             schemaPath: '#/properties/weightType/enum',
@@ -188,7 +188,7 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain('party');
     });
 
-    test('Gives useful min/maxlength error messages', () => {
+    it('Gives useful min/maxlength error messages', () => {
         const error = {
             keyword: 'maxLength',
             instancePath: '/body/description',
@@ -217,7 +217,7 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain(requestDescription);
     });
 
-    test('Handles numerical min/max errors', () => {
+    it('Handles numerical min/max errors', () => {
         const error = {
             keyword: 'maximum',
             instancePath: '/body/newprop',
@@ -250,7 +250,7 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain(propertyValue.toString());
     });
 
-    test('Handles multiple errors', () => {
+    it('Handles multiple errors', () => {
         const errors: [ErrorObject, ...ErrorObject[]] = [
             {
                 keyword: 'maximum',
@@ -295,7 +295,7 @@ describe('OpenAPI error conversion', () => {
     });
 
     describe('Disallowed additional properties', () => {
-        test('gives useful messages for base-level properties', () => {
+        it('gives useful messages for base-level properties', () => {
             const openApiError = {
                 keyword: 'additionalProperties',
                 instancePath: '/body',
@@ -320,7 +320,7 @@ describe('OpenAPI error conversion', () => {
             expect(error.message).toMatch(/\badditional properties\b/i);
         });
 
-        test('gives useful messages for nested properties', () => {
+        it('gives useful messages for nested properties', () => {
             const request2 = {
                 nestedObject: {
                     nested2: { extraPropertyName: 'illegal property' },
@@ -349,7 +349,7 @@ describe('OpenAPI error conversion', () => {
         });
     });
 
-    test('Handles deeply nested properties gracefully', () => {
+    it('Handles deeply nested properties gracefully', () => {
         const error = {
             keyword: 'type',
             instancePath: '/body/nestedObject/a/b',
@@ -371,7 +371,7 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain('[]');
     });
 
-    test('Handles deeply nested properties on referenced schemas', () => {
+    it('Handles deeply nested properties on referenced schemas', () => {
         const error = {
             keyword: 'type',
             instancePath: '/body/nestedObject/a/b',
@@ -395,7 +395,7 @@ describe('OpenAPI error conversion', () => {
 });
 
 describe('Error serialization special cases', () => {
-    test('OwaspValidationErrors: adds `validationErrors` to `details`', () => {
+    it('OwaspValidationErrors: adds `validationErrors` to `details`', () => {
         const results = owasp.test('123');
         const error = new OwaspValidationError(results);
         const json = fromLegacyError(error).toJSON();
@@ -410,7 +410,7 @@ describe('Error serialization special cases', () => {
         });
     });
 
-    test('Converts Joi errors in a sensible fashion', async () => {
+    it('Converts Joi errors in a sensible fashion', async () => {
         // if the validation doesn't fail, this test does nothing, so ensure
         // that an error is thrown.
         let validationThrewAnError = false;
@@ -438,7 +438,7 @@ describe('Error serialization special cases', () => {
 });
 
 describe('Error serialization special cases', () => {
-    test('AuthenticationRequired: adds `path` and `type`', () => {
+    it('AuthenticationRequired: adds `path` and `type`', () => {
         const type = 'password';
         const path = '/api/login';
         const error = new AuthenticationRequired({
@@ -452,7 +452,7 @@ describe('Error serialization special cases', () => {
         expect(json).toMatchObject({ path, type });
     });
 
-    test('AuthenticationRequired adds `options` if they are present', () => {
+    it('AuthenticationRequired adds `options` if they are present', () => {
         const config = {
             type: 'password',
             path: `base-path/auth/simple/login`,
@@ -472,7 +472,7 @@ describe('Error serialization special cases', () => {
         expect(json).toMatchObject(config);
     });
 
-    test('NoAccessError: adds `permissions`', () => {
+    it('NoAccessError: adds `permissions`', () => {
         const permission = 'x';
         const error = new PermissionError(permission);
         const json = error.toJSON();
@@ -480,7 +480,7 @@ describe('Error serialization special cases', () => {
         expect(json.permissions).toStrictEqual([permission]);
     });
 
-    test('NoAccessError: supports multiple permissions', () => {
+    it('NoAccessError: supports multiple permissions', () => {
         const permission = ['x', 'y', 'z'];
         const error = new PermissionError(permission);
         const json = error.toJSON();
@@ -488,7 +488,7 @@ describe('Error serialization special cases', () => {
         expect(json.permissions).toStrictEqual(permission);
     });
 
-    test('BadDataError: adds `details` with error details', () => {
+    it('BadDataError: adds `details` with error details', () => {
         const message = 'You did **this** wrong';
         const error = new BadDataError(message).toJSON();
 
@@ -501,7 +501,7 @@ describe('Error serialization special cases', () => {
         });
     });
 
-    test('OwaspValidationErrors: adds `validationErrors` to `details`', () => {
+    it('OwaspValidationErrors: adds `validationErrors` to `details`', () => {
         const results = owasp.test('123');
         const error = new OwaspValidationError(results);
         const json = error.toJSON();
@@ -517,7 +517,7 @@ describe('Error serialization special cases', () => {
         });
     });
 
-    test('IncompatibleProjectError: adds `validationErrors: []` to the `details` list', () => {
+    it('IncompatibleProjectError: adds `validationErrors: []` to the `details` list', () => {
         const targetProject = '8927CCCA-AD39-46E2-9D83-8E50D9AACE75';
         const error = new IncompatibleProjectError(targetProject);
         const json = error.toJSON();
@@ -532,7 +532,7 @@ describe('Error serialization special cases', () => {
         });
     });
 
-    test('PasswordUndefinedError: adds `validationErrors: []` to the `details` list', () => {
+    it('PasswordUndefinedError: adds `validationErrors: []` to the `details` list', () => {
         const error = new PasswordUndefinedError();
         const json = error.toJSON();
 
@@ -546,7 +546,7 @@ describe('Error serialization special cases', () => {
         });
     });
 
-    test('ProjectWithoutOwnerError: adds `validationErrors: []` to the `details` list', () => {
+    it('ProjectWithoutOwnerError: adds `validationErrors: []` to the `details` list', () => {
         const error = new ProjectWithoutOwnerError();
         const json = error.toJSON();
 
@@ -562,7 +562,7 @@ describe('Error serialization special cases', () => {
 });
 
 describe('Stack traces', () => {
-    test('captures stack traces regardless of whether `Error.captureStackTrace` is called explicitly or not', () => {
+    it('captures stack traces regardless of whether `Error.captureStackTrace` is called explicitly or not', () => {
         const e = new PasswordUndefinedError();
 
         expect(e.stack).toBeTruthy();

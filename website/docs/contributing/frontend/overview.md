@@ -4,7 +4,7 @@ title: Front end
 
 ## Frontend overview
 
-The frontend is written in react/typescript. It's is a single page application that communicates with the backend via a REST API. The frontend is built using vite and served by the backend.
+The frontend is written in react/typescript. It's a single page application that communicates with the backend via a REST API. The frontend is built using vite and served by the backend.
 
 ## ADRs
 

@@ -1,6 +1,5 @@
 import { type Theme, styled } from '@mui/material';
 import type { FC } from 'react';
-import { visuallyHiddenStyles } from '../CreateProject/NewCreateProjectForm/ConfigButtons/shared.styles';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
@@ -32,23 +31,34 @@ const StyledAvatarButton = styled('button')({
     padding: 0,
 });
 
-export const VisuallyHiddenButtonText = styled('span')(() => ({
-    ...visuallyHiddenStyles,
-    position: 'absolute',
+const StyledSecondaryText = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
 }));
 
 export const AvatarCell =
     (onAvatarClick: (userId: number) => void): FC<AvatarCellProps> =>
     ({ row: { original } }) => {
+        const ariaDisabled = original.createdBy.id === 0;
+        const clickAction = ariaDisabled
+            ? () => {}
+            : () => onAvatarClick(original.createdBy.id);
+        const tooltipContent = ariaDisabled ? (
+            <>
+                <p>{original.createdBy.name}</p>
+                <StyledSecondaryText>
+                    You can't filter by unknown users.
+                </StyledSecondaryText>
+            </>
+        ) : (
+            <p>{original.createdBy.name}</p>
+        );
+
         return (
             <StyledContainer>
-                <HtmlTooltip
-                    arrow
-                    describeChild
-                    title={original.createdBy.name}
-                >
+                <HtmlTooltip arrow describeChild title={tooltipContent}>
                     <StyledAvatarButton
-                        onClick={() => onAvatarClick(original.createdBy.id)}
+                        aria-disabled={ariaDisabled}
+                        onClick={clickAction}
                     >
                         <ScreenReaderOnly>
                             <span>

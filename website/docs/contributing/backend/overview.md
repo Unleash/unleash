@@ -16,10 +16,9 @@ We have created a set of ADRs to help guide the development of the backend:
 Before developing on this project you will need two things:
 
 - PostgreSQL 14.x or newer
-- Node.js 20.x or newer
+- Node.js 14.x or newer
 
 ```sh
-corepack enable
 yarn install
 yarn dev
 ```

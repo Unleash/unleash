@@ -6,7 +6,7 @@ concurrency:
 
 permissions:
   contents: write
-  id-token: write
+  id-token: write  
 
 on:
   workflow_dispatch:
@@ -30,7 +30,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 20.x ]
+        node-version: [20.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -66,12 +66,10 @@ jobs:
           else
             echo "No changes to CHANGELOG.md"
           fi
-      - run: yarn install --immutable
-        env:
-          YARN_ENABLE_SCRIPTS: false
+      - run: yarn install --frozen-lockfile --ignore-scripts
       - name: npm version
         run: |
-          npm version ${{ github.event.inputs.version }}
+          npm version ${{ github.event.inputs.version }} --ignore-scripts
           git push origin ${{ github.ref_name }}
           git push --tags
         env:
@@ -106,10 +104,8 @@ jobs:
         run: git checkout origin/${{ github.ref_name }} -- CHANGELOG.md
       - name: lint
         run: |
-          yarn install --immutable
+          yarn install --frozen-lockfile --ignore-scripts
           yarn lint:fix
-        env:
-          YARN_ENABLE_SCRIPTS: false
       - name: push changes
         run: |
           git add package.json CHANGELOG.md
@@ -122,7 +118,7 @@ jobs:
     secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
-
+  
   publish-npm:
     needs: build
     uses: ./.github/workflows/release.yaml

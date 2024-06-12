@@ -745,7 +745,7 @@ test('Should return "default" for stickiness when creating a flexibleRollout str
         constraints: [],
     };
     const feature = {
-        name: 'test-featureA',
+        name: 'test-feature-stickiness-1',
         description: 'the #1 feature',
     };
     const projectId = 'default';
@@ -759,9 +759,7 @@ test('Should return "default" for stickiness when creating a flexibleRollout str
 
     const featureDB = await service.getFeature({ featureName: feature.name });
 
-    expect(featureDB).toMatchObject({
-        environments: [
-            { strategies: [{ parameters: { stickiness: 'default' } }] },
-        ],
+    expect(featureDB.environments[0]).toMatchObject({
+        strategies: [{ parameters: { stickiness: 'default' } }],
     });
 });

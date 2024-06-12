@@ -22,6 +22,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -104,16 +105,17 @@ export const OtherLinksList = () => {
 
 export const RecentProjectsList: FC<{
     projectId: string;
+    projectName: string;
     mode: NavigationMode;
     onClick: () => void;
-}> = ({ projectId, mode, onClick }) => {
+}> = ({ projectId, projectName, mode, onClick }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     return (
         <List>
             <DynamicListItem
                 href={`/projects/${projectId}`}
-                text={projectId}
+                text={projectName}
                 onClick={onClick}
                 selected={false}
             >
@@ -245,6 +247,10 @@ export const RecentProjectsNavigation: FC<{
     projectId: string;
     onClick: () => void;
 }> = ({ mode, onClick, projectId }) => {
+    const { project, loading } = useProjectOverview(projectId);
+    const projectDeleted = !project.name && !loading;
+
+    if (projectDeleted) return null;
     return (
         <Box>
             {mode === 'full' && (
@@ -261,6 +267,7 @@ export const RecentProjectsNavigation: FC<{
             )}
             <RecentProjectsList
                 projectId={projectId}
+                projectName={project.name}
                 mode={mode}
                 onClick={onClick}
             />

@@ -42,9 +42,6 @@ export const AvatarCell =
         const clickAction = ariaDisabled
             ? () => {}
             : () => onAvatarClick(original.createdBy.id);
-        const screenReaderText = ariaDisabled
-            ? "You can't filter by unknown users."
-            : `Show only flags created by ${original.createdBy.name}`;
         const tooltipContent = ariaDisabled ? (
             <>
                 <p>{original.createdBy.name}</p>
@@ -64,7 +61,10 @@ export const AvatarCell =
                         onClick={clickAction}
                     >
                         <ScreenReaderOnly>
-                            <span>{screenReaderText}</span>
+                            <span>
+                                Show only flags created by{' '}
+                                {original.createdBy.name}
+                            </span>
                         </ScreenReaderOnly>
 
                         <UserAvatar

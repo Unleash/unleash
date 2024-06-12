@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import CallMade from '@mui/icons-material/CallMade';
 import SouthEast from '@mui/icons-material/SouthEast';
@@ -50,6 +51,7 @@ interface IStatusBoxProps {
     change?: number;
     percentage?: boolean;
     customChangeElement?: ReactNode;
+    children?: React.ReactNode;
 }
 
 const resolveIcon = (change: number) => {

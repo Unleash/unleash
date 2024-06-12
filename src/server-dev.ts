@@ -53,6 +53,7 @@ process.nextTick(async () => {
                         createProjectWithEnvironmentConfig: true,
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
+                        commandBarUI: true,
                         flagCreator: true,
                     },
                 },

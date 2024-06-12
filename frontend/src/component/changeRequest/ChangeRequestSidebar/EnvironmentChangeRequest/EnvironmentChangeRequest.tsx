@@ -1,3 +1,4 @@
+import type React from 'react';
 import { type FC, useState } from 'react';
 import {
     Box,
@@ -65,6 +66,7 @@ export const EnvironmentChangeRequest: FC<{
     onClose: () => void;
     onReview: (changeState: (project: string) => Promise<void>) => void;
     onDiscard: (id: number) => void;
+    children?: React.ReactNode;
 }> = ({ environmentChangeRequest, onClose, onReview, onDiscard, children }) => {
     const theme = useTheme();
     const navigate = useNavigate();

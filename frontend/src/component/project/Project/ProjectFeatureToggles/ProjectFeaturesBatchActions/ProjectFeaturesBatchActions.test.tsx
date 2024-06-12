@@ -35,9 +35,9 @@ test('batch archive', async () => {
 
     archiveButton.click();
 
-    screen.getByText('Archive feature flags');
-    screen.getByText('featureA');
-    screen.getByText('featureB');
+    await screen.findByText('Archive feature flags');
+    await screen.findByText('featureA');
+    await screen.findByText('featureB');
 });
 
 test('batch mark as stale', async () => {

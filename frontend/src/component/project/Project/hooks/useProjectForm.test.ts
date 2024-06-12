@@ -1,21 +1,28 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import useProjectForm from './useProjectForm';
+import { act } from 'react-test-renderer';
+import { test } from 'vitest';
 
 describe('configuring change requests', () => {
     test('setting project environments removes any change request envs that are not in the new project env list', () => {
         const { result } = renderHook(() => useProjectForm());
 
-        result.current.setProjectEnvironments(new Set(['dev', 'prod']));
-        result.current.updateProjectChangeRequestConfig.enableChangeRequests(
-            'prod',
-            5,
-        );
+        act(() => {
+            result.current.setProjectEnvironments(new Set(['dev', 'prod']));
+
+            result.current.updateProjectChangeRequestConfig.enableChangeRequests(
+                'prod',
+                5,
+            );
+        });
 
         expect(result.current.projectChangeRequestConfiguration).toMatchObject({
             prod: { requiredApprovals: 5 },
         });
 
-        result.current.setProjectEnvironments(new Set(['dev']));
+        act(() => {
+            result.current.setProjectEnvironments(new Set(['dev']));
+        });
 
         expect(
             'prod' in result.current.projectChangeRequestConfiguration,
@@ -31,7 +38,9 @@ describe('configuring change requests', () => {
             5,
         );
 
-        result.current.setProjectEnvironments(new Set([]));
+        act(() => {
+            result.current.setProjectEnvironments(new Set([]));
+        });
 
         expect(result.current.projectChangeRequestConfiguration).toMatchObject({
             prod: { requiredApprovals: 5 },
@@ -56,10 +65,12 @@ describe('configuring change requests', () => {
     test(`if no project envs are selected, you can add a change request for any env you want`, () => {
         const { result } = renderHook(() => useProjectForm());
 
-        result.current.updateProjectChangeRequestConfig.enableChangeRequests(
-            'dev',
-            5,
-        );
+        act(() => {
+            result.current.updateProjectChangeRequestConfig.enableChangeRequests(
+                'dev',
+                5,
+            );
+        });
 
         expect(
             'dev' in result.current.projectChangeRequestConfiguration,

@@ -1,9 +1,11 @@
+import type React from 'react';
 import type { FC } from 'react';
 import { Box, Paper, styled, Typography } from '@mui/material';
 import { BATCH_ACTIONS_BAR, BATCH_SELECTED_COUNT } from 'utils/testIds';
 
 interface IBatchSelectionActionsBarProps {
     count: number;
+    children?: React.ReactNode;
 }
 
 const StyledStickyContainer = styled('div')(({ theme }) => ({

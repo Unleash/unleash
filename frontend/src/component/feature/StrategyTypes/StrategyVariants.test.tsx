@@ -76,7 +76,7 @@ test('should render variants', async () => {
     button.click();
 
     // UI allows to adjust percentages
-    const matchedElements = screen.getAllByText('Custom percentage');
+    const matchedElements = await screen.findAllByText('Custom percentage');
     expect(matchedElements.length).toBe(2);
 
     // correct variants set on the parent

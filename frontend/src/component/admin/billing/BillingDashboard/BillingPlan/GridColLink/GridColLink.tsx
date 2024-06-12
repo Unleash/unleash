@@ -6,6 +6,8 @@ const StyledSpan = styled('span')(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-export const GridColLink: FC = ({ children }) => {
+export const GridColLink: FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => {
     return <StyledSpan>({children})</StyledSpan>;
 };

@@ -31,18 +31,34 @@ const StyledAvatarButton = styled('button')({
     padding: 0,
 });
 
+const StyledSecondaryText = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
 export const AvatarCell =
     (onAvatarClick: (userId: number) => void): FC<AvatarCellProps> =>
     ({ row: { original } }) => {
+        const ariaDisabled = original.createdBy.id === 0;
+        const clickAction = ariaDisabled
+            ? () => {}
+            : () => onAvatarClick(original.createdBy.id);
+        const tooltipContent = ariaDisabled ? (
+            <>
+                <p>{original.createdBy.name}</p>
+                <StyledSecondaryText>
+                    You can't filter by unknown users.
+                </StyledSecondaryText>
+            </>
+        ) : (
+            <p>{original.createdBy.name}</p>
+        );
+
         return (
             <StyledContainer>
-                <HtmlTooltip
-                    arrow
-                    describeChild
-                    title={original.createdBy.name}
-                >
+                <HtmlTooltip arrow describeChild title={tooltipContent}>
                     <StyledAvatarButton
-                        onClick={() => onAvatarClick(original.createdBy.id)}
+                        aria-disabled={ariaDisabled}
+                        onClick={clickAction}
                     >
                         <ScreenReaderOnly>
                             <span>

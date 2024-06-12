@@ -252,7 +252,7 @@ describe('missing descriptions', () => {
         events: ['feature-created', 'feature-updated'],
     };
 
-    test('creating an addon without a description, sets the description to `null`', async () => {
+    it('creating an addon without a description, sets the description to `null`', async () => {
         const { body } = await app.request
             .post('/api/admin/addons')
             .send(addonWithoutDescription)
@@ -267,7 +267,7 @@ describe('missing descriptions', () => {
             });
     });
 
-    test('updating an addon without touching `description` keeps the original value', async () => {
+    it('updating an addon without touching `description` keeps the original value', async () => {
         const { body } = await app.request
             .post('/api/admin/addons')
             .send(addonWithoutDescription);

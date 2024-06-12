@@ -37,6 +37,7 @@ interface ICreateProps {
     compact?: boolean;
     showGuidance?: boolean;
     useFixedSidebar?: boolean;
+    children?: React.ReactNode;
 }
 
 const StyledContainer = styled('section', {
@@ -410,6 +411,7 @@ interface IGuidanceProps {
     documentationLinkLabel?: string;
     showDescription?: boolean;
     showLink?: boolean;
+    children?: React.ReactNode;
 }
 
 const GuidanceContent: React.FC<

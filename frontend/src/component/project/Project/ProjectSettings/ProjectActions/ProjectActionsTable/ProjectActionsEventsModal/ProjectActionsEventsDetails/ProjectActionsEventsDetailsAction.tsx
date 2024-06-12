@@ -101,7 +101,7 @@ export const ProjectActionsEventsDetailsAction = ({
                 {Object.entries(executionParams).map(([property, value]) => (
                     <div key={property}>
                         <StyledPropertyLabel>{property}:</StyledPropertyLabel>{' '}
-                        {value}
+                        {value as any}
                     </div>
                 ))}
             </StyledActionBody>

@@ -1,4 +1,3 @@
-import LibraryBooks from '@mui/icons-material/LibraryBooks';
 import type { IUiConfig } from 'interfaces/uiConfig';
 
 export const defaultValue: IUiConfig = {
@@ -17,7 +16,7 @@ export const defaultValue: IUiConfig = {
     links: [
         {
             value: 'Documentation',
-            icon: LibraryBooks,
+            icon: 'library_books',
             href: 'https://docs.getunleash.io/docs?source=oss',
             title: 'User documentation',
         },

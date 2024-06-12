@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import { Paper, Typography, styled, type SxProps } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -16,6 +17,7 @@ export const Widget: FC<{
     title: ReactNode;
     tooltip?: ReactNode;
     sx?: SxProps<Theme>;
+    children?: React.ReactNode;
 }> = ({ title, children, tooltip, ...rest }) => (
     <StyledPaper elevation={0} {...rest}>
         <Typography

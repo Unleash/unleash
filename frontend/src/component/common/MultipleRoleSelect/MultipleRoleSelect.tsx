@@ -74,15 +74,17 @@ export const MultipleRoleSelect = ({
             />
             <ConditionallyRender
                 condition={value.length > 0}
-                show={() =>
-                    value.map(({ id }) => (
-                        <RoleDescription
-                            key={id}
-                            sx={{ marginTop: 1 }}
-                            roleId={id}
-                        />
-                    ))
-                }
+                show={() => (
+                    <>
+                        {value.map(({ id }) => (
+                            <RoleDescription
+                                key={id}
+                                sx={{ marginTop: 1 }}
+                                roleId={id}
+                            />
+                        ))}
+                    </>
+                )}
             />
         </>
     );

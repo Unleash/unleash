@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useTheme } from '@mui/material';
 import { useProjectColor } from './useProjectColor';
 import { useFilledMetricsSummary } from './useFilledMetricsSummary';

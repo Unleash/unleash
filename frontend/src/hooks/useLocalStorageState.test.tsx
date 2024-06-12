@@ -40,7 +40,7 @@ describe('useLocalStorageState', () => {
 
         screen.getByTestId('updateButton').click();
 
-        expect(screen.getByTestId('storedValue').textContent).toBe(
+        expect((await screen.findByTestId('storedValue')).textContent).toBe(
             'updatedValue',
         );
         await waitFor(() => {

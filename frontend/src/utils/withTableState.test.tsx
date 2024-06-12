@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useReactTable } from '@tanstack/react-table';
 import { withTableState } from './withTableState';
 import { useState } from 'react';
@@ -211,7 +211,7 @@ describe('withTableState', () => {
         });
     });
 
-    it('works end-to-end with useReactTable', () => {
+    it('works end-to-end with useReactTable', async () => {
         const Component = () => {
             const [state, setState] = useState({
                 limit: 5,
@@ -281,28 +281,32 @@ describe('withTableState', () => {
             );
         };
 
-        const { getByTestId, getByRole } = render(<Component />);
+        const { getByTestId, findByTestId, getByRole, findByRole } = render(
+            <Component />,
+        );
 
         expect(getByTestId('page')).toHaveValue('8');
         expect(getByTestId('pageSize')).toHaveValue('5');
         expect(getByTestId('sort')).toHaveValue('name');
 
-        getByRole('button', { name: 'Next page' }).click();
+        (await findByRole('button', { name: 'Next page' })).click();
 
-        expect(getByTestId('page')).toHaveValue('9');
+        expect(await findByTestId('page')).toHaveValue('9');
 
-        getByRole('button', { name: 'Previous page' }).click();
+        (await findByRole('button', { name: 'Previous page' })).click();
 
-        expect(getByTestId('page')).toHaveValue('8');
+        expect(await findByTestId('page')).toHaveValue('8');
 
-        getByRole('button', { name: 'Paginate' }).click();
+        (await findByRole('button', { name: 'Paginate' })).click();
 
-        expect(getByTestId('page')).toHaveValue('2');
+        expect(await findByTestId('page')).toHaveValue('2');
         expect(getByTestId('pageSize')).toHaveValue('10');
 
-        getByRole('button', { name: 'Sort' }).click();
+        const button = await findByRole('button', { name: 'Sort' });
+        button.click();
 
-        expect(getByTestId('sort')).toHaveValue('createdAt');
+        const sort = await findByTestId('sort');
+        expect(sort).toHaveValue('createdAt');
     });
 
     it('always shows columns that have `enableHiding: false`', () => {

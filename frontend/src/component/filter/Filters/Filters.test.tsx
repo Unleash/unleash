@@ -1,6 +1,6 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FILTER_ITEM } from 'utils/testIds';
+import { FILTER_ITEM, FILTERS_MENU } from 'utils/testIds';
 import {
     type FilterItemParamHolder,
     Filters,
@@ -83,9 +83,9 @@ test('should keep filters order when adding a new filter', async () => {
     const stateElement = await screen.findByText('State');
     expect(stateElement).toBeInTheDocument();
 
-    stateElement.click();
+    fireEvent.click(stateElement);
 
-    const filterItems = screen.getAllByTestId(FILTER_ITEM);
+    const filterItems = await screen.findAllByTestId(FILTER_ITEM);
     const filterTexts = filterItems.map((item) => item.textContent);
 
     expect(filterTexts).toEqual(['Tags', 'State']);
@@ -120,15 +120,17 @@ test('should remove selected item from the add filter list', async () => {
     );
 
     // initial selection list
-    const addFilterButton = screen.getByText('Add Filter');
-    addFilterButton.click();
-    expect(screen.getByRole('menu').textContent).toBe('StateTags');
+    const addFilterButton = await screen.findByText('Add Filter');
+    fireEvent.click(addFilterButton);
+    expect((await screen.findByTestId(FILTERS_MENU)).textContent).toBe(
+        'StateTags',
+    );
 
-    screen.getByText('State').click();
+    (await screen.findByText('State')).click();
 
     // reduced selection list
-    addFilterButton.click();
-    expect(screen.getByRole('menu').textContent).toBe('Tags');
+    fireEvent.click(addFilterButton);
+    expect((await screen.findByTestId(FILTERS_MENU)).textContent).toBe('Tags');
 });
 
 test('should render filters in the order defined by the initial state', async () => {

@@ -1,5 +1,6 @@
 import TimeAgo from 'react-timeago';
 import { LastSeenTooltip } from 'component/common/Table/cells/FeatureSeenCell/LastSeenTooltip';
+import type React from 'react';
 import type { FC, ReactElement } from 'react';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
@@ -54,6 +55,7 @@ const TooltipContainer: FC<{
     color?: string;
     tooltip: ReactElement | string;
     sx?: SxProps;
+    children?: React.ReactNode;
 }> = ({ sx, tooltip, color, children }) => {
     return (
         <StyledContainer sx={sx}>

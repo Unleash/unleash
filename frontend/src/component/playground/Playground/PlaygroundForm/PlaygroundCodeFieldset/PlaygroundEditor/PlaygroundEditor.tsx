@@ -91,7 +91,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
     const { themeMode } = useContext(UIContext);
     const theme = useTheme();
     const onCodeFieldChange = useCallback(
-        (context) => {
+        (context: string | undefined) => {
             setContext(context);
         },
         [setContext],

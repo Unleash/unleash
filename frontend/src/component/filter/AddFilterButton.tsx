@@ -7,6 +7,7 @@ import { Icon, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { Box } from '@mui/system';
 import type { IFilterItem } from './Filters/Filters';
+import { FILTERS_MENU } from '../../utils/testIds';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),
@@ -66,6 +67,7 @@ export const AddFilterButton = ({
             </StyledButton>
             <Menu
                 id='simple-menu'
+                data-testid={FILTERS_MENU}
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}

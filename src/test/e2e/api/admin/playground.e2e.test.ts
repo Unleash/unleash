@@ -142,7 +142,7 @@ describe('Playground API E2E', () => {
         );
     };
 
-    test('Returned features should be a subset of the provided flags', async () => {
+    it('Returned features should be a subset of the provided flags', async () => {
         await fc.assert(
             fc
                 .asyncProperty(
@@ -171,7 +171,7 @@ describe('Playground API E2E', () => {
         );
     });
 
-    test('should filter the list according to the input parameters', async () => {
+    it('should filter the list according to the input parameters', async () => {
         await fc.assert(
             fc
                 .asyncProperty(
@@ -224,7 +224,7 @@ describe('Playground API E2E', () => {
         );
     });
 
-    test('should map project and name correctly', async () => {
+    it('should map project and name correctly', async () => {
         // note: we're not testing `isEnabled` and `variant` here, because
         // that's the SDK's responsibility and it's tested elsewhere.
         await fc.assert(
@@ -280,7 +280,7 @@ describe('Playground API E2E', () => {
         );
     });
 
-    test('isEnabledInCurrentEnvironment should always match feature.enabled', async () => {
+    it('isEnabledInCurrentEnvironment should always match feature.enabled', async () => {
         await fc.assert(
             fc
                 .asyncProperty(
@@ -634,7 +634,7 @@ describe('Playground API E2E', () => {
             );
         });
 
-        test('context is applied to variant checks', async () => {
+        it('context is applied to variant checks', async () => {
             const environment = 'development';
             const featureName = 'feature-name';
             const customContextFieldName = 'customField';

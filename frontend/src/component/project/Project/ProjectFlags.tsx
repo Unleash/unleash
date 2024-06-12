@@ -9,7 +9,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
 import { OutdatedSdksBanner } from '../../banners/OutdatedSdksBanner/OutdatedSdksBanner';
-import { useUiFlag } from '../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 const refreshInterval = 15 * 1000;

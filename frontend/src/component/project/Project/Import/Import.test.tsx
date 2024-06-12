@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { ImportModal } from './ImportModal';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
@@ -33,7 +33,7 @@ const importFile = async (content: string) => {
     const importFile = new File([content], 'import.json', {
         type: 'application/json',
     });
-    userEvent.upload(selectFileInput, importFile);
+    await userEvent.upload(selectFileInput, importFile);
 };
 
 test('Import happy path', async () => {
@@ -65,12 +65,13 @@ test('Import happy path', async () => {
     screen.getByText('Validate').click();
 
     // validate stage
-    screen.getByText('You are importing this configuration in:');
-    screen.getByText('development');
-    screen.getByText('default');
-    const importButton = screen.getByText('Import configuration');
+    await screen.findByText('You are importing this configuration in:');
+    await screen.findByText('development');
+    await screen.findByText('default');
+    const importButton = await screen.findByText('Import configuration');
     expect(importButton).toBeEnabled();
-    importButton.click();
+
+    fireEvent.click(importButton);
 
     // import stage
     await screen.findByText('Importing...');
@@ -91,8 +92,8 @@ test('Block when importing non json content', async () => {
 
     const codeEditorLabel = screen.getByText('Code editor');
     codeEditorLabel.click();
-    const editor = screen.getByLabelText('Exported toggles');
-    userEvent.type(editor, 'invalid non json');
+    const editor = await screen.findByLabelText('Exported toggles');
+    await userEvent.type(editor, 'invalid non json');
 
     const validateButton = screen.getByText('Validate');
     expect(validateButton).toBeDisabled();

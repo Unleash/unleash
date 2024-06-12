@@ -55,7 +55,7 @@ export const ProjectActionsActionsCell = ({
                                         ([param, value]) => (
                                             <li key={param}>
                                                 <strong>{param}</strong>:{' '}
-                                                {value}
+                                                {value as any}
                                             </li>
                                         ),
                                     )}

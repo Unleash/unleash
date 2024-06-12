@@ -21,7 +21,7 @@ import type {
     PartialSome,
 } from '../../types';
 import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue, mapValues } from '../../util';
+import { ensureStringValue, generateImageUrl, mapValues } from '../../util';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller';
 import type { Db } from '../../db/db';
 import { isAfter } from 'date-fns';
@@ -453,6 +453,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.stale = r.stale;
 
                 acc.createdAt = r.created_at;
+                if (r.user_id) {
+                    const name =
+                        r.user_name ||
+                        r.user_username ||
+                        r.user_email ||
+                        'unknown';
+                    acc.createdBy = {
+                        id: r.user_id,
+                        name,
+                        imageUrl: generateImageUrl({
+                            id: r.user_id,
+                            email: r.user_email,
+                            username: name,
+                        }),
+                    };
+                }
                 acc.type = r.type;
                 if (!acc.environments[r.environment]) {
                     acc.environments[r.environment] = {

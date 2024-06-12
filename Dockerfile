@@ -6,9 +6,9 @@ WORKDIR /unleash
 
 COPY . /unleash
 
-RUN corepack enable
+RUN yarn config set network-timeout 300000
 
-RUN yarn install --immutable  && yarn prepare:backend && yarn local:package
+RUN yarn install --frozen-lockfile --ignore-scripts && yarn prepare:backend && yarn local:package
 
 # frontend/build should already exist (it needs to be built in the local filesystem but in case of a fresh build we'll build it here)
 RUN yarn build:frontend:if-needed
@@ -17,7 +17,7 @@ RUN mkdir -p /unleash/build/frontend && mv /unleash/frontend/build /unleash/buil
 
 WORKDIR /unleash/docker
 
-RUN yarn workspaces focus -A --production
+RUN yarn install --frozen-lockfile --production=true
 
 FROM node:$NODE_VERSION
 

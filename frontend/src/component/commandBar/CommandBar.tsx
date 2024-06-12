@@ -1,5 +1,4 @@
-import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -11,28 +10,12 @@ import {
 import Close from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { RecentlyVisited } from './RecentlyVisited/RecentlyVisited';
 import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
-
-interface ICommandBarProps {
-    initialValue?: string;
-    onChange?: (value: string) => void;
-    onFocus?: () => void;
-    onBlur?: () => void;
-    className?: string;
-    placeholder?: string;
-    hasFilters?: boolean;
-    disabled?: boolean;
-    getSearchContext?: () => IGetSearchContextOutput;
-    containerStyles?: React.CSSProperties;
-    debounceTime?: number;
-    expandable?: boolean;
-}
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -91,40 +74,19 @@ const StyledClose = styled(Close)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
-export const CommandBar = ({
-    initialValue = '',
-    onChange,
-    onFocus,
-    onBlur,
-    className,
-    placeholder: customPlaceholder,
-    hasFilters,
-    disabled,
-    getSearchContext,
-    containerStyles,
-    expandable = false,
-    debounceTime = 200,
-    ...rest
-}: ICommandBarProps) => {
+export const CommandBar = () => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const { lastVisited } = useRecentlyVisited();
     const hideSuggestions = () => {
         setShowSuggestions(false);
-        onBlur?.();
     };
 
-    //const { savedQuery, setSavedQuery } = useSavedQuery(id);
-
-    const [value, setValue] = useState<string>(initialValue);
-
-    //const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
+    const [value, setValue] = useState<string>('');
 
     const onSearchChange = (value: string) => {
-        //debouncedOnChange(value);
         setValue(value);
-        //setSavedQuery(value);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -146,23 +108,14 @@ export const CommandBar = ({
             searchInputRef.current?.blur();
         }
     });
-    const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
+    const placeholder = `Search (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
 
-    useEffect(() => {
-        setValue(initialValue);
-    }, [initialValue]);
-
     return (
-        <StyledContainer
-            ref={searchContainerRef}
-            style={containerStyles}
-            active={expandable && showSuggestions}
-            {...rest}
-        >
-            <StyledSearch className={className}>
+        <StyledContainer ref={searchContainerRef} active={showSuggestions}>
+            <StyledSearch>
                 <SearchIcon
                     sx={{
                         mr: 1,
@@ -180,9 +133,7 @@ export const CommandBar = ({
                     onChange={(e) => onSearchChange(e.target.value)}
                     onFocus={() => {
                         setShowSuggestions(true);
-                        onFocus?.();
                     }}
-                    disabled={disabled}
                 />
                 <Box sx={{ width: (theme) => theme.spacing(4) }}>
                     <ConditionallyRender
@@ -209,21 +160,11 @@ export const CommandBar = ({
             </StyledSearch>
 
             <ConditionallyRender
-                condition={
-                    Boolean(hasFilters && getSearchContext) && showSuggestions
-                }
+                condition={Boolean(value)}
                 show={
-                    /*
-                    <SearchSuggestions
-                        onSuggestion={(suggestion) => {
-                            onSearchChange(suggestion);
-                            searchInputRef.current?.focus();
-                        }}
-                        savedQuery={savedQuery}
-                        getSearchContext={getSearchContext!}
-                    />
-                        */
-                    <>yousearched</>
+                    <CommandResultsPaper className='dropdown-outline'>
+                        <div>search result</div>
+                    </CommandResultsPaper>
                 }
                 elseShow={
                     showSuggestions && (

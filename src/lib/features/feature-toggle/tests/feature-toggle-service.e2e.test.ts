@@ -734,3 +734,34 @@ test('Should return last seen at per environment', async () => {
     );
     expect(featureToggle.lastSeenAt).toEqual(new Date(lastSeenAtStoreDate));
 });
+
+test('Should return "default" for stickiness when creating a flexibleRollout strategy with empty stickiness', async () => {
+    const strategy = {
+        name: 'flexibleRollout',
+        parameters: {
+            rollout: '100',
+            stickiness: '',
+        },
+        constraints: [],
+    };
+    const feature = {
+        name: 'test-featureA',
+        description: 'the #1 feature',
+    };
+    const projectId = 'default';
+
+    await service.createFeatureToggle(projectId, feature, TEST_AUDIT_USER);
+    await service.createStrategy(
+        strategy,
+        { projectId, featureName: feature.name, environment: DEFAULT_ENV },
+        TEST_AUDIT_USER,
+    );
+
+    const featureDB = await service.getFeature({ featureName: feature.name });
+
+    expect(featureDB).toMatchObject({
+        environments: [
+            { strategies: [{ parameters: { stickiness: 'default' } }] },
+        ],
+    });
+});

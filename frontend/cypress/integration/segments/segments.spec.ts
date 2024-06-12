@@ -24,6 +24,7 @@ describe('segments', () => {
 
     it('gives an error if a segment exists with the same name', () => {
         cy.get("[data-testid='NAVIGATE_TO_CREATE_SEGMENT']").click();
+        cy.wait(500);
         cy.get("[data-testid='SEGMENT_NAME_ID']").type(segmentName);
         cy.get("[data-testid='SEGMENT_NEXT_BTN_ID']").should('be.disabled');
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(

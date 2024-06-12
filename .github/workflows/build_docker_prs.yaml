@@ -1,18 +1,7 @@
-name: Publish to dockerhub
+name: PR -> Docker build
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - website/**
-  workflow_call:
-    inputs:
-      version:
-        description: "Which version to release"
-        type: 'string'
-        required: true
-  workflow_dispatch:
+  pull_request:
 
 jobs:
   build:
@@ -21,18 +10,12 @@ jobs:
       matrix:
         version: [ 20.14.0-alpine ]
     steps:
-      - name: Checkout tag v${{ inputs.version }}
-        if: ${{ inputs.version != '' }}
-        uses: actions/checkout@v4
-        with:
-          ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - name: Checkout
-        if: ${{ inputs.version == '' }}
         uses: actions/checkout@v4
-      - name: Setup QEmu so we can build multiplatform
-        uses: docker/setup-qemu-action@v2
+      - name: Setup QEmu
+        uses: docker/setup-qemu-action@v3
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Docker meta configuration
         uses: docker/metadata-action@v5
         id: meta
@@ -58,7 +41,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: NODE_VERSION=${{ matrix.version }}

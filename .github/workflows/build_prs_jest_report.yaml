@@ -37,6 +37,8 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn'
+      - name: Enable corepack
+        run: corepack enable
       - name: Tests on 20.x
         id: coverage
         uses: ArtiomTr/jest-coverage-report-action@v2

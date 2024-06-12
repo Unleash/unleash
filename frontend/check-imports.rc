@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 if grep -R --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx" "from '@mui/icons-material'" src; then
   echo "Prohibited import from '@mui/icons-material' found. Use default imports referencing the file instead of the 
   global package. Example: import Delete from '@mui/icons-material/Delete';'"

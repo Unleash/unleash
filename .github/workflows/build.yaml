@@ -40,7 +40,11 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn'
-      - run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Enable corepack
+        run: corepack enable
+      - run: yarn install --immutable
+        env:
+          YARN_ENABLE_SCRIPTS: false
       - run: yarn lint
       - run: yarn build:backend
       - run: yarn run test:report # This adds test results as github check to the workflow

@@ -4,11 +4,11 @@ import { Box, Button } from '@mui/material';
 import {
     StyledDropdown,
     StyledPopover,
-    HiddenDescription,
     ButtonLabel,
     StyledTooltipContent,
 } from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 export type ConfigButtonProps = {
     button: {
@@ -95,9 +95,9 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                     horizontal: 'left',
                 }}
             >
-                <HiddenDescription id={descriptionId}>
-                    {description}
-                </HiddenDescription>
+                <ScreenReaderOnly>
+                    <p id={descriptionId}>{description}</p>
+                </ScreenReaderOnly>
                 <StyledDropdown aria-describedby={descriptionId}>
                     {children}
                 </StyledDropdown>

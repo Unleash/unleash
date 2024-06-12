@@ -1,6 +1,6 @@
 import { TextField, styled } from '@mui/material';
 
-export const visuallyHiddenStyles = {
+const visuallyHiddenStyles = {
     border: 0,
     clip: 'rect(0 0 0 0)',
     height: 'auto',

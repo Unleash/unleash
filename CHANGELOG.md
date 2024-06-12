@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.2] - 2024-06-12
+
+### Bug Fixes
+
+- Remove stale stats widget ([#7353](https://github.com/Unleash/unleash/issues/7353)) ([#7376](https://github.com/Unleash/unleash/issues/7376))
+
+
 ## [6.0.1] - 2024-06-10
 
 ### Bug Fixes

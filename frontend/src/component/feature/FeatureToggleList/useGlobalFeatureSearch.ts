@@ -15,10 +15,11 @@ import {
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 
-export const useGlobalFeatureSearch = (storageKey = 'features-list-table') => {
+export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
+    const storageKey = 'features-list-table';
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        limit: withDefault(NumberParam, pageLimit),
         query: StringParam,
         favoritesFirst: withDefault(BooleansStringParam, true),
         sortBy: withDefault(StringParam, 'createdAt'),

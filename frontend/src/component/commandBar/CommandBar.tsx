@@ -16,6 +16,11 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { RecentlyVisited } from './RecentlyVisited/RecentlyVisited';
 import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
+import { useGlobalFeatureSearch } from '../feature/FeatureToggleList/useGlobalFeatureSearch';
+import {
+    CommandResultGroup,
+    type CommandResultGroupItem,
+} from './RecentlyVisited/CommandResultGroup';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -86,6 +91,7 @@ export const CommandBar = () => {
     const [value, setValue] = useState<string>('');
 
     const onSearchChange = (value: string) => {
+        setTableState({ query: value });
         setValue(value);
     };
 
@@ -112,6 +118,13 @@ export const CommandBar = () => {
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
+
+    const { features, setTableState } = useGlobalFeatureSearch(3);
+
+    const flags: CommandResultGroupItem[] = features.map((feature) => ({
+        name: feature.name,
+        link: `/projects/${feature.project}/features/${feature.name}`,
+    }));
 
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
@@ -163,7 +176,11 @@ export const CommandBar = () => {
                 condition={Boolean(value)}
                 show={
                     <CommandResultsPaper className='dropdown-outline'>
-                        <div>search result</div>
+                        <CommandResultGroup
+                            groupName={'Flags'}
+                            icon={'flag'}
+                            items={flags}
+                        />
                     </CommandResultsPaper>
                 }
                 elseShow={

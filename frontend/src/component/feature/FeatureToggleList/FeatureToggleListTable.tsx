@@ -31,23 +31,7 @@ import { focusable } from 'themes/themeStyles';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
 import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
-import {
-    DEFAULT_PAGE_LIMIT,
-    useFeatureSearch,
-} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import mapValues from 'lodash.mapvalues';
-import {
-    BooleansStringParam,
-    FilterItemParam,
-} from 'utils/serializeQueryParams';
-import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
 import { withTableState } from 'utils/withTableState';
-import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -56,6 +40,7 @@ import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useFeedback } from '../../feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
+import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
@@ -94,45 +79,16 @@ export const FeatureToggleListTable: VFC = () => {
         variant,
     );
 
-    const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        favoritesFirst: withDefault(BooleansStringParam, true),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-        project: FilterItemParam,
-        tag: FilterItemParam,
-        state: FilterItemParam,
-        segment: FilterItemParam,
-        createdAt: FilterItemParam,
-        type: FilterItemParam,
-    };
-    const [tableState, setTableState] = usePersistentTableState(
-        'features-list-table',
-        stateConfig,
-    );
     const {
-        offset,
-        limit,
-        query,
-        favoritesFirst,
-        sortBy,
-        sortOrder,
-        ...filterState
-    } = tableState;
-
-    const {
-        features = [],
+        features,
         total,
-        loading,
         refetch: refetchFeatures,
+        loading,
         initialLoad,
-    } = useFeatureSearch(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
-            value ? `${value}` : undefined,
-        ),
-    );
+        tableState,
+        setTableState,
+        filterState,
+    } = useGlobalFeatureSearch();
     const bodyLoadingRef = useLoading(loading);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -158,10 +114,10 @@ export const FeatureToggleListTable: VFC = () => {
             columnHelper.accessor('favorite', {
                 header: () => (
                     <FavoriteIconHeader
-                        isActive={favoritesFirst}
+                        isActive={tableState.favoritesFirst}
                         onClick={() =>
                             setTableState({
-                                favoritesFirst: !favoritesFirst,
+                                favoritesFirst: !tableState.favoritesFirst,
                             })
                         }
                     />
@@ -262,7 +218,7 @@ export const FeatureToggleListTable: VFC = () => {
                 },
             }),
         ],
-        [favoritesFirst],
+        [tableState.favoritesFirst],
     );
 
     const data = useMemo(
@@ -338,7 +294,9 @@ export const FeatureToggleListTable: VFC = () => {
                                         <Search
                                             placeholder='Search'
                                             expandable
-                                            initialValue={query || ''}
+                                            initialValue={
+                                                tableState.query || ''
+                                            }
                                             onChange={setSearchValue}
                                             id='globalFeatureFlags'
                                         />
@@ -429,7 +387,7 @@ export const FeatureToggleListTable: VFC = () => {
                         condition={isSmallScreen}
                         show={
                             <Search
-                                initialValue={query || ''}
+                                initialValue={tableState.query || ''}
                                 onChange={setSearchValue}
                                 id='globalFeatureFlags'
                             />
@@ -442,7 +400,7 @@ export const FeatureToggleListTable: VFC = () => {
                 onChange={setTableState}
                 state={filterState}
             />
-            <SearchHighlightProvider value={query || ''}>
+            <SearchHighlightProvider value={tableState.query || ''}>
                 <div ref={bodyLoadingRef}>
                     <PaginatedTable tableInstance={table} totalItems={total} />
                 </div>
@@ -452,11 +410,11 @@ export const FeatureToggleListTable: VFC = () => {
                 show={
                     <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
                         <ConditionallyRender
-                            condition={(query || '')?.length > 0}
+                            condition={(tableState.query || '')?.length > 0}
                             show={
                                 <TablePlaceholder>
                                     No feature flags found matching &ldquo;
-                                    {query}
+                                    {tableState.query}
                                     &rdquo;
                                 </TablePlaceholder>
                             }

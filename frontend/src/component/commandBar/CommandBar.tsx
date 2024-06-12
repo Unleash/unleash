@@ -173,7 +173,7 @@ export const CommandBar = () => {
             </StyledSearch>
 
             <ConditionallyRender
-                condition={Boolean(value)}
+                condition={Boolean(value) && showSuggestions}
                 show={
                     <CommandResultsPaper className='dropdown-outline'>
                         <CommandResultGroup

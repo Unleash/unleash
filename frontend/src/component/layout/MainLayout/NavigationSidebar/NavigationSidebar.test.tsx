@@ -10,6 +10,9 @@ import {
 } from 'hooks/useLastViewedFlags';
 import { type FC, useEffect } from 'react';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+
+const server = testServerSetup();
 
 beforeEach(() => {
     window.localStorage.clear();
@@ -95,6 +98,10 @@ const SetupComponent: FC<{ project: string; flags: LastViewedFlag[] }> = ({
 };
 
 test('print recent projects and flags', async () => {
+    testServerRoute(server, `/api/admin/projects/projectA/overview`, {
+        name: 'projectNameA',
+    });
+
     render(
         <SetupComponent
             project={'projectA'}
@@ -102,6 +109,6 @@ test('print recent projects and flags', async () => {
         />,
     );
 
-    await screen.findByText('projectA');
+    await screen.findByText('projectNameA');
     await screen.findByText('featureA');
 });

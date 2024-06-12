@@ -9,7 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(2),
-    gridTemplateColumns: 'repeat(5, 1fr)',
+    gridTemplateColumns: 'repeat(4, 1fr)',
     flexWrap: 'wrap',
     [theme.breakpoints.down('lg')]: {
         gridTemplateColumns: 'repeat(2, 1fr)',
@@ -101,18 +101,6 @@ export const ProjectInsightsStats = ({ stats }: IProjectStatsProps) => {
                 change={createdCurrentWindow - createdPastWindow}
             >
                 <NavigationBar to={`/projects/${projectId}`}>
-                    <KeyboardArrowRight />
-                </NavigationBar>
-            </StatusBox>
-
-            <StatusBox
-                title='Stale flags'
-                boxText={String(projectActivityCurrentWindow)}
-                change={
-                    projectActivityCurrentWindow - projectActivityPastWindow
-                }
-            >
-                <NavigationBar to={`/projects/${projectId}/health`}>
                     <KeyboardArrowRight />
                 </NavigationBar>
             </StatusBox>

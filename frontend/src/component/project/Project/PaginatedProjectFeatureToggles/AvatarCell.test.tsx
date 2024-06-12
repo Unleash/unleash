@@ -18,25 +18,25 @@ test("the filtering button should have aria-disabled='false' when the user id is
 });
 
 test('the onAvatarClick function should not be called when the user id is 0', async () => {
-    const callBack = vi.fn();
-    const Cell = AvatarCell(callBack);
+    const callback = vi.fn();
+    const Cell = AvatarCell(callback);
     render(<Cell row={{ original: { createdBy: { id: 0, name: '' } } }} />);
     const button = await screen.findByRole('button');
 
     fireEvent.click(button);
 
-    expect(callBack).not.toHaveBeenCalled();
+    expect(callback).not.toHaveBeenCalled();
 });
 
 test('the onAvatarClick function should be called when the user id is not 0', async () => {
-    const callBack = vi.fn();
-    const Cell = AvatarCell(callBack);
+    const callback = vi.fn();
+    const Cell = AvatarCell(callback);
     render(<Cell row={{ original: { createdBy: { id: 1, name: '' } } }} />);
     const button = await screen.findByRole('button');
 
     fireEvent.click(button);
 
-    expect(callBack).toHaveBeenCalled();
+    expect(callback).toHaveBeenCalled();
 });
 
 test("when the user id is 0, the tooltip should tell you that you can't filter by unknown users", async () => {

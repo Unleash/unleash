@@ -87,7 +87,7 @@ const BasePermissionIconButton = ({
                     {...rest}
                     disabled={!access || disabled}
                     aria-labelledby={id}
-                    size={rest.size || 'small'}
+                    size={rest.size || 'large'}
                 >
                     {children}
                 </IconButton>

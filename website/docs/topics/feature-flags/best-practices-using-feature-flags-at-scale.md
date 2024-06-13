@@ -10,9 +10,25 @@ This guide to using feature flag systems at scale is based on lessons learned wo
 
 This guide is organized into three sections that align with the stages of a large-scale feature flag rollout:
 
-* Organizing your team and internal processes to support feature flags
-* Instrumenting your code and managing flag lifecycle
-* Avoiding common pitfalls when implementing flags at scale
+- [Organizing your team and internal processes to support feature flags](#organizing-your-team-and-internal-processes-to-support-feature-flags)
+  - [1. Align feature flags with organizational and application design.](#1-align-feature-flags-with-organizational-and-application-design)
+  - [2. Make flags searchable globally.](#2-make-flags-searchable-globally)
+  - [3. Design for flag permissions to change over time.](#3-design-for-flag-permissions-to-change-over-time)
+  - [4. Get flag management permissions right. And audit everything.](#4-get-flag-management-permissions-right-and-audit-everything)
+  - [5. Base flag permissions on global permissions.](#5-base-flag-permissions-on-global-permissions)
+  - [6. Implement flag approval workflows early.](#6-implement-flag-approval-workflows-early)
+- [Instrumenting your code and managing flag lifecycle](#instrumenting-your-code-and-managing-flag-lifecycle)
+  - [7. Define flags in your code at the highest level of abstraction.](#7-define-flags-in-your-code-at-the-highest-level-of-abstraction)
+  - [8. Evaluate a feature flag only once.](#8-evaluate-a-feature-flag-only-once)
+  - [9. Continually pay down feature flag tech debt.](#9-continually-pay-down-feature-flag-tech-debt)
+  - [10. Leverage flag lifecycles to optimize your development](#10-leverage-flag-lifecycles-to-optimize-your-development)
+- [Common pitfalls to avoid when implementing flags at scale](#common-pitfalls-to-avoid-when-implementing-flags-at-scale)
+  - [11. Avoid feature flag parent-child dependencies.](#11-avoid-feature-flag-parent-child-dependencies)
+  - [12. Don’t use flags to manage configuration.](#12-dont-use-flags-to-manage-configuration)
+  - [13. Never reuse feature flag names.](#13-never-reuse-feature-flag-names)
+  - [14. Avoid giant feature flag targeting lists.](#14-avoid-giant-feature-flag-targeting-lists)
+  - [15. Do not define business logic using feature flags.](#15-do-not-define-business-logic-using-feature-flags)
+- [Staying sane while managing feature flags at scale](#staying-sane-while-managing-feature-flags-at-scale)
 
 ## Organizing your team and internal processes to support feature flags
 
@@ -46,7 +62,7 @@ Example: Do all members of Team A need updates on Project X, even if only one me
 
 Modern applications are composed of multiple services with many complex dependencies. While you should try to organize your flags based on high-level abstractions such as applications, teams, or business units, many services cut across these artificial organizing principles.
 
-Just because a user might need to interact with a flag does not mean you should display it by default when it is outside your main organizational parameters. However, all flags should be easily searchable. When a user finds one, they should be able to inspect its configuration and ownership so that they might request additional permissions or submit change requests for approval.
+Just because a user might need to interact with a flag does not mean you should display it by default when it is outside your main organizational parameters. However, all flags should be easily searchable. When a user finds one, they should be able to inspect its configuration and ownership so that they might request additional permissions or [submit change requests for approval](#6-implement-flag-approval-workflows-early).
 
 This is why feature flag systems should be [open by default](https://docs.getunleash.io/topics/feature-flags/democratize-feature-flag-access).  There are valid use cases for excluding flags from global search. For example, a public company in the middle of an acquisition where exposing flags related to the website or app changes might breach regulatory guidelines.  Your feature flag system should accommodate these private projects; however, they should be the exception, not the rule.
 

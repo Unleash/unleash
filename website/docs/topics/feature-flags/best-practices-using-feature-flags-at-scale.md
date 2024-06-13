@@ -18,6 +18,8 @@ Before you add your first feature flag, you need to think about how organization
 
 – Melvin Conway
 
+![feature-flag-orginization-methods](https://github.com/ferrantim/unleash/assets/3068350/7aa67c51-f085-4367-849b-bb6e06a3e754)
+
 There is no getting around [Conway’s law](https://martinfowler.com/bliki/ConwaysLaw.html). Applications tend to resemble the organizations that create them, and your feature flag system is no exception. Rather than fighting this law, acknowledge and embrace it, and pick a way to organize your feature flags that reflects your organization.
 
 A typical Fortune 500 company typically has thousands of software developers.  Organizing your feature flag system based on “applications” when your company is organized based on business units or products will lead to a poor experience and additional complexities in managing flag permissions.
@@ -100,6 +102,8 @@ These groups should be mirrored in your feature flag system to help you organize
 Users who are added or removed from your main SSO directory should be added or removed (based on their role) from your feature flag system.  Managing global permissions is complex. Only do it in one place.
 
 ### 6. Implement flag approval workflows early.
+
+![feature-flag-approval-workflow](https://github.com/ferrantim/unleash/assets/3068350/38de8897-be16-43af-80d2-a3f0680248ea)
 
 Depending on the industry and legal framework you’re operating in, you’ll need varying approvals for a feature flag change to go into production. You may be able to just roll something out on a whim, or you might need to get it approved by specific stakeholders before releasing it. Your feature flag tool should help you do this, regardless of how much oversight you need.
 

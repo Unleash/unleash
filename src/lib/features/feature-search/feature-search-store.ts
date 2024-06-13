@@ -164,12 +164,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 selectColumns = [
                     ...selectColumns,
-                    this.db.raw(
-                        'has_strategies.feature_name IS NOT NULL AS has_strategies',
-                    ),
-                    this.db.raw(
-                        'enabled_strategies.feature_name IS NOT NULL AS has_enabled_strategies',
-                    ),
                     this.db.raw(`CASE
                             WHEN dependent_features.parent = features.name THEN 'parent'
                             WHEN dependent_features.child = features.name THEN 'child'
@@ -247,8 +241,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'users.id',
                         'features.created_by_user_id',
                     );
-
-                this.applyStrategiesByEnvironment(query);
 
                 query.leftJoin('last_seen_at_metrics', function () {
                     this.on(
@@ -329,6 +321,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
+
+        this.applyStrategiesByEnvironment(finalQuery);
         if (featureLifecycleEnabled) {
             finalQuery.leftJoin(
                 'lifecycle',
@@ -336,6 +330,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'lifecycle.stage_feature',
             );
         }
+        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {
@@ -357,6 +352,14 @@ class FeatureSearchStore implements IFeatureSearchStore {
     }
 
     private applyStrategiesByEnvironment(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder.select(
+            this.db.raw(
+                'has_strategies.feature_name IS NOT NULL AS has_strategies',
+            ),
+            this.db.raw(
+                'enabled_strategies.feature_name IS NOT NULL AS has_enabled_strategies',
+            ),
+        );
         queryBuilder
             .leftJoin(
                 this.db
@@ -370,11 +373,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     this.on(
                         'enabled_strategies.feature_name',
                         '=',
-                        'features.name',
+                        'ranked_features.feature_name',
                     ).andOn(
                         'enabled_strategies.environment',
                         '=',
-                        'feature_environments.environment',
+                        'ranked_features.environment',
                     );
                 },
             )
@@ -388,11 +391,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     this.on(
                         'has_strategies.feature_name',
                         '=',
-                        'features.name',
+                        'ranked_features.feature_name',
                     ).andOn(
                         'has_strategies.environment',
                         '=',
-                        'feature_environments.environment',
+                        'ranked_features.environment',
                     );
                 },
             );

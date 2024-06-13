@@ -49,6 +49,10 @@ export const CommandResultGroup = ({
     items,
 }: CommandResultGroupProps) => {
     const slicedItems = items.slice(0, 3);
+
+    if (items.length === 0) {
+        return;
+    }
     return (
         <>
             <StyledTypography color='textSecondary'>

@@ -1,3 +1,9 @@
+---
+title: 15 Principles for Using Feature Flag Systems at Scale
+---
+
+import Figure from '@site/src/components/Figure/Figure.tsx'
+
 “A feature flag is just an if statement,” you say. This is true in a way, but when your organization has thousands of developers, each managing dozens or hundreds of flags with complex targeting rules and audit trails across dozens of microservices-based applications, those if statements can quickly become complex. This is especially true if you don’t set up your system correctly in the first place.
 
 This guide to using feature flag systems at scale is based on lessons learned working with some of the largest feature flag deployments in the world through the [Unleash Open-Source](https://github.com/Unleash/unleash) and [Enterprise Feature Management platform](https://www.getunleash.io/enterprise-feature-management-platform). However, the principles outlined do not apply only to Unleash. They apply to any large-scale feature flag system, including one you build yourself or another commercial solution.  For tips on how to stand up and run a feature flag system, see our [principles for building and scaling feature flags](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).

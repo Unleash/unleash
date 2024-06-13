@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles/createTheme';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { StyledProjectIcon } from '../../layout/MainLayout/NavigationSidebar/IconRenderer';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -68,7 +70,12 @@ export const CommandResultGroup = ({
                         sx={listItemButtonStyle}
                     >
                         <StyledListItemIcon>
-                            <Icon>{icon}</Icon>
+                            <ConditionallyRender
+                                condition={groupName === 'Projects'}
+                                show={<StyledProjectIcon />}
+                                q
+                                elseShow={<Icon>{icon}</Icon>}
+                            />
                         </StyledListItemIcon>
                         <StyledListItemText>
                             <Typography>{item.name}</Typography>

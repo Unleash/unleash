@@ -68,7 +68,7 @@ This is why feature flag systems should be [open by default](https://docs.getunl
 
 ### 3. Design for flag permissions to change over time.
 
-The owner or maintainer of a flag may change over time as the feature it controls evolves across its lifecycle.
+The owner or maintainer of a flag may change over time as the feature it controls [evolves across its lifecycle](#10-leverage-flag-lifecycles-to-optimize-your-development).
 
 For instance, when a developer starts working on a feature, they’ll place it behind a flag so that they can merge back into the main branch early and often (a development style known as [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide#What%20is%20trunk-based%20development)) without affecting the product. At this point, the flag exists to hide unfinished code and should be owned and managed by the developer.
 
@@ -199,7 +199,7 @@ We love feature flags for the way that they increase developer productivity, red
 
 Feature flag technical debt accumulates when feature flags are not properly managed or retired after their intended use. Over time, the codebase becomes cluttered with outdated or unnecessary flags, making the code more complex and harder to maintain. This increased complexity can slow development productivity as developers spend more time understanding and navigating the code. Additionally, neglected feature flags can introduce security vulnerabilities if they unintentionally expose sensitive features or data. Furthermore, the presence of stale or conflicting feature flags can lead to unexpected app behaviors, increasing the risk of downtime and affecting overall application stability. Managing feature flags effectively minimizes these risks and maintains a healthy development workflow.
 
-This is why we avoid using feature flags for things like application configuration for which they are not a great fit. More flags, more debt. Like any debt, it can be used efficiently to accomplish goals that would otherwise be difficult or impossible (e.g., buying a home).  But left unchecked, you can end up in a world of pain.
+This is why we [avoid using feature flags for things like application configuration](#12-dont-use-flags-to-manage-configuration) for which they are not a great fit. More flags, more debt. Like any debt, it can be used efficiently to accomplish goals that would otherwise be difficult or impossible (e.g., buying a home).  But left unchecked, you can end up in a world of pain.
 
 Paying down technical debt–in its simplest form, removing old flags–requires an understanding of flag lifecycles and the ability to track them. 
 
@@ -315,7 +315,7 @@ The last thing is that maintaining these lists also risks leaking PII to systems
 
 ### 15. Do not define business logic using feature flags.
 
-In our experience, since feature flags reduce the friction of releasing software, teams who adopt feature flags tend to use them more and more.  This is a good thing as long as archived flags are removed from the code base keeping tech debt down. You should resist, however, the temptation to codify core business logic inside feature flags, the same way you should resist wrapping application configuration in feature flags.
+In our experience, since feature flags reduce the friction of releasing software, teams who adopt feature flags tend to use them more and more.  This is a good thing as long as archived flags are removed from the code base keeping tech debt down. You should resist, however, the temptation to codify core business logic inside feature flags, the same way you should [resist wrapping application configuration in feature flags](#12-dont-use-flags-to-manage-configuration).
 
 Here is a good rule of thumb: Experiment with business logic using feature flags.  But once you have established the business logic, codify it in code that lives outside of a flag.
 
@@ -333,7 +333,7 @@ Embedding business logic within feature flags can make the codebase unnecessaril
 
 *Performance Implications*
 
-Feature flags are typically designed to be checked frequently and quickly, with minimal performance overhead. However, when feature flags are used to control business logic, they may involve more complex evaluations and data fetching, which can degrade application performance. This is particularly problematic for high-traffic applications where performance is critical.
+Feature flags are typically designed to be checked frequently and quickly, with minimal performance overhead. However, when feature flags are used to control business logic, [they may involve more complex evaluations and data fetching, which can degrade application performance](#14-avoid-giant-feature-flag-targeting-lists). This is particularly problematic for high-traffic applications where performance is critical.
 
 *Security Risks*
 

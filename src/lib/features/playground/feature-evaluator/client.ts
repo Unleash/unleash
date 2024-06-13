@@ -78,9 +78,9 @@ export default class UnleashClient {
 
             if (parent.enabled !== false) {
                 if (parent.variants?.length) {
-                    const { name, feature_enabled: featureEnabled } =
-                        this.getVariant(parent.feature, context);
-                    return featureEnabled && parent.variants.includes(name);
+                    return parent.variants.includes(
+                        this.getVariant(parent.feature, context).name,
+                    );
                 }
                 return (
                     this.isEnabled(parent.feature, context, () => false)

@@ -77,13 +77,10 @@ export default class UnleashClient {
             }
 
             if (parent.enabled !== false) {
-                if (!parentToggle.enabled) {
-                    return false;
-                }
                 if (parent.variants?.length) {
-                    return parent.variants.includes(
-                        this.getVariant(parent.feature, context).name,
-                    );
+                    const { name, feature_enabled: featureEnabled } =
+                        this.getVariant(parent.feature, context);
+                    return featureEnabled && parent.variants.includes(name);
                 }
                 return (
                     this.isEnabled(parent.feature, context, () => false)
@@ -91,12 +88,9 @@ export default class UnleashClient {
                 );
             }
 
-            return (
-                !parentToggle.enabled &&
-                !(
-                    this.isEnabled(parent.feature, context, () => false)
-                        .result === true
-                )
+            return !(
+                this.isEnabled(parent.feature, context, () => false).result ===
+                true
             );
         });
     }

@@ -248,7 +248,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'features.created_by_user_id',
                     );
 
-                this.findFeatureStrategies(query);
+                this.applyStrategiesByEnvironment(query);
 
                 query.leftJoin('last_seen_at_metrics', function () {
                     this.on(
@@ -356,8 +356,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
         };
     }
 
-    private findFeatureStrategies(queryBuilder: Knex.QueryBuilder) {
-        return queryBuilder
+    private applyStrategiesByEnvironment(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder
             .leftJoin(
                 this.db
                     .select('feature_name', 'environment')

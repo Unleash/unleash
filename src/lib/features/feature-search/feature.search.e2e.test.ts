@@ -776,23 +776,6 @@ test('should return segments in payload with no duplicates/nulls', async () => {
             {
                 name: 'my_feature_a',
                 segments: [mySegment.name],
-                environments: [
-                    {
-                        name: 'default',
-                        hasStrategies: true,
-                        hasEnabledStrategies: true,
-                    },
-                    {
-                        name: 'development',
-                        hasStrategies: true,
-                        hasEnabledStrategies: true,
-                    },
-                    {
-                        name: 'production',
-                        hasStrategies: false,
-                        hasEnabledStrategies: false,
-                    },
-                ],
             },
         ],
     });

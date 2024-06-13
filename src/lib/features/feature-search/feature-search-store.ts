@@ -86,10 +86,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .distinctOn('stage_feature')
             .orderBy([
                 'stage_feature',
-                {
-                    column: 'entered_stage_at',
-                    order: 'desc',
-                },
+                { column: 'entered_stage_at', order: 'desc' },
             ]);
     }
 
@@ -165,10 +162,10 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 selectColumns = [
                     ...selectColumns,
                     this.db.raw(
-                        'has_strategies.feature_name IS NOT NULL AS has_strategies',
+                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
                     ),
                     this.db.raw(
-                        'enabled_strategies.feature_name IS NOT NULL AS has_enabled_strategies',
+                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
                     ),
                     this.db.raw(`CASE
                             WHEN dependent_features.parent = features.name THEN 'parent'
@@ -247,8 +244,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'users.id',
                         'features.created_by_user_id',
                     );
-
-                this.applyStrategiesByEnvironment(query);
 
                 query.leftJoin('last_seen_at_metrics', function () {
                     this.on(
@@ -354,48 +349,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
             features: [],
             total: 0,
         };
-    }
-
-    private applyStrategiesByEnvironment(queryBuilder: Knex.QueryBuilder) {
-        queryBuilder
-            .leftJoin(
-                this.db
-                    .select('feature_name', 'environment')
-                    .from('feature_strategies')
-                    .where(function () {
-                        this.whereNull('disabled').orWhere('disabled', false);
-                    })
-                    .as('enabled_strategies'),
-                function () {
-                    this.on(
-                        'enabled_strategies.feature_name',
-                        '=',
-                        'features.name',
-                    ).andOn(
-                        'enabled_strategies.environment',
-                        '=',
-                        'feature_environments.environment',
-                    );
-                },
-            )
-            .leftJoin(
-                this.db
-                    .select('feature_name', 'environment')
-                    .from('feature_strategies')
-                    .groupBy('feature_name', 'environment')
-                    .as('has_strategies'),
-                function () {
-                    this.on(
-                        'has_strategies.feature_name',
-                        '=',
-                        'features.name',
-                    ).andOn(
-                        'has_strategies.environment',
-                        '=',
-                        'feature_environments.environment',
-                    );
-                },
-            );
     }
 
     private buildRankingSql(

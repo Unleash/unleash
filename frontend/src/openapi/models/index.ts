@@ -543,6 +543,7 @@ export * from './featureLifecycleSchemaItem';
 export * from './featureLifecycleSchemaItemStage';
 export * from './featureMetricsSchema';
 export * from './featureSchema';
+export * from './featureSchemaCreatedBy';
 export * from './featureSchemaDependenciesItem';
 export * from './featureSchemaLifecycle';
 export * from './featureSchemaLifecycleStage';

@@ -107,12 +107,16 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                         <StyledDetail>
                             <StyledLabel>Dependency:</StyledLabel>
                             <PermissionButton
+                                size='small'
                                 permission={UPDATE_FEATURE_DEPENDENCY}
                                 projectId={feature.project}
                                 variant='text'
                                 onClick={() => {
                                     setShowDependencyDialogue(true);
                                 }}
+                                sx={(theme) => ({
+                                    marginBottom: theme.spacing(0.4),
+                                })}
                             >
                                 Add parent feature
                             </PermissionButton>

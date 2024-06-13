@@ -95,7 +95,7 @@ test('advanced playground evaluation with no toggles', async () => {
     });
 });
 
-test('advanced playground evaluation with parent dependency', async () => {
+test('advanced playground evaluation with unsatisfied parent dependency', async () => {
     await createFeatureToggle('test-parent');
     await createFeatureToggle('test-child');
     await enableToggle('test-child');
@@ -122,6 +122,35 @@ test('advanced playground evaluation with parent dependency', async () => {
         enabled: false,
         feature_enabled: false,
     });
+    expect(parent.hasUnsatisfiedDependency).toBe(false);
+    expect(parent.isEnabled).toBe(false);
+});
+
+test('advanced playground evaluation with satisfied disabled parent dependency', async () => {
+    await createFeatureToggle('test-parent');
+    await createFeatureToggle('test-child');
+    await enableToggle('test-child');
+    await app.addDependency('test-child', {
+        feature: 'test-parent',
+        enabled: false,
+        variants: [],
+    });
+
+    const { body: result } = await app.request
+        .post('/api/admin/playground/advanced')
+        .send({
+            environments: ['default'],
+            projects: ['default'],
+            context: { appName: 'test' },
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    const child = result.features[0].environments.default[0];
+    const parent = result.features[1].environments.default[0];
+
+    expect(child.hasUnsatisfiedDependency).toBe(false);
+    expect(child.isEnabled).toBe(true);
     expect(parent.hasUnsatisfiedDependency).toBe(false);
     expect(parent.isEnabled).toBe(false);
 });

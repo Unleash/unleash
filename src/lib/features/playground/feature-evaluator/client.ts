@@ -77,9 +77,6 @@ export default class UnleashClient {
             }
 
             if (parent.enabled !== false) {
-                if (!parentToggle.enabled) {
-                    return false;
-                }
                 if (parent.variants?.length) {
                     return parent.variants.includes(
                         this.getVariant(parent.feature, context).name,
@@ -91,12 +88,9 @@ export default class UnleashClient {
                 );
             }
 
-            return (
-                !parentToggle.enabled &&
-                !(
-                    this.isEnabled(parent.feature, context, () => false)
-                        .result === true
-                )
+            return !(
+                this.isEnabled(parent.feature, context, () => false).result ===
+                true
             );
         });
     }

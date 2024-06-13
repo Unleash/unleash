@@ -5,6 +5,8 @@ import {
     Routes,
     Route,
     Navigate,
+    RouterProvider,
+    createMemoryRouter,
 } from 'react-router-dom';
 import { useRecentlyVisited } from './useRecentlyVisited';
 
@@ -50,4 +52,17 @@ test('checks that routes that exist in routes.ts gets added to lastVisited', asy
     await screen.findByText('/integrations');
     await screen.findByText('/segments');
     await screen.findByText('segment div');
+});
+
+test('visiting gets added to the list', async () => {
+    const router = createMemoryRouter([
+        { path: '/search', element: <RouteNameRender /> },
+        { path: '/projects', element: <RouteNameRender /> },
+        { path: '/', element: <RouteNameRender /> },
+    ]);
+    render(<RouterProvider router={router} />);
+    router.navigate('/search');
+    await screen.findByText('/search');
+    router.navigate('/projects');
+    await screen.findByText('/projects');
 });

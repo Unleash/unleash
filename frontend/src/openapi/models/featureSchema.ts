@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy';
 import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
 import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
 import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle';
@@ -28,6 +29,8 @@ export interface FeatureSchema {
      * @nullable
      */
     createdAt?: string | null;
+    /** User who created the feature flag */
+    createdBy?: FeatureSchemaCreatedBy;
     /** The list of parent dependencies. This is an experimental field and may change. */
     dependencies?: FeatureSchemaDependenciesItem[];
     /**

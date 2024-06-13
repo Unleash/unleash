@@ -130,6 +130,8 @@ Flags live in code, and hundreds of small choices go into instrumenting flags in
 
 ### 7. Define flags in your code at the highest level of abstraction.
 
+![evaluate-flags-high-in-code](https://github.com/ferrantim/unleash/assets/3068350/d355080c-3537-4106-ac7b-3a761ce3ac50)
+
 Defining your flag at the highest level in your code is important for both user-facing and backend changes.
 
 For user-facing changes (e.g., testing a light/dark mode or a new signup workflow), instead of evaluating a single feature flag in multiple locations in your code, try to evaluate the flag close to the user interface (UI) – "far out in the stack." This allows for more granular control based on user context and eliminates the need for flags in lower-level parts of the system.
@@ -158,6 +160,8 @@ Here are a few examples of functionality managed by feature flags and where you 
 * Cache Invalidation Logic: When modifying code that invalidates cache entries based on a feature flag, evaluating the flag near that logic allows for focused testing of the cache invalidation behavior. This isolates the test from other parts of the system that could potentially interact with the cache.
 
 ### 8. Evaluate a feature flag only once.
+
+![evaluate-flags-only-once](https://github.com/ferrantim/unleash/assets/3068350/2c8ffe74-7972-429f-a0be-adcb045a2836)
 
 When building new (often complex) features for users, systems require changes across multiple parts – modules within an application or services in a microservices architecture. While it's tempting to use a single feature flag to control all these changes and evaluate it locally in each module, we recommend against it for a few reasons:
 

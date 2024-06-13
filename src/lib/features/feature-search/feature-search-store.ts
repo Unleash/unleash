@@ -330,7 +330,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'lifecycle.stage_feature',
             );
         }
-        console.log(finalQuery.toQuery());
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {

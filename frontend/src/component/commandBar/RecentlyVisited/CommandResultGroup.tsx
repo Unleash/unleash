@@ -53,7 +53,7 @@ export const CommandResultGroup = ({
     const slicedItems = items.slice(0, 3);
 
     if (items.length === 0) {
-        return;
+        return null;
     }
     return (
         <>
@@ -73,7 +73,6 @@ export const CommandResultGroup = ({
                             <ConditionallyRender
                                 condition={groupName === 'Projects'}
                                 show={<StyledProjectIcon />}
-                                q
                                 elseShow={<Icon>{icon}</Icon>}
                             />
                         </StyledListItemIcon>

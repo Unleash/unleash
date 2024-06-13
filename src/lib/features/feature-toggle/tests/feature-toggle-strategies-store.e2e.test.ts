@@ -32,6 +32,10 @@ beforeAll(async () => {
     });
 });
 
+afterEach(async () => {
+    await featureStrategiesStore.deleteAll();
+});
+
 afterAll(async () => {
     await db.destroy();
 });

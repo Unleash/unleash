@@ -21,6 +21,7 @@ import { useShowDependentFeatures } from './useShowDependentFeatures';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
 import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -83,6 +84,10 @@ const StyledDescription = styled('p')({
     wordBreak: 'break-word',
 });
 
+const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+    margin: theme.spacing(1),
+}));
+
 export const StyledLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginRight: theme.spacing(1),
@@ -98,6 +103,7 @@ const FeatureOverviewMetaData = () => {
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
         useState(false);
+    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const { locationSettings } = useLocationSettings();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
@@ -166,6 +172,7 @@ const FeatureOverviewMetaData = () => {
                                         {description}
                                     </StyledDescription>
                                     <PermissionIconButton
+                                        size='medium'
                                         projectId={projectId}
                                         permission={UPDATE_FEATURE}
                                         component={Link}
@@ -184,6 +191,7 @@ const FeatureOverviewMetaData = () => {
                                 <StyledDescriptionContainer>
                                     No description.{' '}
                                     <PermissionIconButton
+                                        size='medium'
                                         projectId={projectId}
                                         permission={UPDATE_FEATURE}
                                         component={Link}
@@ -216,6 +224,24 @@ const FeatureOverviewMetaData = () => {
                             />
                         </StyledDetailsContainer>
                     </BodyItemWithIcon>
+                    <ConditionallyRender
+                        condition={
+                            Boolean(feature.createdBy) && flagCreatorEnabled
+                        }
+                        show={() => (
+                            <BodyItemWithIcon>
+                                <StyledDetailsContainer>
+                                    <StyledDetail>
+                                        <StyledLabel>Created by:</StyledLabel>
+                                        <span>{feature.createdBy?.name}</span>
+                                    </StyledDetail>
+                                    <StyledUserAvatar
+                                        src={feature.createdBy?.imageUrl}
+                                    />
+                                </StyledDetailsContainer>
+                            </BodyItemWithIcon>
+                        )}
+                    />
                     <ConditionallyRender
                         condition={showDependentFeatures}
                         show={<DependencyRow feature={feature} />}

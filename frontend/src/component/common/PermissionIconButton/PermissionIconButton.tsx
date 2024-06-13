@@ -25,7 +25,7 @@ interface IPermissionIconButtonProps {
     edge?: IconButtonProps['edge'];
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
     sx?: IconButtonProps['sx'];
-    size?: string;
+    size?: 'small' | 'medium' | 'large';
 }
 
 interface IButtonProps extends IPermissionIconButtonProps {
@@ -87,7 +87,7 @@ const BasePermissionIconButton = ({
                     {...rest}
                     disabled={!access || disabled}
                     aria-labelledby={id}
-                    size='large'
+                    size={rest.size || 'large'}
                 >
                     {children}
                 </IconButton>

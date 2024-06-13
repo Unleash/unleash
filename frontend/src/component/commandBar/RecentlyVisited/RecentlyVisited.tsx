@@ -1,4 +1,5 @@
 import {
+    Icon,
     List,
     ListItemButton,
     ListItemIcon,
@@ -7,7 +8,10 @@ import {
     Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import {
+    IconRenderer,
+    StyledProjectIcon,
+} from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 import type { LastViewedPage } from 'hooks/useRecentlyVisited';
 import type { Theme } from '@mui/material/styles/createTheme';
 
@@ -33,28 +37,51 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
 }));
 
+const toListItemData = (lastVisited: LastViewedPage[]) => {
+    return lastVisited.map((item) => {
+        if (item.featureId) {
+            return {
+                name: item.featureId,
+                path: `/projects/${item.projectId}/features/${item.featureId}`,
+                icon: <Icon>{'flag'}</Icon>,
+            };
+        }
+        if (item.projectId) {
+            return {
+                name: item.projectId,
+                path: `/projects/${item.projectId}`,
+                icon: <StyledProjectIcon />,
+            };
+        }
+        return {
+            name: item.featureId ?? item.projectId ?? item.pathName,
+            path: item.pathName || '/',
+            icon: <IconRenderer path={item.pathName ?? '/unknown'} />,
+        };
+    });
+};
+
 export const RecentlyVisited = ({
     lastVisited,
 }: { lastVisited: LastViewedPage[] }) => {
+    const listItems = toListItemData(lastVisited);
     return (
         <>
             <StyledTypography color='textSecondary'>
                 Recently visited
             </StyledTypography>
             <List>
-                {lastVisited.map((item, index) => (
+                {listItems.map((item, index) => (
                     <ListItemButton
                         key={`recently-visited-${index}`}
                         dense={true}
                         component={Link}
-                        to={item.pathName ?? '/default'}
+                        to={item.path}
                         sx={listItemButtonStyle}
                     >
-                        <StyledListItemIcon>
-                            <IconRenderer path={item.pathName ?? '/default'} />
-                        </StyledListItemIcon>
+                        <StyledListItemIcon>{item.icon}</StyledListItemIcon>
                         <StyledListItemText>
-                            <Typography>{item.pathName}</Typography>
+                            <Typography>{item.name}</Typography>
                         </StyledListItemText>
                     </ListItemButton>
                 ))}

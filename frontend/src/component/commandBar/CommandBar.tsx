@@ -22,7 +22,7 @@ import {
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
 import { useAsyncDebounce } from 'react-table';
-import useProjects from '../../hooks/api/getters/useProjects/useProjects';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',

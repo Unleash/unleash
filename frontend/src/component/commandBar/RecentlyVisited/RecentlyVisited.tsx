@@ -14,6 +14,8 @@ import {
 } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 import type { LastViewedPage } from 'hooks/useRecentlyVisited';
 import type { Theme } from '@mui/material/styles/createTheme';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -37,55 +39,127 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
 }));
 
-const toListItemData = (lastVisited: LastViewedPage[]) => {
-    return lastVisited.map((item) => {
-        if (item.featureId) {
-            return {
-                name: item.featureId,
-                path: `/projects/${item.projectId}/features/${item.featureId}`,
-                icon: <Icon>{'flag'}</Icon>,
-            };
-        }
-        if (item.projectId) {
-            return {
-                name: item.projectId,
-                path: `/projects/${item.projectId}`,
-                icon: <StyledProjectIcon />,
-            };
-        }
-        return {
-            name: item.featureId ?? item.projectId ?? item.pathName,
-            path: item.pathName || '/',
-            icon: <IconRenderer path={item.pathName ?? '/unknown'} />,
-        };
-    });
+const toListItemButton = (
+    item: LastViewedPage,
+    routes: Record<string, { path: string; route: string; title: string }>,
+    index: number,
+) => {
+    const key = `recently-visited-${index}`;
+    if (item.featureId && item.projectId) {
+        return (
+            <RecentlyVisitedFeatureButton
+                key={key}
+                featureId={item.featureId}
+                projectId={item.projectId}
+            />
+        );
+    }
+    if (item.projectId) {
+        return (
+            <RecentlyVisitedProjectButton
+                key={key}
+                projectId={item.projectId}
+            />
+        );
+    }
+    if (!item.pathName) return null;
+    const name = routes[item.pathName]?.title ?? item.pathName;
+    return (
+        <RecentlyVisitedPathButton key={key} path={item.pathName} name={name} />
+    );
+};
+
+const RecentlyVisitedFeatureButton = ({
+    key,
+    projectId,
+    featureId,
+}: { key: string; projectId: string; featureId: string }) => {
+    return (
+        <ListItemButton
+            key={key}
+            dense={true}
+            component={Link}
+            to={`/projects/${projectId}/features/${featureId}`}
+            sx={listItemButtonStyle}
+        >
+            <StyledListItemIcon>
+                <Icon>{'flag'}</Icon>
+            </StyledListItemIcon>
+            <StyledListItemText>
+                <Typography color='textPrimary'>{featureId}</Typography>
+            </StyledListItemText>
+        </ListItemButton>
+    );
+};
+
+const RecentlyVisitedPathButton = ({
+    path,
+    key,
+    name,
+}: { path: string; key: string; name: string }) => {
+    return (
+        <ListItemButton
+            key={key}
+            dense={true}
+            component={Link}
+            to={path}
+            sx={listItemButtonStyle}
+        >
+            <StyledListItemIcon>
+                <ConditionallyRender
+                    condition={path === '/projects'}
+                    show={<StyledProjectIcon />}
+                    elseShow={<IconRenderer path={path} />}
+                />
+            </StyledListItemIcon>
+            <StyledListItemText>
+                <Typography color='textPrimary'>{name}</Typography>
+            </StyledListItemText>
+        </ListItemButton>
+    );
+};
+
+const RecentlyVisitedProjectButton = ({
+    projectId,
+    key,
+}: { projectId: string; key: string }) => {
+    const { project, loading } = useProjectOverview(projectId);
+    const projectDeleted = !project.name && !loading;
+    if (projectDeleted) return null;
+    return (
+        <ListItemButton
+            key={key}
+            dense={true}
+            component={Link}
+            to={`/projects/${projectId}`}
+            sx={listItemButtonStyle}
+        >
+            <StyledListItemIcon>
+                <StyledProjectIcon />
+            </StyledListItemIcon>
+            <StyledListItemText>
+                <Typography color='textPrimary'>{project.name}</Typography>
+            </StyledListItemText>
+        </ListItemButton>
+    );
 };
 
 export const RecentlyVisited = ({
     lastVisited,
-}: { lastVisited: LastViewedPage[] }) => {
-    const listItems = toListItemData(lastVisited);
+    routes,
+}: {
+    lastVisited: LastViewedPage[];
+    routes: Record<string, { path: string; route: string; title: string }>;
+}) => {
+    const buttons = lastVisited.map((item, index) =>
+        toListItemButton(item, routes, index),
+    );
     return (
         <>
             <StyledTypography color='textSecondary'>
                 Recently visited
             </StyledTypography>
-            <List>
-                {listItems.map((item, index) => (
-                    <ListItemButton
-                        key={`recently-visited-${index}`}
-                        dense={true}
-                        component={Link}
-                        to={item.path}
-                        sx={listItemButtonStyle}
-                    >
-                        <StyledListItemIcon>{item.icon}</StyledListItemIcon>
-                        <StyledListItemText>
-                            <Typography>{item.name}</Typography>
-                        </StyledListItemText>
-                    </ListItemButton>
-                ))}
-            </List>
+            <List>{buttons}</List>
         </>
     );
 };

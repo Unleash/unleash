@@ -21,6 +21,8 @@ import {
     CommandResultGroup,
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
+import { PageSuggestions } from './PageSuggestions';
+import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
@@ -89,6 +91,23 @@ export const CommandBar = () => {
         CommandResultGroupItem[]
     >([]);
     const { lastVisited } = useRecentlyVisited();
+    const { routes } = useRoutes();
+    const allRoutes: Record<
+        string,
+        { path: string; route: string; title: string }
+    > = {};
+    for (const route of [
+        ...routes.mainNavRoutes,
+        ...routes.adminRoutes,
+        ...routes.mobileRoutes,
+    ]) {
+        allRoutes[route.path] = {
+            path: route.path,
+            route: route.route,
+            title: route.title,
+        };
+    }
+
     const hideSuggestions = () => {
         setShowSuggestions(false);
     };
@@ -212,7 +231,11 @@ export const CommandBar = () => {
                 elseShow={
                     showSuggestions && (
                         <CommandResultsPaper className='dropdown-outline'>
-                            <RecentlyVisited lastVisited={lastVisited} />
+                            <RecentlyVisited
+                                lastVisited={lastVisited}
+                                routes={allRoutes}
+                            />
+                            <PageSuggestions routes={allRoutes} />
                         </CommandResultsPaper>
                     )
                 }

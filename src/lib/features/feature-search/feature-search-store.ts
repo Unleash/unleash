@@ -337,7 +337,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
             total: 0,
         };
     }
-
+    /*
+        This is noncritical data that can should be joined after paging and is not part of filtering/sorting
+     */
     private queryExtraData(queryBuilder: Knex.QueryBuilder) {
         this.queryMetrics(queryBuilder);
         this.queryStrategiesByEnvironment(queryBuilder);

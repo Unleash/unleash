@@ -56,21 +56,24 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
             .select(
                 'feature_name',
                 'environment',
+                'constraints',
                 this.db.raw(
-                    'jsonb_array_length(constraints) as constraint_count',
+                    'MAX(jsonb_array_length(constraints)) as constraint_count',
+                ),
+                this.db.raw(
+                    "MAX(coalesce(jsonb_array_length(value->'values'), 0)) as max_values_count",
                 ),
             )
-
-            .orderBy('constraint_count', 'desc')
-            .limit(1);
-
-        console.log('got rows', rows);
+            .joinRaw('JOIN jsonb_array_elements(constraints) as value ON true')
+            .groupBy('feature_name', 'environment', 'constraints')
+            .orderBy('max_values_count', 'desc')
+            .limit(2);
 
         return rows.length > 0
             ? {
                   feature: String(rows[0].feature_name),
                   environment: String(rows[0].environment),
-                  count: Number(rows[0].constraint_count),
+                  count: Number(rows[0].max_values_count),
               }
             : null;
     }
@@ -90,8 +93,6 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
 
             .orderBy('constraint_count', 'desc')
             .limit(1);
-
-        console.log('got rows', rows);
 
         return rows.length > 0
             ? {

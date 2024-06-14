@@ -317,6 +317,11 @@ describe('max metrics collection', () => {
             featureName: flagA.name,
             constraints: [
                 {
+                    values: ['only one'],
+                    operator: 'IN',
+                    contextName: 'appName',
+                },
+                {
                     values: Array.from({ length: maxValueCount }, (_, i) =>
                         i.toString(),
                     ),
@@ -335,7 +340,6 @@ describe('max metrics collection', () => {
             featureName: flagB.name,
             constraints: [
                 {
-                    values: ['onlyone'],
                     operator: 'IN',
                     contextName: 'appName',
                 },

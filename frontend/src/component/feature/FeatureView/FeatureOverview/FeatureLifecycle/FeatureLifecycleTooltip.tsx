@@ -25,7 +25,7 @@ import { isSafeToArchive } from './isSafeToArchive';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,

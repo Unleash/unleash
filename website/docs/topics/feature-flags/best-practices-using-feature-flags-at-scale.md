@@ -56,7 +56,7 @@ In an organization that actively uses feature flags, there will invariably be a 
 
 Removing information and updates you don’t care about makes the things you care about stand out that much more. 
 
-Example: Do all members of Team A need updates on Project X, even if only one member of Team A is working on it? If so, include all team members in Project X’s group. Otherwise, only include the member who works on project X. 
+**Example**: Do all members of Team A need updates on Project X, even if only one member of Team A is working on it? If so, include all team members in Project X’s group. Otherwise, only include the member who works on project X. 
 
 ### 2. Make flags searchable globally.
 

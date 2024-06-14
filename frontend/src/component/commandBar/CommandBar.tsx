@@ -16,7 +16,6 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { RecentlyVisited } from './RecentlyVisited/RecentlyVisited';
 import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
-import { useGlobalFeatureSearch } from '../feature/FeatureToggleList/useGlobalFeatureSearch';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
@@ -25,6 +24,7 @@ import { PageSuggestions } from './PageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -87,6 +87,7 @@ export const CommandBar = () => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [searchString, setSearchString] = useState(undefined);
     const [searchedProjects, setSearchedProjects] = useState<
         CommandResultGroupItem[]
     >([]);
@@ -114,11 +115,14 @@ export const CommandBar = () => {
 
     const [value, setValue] = useState<string>('');
 
-    const { features, setTableState } = useGlobalFeatureSearch(3);
+    const { features = [] } = useFeatureSearch({
+        query: searchString,
+        limit: '3',
+    });
     const { projects } = useProjects();
 
     const debouncedSetSearchState = useAsyncDebounce((query) => {
-        setTableState({ query });
+        setSearchString(query);
 
         const filteredProjects = projects.filter((project) =>
             project.name.toLowerCase().includes(query.toLowerCase()),

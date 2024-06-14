@@ -332,7 +332,7 @@ Coming from a feature flag vendor, it might surprise you that we do not advocate
 
 Embedding business logic within feature flags can make the codebase unnecessarily complex. Business rules can become scattered and entangled with feature flagging logic, making the code harder to read, understand, and maintain. When changes are needed, developers might have to navigate through a labyrinth of feature flags to find and update the relevant logic, increasing the risk of introducing bugs.
 
-*Performance Implications*
+#### Performance Implications
 
 Feature flags are typically designed to be checked frequently and quickly, with minimal performance overhead. However, when feature flags are used to control business logic, [they may involve more complex evaluations and data fetching, which can degrade application performance](#14-avoid-giant-feature-flag-targeting-lists). This is particularly problematic for high-traffic applications where performance is critical.
 

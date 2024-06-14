@@ -64,7 +64,7 @@ Modern applications are composed of multiple services with many complex dependen
 
 Just because a user might need to interact with a flag does not mean you should display it by default when it is outside your main organizational parameters. However, all flags should be easily searchable. When a user finds one, they should be able to inspect its configuration and ownership so that they might request additional permissions or [submit change requests for approval](#6-implement-flag-approval-workflows-early).
 
-This is why feature flag systems should be [open by default](https://docs.getunleash.io/topics/feature-flags/democratize-feature-flag-access).  There are valid use cases for excluding flags from global search. For example, a public company in the middle of an acquisition where exposing flags related to the website or app changes might breach regulatory guidelines.  Your feature flag system should accommodate these private projects; however, they should be the exception, not the rule.
+This is why feature flag systems should be [open by default](feature-flag-best-practices.md#9-choose-open-by-default-democratize-feature-flag-access).  There are valid use cases for excluding flags from global search. For example, a public company in the middle of an acquisition where exposing flags related to the website or app changes might breach regulatory guidelines.  Your feature flag system should accommodate these private projects; however, they should be the exception, not the rule.
 
 ### 3. Design for flag permissions to change over time.
 

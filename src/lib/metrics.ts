@@ -129,11 +129,6 @@ export default class MetricsMonitor {
             help: 'Maximum number of constraints used on a single strategy',
             labelNames: ['feature', 'environment'],
         });
-        const maxProjectFeatures = createGauge({
-            name: 'max_project_features',
-            help: 'Maximum number of flags in one project',
-            labelNames: ['project'],
-        });
 
         const featureTogglesArchivedTotal = createGauge({
             name: 'feature_toggles_archived_total',
@@ -307,11 +302,9 @@ export default class MetricsMonitor {
                 const [
                     maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
-                    maxProjectFeaturesResult,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxConstraintValues(),
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
-                    stores.featureStrategiesReadModel.getMaxProjectFeatures(),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -374,12 +367,6 @@ export default class MetricsMonitor {
                             feature: maxConstraintsPerStrategyResult.feature,
                         })
                         .set(maxConstraintsPerStrategyResult.count);
-                }
-                if (maxProjectFeaturesResult) {
-                    maxProjectFeatures.reset();
-                    maxProjectFeatures
-                        .labels({ project: maxProjectFeaturesResult.project })
-                        .set(maxProjectFeaturesResult.count);
                 }
 
                 enabledMetricsBucketsPreviousDay.reset();

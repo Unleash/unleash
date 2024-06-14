@@ -159,7 +159,7 @@ const defaultParameters = (
     params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
     stickiness: string,
 ) => {
-    if (params.strategyName === 'gradualRollout') {
+    if (params.strategyName === 'flexibleRollout') {
         return {
             rollout: '100',
             stickiness,

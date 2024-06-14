@@ -7,7 +7,6 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
     constructor(db: Db) {
         this.db = db;
     }
-
     async getMaxFeatureEnvironmentStrategies(): Promise<{
         feature: string;
         environment: string;
@@ -46,5 +45,26 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
                   count: Number(rows[0].strategy_count),
               }
             : null;
+    }
+
+    getMaxConstraintValues(): Promise<{
+        feature: string;
+        environment: string;
+        count: number;
+    } | null> {
+        throw new Error('Method not implemented.');
+    }
+    getMaxConstraintPerStrategy(): Promise<{
+        feature: string;
+        environment: string;
+        count: number;
+    } | null> {
+        throw new Error('Method not implemented.');
+    }
+    getMaxProjectFeatures(): Promise<{
+        project: string;
+        count: number;
+    } | null> {
+        throw new Error('Method not implemented.');
     }
 }

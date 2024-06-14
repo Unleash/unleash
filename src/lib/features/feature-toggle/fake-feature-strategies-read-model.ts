@@ -17,4 +17,27 @@ export class FakeFeatureStrategiesReadModel
     } | null> {
         return null;
     }
+
+    async getMaxConstraintValues(): Promise<{
+        feature: string;
+        environment: string;
+        count: number;
+    } | null> {
+        return null;
+    }
+
+    async getMaxConstraintPerStrategy(): Promise<{
+        feature: string;
+        environment: string;
+        count: number;
+    } | null> {
+        return null;
+    }
+
+    async getMaxProjectFeatures(): Promise<{
+        project: string;
+        count: number;
+    } | null> {
+        return null;
+    }
 }

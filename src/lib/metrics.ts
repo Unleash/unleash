@@ -119,6 +119,21 @@ export default class MetricsMonitor {
             help: 'Maximum number of strategies in one feature',
             labelNames: ['feature'],
         });
+        const maxConstraintValues = createGauge({
+            name: 'max_constraint_values',
+            help: 'Maximum number of constraint values used in a single constraint',
+            labelNames: ['feature', 'environment'],
+        });
+        const maxStrategyConstraints = createGauge({
+            name: 'max_strategy_constraints',
+            help: 'Maximum number of constraints used on a single strategy',
+            labelNames: ['feature', 'environment'],
+        });
+        const maxProjectFeatures = createGauge({
+            name: 'max_project_features',
+            help: 'Maximum number of flags in one project',
+            labelNames: ['project'],
+        });
 
         const featureTogglesArchivedTotal = createGauge({
             name: 'feature_toggles_archived_total',

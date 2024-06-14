@@ -15,6 +15,7 @@ import type { Db } from '../../../lib/db/db';
 import type { IContextFieldDto } from '../../../lib/types/stores/context-field-store';
 import { DEFAULT_ENV } from '../../../lib/util';
 import type {
+    CreateDependentFeatureSchema,
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     ImportTogglesSchema,
@@ -102,7 +103,10 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
-    addDependency(child: string, parent: string): supertest.Test;
+    addDependency(
+        child: string,
+        parent: string | CreateDependentFeatureSchema,
+    ): supertest.Test;
 
     addTag(
         feature: string,
@@ -224,7 +228,7 @@ function httpApis(
 
         addDependency(
             child: string,
-            parent: string,
+            parent: string | CreateDependentFeatureSchema,
             project = DEFAULT_PROJECT,
             expectedResponseCode: number = 200,
         ): supertest.Test {
@@ -232,7 +236,7 @@ function httpApis(
                 .post(
                     `/api/admin/projects/${project}/features/${child}/dependencies`,
                 )
-                .send({ feature: parent })
+                .send(typeof parent === 'string' ? { feature: parent } : parent)
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

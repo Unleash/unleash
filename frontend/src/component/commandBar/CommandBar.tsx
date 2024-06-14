@@ -21,6 +21,7 @@ import {
     CommandResultGroup,
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
+import { PageSuggestions } from './PageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
@@ -208,6 +209,7 @@ export const CommandBar = () => {
                                 lastVisited={lastVisited}
                                 routes={allRoutes}
                             />
+                            <PageSuggestions routes={allRoutes} />
                         </CommandResultsPaper>
                     )
                 }

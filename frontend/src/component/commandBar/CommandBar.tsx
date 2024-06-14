@@ -23,6 +23,8 @@ import {
 } from './RecentlyVisited/CommandResultGroup';
 import { PageSuggestions } from './PageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
+import { useAsyncDebounce } from 'react-table';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -85,6 +87,9 @@ export const CommandBar = () => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [searchedProjects, setSearchedProjects] = useState<
+        CommandResultGroupItem[]
+    >([]);
     const { lastVisited } = useRecentlyVisited();
     const { routes } = useRoutes();
     const allRoutes: Record<
@@ -109,8 +114,26 @@ export const CommandBar = () => {
 
     const [value, setValue] = useState<string>('');
 
+    const { features, setTableState } = useGlobalFeatureSearch(3);
+    const { projects } = useProjects();
+
+    const debouncedSetSearchState = useAsyncDebounce((query) => {
+        setTableState({ query });
+
+        const filteredProjects = projects.filter((project) =>
+            project.name.toLowerCase().includes(query.toLowerCase()),
+        );
+
+        const mappedProjects = filteredProjects.map((project) => ({
+            name: project.name,
+            link: `/projects/${project.id}`,
+        }));
+
+        setSearchedProjects(mappedProjects);
+    }, 200);
+
     const onSearchChange = (value: string) => {
-        setTableState({ query: value });
+        debouncedSetSearchState(value);
         setValue(value);
     };
 
@@ -137,8 +160,6 @@ export const CommandBar = () => {
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
-
-    const { features, setTableState } = useGlobalFeatureSearch(3);
 
     const flags: CommandResultGroupItem[] = features.map((feature) => ({
         name: feature.name,
@@ -199,6 +220,11 @@ export const CommandBar = () => {
                             groupName={'Flags'}
                             icon={'flag'}
                             items={flags}
+                        />
+                        <CommandResultGroup
+                            groupName={'Projects'}
+                            icon={'flag'}
+                            items={searchedProjects}
                         />
                     </CommandResultsPaper>
                 }

@@ -86,7 +86,10 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .distinctOn('stage_feature')
             .orderBy([
                 'stage_feature',
-                { column: 'entered_stage_at', order: 'desc' },
+                {
+                    column: 'entered_stage_at',
+                    order: 'desc',
+                },
             ]);
     }
 
@@ -161,12 +164,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 selectColumns = [
                     ...selectColumns,
-                    this.db.raw(
-                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
-                    ),
-                    this.db.raw(
-                        'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
-                    ),
                     this.db.raw(`CASE
                             WHEN dependent_features.parent = features.name THEN 'parent'
                             WHEN dependent_features.child = features.name THEN 'child'
@@ -310,17 +307,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'ranked_features.feature_name',
                 'final_ranks.feature_name',
             )
-            .leftJoin('metrics', (qb) => {
-                qb.on(
-                    'metric_environment',
-                    '=',
-                    'ranked_features.environment',
-                ).andOn(
-                    'metric_feature_name',
-                    '=',
-                    'ranked_features.feature_name',
-                );
-            })
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
@@ -331,6 +317,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'lifecycle.stage_feature',
             );
         }
+        this.queryExtraData(finalQuery);
         const rows = await finalQuery;
         stopTimer();
         if (rows.length > 0) {
@@ -349,6 +336,74 @@ class FeatureSearchStore implements IFeatureSearchStore {
             features: [],
             total: 0,
         };
+    }
+    /*
+        This is noncritical data that can should be joined after paging and is not part of filtering/sorting
+     */
+    private queryExtraData(queryBuilder: Knex.QueryBuilder) {
+        this.queryMetrics(queryBuilder);
+        this.queryStrategiesByEnvironment(queryBuilder);
+    }
+
+    private queryMetrics(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder.leftJoin('metrics', (qb) => {
+            qb.on(
+                'metric_environment',
+                '=',
+                'ranked_features.environment',
+            ).andOn('metric_feature_name', '=', 'ranked_features.feature_name');
+        });
+    }
+
+    private queryStrategiesByEnvironment(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder.select(
+            this.db.raw(
+                'has_strategies.feature_name IS NOT NULL AS has_strategies',
+            ),
+            this.db.raw(
+                'enabled_strategies.feature_name IS NOT NULL AS has_enabled_strategies',
+            ),
+        );
+        queryBuilder
+            .leftJoin(
+                this.db
+                    .select('feature_name', 'environment')
+                    .from('feature_strategies')
+                    .groupBy('feature_name', 'environment')
+                    .where(function () {
+                        this.whereNull('disabled').orWhere('disabled', false);
+                    })
+                    .as('enabled_strategies'),
+                function () {
+                    this.on(
+                        'enabled_strategies.feature_name',
+                        '=',
+                        'ranked_features.feature_name',
+                    ).andOn(
+                        'enabled_strategies.environment',
+                        '=',
+                        'ranked_features.environment',
+                    );
+                },
+            )
+            .leftJoin(
+                this.db
+                    .select('feature_name', 'environment')
+                    .from('feature_strategies')
+                    .groupBy('feature_name', 'environment')
+                    .as('has_strategies'),
+                function () {
+                    this.on(
+                        'has_strategies.feature_name',
+                        '=',
+                        'ranked_features.feature_name',
+                    ).andOn(
+                        'has_strategies.environment',
+                        '=',
+                        'ranked_features.environment',
+                    );
+                },
+            );
     }
 
     private buildRankingSql(

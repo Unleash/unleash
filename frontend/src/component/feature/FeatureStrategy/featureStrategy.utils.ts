@@ -6,5 +6,5 @@ export const comparisonModerator = (
 ): DeepOmit<IFeatureToggle, keyof IFeatureToggle> => {
     const tempData = { ...data };
 
-    return deepOmit(tempData, 'lastSeenAt', 'yes', 'no');
+    return deepOmit(tempData, 'lastSeenAt', 'yes', 'no', 'lifecycle');
 };

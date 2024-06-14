@@ -38,6 +38,9 @@ export type Lifecycle = {
     enteredStageAt: string;
 };
 
+/**
+ * @deprecated use FeatureSchema from openapi
+ */
 export interface IFeatureToggle {
     stale: boolean;
     archived: boolean;
@@ -57,6 +60,11 @@ export interface IFeatureToggle {
     dependencies: Array<IDependency>;
     lifecycle?: Lifecycle;
     children: Array<string>;
+    createdBy?: {
+        id: string;
+        name: string;
+        imageUrl: string;
+    };
 }
 
 export interface IDependency {

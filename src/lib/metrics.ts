@@ -124,7 +124,7 @@ export default class MetricsMonitor {
             help: 'Maximum number of constraint values used in a single constraint',
             labelNames: ['feature', 'environment'],
         });
-        const maxStrategyConstraints = createGauge({
+        const maxConstraintsPerStrategy = createGauge({
             name: 'max_strategy_constraints',
             help: 'Maximum number of constraints used on a single strategy',
             labelNames: ['feature', 'environment'],
@@ -304,6 +304,15 @@ export default class MetricsMonitor {
                         stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                         stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
                     ]);
+                const [
+                    maxConstraintValuesResult,
+                    maxConstraintsPerStrategyResult,
+                    maxProjectFeaturesResult,
+                ] = await Promise.all([
+                    stores.featureStrategiesReadModel.getMaxConstraintValues(),
+                    stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
+                    stores.featureStrategiesReadModel.getMaxProjectFeatures(),
+                ]);
 
                 featureFlagsTotal.reset();
                 featureFlagsTotal.labels({ version }).set(stats.featureToggles);
@@ -346,6 +355,31 @@ export default class MetricsMonitor {
                     maxFeatureStrategies
                         .labels({ feature: maxStrategies.feature })
                         .set(maxStrategies.count);
+                }
+                if (maxConstraintValuesResult) {
+                    maxConstraintValues.reset();
+                    maxConstraintValues
+                        .labels({
+                            environment: maxConstraintValuesResult.environment,
+                            feature: maxConstraintValuesResult.feature,
+                        })
+                        .set(maxConstraintValuesResult.count);
+                }
+                if (maxConstraintsPerStrategyResult) {
+                    maxConstraintsPerStrategy.reset();
+                    maxConstraintsPerStrategy
+                        .labels({
+                            environment:
+                                maxConstraintsPerStrategyResult.environment,
+                            feature: maxConstraintsPerStrategyResult.feature,
+                        })
+                        .set(maxConstraintsPerStrategyResult.count);
+                }
+                if (maxProjectFeaturesResult) {
+                    maxProjectFeatures.reset();
+                    maxProjectFeatures
+                        .labels({ project: maxProjectFeaturesResult.project })
+                        .set(maxProjectFeaturesResult.count);
                 }
 
                 enabledMetricsBucketsPreviousDay.reset();

@@ -8,6 +8,7 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
+import { Route, Routes } from 'react-router-dom';
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const twoMinutesAgo = '2024-04-25T08:03:00.000Z';
@@ -22,16 +23,24 @@ const renderOpenTooltip = (
     loading = false,
 ) => {
     render(
-        <FeatureLifecycleTooltip
-            stage={stage}
-            onArchive={onArchive}
-            onComplete={onComplete}
-            onUncomplete={onUncomplete}
-            loading={loading}
-        >
-            <span>child</span>
-        </FeatureLifecycleTooltip>,
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <FeatureLifecycleTooltip
+                        stage={stage}
+                        onArchive={onArchive}
+                        onComplete={onComplete}
+                        onUncomplete={onUncomplete}
+                        loading={loading}
+                    >
+                        <span>child</span>
+                    </FeatureLifecycleTooltip>
+                }
+            />
+        </Routes>,
         {
+            route: '/projects/default',
             permissions: [
                 { permission: DELETE_FEATURE },
                 { permission: UPDATE_FEATURE },

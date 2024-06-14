@@ -12,6 +12,7 @@ import UsersIcon from '@mui/icons-material/GroupOutlined';
 import ServiceAccountIcon from '@mui/icons-material/Computer';
 import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import RoleIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 import ApiAccessIcon from '@mui/icons-material/KeyOutlined';
 import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import NetworkIcon from '@mui/icons-material/HubOutlined';
@@ -32,6 +33,7 @@ import { styled } from '@mui/material';
 
 // TODO: move to routes
 const icons: Record<string, typeof SvgIcon> = {
+    '/search': SearchIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,

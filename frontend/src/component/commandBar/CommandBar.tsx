@@ -21,6 +21,7 @@ import {
     CommandResultGroup,
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
+import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -84,6 +85,23 @@ export const CommandBar = () => {
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const { lastVisited } = useRecentlyVisited();
+    const { routes } = useRoutes();
+    const allRoutes: Record<
+        string,
+        { path: string; route: string; title: string }
+    > = {};
+    for (const route of [
+        ...routes.mainNavRoutes,
+        ...routes.adminRoutes,
+        ...routes.mobileRoutes,
+    ]) {
+        allRoutes[route.path] = {
+            path: route.path,
+            route: route.route,
+            title: route.title,
+        };
+    }
+
     const hideSuggestions = () => {
         setShowSuggestions(false);
     };
@@ -186,7 +204,10 @@ export const CommandBar = () => {
                 elseShow={
                     showSuggestions && (
                         <CommandResultsPaper className='dropdown-outline'>
-                            <RecentlyVisited lastVisited={lastVisited} />
+                            <RecentlyVisited
+                                lastVisited={lastVisited}
+                                routes={allRoutes}
+                            />
                         </CommandResultsPaper>
                     )
                 }

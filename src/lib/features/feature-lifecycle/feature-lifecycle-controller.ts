@@ -143,12 +143,13 @@ export default class FeatureLifecycleController extends Controller {
         if (!this.flagResolver.isEnabled('featureLifecycle')) {
             throw new NotFoundError('Feature lifecycle is disabled.');
         }
-        const { featureName } = req.params;
+        const { featureName, projectId } = req.params;
 
         const status = req.body;
 
         await this.featureLifecycleService.featureCompleted(
             featureName,
+            projectId,
             status,
             req.audit,
         );
@@ -163,10 +164,11 @@ export default class FeatureLifecycleController extends Controller {
         if (!this.flagResolver.isEnabled('featureLifecycle')) {
             throw new NotFoundError('Feature lifecycle is disabled.');
         }
-        const { featureName } = req.params;
+        const { featureName, projectId } = req.params;
 
-        await this.featureLifecycleService.featureUnCompleted(
+        await this.featureLifecycleService.featureUncompleted(
             featureName,
+            projectId,
             req.audit,
         );
 

@@ -180,6 +180,7 @@ export class FeatureLifecycleService extends EventEmitter {
 
     public async featureCompleted(
         feature: string,
+        projectId: string,
         status: FeatureLifecycleCompletedSchema,
         auditUser: IAuditUser,
     ) {
@@ -193,6 +194,7 @@ export class FeatureLifecycleService extends EventEmitter {
         ]);
         await this.eventService.storeEvent(
             new FeatureCompletedEvent({
+                project: projectId,
                 featureName: feature,
                 data: status,
                 auditUser,
@@ -200,13 +202,18 @@ export class FeatureLifecycleService extends EventEmitter {
         );
     }
 
-    public async featureUnCompleted(feature: string, auditUser: IAuditUser) {
+    public async featureUncompleted(
+        feature: string,
+        projectId: string,
+        auditUser: IAuditUser,
+    ) {
         await this.featureLifecycleStore.deleteStage({
             feature,
             stage: 'completed',
         });
         await this.eventService.storeEvent(
             new FeatureUncompletedEvent({
+                project: projectId,
                 featureName: feature,
                 auditUser,
             }),

@@ -722,29 +722,35 @@ export class FeatureTagImport extends BaseEvent {
 export class FeatureCompletedEvent extends BaseEvent {
     readonly featureName: string;
     readonly data: FeatureLifecycleCompletedSchema;
+    readonly project: string;
 
     constructor(p: {
+        project: string;
         featureName: string;
         data: FeatureLifecycleCompletedSchema;
         auditUser: IAuditUser;
     }) {
         super(FEATURE_COMPLETED, p.auditUser);
-        const { featureName, data } = p;
+        const { featureName, data, project } = p;
         this.featureName = featureName;
         this.data = data;
+        this.project = project;
     }
 }
 
 export class FeatureUncompletedEvent extends BaseEvent {
     readonly featureName: string;
+    readonly project: string;
 
     constructor(p: {
         featureName: string;
         auditUser: IAuditUser;
+        project: string;
     }) {
         super(FEATURE_UNCOMPLETED, p.auditUser);
-        const { featureName } = p;
+        const { featureName, project } = p;
         this.featureName = featureName;
+        this.project = project;
     }
 }
 

@@ -324,7 +324,7 @@ For example, if you want to determine whether premium users of your product will
 
 If feature flags are so great, why shouldn’t you use them for business logic? A few reasons:
 
-*Dependency on 3rd party services*
+#### Dependency on 3rd party services
 
 Coming from a feature flag vendor, it might surprise you that we do not advocate making core business logic dependent on a 3rd party feature flag service. If that flag service is down, then your app could potentially cease to function in the way designed.  This applies to using 3rd party feature flag services, as well as home grown feature flags service. 
 

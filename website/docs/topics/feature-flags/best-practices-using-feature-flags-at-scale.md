@@ -153,7 +153,7 @@ Flags live in code, and hundreds of small choices go into instrumenting flags in
 
 ### 7. Define flags in your code at the highest level of abstraction.
 
-![evaluate-flags-high-in-code](https://github.com/ferrantim/unleash/assets/3068350/d355080c-3537-4106-ac7b-3a761ce3ac50)
+<Figure img="/img/evaluate-flags-at-the-edge.png" caption="Instead of evaluating a flag in a back-end service and then dynamically changing the behavior in that service (either by calling out to other services or changing how the service works), consider evaluating the flag as far out in the stack as you can and deciding which service to call based on the flag value."/>
 
 Defining your flag at the highest level in your code is important for both user-facing and backend changes.
 

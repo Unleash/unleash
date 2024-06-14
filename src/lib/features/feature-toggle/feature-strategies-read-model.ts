@@ -63,7 +63,7 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
             .joinRaw('JOIN jsonb_array_elements(constraints) as value ON true')
             .groupBy('feature_name', 'environment')
             .orderBy('max_values_count', 'desc')
-            .limit(2);
+            .limit(1);
 
         return rows.length > 0
             ? {

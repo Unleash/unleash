@@ -47,21 +47,61 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
             : null;
     }
 
-    getMaxConstraintValues(): Promise<{
+    async getMaxConstraintValues(): Promise<{
         feature: string;
         environment: string;
         count: number;
     } | null> {
-        throw new Error('Method not implemented.');
+        const rows = await this.db('feature_strategies')
+            .select(
+                'feature_name',
+                'environment',
+                this.db.raw(
+                    'jsonb_array_length(constraints) as constraint_count',
+                ),
+            )
+
+            .orderBy('constraint_count', 'desc')
+            .limit(1);
+
+        console.log('got rows', rows);
+
+        return rows.length > 0
+            ? {
+                  feature: String(rows[0].feature_name),
+                  environment: String(rows[0].environment),
+                  count: Number(rows[0].constraint_count),
+              }
+            : null;
     }
-    getMaxConstraintsPerStrategy(): Promise<{
+    async getMaxConstraintsPerStrategy(): Promise<{
         feature: string;
         environment: string;
         count: number;
     } | null> {
-        throw new Error('Method not implemented.');
+        const rows = await this.db('feature_strategies')
+            .select(
+                'feature_name',
+                'environment',
+                this.db.raw(
+                    'jsonb_array_length(constraints) as constraint_count',
+                ),
+            )
+
+            .orderBy('constraint_count', 'desc')
+            .limit(1);
+
+        console.log('got rows', rows);
+
+        return rows.length > 0
+            ? {
+                  feature: String(rows[0].feature_name),
+                  environment: String(rows[0].environment),
+                  count: Number(rows[0].constraint_count),
+              }
+            : null;
     }
-    getMaxProjectFeatures(): Promise<{
+    async getMaxProjectFeatures(): Promise<{
         project: string;
         count: number;
     } | null> {

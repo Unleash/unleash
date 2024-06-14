@@ -336,7 +336,7 @@ Embedding business logic within feature flags can make the codebase unnecessaril
 
 Feature flags are typically designed to be checked frequently and quickly, with minimal performance overhead. However, when feature flags are used to control business logic, [they may involve more complex evaluations and data fetching, which can degrade application performance](#14-avoid-giant-feature-flag-targeting-lists). This is particularly problematic for high-traffic applications where performance is critical.
 
-*Security Risks*
+#### Security Risks
 
 Business logic often involves access controls and entitlements. Using feature flags to manage these aspects can expose security vulnerabilities if not handled correctly. Feature flags might be toggled accidentally or maliciously, leading to unauthorized access or exposure of sensitive data.
 

@@ -164,7 +164,7 @@ describe('strategy parameters default to sane defaults', () => {
             createdByUserId: 9999,
         });
         const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
+            strategyName: 'flexibleRollout',
             projectId: 'default',
             environment: 'default',
             featureName: toggle.name,
@@ -184,7 +184,7 @@ describe('strategy parameters default to sane defaults', () => {
             createdByUserId: 9999,
         });
         const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
+            strategyName: 'flexibleRollout',
             projectId: 'default',
             environment: 'default',
             featureName: toggle.name,
@@ -236,7 +236,7 @@ describe('strategy parameters default to sane defaults', () => {
             createdByUserId: 9999,
         });
         const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
+            strategyName: 'flexibleRollout',
             projectId: project.id,
             environment: 'default',
             featureName: toggle.name,

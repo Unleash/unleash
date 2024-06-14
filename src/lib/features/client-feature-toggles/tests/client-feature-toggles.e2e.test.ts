@@ -25,7 +25,11 @@ const apiClientResponse = [
             {
                 name: 'flexibleRollout',
                 constraints: [],
-                parameters: { rollout: '100' },
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'test1',
+                },
                 variants: [],
             },
         ],
@@ -169,7 +173,11 @@ test('should return correct data structure from /api/client/features', async () 
         {
             name: 'flexibleRollout',
             constraints: [],
-            parameters: { rollout: '100' },
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+                groupId: 'test1',
+            },
         },
         DEFAULT_ENV,
         'test1',

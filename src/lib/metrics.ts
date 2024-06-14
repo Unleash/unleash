@@ -294,15 +294,14 @@ export default class MetricsMonitor {
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
-                const [maxStrategies, maxEnvironmentStrategies] =
-                    await Promise.all([
-                        stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
-                        stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
-                    ]);
                 const [
+                    maxStrategies,
+                    maxEnvironmentStrategies,
                     maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
                 ] = await Promise.all([
+                    stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
+                    stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
                     stores.featureStrategiesReadModel.getMaxConstraintValues(),
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
                 ]);

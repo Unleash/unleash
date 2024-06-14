@@ -22,7 +22,7 @@ import {
 } from './RecentlyVisited/CommandResultGroup';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { useFeatureSearch } from '../../hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',

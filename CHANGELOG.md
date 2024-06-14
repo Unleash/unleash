@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.3] - 2024-06-14
+
+### Bug Fixes
+
+- Backport lifecycle and playground fixes ([#7396](https://github.com/Unleash/unleash/issues/7396))
+
+
 ## [6.0.2] - 2024-06-12
 
 ### Bug Fixes

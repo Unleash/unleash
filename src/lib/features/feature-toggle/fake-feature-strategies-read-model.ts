@@ -26,7 +26,7 @@ export class FakeFeatureStrategiesReadModel
         return null;
     }
 
-    async getMaxConstraintPerStrategy(): Promise<{
+    async getMaxConstraintsPerStrategy(): Promise<{
         feature: string;
         environment: string;
         count: number;

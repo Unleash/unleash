@@ -54,7 +54,7 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
     } | null> {
         throw new Error('Method not implemented.');
     }
-    getMaxConstraintPerStrategy(): Promise<{
+    getMaxConstraintsPerStrategy(): Promise<{
         feature: string;
         environment: string;
         count: number;

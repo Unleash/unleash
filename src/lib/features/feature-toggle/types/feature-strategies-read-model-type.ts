@@ -13,7 +13,7 @@ export interface IFeatureStrategiesReadModel {
         environment: string;
         count: number;
     } | null>;
-    getMaxConstraintPerStrategy(): Promise<{
+    getMaxConstraintsPerStrategy(): Promise<{
         feature: string;
         environment: string;
         count: number;

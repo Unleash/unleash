@@ -57,10 +57,14 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
                 'feature_name',
                 'environment',
                 this.db.raw(
-                    "MAX(coalesce(jsonb_array_length(value->'values'), 0)) as max_values_count",
+                    "MAX(coalesce(jsonb_array_length(constraint_value->'values'), 0)) as max_values_count",
                 ),
             )
-            .joinRaw('JOIN jsonb_array_elements(constraints) as value ON true')
+            .from(
+                this.db.raw(
+                    'feature_strategies, jsonb_array_elements(constraints) AS constraint_value',
+                ),
+            )
             .groupBy('feature_name', 'environment')
             .orderBy('max_values_count', 'desc')
             .limit(1);

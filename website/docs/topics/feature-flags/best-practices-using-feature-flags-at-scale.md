@@ -88,7 +88,8 @@ Here are common examples that require updating flag permissions you should plan 
 * Requirements changed mid-project. 
 * The project owner or team lead changed.
 * Teams are reorganized.
-* The flag lifecycle stage dictates changes in the owners
+
+The flag lifecycle stage dictates changes in the owners.
 
 ### 4. Get flag management permissions right. And audit everything.
 

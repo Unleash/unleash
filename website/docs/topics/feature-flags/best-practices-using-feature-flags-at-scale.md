@@ -328,7 +328,7 @@ If feature flags are so great, why shouldn’t you use them for business logic? 
 
 Coming from a feature flag vendor, it might surprise you that we do not advocate making core business logic dependent on a 3rd party feature flag service. If that flag service is down, then your app could potentially cease to function in the way designed.  This applies to using 3rd party feature flag services, as well as home grown feature flags service. 
 
-*Complexity and Maintainability*
+#### Complexity and Maintainability
 
 Embedding business logic within feature flags can make the codebase unnecessarily complex. Business rules can become scattered and entangled with feature flagging logic, making the code harder to read, understand, and maintain. When changes are needed, developers might have to navigate through a labyrinth of feature flags to find and update the relevant logic, increasing the risk of introducing bugs.
 

@@ -126,7 +126,7 @@ Users who are added or removed from your main SSO directory should be added or r
 
 ### 6. Implement flag approval workflows early.
 
-![feature-flag-approval-workflow](https://github.com/ferrantim/unleash/assets/3068350/38de8897-be16-43af-80d2-a3f0680248ea)
+<Figure img="/img/change-request-flow.png" caption="Some changes require approval processes. Those processes will tend to let a reviewer approve or reject the proposed changes before someone with the required permissons can apply the changes."/>
 
 Depending on the industry and legal framework you’re operating in, you’ll need varying approvals for a feature flag change to go into production. You may be able to just roll something out on a whim, or you might need to get it approved by specific stakeholders before releasing it. Your feature flag tool should help you do this, regardless of how much oversight you need.
 

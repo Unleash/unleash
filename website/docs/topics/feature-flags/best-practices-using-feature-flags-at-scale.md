@@ -184,7 +184,7 @@ Here are a few examples of functionality managed by feature flags and where you 
 
 ### 8. Evaluate a feature flag only once.
 
-![evaluate-flags-only-once](https://github.com/ferrantim/unleash/assets/3068350/2c8ffe74-7972-429f-a0be-adcb045a2836)
+<Figure img="/img/evaluate-flags-only-once.png" caption="You should evaluate flags only once in a chain of services and pass the result on to the next service in the chain if it needs the value. If you evaluate the flag in each service, you risk the flag value changing between each service, causing unexpected results."/>
 
 When building new (often complex) features for users, systems require changes across multiple parts – modules within an application or services in a microservices architecture. While it's tempting to use a single feature flag to control all these changes and evaluate it locally in each module, we recommend against it for a few reasons:
 

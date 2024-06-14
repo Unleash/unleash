@@ -25,6 +25,7 @@ import { isSafeToArchive } from './isSafeToArchive';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -267,6 +268,8 @@ const LiveStageDescription: FC<{
     loading: boolean;
     children?: React.ReactNode;
 }> = ({ children, onComplete, loading }) => {
+    const projectId = useRequiredPathParam('projectId');
+
     return (
         <>
             <BoldTitle>Is this feature complete?</BoldTitle>
@@ -285,6 +288,7 @@ const LiveStageDescription: FC<{
                 size='small'
                 onClick={onComplete}
                 disabled={loading}
+                projectId={projectId}
             >
                 Mark completed
             </PermissionButton>
@@ -303,6 +307,8 @@ const SafeToArchive: FC<{
     onUncomplete: () => void;
     loading: boolean;
 }> = ({ onArchive, onUncomplete, loading }) => {
+    const projectId = useRequiredPathParam('projectId');
+
     return (
         <>
             <BoldTitle>Safe to archive</BoldTitle>
@@ -319,6 +325,7 @@ const SafeToArchive: FC<{
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
+                    flexWrap: 'wrap',
                     gap: 2,
                 }}
             >
@@ -329,6 +336,7 @@ const SafeToArchive: FC<{
                     size='small'
                     onClick={onUncomplete}
                     disabled={loading}
+                    projectId={projectId}
                 >
                     Revert to live
                 </PermissionButton>
@@ -339,6 +347,7 @@ const SafeToArchive: FC<{
                     size='small'
                     sx={{ mb: 2 }}
                     onClick={onArchive}
+                    projectId={projectId}
                 >
                     Archive feature
                 </PermissionButton>

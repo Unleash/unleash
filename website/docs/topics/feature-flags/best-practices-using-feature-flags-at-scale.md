@@ -348,4 +348,4 @@ Feature flags are a powerful tool for delivering software efficiently while main
 
 Remember, the key to successful feature flag management at scale lies in clear processes, regular maintenance, and a commitment to best practices. With these in place, you can leverage feature flags to drive innovation and improve your software development lifecycle.
 
-This guide was all about using feature flags at scale. For similar tips on building and scaling the feature flag system itself, see our [feature flag best practices guide](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
+This guide was all about using feature flags at scale. For similar tips on building and scaling the feature flag system itself, see our [feature flag best practices guide](feature-flag-best-practices.md).

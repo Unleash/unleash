@@ -18,8 +18,4 @@ export interface IFeatureStrategiesReadModel {
         environment: string;
         count: number;
     } | null>;
-    getMaxProjectFeatures(): Promise<{
-        project: string;
-        count: number;
-    } | null>;
 }

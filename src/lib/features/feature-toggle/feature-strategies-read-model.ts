@@ -102,10 +102,4 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
               }
             : null;
     }
-    async getMaxProjectFeatures(): Promise<{
-        project: string;
-        count: number;
-    } | null> {
-        throw new Error('Method not implemented.');
-    }
 }

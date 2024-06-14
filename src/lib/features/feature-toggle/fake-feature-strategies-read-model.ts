@@ -33,11 +33,4 @@ export class FakeFeatureStrategiesReadModel
     } | null> {
         return null;
     }
-
-    async getMaxProjectFeatures(): Promise<{
-        project: string;
-        count: number;
-    } | null> {
-        return null;
-    }
 }

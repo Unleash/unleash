@@ -411,48 +411,4 @@ describe('max metrics collection', () => {
             count: 2,
         });
     });
-
-    // test('Read project with max number of flags', async () => {
-    //     const toggle = await featureToggleStore.create('default', {
-    //         name: 'featureA',
-    //         createdByUserId: 9999,
-    //     });
-
-    //     const maxStrategiesBefore =
-    //         await featureStrategiesReadModel.getMaxFeatureStrategies();
-    //     const maxEnvStrategiesBefore =
-    //         await featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies();
-    //     expect(maxStrategiesBefore).toBe(null);
-    //     expect(maxEnvStrategiesBefore).toBe(null);
-
-    //     await featureStrategiesStore.createStrategyFeatureEnv({
-    //         strategyName: 'gradualRollout',
-    //         projectId: 'default',
-    //         environment: 'default',
-    //         featureName: toggle.name,
-    //         constraints: [],
-    //         sortOrder: 0,
-    //         parameters: {},
-    //     });
-    //     await featureStrategiesStore.createStrategyFeatureEnv({
-    //         strategyName: 'gradualRollout',
-    //         projectId: 'default',
-    //         environment: 'default',
-    //         featureName: toggle.name,
-    //         constraints: [],
-    //         sortOrder: 0,
-    //         parameters: {},
-    //     });
-
-    //     const maxStrategies =
-    //         await featureStrategiesReadModel.getMaxFeatureStrategies();
-    //     const maxEnvStrategies =
-    //         await featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies();
-    //     expect(maxStrategies).toEqual({ feature: 'featureA', count: 2 });
-    //     expect(maxEnvStrategies).toEqual({
-    //         feature: 'featureA',
-    //         environment: 'default',
-    //         count: 2,
-    //     });
-    // });
 });

@@ -1,0 +1,20 @@
+import type { IFeatureStrategiesReadModel } from './types/feature-strategies-read-model-type';
+
+export class FakeFeatureStrategiesReadModel
+    implements IFeatureStrategiesReadModel
+{
+    async getMaxFeatureEnvironmentStrategies(): Promise<{
+        feature: string;
+        environment: string;
+        count: number;
+    } | null> {
+        return null;
+    }
+
+    async getMaxFeatureStrategies(): Promise<{
+        feature: string;
+        count: number;
+    } | null> {
+        return null;
+    }
+}

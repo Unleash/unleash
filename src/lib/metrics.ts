@@ -109,6 +109,16 @@ export default class MetricsMonitor {
             help: 'Number of feature flags',
             labelNames: ['version'],
         });
+        const maxFeatureEnvironmentStrategies = createGauge({
+            name: 'max_feature_environment_strategies',
+            help: 'Maximum number of environment strategies in one feature',
+            labelNames: ['feature', 'environment'],
+        });
+        const maxFeatureStrategies = createGauge({
+            name: 'max_feature_strategies',
+            help: 'Maximum number of strategies in one feature',
+            labelNames: ['feature'],
+        });
 
         const featureTogglesArchivedTotal = createGauge({
             name: 'feature_toggles_archived_total',
@@ -274,6 +284,11 @@ export default class MetricsMonitor {
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
+                const [maxStrategies, maxEnvironmentStrategies] =
+                    await Promise.all([
+                        stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
+                        stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
+                    ]);
 
                 featureFlagsTotal.reset();
                 featureFlagsTotal.labels({ version }).set(stats.featureToggles);
@@ -300,6 +315,22 @@ export default class MetricsMonitor {
 
                 for (const [type, value] of stats.apiTokens) {
                     apiTokens.labels({ type }).set(value);
+                }
+
+                if (maxEnvironmentStrategies) {
+                    maxFeatureEnvironmentStrategies.reset();
+                    maxFeatureEnvironmentStrategies
+                        .labels({
+                            environment: maxEnvironmentStrategies.environment,
+                            feature: maxEnvironmentStrategies.feature,
+                        })
+                        .set(maxEnvironmentStrategies.count);
+                }
+                if (maxStrategies) {
+                    maxFeatureStrategies.reset();
+                    maxFeatureStrategies
+                        .labels({ feature: maxStrategies.feature })
+                        .set(maxStrategies.count);
                 }
 
                 enabledMetricsBucketsPreviousDay.reset();
@@ -426,6 +457,7 @@ export default class MetricsMonitor {
                     );
             } catch (e) {}
         }
+
         await schedulerService.schedule(
             collectStaticCounters.bind(this),
             hoursToMilliseconds(2),

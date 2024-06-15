@@ -2,8 +2,6 @@
 title: Securing Unleash
 ---
 
-**If you are still using Unleash v3 you need to follow the [securing-unleash-v3](./securing-unleash-v3)**
-
 > This guide is only relevant if you are using Unleash Open-Source. The Enterprise edition does already ship with multiple SSO options, such as SAML 2.0, OpenID Connect.
 
 Unleash Open-Source v4 comes with username/password authentication out of the box. In addition Unleash v4 also comes with API token support, to make it easy to handle access tokens for Client SDKs and programmatic access to the Unleash APIs.

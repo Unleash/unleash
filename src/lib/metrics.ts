@@ -119,6 +119,16 @@ export default class MetricsMonitor {
             help: 'Maximum number of strategies in one feature',
             labelNames: ['feature'],
         });
+        const maxConstraintValues = createGauge({
+            name: 'max_constraint_values',
+            help: 'Maximum number of constraint values used in a single constraint',
+            labelNames: ['feature', 'environment'],
+        });
+        const maxConstraintsPerStrategy = createGauge({
+            name: 'max_strategy_constraints',
+            help: 'Maximum number of constraints used on a single strategy',
+            labelNames: ['feature', 'environment'],
+        });
 
         const featureTogglesArchivedTotal = createGauge({
             name: 'feature_toggles_archived_total',
@@ -284,11 +294,17 @@ export default class MetricsMonitor {
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
-                const [maxStrategies, maxEnvironmentStrategies] =
-                    await Promise.all([
-                        stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
-                        stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
-                    ]);
+                const [
+                    maxStrategies,
+                    maxEnvironmentStrategies,
+                    maxConstraintValuesResult,
+                    maxConstraintsPerStrategyResult,
+                ] = await Promise.all([
+                    stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
+                    stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
+                    stores.featureStrategiesReadModel.getMaxConstraintValues(),
+                    stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
+                ]);
 
                 featureFlagsTotal.reset();
                 featureFlagsTotal.labels({ version }).set(stats.featureToggles);
@@ -331,6 +347,25 @@ export default class MetricsMonitor {
                     maxFeatureStrategies
                         .labels({ feature: maxStrategies.feature })
                         .set(maxStrategies.count);
+                }
+                if (maxConstraintValuesResult) {
+                    maxConstraintValues.reset();
+                    maxConstraintValues
+                        .labels({
+                            environment: maxConstraintValuesResult.environment,
+                            feature: maxConstraintValuesResult.feature,
+                        })
+                        .set(maxConstraintValuesResult.count);
+                }
+                if (maxConstraintsPerStrategyResult) {
+                    maxConstraintsPerStrategy.reset();
+                    maxConstraintsPerStrategy
+                        .labels({
+                            environment:
+                                maxConstraintsPerStrategyResult.environment,
+                            feature: maxConstraintsPerStrategyResult.feature,
+                        })
+                        .set(maxConstraintsPerStrategyResult.count);
                 }
 
                 enabledMetricsBucketsPreviousDay.reset();

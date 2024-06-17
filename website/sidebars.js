@@ -51,6 +51,7 @@ module.exports = {
             },
             items: [
                 'topics/feature-flags/feature-flag-best-practices',
+                'topics/feature-flags/best-practices-using-feature-flags-at-scale',
                 'topics/feature-flag-migration/feature-flag-migration-best-practices',
                 'topics/a-b-testing',
             ],

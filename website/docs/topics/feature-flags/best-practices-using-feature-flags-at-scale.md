@@ -153,7 +153,7 @@ Flags live in code, and hundreds of small choices go into instrumenting flags in
 
 ### 7. Define flags in your code at the highest level of abstraction.
 
-<Figure img="/img/evaluate-flags-at-the-edge.png" caption="Instead of evaluating a flag in a back-end service and then dynamically changing the behavior in that service (either by calling out to other services or changing how the service works), consider evaluating the flag as far out in the stack as you can and deciding which service to call based on the flag value."/>
+<Figure img="/img/evaluate-flags-at-the-edge.svg" caption="Instead of evaluating a flag in a back-end service and then dynamically changing the behavior in that service (either by calling out to other services or changing how the service works), consider evaluating the flag as far out in the stack as you can and deciding which service to call based on the flag value."/>
 
 Defining your flag at the highest level in your code is important for both user-facing and backend changes.
 
@@ -184,7 +184,7 @@ Here are a few examples of functionality managed by feature flags and where you 
 
 ### 8. Evaluate a feature flag only once.
 
-<Figure img="/img/evaluate-flags-only-once.png" caption="You should evaluate flags only once in a chain of services and pass the result on to the next service in the chain if it needs the value. If you evaluate the flag in each service, you risk the flag value changing between each service, causing unexpected results."/>
+<Figure img="/img/evaluate-flags-only-once.svg" caption="You should evaluate flags only once in a chain of services and pass the result on to the next service in the chain if it needs the value. If you evaluate the flag in each service, you risk the flag value changing between each service, causing unexpected results."/>
 
 When building new (often complex) features for users, systems require changes across multiple parts – modules within an application or services in a microservices architecture. While it's tempting to use a single feature flag to control all these changes and evaluate it locally in each module, we recommend against it for a few reasons:
 

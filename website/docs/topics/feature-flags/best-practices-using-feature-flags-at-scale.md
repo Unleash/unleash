@@ -250,48 +250,39 @@ A good rule of thumb is that if the data is static (you don’t expect it to cha
 
 
 <table>
-  <tr>
-   <td>Configuration system
-   </td>
-   <td>Feature flag system
-   </td>
-  </tr>
-  <tr>
-   <td>Is: Long-lived, static during runtime
-   </td>
-   <td>Is: Short-lived, changes during runtime
-   </td>
-  </tr>
-  <tr>
-   <td>Examples of things to update with the config system: 
-<ul>
-
-<li>Database or server credentials
-
-<li>Server port
-
-<li>CORS headers
-
-<li>API base URL
-
-<li>SSO setup
-</li>
-</ul>
-   </td>
-   <td>Examples of things to update with feature flag system:
-<ul>
-
-<li>Dark mode/light mode
-
-<li>Stable / Beta feature
-
-<li>New or old algorithm
-
-<li>A/B test
-</li>
-</ul>
-   </td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Configuration system</th>
+      <th>Feature flag system</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Is: Long-lived, static during runtime</td>
+      <td>Is: Short-lived, changes during runtime</td>
+    </tr>
+    <tr>
+      <td>
+        Examples of things to update with the config system:
+        <ul>
+          <li>Database or server credentials</li>
+          <li>Server port</li>
+          <li>CORS headers</li>
+          <li>API base URL</li>
+          <li>SSO setup</li>
+        </ul>
+      </td>
+      <td>
+        Examples of things to update with feature flag system:
+        <ul>
+          <li>Dark mode/light mode</li>
+          <li>Stable / Beta feature</li>
+          <li>New or old algorithm</li>
+          <li>A/B test</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 ### 13. Never reuse feature flag names.

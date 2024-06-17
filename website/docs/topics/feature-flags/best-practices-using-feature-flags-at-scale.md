@@ -1,5 +1,5 @@
 ---
-title: 15 Principles for Using Feature Flag Systems at Scale
+title: 15 Principles for using feature flag systems at scale
 ---
 
 import Figure from '@site/src/components/Figure/Figure.tsx'

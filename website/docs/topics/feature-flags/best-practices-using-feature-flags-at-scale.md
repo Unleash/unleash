@@ -331,7 +331,7 @@ Feature flags are typically designed to be checked frequently and quickly, with 
 
 Business logic often involves access controls and entitlements. Using feature flags to manage these aspects can expose security vulnerabilities if not handled correctly. Feature flags might be toggled accidentally or maliciously, leading to unauthorized access or exposure of sensitive data.
 
-## Staying sane while managing feature flags at scale
+## Keeping cool while managing feature flags at scale
 
 These best practices come from working with many of the largest organizations on the planet. We’ve learned that staying sane while managing feature flags at scale requires careful planning, thoughtful organization, and adherence to several best practices. By aligning feature flags with organizational structure, making flags searchable, and managing permissions effectively, you can maintain a clean and efficient system that sets you up for success from the start. Instrumenting your code correctly and regularly paying down technical debt helps maintain performance and security. Finally, avoiding common pitfalls, such as using feature flags for business logic or configuration management, keeps your system robust and manageable.
 

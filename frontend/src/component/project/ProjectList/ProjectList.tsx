@@ -102,20 +102,17 @@ const ProjectCreationButton = () => {
 
     const useNewProjectForm = useUiFlag('newCreateProjectUI');
 
-    const dialogMarkup = useNewProjectForm ? (
-        <CreateProjectDialog
-            open={openCreateDialog}
-            onClose={() => setOpenCreateDialog(false)}
-        />
-    ) : null;
+    const [dialogMarkup, handleClick] = useNewProjectForm
+        ? [
+              <CreateProjectDialog
+                  open={openCreateDialog}
+                  onClose={() => setOpenCreateDialog(false)}
+              />,
+              () => setOpenCreateDialog(true),
+          ]
+        : [null, () => navigate('/projects/create')];
 
-    const handleClick = () => {
-        if (useNewProjectForm) {
-            return setOpenCreateDialog(true);
-        }
-        navigate('/projects/create');
-    };
-    const Dialog = () => (
+    return (
         <>
             <ResponsiveButton
                 Icon={Add}
@@ -132,8 +129,6 @@ const ProjectCreationButton = () => {
             {dialogMarkup}
         </>
     );
-
-    return <Dialog />;
 };
 
 export const ProjectListNew = () => {

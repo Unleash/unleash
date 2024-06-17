@@ -87,11 +87,57 @@ function resolveCreateButtonData(
     }
 }
 
-export const ProjectListNew = () => {
+const ProjectCreationButton = () => {
+    const [searchParams] = useSearchParams();
+    const showCreateDialog = Boolean(searchParams.get('create'));
+    const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
-    const { projects, loading, error, refetch } = useProjects();
     const { isOss } = useUiConfig();
+
+    const createButtonData = resolveCreateButtonData(
+        isOss(),
+        hasAccess(CREATE_PROJECT),
+    );
+
+    const useNewProjectForm = useUiFlag('newCreateProjectUI');
+
+    const dialogMarkup = useNewProjectForm ? (
+        <CreateProjectDialog
+            open={openCreateDialog}
+            onClose={() => setOpenCreateDialog(false)}
+        />
+    ) : null;
+
+    const handleClick = () => {
+        if (useNewProjectForm) {
+            return setOpenCreateDialog(true);
+        }
+        navigate('/projects/create');
+    };
+    const Dialog = () => (
+        <>
+            <ResponsiveButton
+                Icon={Add}
+                endIcon={createButtonData.endIcon}
+                onClick={handleClick}
+                maxWidth='700px'
+                permission={CREATE_PROJECT}
+                disabled={createButtonData.disabled}
+                tooltipProps={createButtonData.tooltip}
+                data-testid={NAVIGATE_TO_CREATE_PROJECT}
+            >
+                New project
+            </ResponsiveButton>
+            {dialogMarkup}
+        </>
+    );
+
+    return <Dialog />;
+};
+
+export const ProjectListNew = () => {
+    const { projects, loading, error, refetch } = useProjects();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [searchParams, setSearchParams] = useSearchParams();
@@ -100,10 +146,6 @@ export const ProjectListNew = () => {
     );
 
     const myProjects = new Set(useProfile().profile?.projects || []);
-
-    const showCreateDialog = Boolean(searchParams.get('create'));
-    const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
-    const useNewProjectForm = useUiFlag('newCreateProjectUI');
 
     useEffect(() => {
         const tableState: PageQueryType = {};
@@ -137,11 +179,6 @@ export const ProjectListNew = () => {
         return groupProjects(myProjects, filteredProjects);
     }, [filteredProjects, myProjects]);
 
-    const createButtonData = resolveCreateButtonData(
-        isOss(),
-        hasAccess(CREATE_PROJECT),
-    );
-
     const projectCount =
         filteredProjects.length < projects.length
             ? `${filteredProjects.length} of ${projects.length}`
@@ -159,13 +196,6 @@ export const ProjectListNew = () => {
             />
         );
     };
-
-    function handleClick() {
-        if (useNewProjectForm) {
-            return setOpenCreateDialog(true);
-        }
-        navigate('/projects/create');
-    }
 
     return (
         <PageContent
@@ -187,18 +217,7 @@ export const ProjectListNew = () => {
                                     </>
                                 }
                             />
-                            <ResponsiveButton
-                                Icon={Add}
-                                endIcon={createButtonData.endIcon}
-                                onClick={handleClick}
-                                maxWidth='700px'
-                                permission={CREATE_PROJECT}
-                                disabled={createButtonData.disabled}
-                                tooltipProps={createButtonData.tooltip}
-                                data-testid={NAVIGATE_TO_CREATE_PROJECT}
-                            >
-                                New project
-                            </ResponsiveButton>
+                            <ProjectCreationButton />
                         </>
                     }
                 >
@@ -234,15 +253,6 @@ export const ProjectListNew = () => {
                     projects={groupedProjects.otherProjects}
                 />
             </StyledContainer>
-            <ConditionallyRender
-                condition={useNewProjectForm}
-                show={
-                    <CreateProjectDialog
-                        open={openCreateDialog}
-                        onClose={() => setOpenCreateDialog(false)}
-                    />
-                }
-            />
         </PageContent>
     );
 };

@@ -40,7 +40,7 @@ Before you add your first feature flag, you need to think about how organization
 
 – Melvin Conway
 
-<Figure img="/img/feature-flag-organization-methods.png" caption="In situtations where predefined teams own a feature from start to finish, it makes sense to create a project for each team. In situtations where you have dynamic teams that form around feature work, you might instead want to create smaller projects for each feature, only giving access to the people who work on that feature."/>
+<Figure img="/img/feature-flag-orginization-methods.png" caption="In situtations where predefined teams own a feature from start to finish, it makes sense to create a project for each team. In situtations where you have dynamic teams that form around feature work, you might instead want to create smaller projects for each feature, only giving access to the people who work on that feature."/>
 
 There is no getting around [Conway’s law](https://martinfowler.com/bliki/ConwaysLaw.html). Applications tend to resemble the organizations that create them, and your feature flag system is no exception. Rather than fighting this law, acknowledge and embrace it, and pick a way to organize your feature flags that reflects your organization.
 

@@ -38,6 +38,8 @@ import { caseInsensitiveSearch } from 'utils/search';
 import type { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
 import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
+import { useCheckProjectPermissions } from 'hooks/useHasAccess';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -118,6 +120,8 @@ export const ProjectAccessAssign = ({
     const { addAccessToProject, setUserRoles, setGroupRoles, loading } =
         useProjectApi();
     const edit = Boolean(selected);
+
+    const checkPermissions = useCheckProjectPermissions(projectId);
 
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
@@ -323,11 +327,10 @@ export const ProjectAccessAssign = ({
 
     const isValid = selectedOptions.length > 0 && selectedRoles.length > 0;
     const displayAllRoles =
+        checkPermissions(ADMIN) ||
         userRoles.length === 0 ||
-        userRoles.some(
-            (userRole) =>
-                userRole.name === 'Admin' || userRole.name === 'Owner',
-        );
+        userRoles.some((userRole) => userRole.name === 'Owner');
+
     let filteredRoles: IRole[];
     if (displayAllRoles) {
         filteredRoles = roles;

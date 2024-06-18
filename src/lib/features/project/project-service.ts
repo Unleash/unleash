@@ -52,6 +52,7 @@ import {
     SYSTEM_USER_ID,
     type ProjectCreated,
     type IProjectOwnersReadModel,
+    ADMIN,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -838,16 +839,21 @@ export default class ProjectService {
     }
 
     private async isAllowedToAddAccess(
-        userAddingAccess: number,
+        userAddingAccess: IAuditUser,
         projectId: string,
         rolesBeingAdded: number[],
     ): Promise<boolean> {
+        const userPermissions =
+            await this.accessService.getPermissionsForUser(userAddingAccess);
+        if (userPermissions.some(({ permission }) => permission === ADMIN)) {
+            return true;
+        }
         const userRoles = await this.accessService.getAllProjectRolesForUser(
-            userAddingAccess,
+            userAddingAccess.id,
             projectId,
         );
         if (
-            this.isAdmin(userAddingAccess, userRoles) ||
+            this.isAdmin(userAddingAccess.id, userRoles) ||
             this.isProjectOwner(userRoles, projectId)
         ) {
             return true;
@@ -864,7 +870,7 @@ export default class ProjectService {
         users: number[],
         auditUser: IAuditUser,
     ): Promise<void> {
-        if (await this.isAllowedToAddAccess(auditUser.id, projectId, roles)) {
+        if (await this.isAllowedToAddAccess(auditUser, projectId, roles)) {
             await this.accessService.addAccessToProject(
                 roles,
                 groups,
@@ -924,7 +930,7 @@ export default class ProjectService {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
-            auditUser.id,
+            auditUser,
             projectId,
             newRoles,
         );
@@ -975,7 +981,7 @@ export default class ProjectService {
             await this.validateAtLeastOneOwner(projectId, ownerRole);
         }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
-            auditUser.id,
+            auditUser,
             projectId,
             newRoles,
         );

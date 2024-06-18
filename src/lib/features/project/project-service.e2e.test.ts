@@ -444,7 +444,7 @@ describe('Managing Project access', () => {
     test('Admin group members should be allowed to add any project role', async () => {
         const viewerUser = await stores.userStore.insert({
             name: 'Some project admin',
-            email: 'admin@example.com',
+            email: 'some_project_admin@example.com',
         });
         await accessService.setUserRootRole(viewerUser.id, RoleName.VIEWER);
 
@@ -468,7 +468,7 @@ describe('Managing Project access', () => {
         };
         await projectService.createProject(project, user, auditUser);
         const customRole = await stores.roleStore.create({
-            name: 'my_custom_role_admin_user',
+            name: 'my_custom_project_role_admin_user',
             roleType: 'custom',
             description:
                 'Used to prove that you can assign a role when you are admin',
@@ -496,11 +496,11 @@ describe('Managing Project access', () => {
         await projectService.createProject(project, user, auditUser);
         const projectAdmin = await stores.userStore.insert({
             name: 'Some project admin',
-            email: 'admin@example.com',
+            email: 'some_other_project_admin@example.com',
         });
         const projectCustomer = await stores.userStore.insert({
             name: 'Some project customer',
-            email: 'customer@example.com',
+            email: 'some_project_customer@example.com',
         });
         const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
         await accessService.addUserToRole(
@@ -509,7 +509,7 @@ describe('Managing Project access', () => {
             project.id,
         );
         const customRole = await stores.roleStore.create({
-            name: 'my_custom_role',
+            name: 'my_custom_project_role',
             roleType: 'custom',
             description:
                 'Used to prove that you can assign a role the project owner does not have',
@@ -522,7 +522,7 @@ describe('Managing Project access', () => {
                 [projectCustomer.id],
                 auditUser,
             ),
-        ).resolves;
+        ).resolves.not.toThrow();
     });
     test('Users with project role should only be allowed to grant same role to others', async () => {
         const project = {

@@ -102,22 +102,12 @@ const ProjectCreationButton = () => {
 
     const useNewProjectForm = useUiFlag('newCreateProjectUI');
 
-    const [dialogMarkup, handleClick] = useNewProjectForm
-        ? [
-              <CreateProjectDialog
-                  open={openCreateDialog}
-                  onClose={() => setOpenCreateDialog(false)}
-              />,
-              () => setOpenCreateDialog(true),
-          ]
-        : [null, () => navigate('/projects/create')];
-
-    return (
-        <>
+    const CreateButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+        return (
             <ResponsiveButton
                 Icon={Add}
                 endIcon={createButtonData.endIcon}
-                onClick={handleClick}
+                onClick={onClick}
                 maxWidth='700px'
                 permission={CREATE_PROJECT}
                 disabled={createButtonData.disabled}
@@ -126,9 +116,22 @@ const ProjectCreationButton = () => {
             >
                 New project
             </ResponsiveButton>
-            {dialogMarkup}
-        </>
-    );
+        );
+    };
+
+    if (useNewProjectForm) {
+        return (
+            <>
+                <CreateButton onClick={() => setOpenCreateDialog(true)} />
+                <CreateProjectDialog
+                    open={openCreateDialog}
+                    onClose={() => setOpenCreateDialog(false)}
+                />
+            </>
+        );
+    } else {
+        return <CreateButton onClick={() => navigate('/projects/create')} />;
+    }
 };
 
 export const ProjectListNew = () => {

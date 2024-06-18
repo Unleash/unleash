@@ -26,7 +26,7 @@ Unleash started on http://localhost:4242
 
 To run multiple replicas of Unleash simply point all instances to the same database.
 
-**Unleash v4:** The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:
+The first time Unleash starts it will create a default user which you can use to sign-in to you Unleash instance and add more users with:
 
 - username: `admin`
 - password: `unleash4all`

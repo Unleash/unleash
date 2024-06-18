@@ -440,6 +440,51 @@ describe('Managing Project access', () => {
             ),
         ).resolves.not.toThrow();
     });
+
+    test('Admin group members should be allowed to add any project role', async () => {
+        const viewerUser = await stores.userStore.insert({
+            name: 'Some project admin',
+            email: 'admin@example.com',
+        });
+        await accessService.setUserRootRole(viewerUser.id, RoleName.VIEWER);
+
+        const adminRole = await stores.roleStore.getRoleByName(RoleName.ADMIN);
+        const adminGroup = await stores.groupStore.create({
+            name: 'admin_group',
+            rootRole: adminRole.id,
+        });
+        await stores.groupStore.addUsersToGroup(
+            adminGroup.id,
+            [{ user: { id: viewerUser.id } }],
+            opsUser.username!,
+        );
+
+        const project = {
+            id: 'some-project',
+            name: 'sp',
+            description: '',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user, auditUser);
+        const customRole = await stores.roleStore.create({
+            name: 'my_custom_role_admin_user',
+            roleType: 'custom',
+            description:
+                'Used to prove that you can assign a role when you are admin',
+        });
+
+        await expect(
+            projectService.addAccess(
+                project.id,
+                [customRole.id], // roles
+                [], // groups
+                [opsUser.id], // users
+                extractAuditInfoFromUser(viewerUser),
+            ),
+        ).resolves.not.toThrow();
+    });
+
     test('Users with project owner should be allowed to add any project role', async () => {
         const project = {
             id: 'project-owner',
@@ -675,6 +720,42 @@ describe('Managing Project access', () => {
             projectService.setRolesForUser(
                 project.id,
                 secondUser.id,
+                [customRole.id],
+                projectAuditUser,
+            ),
+        ).rejects.toThrow(
+            new InvalidOperationError(
+                'User tried to assign a role they did not have access to',
+            ),
+        );
+    });
+    test('Users can not assign roles they do not have to a group through explicit roles endpoint', async () => {
+        const project = {
+            id: 'user_fail_assign_to_group',
+            name: 'user_fail_assign_to_group',
+            description: '',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+        };
+        await projectService.createProject(project, user, auditUser);
+        const projectUser = await stores.userStore.insert({
+            name: 'Some project user',
+            email: 'fail_assign_role_to_group@example.com',
+        });
+        const projectAuditUser = extractAuditInfoFromUser(projectUser);
+        const group = await stores.groupStore.create({
+            name: 'Some group_awaiting_role',
+        });
+        const customRole = await stores.roleStore.create({
+            name: 'role_that_noone_has_fail_assign_group',
+            roleType: 'custom',
+            description:
+                'Used to prove that you can not assign a role you do not have via setRolesForGroup',
+        });
+        return expect(
+            projectService.setRolesForGroup(
+                project.id,
+                group.id,
                 [customRole.id],
                 projectAuditUser,
             ),

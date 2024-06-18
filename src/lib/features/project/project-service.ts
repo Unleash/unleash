@@ -901,10 +901,19 @@ export default class ProjectService {
         newRoles: number[],
         auditUser: IAuditUser,
     ): Promise<void> {
-        const currentRoles = await this.accessService.getProjectRolesForUser(
+        let currentRoles = await this.accessService.getProjectRolesForUser(
             projectId,
             userId,
         );
+        const groups = await this.groupService.getGroupsForUser(userId);
+        for (const group of groups) {
+            currentRoles = currentRoles.concat(
+                await this.accessService.getProjectRolesForGroup(
+                    projectId,
+                    group.id,
+                ),
+            );
+        }
         const ownerRole = await this.accessService.getRoleByName(
             RoleName.OWNER,
         );

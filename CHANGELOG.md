@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.4] - 2024-06-19
+
+### Bug Fixes
+
+- Project to lifecycle events ([#7400](https://github.com/Unleash/unleash/issues/7400))
+
+- Check for permission in group access assignment ([#7408](https://github.com/Unleash/unleash/issues/7408)) ([#7413](https://github.com/Unleash/unleash/issues/7413))
+
+
 ## [6.0.3] - 2024-06-14
 
 ### Bug Fixes

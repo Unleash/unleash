@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'enableLegacyVariants'
     | 'navigationSidebar'
     | 'commandBarUI'
-    | 'flagCreator';
+    | 'flagCreator'
+    | 'anonymizeProjectOwners';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -297,6 +298,10 @@ const flags: IFlags = {
     ),
     flagCreator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_CREATOR,
+        false,
+    ),
+    anonymizeProjectOwners: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,
         false,
     ),
 };

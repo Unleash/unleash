@@ -1,6 +1,6 @@
 import type { Db } from '../../db/db';
 import { RoleName, type IProjectWithCount } from '../../types';
-import { generateImageUrl } from '../../util';
+import { anonymise, generateImageUrl } from '../../util';
 import type {
     GroupProjectOwner,
     IProjectOwnersReadModel,
@@ -35,6 +35,7 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
 
     private async getAllProjectUsersByRole(
         roleId: number,
+        anonymizeProjectOwners: boolean = false,
     ): Promise<Record<string, UserProjectOwner[]>> {
         const usersResult = await this.db
             .select(
@@ -53,13 +54,17 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
             .join(`${T.USERS} as user`, 'ru.user_id', 'user.id');
         const usersDict: Record<string, UserProjectOwner[]> = {};
 
+        const processSensitiveData = anonymizeProjectOwners
+            ? anonymise
+            : (x: string) => x;
+
         usersResult.forEach((user) => {
             const project = user.project as string;
 
             const data: UserProjectOwner = {
                 ownerType: 'user',
                 name: user?.name || user?.username,
-                email: user?.email,
+                email: processSensitiveData(user?.email),
                 imageUrl: generateImageUrl(user),
             };
 
@@ -104,11 +109,16 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
         return groupsDict;
     }
 
-    async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
+    async getAllProjectOwners(
+        anonymizeProjectOwners: boolean = false,
+    ): Promise<ProjectOwnersDictionary> {
         const ownerRole = await this.db(T.ROLES)
             .where({ name: RoleName.OWNER })
             .first();
-        const usersDict = await this.getAllProjectUsersByRole(ownerRole.id);
+        const usersDict = await this.getAllProjectUsersByRole(
+            ownerRole.id,
+            anonymizeProjectOwners,
+        );
         const groupsDict = await this.getAllProjectGroupsByRole(ownerRole.id);
 
         const dict: Record<
@@ -129,8 +139,9 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
 
     async addOwners(
         projects: IProjectWithCount[],
+        anonymizeProjectOwners: boolean = false,
     ): Promise<IProjectWithCountAndOwners[]> {
-        const owners = await this.getAllProjectOwners();
+        const owners = await this.getAllProjectOwners(anonymizeProjectOwners);
 
         return ProjectOwnersReadModel.addOwnerData(projects, owners);
     }

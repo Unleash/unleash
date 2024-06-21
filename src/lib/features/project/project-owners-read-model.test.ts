@@ -361,7 +361,7 @@ describe('integration tests', () => {
         ]);
     });
 
-    test('anonymizes emails when asked to and names when asked to', async () => {
+    test('anonymizes emails when asked to', async () => {
         const projectId = randomId();
         await db.stores.projectStore.create({ id: projectId, name: projectId });
 

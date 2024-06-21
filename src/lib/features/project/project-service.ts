@@ -233,7 +233,13 @@ export default class ProjectService {
     async addOwnersToProjects(
         projects: IProjectWithCount[],
     ): Promise<IProjectWithCount[]> {
-        return this.projectOwnersReadModel.addOwners(projects);
+        const anonymizeProjectOwners = this.flagResolver.isEnabled(
+            'anonymizeProjectOwners',
+        );
+        return this.projectOwnersReadModel.addOwners(
+            projects,
+            anonymizeProjectOwners,
+        );
     }
 
     async getProject(id: string): Promise<IProject> {

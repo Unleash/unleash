@@ -200,7 +200,7 @@
     "husky": "^9.0.11",
     "jest": "29.7.0",
     "jest-junit": "^16.0.0",
-    "lint-staged": "15.2.5",
+    "lint-staged": "15.2.7",
     "nock": "13.5.4",
     "openapi-enforcer": "1.23.0",
     "proxyquire": "2.1.3",

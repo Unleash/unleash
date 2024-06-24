@@ -294,10 +294,7 @@ export default class ProjectService {
     }
 
     async validateProjectEnvironments(environments: string[] | undefined) {
-        if (
-            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
-            environments
-        ) {
+        if (environments) {
             if (environments.length === 0) {
                 throw new BadDataError(
                     'A project must always have at least one environment.',
@@ -339,12 +336,7 @@ export default class ProjectService {
         const validateData = async () => {
             await this.validateProjectEnvironments(newProject.environments);
 
-            if (
-                !newProject.id?.trim() &&
-                this.flagResolver.isEnabled(
-                    'createProjectWithEnvironmentConfig',
-                )
-            ) {
+            if (!newProject.id?.trim()) {
                 newProject.id = await this.generateUniqueProjectId(
                     newProject.name,
                 );
@@ -362,15 +354,13 @@ export default class ProjectService {
 
         await this.projectStore.create(data);
 
-        const envsToEnable =
-            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig') &&
-            newProject.environments?.length
-                ? newProject.environments
-                : (
-                      await this.environmentStore.getAll({
-                          enabled: true,
-                      })
-                  ).map((env) => env.name);
+        const envsToEnable = newProject.environments?.length
+            ? newProject.environments
+            : (
+                  await this.environmentStore.getAll({
+                      enabled: true,
+                  })
+              ).map((env) => env.name);
 
         await Promise.all(
             envsToEnable.map(async (env) => {
@@ -378,10 +368,7 @@ export default class ProjectService {
             }),
         );
 
-        if (
-            this.isEnterprise &&
-            this.flagResolver.isEnabled('createProjectWithEnvironmentConfig')
-        ) {
+        if (this.isEnterprise) {
             if (newProject.changeRequestEnvironments) {
                 await this.validateEnvironmentsExist(
                     newProject.changeRequestEnvironments.map((env) => env.name),

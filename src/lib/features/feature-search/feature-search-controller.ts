@@ -2,6 +2,7 @@ import type { Response } from 'express';
 import Controller from '../../routes/controller';
 import type { FeatureSearchService, OpenApiService } from '../../services';
 import {
+    type IFeatureSearchOverview,
     type IFlagResolver,
     type IUnleashConfig,
     type IUnleashServices,
@@ -12,6 +13,7 @@ import type { Logger } from '../../logger';
 import {
     createResponseSchema,
     getStandardResponses,
+    type SearchFeaturesSchema,
     searchFeaturesSchema,
 } from '../../openapi';
 import type { IAuthRequest } from '../../routes/unleash-types';
@@ -20,6 +22,7 @@ import {
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters';
 import { normalizeQueryParams } from './search-utils';
+import { anonymise } from '../../util';
 
 const PATH = '/features';
 
@@ -71,9 +74,24 @@ export default class FeatureSearchController extends Controller {
         });
     }
 
+    maybeAnonymise(
+        features: IFeatureSearchOverview[],
+    ): IFeatureSearchOverview[] {
+        if (this.flagResolver.isEnabled('anonymiseEventLog')) {
+            return features.map((feature) => ({
+                ...feature,
+                createdBy: {
+                    ...feature.createdBy,
+                    name: anonymise(feature.createdBy.name),
+                },
+            }));
+        }
+        return features;
+    }
+
     async searchFeatures(
         req: IAuthRequest<any, any, any, FeatureSearchQueryParameters>,
-        res: Response,
+        res: Response<SearchFeaturesSchema>,
     ): Promise<void> {
         const {
             query,
@@ -131,7 +149,7 @@ export default class FeatureSearchController extends Controller {
             res,
             searchFeaturesSchema.$id,
             serializeDates({
-                features,
+                features: this.maybeAnonymise(features),
                 total,
             }),
         );

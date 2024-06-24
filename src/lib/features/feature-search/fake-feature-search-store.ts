@@ -1,4 +1,4 @@
-import type { IFeatureOverview } from '../../types';
+import type { IFeatureSearchOverview } from '../../types';
 import type {
     IFeatureSearchParams,
     IQueryParam,
@@ -9,7 +9,7 @@ export default class FakeFeatureSearchStore implements IFeatureSearchStore {
     searchFeatures(
         params: IFeatureSearchParams,
         queryParams: IQueryParam[],
-    ): Promise<{ features: IFeatureOverview[]; total: number }> {
+    ): Promise<{ features: IFeatureSearchOverview[]; total: number }> {
         throw new Error('Method not implemented.');
     }
 }

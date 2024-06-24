@@ -6,6 +6,7 @@ import {
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
     DELETE_FEATURE_STRATEGY,
+    type FeatureToggleView,
     type IFlagResolver,
     type IUnleashConfig,
     type IUnleashServices,
@@ -52,6 +53,7 @@ import type {
     UnleashTransaction,
 } from '../../db/transaction';
 import { BadDataError } from '../../error';
+import { anonymise } from '../../util';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -694,9 +696,25 @@ export default class ProjectFeaturesController extends Controller {
         );
     }
 
+    maybeAnonymise(feature: FeatureToggleView): FeatureToggleView {
+        if (
+            this.flagResolver.isEnabled('anonymiseEventLog') &&
+            feature.createdBy
+        ) {
+            return {
+                ...feature,
+                createdBy: {
+                    ...feature.createdBy,
+                    name: anonymise(feature.createdBy?.name),
+                },
+            };
+        }
+        return feature;
+    }
+
     async getFeature(
         req: IAuthRequest<FeatureParams, any, any, any>,
-        res: Response,
+        res: Response<FeatureSchema>,
     ): Promise<void> {
         const { featureName, projectId } = req.params;
         const { variantEnvironments } = req.query;
@@ -708,7 +726,8 @@ export default class ProjectFeaturesController extends Controller {
             environmentVariants: variantEnvironments === 'true',
             userId: user.id,
         });
-        res.status(200).json(feature);
+
+        res.status(200).json(serializeDates(this.maybeAnonymise(feature)));
     }
 
     async updateFeature(

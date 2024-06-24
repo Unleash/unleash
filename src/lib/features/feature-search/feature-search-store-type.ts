@@ -2,14 +2,14 @@ import type {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import type { IFeatureOverview } from '../../types';
+import type { IFeatureSearchOverview } from '../../types';
 
 export interface IFeatureSearchStore {
     searchFeatures(
         params: IFeatureSearchParams,
         queryParams: IQueryParam[],
     ): Promise<{
-        features: IFeatureOverview[];
+        features: IFeatureSearchOverview[];
         total: number;
     }>;
 }

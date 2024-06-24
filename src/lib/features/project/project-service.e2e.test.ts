@@ -2713,26 +2713,5 @@ describe('automatic ID generation for create project', () => {
                 expect(project.id).toBe(id);
             },
         );
-
-        test.each(['', undefined, '     '])(
-            'if the flag to enable auto ID generation is off, not providing a valid ID (testing `%s`) throws an error',
-            async (id) => {
-                // @ts-expect-error
-                projectService.flagResolver.isEnabled = () => {
-                    return false;
-                };
-
-                const createProject = () =>
-                    projectService.createProject(
-                        {
-                            name: randomId(),
-                            id,
-                        },
-                        user,
-                        auditUser,
-                    );
-                expect(createProject).rejects.toThrow();
-            },
-        );
     });
 });

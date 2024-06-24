@@ -38,7 +38,7 @@ export default class ProjectInsightsController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Projects'],
                     operationId: 'getProjectInsights',
                     summary: 'Get an overview of a project insights.',
                     description:

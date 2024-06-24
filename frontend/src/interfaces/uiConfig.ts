@@ -81,7 +81,6 @@ export type UiFlags = {
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     scimApi?: boolean;
-    newCreateProjectUI?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;

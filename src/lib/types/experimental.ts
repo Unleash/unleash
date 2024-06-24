@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'featureLifecycleMetrics'
     | 'parseProjectFromSession'
     | 'manyStrategiesPagination'
-    | 'newCreateProjectUI'
     | 'enableLegacyVariants'
     | 'navigationSidebar'
     | 'commandBarUI'
@@ -269,10 +268,6 @@ const flags: IFlags = {
     ),
     parseProjectFromSession: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PARSE_PROJECT_FROM_SESSION,
-        false,
-    ),
-    newCreateProjectUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_CREATE_PROJECT_UI,
         false,
     ),
     manyStrategiesPagination: parseEnvVarBoolean(

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IProjectCard } from 'interfaces/project';
@@ -20,7 +20,6 @@ import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-featu
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { safeRegExp } from '@server/util/escape-regex';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { groupProjects } from './group-projects';
 import { ProjectGroup } from './ProjectGroup';
@@ -92,7 +91,6 @@ const ProjectCreationButton = () => {
     const showCreateDialog = Boolean(searchParams.get('create'));
     const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
     const { hasAccess } = useContext(AccessContext);
-    const navigate = useNavigate();
     const { isOss } = useUiConfig();
 
     const createButtonData = resolveCreateButtonData(
@@ -100,14 +98,12 @@ const ProjectCreationButton = () => {
         hasAccess(CREATE_PROJECT),
     );
 
-    const useNewProjectForm = useUiFlag('newCreateProjectUI');
-
-    const CreateButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-        return (
+    return (
+        <>
             <ResponsiveButton
                 Icon={Add}
                 endIcon={createButtonData.endIcon}
-                onClick={onClick}
+                onClick={() => setOpenCreateDialog(true)}
                 maxWidth='700px'
                 permission={CREATE_PROJECT}
                 disabled={createButtonData.disabled}
@@ -116,22 +112,12 @@ const ProjectCreationButton = () => {
             >
                 New project
             </ResponsiveButton>
-        );
-    };
-
-    if (useNewProjectForm) {
-        return (
-            <>
-                <CreateButton onClick={() => setOpenCreateDialog(true)} />
-                <CreateProjectDialog
-                    open={openCreateDialog}
-                    onClose={() => setOpenCreateDialog(false)}
-                />
-            </>
-        );
-    } else {
-        return <CreateButton onClick={() => navigate('/projects/create')} />;
-    }
+            <CreateProjectDialog
+                open={openCreateDialog}
+                onClose={() => setOpenCreateDialog(false)}
+            />
+        </>
+    );
 };
 
 export const ProjectListNew = () => {

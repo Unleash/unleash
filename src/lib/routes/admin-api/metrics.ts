@@ -147,7 +147,7 @@ class MetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Metrics'],
                     operationId: 'getApplicationOverview',
                     summary: 'Get application overview',
                     description:
@@ -166,7 +166,7 @@ class MetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Metrics'],
                     operationId: 'getApplicationEnvironmentInstances',
                     summary: 'Get application environment instances',
                     description:
@@ -187,7 +187,7 @@ class MetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Metrics'],
                     operationId: 'getOutdatedSdks',
                     summary: 'Get outdated SDKs',
                     description:

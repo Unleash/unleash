@@ -156,7 +156,7 @@ export default class ProjectController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Projects'],
                     operationId: 'getProjectApplications',
                     summary: 'Get a list of all applications for a project.',
                     description:
@@ -177,7 +177,7 @@ export default class ProjectController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Projects'],
                     operationId: 'getProjectFlagCreators',
                     summary: 'Get a list of all flag creators for a project.',
                     description:
@@ -197,7 +197,7 @@ export default class ProjectController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Projects'],
                     operationId: 'getOutdatedProjectSdks',
                     summary: 'Get outdated project SDKs',
                     description:

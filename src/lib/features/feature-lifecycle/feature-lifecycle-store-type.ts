@@ -20,6 +20,7 @@ export interface IFeatureLifecycleStore {
     getAll(): Promise<FeatureLifecycleProjectItem[]>;
     stageExists(stage: FeatureLifecycleStage): Promise<boolean>;
     delete(feature: string): Promise<void>;
+    deleteAll(): Promise<void>;
     deleteStage(stage: FeatureLifecycleStage): Promise<void>;
     backfill(): Promise<void>;
 }

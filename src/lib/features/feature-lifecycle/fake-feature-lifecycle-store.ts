@@ -57,6 +57,10 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
         this.lifecycles[feature] = [];
     }
 
+    async deleteAll(): Promise<void> {
+        this.lifecycles = {};
+    }
+
     async stageExists(stage: FeatureLifecycleStage): Promise<boolean> {
         const lifecycle = await this.get(stage.feature);
         return Boolean(lifecycle.find((s) => s.stage === stage.stage));

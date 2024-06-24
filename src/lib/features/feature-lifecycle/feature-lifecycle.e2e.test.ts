@@ -62,7 +62,9 @@ afterAll(async () => {
     await db.destroy();
 });
 
-beforeEach(async () => {});
+beforeEach(async () => {
+    await featureLifecycleStore.deleteAll();
+});
 
 const getFeatureLifecycle = async (featureName: string, expectedCode = 200) => {
     return app.request

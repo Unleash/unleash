@@ -4,7 +4,6 @@ import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import type { Logger, LogProvider } from '../../logger';
 import type {
-    IFeatureOverview,
     IFeatureSearchOverview,
     IFeatureSearchStore,
     IFlagResolver,
@@ -21,8 +20,8 @@ import { applyGenericQueryParams, applySearchFilters } from './search-utils';
 import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
 import { generateImageUrl } from '../../util';
 
-const sortEnvironments = (overview: IFeatureOverview[]) => {
-    return overview.map((data: IFeatureOverview) => ({
+const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
+    return overview.map((data: IFeatureSearchOverview) => ({
         ...data,
         environments: data.environments
             .filter((f) => f.name)
@@ -106,7 +105,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
         }: IFeatureSearchParams,
         queryParams: IQueryParam[],
     ): Promise<{
-        features: IFeatureOverview[];
+        features: IFeatureSearchOverview[];
         total: number;
     }> {
         const stopTimer = this.timer('searchFeatures');
@@ -325,7 +324,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 rows,
                 featureLifecycleEnabled,
             );
-            const features = sortEnvironments(overview);
+            const features = sortEnvironments(
+                overview,
+            ) as IFeatureSearchOverview[];
             return {
                 features,
                 total: Number(rows[0].total) || 0,

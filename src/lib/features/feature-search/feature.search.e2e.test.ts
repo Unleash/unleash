@@ -22,6 +22,7 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     featureLifecycle: true,
+                    anonymiseEventLog: true,
                 },
             },
         },
@@ -186,7 +187,7 @@ test('should search matching features by name', async () => {
                 name: 'my_feature_a',
                 createdBy: {
                     id: 1,
-                    name: 'user@getunleash.io',
+                    name: '3957b71c0@unleash.run',
                     imageUrl:
                         'https://gravatar.com/avatar/3957b71c0a6d2528f03b423f432ed2efe855d263400f960248a1080493d9d68a?s=42&d=retro&r=g',
                 },
@@ -195,7 +196,7 @@ test('should search matching features by name', async () => {
                 name: 'my_feature_b',
                 createdBy: {
                     id: 1,
-                    name: 'user@getunleash.io',
+                    name: '3957b71c0@unleash.run',
                     imageUrl:
                         'https://gravatar.com/avatar/3957b71c0a6d2528f03b423f432ed2efe855d263400f960248a1080493d9d68a?s=42&d=retro&r=g',
                 },

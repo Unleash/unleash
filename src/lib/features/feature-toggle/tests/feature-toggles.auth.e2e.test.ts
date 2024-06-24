@@ -18,7 +18,14 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_auth_api_serial', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+                anonymiseEventLog: true,
+            },
+        },
+    });
 });
 
 afterEach(async () => {
@@ -161,7 +168,7 @@ test('Should read flag creator', async () => {
 
     expect(feature.createdBy).toEqual({
         id: user.id,
-        name: 'user@getunleash.io',
+        name: '3957b71c0@unleash.run',
         imageUrl:
             'https://gravatar.com/avatar/3957b71c0a6d2528f03b423f432ed2efe855d263400f960248a1080493d9d68a?s=42&d=retro&r=g',
     });

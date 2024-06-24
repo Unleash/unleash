@@ -79,9 +79,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
         experimental: {
-            flags: {
-                createProjectWithEnvironmentConfig: true,
-            },
+            flags: {},
         },
     });
     eventService = new EventService(stores, config);

@@ -83,7 +83,6 @@ exports[`should create default config 1`] = `
       "celebrateUnleash": false,
       "collectTrafficDataUsage": false,
       "commandBarUI": false,
-      "createProjectWithEnvironmentConfig": false,
       "demo": false,
       "disableBulkToggle": false,
       "disableMetrics": false,

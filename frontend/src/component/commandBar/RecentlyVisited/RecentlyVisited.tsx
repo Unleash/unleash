@@ -18,25 +18,41 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const listItemButtonStyle = (theme: Theme) => ({
-    borderRadius: theme.spacing(0.5),
+    border: `1px solid transparent`,
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&.Mui-selected': {
+    '&:hover': {
+        border: `1px solid ${theme.palette.primary.main}`,
         borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
     },
 });
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(3),
+}));
+
+const StyledButtonTypography = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
+const ColoredStyledProjectIcon = styled(StyledProjectIcon)(({ theme }) => ({
+    fill: theme.palette.primary.main,
+    stroke: theme.palette.primary.main,
+}));
+
 const StyledTypography = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.bodySize,
-    padding: theme.spacing(0, 3),
+    fontSize: theme.fontSizes.smallBody,
+    padding: theme.spacing(0, 2.5),
 }));
 
 const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
-    minWidth: theme.spacing(4),
-    margin: theme.spacing(0.25, 0),
+    minWidth: theme.spacing(0.5),
+    margin: theme.spacing(0, 1, 0, 0),
+    color: theme.palette.primary.main,
 }));
 
 const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const toListItemButton = (
@@ -86,7 +102,9 @@ const RecentlyVisitedFeatureButton = ({
                 <Icon>{'flag'}</Icon>
             </StyledListItemIcon>
             <StyledListItemText>
-                <Typography color='textPrimary'>{featureId}</Typography>
+                <StyledButtonTypography color='textPrimary'>
+                    {featureId}
+                </StyledButtonTypography>
             </StyledListItemText>
         </ListItemButton>
     );
@@ -105,15 +123,19 @@ const RecentlyVisitedPathButton = ({
             to={path}
             sx={listItemButtonStyle}
         >
-            <StyledListItemIcon>
+            <StyledListItemIcon
+                sx={(theme) => ({ color: theme.palette.primary.main })}
+            >
                 <ConditionallyRender
                     condition={path === '/projects'}
-                    show={<StyledProjectIcon />}
+                    show={<ColoredStyledProjectIcon />}
                     elseShow={<IconRenderer path={path} />}
                 />
             </StyledListItemIcon>
             <StyledListItemText>
-                <Typography color='textPrimary'>{name}</Typography>
+                <StyledButtonTypography color='textPrimary'>
+                    {name}
+                </StyledButtonTypography>
             </StyledListItemText>
         </ListItemButton>
     );
@@ -135,10 +157,12 @@ const RecentlyVisitedProjectButton = ({
             sx={listItemButtonStyle}
         >
             <StyledListItemIcon>
-                <StyledProjectIcon />
+                <ColoredStyledProjectIcon />
             </StyledListItemIcon>
             <StyledListItemText>
-                <Typography color='textPrimary'>{project.name}</Typography>
+                <StyledButtonTypography color='textPrimary'>
+                    {project.name}
+                </StyledButtonTypography>
             </StyledListItemText>
         </ListItemButton>
     );
@@ -155,11 +179,11 @@ export const RecentlyVisited = ({
         toListItemButton(item, routes, index),
     );
     return (
-        <>
+        <StyledContainer>
             <StyledTypography color='textSecondary'>
                 Recently visited
             </StyledTypography>
             <List>{buttons}</List>
-        </>
+        </StyledContainer>
     );
 };

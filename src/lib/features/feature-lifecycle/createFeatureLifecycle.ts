@@ -14,48 +14,41 @@ import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import EventEmitter from 'events';
 
-export const createFeatureLifecycleService = (
-    db: Db,
-    config: IUnleashConfig,
-) => {
-    const { eventBus, getLogger, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger);
-    const featureLifecycleStore = new FeatureLifecycleStore(db);
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
-    const featureEnvironmentStore = new FeatureEnvironmentStore(
-        db,
-        eventBus,
-        getLogger,
-    );
-    const featureTagStore = new FeatureTagStore(
-        db,
-        config.eventBus,
-        config.getLogger,
-    );
-    const eventService = new EventService(
-        { eventStore, featureTagStore },
-        { getLogger, eventBus: new EventEmitter() },
-    );
-    const featureLifecycleService = new FeatureLifecycleService(
-        {
-            eventStore,
-            featureLifecycleStore,
-            environmentStore,
-            featureEnvironmentStore,
-        },
-        {
-            eventService,
-        },
-        config,
-    );
+export const createFeatureLifecycleService =
+    (config: IUnleashConfig) => (db: Db) => {
+        const { eventBus, getLogger, flagResolver } = config;
+        const eventStore = new EventStore(db, getLogger);
+        const featureLifecycleStore = new FeatureLifecycleStore(db);
+        const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+        const featureEnvironmentStore = new FeatureEnvironmentStore(
+            db,
+            eventBus,
+            getLogger,
+        );
+        const featureTagStore = new FeatureTagStore(
+            db,
+            config.eventBus,
+            config.getLogger,
+        );
+        const eventService = new EventService(
+            { eventStore, featureTagStore },
+            { getLogger, eventBus: new EventEmitter() },
+        );
+        const featureLifecycleService = new FeatureLifecycleService(
+            {
+                eventStore,
+                featureLifecycleStore,
+                environmentStore,
+                featureEnvironmentStore,
+            },
+            {
+                eventService,
+            },
+            config,
+        );
 
-    return {
-        featureLifecycleService,
-        featureLifecycleStore,
-        eventStore,
-        environmentStore,
+        return featureLifecycleService;
     };
-};
 
 export const createFakeFeatureLifecycleService = (config: IUnleashConfig) => {
     const eventStore = new FakeEventStore();

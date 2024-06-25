@@ -363,12 +363,7 @@ export const createServices = (
     );
 
     const transactionalFeatureLifecycleService = db
-        ? withTransactional(
-              (db: Db) =>
-                  createFeatureLifecycleService(db, config)
-                      .featureLifecycleService,
-              db,
-          )
+        ? withTransactional(createFeatureLifecycleService(config), db)
         : withFakeTransactional(
               createFakeFeatureLifecycleService(config).featureLifecycleService,
           );

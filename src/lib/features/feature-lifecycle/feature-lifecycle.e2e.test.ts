@@ -46,7 +46,10 @@ beforeAll(async () => {
     eventStore = db.stores.eventStore;
     eventBus = app.config.eventBus;
     featureLifecycleService = app.services.featureLifecycleService;
-    featureLifecycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
+    featureLifecycleReadModel = new FeatureLifecycleReadModel(
+        db.rawDatabase,
+        app.config.flagResolver,
+    );
     featureLifecycleStore = db.stores.featureLifecycleStore;
 
     await app.request

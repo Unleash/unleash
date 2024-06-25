@@ -160,7 +160,7 @@ export const createServices = (
         ? new DependentFeaturesReadModel(db)
         : new FakeDependentFeaturesReadModel();
     const featureLifecycleReadModel = db
-        ? new FeatureLifecycleReadModel(db)
+        ? new FeatureLifecycleReadModel(db, config.flagResolver)
         : new FakeFeatureLifecycleReadModel();
     const segmentReadModel = db
         ? new SegmentReadModel(db)

@@ -124,7 +124,10 @@ export const createFeatureToggleService = (
 
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
-    const featureLifecycleReadModel = new FeatureLifecycleReadModel(db);
+    const featureLifecycleReadModel = new FeatureLifecycleReadModel(
+        db,
+        config.flagResolver,
+    );
 
     const dependentFeaturesService = createDependentFeaturesService(config)(db);
 

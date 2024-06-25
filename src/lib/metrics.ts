@@ -285,6 +285,12 @@ export default class MetricsMonitor {
             help: 'Duration of feature lifecycle stages',
         });
 
+        const stageCountByProject = createGauge({
+            name: 'stage_count_by_project',
+            help: 'Count features in a given stage by project id',
+            labelNames: ['stage', 'project_id'],
+        });
+
         const projectEnvironmentsDisabled = createCounter({
             name: 'project_environments_disabled',
             help: 'How many "environment disabled" events we have received for each project',
@@ -299,11 +305,13 @@ export default class MetricsMonitor {
                     maxEnvironmentStrategies,
                     maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
+                    stageCountByProjectResult,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
                     stores.featureStrategiesReadModel.getMaxConstraintValues(),
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
+                    stores.featureLifecycleReadModel.getStageCountByProject(),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -326,6 +334,16 @@ export default class MetricsMonitor {
                         })
                         .observe(stage.duration);
                 });
+
+                stageCountByProject.reset();
+                stageCountByProjectResult.forEach((stageResult) =>
+                    stageCountByProject
+                        .labels({
+                            project_id: stageResult.project,
+                            stage: stageResult.stage,
+                        })
+                        .set(stageResult.count),
+                );
 
                 apiTokens.reset();
 

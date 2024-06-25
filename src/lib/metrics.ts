@@ -279,7 +279,7 @@ export default class MetricsMonitor {
             help: 'Duration of mapFeaturesForClient function',
         });
 
-        const featureLifecycleStageDuration = createHistogram({
+        const featureLifecycleStageDuration = createGauge({
             name: 'feature_lifecycle_stage_duration',
             labelNames: ['stage', 'project_id'],
             help: 'Duration of feature lifecycle stages',
@@ -334,7 +334,7 @@ export default class MetricsMonitor {
                             stage: stage.stage,
                             project_id: stage.project,
                         })
-                        .observe(stage.duration);
+                        .set(stage.duration);
                 });
 
                 stageCountByProject.reset();

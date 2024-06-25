@@ -334,7 +334,7 @@ export default class MetricsMonitor {
                             stage: stage.stage,
                             project_id: stage.project,
                         })
-                        .observe(stage.duration);
+                        .set(stage.duration);
                 });
 
                 stageCountByProject.reset();

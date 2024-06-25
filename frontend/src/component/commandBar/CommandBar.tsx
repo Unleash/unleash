@@ -24,7 +24,7 @@ import { PageSuggestions } from './PageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { CommandFeatures } from './CommandFeatures';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -124,17 +124,6 @@ export const CommandBar = () => {
         setShowSuggestions(false);
     };
 
-    const [value, setValue] = useState<string>('');
-
-    const { features = [] } = useFeatureSearch(
-        {
-            query: searchString,
-            limit: '3',
-        },
-        {
-            revalidateOnFocus: false,
-        },
-    );
     const { projects } = useProjects();
 
     const debouncedSetSearchState = useAsyncDebounce((query) => {
@@ -163,7 +152,6 @@ export const CommandBar = () => {
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
-        setValue(value);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -190,11 +178,6 @@ export const CommandBar = () => {
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
 
-    const flags: CommandResultGroupItem[] = features.map((feature) => ({
-        name: feature.name,
-        link: `/projects/${feature.project}/features/${feature.name}`,
-    }));
-
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <StyledSearch>
@@ -211,7 +194,7 @@ export const CommandBar = () => {
                         'aria-label': placeholder,
                         'data-testid': SEARCH_INPUT,
                     }}
-                    value={value}
+                    value={searchString}
                     onChange={(e) => onSearchChange(e.target.value)}
                     onFocus={() => {
                         setShowSuggestions(true);
@@ -220,7 +203,7 @@ export const CommandBar = () => {
 
                 <Box sx={{ width: (theme) => theme.spacing(4) }}>
                     <ConditionallyRender
-                        condition={Boolean(value)}
+                        condition={Boolean(searchString)}
                         show={
                             <Tooltip title='Clear search query' arrow>
                                 <IconButton
@@ -243,14 +226,12 @@ export const CommandBar = () => {
             </StyledSearch>
 
             <ConditionallyRender
-                condition={Boolean(value) && showSuggestions}
+                condition={Boolean(searchString) && showSuggestions}
                 show={
                     <CommandResultsPaper>
-                        <CommandResultGroup
-                            groupName={'Flags'}
-                            icon={'flag'}
-                            items={flags}
-                        />
+                        {searchString !== undefined && (
+                            <CommandFeatures searchString={searchString} />
+                        )}
                         <CommandResultGroup
                             groupName={'Projects'}
                             icon={'flag'}

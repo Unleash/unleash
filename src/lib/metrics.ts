@@ -306,12 +306,14 @@ export default class MetricsMonitor {
                     maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
                     stageCountByProjectResult,
+                    stageDurationByProject,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
                     stores.featureStrategiesReadModel.getMaxConstraintValues(),
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
                     stores.featureLifecycleReadModel.getStageCountByProject(),
+                    stores.featureLifecycleReadModel.getAllWithStageDuration(),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -326,7 +328,7 @@ export default class MetricsMonitor {
                 serviceAccounts.reset();
                 serviceAccounts.set(stats.serviceAccounts);
 
-                stats.featureLifeCycles.forEach((stage) => {
+                stageDurationByProject.forEach((stage) => {
                     featureLifecycleStageDuration
                         .labels({
                             stage: stage.stage,

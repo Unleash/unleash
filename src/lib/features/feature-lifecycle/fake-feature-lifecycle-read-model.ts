@@ -3,11 +3,17 @@ import type {
     StageCount,
     StageCountByProject,
 } from './feature-lifecycle-read-model-type';
-import type { IFeatureLifecycleStage } from '../../types';
+import type {
+    IFeatureLifecycleStage,
+    IProjectLifecycleStageDuration,
+} from '../../types';
 
 export class FakeFeatureLifecycleReadModel
     implements IFeatureLifecycleReadModel
 {
+    getAllWithStageDuration(): Promise<IProjectLifecycleStageDuration[]> {
+        return Promise.resolve([]);
+    }
     getStageCount(): Promise<StageCount[]> {
         return Promise.resolve([]);
     }

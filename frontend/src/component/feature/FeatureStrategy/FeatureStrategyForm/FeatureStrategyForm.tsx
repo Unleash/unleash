@@ -413,32 +413,16 @@ export const FeatureStrategyForm = ({
                         </Alert>
                     }
                 />
-                <FeatureStrategyEnabled
-                    projectId={feature.project}
-                    featureId={feature.name}
-                    environmentId={environmentId}
-                >
-                    <ConditionallyRender
-                        condition={Boolean(isChangeRequest)}
-                        show={
-                            <Alert severity='success'>
-                                This feature flag is currently enabled in the{' '}
-                                <strong>{environmentId}</strong> environment.
-                                Any changes made here will be available to users
-                                as soon as these changes are approved and
-                                applied.
-                            </Alert>
-                        }
-                        elseShow={
-                            <Alert severity='success'>
-                                This feature flag is currently enabled in the{' '}
-                                <strong>{environmentId}</strong> environment.
-                                Any changes made here will be available to users
-                                as soon as you hit <strong>save</strong>.
-                            </Alert>
-                        }
-                    />
-                </FeatureStrategyEnabled>
+                <ConditionallyRender
+                    condition={!isChangeRequest}
+                    show={
+                        <FeatureStrategyEnabled
+                            projectId={feature.project}
+                            featureId={feature.name}
+                            environmentId={environmentId}
+                        />
+                    }
+                />
             </StyledAlertBox>
 
             <StyledTabs value={tab} onChange={handleChange}>

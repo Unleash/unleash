@@ -9,6 +9,13 @@ Generally, the intention is that `unleash-server` should always provide support 
 
 [Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you have followed the previous migration guides on this page. We're removing some features that were deprecated in version 5 and marking some features as deprecated, but these will continue to be supported during version 6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:
 
+### Self-hosted enterprise customers are now required to use a License Key
+
+Before upgrading you should make sure to get a valid license key. More information in [this page](../deploy/license-keys.mdx).
+
+- For Unleash hosted (Pro/Enterprise), license management is not necessary and is handled automatically.
+- For Unleash Open Source, no license is necessary and these steps do not apply.
+
 ### Remove Passport libs from the official open source Docker distribution
 
 *If you're not using the official open source image, you can safely ignore this change.* 

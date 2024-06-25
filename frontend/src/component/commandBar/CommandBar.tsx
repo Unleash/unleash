@@ -24,7 +24,7 @@ import { PageSuggestions } from './PageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { CommandFeatures } from './CommandFeatures';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -125,16 +125,6 @@ export const CommandBar = () => {
     };
 
     const [value, setValue] = useState<string>('');
-
-    const { features = [] } = useFeatureSearch(
-        {
-            query: searchString,
-            limit: '3',
-        },
-        {
-            revalidateOnFocus: false,
-        },
-    );
     const { projects } = useProjects();
 
     const debouncedSetSearchState = useAsyncDebounce((query) => {
@@ -190,11 +180,6 @@ export const CommandBar = () => {
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
 
-    const flags: CommandResultGroupItem[] = features.map((feature) => ({
-        name: feature.name,
-        link: `/projects/${feature.project}/features/${feature.name}`,
-    }));
-
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <StyledSearch>
@@ -246,11 +231,9 @@ export const CommandBar = () => {
                 condition={Boolean(value) && showSuggestions}
                 show={
                     <CommandResultsPaper>
-                        <CommandResultGroup
-                            groupName={'Flags'}
-                            icon={'flag'}
-                            items={flags}
-                        />
+                        {searchString !== undefined && (
+                            <CommandFeatures searchString={searchString} />
+                        )}
                         <CommandResultGroup
                             groupName={'Projects'}
                             icon={'flag'}

@@ -115,10 +115,15 @@ export const CommandBar = () => {
 
     const [value, setValue] = useState<string>('');
 
-    const { features = [] } = useFeatureSearch({
-        query: searchString,
-        limit: '3',
-    });
+    const { features = [] } = useFeatureSearch(
+        {
+            query: searchString,
+            limit: '3',
+        },
+        {
+            revalidateOnFocus: false,
+        },
+    );
     const { projects } = useProjects();
 
     const debouncedSetSearchState = useAsyncDebounce((query) => {

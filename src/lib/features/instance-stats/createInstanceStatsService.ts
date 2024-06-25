@@ -40,10 +40,6 @@ import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
-import {
-    createFakeFeatureLifecycleService,
-    createFeatureLifecycleService,
-} from '../feature-lifecycle/createFeatureLifecycle';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -88,10 +84,6 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
-    const { featureLifecycleService } = createFeatureLifecycleService(
-        db,
-        config,
-    );
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -133,7 +125,6 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         versionService,
         getActiveUsers,
         getProductionChanges,
-        featureLifecycleService,
     );
 
     return instanceStatsService;
@@ -156,8 +147,6 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const apiTokenStore = new FakeApiTokenStore();
     const clientMetricsStoreV2 = new FakeClientMetricsStoreV2();
 
-    const { featureLifecycleService } =
-        createFakeFeatureLifecycleService(config);
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -194,7 +183,6 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         versionService,
         getActiveUsers,
         getProductionChanges,
-        featureLifecycleService,
     );
 
     return instanceStatsService;

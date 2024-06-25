@@ -1,5 +1,9 @@
 import type { Db } from '../../db/db';
-import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type';
+import type {
+    IFeatureLifecycleReadModel,
+    StageCount,
+    StageCountByProject,
+} from './feature-lifecycle-read-model-type';
 import { getCurrentStage } from './get-current-stage';
 import type { IFeatureLifecycleStage, StageName } from '../../types';
 
@@ -15,6 +19,61 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
 
     constructor(db: Db) {
         this.db = db;
+    }
+
+    async getStageCount(): Promise<StageCount[]> {
+        const { rows } = await this.db.raw(`
+            SELECT
+                stage,
+                COUNT(*) AS feature_count
+            FROM (
+                SELECT DISTINCT ON (feature)
+                    feature,
+                    stage,
+                    created_at
+                FROM
+                    feature_lifecycles
+                ORDER BY
+                    feature, created_at DESC
+            ) AS LatestStages
+            GROUP BY
+                stage;
+        `);
+
+        return rows.map((row) => ({
+            stage: row.stage,
+            count: Number(row.feature_count),
+        }));
+    }
+
+    async getStageCountByProject(): Promise<StageCountByProject[]> {
+        const { rows } = await this.db.raw(`
+            SELECT
+                f.project,
+                ls.stage,
+                COUNT(*) AS feature_count
+            FROM (
+                SELECT DISTINCT ON (fl.feature)
+                    fl.feature,
+                    fl.stage,
+                    fl.created_at
+                FROM
+                    feature_lifecycles fl
+                ORDER BY
+                    fl.feature, fl.created_at DESC
+            ) AS ls
+            JOIN
+                features f ON f.name = ls.feature
+            GROUP BY
+                f.project,
+                ls.stage;
+        `);
+
+        return rows.map((row) => ({
+            stage: row.stage,
+            count: Number(row.feature_count),
+            project: row.project,
+        }));
     }
 
     async findCurrentStage(

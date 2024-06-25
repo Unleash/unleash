@@ -101,6 +101,10 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
         await this.db('feature_lifecycles').where({ feature }).del();
     }
 
+    async deleteAll(): Promise<void> {
+        await this.db('feature_lifecycles').del();
+    }
+
     async deleteStage(stage: FeatureLifecycleStage): Promise<void> {
         await this.db('feature_lifecycles')
             .where({

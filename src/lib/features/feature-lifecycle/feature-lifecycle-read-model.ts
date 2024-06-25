@@ -5,7 +5,11 @@ import type {
     StageCountByProject,
 } from './feature-lifecycle-read-model-type';
 import { getCurrentStage } from './get-current-stage';
-import type { IFeatureLifecycleStage, StageName } from '../../types';
+import type {
+    IFeatureLifecycleStage,
+    IFlagResolver,
+    StageName,
+} from '../../types';
 
 type DBType = {
     feature: string;
@@ -17,11 +21,18 @@ type DBType = {
 export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     private db: Db;
 
-    constructor(db: Db) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, flagResolver: IFlagResolver) {
         this.db = db;
+        this.flagResolver = flagResolver;
     }
 
     async getStageCount(): Promise<StageCount[]> {
+        if (!this.flagResolver.isEnabled('featureLifecycleMetrics')) {
+            return [];
+        }
+
         const { rows } = await this.db.raw(`
             SELECT
                 stage,
@@ -47,6 +58,10 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     }
 
     async getStageCountByProject(): Promise<StageCountByProject[]> {
+        if (!this.flagResolver.isEnabled('featureLifecycleMetrics')) {
+            return [];
+        }
+
         const { rows } = await this.db.raw(`
             SELECT
                 f.project,

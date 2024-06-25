@@ -47,6 +47,7 @@ import { FakeProjectOwnersReadModel } from '../../lib/features/project/fake-proj
 import { FakeFeatureLifecycleStore } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-store';
 import { FakeProjectFlagCreatorsReadModel } from '../../lib/features/project/fake-project-flag-creators-read-model';
 import { FakeFeatureStrategiesReadModel } from '../../lib/features/feature-toggle/fake-feature-strategies-read-model';
+import { FakeFeatureLifecycleReadModel } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-read-model';
 
 const db = {
     select: () => ({
@@ -103,6 +104,7 @@ const createStores: () => IUnleashStores = () => {
         projectFlagCreatorsReadModel: new FakeProjectFlagCreatorsReadModel(),
         featureLifecycleStore: new FakeFeatureLifecycleStore(),
         featureStrategiesReadModel: new FakeFeatureStrategiesReadModel(),
+        featureLifecycleReadModel: new FakeFeatureLifecycleReadModel(),
     };
 };
 

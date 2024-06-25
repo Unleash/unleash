@@ -44,6 +44,7 @@ import { IProjectOwnersReadModel } from '../features/project/project-owners-read
 import { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type';
 import { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.type';
 import { IFeatureStrategiesReadModel } from '../features/feature-toggle/types/feature-strategies-read-model-type';
+import { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -92,6 +93,7 @@ export interface IUnleashStores {
     projectFlagCreatorsReadModel: IProjectFlagCreatorsReadModel;
     featureLifecycleStore: IFeatureLifecycleStore;
     featureStrategiesReadModel: IFeatureStrategiesReadModel;
+    featureLifecycleReadModel: IFeatureLifecycleReadModel;
 }
 
 export {
@@ -139,4 +141,5 @@ export {
     IFeatureLifecycleStore,
     IProjectFlagCreatorsReadModel,
     IFeatureStrategiesReadModel,
+    IFeatureLifecycleReadModel,
 };

@@ -12,10 +12,13 @@ import {
     IconRenderer,
     StyledProjectIcon,
 } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
+import InsightsIcon from '@mui/icons-material/Insights';
 import type { LastViewedPage } from 'hooks/useRecentlyVisited';
 import type { Theme } from '@mui/material/styles/createTheme';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import type { ReactElement } from 'react-markdown/lib/react-markdown';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -38,6 +41,12 @@ const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
 const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
 }));
+
+const overridePathIcons: Record<string, () => ReactElement> = {
+    '/insights': () => <InsightsIcon />,
+    '/playground': () => <PlaygroundIcon />,
+    '/projects': () => <StyledProjectIcon />,
+};
 
 const toListItemButton = (
     item: LastViewedPage,
@@ -107,8 +116,8 @@ const RecentlyVisitedPathButton = ({
         >
             <StyledListItemIcon>
                 <ConditionallyRender
-                    condition={path === '/projects'}
-                    show={<StyledProjectIcon />}
+                    condition={overridePathIcons[path] !== undefined}
+                    show={overridePathIcons[path]}
                     elseShow={<IconRenderer path={path} />}
                 />
             </StyledListItemIcon>

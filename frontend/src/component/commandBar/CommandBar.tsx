@@ -124,7 +124,6 @@ export const CommandBar = () => {
         setShowSuggestions(false);
     };
 
-    const [value, setValue] = useState<string>('');
     const { projects } = useProjects();
 
     const debouncedSetSearchState = useAsyncDebounce((query) => {
@@ -153,7 +152,6 @@ export const CommandBar = () => {
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
-        setValue(value);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -196,7 +194,7 @@ export const CommandBar = () => {
                         'aria-label': placeholder,
                         'data-testid': SEARCH_INPUT,
                     }}
-                    value={value}
+                    value={searchString}
                     onChange={(e) => onSearchChange(e.target.value)}
                     onFocus={() => {
                         setShowSuggestions(true);
@@ -205,7 +203,7 @@ export const CommandBar = () => {
 
                 <Box sx={{ width: (theme) => theme.spacing(4) }}>
                     <ConditionallyRender
-                        condition={Boolean(value)}
+                        condition={Boolean(searchString)}
                         show={
                             <Tooltip title='Clear search query' arrow>
                                 <IconButton
@@ -228,7 +226,7 @@ export const CommandBar = () => {
             </StyledSearch>
 
             <ConditionallyRender
-                condition={Boolean(value) && showSuggestions}
+                condition={Boolean(searchString) && showSuggestions}
                 show={
                     <CommandResultsPaper>
                         {searchString !== undefined && (

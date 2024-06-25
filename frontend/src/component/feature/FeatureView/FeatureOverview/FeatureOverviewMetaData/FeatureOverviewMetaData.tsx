@@ -1,4 +1,4 @@
-import { capitalize, styled } from '@mui/material';
+import { Box, capitalize, styled } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
@@ -140,7 +140,7 @@ const FeatureOverviewMetaData = () => {
                 <StyledBody>
                     <SpacedBodyItem data-loading>
                         <StyledLabel>Project:</StyledLabel>
-                        <span>{project}</span>
+                        <Box sx={{ wordBreak: 'break-all' }}>{project}</Box>
                     </SpacedBodyItem>
                     <ConditionallyRender
                         condition={

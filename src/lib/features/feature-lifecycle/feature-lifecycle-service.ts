@@ -15,17 +15,17 @@ import {
 import type {
     FeatureLifecycleView,
     IFeatureLifecycleStore,
+    NewStage,
 } from './feature-lifecycle-store-type';
-import EventEmitter from 'events';
+import type EventEmitter from 'events';
 import type { Logger } from '../../logger';
 import type EventService from '../events/event-service';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
 import type { IClientMetricsEnv } from '../metrics/client-metrics/client-metrics-store-v2-type';
 import groupBy from 'lodash.groupby';
+import { STAGE_ENTERED } from '../../metric-events';
 
-export const STAGE_ENTERED = 'STAGE_ENTERED';
-
-export class FeatureLifecycleService extends EventEmitter {
+export class FeatureLifecycleService {
     private eventStore: IEventStore;
 
     private featureLifecycleStore: IFeatureLifecycleStore;
@@ -65,7 +65,6 @@ export class FeatureLifecycleService extends EventEmitter {
             getLogger,
         }: Pick<IUnleashConfig, 'flagResolver' | 'eventBus' | 'getLogger'>,
     ) {
-        super();
         this.eventStore = eventStore;
         this.featureLifecycleStore = featureLifecycleStore;
         this.environmentStore = environmentStore;
@@ -128,22 +127,26 @@ export class FeatureLifecycleService extends EventEmitter {
     }
 
     private async featureInitialized(feature: string) {
-        await this.featureLifecycleStore.insert([
+        const result = await this.featureLifecycleStore.insert([
             { feature, stage: 'initial' },
         ]);
-        this.emit(STAGE_ENTERED, { stage: 'initial', feature });
+        this.recordStagesEntered(result);
     }
 
     private async stageReceivedMetrics(
         features: string[],
         stage: 'live' | 'pre-live',
     ) {
-        await this.featureLifecycleStore.insert(
+        const newlyEnteredStages = await this.featureLifecycleStore.insert(
             features.map((feature) => ({ feature, stage })),
         );
-        features.forEach((feature) =>
-            this.emit(STAGE_ENTERED, { stage, feature }),
-        );
+        this.recordStagesEntered(newlyEnteredStages);
+    }
+
+    private recordStagesEntered(newlyEnteredStages: NewStage[]) {
+        newlyEnteredStages.forEach(({ stage, feature }) => {
+            this.eventBus.emit(STAGE_ENTERED, { stage, feature });
+        });
     }
 
     private async featuresReceivedMetrics(
@@ -182,7 +185,7 @@ export class FeatureLifecycleService extends EventEmitter {
         status: FeatureLifecycleCompletedSchema,
         auditUser: IAuditUser,
     ) {
-        await this.featureLifecycleStore.insert([
+        const result = await this.featureLifecycleStore.insert([
             {
                 feature,
                 stage: 'completed',
@@ -190,6 +193,7 @@ export class FeatureLifecycleService extends EventEmitter {
                 statusValue: status.statusValue,
             },
         ]);
+        this.recordStagesEntered(result);
         await this.eventService.storeEvent(
             new FeatureCompletedEvent({
                 project: projectId,
@@ -219,10 +223,10 @@ export class FeatureLifecycleService extends EventEmitter {
     }
 
     private async featureArchived(feature: string) {
-        await this.featureLifecycleStore.insert([
+        const result = await this.featureLifecycleStore.insert([
             { feature, stage: 'archived' },
         ]);
-        this.emit(STAGE_ENTERED, { stage: 'archived', feature });
+        this.recordStagesEntered(result);
     }
 
     private async featureRevived(feature: string) {

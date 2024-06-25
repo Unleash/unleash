@@ -2,6 +2,7 @@ import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
     FeatureLifecycleView,
+    NewStage,
 } from './feature-lifecycle-store-type';
 
 export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
@@ -9,20 +10,31 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
 
     async insert(
         featureLifecycleStages: FeatureLifecycleStage[],
-    ): Promise<void> {
-        await Promise.all(
-            featureLifecycleStages.map((stage) => this.insertOne(stage)),
+    ): Promise<NewStage[]> {
+        const results = await Promise.all(
+            featureLifecycleStages.map(async (stage) => {
+                const success = await this.insertOne(stage);
+                if (success) {
+                    return {
+                        feature: stage.feature,
+                        stage: stage.stage,
+                    };
+                }
+                return null;
+            }),
         );
+        return results.filter((result) => result !== null) as NewStage[];
     }
 
     async backfill() {}
 
     private async insertOne(
         featureLifecycleStage: FeatureLifecycleStage,
-    ): Promise<void> {
+    ): Promise<boolean> {
         if (await this.stageExists(featureLifecycleStage)) {
-            return;
+            return false;
         }
+        const newStages: NewStage[] = [];
         const existingStages = await this.get(featureLifecycleStage.feature);
         this.lifecycles[featureLifecycleStage.feature] = [
             ...existingStages,
@@ -34,6 +46,7 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
                 enteredStageAt: new Date(),
             },
         ];
+        return true;
     }
 
     async get(feature: string): Promise<FeatureLifecycleView> {

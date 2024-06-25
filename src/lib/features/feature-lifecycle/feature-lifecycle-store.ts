@@ -3,6 +3,7 @@ import type {
     IFeatureLifecycleStore,
     FeatureLifecycleView,
     FeatureLifecycleProjectItem,
+    NewStage,
 } from './feature-lifecycle-store-type';
 import type { Db } from '../../db/db';
 import type { StageName } from '../../types';
@@ -38,7 +39,7 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
 
     async insert(
         featureLifecycleStages: FeatureLifecycleStage[],
-    ): Promise<void> {
+    ): Promise<NewStage[]> {
         const existingFeatures = await this.db('features')
             .select('name')
             .whereIn(
@@ -53,9 +54,9 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
         );
 
         if (validStages.length === 0) {
-            return;
+            return [];
         }
-        await this.db('feature_lifecycles')
+        const result = await this.db('feature_lifecycles')
             .insert(
                 validStages.map((stage) => ({
                     feature: stage.feature,
@@ -67,6 +68,11 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
             .returning('*')
             .onConflict(['feature', 'stage'])
             .ignore();
+
+        return result.map((row) => ({
+            stage: row.stage,
+            feature: row.feature,
+        }));
     }
 
     async get(feature: string): Promise<FeatureLifecycleView> {

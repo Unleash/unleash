@@ -320,5 +320,6 @@ test('should collect metrics for lifecycle', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_lifecycle_stage_duration/);
-    expect(metrics).toMatch(/stage_count_by_project/);
+    expect(metrics).toMatch(/feature_lifecycle_stage_count_by_project/);
+    expect(metrics).toMatch(/feature_lifecycle_stage_entered/);
 });

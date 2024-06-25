@@ -1,7 +1,7 @@
 import type { ITagType } from '../features/tag-type/tag-type-store-type';
 import type { LogProvider } from '../logger';
 import type { IRole } from './stores/access-store';
-import type { IAuditUser, IUser } from './user';
+import type { IUser } from './user';
 import type { ALL_OPERATORS } from '../util';
 import type { IProjectStats } from '../features/project/project-service';
 import type { CreateFeatureStrategySchema } from '../openapi';
@@ -480,24 +480,6 @@ export interface IMetricsBucket {
     start: Date;
     stop: Date;
     toggles: { [key: string]: IMetricCounts };
-}
-
-export interface IImportFile extends ImportCommon {
-    file: string;
-}
-
-interface ImportCommon {
-    dropBeforeImport?: boolean;
-    keepExisting?: boolean;
-    /** @deprecated should use auditUser instead */
-    userName?: string;
-    /** @deprecated should use auditUser instead */
-    userId?: number;
-    auditUser: IAuditUser;
-}
-
-export interface IImportData extends ImportCommon {
-    data: any;
 }
 
 // Create project aligns with #/components/schemas/createProjectSchema

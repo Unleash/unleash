@@ -83,6 +83,12 @@ const StyledClose = styled(Close)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
+interface IPageRouteInfo {
+    path: string;
+    route: string;
+    title: string;
+}
+
 export const CommandBar = () => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
@@ -91,12 +97,12 @@ export const CommandBar = () => {
     const [searchedProjects, setSearchedProjects] = useState<
         CommandResultGroupItem[]
     >([]);
+    const [searchedPages, setSearchedPages] = useState<
+        CommandResultGroupItem[]
+    >([]);
     const { lastVisited } = useRecentlyVisited();
     const { routes } = useRoutes();
-    const allRoutes: Record<
-        string,
-        { path: string; route: string; title: string }
-    > = {};
+    const allRoutes: Record<string, IPageRouteInfo> = {};
     for (const route of [
         ...routes.mainNavRoutes,
         ...routes.adminRoutes,
@@ -139,6 +145,15 @@ export const CommandBar = () => {
         }));
 
         setSearchedProjects(mappedProjects);
+
+        const filteredPages = Object.values(allRoutes).filter((route) =>
+            route.title.toLowerCase().includes(query.toLowerCase()),
+        );
+        const mappedPages = filteredPages.map((page) => ({
+            name: page.title,
+            link: page.path,
+        }));
+        setSearchedPages(mappedPages);
     }, 200);
 
     const onSearchChange = (value: string) => {
@@ -234,6 +249,11 @@ export const CommandBar = () => {
                             groupName={'Projects'}
                             icon={'flag'}
                             items={searchedProjects}
+                        />
+                        <CommandResultGroup
+                            groupName={'Pages'}
+                            icon={'flag'}
+                            items={searchedPages}
                         />
                     </CommandResultsPaper>
                 }

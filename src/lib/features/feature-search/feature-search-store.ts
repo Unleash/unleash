@@ -292,7 +292,13 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'client_metrics_env.environment',
                     ]);
             })
-            .select('*')
+            .select([
+                'ranked_features.*',
+                'total_features.total',
+                'final_ranks.final_rank',
+                'metrics.yes',
+                'metrics.no',
+            ])
             .from('ranked_features')
             .innerJoin(
                 'final_ranks',
@@ -314,11 +320,17 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
         if (featureLifecycleEnabled) {
-            finalQuery.leftJoin(
-                'lifecycle',
-                'ranked_features.feature_name',
-                'lifecycle.stage_feature',
-            );
+            finalQuery
+                .select(
+                    'lifecycle.latest_stage',
+                    'lifecycle.stage_status',
+                    'lifecycle.entered_stage_at',
+                )
+                .leftJoin(
+                    'lifecycle',
+                    'ranked_features.feature_name',
+                    'lifecycle.stage_feature',
+                );
         }
         const rows = await finalQuery;
         stopTimer();

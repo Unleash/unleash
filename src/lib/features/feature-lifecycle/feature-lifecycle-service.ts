@@ -10,7 +10,6 @@ import {
     type IEventStore,
     type IFeatureEnvironmentStore,
     type IFlagResolver,
-    type IProjectLifecycleStageDuration,
     type IUnleashConfig,
 } from '../../types';
 import type {
@@ -21,7 +20,6 @@ import EventEmitter from 'events';
 import type { Logger } from '../../logger';
 import type EventService from '../events/event-service';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
-import { calculateStageDurations } from './calculate-stage-durations';
 import type { IClientMetricsEnv } from '../metrics/client-metrics/client-metrics-store-v2-type';
 import groupBy from 'lodash.groupby';
 
@@ -230,12 +228,5 @@ export class FeatureLifecycleService extends EventEmitter {
     private async featureRevived(feature: string) {
         await this.featureLifecycleStore.delete(feature);
         await this.featureInitialized(feature);
-    }
-
-    public async getAllWithStageDuration(): Promise<
-        IProjectLifecycleStageDuration[]
-    > {
-        const featureLifeCycles = await this.featureLifecycleStore.getAll();
-        return calculateStageDurations(featureLifeCycles);
     }
 }

@@ -8,14 +8,21 @@ import { getCurrentStage } from './get-current-stage';
 import type {
     IFeatureLifecycleStage,
     IFlagResolver,
+    IProjectLifecycleStageDuration,
     StageName,
 } from '../../types';
+import { calculateStageDurations } from './calculate-stage-durations';
+import type { FeatureLifecycleProjectItem } from './feature-lifecycle-store-type';
 
 type DBType = {
     feature: string;
     stage: StageName;
     status: string | null;
     created_at: Date;
+};
+
+type DBProjectType = DBType & {
+    project: string;
 };
 
 export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
@@ -105,5 +112,32 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
         }));
 
         return getCurrentStage(stages);
+    }
+
+    private async getAll(): Promise<FeatureLifecycleProjectItem[]> {
+        const results = await this.db('feature_lifecycles as flc')
+            .select('flc.feature', 'flc.stage', 'flc.created_at', 'f.project')
+            .leftJoin('features as f', 'f.name', 'flc.feature')
+            .orderBy('created_at', 'asc');
+
+        return results.map(
+            ({ feature, stage, created_at, project }: DBProjectType) => ({
+                feature,
+                stage,
+                project,
+                enteredStageAt: new Date(created_at),
+            }),
+        );
+    }
+
+    public async getAllWithStageDuration(): Promise<
+        IProjectLifecycleStageDuration[]
+    > {
+        if (!this.flagResolver.isEnabled('featureLifecycleMetrics')) {
+            return [];
+        }
+
+        const featureLifeCycles = await this.getAll();
+        return calculateStageDurations(featureLifeCycles);
     }
 }

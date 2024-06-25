@@ -16,14 +16,19 @@ import { InstanceStatsService } from './features/instance-stats/instance-stats-s
 import VersionService from './services/version-service';
 import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
 import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
-import type { IEnvironmentStore, IUnleashStores } from './types';
+import type {
+    IEnvironmentStore,
+    IFeatureLifecycleReadModel,
+    IFeatureLifecycleStore,
+    IUnleashStores,
+} from './types';
 import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
 import { SchedulerService } from './services';
 import noLogger from '../test/fixtures/no-logger';
-import { createFeatureLifecycleService } from './features';
-import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
 import getLogger from '../test/fixtures/no-logger';
-import type { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
+import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
+import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
+import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -33,7 +38,8 @@ let environmentStore: IEnvironmentStore;
 let statsService: InstanceStatsService;
 let stores: IUnleashStores;
 let schedulerService: SchedulerService;
-let featureLifeCycleStore: FeatureLifecycleStore;
+let featureLifeCycleStore: IFeatureLifecycleStore;
+let featureLifeCycleReadModel: IFeatureLifecycleReadModel;
 let db: ITestDb;
 
 beforeAll(async () => {
@@ -59,8 +65,13 @@ beforeAll(async () => {
     );
     db = await dbInit('metrics_test', getLogger);
 
-    const { featureLifecycleService, featureLifecycleStore } =
-        createFeatureLifecycleService(db.rawDatabase, config);
+    featureLifeCycleReadModel = new FeatureLifecycleReadModel(
+        db.rawDatabase,
+        config.flagResolver,
+    );
+    stores.featureLifecycleReadModel = featureLifeCycleReadModel;
+    featureLifeCycleStore = new FeatureLifecycleStore(db.rawDatabase);
+    stores.featureLifecycleStore = featureLifeCycleStore;
 
     statsService = new InstanceStatsService(
         stores,
@@ -68,9 +79,7 @@ beforeAll(async () => {
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
-        featureLifecycleService,
     );
-    featureLifeCycleStore = featureLifecycleStore;
 
     schedulerService = new SchedulerService(
         noLogger,
@@ -303,9 +312,13 @@ test('should collect metrics for lifecycle', async () => {
             stage: 'initial',
         },
     ]);
-    const { featureLifeCycles } = await statsService.getStats();
-    expect(featureLifeCycles).toHaveLength(1);
+    const stageCount = await featureLifeCycleReadModel.getStageCountByProject();
+    const stageDurations =
+        await featureLifeCycleReadModel.getAllWithStageDuration();
+    expect(stageCount).toHaveLength(1);
+    expect(stageDurations).toHaveLength(1);
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_lifecycle_stage_duration/);
+    expect(metrics).toMatch(/stage_count_by_project/);
 });

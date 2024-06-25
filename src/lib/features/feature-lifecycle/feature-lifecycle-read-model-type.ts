@@ -1,4 +1,8 @@
-import type { IFeatureLifecycleStage, StageName } from '../../types';
+import type {
+    IFeatureLifecycleStage,
+    IProjectLifecycleStageDuration,
+    StageName,
+} from '../../types';
 
 export type StageCount = {
     stage: StageName;
@@ -15,4 +19,5 @@ export interface IFeatureLifecycleReadModel {
     ): Promise<IFeatureLifecycleStage | undefined>;
     getStageCount(): Promise<StageCount[]>;
     getStageCountByProject(): Promise<StageCountByProject[]>;
+    getAllWithStageDuration(): Promise<IProjectLifecycleStageDuration[]>;
 }

@@ -2,7 +2,6 @@ import type {
     FeatureLifecycleStage,
     IFeatureLifecycleStore,
     FeatureLifecycleView,
-    FeatureLifecycleProjectItem,
 } from './feature-lifecycle-store-type';
 
 export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
@@ -39,18 +38,6 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
 
     async get(feature: string): Promise<FeatureLifecycleView> {
         return this.lifecycles[feature] || [];
-    }
-
-    async getAll(): Promise<FeatureLifecycleProjectItem[]> {
-        const result = Object.entries(this.lifecycles).flatMap(
-            ([key, items]): FeatureLifecycleProjectItem[] =>
-                items.map((item) => ({
-                    ...item,
-                    feature: key,
-                    project: 'fake-project',
-                })),
-        );
-        return result;
     }
 
     async delete(feature: string): Promise<void> {

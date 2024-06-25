@@ -17,7 +17,6 @@ export type FeatureLifecycleProjectItem = FeatureLifecycleStage & {
 export interface IFeatureLifecycleStore {
     insert(featureLifecycleStages: FeatureLifecycleStage[]): Promise<void>;
     get(feature: string): Promise<FeatureLifecycleView>;
-    getAll(): Promise<FeatureLifecycleProjectItem[]>;
     stageExists(stage: FeatureLifecycleStage): Promise<boolean>;
     delete(feature: string): Promise<void>;
     deleteAll(): Promise<void>;

@@ -11,16 +11,25 @@ import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/Icon
 import type { Theme } from '@mui/material/styles/createTheme';
 
 const listItemButtonStyle = (theme: Theme) => ({
-    borderRadius: theme.spacing(0.5),
+    border: `1px solid transparent`,
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&.Mui-selected': {
+    '&:hover': {
+        border: `1px solid ${theme.palette.primary.main}`,
         borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
     },
 });
 
+const StyledContainer = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(3),
+}));
+
+const StyledButtonTypography = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
 const StyledTypography = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.bodySize,
-    padding: theme.spacing(0, 3),
+    fontSize: theme.fontSizes.smallBody,
+    padding: theme.spacing(0, 2.5),
 }));
 
 const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
@@ -30,6 +39,7 @@ const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
 
 const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const toListItemData = (
@@ -64,7 +74,7 @@ export const PageSuggestions = ({
     const filtered = pages.filter((page) => routes[page]);
     const pageItems = toListItemData(filtered, routes);
     return (
-        <>
+        <StyledContainer>
             <StyledTypography color='textSecondary'>Pages</StyledTypography>
             <List>
                 {pageItems.map((item, index) => (
@@ -75,15 +85,24 @@ export const PageSuggestions = ({
                         to={item.path}
                         sx={listItemButtonStyle}
                     >
-                        <StyledListItemIcon>{item.icon}</StyledListItemIcon>
+                        <StyledListItemIcon
+                            sx={(theme) => ({
+                                color: theme.palette.primary.main,
+                                fontSize: theme.fontSizes.smallBody,
+                                minWidth: theme.spacing(0.5),
+                                margin: theme.spacing(0, 1, 0, 0),
+                            })}
+                        >
+                            {item.icon}
+                        </StyledListItemIcon>
                         <StyledListItemText>
-                            <Typography color='textPrimary'>
+                            <StyledButtonTypography color='textPrimary'>
                                 {item.name}
-                            </Typography>
+                            </StyledButtonTypography>
                         </StyledListItemText>
                     </ListItemButton>
                 ))}
             </List>
-        </>
+        </StyledContainer>
     );
 };

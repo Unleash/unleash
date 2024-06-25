@@ -30,9 +30,11 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
     width: '100%',
     left: 0,
-    top: '20px',
-    zIndex: 2,
-    padding: theme.spacing(4, 1.5, 1.5),
+    top: '39px',
+    zIndex: 4,
+    borderTop: theme.spacing(0),
+    padding: theme.spacing(4, 0, 1.5),
+    borderRadius: 0,
     borderBottomLeftRadius: theme.spacing(1),
     borderBottomRightRadius: theme.spacing(1),
     boxShadow: '0px 8px 20px rgba(33, 33, 33, 0.15)',
@@ -46,6 +48,7 @@ const StyledContainer = styled('div', {
 })<{
     active: boolean | undefined;
 }>(({ theme, active }) => ({
+    border: `1px solid transparent`,
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
@@ -68,13 +71,15 @@ const StyledSearch = styled('div')(({ theme }) => ({
     width: '100%',
     zIndex: 3,
     '&:focus-within': {
-        borderColor: theme.palette.primary.main,
-        boxShadow: theme.boxShadows.main,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        borderBottom: '0px',
     },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
+    minWidth: '300px',
     backgroundColor: theme.palette.background.elevation1,
 }));
 
@@ -180,7 +185,7 @@ export const CommandBar = () => {
             searchInputRef.current?.blur();
         }
     });
-    const placeholder = `Search (${hotkey})`;
+    const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
@@ -212,6 +217,7 @@ export const CommandBar = () => {
                         setShowSuggestions(true);
                     }}
                 />
+
                 <Box sx={{ width: (theme) => theme.spacing(4) }}>
                     <ConditionallyRender
                         condition={Boolean(value)}
@@ -239,7 +245,7 @@ export const CommandBar = () => {
             <ConditionallyRender
                 condition={Boolean(value) && showSuggestions}
                 show={
-                    <CommandResultsPaper className='dropdown-outline'>
+                    <CommandResultsPaper>
                         <CommandResultGroup
                             groupName={'Flags'}
                             icon={'flag'}
@@ -259,7 +265,7 @@ export const CommandBar = () => {
                 }
                 elseShow={
                     showSuggestions && (
-                        <CommandResultsPaper className='dropdown-outline'>
+                        <CommandResultsPaper>
                             <RecentlyVisited
                                 lastVisited={lastVisited}
                                 routes={allRoutes}

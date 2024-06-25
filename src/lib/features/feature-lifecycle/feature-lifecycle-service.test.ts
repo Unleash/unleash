@@ -10,8 +10,8 @@ import {
 } from '../../types';
 import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
 import EventEmitter from 'events';
-import { STAGE_ENTERED } from './feature-lifecycle-service';
 import noLoggerProvider from '../../../test/fixtures/no-logger';
+import { STAGE_ENTERED } from '../../metric-events';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();
@@ -42,7 +42,7 @@ test('can insert and read lifecycle stages', async () => {
     }
     function reachedStage(feature: string, name: StageName) {
         return new Promise((resolve) =>
-            featureLifecycleService.on(STAGE_ENTERED, (event) => {
+            eventBus.on(STAGE_ENTERED, (event) => {
                 if (event.stage === name && event.feature === feature)
                     resolve(name);
             }),

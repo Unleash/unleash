@@ -285,10 +285,16 @@ export default class MetricsMonitor {
             help: 'Duration of feature lifecycle stages',
         });
 
-        const stageCountByProject = createGauge({
-            name: 'stage_count_by_project',
+        const featureLifecycleStageCountByProject = createGauge({
+            name: 'feature_lifecycle_stage_count_by_project',
             help: 'Count features in a given stage by project id',
             labelNames: ['stage', 'project_id'],
+        });
+
+        const featureLifecycleStageEnteredCounter = createCounter({
+            name: 'feature_lifecycle_stage_entered',
+            help: 'Count how many features entered a given stage',
+            labelNames: ['stage'],
         });
 
         const projectEnvironmentsDisabled = createCounter({
@@ -337,9 +343,18 @@ export default class MetricsMonitor {
                         .set(stage.duration);
                 });
 
-                stageCountByProject.reset();
+                eventBus.on(
+                    events.STAGE_ENTERED,
+                    (entered: { stage: string; feature: string }) => {
+                        featureLifecycleStageEnteredCounter
+                            .labels({ stage: entered.stage })
+                            .inc();
+                    },
+                );
+
+                featureLifecycleStageCountByProject.reset();
                 stageCountByProjectResult.forEach((stageResult) =>
-                    stageCountByProject
+                    featureLifecycleStageCountByProject
                         .labels({
                             project_id: stageResult.project,
                             stage: stageResult.stage,

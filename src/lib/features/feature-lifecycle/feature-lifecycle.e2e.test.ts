@@ -14,13 +14,11 @@ import {
     type StageName,
 } from '../../types';
 import type EventEmitter from 'events';
-import {
-    type FeatureLifecycleService,
-    STAGE_ENTERED,
-} from './feature-lifecycle-service';
+import type { FeatureLifecycleService } from './feature-lifecycle-service';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
 import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model';
 import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type';
+import { STAGE_ENTERED } from '../../metric-events';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -102,7 +100,7 @@ const uncompleteFeature = async (featureName: string, expectedCode = 200) => {
 
 function reachedStage(feature: string, stage: StageName) {
     return new Promise((resolve) =>
-        featureLifecycleService.on(STAGE_ENTERED, (event) => {
+        eventBus.on(STAGE_ENTERED, (event) => {
             if (event.stage === stage && event.feature === feature)
                 resolve(stage);
         }),

@@ -38,7 +38,7 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
 export interface CommandResultGroupItem {
     name: string;
     link: string;
-    description?: string | undefined;
+    description?: string | null;
 }
 
 interface CommandResultGroupProps {
@@ -78,7 +78,11 @@ export const CommandResultGroup = ({
                                 elseShow={<Icon>{icon}</Icon>}
                             />
                         </StyledListItemIcon>
-                        <TooltipResolver title={item.description}>
+                        <TooltipResolver
+                            title={item.description}
+                            variant={'custom'}
+                            placement={'bottom-end'}
+                        >
                             <StyledListItemText>
                                 <Typography>{item.name}</Typography>
                             </StyledListItemText>

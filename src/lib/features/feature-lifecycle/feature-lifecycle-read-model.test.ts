@@ -7,7 +7,7 @@ import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle
 import type { IFlagResolver } from '../../types';
 
 let db: ITestDb;
-let featureLifeycycleReadModel: IFeatureLifecycleReadModel;
+let featureLifecycleReadModel: IFeatureLifecycleReadModel;
 let featureLifecycleStore: IFeatureLifecycleStore;
 let featureToggleStore: IFeatureToggleStore;
 
@@ -19,7 +19,7 @@ const alwaysOnFlagResolver = {
 
 beforeAll(async () => {
     db = await dbInit('feature_lifecycle_read_model', getLogger);
-    featureLifeycycleReadModel = new FeatureLifecycleReadModel(
+    featureLifecycleReadModel = new FeatureLifecycleReadModel(
         db.rawDatabase,
         alwaysOnFlagResolver,
     );
@@ -59,14 +59,14 @@ test('can return stage count', async () => {
         { feature: 'featureA', stage: 'pre-live' },
     ]);
 
-    const stageCount = await featureLifeycycleReadModel.getStageCount();
+    const stageCount = await featureLifecycleReadModel.getStageCount();
     expect(stageCount).toMatchObject([
         { stage: 'pre-live', count: 1 },
         { stage: 'initial', count: 2 },
     ]);
 
     const stageCountByProject =
-        await featureLifeycycleReadModel.getStageCountByProject();
+        await featureLifecycleReadModel.getStageCountByProject();
     expect(stageCountByProject).toMatchObject([
         { project: 'default', stage: 'pre-live', count: 1 },
         { project: 'default', stage: 'initial', count: 2 },

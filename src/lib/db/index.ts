@@ -48,6 +48,7 @@ import { FeatureLifecycleStore } from '../features/feature-lifecycle/feature-lif
 import { ProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model';
 import { FeatureStrategiesReadModel } from '../features/feature-toggle/feature-strategies-read-model';
 import { FeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model';
+import { LargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -166,6 +167,7 @@ export const createStores = (
             db,
             config.flagResolver,
         ),
+        largestResourcesReadModel: new LargestResourcesReadModel(db),
     };
 };
 

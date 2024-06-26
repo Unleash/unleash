@@ -129,6 +129,16 @@ export default class MetricsMonitor {
             help: 'Maximum number of constraints used on a single strategy',
             labelNames: ['feature', 'environment'],
         });
+        const largestProjectEnvironment = createGauge({
+            name: 'largest_project_environment_size',
+            help: 'The largest project environment size (bytes) based on strategies, constraints, variants and parameters',
+            labelNames: ['project', 'environment'],
+        });
+        const largestFeatureEnvironment = createGauge({
+            name: 'largest_feature_environment_size',
+            help: 'The largest feature environment size (bytes) base on strategies, constraints, variants and parameters',
+            labelNames: ['feature', 'environment'],
+        });
 
         const featureTogglesArchivedTotal = createGauge({
             name: 'feature_toggles_archived_total',
@@ -313,6 +323,8 @@ export default class MetricsMonitor {
                     maxConstraintsPerStrategyResult,
                     stageCountByProjectResult,
                     stageDurationByProject,
+                    largestProjectEnvironments,
+                    largestFeatureEnvironments,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
@@ -320,6 +332,12 @@ export default class MetricsMonitor {
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
                     stores.featureLifecycleReadModel.getStageCountByProject(),
                     stores.featureLifecycleReadModel.getAllWithStageDuration(),
+                    stores.largestResourcesReadModel.getLargestProjectEnvironments(
+                        1,
+                    ),
+                    stores.largestResourcesReadModel.getLargestFeatureEnvironments(
+                        1,
+                    ),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -401,6 +419,28 @@ export default class MetricsMonitor {
                             feature: maxConstraintsPerStrategyResult.feature,
                         })
                         .set(maxConstraintsPerStrategyResult.count);
+                }
+
+                if (largestProjectEnvironments.length > 0) {
+                    const projectEnvironment = largestProjectEnvironments[0];
+                    largestProjectEnvironment.reset();
+                    largestProjectEnvironment
+                        .labels({
+                            project: projectEnvironment.project,
+                            environment: projectEnvironment.environment,
+                        })
+                        .set(projectEnvironment.size);
+                }
+
+                if (largestFeatureEnvironments.length > 0) {
+                    const featureEnvironment = largestFeatureEnvironments[0];
+                    largestFeatureEnvironment.reset();
+                    largestFeatureEnvironment
+                        .labels({
+                            feature: featureEnvironment.feature,
+                            environment: featureEnvironment.environment,
+                        })
+                        .set(featureEnvironment.size);
                 }
 
                 enabledMetricsBucketsPreviousDay.reset();

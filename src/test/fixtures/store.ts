@@ -48,6 +48,7 @@ import { FakeFeatureLifecycleStore } from '../../lib/features/feature-lifecycle/
 import { FakeProjectFlagCreatorsReadModel } from '../../lib/features/project/fake-project-flag-creators-read-model';
 import { FakeFeatureStrategiesReadModel } from '../../lib/features/feature-toggle/fake-feature-strategies-read-model';
 import { FakeFeatureLifecycleReadModel } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-read-model';
+import { FakeLargestResourcesReadModel } from '../../lib/features/metrics/sizes/fake-largest-resources-read-model';
 
 const db = {
     select: () => ({
@@ -105,6 +106,7 @@ const createStores: () => IUnleashStores = () => {
         featureLifecycleStore: new FakeFeatureLifecycleStore(),
         featureStrategiesReadModel: new FakeFeatureStrategiesReadModel(),
         featureLifecycleReadModel: new FakeFeatureLifecycleReadModel(),
+        largestResourcesReadModel: new FakeLargestResourcesReadModel(),
     };
 };
 

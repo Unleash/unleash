@@ -362,9 +362,12 @@ export const createServices = (
         config.getLogger,
     );
 
-    const { featureLifecycleService } = db
-        ? createFeatureLifecycleService(db, config)
-        : createFakeFeatureLifecycleService(config);
+    const transactionalFeatureLifecycleService = db
+        ? withTransactional(createFeatureLifecycleService(config), db)
+        : withFakeTransactional(
+              createFakeFeatureLifecycleService(config).featureLifecycleService,
+          );
+    const featureLifecycleService = transactionalFeatureLifecycleService;
     featureLifecycleService.listen();
 
     return {
@@ -426,6 +429,7 @@ export const createServices = (
         projectInsightsService,
         jobService,
         featureLifecycleService,
+        transactionalFeatureLifecycleService,
     };
 };
 

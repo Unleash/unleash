@@ -14,7 +14,6 @@ import {
     type StageName,
 } from '../../types';
 import type EventEmitter from 'events';
-import type { FeatureLifecycleService } from './feature-lifecycle-service';
 import type { FeatureLifecycleCompletedSchema } from '../../openapi';
 import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model';
 import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type';
@@ -22,7 +21,6 @@ import { STAGE_ENTERED } from '../../metric-events';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let featureLifecycleService: FeatureLifecycleService;
 let featureLifecycleStore: IFeatureLifecycleStore;
 let eventStore: IEventStore;
 let eventBus: EventEmitter;
@@ -43,7 +41,6 @@ beforeAll(async () => {
     );
     eventStore = db.stores.eventStore;
     eventBus = app.config.eventBus;
-    featureLifecycleService = app.services.featureLifecycleService;
     featureLifecycleReadModel = new FeatureLifecycleReadModel(
         db.rawDatabase,
         app.config.flagResolver,

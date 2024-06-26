@@ -21,6 +21,7 @@ import Controller from '../../routes/controller';
 import type { Request, Response } from 'express';
 import { NotFoundError } from '../../error';
 import type { IAuthRequest } from '../../routes/unleash-types';
+import type { WithTransactional } from '../../db/transaction';
 
 interface FeatureLifecycleParams {
     projectId: string;
@@ -30,7 +31,7 @@ interface FeatureLifecycleParams {
 const PATH = '/:projectId/features/:featureName/lifecycle';
 
 export default class FeatureLifecycleController extends Controller {
-    private featureLifecycleService: FeatureLifecycleService;
+    private featureLifecycleService: WithTransactional<FeatureLifecycleService>;
 
     private openApiService: OpenApiService;
 
@@ -39,12 +40,15 @@ export default class FeatureLifecycleController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            featureLifecycleService,
+            transactionalFeatureLifecycleService,
             openApiService,
-        }: Pick<IUnleashServices, 'openApiService' | 'featureLifecycleService'>,
+        }: Pick<
+            IUnleashServices,
+            'openApiService' | 'transactionalFeatureLifecycleService'
+        >,
     ) {
         super(config);
-        this.featureLifecycleService = featureLifecycleService;
+        this.featureLifecycleService = transactionalFeatureLifecycleService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
 
@@ -147,11 +151,8 @@ export default class FeatureLifecycleController extends Controller {
 
         const status = req.body;
 
-        await this.featureLifecycleService.featureCompleted(
-            featureName,
-            projectId,
-            status,
-            req.audit,
+        await this.featureLifecycleService.transactional((service) =>
+            service.featureCompleted(featureName, projectId, status, req.audit),
         );
 
         res.status(200).end();
@@ -166,10 +167,8 @@ export default class FeatureLifecycleController extends Controller {
         }
         const { featureName, projectId } = req.params;
 
-        await this.featureLifecycleService.featureUncompleted(
-            featureName,
-            projectId,
-            req.audit,
+        await this.featureLifecycleService.transactional((service) =>
+            service.featureUncompleted(featureName, projectId, req.audit),
         );
 
         res.status(200).end();

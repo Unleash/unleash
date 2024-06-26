@@ -117,4 +117,5 @@ export interface IUnleashServices {
     projectInsightsService: ProjectInsightsService;
     jobService: JobService;
     featureLifecycleService: FeatureLifecycleService;
+    transactionalFeatureLifecycleService: WithTransactional<FeatureLifecycleService>;
 }

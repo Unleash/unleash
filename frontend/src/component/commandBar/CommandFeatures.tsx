@@ -21,6 +21,7 @@ export const CommandFeatures = ({ searchString }: ICommandBar) => {
     const flags: CommandResultGroupItem[] = features.map((feature) => ({
         name: feature.name,
         link: `/projects/${feature.project}/features/${feature.name}`,
+        description: feature.description,
     }));
 
     return (

@@ -20,7 +20,7 @@ export interface CreateProjectSchema {
      */
     description?: string | null;
     /**
-     * A list of environments that should be enabled for this project. The list must contain at least one environment. If this property is missing, Unleash will default to enabling all non-deprecated environments for the project. This is a beta feature and is not yet generally available.
+     * A list of environments that should be enabled for this project. When provided, the list must contain at least one environment. If this property is missing, Unleash will default to enabling all non-deprecated environments for the project.
      * @minItems 1
      */
     environments?: string[];

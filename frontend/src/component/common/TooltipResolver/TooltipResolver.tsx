@@ -3,7 +3,7 @@ import { Tooltip, type TooltipProps } from '@mui/material';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 
 export interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {
-    title?: string;
+    title?: string | null;
     titleComponent?: ReactNode;
     variant?: 'default' | 'custom';
 }

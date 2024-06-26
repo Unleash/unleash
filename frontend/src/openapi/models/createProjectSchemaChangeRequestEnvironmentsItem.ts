@@ -7,6 +7,6 @@
 export type CreateProjectSchemaChangeRequestEnvironmentsItem = {
     /** The name of the environment to configure change requests for. */
     name: string;
-    /** The number of approvals required for a change request to be fully approved and ready to applied in this environment. If no value is provided, it will be set to the default number, which is 1. Values will be clamped to between 1 and 10 inclusive. this is a beta feature is not yet generally available. */
+    /** The number of approvals required for a change request to be fully approved and ready to applied in this environment. If no value is provided, it will be set to the default number, which is 1. Values will be clamped to between 1 and 10 inclusive. */
     requiredApprovals?: number;
 };

@@ -38,7 +38,7 @@ export interface FeatureSearchResponseSchema {
      * Detailed description of the feature
      * @nullable
      */
-    description?: string | null;
+    description: string | null;
     /** The list of environments where the feature can be used */
     environments: FeatureSearchEnvironmentSchema[];
     /** `true` if the feature was favorited, otherwise `false`. */

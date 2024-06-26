@@ -10,7 +10,8 @@ import {
 import { Link } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StyledProjectIcon } from '../../layout/MainLayout/NavigationSidebar/IconRenderer';
+import { StyledProjectIcon } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -37,6 +38,7 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
 export interface CommandResultGroupItem {
     name: string;
     link: string;
+    description?: string | null;
 }
 
 interface CommandResultGroupProps {
@@ -76,9 +78,15 @@ export const CommandResultGroup = ({
                                 elseShow={<Icon>{icon}</Icon>}
                             />
                         </StyledListItemIcon>
-                        <StyledListItemText>
-                            <Typography>{item.name}</Typography>
-                        </StyledListItemText>
+                        <TooltipResolver
+                            title={item.description}
+                            variant={'custom'}
+                            placement={'bottom-end'}
+                        >
+                            <StyledListItemText>
+                                <Typography>{item.name}</Typography>
+                            </StyledListItemText>
+                        </TooltipResolver>
                     </ListItemButton>
                 ))}
             </List>

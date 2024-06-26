@@ -10,8 +10,8 @@ import {
 import { Link } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StyledProjectIcon } from '../../layout/MainLayout/NavigationSidebar/IconRenderer';
-import { TooltipResolver } from '../../common/TooltipResolver/TooltipResolver';
+import { StyledProjectIcon } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),

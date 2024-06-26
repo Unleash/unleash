@@ -92,3 +92,19 @@ test('can calculate resource size', async () => {
     expect(project.size).toBe(feature1.size + feature2.size);
     expect(feature1.size).toBeGreaterThan(feature2.size);
 });
+
+test('should demonstrate SQL injection vulnerability', async () => {
+    const maliciousLimit = '1; DROP TABLE feature_strategies; --';
+    let errorOccurred = false;
+
+    try {
+        await largestResourcesReadModel.getLargestProjectEnvironments(
+            maliciousLimit,
+        );
+    } catch (error) {
+        errorOccurred = true;
+        console.log('SQL injection attempt caught:', error.message);
+    }
+
+    expect(errorOccurred).toBe(true);
+});

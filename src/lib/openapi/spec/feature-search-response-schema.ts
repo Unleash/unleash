@@ -14,6 +14,7 @@ export const featureSearchResponseSchema = {
     additionalProperties: false,
     required: [
         'name',
+        'description',
         'dependencyType',
         'type',
         'project',

@@ -1,6 +1,6 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
-import slug from 'slug';
+import createSlug from 'slug';
 import type { IAuditUser, IUser } from '../../types/user';
 import type {
     AccessService,
@@ -304,12 +304,9 @@ export default class ProjectService {
             await this.validateEnvironmentsExist(environments);
         }
     }
-
-    generateProjectSlug = (name: string): string => slug(name);
-
     async generateProjectId(name: string): Promise<string> {
         const generateUniqueId = async (name: string, suffix?: number) => {
-            const slug = this.generateProjectSlug(name);
+            const slug = createSlug(name);
             const id = suffix ? `${slug}-${suffix}` : slug;
             if (await this.projectStore.hasProject(id)) {
                 return await generateUniqueId(name, (suffix ?? 0) + 1);

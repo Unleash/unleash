@@ -318,6 +318,7 @@ export const ProjectFeatureToggles = ({
                     id: index,
                     type: '-',
                     name: `Feature name ${index}`,
+                    description: '',
                     createdAt: new Date().toISOString(),
                     createdBy: {
                         id: 0,

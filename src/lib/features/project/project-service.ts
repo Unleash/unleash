@@ -307,17 +307,17 @@ export default class ProjectService {
 
     generateProjectSlug = (name: string): string => slug(name);
 
-    async generateUniqueProjectId(name: string): Promise<string> {
-        const generate = async (name: string, suffix?: number) => {
+    async generateProjectId(name: string): Promise<string> {
+        const generateUniqueId = async (name: string, suffix?: number) => {
             const slug = this.generateProjectSlug(name);
             const id = suffix ? `${slug}-${suffix}` : slug;
             if (await this.projectStore.hasProject(id)) {
-                return await generate(name, (suffix ?? 0) + 1);
+                return await generateUniqueId(name, (suffix ?? 0) + 1);
             } else {
                 return id;
             }
         };
-        return generate(name);
+        return generateUniqueId(name);
     }
 
     async createProject(
@@ -336,9 +336,7 @@ export default class ProjectService {
             await this.validateProjectEnvironments(newProject.environments);
 
             if (!newProject.id?.trim()) {
-                newProject.id = await this.generateUniqueProjectId(
-                    newProject.name,
-                );
+                newProject.id = await this.generateProjectId(newProject.name);
                 return await projectSchema.validateAsync(newProject);
             } else {
                 const validatedData =

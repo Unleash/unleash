@@ -315,16 +315,16 @@ describe('project ID generation', () => {
         const service = createService();
         fc.assert(
             fc.property(fc.string(), (name) => {
-                const projectId = service.generateProjectId(name);
+                const projectId = service.generateProjectSlug(name);
                 expect(projectId).toMatch(encodeURIComponent(projectId));
             }),
         );
     });
 
-    test('it adds a 12 character hex to the end of the id', () => {
+    test('it does not add anything to the name unless it has to', () => {
         const service = createService();
 
-        const projectId = service.generateProjectId('one');
-        expect(projectId).toMatch(/^one-[a-f0-9]{12}$/);
+        const projectId = service.generateProjectSlug('one');
+        expect(projectId).toBe('one');
     });
 });

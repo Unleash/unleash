@@ -62,7 +62,7 @@ import type {
 import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
-import { arraysHaveSameItems, randomId } from '../../util';
+import { arraysHaveSameItems } from '../../util';
 import type { GroupService } from '../../services/group-service';
 import type { IGroupRole } from '../../types/group';
 import type { FavoritesService } from '../../services/favorites-service';
@@ -305,20 +305,19 @@ export default class ProjectService {
         }
     }
 
-    generateProjectId(name: string): string {
-        const urlFriendly = slug(name);
-        const tail = randomId().slice(-12);
-        const id = `${urlFriendly}-${tail}`;
-        return id;
-    }
+    generateProjectSlug = (name: string): string => slug(name);
 
     async generateUniqueProjectId(name: string): Promise<string> {
-        const id = this.generateProjectId(name);
-        if (await this.projectStore.hasProject(id)) {
-            return await this.generateUniqueProjectId(name);
-        } else {
-            return id;
-        }
+        const generate = async (name: string, suffix?: number) => {
+            const slug = this.generateProjectSlug(name);
+            const id = suffix ? `${slug}-${suffix}` : slug;
+            if (await this.projectStore.hasProject(id)) {
+                return await generate(name, (suffix ?? 0) + 1);
+            } else {
+                return id;
+            }
+        };
+        return generate(name);
     }
 
     async createProject(

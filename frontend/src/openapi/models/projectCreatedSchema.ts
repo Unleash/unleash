@@ -10,7 +10,7 @@ import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode';
  * Details about the newly created project.
  */
 export interface ProjectCreatedSchema {
-    /** The list of environments that have change requests enabled. This is a beta feature and may be subject to change. */
+    /** The list of environments that have change requests enabled. */
     changeRequestEnvironments?: ProjectCreatedSchemaChangeRequestEnvironmentsItem[];
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
     defaultStickiness?: string;
@@ -20,7 +20,7 @@ export interface ProjectCreatedSchema {
      */
     description?: string | null;
     /**
-     * The environments enabled for the project. This is a beta feature and may be subject to change.
+     * The environments enabled for the project.
      * @minItems 1
      */
     environments?: string[];

@@ -16,6 +16,7 @@ import type { LastViewedPage } from 'hooks/useRecentlyVisited';
 import type { Theme } from '@mui/material/styles/createTheme';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,
@@ -90,11 +91,23 @@ const RecentlyVisitedFeatureButton = ({
     projectId,
     featureId,
 }: { key: string; projectId: string; featureId: string }) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    const onClick = () => {
+        trackEvent('command-bar', {
+            props: {
+                eventType: `click`,
+                source: 'recently-visited',
+                eventTarget: 'Flags',
+            },
+        });
+    };
     return (
         <ListItemButton
             key={key}
             dense={true}
             component={Link}
+            onClick={onClick}
             to={`/projects/${projectId}/features/${featureId}`}
             sx={listItemButtonStyle}
         >
@@ -115,12 +128,25 @@ const RecentlyVisitedPathButton = ({
     key,
     name,
 }: { path: string; key: string; name: string }) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    const onClick = () => {
+        trackEvent('command-bar', {
+            props: {
+                eventType: `click`,
+                source: 'recently-visited',
+                eventTarget: 'Pages',
+                pageType: name,
+            },
+        });
+    };
     return (
         <ListItemButton
             key={key}
             dense={true}
             component={Link}
             to={path}
+            onClick={onClick}
             sx={listItemButtonStyle}
         >
             <StyledListItemIcon
@@ -145,8 +171,20 @@ const RecentlyVisitedProjectButton = ({
     projectId,
     key,
 }: { projectId: string; key: string }) => {
+    const { trackEvent } = usePlausibleTracker();
     const { project, loading } = useProjectOverview(projectId);
     const projectDeleted = !project.name && !loading;
+
+    const onClick = () => {
+        trackEvent('command-bar', {
+            props: {
+                eventType: `click`,
+                source: 'recently-visited',
+                eventTarget: 'Projects',
+            },
+        });
+    };
+
     if (projectDeleted) return null;
     return (
         <ListItemButton
@@ -154,6 +192,7 @@ const RecentlyVisitedProjectButton = ({
             dense={true}
             component={Link}
             to={`/projects/${projectId}`}
+            onClick={onClick}
             sx={listItemButtonStyle}
         >
             <StyledListItemIcon>

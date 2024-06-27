@@ -10,7 +10,6 @@ Before you begin:
 - You need 
   - Node 20
   - corepack enabled `corepack enable`
-  - yarn installed globally `npm install -g yarn`
 
 ### Don't see your issue? Open one
 

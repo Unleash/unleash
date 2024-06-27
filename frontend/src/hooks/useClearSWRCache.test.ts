@@ -14,7 +14,7 @@ describe('manageCacheEntries', () => {
         expect(cacheMock.has('prefix-3')).toBe(true);
     });
 
-    it('should keep the latest SWR_CACHE_SIZE entries and delete the rest', () => {
+    it('should keep the SWR_CACHE_SIZE entries and delete the rest', () => {
         const cacheMock = new Map();
         cacheMock.set('prefix-1', {});
         cacheMock.set('prefix-2', {});

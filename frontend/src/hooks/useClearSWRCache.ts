@@ -1,19 +1,25 @@
-import { useSWRConfig } from 'swr';
+import { type State, useSWRConfig } from 'swr';
+
+interface Cache<Data = any> {
+    keys(): IterableIterator<string>;
+    get(key: string): State<Data> | undefined;
+    set(key: string, value: State<Data>): void;
+    delete(key: string): void;
+}
 
 export const manageCacheEntries = (
-    cache: any,
+    cache: Cache,
     currentKey: string,
     clearPrefix: string,
     SWR_CACHE_SIZE = 1,
 ) => {
     const keys = [...cache.keys()];
+
     const filteredKeys = keys.filter(
         (key) => key.startsWith(clearPrefix) && key !== currentKey,
     );
-    const sortedKeys = filteredKeys.sort(
-        (a, b) => cache.get(b).timestamp - cache.get(a).timestamp,
-    );
-    const keysToDelete = sortedKeys.slice(SWR_CACHE_SIZE - 1);
+    const keysToDelete = filteredKeys.slice(SWR_CACHE_SIZE - 1);
+
     keysToDelete.forEach((key) => cache.delete(key));
 };
 

@@ -67,7 +67,9 @@ export default class SlackAppAddon extends Addon {
                 );
                 return;
             }
-            this.logger.debug(`Found candidate channels: ${eventChannels}.`);
+            this.logger.debug(
+                `Found candidate channels: ${JSON.stringify(eventChannels)}.`,
+            );
 
             if (!this.slackClient || this.accessToken !== accessToken) {
                 const client = new WebClient(accessToken);
@@ -162,13 +164,13 @@ export default class SlackAppAddon extends Addon {
         if (error.code === ErrorCode.PlatformError) {
             const { data } = error as WebAPIPlatformError;
             this.logger.warn(
-                `Error handling event ${event.type}. A platform error occurred: ${data}`,
+                `Error handling event ${event.type}. A platform error occurred: ${JSON.stringify(data)}`,
                 error,
             );
         } else if (error.code === ErrorCode.RequestError) {
             const { original } = error as WebAPIRequestError;
             this.logger.warn(
-                `Error handling event ${event.type}. A request error occurred: ${original}`,
+                `Error handling event ${event.type}. A request error occurred: ${JSON.stringify(original)}`,
                 error,
             );
         } else if (error.code === ErrorCode.RateLimitedError) {

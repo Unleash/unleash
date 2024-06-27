@@ -44,4 +44,34 @@ describe('ProjectsList', () => {
 
         expect(container.textContent).toEqual('*');
     });
+
+    it('should show up to 4 projects', async () => {
+        const { container } = render(
+            <ProjectsList
+                projects={['project1', 'project2', 'project3', 'project4']}
+            />,
+        );
+
+        expect(container.textContent).toContain(
+            'project1, project2, project3, project4',
+        );
+    });
+
+    it('should abbreviate for 5 projects', async () => {
+        const { container } = render(
+            <ProjectsList
+                projects={[
+                    'project1',
+                    'project2',
+                    'project3',
+                    'project4',
+                    'project5',
+                ]}
+            />,
+        );
+
+        expect(container.textContent).toContain(
+            'project1, project2, project3, +2 more',
+        );
+    });
 });

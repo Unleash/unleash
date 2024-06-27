@@ -1,5 +1,7 @@
 import { styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Fragment, type VFC } from 'react';
@@ -38,9 +40,12 @@ export const ProjectsList: VFC<IProjectsListProps> = ({
         );
     }
 
+    const fieldsHead = fields.length < 5 ? fields : fields.slice(0, 3);
+    const fieldsTail = fields.length < 5 ? [] : fields.slice(3);
+
     return (
         <TextCell>
-            {fields.map((item, index) => (
+            {fieldsHead.map((item, index) => (
                 <Fragment key={item}>
                     {index > 0 && ', '}
                     {!item || item === '*' ? (
@@ -54,6 +59,36 @@ export const ProjectsList: VFC<IProjectsListProps> = ({
                     )}
                 </Fragment>
             ))}
+            <ConditionallyRender
+                condition={fieldsTail.length > 0}
+                show={
+                    <>
+                        {', '}
+                        <HtmlTooltip
+                            title={fieldsTail.map((item, index) => (
+                                <Fragment key={item}>
+                                    {index > 0 && ', '}
+                                    {!item || item === '*' ? (
+                                        <Highlighter search={searchQuery}>
+                                            *
+                                        </Highlighter>
+                                    ) : (
+                                        <StyledLink to={`/projects/${item}`}>
+                                            <Highlighter search={searchQuery}>
+                                                {item}
+                                            </Highlighter>
+                                        </StyledLink>
+                                    )}
+                                </Fragment>
+                            ))}
+                            placement='bottom-start'
+                            arrow
+                        >
+                            <span>+{`${fieldsTail.length}`} more</span>
+                        </HtmlTooltip>
+                    </>
+                }
+            />
         </TextCell>
     );
 };

@@ -9,6 +9,8 @@ import {
 import { Link } from 'react-router-dom';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 import type { Theme } from '@mui/material/styles/createTheme';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import type { JSX } from 'react';
 
 const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,
@@ -42,10 +44,16 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+interface IPageSuggestionItem {
+    icon: JSX.Element;
+    name: string;
+    path: string;
+}
+
 const toListItemData = (
     items: string[],
     routes: Record<string, { path: string; route: string; title: string }>,
-) => {
+): IPageSuggestionItem[] => {
     return items.map((item) => {
         return {
             name: routes[item]?.title ?? item,
@@ -71,8 +79,19 @@ export const PageSuggestions = ({
 }: {
     routes: Record<string, { path: string; route: string; title: string }>;
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const filtered = pages.filter((page) => routes[page]);
     const pageItems = toListItemData(filtered, routes);
+    const onClick = (item: IPageSuggestionItem) => {
+        trackEvent('command-bar', {
+            props: {
+                eventType: `click`,
+                source: 'suggestions',
+                eventTarget: 'Pages',
+                pageType: item.name,
+            },
+        });
+    };
     return (
         <StyledContainer>
             <StyledTypography color='textSecondary'>Pages</StyledTypography>
@@ -83,6 +102,9 @@ export const PageSuggestions = ({
                         dense={true}
                         component={Link}
                         to={item.path}
+                        onClick={() => {
+                            onClick(item);
+                        }}
                         sx={listItemButtonStyle}
                     >
                         <StyledListItemIcon

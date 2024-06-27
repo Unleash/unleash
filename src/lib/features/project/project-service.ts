@@ -1,6 +1,6 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
-import slug from 'slug';
+import createSlug from 'slug';
 import type { IAuditUser, IUser } from '../../types/user';
 import type {
     AccessService,
@@ -62,7 +62,7 @@ import type {
 import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
 import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
-import { arraysHaveSameItems, randomId } from '../../util';
+import { arraysHaveSameItems } from '../../util';
 import type { GroupService } from '../../services/group-service';
 import type { IGroupRole } from '../../types/group';
 import type { FavoritesService } from '../../services/favorites-service';
@@ -304,21 +304,17 @@ export default class ProjectService {
             await this.validateEnvironmentsExist(environments);
         }
     }
-
-    generateProjectId(name: string): string {
-        const urlFriendly = slug(name);
-        const tail = randomId().slice(-12);
-        const id = `${urlFriendly}-${tail}`;
-        return id;
-    }
-
-    async generateUniqueProjectId(name: string): Promise<string> {
-        const id = this.generateProjectId(name);
-        if (await this.projectStore.hasProject(id)) {
-            return await this.generateUniqueProjectId(name);
-        } else {
-            return id;
-        }
+    async generateProjectId(name: string): Promise<string> {
+        const generateUniqueId = async (name: string, suffix?: number) => {
+            const slug = createSlug(name);
+            const id = suffix ? `${slug}-${suffix}` : slug;
+            if (await this.projectStore.hasProject(id)) {
+                return await generateUniqueId(name, (suffix ?? 0) + 1);
+            } else {
+                return id;
+            }
+        };
+        return generateUniqueId(name);
     }
 
     async createProject(
@@ -337,9 +333,7 @@ export default class ProjectService {
             await this.validateProjectEnvironments(newProject.environments);
 
             if (!newProject.id?.trim()) {
-                newProject.id = await this.generateUniqueProjectId(
-                    newProject.name,
-                );
+                newProject.id = await this.generateProjectId(newProject.name);
                 return await projectSchema.validateAsync(newProject);
             } else {
                 const validatedData =

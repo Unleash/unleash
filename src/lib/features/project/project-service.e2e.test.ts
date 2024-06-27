@@ -2650,10 +2650,10 @@ describe('automatic ID generation for create project', () => {
             auditUser,
         );
 
-        expect(project.id).toMatch(/^new-name-/);
+        expect(project.id).toBe('new-name');
     });
 
-    test('two projects with the same name get different ids', async () => {
+    test('projects with the same name get ids with incrementing counters', async () => {
         const createProject = async () =>
             projectService.createProject(
                 { name: 'some name' },
@@ -2663,10 +2663,11 @@ describe('automatic ID generation for create project', () => {
 
         const project1 = await createProject();
         const project2 = await createProject();
+        const project3 = await createProject();
 
-        expect(project1.id).toMatch(/^some-name-/);
-        expect(project2.id).toMatch(/^some-name-/);
-        expect(project1.id).not.toBe(project2.id);
+        expect(project1.id).toBe('some-name');
+        expect(project2.id).toBe('some-name-1');
+        expect(project3.id).toBe('some-name-2');
     });
 
     test.each(['', undefined, '     '])(
@@ -2679,7 +2680,7 @@ describe('automatic ID generation for create project', () => {
                 auditUser,
             );
 
-            expect(project.id).toMatch(new RegExp(`^${name}-`));
+            expect(project.id).toBe(name);
         },
     );
 

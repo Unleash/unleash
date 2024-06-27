@@ -1,4 +1,3 @@
-import fc from 'fast-check';
 import { createTestConfig } from '../../../test/config/test-config';
 import { BadDataError } from '../../error';
 import { type IBaseEvent, RoleName, TEST_AUDIT_USER } from '../../types';
@@ -300,31 +299,5 @@ describe('enterprise extension: enable change requests', () => {
                 TEST_AUDIT_USER,
             ),
         ).resolves.toBeTruthy();
-    });
-});
-
-describe('project ID generation', () => {
-    const createService = () => {
-        const config = createTestConfig();
-        const service = createFakeProjectService(config);
-
-        return service;
-    };
-
-    test('the name that comes out is always url friendly', () => {
-        const service = createService();
-        fc.assert(
-            fc.property(fc.string(), (name) => {
-                const projectId = service.generateProjectId(name);
-                expect(projectId).toMatch(encodeURIComponent(projectId));
-            }),
-        );
-    });
-
-    test('it adds a 12 character hex to the end of the id', () => {
-        const service = createService();
-
-        const projectId = service.generateProjectId('one');
-        expect(projectId).toMatch(/^one-[a-f0-9]{12}$/);
     });
 });

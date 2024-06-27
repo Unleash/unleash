@@ -54,7 +54,11 @@
     "semver": "^7.5.3"
   },
   "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -70,5 +74,6 @@
     "react-router": "6.23.1",
     "replace-in-file": "7.2.0",
     "typescript": "5.4.5"
-  }
+  },
+  "packageManager": "yarn@4.3.1"
 }

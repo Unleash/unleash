@@ -35,6 +35,8 @@ jobs:
           cache-dependency-path: |
             current/yarn.lock
             main/yarn.lock
+      - name: Enable corepack
+        run: corepack enable
       - name: Compare errors if enabling strictNullChecks
         env:
           URL: ${{ github.event.pull_request.comments_url }}
@@ -50,9 +52,9 @@ jobs:
           YARN_1="yarn --mutex network --cwd ./current"
           YARN_2="yarn --mutex network --cwd ./main"
 
-          $YARN_1 install --ignore-scripts &> /dev/null && $YARN_1 build:backend --strictNullChecks true 2> .stderr-current > .out-current &
+          $YARN_1 install  &> /dev/null && $YARN_1 build:backend --strictNullChecks true 2> .stderr-current > .out-current &
           pid1=$!
-          $YARN_2 install --ignore-scripts &> /dev/null && $YARN_2 build:backend --strictNullChecks true 2> .stderr-main > .out-main &
+          $YARN_2 install  &> /dev/null && $YARN_2 build:backend --strictNullChecks true 2> .stderr-main > .out-main &
           pid2=$!
 
           # wait for the processes that are expected to fail

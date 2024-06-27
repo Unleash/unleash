@@ -39,6 +39,8 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn'
+      - name: Enable corepack
+        run: corepack enable
       - run: yarn
       - run: yarn build:frontend:if-needed
       - run: yarn run test:coverage

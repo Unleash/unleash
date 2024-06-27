@@ -7,6 +7,9 @@ Before you begin:
 - Have you read the [code of conduct](CODE_OF_CONDUCT.md)?
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
 - Browse the [developer-guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
+- You need 
+  - Node 20
+  - corepack enabled `corepack enable`
 
 ### Don't see your issue? Open one
 

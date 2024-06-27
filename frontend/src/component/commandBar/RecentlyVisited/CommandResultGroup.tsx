@@ -12,6 +12,7 @@ import type { Theme } from '@mui/material/styles/createTheme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StyledProjectIcon } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -52,11 +53,23 @@ export const CommandResultGroup = ({
     groupName,
     items,
 }: CommandResultGroupProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const slicedItems = items.slice(0, 3);
 
     if (items.length === 0) {
         return null;
     }
+
+    const onClick = (item: CommandResultGroupItem) => {
+        trackEvent('command-bar', {
+            props: {
+                eventType: `click`,
+                source: 'search',
+                eventTarget: groupName,
+                ...(groupName === 'Pages' && { pageType: item.name }),
+            },
+        });
+    };
     return (
         <>
             <StyledTypography color='textSecondary'>
@@ -68,6 +81,9 @@ export const CommandResultGroup = ({
                         key={`command-result-group-${groupName}-${index}`}
                         dense={true}
                         component={Link}
+                        onClick={() => {
+                            onClick(item);
+                        }}
                         to={item.link}
                         sx={listItemButtonStyle}
                     >

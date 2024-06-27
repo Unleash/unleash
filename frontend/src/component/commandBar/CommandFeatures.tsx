@@ -3,11 +3,16 @@ import {
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { useEffect } from 'react';
 
 interface ICommandBar {
     searchString: string;
+    setSearchedFlagCount: (count: number) => void;
 }
-export const CommandFeatures = ({ searchString }: ICommandBar) => {
+export const CommandFeatures = ({
+    searchString,
+    setSearchedFlagCount,
+}: ICommandBar) => {
     const { features = [] } = useFeatureSearch(
         {
             query: searchString,
@@ -23,6 +28,10 @@ export const CommandFeatures = ({ searchString }: ICommandBar) => {
         link: `/projects/${feature.project}/features/${feature.name}`,
         description: feature.description,
     }));
+
+    useEffect(() => {
+        setSearchedFlagCount(flags.length);
+    }, [JSON.stringify(flags)]);
 
     return (
         <CommandResultGroup groupName={'Flags'} icon={'flag'} items={flags} />

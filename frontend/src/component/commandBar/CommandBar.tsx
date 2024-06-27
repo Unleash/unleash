@@ -25,6 +25,7 @@ import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRout
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { CommandFeatures } from './CommandFeatures';
+import { usePlausibleTracker } from '../../hooks/usePlausibleTracker';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -95,6 +96,7 @@ interface IPageRouteInfo {
 }
 
 export const CommandBar = () => {
+    const { trackEvent } = usePlausibleTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -105,6 +107,8 @@ export const CommandBar = () => {
     const [searchedPages, setSearchedPages] = useState<
         CommandResultGroupItem[]
     >([]);
+    const [searchedFlagCount, setSearchedFlagCount] = useState(0);
+    const [value, setValue] = useState<string>('');
     const { lastVisited } = useRecentlyVisited();
     const { routes } = useRoutes();
     const allRoutes: Record<string, IPageRouteInfo> = {};
@@ -148,10 +152,25 @@ export const CommandBar = () => {
             link: page.path,
         }));
         setSearchedPages(mappedPages);
+
+        const noResultsFound =
+            query.length !== 0 &&
+            mappedProjects.length === 0 &&
+            mappedPages.length === 0 &&
+            searchedFlagCount === 0;
+        if (noResultsFound) {
+            trackEvent('command-bar', {
+                props: {
+                    eventType: 'no search results found',
+                    query: query,
+                },
+            });
+        }
     }, 200);
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
+        setValue(value);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -194,7 +213,7 @@ export const CommandBar = () => {
                         'aria-label': placeholder,
                         'data-testid': SEARCH_INPUT,
                     }}
-                    value={searchString}
+                    value={value}
                     onChange={(e) => onSearchChange(e.target.value)}
                     onFocus={() => {
                         setShowSuggestions(true);
@@ -203,13 +222,13 @@ export const CommandBar = () => {
 
                 <Box sx={{ width: (theme) => theme.spacing(4) }}>
                     <ConditionallyRender
-                        condition={Boolean(searchString)}
+                        condition={Boolean(value)}
                         show={
                             <Tooltip title='Clear search query' arrow>
                                 <IconButton
                                     size='small'
                                     onClick={(e) => {
-                                        e.stopPropagation(); // prevent outside click from the lazily added element
+                                        e.stopPropagation();
                                         onSearchChange('');
                                         searchInputRef.current?.focus();
                                     }}
@@ -226,11 +245,14 @@ export const CommandBar = () => {
             </StyledSearch>
 
             <ConditionallyRender
-                condition={Boolean(searchString) && showSuggestions}
+                condition={Boolean(value) && showSuggestions}
                 show={
                     <CommandResultsPaper>
                         {searchString !== undefined && (
-                            <CommandFeatures searchString={searchString} />
+                            <CommandFeatures
+                                searchString={searchString}
+                                setSearchedFlagCount={setSearchedFlagCount}
+                            />
                         )}
                         <CommandResultGroup
                             groupName={'Projects'}

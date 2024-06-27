@@ -61,7 +61,8 @@ export type CustomEvents =
     | 'insights-share'
     | 'many-strategies'
     | 'sdk-banner'
-    | 'feature-lifecycle';
+    | 'feature-lifecycle'
+    | 'command-bar';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

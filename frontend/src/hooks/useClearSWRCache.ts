@@ -1,13 +1,8 @@
-import { type State, useSWRConfig } from 'swr';
+import { useSWRConfig } from 'swr';
 
-interface Cache<Data = any> {
-    keys(): IterableIterator<string>;
-    get(key: string): State<Data> | undefined;
-    set(key: string, value: State<Data>): void;
-    delete(key: string): void;
-}
+type Cache = ReturnType<typeof useSWRConfig>['cache'];
 
-export const manageCacheEntries = (
+export const clearCacheEntries = (
     cache: Cache,
     currentKey: string,
     clearPrefix: string,
@@ -34,5 +29,5 @@ export const useClearSWRCache = (
     SWR_CACHE_SIZE = 1,
 ) => {
     const { cache } = useSWRConfig();
-    manageCacheEntries(cache, currentKey, clearPrefix, SWR_CACHE_SIZE);
+    clearCacheEntries(cache, currentKey, clearPrefix, SWR_CACHE_SIZE);
 };

@@ -42,4 +42,26 @@ describe('useFeatureSearch', () => {
         await screen.findByText(/Features:/);
         await screen.findByText(/Total:/);
     });
+
+    test('should keep at least latest cache entry', async () => {
+        testServerRoute(server, '/api/admin/search/features?project=project1', {
+            features: [{ name: 'Feature1' }],
+            total: 1,
+        });
+        render(<TestComponent params={{ project: 'project1' }} />);
+        await screen.findByText(/Features:/);
+        await screen.findByText(
+            'Cache: api/admin/search/features?project=project1',
+        );
+
+        testServerRoute(server, '/api/admin/search/features?project=project2', {
+            features: [{ name: 'Feature2' }],
+            total: 1,
+        });
+        render(<TestComponent params={{ project: 'project2' }} />);
+        await screen.findByText(/Features:/);
+        await screen.findByText(
+            'Cache: api/admin/search/features?project=project1api/admin/search/features?project=project2',
+        );
+    });
 });

@@ -1,4 +1,3 @@
-import type React from 'react';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -11,14 +10,13 @@ interface IFeatureStrategyEnabledProps {
     projectId: string;
     featureId: string;
     environmentId: string;
-    children?: React.ReactNode;
+    isChangeRequest?: boolean;
 }
 
 export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
     projectId,
     featureId,
     environmentId,
-    children,
 }) => {
     const featurePagePath = formatFeaturePath(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
@@ -28,7 +26,14 @@ export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
     return (
         <ConditionallyRender
             condition={isFeatureEnabledInEnvironment(feature, environmentId)}
-            show={children}
+            show={
+                <Alert severity='success'>
+                    This feature flag is currently enabled in the{' '}
+                    <strong>{environmentId}</strong> environment. Any changes
+                    made here will be available to users as soon as you hit{' '}
+                    <strong>save</strong>.
+                </Alert>
+            }
             elseShow={
                 <Alert severity='warning'>
                     This feature flag is currently disabled in the{' '}

@@ -172,6 +172,7 @@ describe('updateWeightEdit', () => {
                     weight: 350,
                 },
             ];
+
             const weights = updateWeightEdit(variants, 1000).map(
                 (variant) => variant.weight,
             );

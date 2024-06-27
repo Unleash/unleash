@@ -72,9 +72,13 @@ const StyledTypographySubtitle = styled(Typography)(({ theme }) => ({
 
 interface ISplitPreviewSliderProps {
     variants: IFeatureVariant[];
+    weightsError?: boolean;
 }
 
-const SplitPreviewSlider = ({ variants }: ISplitPreviewSliderProps) => {
+const SplitPreviewSlider = ({
+    variants,
+    weightsError,
+}: ISplitPreviewSliderProps) => {
     if (variants.length < 1) {
         return null;
     }
@@ -108,7 +112,12 @@ const SplitPreviewSlider = ({ variants }: ISplitPreviewSliderProps) => {
                                 {' '}
                                 <StyledSegment>
                                     <StyledSegmentTrack index={index} />
-                                    <StyledTypographySubtitle variant='subtitle2'>
+                                    <StyledTypographySubtitle
+                                        variant='subtitle2'
+                                        color={
+                                            weightsError ? 'error' : 'inherit'
+                                        }
+                                    >
                                         {value}%
                                     </StyledTypographySubtitle>
                                 </StyledSegment>

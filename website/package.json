@@ -39,7 +39,7 @@
     "url-loader": "4.1.1"
   },
   "resolutions": {
-    "axios": "^0.28.0",
+    "axios": "^1.0.0",
     "async": "^3.2.4",
     "trim": "^1.0.0",
     "got": "^13.0.0",

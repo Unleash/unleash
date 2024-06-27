@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'navigationSidebar'
     | 'commandBarUI'
     | 'flagCreator'
-    | 'anonymizeProjectOwners';
+    | 'anonymizeProjectOwners'
+    | 'resourceLimits';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -292,6 +293,10 @@ const flags: IFlags = {
     ),
     anonymizeProjectOwners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,
+        false,
+    ),
+    resourceLimits: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_RESOURCE_LIMITS,
         false,
     ),
 };

@@ -142,6 +142,7 @@ exports[`should create default config 1`] = `
       "personalAccessTokensKillSwitch": false,
       "projectOverviewRefactorFeedback": false,
       "queryMissingTokens": false,
+      "resourceLimits": false,
       "responseTimeMetricsFix": false,
       "responseTimeWithAppNameKillSwitch": false,
       "scimApi": false,

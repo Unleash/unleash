@@ -25,7 +25,7 @@ import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRout
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { CommandFeatures } from './CommandFeatures';
-import { usePlausibleTracker } from '../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',

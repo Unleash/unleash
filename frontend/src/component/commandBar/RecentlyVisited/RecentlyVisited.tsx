@@ -16,7 +16,7 @@ import type { LastViewedPage } from 'hooks/useRecentlyVisited';
 import type { Theme } from '@mui/material/styles/createTheme';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,

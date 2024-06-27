@@ -12,7 +12,7 @@ import type { Theme } from '@mui/material/styles/createTheme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StyledProjectIcon } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),

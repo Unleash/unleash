@@ -874,18 +874,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@biomejs/biome@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/biome@npm:1.8.1"
+"@biomejs/biome@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/biome@npm:1.8.2"
   dependencies:
-    "@biomejs/cli-darwin-arm64": "npm:1.8.1"
-    "@biomejs/cli-darwin-x64": "npm:1.8.1"
-    "@biomejs/cli-linux-arm64": "npm:1.8.1"
-    "@biomejs/cli-linux-arm64-musl": "npm:1.8.1"
-    "@biomejs/cli-linux-x64": "npm:1.8.1"
-    "@biomejs/cli-linux-x64-musl": "npm:1.8.1"
-    "@biomejs/cli-win32-arm64": "npm:1.8.1"
-    "@biomejs/cli-win32-x64": "npm:1.8.1"
+    "@biomejs/cli-darwin-arm64": "npm:1.8.2"
+    "@biomejs/cli-darwin-x64": "npm:1.8.2"
+    "@biomejs/cli-linux-arm64": "npm:1.8.2"
+    "@biomejs/cli-linux-arm64-musl": "npm:1.8.2"
+    "@biomejs/cli-linux-x64": "npm:1.8.2"
+    "@biomejs/cli-linux-x64-musl": "npm:1.8.2"
+    "@biomejs/cli-win32-arm64": "npm:1.8.2"
+    "@biomejs/cli-win32-x64": "npm:1.8.2"
   dependenciesMeta:
     "@biomejs/cli-darwin-arm64":
       optional: true
@@ -905,62 +905,62 @@ __metadata:
       optional: true
   bin:
     biome: bin/biome
-  checksum: 10c0/17990974c5a4f56104bc59e45d1aebc50ffa146c0d9f3da99f5c54770188939608d08f1edb70b69ea7715c4d9da6d10d4b2b1ed7cd9b54ec58fcd89cda2a1d38
+  checksum: 10c0/29f5bd0bb52fc6775b176ccdfcc613d75a160149ad9f99498d20970780d4eb528c34f440ac13dea76df7446710c00ccda1a55785f320c851b9693076b88ce12c
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-arm64@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-darwin-arm64@npm:1.8.1"
+"@biomejs/cli-darwin-arm64@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-darwin-arm64@npm:1.8.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-x64@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-darwin-x64@npm:1.8.1"
+"@biomejs/cli-darwin-x64@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-darwin-x64@npm:1.8.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64-musl@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-linux-arm64-musl@npm:1.8.1"
+"@biomejs/cli-linux-arm64-musl@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-linux-arm64-musl@npm:1.8.2"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-linux-arm64@npm:1.8.1"
+"@biomejs/cli-linux-arm64@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-linux-arm64@npm:1.8.2"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64-musl@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-linux-x64-musl@npm:1.8.1"
+"@biomejs/cli-linux-x64-musl@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-linux-x64-musl@npm:1.8.2"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-linux-x64@npm:1.8.1"
+"@biomejs/cli-linux-x64@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-linux-x64@npm:1.8.2"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-arm64@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-win32-arm64@npm:1.8.1"
+"@biomejs/cli-win32-arm64@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-win32-arm64@npm:1.8.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-x64@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@biomejs/cli-win32-x64@npm:1.8.1"
+"@biomejs/cli-win32-x64@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@biomejs/cli-win32-x64@npm:1.8.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -9762,7 +9762,7 @@ __metadata:
   dependencies:
     "@apidevtools/swagger-parser": "npm:10.1.0"
     "@babel/core": "npm:7.24.7"
-    "@biomejs/biome": "npm:1.8.1"
+    "@biomejs/biome": "npm:1.8.2"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^1.0.0-rc.7"
     "@slack/web-api": "npm:^6.10.0"
     "@swc/core": "npm:1.6.3"

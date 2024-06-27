@@ -38,7 +38,9 @@ describe('SlackAppAddon', () => {
     const getLogger = jest.fn(() => loggerMock);
     const mockError = {
         code: ErrorCode.PlatformError,
-        data: 'Platform error message',
+        data: {
+            error: 'Platform error message',
+        },
     };
 
     const event: IEvent = {
@@ -150,7 +152,7 @@ describe('SlackAppAddon', () => {
         });
 
         expect(loggerMock.warn).toHaveBeenCalledWith(
-            `Error handling event ${event.type}. A platform error occurred: Platform error message`,
+            `Error handling event ${event.type}. A platform error occurred: ${JSON.stringify(mockError.data)}`,
             expect.any(Object),
         );
     });
@@ -178,7 +180,7 @@ describe('SlackAppAddon', () => {
 
         expect(postMessage).toHaveBeenCalledTimes(3);
         expect(loggerMock.warn).toHaveBeenCalledWith(
-            `Error handling event ${FEATURE_ENVIRONMENT_ENABLED}. A platform error occurred: Platform error message`,
+            `Error handling event ${FEATURE_ENVIRONMENT_ENABLED}. A platform error occurred: ${JSON.stringify(mockError.data)}`,
             expect.any(Object),
         );
         expect(loggerMock.info).toHaveBeenCalledWith(

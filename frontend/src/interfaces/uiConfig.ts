@@ -86,6 +86,7 @@ export type UiFlags = {
     navigationSidebar?: boolean;
     commandBarUI?: boolean;
     flagCreator?: boolean;
+    resourceLimits?: boolean;
 };
 
 export interface IVersionInfo {

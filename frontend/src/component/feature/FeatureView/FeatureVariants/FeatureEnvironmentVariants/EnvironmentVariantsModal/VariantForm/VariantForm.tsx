@@ -337,7 +337,7 @@ export const VariantForm = ({
 
     const percentageError =
         errors?.percentage || weightsError
-            ? 'Total weight must equal 100%'
+            ? 'Total weight may not exceed 100%'
             : '';
 
     return (

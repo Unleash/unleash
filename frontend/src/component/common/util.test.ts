@@ -116,7 +116,7 @@ describe('updateWeightEdit', () => {
     });
 
     describe('sum over 100% does not result in negative weight', () => {
-        it('can deal with weight of 2 items', () => {
+        it('when 2 items exceed 100%', () => {
             const variants = [
                 {
                     ...variantTemplate,
@@ -140,7 +140,7 @@ describe('updateWeightEdit', () => {
             expect(weights).toEqual([600, 600, 0]);
         });
 
-        it('can deal with weight of more items', () => {
+        it('when sum of multiple items exceed 100%', () => {
             const variants = [
                 {
                     ...variantTemplate,

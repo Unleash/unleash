@@ -134,9 +134,11 @@ describe('updateWeightEdit', () => {
                 },
                 { ...variantTemplate, id: '3', name: 'C' },
             ];
+
             const weights = updateWeightEdit(variants, 1000).map(
                 (variant) => variant.weight,
             );
+
             expect(weights).toEqual([600, 600, 0]);
         });
 
@@ -173,6 +175,7 @@ describe('updateWeightEdit', () => {
             const weights = updateWeightEdit(variants, 1000).map(
                 (variant) => variant.weight,
             );
+
             expect(weights).toEqual([400, 450, 0, 0, 350]);
         });
     });

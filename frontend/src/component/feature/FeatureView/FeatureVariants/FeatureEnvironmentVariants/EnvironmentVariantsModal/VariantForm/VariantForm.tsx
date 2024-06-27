@@ -173,6 +173,7 @@ interface IVariantFormProps {
     error?: string;
     disableOverrides?: boolean;
     decorationColor?: string;
+    weightsError?: boolean;
 }
 
 export const VariantForm = ({
@@ -183,6 +184,7 @@ export const VariantForm = ({
     error,
     disableOverrides = false,
     decorationColor,
+    weightsError,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
@@ -333,6 +335,11 @@ export const VariantForm = ({
         }
     }, [variant.weight]);
 
+    const percentageError =
+        errors?.percentage || weightsError
+            ? 'Total weight may not exceed 100%'
+            : '';
+
     return (
         <StyledVariantForm data-testid='VARIANT'>
             <StyledDecoration color={decorationColor} />
@@ -394,8 +401,8 @@ export const VariantForm = ({
                                 data-testid='VARIANT_WEIGHT_INPUT'
                                 type='number'
                                 label='Variant weight'
-                                error={Boolean(errors.percentage)}
-                                errorText={errors.percentage}
+                                error={Boolean(percentageError)}
+                                errorText={percentageError}
                                 value={percentage}
                                 onChange={(e) =>
                                     onSetPercentage(e.target.value)

@@ -115,6 +115,12 @@ export const NewStrategyVariants: FC<{
         });
     };
 
+    const variantWeightsError =
+        variantsEdit.reduce(
+            (acc, variant) => acc + (variant.weight || 0),
+            0,
+        ) !== 1000;
+
     return (
         <>
             <StyledVariantsHeader>
@@ -178,6 +184,7 @@ export const NewStrategyVariants: FC<{
                                 i % theme.palette.variants.length
                             ]
                         }
+                        weightsError={variantWeightsError}
                     />
                 ))}
             </StyledVariantForms>
@@ -192,7 +199,10 @@ export const NewStrategyVariants: FC<{
             >
                 Add variant
             </PermissionButton>
-            <SplitPreviewSlider variants={variantsEdit} />
+            <SplitPreviewSlider
+                variants={variantsEdit}
+                weightsError={variantWeightsError}
+            />
         </>
     );
 };

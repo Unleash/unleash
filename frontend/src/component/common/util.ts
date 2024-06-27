@@ -143,7 +143,7 @@ export function updateWeightEdit(
     );
 
     const getPercentage = () =>
-        Math.round(remainingPercentage / variableVariantCount);
+        Math.max(Math.round(remainingPercentage / variableVariantCount), 0);
 
     return variants.map((variant) => {
         if (variant.weightType !== weightTypes.FIX) {

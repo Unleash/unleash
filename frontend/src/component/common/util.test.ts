@@ -114,4 +114,70 @@ describe('updateWeightEdit', () => {
         );
         expect(weights).toEqual([500, 500, 0]);
     });
+
+    describe('sum over 100% does not result in negative weight', () => {
+        it('when 2 items exceed 100%', () => {
+            const variants = [
+                {
+                    ...variantTemplate,
+                    weightType: 'fix' as const,
+                    weight: 600,
+                    id: '1',
+                    name: 'A',
+                },
+                {
+                    ...variantTemplate,
+                    weightType: 'fix' as const,
+                    weight: 600,
+                    id: '2',
+                    name: 'B',
+                },
+                { ...variantTemplate, id: '3', name: 'C' },
+            ];
+
+            const weights = updateWeightEdit(variants, 1000).map(
+                (variant) => variant.weight,
+            );
+
+            expect(weights).toEqual([600, 600, 0]);
+        });
+
+        it('when sum of multiple items exceed 100%', () => {
+            const variants = [
+                {
+                    ...variantTemplate,
+                    weightType: 'fix' as const,
+                    weight: 400,
+                    id: '1',
+                    name: 'A',
+                },
+                {
+                    ...variantTemplate,
+                    weightType: 'fix' as const,
+                    weight: 450,
+                    id: '2',
+                    name: 'B',
+                },
+                {
+                    ...variantTemplate,
+                    id: '3',
+                    name: 'C',
+                },
+                { ...variantTemplate, id: '4', name: 'D' },
+                {
+                    ...variantTemplate,
+                    id: '5',
+                    name: 'E',
+                    weightType: 'fix' as const,
+                    weight: 350,
+                },
+            ];
+
+            const weights = updateWeightEdit(variants, 1000).map(
+                (variant) => variant.weight,
+            );
+
+            expect(weights).toEqual([400, 450, 0, 0, 350]);
+        });
+    });
 });

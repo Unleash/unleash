@@ -207,7 +207,7 @@ const RecentlyVisitedProjectButton = ({
     );
 };
 
-export const RecentlyVisited = ({
+export const CommandRecent = ({
     lastVisited,
     routes,
 }: {

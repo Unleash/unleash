@@ -148,7 +148,7 @@ module.exports = {
                         },
                     ],
                 },
-                { 
+                {
                     type: 'doc',
                     label: 'iOS',
                     id: 'feature-flag-tutorials/ios/implementing-feature-flags',

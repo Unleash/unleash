@@ -1,11 +1,11 @@
-import { List } from '@mui/material';
-import type { LastViewedPage } from 'hooks/useRecentlyVisited';
 import {
     CommandResultGroup,
     RecentlyVisitedFeatureButton,
     RecentlyVisitedPathButton,
     RecentlyVisitedProjectButton,
 } from './RecentlyVisited/CommandResultGroup';
+import { List } from '@mui/material';
+import type { LastViewedPage } from 'hooks/useRecentlyVisited';
 
 const toListItemButton = (
     item: LastViewedPage,

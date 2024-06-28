@@ -19,6 +19,7 @@ interface IFeatureStrategyMenuProps {
     variant?: IPermissionButtonProps['variant'];
     matchWidth?: boolean;
     size?: IPermissionButtonProps['size'];
+    disableReason?: string;
 }
 
 const StyledStrategyMenu = styled('div')({
@@ -43,6 +44,7 @@ export const FeatureStrategyMenu = ({
     variant,
     size,
     matchWidth,
+    disableReason,
 }: IFeatureStrategyMenuProps) => {
     const [anchor, setAnchor] = useState<Element>();
     const navigate = useNavigate();
@@ -86,6 +88,10 @@ export const FeatureStrategyMenu = ({
                 variant={variant}
                 size={size}
                 sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
+                disabled={Boolean(disableReason)}
+                tooltipProps={{
+                    title: disableReason ? disableReason : undefined,
+                }}
             >
                 {label}
             </PermissionButton>
@@ -99,8 +105,9 @@ export const FeatureStrategyMenu = ({
                 variant='outlined'
                 size={size}
                 hideLockIcon
+                disabled={Boolean(disableReason)}
                 tooltipProps={{
-                    title: 'More strategies',
+                    title: disableReason ? disableReason : 'More strategies',
                 }}
             >
                 <MoreVert

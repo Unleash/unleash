@@ -2684,6 +2684,40 @@ describe('automatic ID generation for create project', () => {
         },
     );
 
+    test('Projects with long names get ids capped at 90 characters and then suffixed', async () => {
+        const name = Array.from({ length: 200 })
+            .map(() => 'a')
+            .join();
+
+        const project = await projectService.createProject(
+            {
+                name,
+            },
+            user,
+            auditUser,
+        );
+
+        expect(project.name).toBe(name);
+        expect(project.id.length).toBeLessThanOrEqual(90);
+
+        const secondName =
+            name +
+            Array.from({ length: 100 })
+                .map(() => 'b')
+                .join();
+
+        const secondProject = await projectService.createProject(
+            {
+                name: secondName,
+            },
+            user,
+            auditUser,
+        );
+
+        expect(secondProject.name).toBe(secondName);
+        expect(secondProject.id).toBe(`${project.id}-1`);
+    });
+
     describe('backwards compatibility', () => {
         const featureFlag = 'createProjectWithEnvironmentConfig';
 

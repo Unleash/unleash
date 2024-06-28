@@ -358,6 +358,27 @@ class FeatureToggleService {
         }
     }
 
+    async validateStrategyLimit(
+        featureEnv: {
+            projectId: string;
+            environment: string;
+            featureName: string;
+        },
+        limit: number,
+    ) {
+        if (!this.flagResolver.isEnabled('resourceLimits')) return;
+        const existingCount = (
+            await this.featureStrategiesStore.getStrategiesForFeatureEnv(
+                featureEnv.projectId,
+                featureEnv.featureName,
+                featureEnv.environment,
+            )
+        ).length;
+        if (existingCount >= limit) {
+            throw new BadDataError(`Strategy limit of ${limit} exceeded}.`);
+        }
+    }
+
     async validateStrategyType(
         strategyName: string | undefined,
     ): Promise<void> {
@@ -623,6 +644,11 @@ class FeatureToggleService {
             );
             strategyConfig.variants = fixedVariants;
         }
+
+        await this.validateStrategyLimit(
+            { featureName, projectId, environment },
+            30,
+        );
 
         try {
             const newFeatureStrategy =

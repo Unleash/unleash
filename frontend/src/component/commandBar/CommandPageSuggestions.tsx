@@ -1,8 +1,3 @@
-import { ListItemButton } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import type { JSX } from 'react';
 import {
     CommandResultGroup,
     listItemButtonStyle,
@@ -10,6 +5,11 @@ import {
     StyledListItemIcon,
     StyledListItemText,
 } from './RecentlyVisited/CommandResultGroup';
+import { ListItemButton } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import type { JSX } from 'react';
 
 interface IPageSuggestionItem {
     icon: JSX.Element;

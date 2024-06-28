@@ -305,16 +305,16 @@ export default class ProjectService {
         }
     }
     async generateProjectId(name: string): Promise<string> {
-        const generateUniqueId = async (name: string, suffix?: number) => {
-            const slug = createSlug(name);
+        const slug = createSlug(name).slice(0, 90);
+        const generateUniqueId = async (suffix?: number) => {
             const id = suffix ? `${slug}-${suffix}` : slug;
             if (await this.projectStore.hasProject(id)) {
-                return await generateUniqueId(name, (suffix ?? 0) + 1);
+                return await generateUniqueId((suffix ?? 0) + 1);
             } else {
                 return id;
             }
         };
-        return generateUniqueId(name);
+        return generateUniqueId();
     }
 
     async createProject(

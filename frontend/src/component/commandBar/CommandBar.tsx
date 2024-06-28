@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -27,6 +27,7 @@ import { CommandFeatures } from './CommandFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { CommandRecent } from './CommandRecent';
 import { CommandPages } from './CommandPages';
+import { CommandBarFeedback } from './CommandBarFeedback';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -35,7 +36,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     top: '39px',
     zIndex: 4,
     borderTop: theme.spacing(0),
-    padding: theme.spacing(4, 0, 1.5),
+    padding: theme.spacing(1.5, 0, 1.5),
     borderRadius: 0,
     borderBottomLeftRadius: theme.spacing(1),
     borderBottomRightRadius: theme.spacing(1),
@@ -109,6 +110,7 @@ export const CommandBar = () => {
         CommandResultGroupItem[]
     >([]);
     const [searchedFlagCount, setSearchedFlagCount] = useState(0);
+    const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
     const { lastVisited } = useRecentlyVisited();
     const { routes } = useRoutes();
@@ -167,7 +169,12 @@ export const CommandBar = () => {
                 },
             });
         }
+        setHasNoResults(noResultsFound);
     }, 200);
+
+    useEffect(() => {
+        debouncedSetSearchState(value);
+    }, [searchedFlagCount]);
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
@@ -260,7 +267,16 @@ export const CommandBar = () => {
                             icon={'flag'}
                             items={searchedProjects}
                         />
+                        <CommandResultGroup
+                            groupName={'Pages'}
+                            icon={'flag'}
+                            items={searchedPages}
+                        />
                         <CommandPages items={searchedPages} />
+                        <ConditionallyRender
+                            condition={hasNoResults}
+                            show={<CommandBarFeedback />}
+                        />
                     </CommandResultsPaper>
                 }
                 elseShow={

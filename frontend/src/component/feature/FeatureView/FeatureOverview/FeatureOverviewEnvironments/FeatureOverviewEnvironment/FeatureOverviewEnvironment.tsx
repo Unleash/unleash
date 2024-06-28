@@ -117,6 +117,19 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     },
 }));
 
+const useStrategyLimit = (strategyCount: number) => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const { uiConfig } = useUiConfig();
+    const featureEnvironmentStrategiesLimit =
+        uiConfig.resourceLimits.featureEnvironmentStrategies;
+    const limitReached =
+        resourceLimitsEnabled &&
+        strategyCount >= featureEnvironmentStrategiesLimit;
+    const limitMessage = `Limit of ${featureEnvironmentStrategiesLimit} strategies reached`;
+
+    return { limitReached, limitMessage };
+};
+
 const FeatureOverviewEnvironment = ({
     env,
 }: IFeatureOverviewEnvironmentProps) => {
@@ -133,15 +146,10 @@ const FeatureOverviewEnvironment = ({
     const featureEnvironment = feature?.environments.find(
         (featureEnvironment) => featureEnvironment.name === env.name,
     );
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const { uiConfig } = useUiConfig();
-    const featureEnvironmentStrategiesLimit =
-        uiConfig.resourceLimits.featureEnvironmentStrategies;
-    const limitReached =
-        resourceLimitsEnabled &&
-        Array.isArray(featureEnvironment?.strategies) &&
-        featureEnvironment?.strategies.length >=
-            featureEnvironmentStrategiesLimit;
+
+    const { limitMessage, limitReached } = useStrategyLimit(
+        featureEnvironment?.strategies.length || 0,
+    );
 
     return (
         <ConditionallyRender
@@ -192,7 +200,7 @@ const FeatureOverviewEnvironment = ({
                                         size='small'
                                         disableReason={
                                             limitReached
-                                                ? `Limit of ${featureEnvironmentStrategiesLimit} strategies reached`
+                                                ? limitMessage
                                                 : undefined
                                         }
                                     />
@@ -239,7 +247,7 @@ const FeatureOverviewEnvironment = ({
                                                 environmentId={env.name}
                                                 disableReason={
                                                     limitReached
-                                                        ? 'Limit reached'
+                                                        ? limitMessage
                                                         : undefined
                                                 }
                                             />

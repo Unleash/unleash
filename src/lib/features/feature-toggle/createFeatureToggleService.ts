@@ -155,9 +155,7 @@ export const createFeatureToggleService = (
     return featureToggleService;
 };
 
-export const createFakeFeatureToggleService = (
-    config: IUnleashConfig,
-): FeatureToggleService => {
+export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const { getLogger, flagResolver } = config;
     const eventStore = new FakeEventStore();
     const strategyStore = new FakeStrategiesStore();
@@ -216,5 +214,5 @@ export const createFakeFeatureToggleService = (
         dependentFeaturesService,
         featureLifecycleReadModel,
     );
-    return featureToggleService;
+    return { featureToggleService, featureToggleStore };
 };

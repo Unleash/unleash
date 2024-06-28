@@ -68,7 +68,7 @@ export const createFakeExportImportTogglesService = (
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const { accessService } = createFakeAccessService(config);
-    const featureToggleService = createFakeFeatureToggleService(config);
+    const { featureToggleService } = createFakeFeatureToggleService(config);
     const privateProjectChecker = createFakePrivateProjectChecker();
 
     const eventService = new EventService(

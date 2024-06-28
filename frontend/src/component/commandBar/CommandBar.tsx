@@ -14,18 +14,19 @@ import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useOnBlur } from 'hooks/useOnBlur';
-import { RecentlyVisited } from './RecentlyVisited/RecentlyVisited';
 import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
-import { PageSuggestions } from './PageSuggestions';
+import { CommandPageSuggestions } from './CommandPageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { CommandFeatures } from './CommandFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { CommandRecent } from './CommandRecent';
+import { CommandPages } from './CommandPages';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -259,21 +260,17 @@ export const CommandBar = () => {
                             icon={'flag'}
                             items={searchedProjects}
                         />
-                        <CommandResultGroup
-                            groupName={'Pages'}
-                            icon={'flag'}
-                            items={searchedPages}
-                        />
+                        <CommandPages items={searchedPages} />
                     </CommandResultsPaper>
                 }
                 elseShow={
                     showSuggestions && (
                         <CommandResultsPaper>
-                            <RecentlyVisited
+                            <CommandRecent
                                 lastVisited={lastVisited}
                                 routes={allRoutes}
                             />
-                            <PageSuggestions routes={allRoutes} />
+                            <CommandPageSuggestions routes={allRoutes} />
                         </CommandResultsPaper>
                     )
                 }

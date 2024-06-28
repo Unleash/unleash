@@ -3,20 +3,22 @@ title: How to Implement Feature Flags in iOS
 slug: /feature-flag-tutorials/ios
 ---
 
-iOS is a mobile operating system developed by Apple for their mostly used mobile device: the iPhone. [Swift](https://www.swift.org/) is a programming language designed for Apple iOS devices. Unleash offers an [iOS SDK](https://docs.getunleash.io/reference/sdks/ios-proxy) for connecting SwiftUI with your iOS application to use feature flags. We will be using the open-source iOS Swift project called [Open Meteo](https://github.com/ighiba/open-meteo) to
+iOS is a mobile operating system developed by Apple for their mostly used mobile device: the iPhone. [Swift](https://www.swift.org/) is a programming language designed for Apple iOS devices. Unleash offers an [iOS SDK](https://docs.getunleash.io/reference/sdks/ios-proxy) for connecting SwiftUI with your iOS application to use feature flags. We will be using the open-source iOS Swift project called [Open Meteo](https://github.com/ighiba/open-meteo)!
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in iOS with Swift?
+
+![Open Meteo Application](/img/ios-tutorial-app-view.png)
 
 In this tutorial, you will learn how to set up and use iOS feature flags with Unleash.
 
 Here are the steps we will cover in this tutorial:
 
-1. Feature flag best practices for client-side apps
-2. Spin up a local provider
-3. Configure a feature flag
-4. Add Unleash to an iOS app
-5. Hide a feature behind an iOS flag
-6. Verify the feature flag experience
+1. [Feature flag best practices for client-side apps](#1-architect-to-limit-pii-and-configuration-leakage)
+2. [Spin up a local provider](#2-install-a-local-feature-flag-provider)
+3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
+4. [Add Unleash to an iOS app](#4-add-unleash-to-an-ios-app)
+5. [Log status of iOS feature flag](#5-configure-unleash-and-log-ios-feature-flag-status)
+6. [Verify the feature flag experience](#6-verify-the-feature-flag-experience)
 
 ## Prerequisites
 
@@ -75,13 +77,13 @@ Next, you will create a feature flag and turn it on for your iOS app.
 
 In the Create Flag view, give your feature flag a unique name and click ‘Create feature flag’.
 
-For the purpose of this tutorial, name the feature flag `delete_survey_flag`. Use the default values in the rest of the feature flag form.
+For the purpose of this tutorial, name the feature flag `tempUnit`. Use the default values in the rest of the feature flag form.
 
-![Image of a feature flag form](/img/python-tutorial-feature-flag-form.png)
+![Image of a feature flag form](/img/ios-tutorial-create-flag-form.png)
 
 Your new feature flag has been created and is ready to be used. Enable the flag for your development environment, which makes it accessible for use in the iOS app we will clone into your local environment.
 
-![Image of the enabled iOS flag in development environment](/img/python-tutorial-enabled-flag.png)
+![Image of the enabled iOS flag in development environment](/img/ios-tutorial-enabled-flag.png)
 
 Next, generate an API token to authenticate calls made to Unleash servers from your project. This API token will eventually be pulled into a configuration object within your iOS application to toggle features.
 
@@ -97,33 +99,94 @@ Name the API token and select the “Client-side SDK” token type, since we’l
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
-![Image of the API token creation form](/img/tutorial-create-api-token.png)
+![Image of the API token creation form](/img/react-tutorial-create-api-token-form.png)
 
 The API token you generated can be managed in the API Access view in your project settings. It will become handy in Step 4.
 
 ## 4. Add Unleash to an iOS app
 
-Follow the following steps in order to install the unleash-proxy-client-swift:
+In this section, you will clone an open source iOS app called [Open Meteo](https://github.com/ighiba/open-meteo), which is meant to model a weather application on Apple devices.
+
+Go to your Terminal and clone the repository with this command:
+
+```
+git clone git@github.com:ighiba/open-meteo.git
+```
+
+Go into the repository directory and install the dependencies:
+
+```
+pod install
+```
+
+Open your XCode workspace, build and run the app on a simulator or device.
+
+> :triangular_flag_on_post: **Note:**
+> Make sure you have CocoaPods installed on your system.
+
+Next, follow the steps below in order to install the unleash-proxy-client-swift:
 
 1. In your Xcode project go to File -> Swift Packages -> Add Package Dependency
 2. Supply the link to this repository
 3. Set the appropriate package constraints (typically up to next major version)
 4. Let Xcode find and install the necessary packages
 
-Once you're done, you should see SwiftEventBus and UnleashProxyClientSwift listed as dependencies in the file explorer of your project.
+Once you're done, you should see `SwiftEventBus` and `UnleashProxyClientSwift` listed as dependencies in the file explorer of your project.
 
-## 5. Use a feature flag to display a new view
+When you run the app, you may see an iPhone simulator displaying the weather app:
 
-In order to get started you need to import and instantiate the unleash client with this code snippet:
+![Open Meteo weather app simulator](/img/ios-tutorial-app-view.png)
+
+## 5. Configure Unleash and log iOS feature flag status
+
+Next, we will configure Unleash in your iOS app.
+
+Navigate to the `OpenMeteo/AppDelegate` file in your XCode workspace.
+
+At the top of the file, add these two import lines:
 
 ```swift
 import SwiftUI
 import UnleashProxyClientSwift
-
-var unleash = UnleashProxyClientSwift.UnleashClient(unleashUrl: "https://<unleash-instance>/api/frontend", clientKey: "<client-side-api-token>", refreshInterval: 15, appName: "test", context: ["userId": "c3b155b0-5ebe-4a20-8386-e0cab160051e"])
-
-unleash.start()
 ```
+
+Inside the `AppDelegate` class, add this code snippet:
+
+```swift
+
+public let unleash = UnleashProxyClientSwift.UnleashClient(unleashUrl: "http://localhost:4242/api/frontend", clientKey: "<client_key>", refreshInterval: 15, appName: "OpenMeteo")
+
+func handleReady () {
+    let isEnabled = unleash.isEnabled(name: "tempUnit")
+    print(isEnabled)
+}
+
+func handleUpdate () {
+    let isEnabled = unleash.isEnabled(name: "tempUnit")
+    print(isEnabled)
+}
+
+func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+    unleash.start()
+    return true
+}
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    unleash.subscribe(name: "ready", callback: handleReady)
+    unleash.subscribe(name: "update", callback: handleUpdate)
+    return true
+}
+```
+
+Next, replace the `<client_key>` string in the config object with the API token you generated. You can do this by copying the API token into your clipboard from the API Access view table in your Unleash instance and pasting it into the code.
+
+As the application is launching, it will make an authenticated call to the Unleash server so we can begin using the `tempUnit` feature flag we created.
+
+You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Client-Side SDK with iOS](/reference/sdks/ios-proxy) documentation.
+
+Rebuild and run your app. In your console, you will see the feature flag status defaulted to `false` and then `true` when the data has been updated from making the call to Unleash.
+
+![Image of the console in XCode that shows the flag status](/img/ios-tutorial-log-status.png)
 
 ## 6. Verify the feature flag experience
 
@@ -131,10 +194,10 @@ Now that we’ve added in new functionality and connected it to our feature flag
 
 In your local Unleash instance, turn off the feature flag by disabling it in the development environment.
 
-![Image of feature flag with a disabled environment](/img/python-tutorial-disabled-flag.png)
+![Image of feature flag with a disabled environment](/img/ios-tutorial-flag-off.png)
 
-Next, return to your app and refresh the browser. With the flag disabled, the view will no longer be visible.
+Next, return to your app and rebuild the project. With the flag disabled, the flag status will remain `false` in the console after it captures the data from Unleash.
 
 ## Conclusion
 
-In this tutorial, we ran Unleash locally, created a new feature flag, installed the iOS SDK into an iOS app, and toggled new functionality that hid a MVVC view.
+In this tutorial, we ran Unleash locally, created a new feature flag, installed the iOS SDK into an iOS app, and logged a feature flag status.

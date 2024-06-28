@@ -25,6 +25,7 @@ const fallbackData: SearchFeaturesSchema = {
     total: 0,
 };
 
+const SWR_CACHE_SIZE = 10;
 const PREFIX_KEY = 'api/admin/search/features?';
 
 const createFeatureSearch = () => {
@@ -57,7 +58,7 @@ const createFeatureSearch = () => {
     ): UseFeatureSearchOutput => {
         const { KEY, fetcher } = getFeatureSearchFetcher(params);
         const cacheId = params.project || '';
-        useClearSWRCache(KEY, PREFIX_KEY);
+        useClearSWRCache(KEY, PREFIX_KEY, SWR_CACHE_SIZE);
 
         useEffect(() => {
             initCache(params.project || '');
@@ -97,8 +98,6 @@ const createFeatureSearch = () => {
 
 export const DEFAULT_PAGE_LIMIT = 25;
 
-export const useFeatureSearch = createFeatureSearch();
-
 const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
     const urlSearchParams = new URLSearchParams(
         Array.from(
@@ -122,3 +121,5 @@ const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
         KEY,
     };
 };
+
+export const useFeatureSearch = createFeatureSearch();

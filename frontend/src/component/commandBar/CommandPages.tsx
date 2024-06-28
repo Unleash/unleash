@@ -1,72 +1,42 @@
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Link } from 'react-router-dom';
 import {
     CommandResultGroup,
-    listItemButtonStyle,
     StyledButtonTypography,
     StyledListItemIcon,
     StyledListItemText,
+    listItemButtonStyle,
+    type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
 import { ListItemButton } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import type { JSX } from 'react';
 
-interface IPageSuggestionItem {
-    icon: JSX.Element;
-    name: string;
-    path: string;
-}
-
-const toListItemData = (
-    items: string[],
-    routes: Record<string, { path: string; route: string; title: string }>,
-): IPageSuggestionItem[] => {
-    return items.map((item) => {
-        return {
-            name: routes[item]?.title ?? item,
-            path: item,
-            icon: <IconRenderer path={item} />,
-        };
-    });
-};
-
-const pages = [
-    '/search',
-    '/integrations',
-    '/environments',
-    '/context',
-    '/segments',
-    '/tag-types',
-    '/applications',
-    '/strategies',
-];
-
-export const CommandPageSuggestions = ({
-    routes,
+export const CommandPages = ({
+    items,
 }: {
-    routes: Record<string, { path: string; route: string; title: string }>;
+    items: CommandResultGroupItem[];
 }) => {
     const { trackEvent } = usePlausibleTracker();
-    const filtered = pages.filter((page) => routes[page]);
-    const pageItems = toListItemData(filtered, routes);
-    const onClick = (item: IPageSuggestionItem) => {
+    const groupName = 'Pages';
+
+    const onClick = (item: CommandResultGroupItem) => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
-                source: 'suggestions',
-                eventTarget: 'Pages',
-                pageType: item.name,
+                source: 'search',
+                eventTarget: groupName,
+                ...(groupName === 'Pages' && { pageType: item.name }),
             },
         });
     };
     return (
-        <CommandResultGroup icon='pages' groupName='Pages'>
-            {pageItems.map((item, index) => (
+        <CommandResultGroup groupName={'Pages'} icon={'default'}>
+            {items.map((item, index) => (
                 <ListItemButton
-                    key={`recently-visited-${index}`}
+                    key={`command-result-group-pages-${index}`}
                     dense={true}
                     component={Link}
-                    to={item.path}
+                    to={item.link}
                     onClick={() => {
                         onClick(item);
                     }}
@@ -79,7 +49,7 @@ export const CommandPageSuggestions = ({
                             margin: theme.spacing(0, 1, 0, 0),
                         })}
                     >
-                        {item.icon}
+                        <IconRenderer path={item.link} />
                     </StyledListItemIcon>
                     <StyledListItemText>
                         <StyledButtonTypography color='textPrimary'>

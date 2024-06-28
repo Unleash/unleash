@@ -1,12 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment';
-import {
-    testServerRoute,
-    testServerSetup,
-} from '../../../../../../utils/testServer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
-import { CREATE_FEATURE_STRATEGY } from '../../../../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 
 const server = testServerSetup();
 

@@ -23,6 +23,7 @@ import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureS
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { Badge } from 'component/common/Badge/Badge';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -133,10 +134,14 @@ const FeatureOverviewEnvironment = ({
         (featureEnvironment) => featureEnvironment.name === env.name,
     );
     const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const { uiConfig } = useUiConfig();
+    const featureEnvironmentStrategiesLimit =
+        uiConfig.resourceLimits.featureEnvironmentStrategies;
     const limitReached =
         resourceLimitsEnabled &&
         Array.isArray(featureEnvironment?.strategies) &&
-        featureEnvironment?.strategies.length >= 30;
+        featureEnvironment?.strategies.length >=
+            featureEnvironmentStrategiesLimit;
 
     return (
         <ConditionallyRender
@@ -187,7 +192,7 @@ const FeatureOverviewEnvironment = ({
                                         size='small'
                                         disableReason={
                                             limitReached
-                                                ? 'Limit reached'
+                                                ? `Limit of ${featureEnvironmentStrategiesLimit} strategies reached`
                                                 : undefined
                                         }
                                     />

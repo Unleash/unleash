@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Variant } from 'utils/variants';
+import type { ResourceLimitsSchema } from '../openapi';
 
 export interface IUiConfig {
     authenticationType?: string;
@@ -28,6 +29,7 @@ export interface IUiConfig {
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;
     frontendApiOrigins?: string[];
+    resourceLimits: ResourceLimitsSchema;
 }
 
 export interface IProclamationToast {

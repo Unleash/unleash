@@ -74,7 +74,7 @@ const pages = [
     '/strategies',
 ];
 
-export const PageSuggestions = ({
+export const CommandPageSuggestions = ({
     routes,
 }: {
     routes: Record<string, { path: string; route: string; title: string }>;

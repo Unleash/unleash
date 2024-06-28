@@ -14,13 +14,13 @@ import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useOnBlur } from 'hooks/useOnBlur';
-import { RecentlyVisited } from './RecentlyVisited/RecentlyVisited';
+import { CommandRecent } from './CommandRecent';
 import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup';
-import { PageSuggestions } from './PageSuggestions';
+import { CommandPageSuggestions } from './CommandPageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -269,11 +269,11 @@ export const CommandBar = () => {
                 elseShow={
                     showSuggestions && (
                         <CommandResultsPaper>
-                            <RecentlyVisited
+                            <CommandRecent
                                 lastVisited={lastVisited}
                                 routes={allRoutes}
                             />
-                            <PageSuggestions routes={allRoutes} />
+                            <CommandPageSuggestions routes={allRoutes} />
                         </CommandResultsPaper>
                     )
                 }

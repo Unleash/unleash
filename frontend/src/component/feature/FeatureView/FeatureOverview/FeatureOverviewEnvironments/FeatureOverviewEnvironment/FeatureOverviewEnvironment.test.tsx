@@ -4,6 +4,7 @@ import FeatureOverviewEnvironment from './FeatureOverviewEnvironment';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import type { IFeatureStrategy } from 'interfaces/strategy';
 
 const server = testServerSetup();
 
@@ -33,7 +34,7 @@ const setupApi = () => {
 
 const strategy = {
     name: 'default',
-};
+} as IFeatureStrategy;
 const environmentWithoutStrategies = {
     name: 'production',
     enabled: true,

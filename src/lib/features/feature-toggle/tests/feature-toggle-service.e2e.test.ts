@@ -19,10 +19,7 @@ import EnvironmentService from '../../project-environments/environment-service';
 import { ForbiddenError, PatternError, PermissionError } from '../../../error';
 import type { ISegmentService } from '../../segment/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
-import {
-    insertFeatureEnvironmentsLastSeen,
-    insertLastSeenAt,
-} from '../../../../test/e2e/helpers/test-helper';
+import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
 import { EventService } from '../../../services';
 
 let stores: IUnleashStores;
@@ -689,8 +686,6 @@ test('Should return last seen at per environment', async () => {
     const featureName = 'last-seen-at-per-env';
     const projectId = 'default';
 
-    const userName = 'last-seen-user';
-
     await service.createFeatureToggle(
         projectId,
         {
@@ -698,20 +693,6 @@ test('Should return last seen at per environment', async () => {
         },
         TEST_AUDIT_USER,
     );
-
-    const date = await insertFeatureEnvironmentsLastSeen(
-        featureName,
-        db.rawDatabase,
-    );
-
-    const { environments, lastSeenAt } = await service.getFeature({
-        featureName,
-        projectId: 'default',
-        environmentVariants: false,
-    });
-
-    expect(environments[0].lastSeenAt).toEqual(new Date(date));
-    expect(lastSeenAt).toEqual(new Date(date));
 
     // Test with feature flag on
     const config = createTestConfig();

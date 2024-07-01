@@ -108,6 +108,7 @@ import { FEATURES_CREATED_BY_PROCESSED } from '../../metric-events';
 import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type EventEmitter from 'node:events';
 import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type';
+import type { ResourceLimitsSchema } from '../../openapi';
 
 interface IFeatureContext {
     featureName: string;
@@ -179,6 +180,8 @@ class FeatureToggleService {
 
     private eventBus: EventEmitter;
 
+    private resourceLimits: ResourceLimitsSchema;
+
     constructor(
         {
             featureStrategiesStore,
@@ -204,7 +207,11 @@ class FeatureToggleService {
             getLogger,
             flagResolver,
             eventBus,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
+            resourceLimits,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'flagResolver' | 'eventBus' | 'resourceLimits'
+        >,
         segmentService: ISegmentService,
         accessService: AccessService,
         eventService: EventService,
@@ -233,6 +240,7 @@ class FeatureToggleService {
         this.dependentFeaturesService = dependentFeaturesService;
         this.featureLifecycleReadModel = featureLifecycleReadModel;
         this.eventBus = eventBus;
+        this.resourceLimits = resourceLimits;
     }
 
     async validateFeaturesContext(
@@ -647,7 +655,7 @@ class FeatureToggleService {
 
         await this.validateStrategyLimit(
             { featureName, projectId, environment },
-            30,
+            this.resourceLimits.featureEnvironmentStrategies,
         );
 
         try {

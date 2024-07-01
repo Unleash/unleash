@@ -649,6 +649,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT,
             5,
         ),
+        featureEnvironmentStrategies: parseEnvVarNumber(
+            process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
+            30,
+        ),
+        environments: parseEnvVarNumber(
+            process.env.UNLEASH_ENVIRONMENTS_LIMIT,
+            50,
+        ),
     };
 
     return {

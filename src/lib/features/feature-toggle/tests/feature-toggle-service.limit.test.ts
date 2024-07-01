@@ -14,10 +14,14 @@ const alwaysOnFlagResolver = {
 } as unknown as IFlagResolver;
 
 test('Should not allow to exceed strategy limit', async () => {
+    const LIMIT = 3;
     const { featureToggleService, featureToggleStore } =
         createFakeFeatureToggleService({
             getLogger,
             flagResolver: alwaysOnFlagResolver,
+            resourceLimits: {
+                featureEnvironmentStrategies: LIMIT,
+            },
         } as unknown as IUnleashConfig);
 
     const addStrategy = () =>
@@ -31,11 +35,11 @@ test('Should not allow to exceed strategy limit', async () => {
         createdByUserId: 1,
     });
 
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < LIMIT; i++) {
         await addStrategy();
     }
 
     await expect(addStrategy()).rejects.toThrow(
-        'Strategy limit of 30 exceeded',
+        `Strategy limit of ${LIMIT} exceeded`,
     );
 });

@@ -150,6 +150,11 @@ module.exports = {
                 },
                 {
                     type: 'doc',
+                    label: 'iOS',
+                    id: 'feature-flag-tutorials/ios/implementing-feature-flags',
+                },
+                {
+                    type: 'doc',
                     label: 'Serverless',
                     id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
                 },

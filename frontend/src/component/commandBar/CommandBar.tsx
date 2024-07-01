@@ -13,7 +13,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
@@ -27,6 +26,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { CommandRecent } from './CommandRecent';
 import { CommandPages } from './CommandPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
+import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -111,7 +111,6 @@ export const CommandBar = () => {
     const [searchedFlagCount, setSearchedFlagCount] = useState(0);
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
-    const { lastVisited } = useRecentlyVisited();
     const { routes } = useRoutes();
     const allRoutes: Record<string, IPageRouteInfo> = {};
     for (const route of [
@@ -204,6 +203,7 @@ export const CommandBar = () => {
     useOnClickOutside([searchContainerRef], hideSuggestions);
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
+            <RecentlyVisitedRecorder />
             <StyledSearch>
                 <SearchIcon
                     sx={{
@@ -278,10 +278,7 @@ export const CommandBar = () => {
                 elseShow={
                     showSuggestions && (
                         <CommandResultsPaper>
-                            <CommandRecent
-                                lastVisited={lastVisited}
-                                routes={allRoutes}
-                            />
+                            <CommandRecent routes={allRoutes} />
                             <CommandPageSuggestions routes={allRoutes} />
                         </CommandResultsPaper>
                     )

@@ -1,6 +1,7 @@
 import { createFakeFeatureToggleService } from '../createFeatureToggleService';
 import type {
     IAuditUser,
+    IConstraint,
     IFlagResolver,
     IStrategyConfig,
     IUnleashConfig,
@@ -41,5 +42,43 @@ test('Should not allow to exceed strategy limit', async () => {
 
     await expect(addStrategy()).rejects.toThrow(
         `Strategy limit of ${LIMIT} exceeded`,
+    );
+});
+
+test('Should not allow to exceed constraint values limit', async () => {
+    const LIMIT = 3;
+    const { featureToggleService, featureToggleStore } =
+        createFakeFeatureToggleService({
+            getLogger,
+            flagResolver: alwaysOnFlagResolver,
+            resourceLimits: {
+                constraintValues: LIMIT,
+            },
+        } as unknown as IUnleashConfig);
+
+    const addStrategyWithConstraints = (constraints: IConstraint[]) =>
+        featureToggleService.unprotectedCreateStrategy(
+            {
+                name: 'default',
+                featureName: 'feature',
+                constraints,
+            } as IStrategyConfig,
+            { projectId: 'default', featureName: 'feature' } as any,
+            {} as IAuditUser,
+        );
+    await featureToggleStore.create('default', {
+        name: 'feature',
+        createdByUserId: 1,
+    });
+    await expect(() =>
+        addStrategyWithConstraints([
+            {
+                contextName: 'userId',
+                operator: 'IN',
+                values: ['1', '2', '3', '4'],
+            },
+        ]),
+    ).rejects.toThrow(
+        `Constraint values limit of ${LIMIT} is exceeded for userId`,
     );
 });

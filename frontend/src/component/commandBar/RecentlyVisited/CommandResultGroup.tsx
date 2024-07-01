@@ -17,6 +17,7 @@ import {
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { Children } from 'react';
 
 export const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,
@@ -26,10 +27,6 @@ export const listItemButtonStyle = (theme: Theme) => ({
         borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
     },
 });
-const StyledContainer = styled('div')(({ theme }) => ({
-    marginBottom: theme.spacing(3),
-}));
-
 export const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
     padding: theme.spacing(0, 2.5),
@@ -193,7 +190,10 @@ export const CommandResultGroup = ({
     children,
 }: CommandResultGroupProps) => {
     const { trackEvent } = usePlausibleTracker();
-    if (!children && (!items || items.length === 0)) {
+    if (
+        (!children || Children.count(children) === 0) &&
+        (!items || items.length === 0)
+    ) {
         return null;
     }
 
@@ -211,7 +211,7 @@ export const CommandResultGroup = ({
     };
 
     return (
-        <StyledContainer>
+        <div>
             <StyledTypography color='textSecondary'>
                 {groupName}
             </StyledTypography>
@@ -249,6 +249,6 @@ export const CommandResultGroup = ({
                     </ListItemButton>
                 ))}
             </List>
-        </StyledContainer>
+        </div>
     );
 };

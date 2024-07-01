@@ -13,7 +13,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import { useOnBlur } from 'hooks/useOnBlur';
 import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
 import {
     CommandResultGroup,
@@ -129,6 +128,7 @@ export const CommandBar = () => {
 
     const hideSuggestions = () => {
         setShowSuggestions(false);
+        console.log('show suggestiosn false');
     };
 
     const { projects } = useProjects();
@@ -203,8 +203,8 @@ export const CommandBar = () => {
     const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
-    useOnBlur(searchContainerRef, hideSuggestions);
 
+    console.log(Boolean(value), showSuggestions);
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <StyledSearch>
@@ -267,15 +267,14 @@ export const CommandBar = () => {
                             icon={'flag'}
                             items={searchedProjects}
                         />
-                        <CommandResultGroup
-                            groupName={'Pages'}
-                            icon={'flag'}
-                            items={searchedPages}
-                        />
                         <CommandPages items={searchedPages} />
                         <ConditionallyRender
                             condition={hasNoResults}
-                            show={<CommandBarFeedback />}
+                            show={
+                                <CommandBarFeedback
+                                    onSubmit={hideSuggestions}
+                                />
+                            }
                         />
                     </CommandResultsPaper>
                 }

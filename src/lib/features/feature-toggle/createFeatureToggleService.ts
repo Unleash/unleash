@@ -60,7 +60,7 @@ export const createFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
 ): FeatureToggleService => {
-    const { getLogger, eventBus, flagResolver } = config;
+    const { getLogger, eventBus, flagResolver, resourceLimits } = config;
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,
@@ -142,7 +142,7 @@ export const createFeatureToggleService = (
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver, eventBus },
+        { getLogger, flagResolver, eventBus, resourceLimits },
         segmentService,
         accessService,
         eventService,
@@ -156,7 +156,7 @@ export const createFeatureToggleService = (
 };
 
 export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
-    const { getLogger, flagResolver } = config;
+    const { getLogger, flagResolver, resourceLimits } = config;
     const eventStore = new FakeEventStore();
     const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
@@ -204,7 +204,12 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver, eventBus: new EventEmitter() },
+        {
+            getLogger,
+            flagResolver,
+            eventBus: new EventEmitter(),
+            resourceLimits,
+        },
         segmentService,
         accessService,
         eventService,

@@ -85,17 +85,17 @@ module.exports = {
                 },
                 {
                     type: 'html',
-                    value: '<a href="https://www.getunleash.io/enterprise-feature-management-platform" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Product</a>',
+                    value: '<a href="https://www.getunleash.io/enterprise-feature-management-platform" class="navbar__item navbar__link">Product</a>',
                     position: 'right',
                 },
                 {
                     type: 'html',
-                    value: '<a href="https://www.getunleash.io/plans" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Plans</a>',
+                    value: '<a href="https://www.getunleash.io/plans" class="navbar__item navbar__link">Plans</a>',
                     position: 'right',
                 },
                 {
                     type: 'html',
-                    value: '<a href="https://www.getunleash.io/blog" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Blog</a>',
+                    value: '<a href="https://www.getunleash.io/blog" class="navbar__item navbar__link">Blog</a>',
                     position: 'right',
                 },
                 {

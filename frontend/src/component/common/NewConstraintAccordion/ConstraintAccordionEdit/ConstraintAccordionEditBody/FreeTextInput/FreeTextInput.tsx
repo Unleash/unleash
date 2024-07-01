@@ -6,6 +6,8 @@ import type React from 'react';
 import { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { parseParameterStrings } from 'utils/parseParameter';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFreeTextInputProps {
     values: string[];
@@ -62,6 +64,8 @@ export const FreeTextInput = ({
 }: IFreeTextInputProps) => {
     const [inputValues, setInputValues] = useState('');
     const { classes: styles } = useStyles();
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const { uiConfig } = useUiConfig();
 
     const onKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === ENTER) {
@@ -75,8 +79,16 @@ export const FreeTextInput = ({
             ...values,
             ...parseParameterStrings(inputValues),
         ]);
+        const limitReached = Boolean(
+            resourceLimitsEnabled &&
+                newValues.length > uiConfig.resourceLimits.constraintValues,
+        );
 
-        if (newValues.length === 0) {
+        if (limitReached) {
+            setError(
+                `constraint cannot have more than ${uiConfig.resourceLimits.constraintValues} values`,
+            );
+        } else if (newValues.length === 0) {
             setError('values cannot be empty');
         } else if (newValues.some((v) => v.length > 100)) {
             setError('values cannot be longer than 100 characters');

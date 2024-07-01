@@ -50,6 +50,7 @@ export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
                     ))}
                     placement='bottom-start'
                     arrow
+                    tabIndex={0}
                 >
                     <span>{`${projectsList.length}`} projects</span>
                 </HtmlTooltip>

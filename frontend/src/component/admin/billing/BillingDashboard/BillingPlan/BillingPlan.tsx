@@ -148,7 +148,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                             After you have sent your billing information, your
                             instance will be upgraded - you don't have to do
                             anything.{' '}
-                            <a href='mailto:elise@getunleash.ai?subject=PRO plan clarifications'>
+                            <a href='mailto:customersuccess@getunleash.io?subject=PRO plan clarifications'>
                                 Get in touch with us
                             </a>{' '}
                             for any clarification

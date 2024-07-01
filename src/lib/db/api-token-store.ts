@@ -5,7 +5,7 @@ import type { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import type { IApiTokenStore } from '../types/stores/api-token-store';
 import {
-    type ApiTokenType,
+    ApiTokenType,
     type IApiToken,
     type IApiTokenCreate,
     isAllProjects,
@@ -38,7 +38,13 @@ interface ITokenRow extends ITokenInsert {
 const tokenRowReducer = (acc, tokenRow) => {
     const { project, ...token } = tokenRow;
     if (!acc[tokenRow.secret]) {
-        if (!tokenRow.project && !tokenRow.secret.startsWith('*:')) {
+        console.log('tokenRow', tokenRow);
+        if (
+            !tokenRow.project &&
+            (tokenRow.type === ApiTokenType.CLIENT ||
+                tokenRow.type === ApiTokenType.FRONTEND) &&
+            !tokenRow.secret.startsWith('*:')
+        ) {
             return acc;
         }
 

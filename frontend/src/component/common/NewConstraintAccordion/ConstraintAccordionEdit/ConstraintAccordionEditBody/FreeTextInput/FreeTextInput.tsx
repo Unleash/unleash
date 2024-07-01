@@ -15,7 +15,7 @@ interface IFreeTextInputProps {
     setValues: (values: string[]) => void;
     beforeValues?: JSX.Element;
     error: string;
-    setError: React.Dispatch<React.SetStateAction<string>>;
+    setError: (error: string) => void;
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -65,7 +65,7 @@ export const FreeTextInput = ({
     const [inputValues, setInputValues] = useState('');
     const { classes: styles } = useStyles();
     const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, loading } = useUiConfig();
 
     const onKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === ENTER) {
@@ -126,8 +126,9 @@ export const FreeTextInput = ({
                     className={styles.button}
                     variant='outlined'
                     color='primary'
-                    onClick={() => addValues()}
+                    onClick={addValues}
                     data-testid='CONSTRAINT_VALUES_ADD_BUTTON'
+                    disabled={loading}
                 >
                     Add values
                 </Button>

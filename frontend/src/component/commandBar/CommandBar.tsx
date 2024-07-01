@@ -128,7 +128,6 @@ export const CommandBar = () => {
 
     const hideSuggestions = () => {
         setShowSuggestions(false);
-        console.log('show suggestiosn false');
     };
 
     const { projects } = useProjects();
@@ -203,8 +202,6 @@ export const CommandBar = () => {
     const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
-
-    console.log(Boolean(value), showSuggestions);
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <StyledSearch>

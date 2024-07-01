@@ -1,9 +1,9 @@
 import { Button, styled, TextField } from '@mui/material';
 import type React from 'react';
 import { useState } from 'react';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
-import { useUserFeedbackApi } from '../../hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
-import useToast from '../../hooks/useToast';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
+import useToast from 'hooks/useToast';
 import useUserType from '../feedbackNew/useUserType';
 
 const StyledContainer = styled('div')(({ theme }) => ({

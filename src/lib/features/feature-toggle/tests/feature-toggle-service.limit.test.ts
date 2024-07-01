@@ -41,7 +41,7 @@ test('Should not allow to exceed strategy limit', async () => {
     }
 
     await expect(addStrategy()).rejects.toThrow(
-        `Strategy limit of ${LIMIT} exceeded`,
+        "Failed to create strategy. You can't create more than the established limit of 3",
     );
 });
 
@@ -79,6 +79,6 @@ test('Should not allow to exceed constraint values limit', async () => {
             },
         ]),
     ).rejects.toThrow(
-        `Constraint values limit of ${LIMIT} is exceeded for userId`,
+        "Failed to create content values for userId. You can't create more than the established limit of 3",
     );
 });

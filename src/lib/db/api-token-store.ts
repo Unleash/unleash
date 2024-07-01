@@ -38,6 +38,10 @@ interface ITokenRow extends ITokenInsert {
 const tokenRowReducer = (acc, tokenRow) => {
     const { project, ...token } = tokenRow;
     if (!acc[tokenRow.secret]) {
+        if (!tokenRow.project && !tokenRow.secret.startsWith('*:')) {
+            return acc;
+        }
+
         acc[tokenRow.secret] = {
             secret: token.secret,
             tokenName: token.token_name ? token.token_name : token.username,

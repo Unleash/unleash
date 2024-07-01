@@ -143,9 +143,11 @@ test('doesnt return feature flags if project deleted', async () => {
         TEST_AUDIT_USER,
     );
 
+    await app.services.apiTokenService.fetchActiveTokens();
+
     await app.request
         .get('/api/client/features')
         .set('Authorization', token.secret)
         .expect('Content-Type', /json/)
-        .expect(403);
+        .expect(401);
 });

@@ -80,7 +80,9 @@ export const EnvironmentTable = () => {
         <>
             {headerSearch}
             <PageHeader.Divider />
-            <CreateEnvironmentButton />
+            <CreateEnvironmentButton
+                numberOfEnvironments={environments.length}
+            />
         </>
     );
     const count = rows.length;

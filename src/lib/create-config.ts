@@ -655,7 +655,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ),
         constraintValues: parseEnvVarNumber(
             process.env.UNLEASH_CONSTRAINT_VALUES_LIMIT,
-            250,
+            options?.resourceLimits?.constraintValues || 250,
         ),
         environments: parseEnvVarNumber(
             process.env.UNLEASH_ENVIRONMENTS_LIMIT,

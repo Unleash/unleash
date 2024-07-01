@@ -3,21 +3,21 @@ import Add from '@mui/icons-material/Add';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
-export const CreateEnvironmentButton: React.FC<{
-    numberOfEnvironments: number;
-}> = ({ numberOfEnvironments }) => {
+export const CreateEnvironmentButton = () => {
     const { uiConfig } = useUiConfig();
+    const { environments } = useEnvironments();
     const environmentLimit = uiConfig.resourceLimits.environments;
     const navigate = useNavigate();
 
-    const disabled = numberOfEnvironments >= environmentLimit;
+    const atEnvironmentLimit = environments.length >= environmentLimit;
 
     return (
         <ResponsiveButton
             tooltipProps={{
                 arrow: true,
-                title: disabled
+                title: atEnvironmentLimit
                     ? `You have reached the limit of environments you can create (${environmentLimit}).`
                     : undefined,
             }}
@@ -25,10 +25,9 @@ export const CreateEnvironmentButton: React.FC<{
             maxWidth='700px'
             Icon={Add}
             permission={ADMIN}
-            disabled={disabled || !uiConfig.flags.EEA}
+            disabled={atEnvironmentLimit || !uiConfig.flags.EEA}
         >
-            New environment {disabled ? '(disabled)' : '(not disabled)'} (limit:{' '}
-            {environmentLimit}, count: {numberOfEnvironments})
+            New environment
         </ResponsiveButton>
     );
 };

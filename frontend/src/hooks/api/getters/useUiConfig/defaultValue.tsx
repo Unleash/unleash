@@ -28,4 +28,15 @@ export const defaultValue: IUiConfig = {
         },
     ],
     networkViewEnabled: false,
+    resourceLimits: {
+        segmentValues: 1000,
+        strategySegments: 5,
+        signalEndpoints: 5,
+        actionSetActions: 10,
+        actionSetsPerProject: 5,
+        actionSetFilters: 5,
+        actionSetFilterValues: 25,
+        signalTokensPerEndpoint: 5,
+        featureEnvironmentStrategies: 30,
+    },
 };

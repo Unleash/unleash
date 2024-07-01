@@ -86,7 +86,7 @@ export const FreeTextInput = ({
 
         if (limitReached) {
             setError(
-                `constraint cannot have more than ${uiConfig.resourceLimits.constraintValues} values`,
+                `constraints cannot have more than ${uiConfig.resourceLimits.constraintValues} values`,
             );
         } else if (newValues.length === 0) {
             setError('values cannot be empty');

@@ -48,7 +48,7 @@ test('should set error when new constraint values exceed the limit', async () =>
     const button = await screen.findByText('Add values');
     fireEvent.click(button);
 
-    expect(errors).toEqual(['constraint cannot have more than 3 values']);
+    expect(errors).toEqual(['constraints cannot have more than 3 values']);
     expect(values).toEqual([]);
 });
 
@@ -82,7 +82,7 @@ test('should set error when old and new constraint values exceed the limit', asy
     const button = await screen.findByText('Add values');
     fireEvent.click(button);
 
-    expect(errors).toEqual(['constraint cannot have more than 3 values']);
+    expect(errors).toEqual(['constraints cannot have more than 3 values']);
     expect(values).toEqual([]);
 });
 

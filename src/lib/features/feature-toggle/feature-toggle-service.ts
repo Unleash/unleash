@@ -366,15 +366,14 @@ class FeatureToggleService {
         }
     }
 
-    async validateStrategyLimit(
-        featureEnv: {
-            projectId: string;
-            environment: string;
-            featureName: string;
-        },
-        limit: number,
-    ) {
+    async validateStrategyLimit(featureEnv: {
+        projectId: string;
+        environment: string;
+        featureName: string;
+    }) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
+
+        const limit = this.resourceLimits.featureEnvironmentStrategies;
         const existingCount = (
             await this.featureStrategiesStore.getStrategiesForFeatureEnv(
                 featureEnv.projectId,
@@ -384,6 +383,22 @@ class FeatureToggleService {
         ).length;
         if (existingCount >= limit) {
             throw new BadDataError(`Strategy limit of ${limit} exceeded}.`);
+        }
+    }
+
+    validateContraintValuesLimit(updatedConstrains: IConstraint[]) {
+        if (!this.flagResolver.isEnabled('resourceLimits')) return;
+
+        const limit = this.resourceLimits.constraintValues;
+        const constraintOverLimit = updatedConstrains.find(
+            (constraint) =>
+                Array.isArray(constraint.values) &&
+                constraint.values?.length > limit,
+        );
+        if (constraintOverLimit) {
+            throw new BadDataError(
+                `Constraint values limit of ${limit} is exceeded for ${constraintOverLimit.contextName}.`,
+            );
         }
     }
 
@@ -632,6 +647,7 @@ class FeatureToggleService {
             strategyConfig.constraints &&
             strategyConfig.constraints.length > 0
         ) {
+            this.validateContraintValuesLimit(strategyConfig.constraints);
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
             );
@@ -653,10 +669,11 @@ class FeatureToggleService {
             strategyConfig.variants = fixedVariants;
         }
 
-        await this.validateStrategyLimit(
-            { featureName, projectId, environment },
-            this.resourceLimits.featureEnvironmentStrategies,
-        );
+        await this.validateStrategyLimit({
+            featureName,
+            projectId,
+            environment,
+        });
 
         try {
             const newFeatureStrategy =
@@ -789,6 +806,7 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
+                this.validateContraintValuesLimit(updates.constraints);
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );

@@ -14,6 +14,7 @@ export const resourceLimitsSchema = {
         'signalEndpoints',
         'signalTokensPerEndpoint',
         'featureEnvironmentStrategies',
+        'constraintValues',
         'environments',
     ],
     additionalProperties: false,
@@ -68,6 +69,12 @@ export const resourceLimitsSchema = {
             example: 30,
             description:
                 'The maximum number of feature environment strategies allowed.',
+        },
+        constraintValues: {
+            type: 'integer',
+            example: 250,
+            description:
+                'The maximum number of values for a single constraint.',
         },
         environments: {
             type: 'integer',

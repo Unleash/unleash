@@ -4,19 +4,14 @@ import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList
 
 describe('ProjectsList', () => {
     it('should prioritize new "projects" array over deprecated "project"', async () => {
-        render(
+        const { container } = render(
             <ProjectsList
                 project='project'
                 projects={['project1', 'project2']}
             />,
         );
 
-        const links = await screen.findAllByRole('link');
-        expect(links).toHaveLength(2);
-        expect(links[0]).toHaveTextContent('project1');
-        expect(links[1]).toHaveTextContent('project2');
-        expect(links[0]).toHaveAttribute('href', '/projects/project1');
-        expect(links[1]).toHaveAttribute('href', '/projects/project2');
+        expect(container.textContent).toContain('2 projects');
     });
 
     it('should render correctly with single "project"', async () => {
@@ -25,12 +20,6 @@ describe('ProjectsList', () => {
         const links = await screen.findAllByRole('link');
         expect(links).toHaveLength(1);
         expect(links[0]).toHaveTextContent('project');
-    });
-
-    it('should have comma between project links', async () => {
-        const { container } = render(<ProjectsList projects={['a', 'b']} />);
-
-        expect(container.textContent).toContain(', ');
     });
 
     it('should render asterisk if no projects are passed', async () => {
@@ -45,33 +34,13 @@ describe('ProjectsList', () => {
         expect(container.textContent).toEqual('*');
     });
 
-    it('should show up to 4 projects', async () => {
+    it('should show number of projects', async () => {
         const { container } = render(
             <ProjectsList
                 projects={['project1', 'project2', 'project3', 'project4']}
             />,
         );
 
-        expect(container.textContent).toContain(
-            'project1, project2, project3, project4',
-        );
-    });
-
-    it('should abbreviate for 5 projects', async () => {
-        const { container } = render(
-            <ProjectsList
-                projects={[
-                    'project1',
-                    'project2',
-                    'project3',
-                    'project4',
-                    'project5',
-                ]}
-            />,
-        );
-
-        expect(container.textContent).toContain(
-            'project1, project2, project3, +2 more',
-        );
+        expect(container.textContent).toContain('4 projects');
     });
 });

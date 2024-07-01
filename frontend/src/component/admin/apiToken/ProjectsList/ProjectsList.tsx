@@ -1,10 +1,10 @@
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Fragment, type VFC } from 'react';
+import { Fragment, type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -20,75 +20,68 @@ interface IProjectsListProps {
     projects?: string | string[];
 }
 
-export const ProjectsList: VFC<IProjectsListProps> = ({
-    projects,
-    project,
-}) => {
+export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
     const { searchQuery } = useSearchHighlightContext();
-    const fields: string[] =
-        projects && Array.isArray(projects)
-            ? projects
-            : project
-              ? [project]
-              : [];
 
-    if (fields.length === 0) {
+    const projectsList =
+        projects && Array.isArray(projects) && projects.length > 1
+            ? projects
+            : [];
+
+    if (projectsList.length > 0) {
         return (
             <TextCell>
-                <Highlighter search={searchQuery}>*</Highlighter>
+                <HtmlTooltip
+                    title={projectsList.map((item, index) => (
+                        <Fragment key={item}>
+                            {index > 0 && ', '}
+                            {!item || item === '*' ? (
+                                <Highlighter search={searchQuery}>
+                                    *
+                                </Highlighter>
+                            ) : (
+                                <StyledLink to={`/projects/${item}`}>
+                                    <Highlighter search={searchQuery}>
+                                        {item}
+                                    </Highlighter>
+                                </StyledLink>
+                            )}
+                        </Fragment>
+                    ))}
+                    placement='bottom-start'
+                    arrow
+                >
+                    <span>{`${projectsList.length}`} projects</span>
+                </HtmlTooltip>
             </TextCell>
         );
     }
 
-    const fieldsHead = fields.length < 5 ? fields : fields.slice(0, 3);
-    const fieldsTail = fields.length < 5 ? [] : fields.slice(3);
-
-    return (
-        <TextCell>
-            {fieldsHead.map((item, index) => (
-                <Fragment key={item}>
-                    {index > 0 && ', '}
-                    {!item || item === '*' ? (
+    if (
+        (projectsList.length === 1 && projectsList[0] === '*') ||
+        project === '*' ||
+        (!project && (!projectsList || projectsList.length === 0))
+    ) {
+        return (
+            <TextCell>
+                <HtmlTooltip
+                    title='ALL current and future projects'
+                    placement='bottom'
+                    arrow
+                >
+                    <span>
                         <Highlighter search={searchQuery}>*</Highlighter>
-                    ) : (
-                        <StyledLink to={`/projects/${item}`}>
-                            <Highlighter search={searchQuery}>
-                                {item}
-                            </Highlighter>
-                        </StyledLink>
-                    )}
-                </Fragment>
-            ))}
-            <ConditionallyRender
-                condition={fieldsTail.length > 0}
-                show={
-                    <>
-                        {', '}
-                        <HtmlTooltip
-                            title={fieldsTail.map((item, index) => (
-                                <Fragment key={item}>
-                                    {index > 0 && ', '}
-                                    {!item || item === '*' ? (
-                                        <Highlighter search={searchQuery}>
-                                            *
-                                        </Highlighter>
-                                    ) : (
-                                        <StyledLink to={`/projects/${item}`}>
-                                            <Highlighter search={searchQuery}>
-                                                {item}
-                                            </Highlighter>
-                                        </StyledLink>
-                                    )}
-                                </Fragment>
-                            ))}
-                            placement='bottom-start'
-                            arrow
-                        >
-                            <span>+{`${fieldsTail.length}`} more</span>
-                        </HtmlTooltip>
-                    </>
-                }
-            />
-        </TextCell>
-    );
+                    </span>
+                </HtmlTooltip>
+            </TextCell>
+        );
+    }
+
+    if (projectsList.length === 1 || project) {
+        const item = project || projectsList[0];
+
+        return <LinkCell to={`/projects/${item}`} title={item} />;
+    }
+
+    return null;
 };

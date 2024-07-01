@@ -8,10 +8,15 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 
 const server = testServerSetup();
 
+const LIMIT = 3;
+
 const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             resourceLimits: true,
+        },
+        resourceLimits: {
+            featureEnvironmentStrategies: LIMIT,
         },
     });
 
@@ -45,7 +50,7 @@ const environmentWithManyStrategies = {
     name: 'production',
     enabled: true,
     type: 'production',
-    strategies: [...Array(30).keys()].map(() => strategy),
+    strategies: [...Array(LIMIT).keys()].map(() => strategy),
 };
 
 test('should allow to add strategy when no strategies', async () => {

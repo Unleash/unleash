@@ -3,7 +3,7 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { Button, useMediaQuery } from '@mui/material';
+import { Alert, styled, useMediaQuery } from '@mui/material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -25,6 +25,9 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { SignalEndpointsSignalsModal } from '../SignalEndpointsSignals/SignalEndpointsSignalsModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
+import { ADMIN } from '@server/types/permissions';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 
 export const SignalEndpointsTable = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -43,6 +46,14 @@ export const SignalEndpointsTable = () => {
     const [deleteOpen, setDeleteOpen] = useState(false);
 
     const [signalsModalOpen, setSignalsModalOpen] = useState(false);
+
+    const StyledAlert = styled(Alert)(({ theme }) => ({
+        marginBottom: theme.spacing(3),
+    }));
+
+    const StyledParagraph = styled('p')(({ theme }) => ({
+        marginBottom: theme.spacing(2),
+    }));
 
     const onToggleSignalEndpoint = async (
         { id, name }: ISignalEndpoint,
@@ -227,69 +238,114 @@ export const SignalEndpointsTable = () => {
                 <PageHeader
                     title={`Signal endpoints (${signalEndpoints.length})`}
                     actions={
-                        <Button
+                        <PermissionButton
                             variant='contained'
                             color='primary'
+                            permission={ADMIN}
                             onClick={() => {
                                 setSelectedSignalEndpoint(undefined);
                                 setModalOpen(true);
                             }}
                         >
                             New signal endpoint
-                        </Button>
+                        </PermissionButton>
                     }
                 />
             }
         >
-            <VirtualizedTable
-                rows={rows}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-            />
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <TablePlaceholder>
-                        No signal endpoints available. Get started by adding
-                        one.
-                    </TablePlaceholder>
-                }
-            />
-            <SignalEndpointsModal
-                signalEndpoint={selectedSignalEndpoint}
-                open={modalOpen}
-                setOpen={setModalOpen}
-                newToken={(token: string, signalEndpoint: ISignalEndpoint) => {
-                    setNewToken(token);
-                    setSelectedSignalEndpoint(signalEndpoint);
-                    setTokenDialog(true);
-                }}
-                onOpenSignals={() => {
-                    setModalOpen(false);
-                    setSignalsModalOpen(true);
-                }}
-            />
-            <SignalEndpointsSignalsModal
-                signalEndpoint={selectedSignalEndpoint}
-                open={signalsModalOpen}
-                setOpen={setSignalsModalOpen}
-                onOpenConfiguration={() => {
-                    setSignalsModalOpen(false);
-                    setModalOpen(true);
-                }}
-            />
-            <SignalEndpointsTokensDialog
-                open={tokenDialog}
-                setOpen={setTokenDialog}
-                token={newToken}
-                signalEndpoint={selectedSignalEndpoint}
-            />
-            <SignalEndpointsDeleteDialog
-                signalEndpoint={selectedSignalEndpoint}
-                open={deleteOpen}
-                setOpen={setDeleteOpen}
-                onConfirm={onDeleteConfirm}
-            />
+            <StyledAlert severity='info'>
+                <StyledParagraph>
+                    Signals and Actions empower you to respond to events in your
+                    real-time monitoring system by automating tasks such as
+                    disabling a beta feature in response to an increase in
+                    errors or a drop in conversion rates.
+                </StyledParagraph>
+
+                <StyledParagraph>
+                    <b>Signal endpoints</b> are used to send signals to Unleash.
+                    This allows you to integrate Unleash with your own tools.
+                    <br />
+                    <b>Automated actions</b> are configured inside projects
+                    allowing you to react to those signals and enable or disable
+                    flags based on the signals received.
+                </StyledParagraph>
+
+                <StyledParagraph>
+                    Read the more about this feature in our documentation for{' '}
+                    <a
+                        href='https://docs.getunleash.io/reference/signals'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        Signals
+                    </a>{' '}
+                    and{' '}
+                    <a
+                        href='https://docs.getunleash.io/reference/actions'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        Actions
+                    </a>
+                </StyledParagraph>
+            </StyledAlert>
+
+            <PermissionGuard permissions={ADMIN}>
+                <>
+                    <VirtualizedTable
+                        rows={rows}
+                        headerGroups={headerGroups}
+                        prepareRow={prepareRow}
+                    />
+                    <ConditionallyRender
+                        condition={rows.length === 0}
+                        show={
+                            <TablePlaceholder>
+                                No signal endpoints available. Get started by
+                                adding one.
+                            </TablePlaceholder>
+                        }
+                    />
+                    <SignalEndpointsModal
+                        signalEndpoint={selectedSignalEndpoint}
+                        open={modalOpen}
+                        setOpen={setModalOpen}
+                        newToken={(
+                            token: string,
+                            signalEndpoint: ISignalEndpoint,
+                        ) => {
+                            setNewToken(token);
+                            setSelectedSignalEndpoint(signalEndpoint);
+                            setTokenDialog(true);
+                        }}
+                        onOpenSignals={() => {
+                            setModalOpen(false);
+                            setSignalsModalOpen(true);
+                        }}
+                    />
+                    <SignalEndpointsSignalsModal
+                        signalEndpoint={selectedSignalEndpoint}
+                        open={signalsModalOpen}
+                        setOpen={setSignalsModalOpen}
+                        onOpenConfiguration={() => {
+                            setSignalsModalOpen(false);
+                            setModalOpen(true);
+                        }}
+                    />
+                    <SignalEndpointsTokensDialog
+                        open={tokenDialog}
+                        setOpen={setTokenDialog}
+                        token={newToken}
+                        signalEndpoint={selectedSignalEndpoint}
+                    />
+                    <SignalEndpointsDeleteDialog
+                        signalEndpoint={selectedSignalEndpoint}
+                        open={deleteOpen}
+                        setOpen={setDeleteOpen}
+                        onConfirm={onDeleteConfirm}
+                    />
+                </>
+            </PermissionGuard>
         </PageContent>
     );
 };

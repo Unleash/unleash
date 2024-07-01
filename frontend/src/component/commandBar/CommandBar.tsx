@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -13,7 +13,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import { useOnBlur } from 'hooks/useOnBlur';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
@@ -26,6 +25,7 @@ import { CommandFeatures } from './CommandFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { CommandRecent } from './CommandRecent';
 import { CommandPages } from './CommandPages';
+import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
@@ -35,7 +35,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     top: '39px',
     zIndex: 4,
     borderTop: theme.spacing(0),
-    padding: theme.spacing(4, 0, 1.5),
+    padding: theme.spacing(1.5, 0, 1.5),
     borderRadius: 0,
     borderBottomLeftRadius: theme.spacing(1),
     borderBottomRightRadius: theme.spacing(1),
@@ -109,6 +109,7 @@ export const CommandBar = () => {
         CommandResultGroupItem[]
     >([]);
     const [searchedFlagCount, setSearchedFlagCount] = useState(0);
+    const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
     const { routes } = useRoutes();
     const allRoutes: Record<string, IPageRouteInfo> = {};
@@ -166,7 +167,12 @@ export const CommandBar = () => {
                 },
             });
         }
+        setHasNoResults(noResultsFound);
     }, 200);
+
+    useEffect(() => {
+        debouncedSetSearchState(value);
+    }, [searchedFlagCount]);
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
@@ -195,8 +201,6 @@ export const CommandBar = () => {
     const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
-    useOnBlur(searchContainerRef, hideSuggestions);
-
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <RecentlyVisitedRecorder />
@@ -261,6 +265,14 @@ export const CommandBar = () => {
                             items={searchedProjects}
                         />
                         <CommandPages items={searchedPages} />
+                        <ConditionallyRender
+                            condition={hasNoResults}
+                            show={
+                                <CommandBarFeedback
+                                    onSubmit={hideSuggestions}
+                                />
+                            }
+                        />
                     </CommandResultsPaper>
                 }
                 elseShow={

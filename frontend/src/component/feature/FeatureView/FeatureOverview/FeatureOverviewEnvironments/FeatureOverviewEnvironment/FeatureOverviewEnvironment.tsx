@@ -121,7 +121,7 @@ const useStrategyLimit = (strategyCount: number) => {
     const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const { uiConfig } = useUiConfig();
     const featureEnvironmentStrategiesLimit =
-        uiConfig.resourceLimits.featureEnvironmentStrategies;
+        uiConfig.resourceLimits?.featureEnvironmentStrategies || 100;
     const limitReached =
         resourceLimitsEnabled &&
         strategyCount >= featureEnvironmentStrategiesLimit;

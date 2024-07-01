@@ -255,23 +255,30 @@ export const SignalEndpointsTable = () => {
         >
             <StyledAlert severity='info'>
                 <StyledParagraph>
-                    Signals and Actions empower you to respond to events in your
+                    Signals and actions allow you to respond to events in your
                     real-time monitoring system by automating tasks such as
                     disabling a beta feature in response to an increase in
                     errors or a drop in conversion rates.
                 </StyledParagraph>
 
                 <StyledParagraph>
-                    <b>Signal endpoints</b> are used to send signals to Unleash.
-                    This allows you to integrate Unleash with your own tools.
-                    <br />
-                    <b>Automated actions</b> are configured inside projects
-                    allowing you to react to those signals and enable or disable
-                    flags based on the signals received.
+                    <ul>
+                        <li>
+                            <b>Signal endpoints</b> are used to send signals to
+                            Unleash. This allows you to integrate Unleash with
+                            any external tool.
+                        </li>
+
+                        <li>
+                            <b>Actions</b>, which are configured inside
+                            projects, allow you to react to those signals and
+                            enable or disable flags based on certain conditions.
+                        </li>
+                    </ul>
                 </StyledParagraph>
 
                 <StyledParagraph>
-                    Read the more about this feature in our documentation for{' '}
+                    Read more about these features in our documentation:{' '}
                     <a
                         href='https://docs.getunleash.io/reference/signals'
                         target='_blank'

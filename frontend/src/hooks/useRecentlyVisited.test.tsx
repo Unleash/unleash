@@ -9,11 +9,13 @@ import {
     createMemoryRouter,
 } from 'react-router-dom';
 import { useRecentlyVisited } from './useRecentlyVisited';
+import { RecentlyVisitedRecorder } from 'component/commandBar/RecentlyVisitedRecorder';
 
 const RouteNameRender: FC<{}> = () => {
     const { lastVisited } = useRecentlyVisited();
     return (
         <div>
+            <RecentlyVisitedRecorder />
             {lastVisited.map((visited) => (
                 <div>{visited.pathName}</div>
             ))}
@@ -34,14 +36,22 @@ test('checks that routes that exist in routes.ts gets added to lastVisited', asy
                 <Route path='/search' element={<Navigate to={'/unknown1'} />} />
                 <Route
                     path='/unknown1'
-                    element={<Navigate to={'/integrations'} />}
-                />
-                <Route
-                    path='/integrations'
                     element={<Navigate to={'/unknown2'} />}
                 />
                 <Route
                     path='/unknown2'
+                    element={<Navigate to={'/integrations'} />}
+                />
+                <Route
+                    path='/integrations'
+                    element={<Navigate to={'/unknown3'} />}
+                />
+                <Route
+                    path='/unknown3'
+                    element={<Navigate to={'/unknown4'} />}
+                />
+                <Route
+                    path='/unknown4'
                     element={<Navigate to={'/segments'} />}
                 />
                 <Route path='/segments' element={<div>segment div</div>} />

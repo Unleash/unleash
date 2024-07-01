@@ -5,7 +5,10 @@ import {
     RecentlyVisitedProjectButton,
 } from './RecentlyVisited/CommandResultGroup';
 import { List } from '@mui/material';
-import type { LastViewedPage } from 'hooks/useRecentlyVisited';
+import {
+    useRecentlyVisited,
+    type LastViewedPage,
+} from 'hooks/useRecentlyVisited';
 
 const toListItemButton = (
     item: LastViewedPage,
@@ -38,12 +41,11 @@ const toListItemButton = (
 };
 
 export const CommandRecent = ({
-    lastVisited,
     routes,
 }: {
-    lastVisited: LastViewedPage[];
     routes: Record<string, { path: string; route: string; title: string }>;
 }) => {
+    const { lastVisited } = useRecentlyVisited();
     const buttons = lastVisited.map((item, index) =>
         toListItemButton(item, routes, index),
     );

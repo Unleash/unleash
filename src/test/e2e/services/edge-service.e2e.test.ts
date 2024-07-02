@@ -69,7 +69,7 @@ test('should only return valid tokens', async () => {
 
     const expiredToken = await stores.apiTokenStore.insert({
         tokenName: 'expired',
-        secret: 'expired-secret',
+        secret: '*:expired-secret',
         type: ApiTokenType.CLIENT,
         expiresAt: yesterday,
         projects: ['*'],
@@ -78,7 +78,7 @@ test('should only return valid tokens', async () => {
 
     const activeToken = await stores.apiTokenStore.insert({
         tokenName: 'default-valid',
-        secret: 'valid-secret',
+        secret: '*:valid-secret',
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,
         projects: ['*'],

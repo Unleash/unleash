@@ -22,10 +22,6 @@ import { Children } from 'react';
 export const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&:hover, &:focus': {
-        border: `1px solid ${theme.palette.primary.main}`,
-        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
-    },
 });
 export const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,

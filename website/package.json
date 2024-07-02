@@ -73,7 +73,7 @@
     "enhanced-resolve": "5.17.0",
     "react-router": "6.24.0",
     "replace-in-file": "7.2.0",
-    "typescript": "5.4.5"
+    "typescript": "5.5.2"
   },
   "packageManager": "yarn@4.3.1"
 }

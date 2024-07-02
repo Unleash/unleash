@@ -663,7 +663,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ),
         apiTokens: parseEnvVarNumber(
             process.env.UNLEASH_API_TOKENS_LIMIT,
-            2000,
+            options?.resourceLimits?.apiTokens || 2000,
         ),
     };
 

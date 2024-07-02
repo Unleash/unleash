@@ -20,24 +20,14 @@ const setupApi = (environmentsLimit: number) => {
     testServerRoute(server, '/api/admin/environments', {
         environments: [
             {
-                name: 'default',
+                name: 'production',
                 type: 'production',
-                sortOrder: 1,
                 enabled: false,
-                protected: true,
-                projectCount: 0,
-                apiTokenCount: 1,
-                enabledToggleCount: 0,
             },
             {
                 name: 'development',
                 type: 'development',
-                sortOrder: 2,
                 enabled: true,
-                protected: false,
-                projectCount: 49,
-                apiTokenCount: 24353,
-                enabledToggleCount: 20,
             },
         ],
     });

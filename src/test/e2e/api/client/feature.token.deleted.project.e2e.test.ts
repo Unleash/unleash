@@ -79,7 +79,7 @@ beforeAll(async () => {
     );
     await featureToggleServiceV2.createStrategy(
         {
-            name: 'flexibleRollout',
+            name: 'default',
             constraints: [],
             parameters: {},
         },

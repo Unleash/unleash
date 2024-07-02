@@ -5,6 +5,7 @@ import { formatAssetPath } from 'utils/formatPath';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 
 import dataDogIcon from 'assets/icons/datadog.svg';
+import newRelicIcon from 'assets/icons/new-relic.svg';
 import jiraIcon from 'assets/icons/jira.svg';
 import jiraCommentIcon from 'assets/icons/jira-comment.svg';
 import signals from 'assets/icons/signals.svg';
@@ -50,6 +51,7 @@ const integrations: Record<
     }
 > = {
     datadog: { title: 'Datadog', icon: dataDogIcon },
+    'new-relic': { title: 'New Relic', icon: newRelicIcon },
     jira: { title: 'Jira', icon: jiraIcon },
     'jira-comment': { title: 'Jira', icon: jiraCommentIcon },
     signals: { title: 'Signals', icon: signals },

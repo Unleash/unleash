@@ -649,19 +649,28 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT,
             5,
         ),
-        featureEnvironmentStrategies: parseEnvVarNumber(
-            process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
-            30,
+        featureEnvironmentStrategies: Math.max(
+            1,
+            parseEnvVarNumber(
+                process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
+                30,
+            ),
         ),
-        constraintValues: parseEnvVarNumber(
-            process.env.UNLEASH_CONSTRAINT_VALUES_LIMIT,
-            options?.resourceLimits?.constraintValues || 250,
+        constraintValues: Math.max(
+            1,
+            parseEnvVarNumber(
+                process.env.UNLEASH_CONSTRAINT_VALUES_LIMIT,
+                options?.resourceLimits?.constraintValues || 250,
+            ),
         ),
         environments: parseEnvVarNumber(
             process.env.UNLEASH_ENVIRONMENTS_LIMIT,
             50,
         ),
-        projects: parseEnvVarNumber(process.env.UNLEASH_PROJECTS_LIMIT, 500),
+        projects: Math.max(
+            1,
+            parseEnvVarNumber(process.env.UNLEASH_PROJECTS_LIMIT, 500),
+        ),
     };
 
     return {

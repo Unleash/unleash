@@ -138,3 +138,14 @@ On the other hand, the environment import/export feature was designed to export 
 
 Further, the environment import/export comes with a much more stringent validation and will attempt to stop any corrupted data imports.
 
+## Startup import {#startup-import}
+
+You can also import on startup by using an import file in JSON format and the import will be applied on top of existing data. Currently the startup import supports the same data supported in OSS import.
+
+Unleash lets you do this both via configuration parameters and environment variables. The relevant parameters/variables are:
+
+| config parameter   | environment variable    | default       | value                                 |
+|--------------------|-------------------------|---------------|---------------------------------------|
+| `file`             | `IMPORT_FILE`           | none          | path to the configuration file        |
+| `project`          | `IMPORT_PROJECT`        | `default`     | which project to import into          |
+| `environment`      | `IMPORT_ENVIRONMENT`    | `development` | which environment to import for       |

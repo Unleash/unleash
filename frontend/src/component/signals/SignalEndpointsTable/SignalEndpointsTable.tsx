@@ -3,7 +3,8 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { Alert, styled, useMediaQuery } from '@mui/material';
+import { Alert, Button, styled, useMediaQuery } from '@mui/material';
+import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -28,10 +29,15 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from '@server/types/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { useFeedback } from 'component/feedbackNew/useFeedback';
 
 export const SignalEndpointsTable = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
+    const { openFeedback, hasSubmittedFeedback } = useFeedback(
+        'signals',
+        'automatic',
+    );
 
     const { signalEndpoints, refetch } = useSignalEndpoints();
     const { toggleSignalEndpoint, removeSignalEndpoint } =
@@ -238,17 +244,39 @@ export const SignalEndpointsTable = () => {
                 <PageHeader
                     title={`Signal endpoints (${signalEndpoints.length})`}
                     actions={
-                        <PermissionButton
-                            variant='contained'
-                            color='primary'
-                            permission={ADMIN}
-                            onClick={() => {
-                                setSelectedSignalEndpoint(undefined);
-                                setModalOpen(true);
-                            }}
-                        >
-                            New signal endpoint
-                        </PermissionButton>
+                        <>
+                            <ConditionallyRender
+                                condition={!hasSubmittedFeedback}
+                                show={
+                                    <Button
+                                        startIcon={<ReviewsOutlined />}
+                                        variant='outlined'
+                                        onClick={() => {
+                                            openFeedback({
+                                                title: 'Do you find signals and actions easy to use?',
+                                                positiveLabel:
+                                                    'What do you like most about signals and actions?',
+                                                areasForImprovementsLabel:
+                                                    'What needs to change to use signals and actions the way you want?',
+                                            });
+                                        }}
+                                    >
+                                        Provide feedback
+                                    </Button>
+                                }
+                            />
+                            <PermissionButton
+                                variant='contained'
+                                color='primary'
+                                permission={ADMIN}
+                                onClick={() => {
+                                    setSelectedSignalEndpoint(undefined);
+                                    setModalOpen(true);
+                                }}
+                            >
+                                New signal endpoint
+                            </PermissionButton>
+                        </>
                     }
                 />
             }

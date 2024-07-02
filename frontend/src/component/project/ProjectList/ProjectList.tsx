@@ -226,7 +226,7 @@ export const ProjectListNew = () => {
                                 }
                             />
                             <ProjectCreationButton
-                                projectCount={projectCount}
+                                projectCount={projects.length}
                             />
                         </>
                     }

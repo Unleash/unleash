@@ -14,9 +14,6 @@ const createServiceWithLimit = (limit: number) => {
                 resourceLimits: true,
             },
         },
-        resourceLimits: {
-            apiTokens: limit,
-        },
     });
 
     const apiTokenStore = new FakeApiTokenStore();
@@ -33,7 +30,12 @@ const createServiceWithLimit = (limit: number) => {
 
     const service = new ApiTokenService(
         { apiTokenStore, environmentStore },
-        config,
+        {
+            ...config,
+            resourceLimits: {
+                apiTokens: limit,
+            },
+        },
         eventService,
     );
 

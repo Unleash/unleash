@@ -40,5 +40,6 @@ export const defaultValue: IUiConfig = {
         featureEnvironmentStrategies: 30,
         environments: 50,
         constraintValues: 250,
+        projects: 500,
     },
 };

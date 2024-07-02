@@ -150,7 +150,7 @@ export const createServices = (
     );
     const apiTokenService = db
         ? createApiTokenService(db, config)
-        : createFakeApiTokenService(config);
+        : createFakeApiTokenService(config).apiTokenService;
     const lastSeenService = db
         ? createLastSeenService(db, config)
         : createFakeLastSeenService(config);

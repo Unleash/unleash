@@ -4,7 +4,6 @@ import {
     RecentlyVisitedPathButton,
     RecentlyVisitedProjectButton,
 } from './RecentlyVisited/CommandResultGroup';
-import { List } from '@mui/material';
 import {
     useRecentlyVisited,
     type LastViewedPage,
@@ -40,7 +39,7 @@ const toListItemButton = (
     );
 };
 
-export const CommandRecent = ({
+export const CommandQuickSuggestions = ({
     routes,
     onClick,
 }: {
@@ -57,7 +56,7 @@ export const CommandRecent = ({
             groupName='Quick suggestions'
             onClick={onClick}
         >
-            <List>{buttons}</List>
+            {buttons}
         </CommandResultGroup>
     );
 };

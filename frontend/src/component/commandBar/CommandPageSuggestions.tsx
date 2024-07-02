@@ -75,15 +75,7 @@ export const CommandPageSuggestions = ({
                     }}
                     sx={listItemButtonStyle}
                 >
-                    <StyledListItemIcon
-                        sx={(theme) => ({
-                            fontSize: theme.fontSizes.smallBody,
-                            minWidth: theme.spacing(0.5),
-                            margin: theme.spacing(0, 1, 0, 0),
-                        })}
-                    >
-                        {item.icon}
-                    </StyledListItemIcon>
+                    <StyledListItemIcon>{item.icon}</StyledListItemIcon>
                     <StyledListItemText>
                         <StyledButtonTypography color='textPrimary'>
                             {item.name}

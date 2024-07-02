@@ -11,7 +11,7 @@ import {
 import { ListItemButton } from '@mui/material';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 
-export const CommandPages = ({
+export const CommandSearchPages = ({
     items,
     onClick,
 }: {
@@ -49,13 +49,7 @@ export const CommandPages = ({
                     }}
                     sx={listItemButtonStyle}
                 >
-                    <StyledListItemIcon
-                        sx={(theme) => ({
-                            fontSize: theme.fontSizes.smallBody,
-                            minWidth: theme.spacing(0.5),
-                            margin: theme.spacing(0, 1, 0, 0),
-                        })}
-                    >
+                    <StyledListItemIcon>
                         <IconRenderer path={item.link} />
                     </StyledListItemIcon>
                     <StyledListItemText>

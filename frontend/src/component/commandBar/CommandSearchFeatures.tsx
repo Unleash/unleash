@@ -10,7 +10,7 @@ interface ICommandBar {
     setSearchedFlagCount: (count: number) => void;
     onClick: () => void;
 }
-export const CommandFeatures = ({
+export const CommandSearchFeatures = ({
     searchString,
     setSearchedFlagCount,
     onClick,

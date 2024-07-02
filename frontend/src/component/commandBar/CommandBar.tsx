@@ -21,10 +21,10 @@ import { CommandPageSuggestions } from './CommandPageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { CommandFeatures } from './CommandFeatures';
+import { CommandSearchFeatures } from './CommandSearchFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { CommandRecent } from './CommandRecent';
-import { CommandPages } from './CommandPages';
+import { CommandQuickSuggestions } from './CommandQuickSuggestions';
+import { CommandSearchPages } from './CommandSearchPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
 
@@ -264,7 +264,7 @@ export const CommandBar = () => {
                 show={
                     <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                         {searchString !== undefined && (
-                            <CommandFeatures
+                            <CommandSearchFeatures
                                 searchString={searchString}
                                 setSearchedFlagCount={setSearchedFlagCount}
                                 onClick={clearSearchValue}
@@ -276,7 +276,7 @@ export const CommandBar = () => {
                             onClick={clearSearchValue}
                             items={searchedProjects}
                         />
-                        <CommandPages
+                        <CommandSearchPages
                             items={searchedPages}
                             onClick={clearSearchValue}
                         />
@@ -293,7 +293,7 @@ export const CommandBar = () => {
                 elseShow={
                     showSuggestions && (
                         <CommandResultsPaper onKeyDownCapture={onKeyDown}>
-                            <CommandRecent
+                            <CommandQuickSuggestions
                                 routes={allRoutes}
                                 onClick={clearSearchValue}
                             />

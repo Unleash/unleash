@@ -6,35 +6,31 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 
 const server = testServerSetup();
 
-const setupApi = (environmentsLimit: number) => {
+const setupApi = ({
+    environmentCount,
+    environmentLimit,
+}: { environmentCount: number; environmentLimit: number }) => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             resourceLimits: true,
             EEA: true,
         },
         resourceLimits: {
-            environments: environmentsLimit,
+            environments: environmentLimit,
         },
     });
 
     testServerRoute(server, '/api/admin/environments', {
-        environments: [
-            {
-                name: 'production',
-                type: 'production',
-                enabled: false,
-            },
-            {
-                name: 'development',
-                type: 'development',
-                enabled: true,
-            },
-        ],
+        environments: Array.from({ length: environmentCount }).map((_, i) => ({
+            name: `environment-${i}`,
+            type: 'production',
+            enabled: i % 2 === 0,
+        })),
     });
 };
 
 test('should allow you to create environments when there are fewer environments than the limit', async () => {
-    setupApi(5);
+    setupApi({ environmentLimit: 5, environmentCount: 2 });
 
     render(<CreateEnvironmentButton />, {
         permissions: [{ permission: ADMIN }],
@@ -47,7 +43,7 @@ test('should allow you to create environments when there are fewer environments 
 });
 
 test('should not allow you to create environments when you have reached the limit', async () => {
-    setupApi(2);
+    setupApi({ environmentLimit: 5, environmentCount: 5 });
     render(<CreateEnvironmentButton />, {
         permissions: [{ permission: ADMIN }],
     });

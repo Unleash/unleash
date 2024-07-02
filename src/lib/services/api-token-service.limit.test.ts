@@ -33,6 +33,7 @@ const createServiceWithLimit = (limit: number) => {
         {
             ...config,
             resourceLimits: {
+                ...config.resourceLimits,
                 apiTokens: limit,
             },
         },

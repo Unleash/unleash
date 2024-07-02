@@ -149,6 +149,7 @@ exports[`should create default config 1`] = `
       "showInactiveUsers": false,
       "signals": false,
       "strictSchemaValidation": false,
+      "tokenWidcardOrphans": false,
       "useMemoizedActiveTokens": false,
       "userAccessUIEnabled": false,
     },

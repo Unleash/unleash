@@ -661,6 +661,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.UNLEASH_ENVIRONMENTS_LIMIT,
             50,
         ),
+        projects: parseEnvVarNumber(process.env.UNLEASH_PROJECTS_LIMIT, 500),
     };
 
     return {

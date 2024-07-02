@@ -16,6 +16,7 @@ export const resourceLimitsSchema = {
         'featureEnvironmentStrategies',
         'constraintValues',
         'environments',
+        'projects',
     ],
     additionalProperties: false,
     properties: {
@@ -81,6 +82,12 @@ export const resourceLimitsSchema = {
             minimum: 1,
             example: 50,
             description: 'The maximum number of environments allowed.',
+        },
+        projects: {
+            type: 'integer',
+            minimum: 1,
+            example: 500,
+            description: 'The maximum number of projects allowed.',
         },
     },
     components: {},

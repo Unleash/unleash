@@ -34,7 +34,7 @@ describe('ProjectsList', () => {
         expect(container.textContent).toEqual('*');
     });
 
-    it('should show number of projects', async () => {
+    it('should show the number of projects', async () => {
         const { container } = render(
             <ProjectsList
                 projects={['project1', 'project2', 'project3', 'project4']}

@@ -22,10 +22,6 @@ import { Children } from 'react';
 export const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&:hover, &:focus': {
-        border: `1px solid ${theme.palette.primary.main}`,
-        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
-    },
 });
 export const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
@@ -180,6 +176,7 @@ interface CommandResultGroupProps {
     icon: string;
     groupName: string;
     items?: CommandResultGroupItem[];
+    onClick: () => void;
     children?: React.ReactNode;
 }
 
@@ -187,6 +184,7 @@ export const CommandResultGroup = ({
     icon,
     groupName,
     items,
+    onClick,
     children,
 }: CommandResultGroupProps) => {
     const { trackEvent } = usePlausibleTracker();
@@ -199,7 +197,7 @@ export const CommandResultGroup = ({
 
     const slicedItems = items?.slice(0, 3);
 
-    const onClick = (item: CommandResultGroupItem) => {
+    const onItemClick = (item: CommandResultGroupItem) => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -208,6 +206,7 @@ export const CommandResultGroup = ({
                 ...(groupName === 'Pages' && { pageType: item.name }),
             },
         });
+        onClick();
     };
 
     return (
@@ -222,8 +221,9 @@ export const CommandResultGroup = ({
                         key={`command-result-group-${groupName}-${index}`}
                         dense={true}
                         component={Link}
-                        onClick={() => {
-                            onClick(item);
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onItemClick(item);
                         }}
                         to={item.link}
                         sx={listItemButtonStyle}

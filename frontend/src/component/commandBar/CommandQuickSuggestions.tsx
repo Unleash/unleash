@@ -39,7 +39,7 @@ const toListItemButton = (
     );
 };
 
-export const CommandRecent = ({
+export const CommandQuickSuggestions = ({
     routes,
     onClick,
 }: {

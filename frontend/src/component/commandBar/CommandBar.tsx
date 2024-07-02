@@ -179,6 +179,11 @@ export const CommandBar = () => {
         setValue(value);
     };
 
+    const clearSearchValue = () => {
+        onSearchChange('');
+        setShowSuggestions(false);
+    };
+
     const hotkey = useKeyboardShortcut(
         {
             modifiers: ['ctrl'],
@@ -262,14 +267,19 @@ export const CommandBar = () => {
                             <CommandFeatures
                                 searchString={searchString}
                                 setSearchedFlagCount={setSearchedFlagCount}
+                                onClick={clearSearchValue}
                             />
                         )}
                         <CommandResultGroup
                             groupName={'Projects'}
                             icon={'flag'}
+                            onClick={clearSearchValue}
                             items={searchedProjects}
                         />
-                        <CommandPages items={searchedPages} />
+                        <CommandPages
+                            items={searchedPages}
+                            onClick={clearSearchValue}
+                        />
                         <ConditionallyRender
                             condition={hasNoResults}
                             show={
@@ -283,8 +293,14 @@ export const CommandBar = () => {
                 elseShow={
                     showSuggestions && (
                         <CommandResultsPaper onKeyDownCapture={onKeyDown}>
-                            <CommandRecent routes={allRoutes} />
-                            <CommandPageSuggestions routes={allRoutes} />
+                            <CommandRecent
+                                routes={allRoutes}
+                                onClick={clearSearchValue}
+                            />
+                            <CommandPageSuggestions
+                                routes={allRoutes}
+                                onClick={clearSearchValue}
+                            />
                         </CommandResultsPaper>
                     )
                 }

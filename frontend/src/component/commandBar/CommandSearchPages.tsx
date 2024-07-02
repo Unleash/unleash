@@ -11,7 +11,7 @@ import {
 import { ListItemButton } from '@mui/material';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 
-export const CommandPages = ({
+export const CommandSearchPages = ({
     items,
     onClick,
 }: {

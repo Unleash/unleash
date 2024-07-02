@@ -1,9 +1,6 @@
-import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
 import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
 import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
-import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
-import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
 import {
     ADMIN_TOKEN_USER,
     API_TOKEN_CREATED,
@@ -12,7 +9,6 @@ import {
     TEST_AUDIT_USER,
 } from '../types';
 import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
-import { createFakeEventsService } from '../../lib/features';
 import { extractAuditInfoFromUser } from '../util';
 import { createFakeApiTokenService } from '../features/api-tokens/create-api-token-service';
 
@@ -35,21 +31,7 @@ test('Should init api token', async () => {
             },
         },
     });
-    const apiTokenStore = new FakeApiTokenStore();
-    const environmentStore = new FakeEnvironmentStore();
-    const insertCalled = new Promise((resolve) => {
-        apiTokenStore.on('insert', resolve);
-    });
-
-    const eventService = createFakeEventsService(config);
-
-    new ApiTokenService(
-        { apiTokenStore, environmentStore },
-        config,
-        eventService,
-    );
-
-    await insertCalled;
+    const { apiTokenStore } = createFakeApiTokenService(config);
 
     const tokens = await apiTokenStore.getAll();
 

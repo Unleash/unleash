@@ -4,20 +4,20 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import {
     Badge,
+    Icon,
     ListItem,
     ListItemButton,
     ListItemIcon,
     Tooltip,
     styled,
 } from '@mui/material';
-import NewReleases from '@mui/icons-material/NewReleases';
 import Signals from '@mui/icons-material/Sensors';
 import { useNavigate } from 'react-router-dom';
 import type { NavigationMode } from 'component/layout/MainLayout/NavigationSidebar/NavigationMode';
 import { NewInUnleashItem } from './NewInUnleashItem';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
-    // border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down('lg')]: {
         margin: theme.spacing(2),
@@ -30,11 +30,10 @@ const StyledNewInUnleashHeader = styled('p')(({ theme }) => ({
     alignItems: 'center',
     lineHeight: 1,
     gap: theme.spacing(1),
-    '& > svg': {
+    '& > span': {
         color: theme.palette.neutral.main,
     },
     padding: theme.spacing(1, 2),
-    // borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledNewInUnleashList = styled('ul')(({ theme }) => ({
@@ -68,7 +67,6 @@ type NewItem = {
     icon: ReactNode;
     link: string;
     show: boolean;
-    isBeta?: boolean;
 };
 
 interface INewInUnleashProps {
@@ -82,6 +80,7 @@ export const NewInUnleash = ({
     onItemClick,
     onMiniModeClick,
 }: INewInUnleashProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const navigate = useNavigate();
     const [seenItems, setSeenItems] = useLocalStorageState(
         'new-in-unleash-seen:v1',
@@ -93,20 +92,6 @@ export const NewInUnleash = ({
     const items: NewItem[] = [
         {
             label: 'Signals & Actions',
-            icon: <StyledSignalsIcon />,
-            link: '/integrations/signals',
-            show: isEnterprise() && signalsEnabled,
-            // isBeta: true,
-        },
-        {
-            label: 'Other beta',
-            icon: <StyledSignalsIcon />,
-            link: '/integrations/signals',
-            show: isEnterprise() && signalsEnabled,
-            // isBeta: true,
-        },
-        {
-            label: 'GA feature',
             icon: <StyledSignalsIcon />,
             link: '/integrations/signals',
             show: isEnterprise() && signalsEnabled,
@@ -129,7 +114,7 @@ export const NewInUnleash = ({
                                 badgeContent={visibleItems.length}
                                 color='primary'
                             >
-                                <NewReleases />
+                                <Icon>new_releases</Icon>
                             </Badge>
                         </StyledMiniItemIcon>
                     </Tooltip>
@@ -141,20 +126,29 @@ export const NewInUnleash = ({
     return (
         <StyledNewInUnleash>
             <StyledNewInUnleashHeader>
-                <NewReleases />
+                <Icon>new_releases</Icon>
                 New in Unleash
             </StyledNewInUnleashHeader>
             <StyledNewInUnleashList>
-                {visibleItems.map(({ label, icon, isBeta, link }) => (
+                {visibleItems.map(({ label, icon, link }) => (
                     <NewInUnleashItem
                         key={label}
                         icon={icon}
-                        // isBeta={isBeta}
                         onClick={() => {
+                            trackEvent('new-in-unleash-click', {
+                                props: {
+                                    label,
+                                },
+                            });
                             navigate(link);
                             onItemClick?.();
                         }}
                         onDismiss={() => {
+                            trackEvent('new-in-unleash-dismiss', {
+                                props: {
+                                    label,
+                                },
+                            });
                             setSeenItems(new Set([...seenItems, label]));
                         }}
                     >

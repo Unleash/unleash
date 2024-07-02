@@ -7,8 +7,6 @@ import {
     styled,
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
-// import { Badge } from 'component/common/Badge/Badge';
-// import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
     justifyContent: 'space-between',
@@ -28,19 +26,10 @@ const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({
     padding: theme.spacing(0.25),
 }));
 
-// const StyledBetaBadge = styled(Badge)(({ theme }) => ({
-//     position: 'absolute',
-//     zIndex: theme.zIndex.tooltip,
-//     right: theme.spacing(1),
-//     top: theme.spacing(-0.75),
-//     padding: theme.spacing(0.25),
-// }));
-
 interface INewInUnleashItemProps {
     icon: ReactNode;
     onClick: () => void;
     onDismiss: () => void;
-    // isBeta?: boolean;
     children: ReactNode;
 }
 
@@ -48,7 +37,6 @@ export const NewInUnleashItem = ({
     icon,
     onClick,
     onDismiss,
-    // isBeta = false,
     children,
 }: INewInUnleashItemProps) => {
     const onDismissClick = (e: React.MouseEvent) => {
@@ -58,10 +46,6 @@ export const NewInUnleashItem = ({
 
     return (
         <ListItem disablePadding onClick={onClick}>
-            {/* <ConditionallyRender
-                condition={isBeta}
-                show={<StyledBetaBadge color='success'>Beta</StyledBetaBadge>}
-            /> */}
             <StyledItemButton>
                 <StyledItemButtonContent>
                     {icon}

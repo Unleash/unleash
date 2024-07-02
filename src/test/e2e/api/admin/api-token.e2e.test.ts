@@ -122,7 +122,7 @@ test('creates new admin token with expiry', async () => {
 });
 
 test('update client token with expiry', async () => {
-    const tokenSecret = 'random-secret-update';
+    const tokenSecret = '*:random-secret-update';
 
     await db.stores.apiTokenStore.insert({
         username: 'test',
@@ -187,7 +187,7 @@ test('creates a lot of client tokens', async () => {
 });
 
 test('removes api token', async () => {
-    const tokenSecret = 'random-secret';
+    const tokenSecret = '*:random-secret';
 
     await db.stores.apiTokenStore.insert({
         environment: 'development',

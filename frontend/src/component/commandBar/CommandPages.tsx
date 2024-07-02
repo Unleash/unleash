@@ -49,13 +49,7 @@ export const CommandPages = ({
                     }}
                     sx={listItemButtonStyle}
                 >
-                    <StyledListItemIcon
-                        sx={(theme) => ({
-                            fontSize: theme.fontSizes.smallBody,
-                            minWidth: theme.spacing(0.5),
-                            margin: theme.spacing(0, 1, 0, 0),
-                        })}
-                    >
+                    <StyledListItemIcon>
                         <IconRenderer path={item.link} />
                     </StyledListItemIcon>
                     <StyledListItemText>

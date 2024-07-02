@@ -199,7 +199,7 @@ export const CommandBar = () => {
     const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
-    const onKeyDown = (event: any) => {
+    const onKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Escape') {
             setShowSuggestions(false);
         } else if (event.keyCode >= 48 && event.keyCode <= 110) {

@@ -28,15 +28,11 @@ const createServiceWithLimit = (limit: number) => {
 
     const eventService = createFakeEventsService(config);
 
+    config.resourceLimits.apiTokens = limit;
+
     const service = new ApiTokenService(
         { apiTokenStore, environmentStore },
-        {
-            ...config,
-            resourceLimits: {
-                ...config.resourceLimits,
-                apiTokens: limit,
-            },
-        },
+        config,
         eventService,
     );
 

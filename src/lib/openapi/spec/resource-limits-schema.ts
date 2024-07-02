@@ -82,6 +82,14 @@ export const resourceLimitsSchema = {
             example: 50,
             description: 'The maximum number of environments allowed.',
         },
+        // should it be sdkApiTokens?
+        apiTokens: {
+            type: 'integer',
+            minimum: 1,
+            example: 2000,
+            description:
+                'The maximum number of SDK API tokens you can have at the same time. This limit applies only to server-side and client-side SDK tokens. Personal access tokens and admin tokens are not subject to this limit.',
+        },
     },
     components: {},
 } as const;

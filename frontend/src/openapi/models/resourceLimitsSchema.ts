@@ -26,4 +26,8 @@ export interface ResourceLimitsSchema {
     strategySegments: number;
     /** The maximum number of feature environment strategies allowed. */
     featureEnvironmentStrategies: number;
+    /** The maximum number of environments allowed. */
+    environments: number;
+    /** The maximum number of values for a single constraint. */
+    constraintValues: number;
 }

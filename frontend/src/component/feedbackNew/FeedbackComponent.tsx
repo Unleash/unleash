@@ -16,12 +16,12 @@ import useToast from 'hooks/useToast';
 import type { ProvideFeedbackSchema } from 'openapi';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import type { FeedbackData, FeedbackMode } from './FeedbackContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUserType from './useUserType';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -201,9 +201,10 @@ export const FeedbackComponent = ({
     feedbackMode,
 }: IFeedbackComponent) => {
     const { setToastData } = useToast();
+    const userType = useUserType();
     const { trackEvent } = usePlausibleTracker();
     const theme = useTheme();
-    const { isPro, isOss, isEnterprise } = useUiConfig();
+
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
         feedbackData.category,
@@ -276,22 +277,6 @@ export const FeedbackComponent = ({
         setSelectedScore(event.target.value);
     };
 
-    const getUserType = () => {
-        if (isPro()) {
-            return 'pro';
-        }
-
-        if (isOss()) {
-            return 'oss';
-        }
-
-        if (isEnterprise()) {
-            return 'enterprise';
-        }
-
-        return 'unknown';
-    };
-
     return (
         <ConditionallyRender
             condition={showFeedback}
@@ -320,7 +305,7 @@ export const FeedbackComponent = ({
                                     <input
                                         type='hidden'
                                         name='userType'
-                                        value={getUserType()}
+                                        value={userType}
                                     />
                                     <FormTitle>{feedbackData.title}</FormTitle>
                                     <StyledScoreContainer>

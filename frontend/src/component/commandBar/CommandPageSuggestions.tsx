@@ -43,13 +43,15 @@ const pages = [
 
 export const CommandPageSuggestions = ({
     routes,
+    onClick,
 }: {
     routes: Record<string, { path: string; route: string; title: string }>;
+    onClick: () => void;
 }) => {
     const { trackEvent } = usePlausibleTracker();
     const filtered = pages.filter((page) => routes[page]);
     const pageItems = toListItemData(filtered, routes);
-    const onClick = (item: IPageSuggestionItem) => {
+    const onItemClick = (item: IPageSuggestionItem) => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -58,9 +60,10 @@ export const CommandPageSuggestions = ({
                 pageType: item.name,
             },
         });
+        onClick();
     };
     return (
-        <CommandResultGroup icon='pages' groupName='Pages'>
+        <CommandResultGroup icon='pages' groupName='Pages' onClick={onClick}>
             {pageItems.map((item, index) => (
                 <ListItemButton
                     key={`recently-visited-${index}`}
@@ -68,19 +71,11 @@ export const CommandPageSuggestions = ({
                     component={Link}
                     to={item.path}
                     onClick={() => {
-                        onClick(item);
+                        onItemClick(item);
                     }}
                     sx={listItemButtonStyle}
                 >
-                    <StyledListItemIcon
-                        sx={(theme) => ({
-                            fontSize: theme.fontSizes.smallBody,
-                            minWidth: theme.spacing(0.5),
-                            margin: theme.spacing(0, 1, 0, 0),
-                        })}
-                    >
-                        {item.icon}
-                    </StyledListItemIcon>
+                    <StyledListItemIcon>{item.icon}</StyledListItemIcon>
                     <StyledListItemText>
                         <StyledButtonTypography color='textPrimary'>
                             {item.name}

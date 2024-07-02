@@ -315,7 +315,7 @@ export default class ProjectService {
     async validateProjectLimit() {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
 
-        const limit = this.resourceLimits.projects;
+        const limit = Math.max(this.resourceLimits.projects, 1);
         const projectCount = await this.projectStore.count();
 
         if (projectCount >= limit) {

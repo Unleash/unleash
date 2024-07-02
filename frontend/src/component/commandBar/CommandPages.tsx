@@ -13,13 +13,15 @@ import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/Icon
 
 export const CommandPages = ({
     items,
+    onClick,
 }: {
     items: CommandResultGroupItem[];
+    onClick: () => void;
 }) => {
     const { trackEvent } = usePlausibleTracker();
     const groupName = 'Pages';
 
-    const onClick = (item: CommandResultGroupItem) => {
+    const onItemClick = (item: CommandResultGroupItem) => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -28,9 +30,14 @@ export const CommandPages = ({
                 ...(groupName === 'Pages' && { pageType: item.name }),
             },
         });
+        onClick();
     };
     return (
-        <CommandResultGroup groupName={'Pages'} icon={'default'}>
+        <CommandResultGroup
+            groupName={'Pages'}
+            icon={'default'}
+            onClick={onClick}
+        >
             {items.map((item, index) => (
                 <ListItemButton
                     key={`command-result-group-pages-${index}`}
@@ -38,7 +45,7 @@ export const CommandPages = ({
                     component={Link}
                     to={item.link}
                     onClick={() => {
-                        onClick(item);
+                        onItemClick(item);
                     }}
                     sx={listItemButtonStyle}
                 >

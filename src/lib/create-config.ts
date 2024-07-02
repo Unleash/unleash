@@ -661,6 +661,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.UNLEASH_ENVIRONMENTS_LIMIT,
             50,
         ),
+        apiTokens: Math.max(
+            0,
+            parseEnvVarNumber(process.env.UNLEASH_API_TOKENS_LIMIT, 2000),
+        ),
         projects: parseEnvVarNumber(process.env.UNLEASH_PROJECTS_LIMIT, 500),
     };
 

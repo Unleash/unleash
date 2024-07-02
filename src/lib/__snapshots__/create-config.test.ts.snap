@@ -196,6 +196,7 @@ exports[`should create default config 1`] = `
     "actionSetFilterValues": 25,
     "actionSetFilters": 5,
     "actionSetsPerProject": 5,
+    "apiTokens": 2000,
     "constraintValues": 250,
     "environments": 50,
     "featureEnvironmentStrategies": 30,

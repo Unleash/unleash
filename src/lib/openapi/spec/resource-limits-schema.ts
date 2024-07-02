@@ -83,6 +83,13 @@ export const resourceLimitsSchema = {
             example: 50,
             description: 'The maximum number of environments allowed.',
         },
+        apiTokens: {
+            type: 'integer',
+            minimum: 0,
+            example: 2000,
+            description:
+                'The maximum number of SDK and admin API tokens you can have at the same time. This limit applies only to server-side and client-side SDK tokens and to admin tokens. Personal access tokens are not subject to this limit. The limit applies to the total number of tokens across all projects in your organization.',
+        },
         projects: {
             type: 'integer',
             minimum: 1,

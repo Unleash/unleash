@@ -72,11 +72,6 @@ const StyledSearch = styled('div')(({ theme }) => ({
     padding: '3px 5px 3px 12px',
     width: '100%',
     zIndex: 3,
-    '&:focus-within': {
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        borderBottom: '0px',
-    },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -214,7 +209,22 @@ export const CommandBar = () => {
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <RecentlyVisitedRecorder />
-            <StyledSearch>
+            <StyledSearch
+                sx={{
+                    borderBottomLeftRadius: (theme) =>
+                        showSuggestions
+                            ? 0
+                            : theme.shape.borderRadiusExtraLarge,
+                    borderBottomRightRadius: (theme) =>
+                        showSuggestions
+                            ? 0
+                            : theme.shape.borderRadiusExtraLarge,
+                    borderBottom: (theme) =>
+                        showSuggestions
+                            ? '0px'
+                            : `1px solid ${theme.palette.neutral.border}`,
+                }}
+            >
                 <SearchIcon
                     sx={{
                         mr: 1,

@@ -295,6 +295,14 @@ export class ApiTokenService {
         const environments = await this.environmentStore.getAll();
         validateApiTokenEnvironment(newToken, environments);
 
+        await this.validateApiTokenLimit();
+
+        const secret = this.generateSecretKey(newToken);
+        const createNewToken = { ...newToken, secret };
+        return this.insertNewApiToken(createNewToken, auditUser);
+    }
+
+    private async validateApiTokenLimit() {
         if (this.flagResolver.isEnabled('resourceLimits')) {
             const currentTokenCount = await this.store.count();
             const limit = this.resourceLimits.apiTokens;
@@ -302,10 +310,6 @@ export class ApiTokenService {
                 throw new ExceedsLimitError('api token', limit);
             }
         }
-
-        const secret = this.generateSecretKey(newToken);
-        const createNewToken = { ...newToken, secret };
-        return this.insertNewApiToken(createNewToken, auditUser);
     }
 
     // TODO: Remove this service method after embedded proxy has been released in

@@ -24,7 +24,7 @@ import type { IUnleashConfig } from './types/option';
 import type { ISettingStore, IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import type { IEnvironment } from './types';
+import type { IEnvironment, ISdkHeartbeat } from './types';
 import {
     createCounter,
     createGauge,
@@ -784,15 +784,13 @@ export default class MetricsMonitor {
             }
         });
 
-        eventStore.on(CLIENT_REGISTER, (m) => {
-            if (m.sdkVersion && m.sdkVersion.indexOf(':') > -1) {
-                const [sdkName, sdkVersion] = m.sdkVersion.split(':');
-                clientSdkVersionUsage.increment({
-                    sdk_name: sdkName,
-                    sdk_version: sdkVersion,
-                });
-            }
+        eventStore.on(CLIENT_REGISTER, (heartbeatEvent: ISdkHeartbeat) => {
+            clientSdkVersionUsage.increment({
+                sdk_name: heartbeatEvent.sdkName,
+                sdk_version: heartbeatEvent.sdkVersion,
+            });
         });
+
         eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
             projectEnvironmentsDisabled.increment({ project_id: project });
         });

@@ -598,3 +598,8 @@ export interface IUserAccessOverview {
     rootRole: string;
     groupProjects: string[];
 }
+
+export interface ISdkHeartbeat {
+    sdkVersion: string;
+    sdkName: string;
+}

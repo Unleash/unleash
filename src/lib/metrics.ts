@@ -785,6 +785,9 @@ export default class MetricsMonitor {
         });
 
         eventStore.on(CLIENT_REGISTER, (heartbeatEvent: ISdkHeartbeat) => {
+            if (!heartbeatEvent.sdkName || !heartbeatEvent.sdkVersion) {
+                return;
+            }
             clientSdkVersionUsage.increment({
                 sdk_name: heartbeatEvent.sdkName,
                 sdk_version: heartbeatEvent.sdkVersion,

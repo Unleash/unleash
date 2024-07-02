@@ -239,22 +239,28 @@ test('Should collect metrics for database', async () => {
 
 test('Should collect metrics for client sdk versions', async () => {
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-java:5.0.0',
+        sdkName: 'unleash-client-java',
+        sdkVersion: '5.0.0',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-java:5.0.0',
+        sdkName: 'unleash-client-java',
+        sdkVersion: '5.0.0',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-java:5.0.0',
+        sdkName: 'unleash-client-java',
+        sdkVersion: '5.0.0',
     });
     const metrics = await prometheusRegister.getSingleMetricAsString(
         'client_sdk_versions',
@@ -266,7 +272,8 @@ test('Should collect metrics for client sdk versions', async () => {
         /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0"\} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     const newmetrics = await prometheusRegister.getSingleMetricAsString(
         'client_sdk_versions',

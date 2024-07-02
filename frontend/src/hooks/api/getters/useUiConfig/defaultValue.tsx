@@ -39,5 +39,6 @@ export const defaultValue: IUiConfig = {
         signalTokensPerEndpoint: 5,
         featureEnvironmentStrategies: 30,
         environments: 50,
+        constraintValues: 250,
     },
 };

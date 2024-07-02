@@ -11,13 +11,13 @@ export const CreateEnvironmentButton = () => {
     const environmentLimit = uiConfig.resourceLimits.environments;
     const navigate = useNavigate();
 
-    const atEnvironmentLimit = environments.length >= environmentLimit;
+    const limitReached = environments.length >= environmentLimit;
 
     return (
         <ResponsiveButton
             tooltipProps={{
                 arrow: true,
-                title: atEnvironmentLimit
+                title: limitReached
                     ? `You have reached the limit of environments you can create (${environmentLimit}).`
                     : undefined,
             }}
@@ -25,7 +25,7 @@ export const CreateEnvironmentButton = () => {
             maxWidth='700px'
             Icon={Add}
             permission={ADMIN}
-            disabled={atEnvironmentLimit || !uiConfig.flags.EEA}
+            disabled={limitReached || !uiConfig.flags.EEA}
         >
             New environment
         </ResponsiveButton>

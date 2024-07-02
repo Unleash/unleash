@@ -1,6 +1,6 @@
 import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { ApiTokenService } from '../../../lib/services/api-token-service';
+import type { ApiTokenService } from '../../../lib/services/api-token-service';
 import { createTestConfig } from '../../config/test-config';
 import {
     ApiTokenType,
@@ -12,6 +12,7 @@ import type ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EventService } from '../../../lib/services';
 import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
+import { createApiTokenService } from '../../../lib/features/api-tokens/create-api-token-service';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -45,7 +46,7 @@ beforeAll(async () => {
 
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
-    apiTokenService = new ApiTokenService(stores, config, eventService);
+    apiTokenService = createApiTokenService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

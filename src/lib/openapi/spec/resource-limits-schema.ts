@@ -80,7 +80,7 @@ export const resourceLimitsSchema = {
             type: 'integer',
             minimum: 1,
             example: 50,
-            description: 'The maximum number active environments allowed.',
+            description: 'The maximum number of environments allowed.',
         },
     },
     components: {},

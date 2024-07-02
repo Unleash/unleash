@@ -38,6 +38,7 @@ export const defaultValue: IUiConfig = {
         actionSetFilterValues: 25,
         signalTokensPerEndpoint: 5,
         featureEnvironmentStrategies: 30,
+        environments: 50,
         constraintValues: 250,
     },
 };

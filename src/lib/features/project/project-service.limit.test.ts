@@ -19,18 +19,12 @@ test('Should not allow to exceed project limit', async () => {
         },
     } as unknown as IUnleashConfig);
 
-    await projectService.createProject(
-        { name: 'projectA' },
-        {} as IUser,
-        {} as IAuditUser,
-    );
-    await expect(() =>
-        projectService.createProject(
-            { name: 'projectA' },
-            {} as IUser,
-            {} as IAuditUser,
-        ),
-    ).rejects.toThrow(
+    const createProject = (name: string) =>
+        projectService.createProject({ name }, {} as IUser, {} as IAuditUser);
+
+    await createProject('projectA');
+
+    await expect(() => createProject('projectB')).rejects.toThrow(
         "Failed to create project. You can't create more than the established limit of 1.",
     );
 });

@@ -194,13 +194,18 @@ export const CommandBar = () => {
         },
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
-        if (searchContainerRef.current?.contains(document.activeElement)) {
-            searchInputRef.current?.blur();
-        }
+        setShowSuggestions(false);
     });
     const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
+    const onKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            setShowSuggestions(false);
+        } else if (event.keyCode >= 48 && event.keyCode <= 110) {
+            searchInputRef.current?.focus();
+        }
+    };
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <RecentlyVisitedRecorder />
@@ -252,7 +257,7 @@ export const CommandBar = () => {
             <ConditionallyRender
                 condition={Boolean(value) && showSuggestions}
                 show={
-                    <CommandResultsPaper>
+                    <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                         {searchString !== undefined && (
                             <CommandFeatures
                                 searchString={searchString}
@@ -277,7 +282,7 @@ export const CommandBar = () => {
                 }
                 elseShow={
                     showSuggestions && (
-                        <CommandResultsPaper>
+                        <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                             <CommandRecent routes={allRoutes} />
                             <CommandPageSuggestions routes={allRoutes} />
                         </CommandResultsPaper>

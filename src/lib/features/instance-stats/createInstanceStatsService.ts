@@ -78,7 +78,12 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
     );
     const eventStore = new EventStore(db, getLogger);
-    const apiTokenStore = new ApiTokenStore(db, eventBus, getLogger);
+    const apiTokenStore = new ApiTokenStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const clientMetricsStoreV2 = new ClientMetricsStoreV2(
         db,
         getLogger,

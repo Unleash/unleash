@@ -1151,14 +1151,18 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
 });
 
 test('should return 204 if metrics are disabled', async () => {
-    const localApp = await setupAppWithAuth(db.stores, {
-        frontendApiOrigins: ['https://example.com'],
-        experimental: {
-            flags: {
-                disableMetrics: true,
+    const localApp = await setupAppWithAuth(
+        db.stores,
+        {
+            frontendApiOrigins: ['https://example.com'],
+            experimental: {
+                flags: {
+                    disableMetrics: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 
     const frontendToken =
         await localApp.services.apiTokenService.createApiTokenWithProjects({

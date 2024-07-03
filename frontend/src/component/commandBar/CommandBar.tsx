@@ -202,7 +202,11 @@ export const CommandBar = () => {
     const onKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Escape') {
             setShowSuggestions(false);
-        } else if (event.keyCode >= 48 && event.keyCode <= 110) {
+        } else if (
+            event.keyCode >= 48 &&
+            event.keyCode <= 110 &&
+            !hasNoResults
+        ) {
             searchInputRef.current?.focus();
         }
     };

@@ -133,7 +133,7 @@ import { FakeFeatureLifecycleReadModel } from '../features/feature-lifecycle/fak
 import {
     createApiTokenService,
     createFakeApiTokenService,
-} from '../features/api-tokens/create-api-token-service';
+} from '../features/api-tokens/createApiTokenService';
 
 export const createServices = (
     stores: IUnleashStores,

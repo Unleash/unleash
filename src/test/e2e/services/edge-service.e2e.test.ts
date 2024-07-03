@@ -11,7 +11,7 @@ import type ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EdgeService, EventService } from '../../../lib/services';
 import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
-import { createApiTokenService } from '../../../lib/features/api-tokens/create-api-token-service';
+import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService';
 
 let db: ITestDb;
 let stores: IUnleashStores;

@@ -10,7 +10,7 @@ import {
 } from '../types';
 import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
 import { extractAuditInfoFromUser } from '../util';
-import { createFakeApiTokenService } from '../features/api-tokens/create-api-token-service';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
 
 test('Should init api token', async () => {
     const token = {

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.5] - 2024-07-03
+
+### Bug Fixes
+
+- Make search selects explicit ([#7445](https://github.com/Unleash/unleash/issues/7445))
+
+
+### Features
+
+- What's new in Unleash ([#7497](https://github.com/Unleash/unleash/issues/7497)) ([#7525](https://github.com/Unleash/unleash/issues/7525))
+
+
 ## [6.0.4] - 2024-06-19
 
 ### Bug Fixes

@@ -2552,6 +2552,42 @@ test('should not delete project bound api tokens still bound to project', async 
     expect(fetchedToken.project).toBe(project3);
 });
 
+test('should delete project bound api tokens when all projects they belong to are deleted', async () => {
+    const project2 = 'token-deleted-project-1';
+    const project3 = 'token-deleted-project-2';
+    const tokenName = 'test';
+
+    await projectService.createProject(
+        {
+            id: project2,
+            name: 'Test Project 2',
+        },
+        user,
+        auditUser,
+    );
+
+    await projectService.createProject(
+        {
+            id: project3,
+            name: 'Test Project 3',
+        },
+        user,
+        auditUser,
+    );
+
+    const token = await apiTokenService.createApiToken({
+        type: ApiTokenType.CLIENT,
+        tokenName,
+        environment: DEFAULT_ENV,
+        projects: [project2, project3],
+    });
+
+    await projectService.deleteProject(project2, user, auditUser);
+    await projectService.deleteProject(project3, user, auditUser);
+    const fetchedToken = await apiTokenService.getToken(token.secret);
+    expect(fetchedToken).toBeUndefined();
+});
+
 test('deleting a project with no archived flags should not result in an error', async () => {
     const project = {
         id: 'project-with-nothing',

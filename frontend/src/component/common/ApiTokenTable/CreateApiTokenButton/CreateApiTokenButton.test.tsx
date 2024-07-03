@@ -29,7 +29,7 @@ const setupApi = ({
 };
 
 test('should allow you to create API tokens when there are fewer apiTokens than the limit', async () => {
-    setupApi({ apiTokenLimit: 5, apiTokenCount: 2 });
+    setupApi({ apiTokenLimit: 3, apiTokenCount: 2 });
 
     render(
         <CreateApiTokenButton

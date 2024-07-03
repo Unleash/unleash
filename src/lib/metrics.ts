@@ -813,10 +813,10 @@ export default class MetricsMonitor {
                 clientSdkVersionUsage.increment({
                     sdk_name: heartbeatEvent.sdkName,
                     sdk_version: heartbeatEvent.sdkVersion,
-                    platformName: 'legacy-sdk',
-                    platformVersion: 'legacy-sdk',
-                    yggdrasilVersion: 'legacy-sdk',
-                    specVersion: 'legacy-sdk',
+                    platformName: 'not-sent',
+                    platformVersion: 'not-sent',
+                    yggdrasilVersion: 'not-sent',
+                    specVersion: 'not-sent',
                 });
             }
         });

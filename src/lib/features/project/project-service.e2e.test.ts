@@ -9,7 +9,7 @@ import { RoleName } from '../../types/model';
 import { randomId } from '../../util/random-id';
 import EnvironmentService from '../project-environments/environment-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
-import { EventService } from '../../services';
+import { ApiTokenService, EventService } from '../../services';
 import { FeatureEnvironmentEvent } from '../../types/events';
 import { addDays, subDays } from 'date-fns';
 import {
@@ -28,7 +28,8 @@ import {
 } from '../../types';
 import type { User } from '../../server-impl';
 import { BadDataError, InvalidOperationError } from '../../error';
-import { extractAuditInfoFromUser } from '../../util';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util';
+import { ApiTokenType } from '../../types/models/api-token';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -40,6 +41,7 @@ let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
 let user: User; // many methods in this test use User instead of IUser
 let auditUser: IAuditUser;
+let apiTokenService: ApiTokenService;
 
 let opsUser: IUser;
 let group: IGroup;
@@ -89,6 +91,7 @@ beforeAll(async () => {
 
     environmentService = new EnvironmentService(stores, config, eventService);
     projectService = createProjectService(db.rawDatabase, config);
+    apiTokenService = new ApiTokenService(stores, config, eventService);
 });
 beforeEach(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
@@ -2486,6 +2489,67 @@ test('deleting a project with archived flags should result in any remaining arch
     });
 
     expect(flags.find((t) => t.name === flagName)).toBeUndefined();
+});
+
+test('should also delete api tokens that were only bound to deleted project', async () => {
+    const project2 = 'some';
+    const tokenName = 'test';
+
+    await projectService.createProject(
+        {
+            id: project2,
+            name: 'Test Project 2',
+        },
+        user,
+        auditUser,
+    );
+
+    const token = await apiTokenService.createApiToken({
+        type: ApiTokenType.CLIENT,
+        tokenName,
+        environment: DEFAULT_ENV,
+        project: project2,
+    });
+
+    await projectService.deleteProject(project2, user, auditUser);
+    const deletedToken = await apiTokenService.getToken(token.secret);
+    expect(deletedToken).toBeUndefined();
+});
+
+test('should not delete project bound api tokens still bound to project', async () => {
+    const project2 = 'token-deleted-project';
+    const project3 = 'token-not-deleted-project';
+    const tokenName = 'test';
+
+    await projectService.createProject(
+        {
+            id: project2,
+            name: 'Test Project 2',
+        },
+        user,
+        auditUser,
+    );
+
+    await projectService.createProject(
+        {
+            id: project3,
+            name: 'Test Project 3',
+        },
+        user,
+        auditUser,
+    );
+
+    const token = await apiTokenService.createApiToken({
+        type: ApiTokenType.CLIENT,
+        tokenName,
+        environment: DEFAULT_ENV,
+        projects: [project2, project3],
+    });
+
+    await projectService.deleteProject(project2, user, auditUser);
+    const fetchedToken = await apiTokenService.getToken(token.secret);
+    expect(fetchedToken).not.toBeUndefined();
+    expect(fetchedToken.project).toBe(project3);
 });
 
 test('deleting a project with no archived flags should not result in an error', async () => {

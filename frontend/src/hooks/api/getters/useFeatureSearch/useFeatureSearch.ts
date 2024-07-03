@@ -25,7 +25,7 @@ const fallbackData: SearchFeaturesSchema = {
     total: 0,
 };
 
-const SWR_CACHE_SIZE = 1;
+const SWR_CACHE_SIZE = 10;
 const PATH = 'api/admin/search/features?';
 
 const createFeatureSearch = () => {

@@ -802,22 +802,22 @@ export default class MetricsMonitor {
                     sdk_name: heartbeatEvent.sdkName,
                     sdk_version: heartbeatEvent.sdkVersion,
                     platformName:
-                        heartbeatEvent.metadata?.platformName ?? 'not-sent',
+                        heartbeatEvent.metadata?.platformName ?? 'not-set',
                     platformVersion:
-                        heartbeatEvent.metadata?.platformVersion ?? 'not-sent',
+                        heartbeatEvent.metadata?.platformVersion ?? 'not-set',
                     yggdrasilVersion:
-                        heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-sent',
+                        heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-set',
                     specVersion:
-                        heartbeatEvent.metadata?.specVersion ?? 'not-sent',
+                        heartbeatEvent.metadata?.specVersion ?? 'not-set',
                 });
             } else {
                 clientSdkVersionUsage.increment({
                     sdk_name: heartbeatEvent.sdkName,
                     sdk_version: heartbeatEvent.sdkVersion,
-                    platformName: 'not-sent',
-                    platformVersion: 'not-sent',
-                    yggdrasilVersion: 'not-sent',
-                    specVersion: 'not-sent',
+                    platformName: 'not-set',
+                    platformVersion: 'not-set',
+                    yggdrasilVersion: 'not-set',
+                    specVersion: 'not-set',
                 });
             }
         });

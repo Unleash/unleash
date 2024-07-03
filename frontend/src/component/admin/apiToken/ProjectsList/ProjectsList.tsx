@@ -60,8 +60,7 @@ export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
 
     if (
         (projectsList.length === 1 && projectsList[0] === '*') ||
-        project === '*' ||
-        (!project && (!projectsList || projectsList.length === 0))
+        project === '*'
     ) {
         return (
             <TextCell>

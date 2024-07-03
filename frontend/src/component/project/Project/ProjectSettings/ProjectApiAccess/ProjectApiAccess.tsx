@@ -117,8 +117,6 @@ export const ProjectApiAccess = () => {
                             headerGroups={headerGroups}
                             setHiddenColumns={setHiddenColumns}
                             prepareRow={prepareRow}
-                            getTableBodyProps={getTableBodyProps}
-                            getTableProps={getTableProps}
                             rows={rows}
                             columns={columns}
                             globalFilter={globalFilter}

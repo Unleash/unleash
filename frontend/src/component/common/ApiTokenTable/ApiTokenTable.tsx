@@ -1,24 +1,6 @@
-import type {
-    Row,
-    TablePropGetter,
-    TableProps,
-    TableBodyPropGetter,
-    TableBodyProps,
-    HeaderGroup,
-} from 'react-table';
-import {
-    SortableTableHeader,
-    TableCell,
-    TablePlaceholder,
-} from 'component/common/Table';
-import {
-    Box,
-    Table,
-    TableBody,
-    TableRow,
-    useMediaQuery,
-    Link,
-} from '@mui/material';
+import type { Row, HeaderGroup } from 'react-table';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { Box, useMediaQuery, Link } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
@@ -27,7 +9,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
-const hiddenColumnsSmall = ['Icon', 'createdAt'];
+const hiddenColumnsSmall = ['Icon', 'createdAt', 'seenAt'];
+const hiddenColumnsMedium = ['Icon', 'createdAt', 'seenAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 
 interface IApiTokenTableProps {
@@ -37,34 +20,34 @@ interface IApiTokenTableProps {
     columns: any[];
     rows: Row<object>[];
     prepareRow: (row: Row<object>) => void;
-    getTableProps: (
-        propGetter?: TablePropGetter<object> | undefined,
-    ) => TableProps;
-    getTableBodyProps: (
-        propGetter?: TableBodyPropGetter<object> | undefined,
-    ) => TableBodyProps;
     headerGroups: HeaderGroup<object>[];
     globalFilter: any;
 }
+
 export const ApiTokenTable = ({
     compact = false,
     setHiddenColumns,
     columns,
     loading,
     rows,
-    getTableProps,
-    getTableBodyProps,
     headerGroups,
     globalFilter,
     prepareRow,
 }: IApiTokenTableProps) => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
+
+    console.log({ columns });
 
     useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
                 columns: hiddenColumnsSmall,
+            },
+            {
+                condition: isMediumScreen,
+                columns: hiddenColumnsMedium,
             },
             {
                 condition: compact,
@@ -87,25 +70,11 @@ export const ApiTokenTable = ({
             />
             <Box sx={{ overflowX: 'auto' }}>
                 <SearchHighlightProvider value={globalFilter}>
-                    <Table {...getTableProps()}>
-                        <SortableTableHeader
-                            headerGroups={headerGroups as any}
-                        />
-                        <TableBody {...getTableBodyProps()}>
-                            {rows.map((row) => {
-                                prepareRow(row);
-                                return (
-                                    <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map((cell) => (
-                                            <TableCell {...cell.getCellProps()}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    <VirtualizedTable
+                        rows={rows}
+                        headerGroups={headerGroups}
+                        prepareRow={prepareRow}
+                    />
                 </SearchHighlightProvider>
             </Box>
             <ConditionallyRender

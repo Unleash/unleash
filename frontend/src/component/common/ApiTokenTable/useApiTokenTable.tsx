@@ -4,7 +4,12 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import {
+    useTable,
+    useGlobalFilter,
+    useSortBy,
+    useFlexLayout,
+} from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 import Key from '@mui/icons-material/Key';
@@ -22,15 +27,17 @@ export const useApiTokenTable = (
         return [
             {
                 id: 'Icon',
-                width: '1%',
+                // width: '1%',
                 Cell: () => <IconCell icon={<Key color='disabled' />} />,
                 disableSortBy: true,
                 disableGlobalFilter: true,
+                width: 50,
             },
             {
                 Header: 'Username',
                 accessor: 'username',
                 Cell: HighlightCell,
+                minWidth: 35,
             },
             {
                 Header: 'Type',
@@ -43,9 +50,10 @@ export const useApiTokenTable = (
                     <HighlightCell
                         value={tokenDescriptions[value.toLowerCase()].label}
                         subtitle={tokenDescriptions[value.toLowerCase()].title}
+                        subtitleTooltip
                     />
                 ),
-                minWidth: 280,
+                width: 180,
             },
             {
                 Header: 'Project',
@@ -56,33 +64,34 @@ export const useApiTokenTable = (
                         projects={props.row.original.projects}
                     />
                 ),
-                minWidth: 120,
+                width: 160,
             },
             {
                 Header: 'Environment',
                 accessor: 'environment',
                 Cell: HighlightCell,
-                minWidth: 120,
+                width: 120,
             },
             {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                minWidth: 150,
+                width: 150,
                 disableGlobalFilter: true,
             },
             {
                 Header: 'Last seen',
                 accessor: 'seenAt',
                 Cell: TimeAgoCell,
-                minWidth: 150,
+                width: 140,
                 disableGlobalFilter: true,
             },
             {
                 Header: 'Actions',
+                width: 120,
                 id: 'Actions',
                 align: 'center',
-                width: '1%',
+                // width: '1%',
                 disableSortBy: true,
                 disableGlobalFilter: true,
                 Cell: getActionCell,
@@ -110,6 +119,7 @@ export const useApiTokenTable = (
         },
         useGlobalFilter,
         useSortBy,
+        useFlexLayout,
     );
 
     return {

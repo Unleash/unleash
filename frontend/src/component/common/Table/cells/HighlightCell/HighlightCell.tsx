@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled } from '@mui/material';
@@ -10,6 +10,7 @@ interface IHighlightCellProps {
     value: string;
     subtitle?: string;
     afterTitle?: React.ReactNode;
+    subtitleTooltip?: boolean;
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -40,16 +41,19 @@ const StyledSubtitle = styled('span')(({ theme }) => ({
     WebkitBoxOrient: 'vertical',
 }));
 
-export const HighlightCell: VFC<IHighlightCellProps> = ({
+export const HighlightCell: FC<IHighlightCellProps> = ({
     value,
     subtitle,
     afterTitle,
+    subtitleTooltip,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
     const renderSubtitle = (
         <ConditionallyRender
-            condition={Boolean(subtitle && subtitle.length > 40)}
+            condition={Boolean(
+                subtitle && (subtitle.length > 40 || subtitleTooltip),
+            )}
             show={
                 <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
                     <StyledSubtitle data-loading>

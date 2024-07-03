@@ -50,7 +50,11 @@ export interface CommandResultGroupItem {
     description?: string | null;
 }
 
-const ButtonItemIcon = ({ path }: { path: string }) => {
+const ButtonItemIcon = ({
+    path,
+}: {
+    path: string;
+}) => {
     if (path === '/projects') {
         return <StyledProjectIcon />;
     }
@@ -68,10 +72,16 @@ export const RecentlyVisitedPathButton = ({
     keyName,
     path,
     name,
-}: { keyName: string; path: string; name: string }) => {
+    onClick,
+}: {
+    path: string;
+    keyName: string;
+    name: string;
+    onClick: () => void;
+}) => {
     const { trackEvent } = usePlausibleTracker();
 
-    const onClick = () => {
+    const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -80,6 +90,7 @@ export const RecentlyVisitedPathButton = ({
                 pageType: name,
             },
         });
+        onClick();
     };
 
     return (
@@ -89,7 +100,7 @@ export const RecentlyVisitedPathButton = ({
             component={Link}
             to={path}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
                 <ButtonItemIcon path={path} />
@@ -106,12 +117,17 @@ export const RecentlyVisitedPathButton = ({
 export const RecentlyVisitedProjectButton = ({
     projectId,
     keyName,
-}: { projectId: string; keyName: string }) => {
+    onClick,
+}: {
+    projectId: string;
+    keyName: string;
+    onClick: () => void;
+}) => {
     const { trackEvent } = usePlausibleTracker();
     const { project, loading } = useProjectOverview(projectId);
     const projectDeleted = !project.name && !loading;
 
-    const onClick = () => {
+    const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -119,6 +135,7 @@ export const RecentlyVisitedProjectButton = ({
                 eventTarget: 'Projects',
             },
         });
+        onClick();
     };
 
     if (projectDeleted) return null;
@@ -129,7 +146,7 @@ export const RecentlyVisitedProjectButton = ({
             component={Link}
             to={`/projects/${projectId}`}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
                 <StyledProjectIcon />
@@ -147,12 +164,14 @@ export const RecentlyVisitedFeatureButton = ({
     keyName,
     projectId,
     featureId,
+    onClick,
 }: {
     keyName: string;
     projectId: string;
     featureId: string;
+    onClick: () => void;
 }) => {
-    const onClick = () => {
+    const onItemClick = () => {
         const { trackEvent } = usePlausibleTracker();
 
         trackEvent('command-bar', {
@@ -162,6 +181,7 @@ export const RecentlyVisitedFeatureButton = ({
                 eventTarget: 'Flags',
             },
         });
+        onClick();
     };
     return (
         <ListItemButton
@@ -170,7 +190,7 @@ export const RecentlyVisitedFeatureButton = ({
             component={Link}
             to={`/projects/${projectId}/features/${featureId}`}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
                 <Icon>{'flag'}</Icon>

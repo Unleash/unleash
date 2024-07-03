@@ -23,6 +23,7 @@ export const CommandSearchFeatures = ({
         {
             revalidateOnFocus: false,
         },
+        'command-bar-cache',
     );
 
     const flags: CommandResultGroupItem[] = features.map((feature) => ({

@@ -20,6 +20,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { SearchHistory } from './SearchSuggestions/SearchHistory';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface ISearchProps {
     id?: string;
@@ -110,9 +111,11 @@ export const Search = ({
     debounceTime = 200,
     ...rest
 }: ISearchProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [usedHotkey, setUsedHotkey] = useState(false);
     const hideSuggestions = () => {
         setShowSuggestions(false);
         onBlur?.();
@@ -136,6 +139,7 @@ export const Search = ({
             preventDefault: true,
         },
         () => {
+            setUsedHotkey(true);
             if (document.activeElement === searchInputRef.current) {
                 searchInputRef.current?.blur();
             } else {
@@ -143,6 +147,27 @@ export const Search = ({
             }
         },
     );
+
+    useEffect(() => {
+        if (!showSuggestions) {
+            return;
+        }
+        if (usedHotkey) {
+            trackEvent('search-opened', {
+                props: {
+                    eventType: 'hotkey',
+                },
+            });
+        } else {
+            trackEvent('search-opened', {
+                props: {
+                    eventType: 'manual',
+                },
+            });
+        }
+        setUsedHotkey(false);
+    }, [showSuggestions]);
+
     useKeyboardShortcut({ key: 'Escape' }, () => {
         if (searchContainerRef.current?.contains(document.activeElement)) {
             searchInputRef.current?.blur();

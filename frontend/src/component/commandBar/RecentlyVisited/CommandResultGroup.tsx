@@ -14,6 +14,8 @@ import {
     IconRenderer,
     StyledProjectIcon,
 } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import InsightsIcon from '@mui/icons-material/Insights';
+import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -48,6 +50,20 @@ export interface CommandResultGroupItem {
     description?: string | null;
 }
 
+const ButtonItemIcon = ({ path }: { path: string }) => {
+    if (path === '/projects') {
+        return <StyledProjectIcon />;
+    }
+    if (path === '/playground') {
+        return <PlaygroundIcon />;
+    }
+    if (path === '/insights') {
+        return <InsightsIcon />;
+    }
+
+    return <IconRenderer path={path} />;
+};
+
 export const RecentlyVisitedPathButton = ({
     path,
     key,
@@ -76,11 +92,7 @@ export const RecentlyVisitedPathButton = ({
             onClick={onClick}
         >
             <StyledListItemIcon>
-                <ConditionallyRender
-                    condition={path === '/projects'}
-                    show={<StyledProjectIcon />}
-                    elseShow={<IconRenderer path={path} />}
-                />
+                <ButtonItemIcon path={path} />
             </StyledListItemIcon>
             <StyledListItemText>
                 <StyledButtonTypography color='textPrimary'>

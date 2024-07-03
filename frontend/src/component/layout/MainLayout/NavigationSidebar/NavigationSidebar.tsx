@@ -15,6 +15,7 @@ import {
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
+import { NewInUnleash } from './NewInUnleash/NewInUnleash';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,
@@ -23,6 +24,7 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
 
     return (
         <>
+            <NewInUnleash onItemClick={onClick} />
             <PrimaryNavigationList mode='full' onClick={onClick} />
             <SecondaryNavigationList
                 routes={routes.mainNavRoutes}
@@ -67,6 +69,7 @@ export const NavigationSidebar = () => {
 
     return (
         <StretchContainer>
+            <NewInUnleash mode={mode} onMiniModeClick={() => setMode('full')} />
             <PrimaryNavigationList
                 mode={mode}
                 onClick={setActiveItem}

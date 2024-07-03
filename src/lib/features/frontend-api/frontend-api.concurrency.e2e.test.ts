@@ -21,10 +21,14 @@ beforeAll(async () => {
             baseLogger.error(msg, ...args);
         },
     };
-    app = await setupAppWithoutSupertest(db.stores, {
-        frontendApiOrigins: ['https://example.com'],
-        getLogger: () => appLogger,
-    });
+    app = await setupAppWithoutSupertest(
+        db.stores,
+        {
+            frontendApiOrigins: ['https://example.com'],
+            getLogger: () => appLogger,
+        },
+        db.rawDatabase,
+    );
 });
 
 afterEach(() => {

@@ -17,6 +17,8 @@ export const resourceLimitsSchema = {
         'constraintValues',
         'environments',
         'projects',
+        'apiTokens',
+        'segments',
     ],
     additionalProperties: false,
     properties: {
@@ -95,6 +97,11 @@ export const resourceLimitsSchema = {
             minimum: 1,
             example: 500,
             description: 'The maximum number of projects allowed.',
+        },
+        segments: {
+            type: 'integer',
+            example: 300,
+            description: 'The maximum number of segments allowed.',
         },
     },
     components: {},

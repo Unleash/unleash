@@ -451,6 +451,10 @@ export interface IClientApp {
     icon?: string;
     description?: string;
     color?: string;
+    platformName?: string;
+    platformVersion?: string;
+    yggdrasilVersion?: string;
+    specVersion?: string;
 }
 
 export interface IAppFeature {
@@ -602,4 +606,12 @@ export interface IUserAccessOverview {
 export interface ISdkHeartbeat {
     sdkVersion: string;
     sdkName: string;
+    metadata: ISdkHeartbeatMetadata;
+}
+
+export interface ISdkHeartbeatMetadata {
+    platformName?: string;
+    platformVersion?: string;
+    yggdrasilVersion?: string;
+    specVersion?: string;
 }

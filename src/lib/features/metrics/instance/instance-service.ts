@@ -111,6 +111,12 @@ export default class ClientInstanceService {
             const heartbeatEvent: ISdkHeartbeat = {
                 sdkName,
                 sdkVersion,
+                metadata: {
+                    platformName: data.platformName,
+                    platformVersion: data.platformVersion,
+                    yggdrasilVersion: data.yggdrasilVersion,
+                    specVersion: data.specVersion,
+                },
             };
 
             this.eventStore.emit(CLIENT_REGISTER, heartbeatEvent);

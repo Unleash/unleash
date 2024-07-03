@@ -162,6 +162,12 @@ export default class ClientMetricsServiceV2 {
             const heartbeatEvent: ISdkHeartbeat = {
                 sdkName,
                 sdkVersion,
+                metadata: {
+                    platformName: data.platformName,
+                    platformVersion: data.platformVersion,
+                    yggdrasilVersion: data.yggdrasilVersion,
+                    specVersion: data.specVersion,
+                },
             };
 
             this.config.eventBus.emit(CLIENT_REGISTER, heartbeatEvent);

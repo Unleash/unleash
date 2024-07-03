@@ -15,13 +15,24 @@ beforeAll(async () => {
         getLogger,
     );
     stores = db.stores;
-    app = await setupAppWithAuth(stores, {
-        authentication: { enableApiToken: true, type: IAuthType.DEMO },
-    });
-    appWithBaseUrl = await setupAppWithAuth(stores, {
-        server: { unleashUrl: 'http://localhost:4242', basePathUri: '/demo' },
-        authentication: { enableApiToken: true, type: IAuthType.DEMO },
-    });
+    app = await setupAppWithAuth(
+        stores,
+        {
+            authentication: { enableApiToken: true, type: IAuthType.DEMO },
+        },
+        db.rawDatabase,
+    );
+    appWithBaseUrl = await setupAppWithAuth(
+        stores,
+        {
+            server: {
+                unleashUrl: 'http://localhost:4242',
+                basePathUri: '/demo',
+            },
+            authentication: { enableApiToken: true, type: IAuthType.DEMO },
+        },
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {

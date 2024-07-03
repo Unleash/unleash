@@ -11,9 +11,9 @@ import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/Env
 import { EnvironmentCloneModal } from './EnvironmentCloneModal/EnvironmentCloneModal';
 import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { EnvironmentTokenDialog } from './EnvironmentTokenDialog/EnvironmentTokenDialog';
-import { ENV_LIMIT } from 'constants/values';
 import { EnvironmentDeprecateToggleDialog } from './EnvironmentDeprecateToggleDialog/EnvironmentDeprecateToggleDialog';
 import { EnvironmentDeleteDialog } from './EnvironmentDeleteDialog/EnvironmentDeleteDialog';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -23,6 +23,8 @@ export const EnvironmentActionCell = ({
     environment,
 }: IEnvironmentTableActionsProps) => {
     const navigate = useNavigate();
+    const { uiConfig } = useUiConfig();
+    const environmentLimit = uiConfig.resourceLimits.environments;
     const { setToastApiError, setToastData } = useToast();
     const { environments, refetchEnvironments } = useEnvironments();
     const { refetch: refetchPermissions } = usePermissions();
@@ -82,13 +84,13 @@ export const EnvironmentActionCell = ({
                 onEdit={() => navigate(`/environments/${environment.name}`)}
                 onDeprecateToggle={() => setDeprecateToggleDialog(true)}
                 onClone={() => {
-                    if (environments.length < ENV_LIMIT) {
+                    if (environments.length < environmentLimit) {
                         setCloneModal(true);
                     } else {
                         setToastData({
                             type: 'error',
                             title: 'Environment limit reached',
-                            text: `You have reached the maximum number of environments (${ENV_LIMIT}). Please reach out if you need more.`,
+                            text: `You have reached the maximum number of environments (${environmentLimit}). Please reach out if you need more.`,
                         });
                     }
                 }}

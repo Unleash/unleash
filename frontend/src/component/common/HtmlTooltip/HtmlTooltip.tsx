@@ -68,6 +68,7 @@ export interface IHtmlTooltipProps extends TooltipProps {
     maxWidth?: SpacingArgument;
     maxHeight?: SpacingArgument;
     fontSize?: string;
+    tabIndex?: number;
 }
 
 export const HtmlTooltip = (props: IHtmlTooltipProps) => {

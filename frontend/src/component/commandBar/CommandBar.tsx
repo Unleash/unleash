@@ -21,10 +21,10 @@ import { CommandPageSuggestions } from './CommandPageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { CommandFeatures } from './CommandFeatures';
+import { CommandSearchFeatures } from './CommandSearchFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { CommandRecent } from './CommandRecent';
-import { CommandPages } from './CommandPages';
+import { CommandQuickSuggestions } from './CommandQuickSuggestions';
+import { CommandSearchPages } from './CommandSearchPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
 
@@ -72,11 +72,6 @@ const StyledSearch = styled('div')(({ theme }) => ({
     padding: '3px 5px 3px 12px',
     width: '100%',
     zIndex: 3,
-    '&:focus-within': {
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        borderBottom: '0px',
-    },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -179,6 +174,11 @@ export const CommandBar = () => {
         setValue(value);
     };
 
+    const clearSearchValue = () => {
+        onSearchChange('');
+        setShowSuggestions(false);
+    };
+
     const hotkey = useKeyboardShortcut(
         {
             modifiers: ['ctrl'],
@@ -194,17 +194,37 @@ export const CommandBar = () => {
         },
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
-        if (searchContainerRef.current?.contains(document.activeElement)) {
-            searchInputRef.current?.blur();
-        }
+        setShowSuggestions(false);
     });
     const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
+    const onKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            setShowSuggestions(false);
+        } else if (event.keyCode >= 48 && event.keyCode <= 110) {
+            searchInputRef.current?.focus();
+        }
+    };
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <RecentlyVisitedRecorder />
-            <StyledSearch>
+            <StyledSearch
+                sx={{
+                    borderBottomLeftRadius: (theme) =>
+                        showSuggestions
+                            ? 0
+                            : theme.shape.borderRadiusExtraLarge,
+                    borderBottomRightRadius: (theme) =>
+                        showSuggestions
+                            ? 0
+                            : theme.shape.borderRadiusExtraLarge,
+                    borderBottom: (theme) =>
+                        showSuggestions
+                            ? '0px'
+                            : `1px solid ${theme.palette.neutral.border}`,
+                }}
+            >
                 <SearchIcon
                     sx={{
                         mr: 1,
@@ -252,19 +272,24 @@ export const CommandBar = () => {
             <ConditionallyRender
                 condition={Boolean(value) && showSuggestions}
                 show={
-                    <CommandResultsPaper>
+                    <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                         {searchString !== undefined && (
-                            <CommandFeatures
+                            <CommandSearchFeatures
                                 searchString={searchString}
                                 setSearchedFlagCount={setSearchedFlagCount}
+                                onClick={clearSearchValue}
                             />
                         )}
                         <CommandResultGroup
                             groupName={'Projects'}
                             icon={'flag'}
+                            onClick={clearSearchValue}
                             items={searchedProjects}
                         />
-                        <CommandPages items={searchedPages} />
+                        <CommandSearchPages
+                            items={searchedPages}
+                            onClick={clearSearchValue}
+                        />
                         <ConditionallyRender
                             condition={hasNoResults}
                             show={
@@ -277,9 +302,15 @@ export const CommandBar = () => {
                 }
                 elseShow={
                     showSuggestions && (
-                        <CommandResultsPaper>
-                            <CommandRecent routes={allRoutes} />
-                            <CommandPageSuggestions routes={allRoutes} />
+                        <CommandResultsPaper onKeyDownCapture={onKeyDown}>
+                            <CommandQuickSuggestions
+                                routes={allRoutes}
+                                onClick={clearSearchValue}
+                            />
+                            <CommandPageSuggestions
+                                routes={allRoutes}
+                                onClick={clearSearchValue}
+                            />
                         </CommandResultsPaper>
                     )
                 }

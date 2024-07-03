@@ -71,7 +71,10 @@ import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production
 import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
 import { uniqueByKey } from '../../util/unique';
 import { BadDataError, PermissionError } from '../../error';
-import type { ProjectDoraMetricsSchema } from '../../openapi';
+import type {
+    ProjectDoraMetricsSchema,
+    ResourceLimitsSchema,
+} from '../../openapi';
 import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type EventService from '../events/event-service';
@@ -81,6 +84,7 @@ import type {
     IProjectQuery,
 } from './project-store-type';
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
+import { ExceedsLimitError } from '../../error/exceeds-limit-error';
 
 type Days = number;
 type Count = number;
@@ -153,6 +157,8 @@ export default class ProjectService {
 
     private isEnterprise: boolean;
 
+    private resourceLimits: ResourceLimitsSchema;
+
     constructor(
         {
             projectStore,
@@ -208,6 +214,7 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
+        this.resourceLimits = config.resourceLimits;
     }
 
     async getProjects(
@@ -310,6 +317,18 @@ export default class ProjectService {
             await this.validateEnvironmentsExist(environments);
         }
     }
+
+    async validateProjectLimit() {
+        if (!this.flagResolver.isEnabled('resourceLimits')) return;
+
+        const limit = Math.max(this.resourceLimits.projects, 1);
+        const projectCount = await this.projectStore.count();
+
+        if (projectCount >= limit) {
+            throw new ExceedsLimitError('project', limit);
+        }
+    }
+
     async generateProjectId(name: string): Promise<string> {
         const slug = createSlug(name).slice(0, 90);
         const generateUniqueId = async (suffix?: number) => {
@@ -335,6 +354,8 @@ export default class ProjectService {
             return [];
         },
     ): Promise<ProjectCreated> {
+        await this.validateProjectLimit();
+
         const validateData = async () => {
             await this.validateProjectEnvironments(newProject.environments);
 

@@ -2,11 +2,14 @@ import Addon from './addon';
 
 import definition from './new-relic-definition';
 import Mustache from 'mustache';
-import type {IAddonConfig} from '../types/model';
-import {type FeatureEventFormatter, FeatureEventFormatterMd, LinkStyle,} from './feature-event-formatter-md';
-import {IEvent, IEventType} from '../types/events';
-import {gzip} from "node:zlib";
-import {promisify} from 'util';
+import type { IAddonConfig, IEvent, IEventType } from '../types';
+import {
+    type FeatureEventFormatter,
+    FeatureEventFormatterMd,
+    LinkStyle,
+} from './feature-event-formatter-md';
+import { gzip } from 'node:zlib';
+import { promisify } from 'util';
 
 const asyncGzip = promisify(gzip);
 
@@ -42,12 +45,7 @@ export default class NewRelicAddon extends Addon {
         event: IEvent,
         parameters: INewRelicParameters,
     ): Promise<void> {
-        const {
-            url,
-            licenseKey,
-            customHeaders,
-            bodyTemplate,
-        } = parameters;
+        const { url, licenseKey, customHeaders, bodyTemplate } = parameters;
         const context = {
             event,
         };

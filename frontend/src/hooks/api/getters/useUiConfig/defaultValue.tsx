@@ -42,5 +42,6 @@ export const defaultValue: IUiConfig = {
         constraintValues: 250,
         projects: 500,
         segments: 300,
+        apiTokens: 2000,
     },
 };

@@ -32,4 +32,6 @@ export interface ResourceLimitsSchema {
     constraintValues: number;
     /** The maximum number of projects allowed. */
     projects: number;
+    /** The maximum number of segment allowed. */
+    segments: number;
 }

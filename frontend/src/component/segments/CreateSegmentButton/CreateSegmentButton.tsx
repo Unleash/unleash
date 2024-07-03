@@ -6,10 +6,16 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { NAVIGATE_TO_CREATE_SEGMENT } from 'utils/testIds';
 import { useNavigate } from 'react-router-dom';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import type { FC } from 'react';
 
-export const CreateSegmentButton = () => {
+export const CreateSegmentButton: FC<{
+    disabled: boolean;
+    tooltip?: string;
+}> = ({ disabled, tooltip }) => {
     const projectId = useOptionalPathParam('projectId');
     const navigate = useNavigate();
+
+    console.log('***', disabled);
 
     return (
         <PermissionButton
@@ -22,6 +28,10 @@ export const CreateSegmentButton = () => {
             }}
             permission={[CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT]}
             projectId={projectId}
+            disabled={disabled}
+            tooltipProps={{
+                title: tooltip,
+            }}
             data-testid={NAVIGATE_TO_CREATE_SEGMENT}
         >
             New segment

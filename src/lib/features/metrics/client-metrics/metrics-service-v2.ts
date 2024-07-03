@@ -4,7 +4,7 @@ import {
     type IFlagResolver,
     type IUnleashConfig,
 } from '../../../types';
-import type { IUnleashStores } from '../../../types';
+import type { ISdkHeartbeat, IUnleashStores } from '../../../types';
 import type { ToggleMetricsSummary } from '../../../types/models/metrics';
 import type {
     IClientMetricsEnv,
@@ -12,7 +12,7 @@ import type {
 } from './client-metrics-store-v2-type';
 import { clientMetricsSchema } from '../shared/schema';
 import { compareAsc } from 'date-fns';
-import { CLIENT_METRICS } from '../../../types/events';
+import { CLIENT_METRICS, CLIENT_REGISTER } from '../../../types/events';
 import ApiUser, { type IApiUser } from '../../../types/api-user';
 import { ALL } from '../../../types/models/api-token';
 import type { IUser } from '../../../types/user';
@@ -156,6 +156,16 @@ export default class ClientMetricsServiceV2 {
         this.logger.debug(
             `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,
         );
+
+        if (data.sdkVersion) {
+            const [sdkName, sdkVersion] = data.sdkVersion.split(':');
+            const heartbeatEvent: ISdkHeartbeat = {
+                sdkName,
+                sdkVersion,
+            };
+
+            this.config.eventBus.emit(CLIENT_REGISTER, heartbeatEvent);
+        }
 
         if (validatedToggleNames.length > 0) {
             const clientMetrics: IClientMetricsEnv[] = validatedToggleNames.map(

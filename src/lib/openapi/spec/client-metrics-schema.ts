@@ -21,9 +21,41 @@ export const clientMetricsSchema = {
             example: 'application-name-dacb1234',
         },
         environment: {
-            description: 'Which environment the application is running in',
+            description:
+                'Which environment the application is running in. This property was deprecated in v5. This can be determined by the API key calling this endpoint.',
             type: 'string',
             example: 'development',
+            deprecated: true,
+        },
+        sdkVersion: {
+            type: 'string',
+            description:
+                'An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>"',
+            example: 'unleash-client-java:7.0.0',
+        },
+        platformName: {
+            description:
+                'The platform the application is running on. For languages that compile to binaries, this can be omitted',
+            type: 'string',
+            example: '.NET Core',
+        },
+        platformVersion: {
+            description:
+                'The version of the platform the application is running on. Languages that compile to binaries, this is expected to be the compiler version used to assemble the binary.',
+            type: 'string',
+            example: '3.1',
+        },
+        yggdrasilVersion: {
+            description:
+                'The semantic version of the Yggdrasil engine used by the client. If the client is using a native engine this can be omitted.',
+            type: 'string',
+            example: '1.0.0',
+        },
+        specVersion: {
+            description:
+                'The version of the Unleash client specification the client supports',
+            type: 'string',
+            example: '3.0.0',
         },
         bucket: {
             type: 'object',

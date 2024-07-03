@@ -20,6 +20,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { SearchHistory } from './SearchSuggestions/SearchHistory';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 interface ISearchProps {
     id?: string;
@@ -110,6 +111,7 @@ export const Search = ({
     debounceTime = 200,
     ...rest
 }: ISearchProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -143,6 +145,22 @@ export const Search = ({
             }
         },
     );
+
+    const recordFocusEvent = (e: React.FocusEvent<HTMLInputElement>) => {
+        if (!e.relatedTarget) {
+            trackEvent('search-opened', {
+                props: {
+                    eventType: 'manual',
+                },
+            });
+        } else {
+            trackEvent('search-opened', {
+                props: {
+                    eventType: 'hotkey',
+                },
+            });
+        }
+    };
     useKeyboardShortcut({ key: 'Escape' }, () => {
         if (searchContainerRef.current?.contains(document.activeElement)) {
             searchInputRef.current?.blur();
@@ -182,9 +200,10 @@ export const Search = ({
                     }}
                     value={value}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    onFocus={() => {
+                    onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
                         setShowSuggestions(true);
                         onFocus?.();
+                        recordFocusEvent(e);
                     }}
                     disabled={disabled}
                 />

@@ -58,10 +58,7 @@ export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
         );
     }
 
-    if (
-        (projectsList.length === 1 && projectsList[0] === '*') ||
-        project === '*'
-    ) {
+    if ((projects?.length === 1 && projects?.[0] === '*') || project === '*') {
         return (
             <TextCell>
                 <HtmlTooltip
@@ -83,5 +80,5 @@ export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
         return <LinkCell to={`/projects/${item}`} title={item} />;
     }
 
-    return null;
+    return '';
 };

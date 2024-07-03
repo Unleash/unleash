@@ -27,7 +27,6 @@ export const useApiTokenTable = (
         return [
             {
                 id: 'Icon',
-                // width: '1%',
                 Cell: () => <IconCell icon={<Key color='disabled' />} />,
                 disableSortBy: true,
                 disableGlobalFilter: true,
@@ -91,7 +90,6 @@ export const useApiTokenTable = (
                 width: 120,
                 id: 'Actions',
                 align: 'center',
-                // width: '1%',
                 disableSortBy: true,
                 disableGlobalFilter: true,
                 Cell: getActionCell,

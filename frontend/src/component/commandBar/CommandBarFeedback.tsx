@@ -14,7 +14,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledText = styled('span')(({ theme }) => ({
-    fontSize: theme.spacing(1.5),
+    fontSize: theme.fontSizes.bodySize,
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({

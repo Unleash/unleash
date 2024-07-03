@@ -25,6 +25,8 @@ import type { IChangeRequestAccessReadModel } from '../change-request-access-ser
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type EventService from '../events/event-service';
 import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
+import type { ResourceLimitsSchema } from '../../openapi';
+import { ExceedsLimitError } from '../../error/exceeds-limit-error';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -44,6 +46,8 @@ export class SegmentService implements ISegmentService {
     private eventService: EventService;
 
     private privateProjectChecker: IPrivateProjectChecker;
+
+    private resourceLimits: ResourceLimitsSchema;
 
     constructor(
         {
@@ -65,6 +69,7 @@ export class SegmentService implements ISegmentService {
         this.privateProjectChecker = privateProjectChecker;
         this.logger = config.getLogger('services/segment-service.ts');
         this.flagResolver = config.flagResolver;
+        this.resourceLimits = config.resourceLimits;
         this.config = config;
     }
 
@@ -123,7 +128,21 @@ export class SegmentService implements ISegmentService {
         return strategies.length > 0 || changeRequestStrategies.length > 0;
     }
 
+    async validateSegmentLimit() {
+        if (!this.flagResolver.isEnabled('resourceLimits')) return;
+
+        const limit = this.resourceLimits.segments;
+
+        const segmentCount = await this.segmentStore.count();
+
+        if (segmentCount >= limit) {
+            throw new ExceedsLimitError('segment', limit);
+        }
+    }
+
     async create(data: unknown, auditUser: IAuditUser): Promise<ISegment> {
+        await this.validateSegmentLimit();
+
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
         await this.validateName(input.name);

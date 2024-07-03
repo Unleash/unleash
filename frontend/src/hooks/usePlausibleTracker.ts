@@ -62,7 +62,9 @@ export type CustomEvents =
     | 'many-strategies'
     | 'sdk-banner'
     | 'feature-lifecycle'
-    | 'command-bar';
+    | 'command-bar'
+    | 'new-in-unleash-click'
+    | 'new-in-unleash-dismiss';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

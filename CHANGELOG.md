@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.6] - 2024-07-03
+
+### Features
+
+- Track interaction with search ([#7526](https://github.com/Unleash/unleash/issues/7526))
+
+
 ## [6.0.5] - 2024-07-03
 
 ### Bug Fixes

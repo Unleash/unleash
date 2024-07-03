@@ -2,7 +2,7 @@ import type { Db, IUnleashConfig } from '../../server-impl';
 import EnvironmentStore from '../project-environments/environment-store';
 import { ApiTokenService, type EventService } from '../../services';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import type { IApiTokenStore, IEnvironmentStore } from '../../types';
+import type { IEnvironmentStore } from '../../types';
 import {
     createEventsService,
     createFakeEventsService,
@@ -31,7 +31,7 @@ export const createFakeApiTokenService = (
 ): {
     apiTokenService: ApiTokenService;
     eventService: EventService;
-    apiTokenStore: IApiTokenStore;
+    apiTokenStore: FakeApiTokenStore;
     environmentStore: IEnvironmentStore;
 } => {
     const apiTokenStore = new FakeApiTokenStore();

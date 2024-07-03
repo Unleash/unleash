@@ -58,7 +58,7 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
                 </StyledInfoLabel>
                 <StyledDivider />
                 <StyledInfoLabel>
-                    <a href='mailto:customersuccess@getunleash.io?subject=PRO plan clarifications'>
+                    <a href='mailto:support@getunleash.io?subject=PRO plan clarifications'>
                         Get in touch with us
                     </a>{' '}
                     for any clarification

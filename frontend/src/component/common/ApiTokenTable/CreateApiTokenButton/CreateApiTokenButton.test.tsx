@@ -13,7 +13,6 @@ const setupApi = ({
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             resourceLimits: true,
-            EEA: true,
         },
         resourceLimits: {
             apiTokens: apiTokenLimit,

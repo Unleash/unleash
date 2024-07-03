@@ -51,6 +51,7 @@ export default class MetricsMonitor {
         }
 
         const { eventStore, environmentStore } = stores;
+        const { flagResolver } = config;
 
         const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
             async () => environmentStore.getAll(),
@@ -795,8 +796,8 @@ export default class MetricsMonitor {
             if (!heartbeatEvent.sdkName || !heartbeatEvent.sdkVersion) {
                 return;
             }
-            const extendedMetrics = true;
-            if (extendedMetrics) {
+
+            if (flagResolver.isEnabled('extendedMetrics')) {
                 clientSdkVersionUsage.increment({
                     sdk_name: heartbeatEvent.sdkName,
                     sdk_version: heartbeatEvent.sdkVersion,

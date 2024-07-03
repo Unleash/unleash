@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'commandBarUI'
     | 'flagCreator'
     | 'anonymizeProjectOwners'
-    | 'resourceLimits';
+    | 'resourceLimits'
+    | 'extendedMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -297,6 +298,10 @@ const flags: IFlags = {
     ),
     resourceLimits: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RESOURCE_LIMITS,
+        false,
+    ),
+    extendedMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
         false,
     ),
 };

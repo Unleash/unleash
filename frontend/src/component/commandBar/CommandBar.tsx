@@ -195,6 +195,9 @@ export const CommandBar = () => {
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
         setShowSuggestions(false);
+        if (searchContainerRef.current?.contains(document.activeElement)) {
+            searchInputRef.current?.blur();
+        }
     });
     const placeholder = `Command bar (${hotkey})`;
 

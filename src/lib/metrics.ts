@@ -244,7 +244,14 @@ export default class MetricsMonitor {
         const clientSdkVersionUsage = createCounter({
             name: 'client_sdk_versions',
             help: 'Which sdk versions are being used',
-            labelNames: ['sdk_name', 'sdk_version'],
+            labelNames: [
+                'sdk_name',
+                'sdk_version',
+                'platformName',
+                'platformVersion',
+                'yggdrasilVersion',
+                'specVersion',
+            ],
         });
 
         const productionChanges30 = createGauge({
@@ -788,10 +795,30 @@ export default class MetricsMonitor {
             if (!heartbeatEvent.sdkName || !heartbeatEvent.sdkVersion) {
                 return;
             }
-            clientSdkVersionUsage.increment({
-                sdk_name: heartbeatEvent.sdkName,
-                sdk_version: heartbeatEvent.sdkVersion,
-            });
+            const extendedMetrics = true;
+            if (extendedMetrics) {
+                clientSdkVersionUsage.increment({
+                    sdk_name: heartbeatEvent.sdkName,
+                    sdk_version: heartbeatEvent.sdkVersion,
+                    platformName:
+                        heartbeatEvent.metadata?.platformName ?? 'not-sent',
+                    platformVersion:
+                        heartbeatEvent.metadata?.platformVersion ?? 'not-sent',
+                    yggdrasilVersion:
+                        heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-sent',
+                    specVersion:
+                        heartbeatEvent.metadata?.specVersion ?? 'not-sent',
+                });
+            } else {
+                clientSdkVersionUsage.increment({
+                    sdk_name: heartbeatEvent.sdkName,
+                    sdk_version: heartbeatEvent.sdkVersion,
+                    platformName: 'legacy-sdk',
+                    platformVersion: 'legacy-sdk',
+                    yggdrasilVersion: 'legacy-sdk',
+                    specVersion: 'legacy-sdk',
+                });
+            }
         });
 
         eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {

@@ -1,11 +1,8 @@
-import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
 import type { IUnleashConfig } from '../server-impl';
 import { ApiTokenType } from '../types/models/api-token';
-import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
-import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
-import { createFakeEventsService } from '../../lib/features';
 import { ExceedsLimitError } from '../error/exceeds-limit-error';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
 
 const createServiceWithLimit = (limit: number) => {
     const config: IUnleashConfig = createTestConfig({
@@ -15,28 +12,18 @@ const createServiceWithLimit = (limit: number) => {
             },
         },
     });
+    config.resourceLimits.apiTokens = limit;
 
-    const apiTokenStore = new FakeApiTokenStore();
-    const environmentStore = new FakeEnvironmentStore();
+    const { apiTokenService, environmentStore } =
+        createFakeApiTokenService(config);
+
     environmentStore.create({
         name: 'production',
         type: 'production',
         enabled: true,
-        protected: true,
         sortOrder: 1,
     });
-
-    const eventService = createFakeEventsService(config);
-
-    config.resourceLimits.apiTokens = limit;
-
-    const service = new ApiTokenService(
-        { apiTokenStore, environmentStore },
-        config,
-        eventService,
-    );
-
-    return service;
+    return apiTokenService;
 };
 
 test('Should allow you to create tokens up to and including the limit', async () => {

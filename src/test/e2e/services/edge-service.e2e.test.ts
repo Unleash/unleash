@@ -1,6 +1,5 @@
 import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import { ApiTokenService } from '../../../lib/services/api-token-service';
 import { createTestConfig } from '../../config/test-config';
 import {
     ApiTokenType,
@@ -12,6 +11,7 @@ import type ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
 import { EdgeService, EventService } from '../../../lib/services';
 import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
+import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -45,7 +45,7 @@ beforeAll(async () => {
 
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
-    const apiTokenService = new ApiTokenService(stores, config, eventService);
+    const apiTokenService = createApiTokenService(db.rawDatabase, config);
     edgeService = new EdgeService({ apiTokenService }, config);
 });
 

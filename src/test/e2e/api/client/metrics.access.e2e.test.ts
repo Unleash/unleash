@@ -9,7 +9,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('metrics_api_e2e_access_client', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db.stores, undefined, db.rawDatabase);
 });
 
 afterAll(async () => {

@@ -130,10 +130,6 @@ import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-l
 import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
 import { FeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model';
 import { FakeFeatureLifecycleReadModel } from '../features/feature-lifecycle/fake-feature-lifecycle-read-model';
-import {
-    createApiTokenService,
-    createFakeApiTokenService,
-} from '../features/api-tokens/create-api-token-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -148,9 +144,7 @@ export const createServices = (
         groupService,
         eventService,
     );
-    const apiTokenService = db
-        ? createApiTokenService(db, config)
-        : createFakeApiTokenService(config).apiTokenService;
+    const apiTokenService = new ApiTokenService(stores, config, eventService);
     const lastSeenService = db
         ? createLastSeenService(db, config)
         : createFakeLastSeenService(config);

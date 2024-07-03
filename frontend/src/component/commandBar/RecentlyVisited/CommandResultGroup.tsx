@@ -65,10 +65,10 @@ const ButtonItemIcon = ({ path }: { path: string }) => {
 };
 
 export const RecentlyVisitedPathButton = ({
+    keyName,
     path,
-    key,
     name,
-}: { path: string; key: string; name: string }) => {
+}: { keyName: string; path: string; name: string }) => {
     const { trackEvent } = usePlausibleTracker();
 
     const onClick = () => {
@@ -84,7 +84,7 @@ export const RecentlyVisitedPathButton = ({
 
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={path}
@@ -105,8 +105,8 @@ export const RecentlyVisitedPathButton = ({
 
 export const RecentlyVisitedProjectButton = ({
     projectId,
-    key,
-}: { projectId: string; key: string }) => {
+    keyName,
+}: { projectId: string; keyName: string }) => {
     const { trackEvent } = usePlausibleTracker();
     const { project, loading } = useProjectOverview(projectId);
     const projectDeleted = !project.name && !loading;
@@ -124,7 +124,7 @@ export const RecentlyVisitedProjectButton = ({
     if (projectDeleted) return null;
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={`/projects/${projectId}`}
@@ -144,11 +144,11 @@ export const RecentlyVisitedProjectButton = ({
 };
 
 export const RecentlyVisitedFeatureButton = ({
-    key,
+    keyName,
     projectId,
     featureId,
 }: {
-    key: string;
+    keyName: string;
     projectId: string;
     featureId: string;
 }) => {
@@ -165,7 +165,7 @@ export const RecentlyVisitedFeatureButton = ({
     };
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={`/projects/${projectId}/features/${featureId}`}

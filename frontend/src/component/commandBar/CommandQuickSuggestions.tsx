@@ -18,6 +18,7 @@ const toListItemButton = (
     if (item.featureId && item.projectId) {
         return (
             <RecentlyVisitedFeatureButton
+                keyName={key}
                 key={key}
                 featureId={item.featureId}
                 projectId={item.projectId}
@@ -27,6 +28,7 @@ const toListItemButton = (
     if (item.projectId) {
         return (
             <RecentlyVisitedProjectButton
+                keyName={key}
                 key={key}
                 projectId={item.projectId}
             />
@@ -35,7 +37,12 @@ const toListItemButton = (
     if (!item.pathName) return null;
     const name = routes[item.pathName]?.title ?? item.pathName;
     return (
-        <RecentlyVisitedPathButton key={key} path={item.pathName} name={name} />
+        <RecentlyVisitedPathButton
+            keyName={key}
+            key={key}
+            path={item.pathName}
+            name={name}
+        />
     );
 };
 

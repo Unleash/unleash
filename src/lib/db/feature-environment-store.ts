@@ -303,41 +303,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             .del();
     }
 
-    // TODO: remove this once variants per env are GA
-    async clonePreviousVariants(
-        environment: string,
-        project: string,
-    ): Promise<void> {
-        const rows = await this.db(`${T.features} as f`)
-            .select([
-                this.db.raw(`'${environment}' as environment`),
-                'fe.enabled',
-                'fe.feature_name',
-                'fe.variants',
-            ])
-            .distinctOn(['environment', 'feature_name'])
-            .join(`${T.featureEnvs} as fe`, 'f.name', 'fe.feature_name')
-            .whereNot({ environment })
-            .andWhere({ project });
-
-        const newRows = rows.map((row) => {
-            const r = row as any as IFeatureEnvironmentRow;
-            return {
-                variants: JSON.stringify(r.variants),
-                enabled: r.enabled,
-                environment: r.environment,
-                feature_name: r.feature_name,
-            };
-        });
-
-        if (newRows.length > 0) {
-            await this.db(T.featureEnvs)
-                .insert(newRows)
-                .onConflict(['environment', 'feature_name'])
-                .merge(['variants']);
-        }
-    }
-
     async connectFeatureToEnvironmentsForProject(
         featureName: string,
         projectId: string,

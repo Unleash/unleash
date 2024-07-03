@@ -15,7 +15,6 @@ export const CreateSegmentButton: FC<{
     const projectId = useOptionalPathParam('projectId');
     const navigate = useNavigate();
 
-    console.log('***', disabled);
 
     return (
         <PermissionButton

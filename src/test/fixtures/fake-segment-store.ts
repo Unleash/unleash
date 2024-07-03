@@ -10,7 +10,8 @@ export default class FakeSegmentStore implements ISegmentStore {
     }
 
     async create(segment: Omit<ISegment, 'id'>): Promise<ISegment> {
-        const newSegment = { ...segment, id: this.currentId++ };
+        const newSegment = { ...segment, id: this.currentId };
+        this.currentId = this.currentId + 1;
         this.segments.push(newSegment);
 
         return newSegment;

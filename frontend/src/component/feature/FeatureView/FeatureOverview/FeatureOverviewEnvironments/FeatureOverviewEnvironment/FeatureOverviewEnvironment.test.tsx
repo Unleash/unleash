@@ -1,22 +1,9 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-
-const server = testServerSetup();
-
-const setupApi = () => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/features/featureWithoutStrategies',
-        {
-            environments: [environmentWithoutStrategies],
-        },
-    );
-};
 
 const strategy = {
     name: 'default',
@@ -29,7 +16,6 @@ const environmentWithoutStrategies = {
 };
 
 test('should allow to add strategy', async () => {
-    setupApi();
     render(
         <Routes>
             <Route

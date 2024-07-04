@@ -147,7 +147,7 @@ export class ApiTokenStore implements IApiTokenStore {
         const rows = await this.makeTokenProjectQuery();
         stopTimer();
         const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-            'tokenWidcardOrphans',
+            'allowOrphanedWildcardTokens',
         );
         return toTokens(rows, allowOrphanedWildcardTokens);
     }
@@ -159,7 +159,7 @@ export class ApiTokenStore implements IApiTokenStore {
             .orWhere('expires_at', '>', 'now()');
         stopTimer();
         const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-            'tokenWidcardOrphans',
+            'allowOrphanedWildcardTokens',
         );
         return toTokens(rows, allowOrphanedWildcardTokens);
     }
@@ -233,7 +233,7 @@ export class ApiTokenStore implements IApiTokenStore {
         );
         stopTimer();
         const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-            'tokenWidcardOrphans',
+            'allowOrphanedWildcardTokens',
         );
         return toTokens(row, allowOrphanedWildcardTokens)[0];
     }
@@ -253,7 +253,7 @@ export class ApiTokenStore implements IApiTokenStore {
             .returning('*');
         if (rows.length > 0) {
             const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-                'tokenWidcardOrphans',
+                'allowOrphanedWildcardTokens',
             );
             return toTokens(rows, allowOrphanedWildcardTokens)[0];
         }

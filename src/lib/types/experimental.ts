@@ -63,7 +63,7 @@ export type IFlagKey =
     | 'flagCreator'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
-    | 'tokenWidcardOrphans';
+    | 'allowOrphanedWildcardTokens';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -300,8 +300,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_RESOURCE_LIMITS,
         false,
     ),
-    tokenWidcardOrphans: parseEnvVarBoolean(
-        process.env.UNLEASH_FILTER_ORPHANED_TOKENS_KILL_SWITCH,
+    allowOrphanedWildcardTokens: parseEnvVarBoolean(
+        process.env.UNLEASH_ORPHANED_TOKENS_KILL_SWITCH,
         false,
     ),
 };

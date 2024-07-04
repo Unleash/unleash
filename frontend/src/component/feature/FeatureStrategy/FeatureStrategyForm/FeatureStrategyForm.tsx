@@ -66,7 +66,7 @@ interface IFeatureStrategyFormProps {
     tab: number;
     setTab: React.Dispatch<React.SetStateAction<number>>;
     StrategyVariants: JSX.Element;
-    Limit: JSX.Element;
+    Limit?: JSX.Element;
     disabled?: boolean;
 }
 

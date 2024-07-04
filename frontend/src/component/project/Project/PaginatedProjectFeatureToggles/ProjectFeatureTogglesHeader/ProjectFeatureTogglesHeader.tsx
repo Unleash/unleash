@@ -1,4 +1,4 @@
-import { type ReactNode, type VFC, useState } from 'react';
+import { type ReactNode, type FC, useState } from 'react';
 import {
     Box,
     Button,
@@ -40,7 +40,7 @@ const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
 
-export const ProjectFeatureTogglesHeader: VFC<
+export const ProjectFeatureTogglesHeader: FC<
     IProjectFeatureTogglesHeaderProps
 > = ({
     isLoading,

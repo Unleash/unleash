@@ -34,7 +34,7 @@ const Header = styled(Box)(({ theme }) => ({
     fontWeight: 'bold',
     borderBottom: `2px solid ${theme.palette.background.application}`,
     padding: theme.spacing(3, 4),
-    fontSize: theme.fontSizes.mainHeader,
+    fontSize: theme.typography.h2.fontSize,
 }));
 
 const Footer = styled(Box)(({ theme }) => ({
@@ -93,7 +93,7 @@ export const Limit: FC<{
                     }
                     elseShow={
                         <ExpandableBox>
-                            You reached the limit for {name}
+                            You have reached the limit for {name}
                         </ExpandableBox>
                     }
                 />
@@ -111,7 +111,7 @@ export const Limit: FC<{
             </Header>
             <Main>
                 <LimitStats>
-                    You have added {currentValue} {shortName ?? name}, that is
+                    You have added {currentValue} {shortName ?? name}, which is
                     equivalent to{' '}
                     <Typography component='span' color='primary'>
                         {percentageLimit}%
@@ -133,8 +133,8 @@ export const Limit: FC<{
                 </LimitExplanation>
             </Main>
             <Footer>
-                If you need more than <b>{limit}</b> {shortName ?? name}, please
-                reach out to us at{' '}
+                If you need more than <strong>{limit}</strong>{' '}
+                {shortName ?? name}, please reach out to us at{' '}
                 <a href='mailto:cs@getunleash.io?subject=Increase limit'>
                     cs@getunleash.io
                 </a>

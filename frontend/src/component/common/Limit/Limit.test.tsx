@@ -30,7 +30,7 @@ test('Render reached limit variant', () => {
     );
 
     screen.getByText(
-        'You reached the limit for strategies in this environment',
+        'You have reached the limit for strategies in this environment',
     );
     screen.getByText('100%');
     screen.getByText('Limit: 10');
@@ -47,7 +47,7 @@ test('Render exceeded limit variant', () => {
     );
 
     screen.getByText(
-        'You reached the limit for strategies in this environment',
+        'You have reached the limit for strategies in this environment',
     );
     screen.getByText('200%');
     screen.getByText('Limit: 10');

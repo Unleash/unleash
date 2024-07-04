@@ -142,7 +142,7 @@ export interface IUnleashOptions {
     dailyMetricsStorageDays?: number;
     rateLimiting?: Partial<IRateLimiting>;
     resourceLimits?: Partial<
-        Pick<ResourceLimitsSchema, 'constraintValues' | 'flags'>
+        Pick<ResourceLimitsSchema, 'constraintValues' | 'featureFlags'>
     >;
 }
 

@@ -94,7 +94,7 @@ describe('Flag limits', () => {
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
                 resourceLimits: {
-                    flags: LIMIT,
+                    featureFlags: LIMIT,
                 },
             } as unknown as IUnleashConfig);
 
@@ -127,7 +127,7 @@ describe('Flag limits', () => {
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
                 resourceLimits: {
-                    flags: LIMIT,
+                    featureFlags: LIMIT,
                 },
             } as unknown as IUnleashConfig);
 

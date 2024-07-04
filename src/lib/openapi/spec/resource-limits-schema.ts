@@ -19,7 +19,7 @@ export const resourceLimitsSchema = {
         'projects',
         'apiTokens',
         'segments',
-        'flags',
+        'featureFlags',
     ],
     additionalProperties: false,
     properties: {
@@ -104,7 +104,7 @@ export const resourceLimitsSchema = {
             example: 300,
             description: 'The maximum number of segments allowed.',
         },
-        flags: {
+        featureFlags: {
             type: 'integer',
             minimum: 1,
             example: 5000,

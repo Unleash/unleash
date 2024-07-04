@@ -1174,7 +1174,7 @@ class FeatureToggleService {
     private async validateFeatureFlagLimit() {
         if (this.flagResolver.isEnabled('resourceLimits')) {
             const currentFlagCount = await this.featureToggleStore.count();
-            const limit = this.resourceLimits.flags;
+            const limit = this.resourceLimits.featureFlags;
             if (currentFlagCount >= limit) {
                 throw new ExceedsLimitError('feature flag', limit);
             }

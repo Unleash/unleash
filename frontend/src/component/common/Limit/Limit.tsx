@@ -1,7 +1,7 @@
 import { Box, IconButton, styled, Tooltip, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Link } from 'react-router-dom';
-import WarningIcon from '@mui/icons-material/WarningAmber';
+import WarningIcon from '@mui/icons-material/ErrorOutlined';
 import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import type { FC } from 'react';
@@ -20,11 +20,11 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 const StyledWarningIcon = styled(WarningIcon)(({ theme }) => ({
-    color: theme.palette.warning.main,
+    color: theme.palette.warning.border,
 }));
 
 const StyledErrorIcon = styled(ErrorIcon)(({ theme }) => ({
-    color: theme.palette.warning.main,
+    color: theme.palette.error.main,
 }));
 
 const Header = styled(Box)(({ theme }) => ({
@@ -80,8 +80,8 @@ export const Limit: FC<{
             <Header>
                 <ConditionallyRender
                     condition={belowLimit}
-                    show={<StyledWarningIcon />}
-                    elseShow={<StyledErrorIcon />}
+                    show={<StyledWarningIcon fontSize='large' />}
+                    elseShow={<StyledErrorIcon fontSize='large' />}
                 />
 
                 <ConditionallyRender

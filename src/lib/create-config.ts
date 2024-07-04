@@ -679,6 +679,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             0,
             parseEnvVarNumber(process.env.UNLEASH_SEGMENTS_LIMIT, 300),
         ),
+        featureFlags: Math.max(
+            1,
+            parseEnvVarNumber(
+                process.env.UNLEASH_FEATURE_FLAGS_LIMIT,
+                options?.resourceLimits?.featureFlags || 5000,
+            ),
+        ),
     };
 
     return {

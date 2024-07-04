@@ -1171,6 +1171,16 @@ class FeatureToggleService {
         );
     }
 
+    private async validateFeatureFlagLimit() {
+        if (this.flagResolver.isEnabled('resourceLimits')) {
+            const currentFlagCount = await this.featureToggleStore.count();
+            const limit = this.resourceLimits.featureFlags;
+            if (currentFlagCount >= limit) {
+                throw new ExceedsLimitError('feature flag', limit);
+            }
+        }
+    }
+
     async createFeatureToggle(
         projectId: string,
         value: FeatureToggleDTO,
@@ -1190,6 +1200,9 @@ class FeatureToggleService {
                 'You have reached the maximum number of feature flags for this project.',
             );
         }
+
+        await this.validateFeatureFlagLimit();
+
         if (exists) {
             let featureData: FeatureToggleInsert;
             if (isValidated) {

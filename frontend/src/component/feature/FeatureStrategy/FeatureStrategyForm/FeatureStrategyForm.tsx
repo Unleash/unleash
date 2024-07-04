@@ -66,6 +66,8 @@ interface IFeatureStrategyFormProps {
     tab: number;
     setTab: React.Dispatch<React.SetStateAction<number>>;
     StrategyVariants: JSX.Element;
+    Limit: JSX.Element;
+    disabled?: boolean;
 }
 
 const StyledDividerContent = styled(Box)(({ theme }) => ({
@@ -205,6 +207,8 @@ export const FeatureStrategyForm = ({
     tab,
     setTab,
     StrategyVariants,
+    Limit,
+    disabled,
 }: IFeatureStrategyFormProps) => {
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
@@ -532,6 +536,10 @@ export const FeatureStrategyForm = ({
                     }
                 />
 
+                <Box sx={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
+                    {Limit}
+                </Box>
+
                 <StyledButtons>
                     <PermissionButton
                         permission={permission}
@@ -541,6 +549,7 @@ export const FeatureStrategyForm = ({
                         color='primary'
                         type='submit'
                         disabled={
+                            disabled ||
                             loading ||
                             !hasValidConstraints ||
                             errors.hasFormErrors()

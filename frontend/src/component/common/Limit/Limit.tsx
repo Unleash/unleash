@@ -12,6 +12,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     border: `2px solid ${theme.palette.background.application}`,
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    width: '100%',
 }));
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -32,7 +33,7 @@ const Header = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
     alignItems: 'center',
     fontWeight: 'bold',
-    borderBottom: `2px solid ${theme.palette.background.application}`,
+    borderBottom: `1px solid ${theme.palette.background.application}`,
     padding: theme.spacing(3, 4),
     fontSize: theme.typography.h2.fontSize,
 }));
@@ -42,7 +43,7 @@ const Footer = styled(Box)(({ theme }) => ({
 }));
 
 const Main = styled(Box)(({ theme }) => ({
-    borderBottom: `2px solid ${theme.palette.background.application}`,
+    borderBottom: `1px solid ${theme.palette.background.application}`,
     padding: theme.spacing(3, 4),
 }));
 

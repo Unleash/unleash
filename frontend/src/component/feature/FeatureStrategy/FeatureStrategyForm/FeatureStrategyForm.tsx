@@ -46,7 +46,6 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
-import { Limit } from '../../../common/Limit/Limit';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -531,14 +530,6 @@ export const FeatureStrategyForm = ({
                             show={StrategyVariants}
                         />
                     }
-                />
-
-                <Limit
-                    name='strategies in this environment'
-                    shortName='strategies'
-                    currentValue={9}
-                    limit={10}
-                    onClose={() => {}}
                 />
 
                 <StyledButtons>

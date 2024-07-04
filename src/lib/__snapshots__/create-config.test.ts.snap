@@ -76,6 +76,7 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "adminTokenKillSwitch": false,
+      "allowOrphanedWildcardTokens": false,
       "anonymiseEventLog": false,
       "anonymizeProjectOwners": false,
       "automatedActions": false,
@@ -150,7 +151,6 @@ exports[`should create default config 1`] = `
       "showInactiveUsers": false,
       "signals": false,
       "strictSchemaValidation": false,
-      "allowOrphanedWildcardTokens": false,
       "useMemoizedActiveTokens": false,
       "userAccessUIEnabled": false,
     },

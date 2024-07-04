@@ -33,6 +33,8 @@ import type EventService from '../features/events/event-service';
 import { addMinutes, isPast } from 'date-fns';
 import metricsHelper from '../util/metrics-helper';
 import { FUNCTION_TIME } from '../metric-events';
+import type { ResourceLimitsSchema } from '../openapi';
+import { ExceedsLimitError } from '../error/exceeds-limit-error';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -69,6 +71,8 @@ export class ApiTokenService {
 
     private timer: Function;
 
+    private resourceLimits: ResourceLimitsSchema;
+
     constructor(
         {
             apiTokenStore,
@@ -76,7 +80,11 @@ export class ApiTokenService {
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<
             IUnleashConfig,
-            'getLogger' | 'authentication' | 'flagResolver' | 'eventBus'
+            | 'getLogger'
+            | 'authentication'
+            | 'flagResolver'
+            | 'eventBus'
+            | 'resourceLimits'
         >,
         eventService: EventService,
     ) {
@@ -85,6 +93,7 @@ export class ApiTokenService {
         this.environmentStore = environmentStore;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
+        this.resourceLimits = config.resourceLimits;
         if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
             // This is probably not needed because the scheduler will run it
             this.fetchActiveTokens();
@@ -286,9 +295,21 @@ export class ApiTokenService {
         const environments = await this.environmentStore.getAll();
         validateApiTokenEnvironment(newToken, environments);
 
+        await this.validateApiTokenLimit();
+
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
         return this.insertNewApiToken(createNewToken, auditUser);
+    }
+
+    private async validateApiTokenLimit() {
+        if (this.flagResolver.isEnabled('resourceLimits')) {
+            const currentTokenCount = await this.store.count();
+            const limit = this.resourceLimits.apiTokens;
+            if (currentTokenCount >= limit) {
+                throw new ExceedsLimitError('api token', limit);
+            }
+        }
     }
 
     // TODO: Remove this service method after embedded proxy has been released in

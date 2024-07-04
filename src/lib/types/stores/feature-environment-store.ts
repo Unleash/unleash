@@ -85,7 +85,5 @@ export interface IFeatureEnvironmentStore
         featureEnvironment: IFeatureEnvironment,
     ): Promise<void>;
 
-    clonePreviousVariants(environment: string, project: string): Promise<void>;
-
     variantExists(featureName: string): Promise<boolean>;
 }

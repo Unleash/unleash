@@ -109,6 +109,7 @@ import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type EventEmitter from 'node:events';
 import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type';
 import type { ResourceLimitsSchema } from '../../openapi';
+import { ExceedsLimitError } from '../../error/exceeds-limit-error';
 
 interface IFeatureContext {
     featureName: string;
@@ -366,15 +367,14 @@ class FeatureToggleService {
         }
     }
 
-    async validateStrategyLimit(
-        featureEnv: {
-            projectId: string;
-            environment: string;
-            featureName: string;
-        },
-        limit: number,
-    ) {
+    async validateStrategyLimit(featureEnv: {
+        projectId: string;
+        environment: string;
+        featureName: string;
+    }) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
+
+        const limit = this.resourceLimits.featureEnvironmentStrategies;
         const existingCount = (
             await this.featureStrategiesStore.getStrategiesForFeatureEnv(
                 featureEnv.projectId,
@@ -383,7 +383,24 @@ class FeatureToggleService {
             )
         ).length;
         if (existingCount >= limit) {
-            throw new BadDataError(`Strategy limit of ${limit} exceeded}.`);
+            throw new ExceedsLimitError('strategy', limit);
+        }
+    }
+
+    validateConstraintValuesLimit(updatedConstrains: IConstraint[]) {
+        if (!this.flagResolver.isEnabled('resourceLimits')) return;
+
+        const limit = this.resourceLimits.constraintValues;
+        const constraintOverLimit = updatedConstrains.find(
+            (constraint) =>
+                Array.isArray(constraint.values) &&
+                constraint.values?.length > limit,
+        );
+        if (constraintOverLimit) {
+            throw new ExceedsLimitError(
+                `content values for ${constraintOverLimit.contextName}`,
+                limit,
+            );
         }
     }
 
@@ -632,6 +649,7 @@ class FeatureToggleService {
             strategyConfig.constraints &&
             strategyConfig.constraints.length > 0
         ) {
+            this.validateConstraintValuesLimit(strategyConfig.constraints);
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
             );
@@ -653,10 +671,11 @@ class FeatureToggleService {
             strategyConfig.variants = fixedVariants;
         }
 
-        await this.validateStrategyLimit(
-            { featureName, projectId, environment },
-            this.resourceLimits.featureEnvironmentStrategies,
-        );
+        await this.validateStrategyLimit({
+            featureName,
+            projectId,
+            environment,
+        });
 
         try {
             const newFeatureStrategy =
@@ -789,6 +808,7 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
+                this.validateConstraintValuesLimit(updates.constraints);
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );
@@ -1151,6 +1171,16 @@ class FeatureToggleService {
         );
     }
 
+    private async validateFeatureFlagLimit() {
+        if (this.flagResolver.isEnabled('resourceLimits')) {
+            const currentFlagCount = await this.featureToggleStore.count();
+            const limit = this.resourceLimits.featureFlags;
+            if (currentFlagCount >= limit) {
+                throw new ExceedsLimitError('feature flag', limit);
+            }
+        }
+    }
+
     async createFeatureToggle(
         projectId: string,
         value: FeatureToggleDTO,
@@ -1170,6 +1200,9 @@ class FeatureToggleService {
                 'You have reached the maximum number of feature flags for this project.',
             );
         }
+
+        await this.validateFeatureFlagLimit();
+
         if (exists) {
             let featureData: FeatureToggleInsert;
             if (isValidated) {

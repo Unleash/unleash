@@ -2,12 +2,19 @@ import type { ISegmentStore } from '../../lib/features/segment/segment-store-typ
 import type { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
 
 export default class FakeSegmentStore implements ISegmentStore {
-    count(): Promise<number> {
-        return Promise.resolve(0);
+    segments: ISegment[] = [];
+    currentId: number = 0;
+
+    async count(): Promise<number> {
+        return this.segments.length;
     }
 
-    create(): Promise<ISegment> {
-        throw new Error('Method not implemented.');
+    async create(segment: Omit<ISegment, 'id'>): Promise<ISegment> {
+        const newSegment = { ...segment, id: this.currentId };
+        this.currentId = this.currentId + 1;
+        this.segments.push(newSegment);
+
+        return newSegment;
     }
 
     async delete(): Promise<void> {
@@ -50,8 +57,8 @@ export default class FakeSegmentStore implements ISegmentStore {
         return [];
     }
 
-    async existsByName(): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    async existsByName(name: string): Promise<boolean> {
+        return this.segments.some((segment) => segment.name === name);
     }
 
     destroy(): void {}

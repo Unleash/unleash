@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         commandBarUI: true,
                         flagCreator: true,
                         resourceLimits: true,
+                        extendedMetrics: true,
                     },
                 },
                 authentication: {

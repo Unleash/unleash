@@ -26,4 +26,19 @@ export interface ResourceLimitsSchema {
     strategySegments: number;
     /** The maximum number of feature environment strategies allowed. */
     featureEnvironmentStrategies: number;
+    /** The maximum number of environments allowed. */
+    environments: number;
+    /** The maximum number of values for a single constraint. */
+    constraintValues: number;
+    /** The maximum number of projects allowed. */
+    projects: number;
+    /** The maximum number of segments allowed. */
+    segments: number;
+    /** The maximum number of SDK and admin API tokens you can have at
+     * the same time. This limit applies only to server-side and
+     * client-side SDK tokens and to admin tokens. Personal access
+     * tokens are not subject to this limit. The limit applies to the
+     * total number of tokens across all projects in your
+     * organization. */
+    apiTokens: number;
 }

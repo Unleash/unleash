@@ -67,7 +67,12 @@ test('editor users should only get client or frontend tokens', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(
+        stores,
+        preHook,
+        undefined,
+        db.rawDatabase,
+    );
 
     await stores.apiTokenStore.insert({
         environment: '',
@@ -124,7 +129,12 @@ test('viewer users should not be allowed to fetch tokens', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(
+        stores,
+        preHook,
+        undefined,
+        db.rawDatabase,
+    );
 
     await stores.apiTokenStore.insert({
         environment: '',
@@ -166,7 +176,12 @@ test('Only token-admins should be allowed to create token', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(
+        stores,
+        preHook,
+        undefined,
+        db.rawDatabase,
+    );
 
     await request
         .post('/api/admin/api-tokens')
@@ -194,7 +209,12 @@ test('Token-admin should be allowed to create token', async () => {
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(
+        stores,
+        preHook,
+        undefined,
+        db.rawDatabase,
+    );
 
     await request
         .post('/api/admin/api-tokens')
@@ -211,7 +231,11 @@ test('Token-admin should be allowed to create token', async () => {
 test('An admin token should be allowed to create a token', async () => {
     expect.assertions(2);
 
-    const { request, destroy, services } = await setupAppWithAuth(stores);
+    const { request, destroy, services } = await setupAppWithAuth(
+        stores,
+        undefined,
+        db.rawDatabase,
+    );
 
     const { secret } =
         await services.apiTokenService.createApiTokenWithProjects(
@@ -348,6 +372,8 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
+                undefined,
+                db.rawDatabase,
             );
             await request
                 .post('/api/admin/api-tokens')
@@ -403,6 +429,8 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
+                undefined,
+                db.rawDatabase,
             );
             await request
                 .post('/api/admin/api-tokens')
@@ -458,6 +486,8 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
+                undefined,
+                db.rawDatabase,
             );
             await request
                 .post('/api/admin/api-tokens')
@@ -514,6 +544,8 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
+                undefined,
+                db.rawDatabase,
             );
             await stores.apiTokenStore.insert({
                 environment: '',
@@ -597,6 +629,8 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
+                undefined,
+                db.rawDatabase,
             );
             await stores.apiTokenStore.insert({
                 environment: '',
@@ -657,6 +691,8 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
+                undefined,
+                db.rawDatabase,
             );
             await stores.apiTokenStore.insert({
                 environment: '',
@@ -716,6 +752,8 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
+                undefined,
+                db.rawDatabase,
             );
             await stores.apiTokenStore.insert({
                 environment: '',
@@ -802,6 +840,8 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
+                    undefined,
+                    db.rawDatabase,
                 );
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
@@ -862,6 +902,8 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
+                    undefined,
+                    db.rawDatabase,
                 );
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
@@ -922,6 +964,8 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
+                    undefined,
+                    db.rawDatabase,
                 );
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
@@ -986,6 +1030,8 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
+                    undefined,
+                    db.rawDatabase,
                 );
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
@@ -1046,6 +1092,8 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
+                    undefined,
+                    db.rawDatabase,
                 );
                 const token = await stores.apiTokenStore.insert({
                     environment: '',
@@ -1105,6 +1153,8 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
+                    undefined,
+                    db.rawDatabase,
                 );
                 const token = await stores.apiTokenStore.insert({
                     environment: '',

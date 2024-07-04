@@ -20,12 +20,18 @@ async function getSetup(adminTokenKillSwitchEnabled: boolean) {
         //@ts-ignore - Just testing, so only need the isEnabled call here
     });
     const stores = createStores();
-    await stores.environmentStore.create({
+    const services = createServices(stores, config);
+
+    //@ts-expect-error: we're accessing a private field, but we need
+    //to set up an environment to test the functionality. Because we
+    //don't have a db to use, we need to access the service's store
+    //directly.
+    await services.apiTokenService.environmentStore.create({
         name: 'development',
         type: 'development',
         enabled: true,
     });
-    const services = createServices(stores, config);
+
     const app = await getApp(config, stores, services);
 
     return {

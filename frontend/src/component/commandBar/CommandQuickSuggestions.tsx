@@ -4,7 +4,6 @@ import {
     RecentlyVisitedPathButton,
     RecentlyVisitedProjectButton,
 } from './RecentlyVisited/CommandResultGroup';
-import { List } from '@mui/material';
 import {
     useRecentlyVisited,
     type LastViewedPage,
@@ -14,6 +13,7 @@ const toListItemButton = (
     item: LastViewedPage,
     routes: Record<string, { path: string; route: string; title: string }>,
     index: number,
+    onClick: () => void,
 ) => {
     const key = `recently-visited-${index}`;
     if (item.featureId && item.projectId) {
@@ -22,6 +22,7 @@ const toListItemButton = (
                 key={key}
                 featureId={item.featureId}
                 projectId={item.projectId}
+                onClick={onClick}
             />
         );
     }
@@ -30,28 +31,40 @@ const toListItemButton = (
             <RecentlyVisitedProjectButton
                 key={key}
                 projectId={item.projectId}
+                onClick={onClick}
             />
         );
     }
     if (!item.pathName) return null;
     const name = routes[item.pathName]?.title ?? item.pathName;
     return (
-        <RecentlyVisitedPathButton key={key} path={item.pathName} name={name} />
+        <RecentlyVisitedPathButton
+            key={key}
+            path={item.pathName}
+            name={name}
+            onClick={onClick}
+        />
     );
 };
 
-export const CommandRecent = ({
+export const CommandQuickSuggestions = ({
     routes,
+    onClick,
 }: {
+    onClick: () => void;
     routes: Record<string, { path: string; route: string; title: string }>;
 }) => {
     const { lastVisited } = useRecentlyVisited();
     const buttons = lastVisited.map((item, index) =>
-        toListItemButton(item, routes, index),
+        toListItemButton(item, routes, index, onClick),
     );
     return (
-        <CommandResultGroup icon='default' groupName='Quick suggestions'>
-            <List>{buttons}</List>
+        <CommandResultGroup
+            icon='default'
+            groupName='Quick suggestions'
+            onClick={onClick}
+        >
+            {buttons}
         </CommandResultGroup>
     );
 };

@@ -141,6 +141,9 @@ export interface IUnleashOptions {
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
     dailyMetricsStorageDays?: number;
     rateLimiting?: Partial<IRateLimiting>;
+    resourceLimits?: Partial<
+        Pick<ResourceLimitsSchema, 'constraintValues' | 'featureFlags'>
+    >;
 }
 
 export interface IEmailOption {

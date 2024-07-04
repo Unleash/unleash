@@ -14,22 +14,17 @@ import {
     IconRenderer,
     StyledProjectIcon,
 } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import InsightsIcon from '@mui/icons-material/Insights';
+import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { Children } from 'react';
 
 export const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&:hover, &:focus': {
-        border: `1px solid ${theme.palette.primary.main}`,
-        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
-    },
 });
-const StyledContainer = styled('div')(({ theme }) => ({
-    marginBottom: theme.spacing(3),
-}));
-
 export const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
     padding: theme.spacing(0, 2.5),
@@ -55,14 +50,38 @@ export interface CommandResultGroupItem {
     description?: string | null;
 }
 
+const ButtonItemIcon = ({
+    path,
+}: {
+    path: string;
+}) => {
+    if (path === '/projects') {
+        return <StyledProjectIcon />;
+    }
+    if (path === '/playground') {
+        return <PlaygroundIcon />;
+    }
+    if (path === '/insights') {
+        return <InsightsIcon />;
+    }
+
+    return <IconRenderer path={path} />;
+};
+
 export const RecentlyVisitedPathButton = ({
     path,
     key,
     name,
-}: { path: string; key: string; name: string }) => {
+    onClick,
+}: {
+    path: string;
+    key: string;
+    name: string;
+    onClick: () => void;
+}) => {
     const { trackEvent } = usePlausibleTracker();
 
-    const onClick = () => {
+    const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -71,6 +90,7 @@ export const RecentlyVisitedPathButton = ({
                 pageType: name,
             },
         });
+        onClick();
     };
 
     return (
@@ -80,14 +100,10 @@ export const RecentlyVisitedPathButton = ({
             component={Link}
             to={path}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
-                <ConditionallyRender
-                    condition={path === '/projects'}
-                    show={<StyledProjectIcon />}
-                    elseShow={<IconRenderer path={path} />}
-                />
+                <ButtonItemIcon path={path} />
             </StyledListItemIcon>
             <StyledListItemText>
                 <StyledButtonTypography color='textPrimary'>
@@ -101,12 +117,17 @@ export const RecentlyVisitedPathButton = ({
 export const RecentlyVisitedProjectButton = ({
     projectId,
     key,
-}: { projectId: string; key: string }) => {
+    onClick,
+}: {
+    projectId: string;
+    key: string;
+    onClick: () => void;
+}) => {
     const { trackEvent } = usePlausibleTracker();
     const { project, loading } = useProjectOverview(projectId);
     const projectDeleted = !project.name && !loading;
 
-    const onClick = () => {
+    const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -114,6 +135,7 @@ export const RecentlyVisitedProjectButton = ({
                 eventTarget: 'Projects',
             },
         });
+        onClick();
     };
 
     if (projectDeleted) return null;
@@ -124,7 +146,7 @@ export const RecentlyVisitedProjectButton = ({
             component={Link}
             to={`/projects/${projectId}`}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
                 <StyledProjectIcon />
@@ -142,12 +164,14 @@ export const RecentlyVisitedFeatureButton = ({
     key,
     projectId,
     featureId,
+    onClick,
 }: {
     key: string;
     projectId: string;
     featureId: string;
+    onClick: () => void;
 }) => {
-    const onClick = () => {
+    const onItemClick = () => {
         const { trackEvent } = usePlausibleTracker();
 
         trackEvent('command-bar', {
@@ -157,6 +181,7 @@ export const RecentlyVisitedFeatureButton = ({
                 eventTarget: 'Flags',
             },
         });
+        onClick();
     };
     return (
         <ListItemButton
@@ -165,7 +190,7 @@ export const RecentlyVisitedFeatureButton = ({
             component={Link}
             to={`/projects/${projectId}/features/${featureId}`}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
                 <Icon>{'flag'}</Icon>
@@ -183,6 +208,7 @@ interface CommandResultGroupProps {
     icon: string;
     groupName: string;
     items?: CommandResultGroupItem[];
+    onClick: () => void;
     children?: React.ReactNode;
 }
 
@@ -190,16 +216,20 @@ export const CommandResultGroup = ({
     icon,
     groupName,
     items,
+    onClick,
     children,
 }: CommandResultGroupProps) => {
     const { trackEvent } = usePlausibleTracker();
-    if (!children && (!items || items.length === 0)) {
+    if (
+        (!children || Children.count(children) === 0) &&
+        (!items || items.length === 0)
+    ) {
         return null;
     }
 
     const slicedItems = items?.slice(0, 3);
 
-    const onClick = (item: CommandResultGroupItem) => {
+    const onItemClick = (item: CommandResultGroupItem) => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -208,10 +238,11 @@ export const CommandResultGroup = ({
                 ...(groupName === 'Pages' && { pageType: item.name }),
             },
         });
+        onClick();
     };
 
     return (
-        <StyledContainer>
+        <div>
             <StyledTypography color='textSecondary'>
                 {groupName}
             </StyledTypography>
@@ -222,8 +253,9 @@ export const CommandResultGroup = ({
                         key={`command-result-group-${groupName}-${index}`}
                         dense={true}
                         component={Link}
-                        onClick={() => {
-                            onClick(item);
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onItemClick(item);
                         }}
                         to={item.link}
                         sx={listItemButtonStyle}
@@ -249,6 +281,6 @@ export const CommandResultGroup = ({
                     </ListItemButton>
                 ))}
             </List>
-        </StyledContainer>
+        </div>
     );
 };

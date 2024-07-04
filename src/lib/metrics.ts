@@ -24,7 +24,7 @@ import type { IUnleashConfig } from './types/option';
 import type { ISettingStore, IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import type { IEnvironment } from './types';
+import type { IEnvironment, ISdkHeartbeat } from './types';
 import {
     createCounter,
     createGauge,
@@ -51,6 +51,7 @@ export default class MetricsMonitor {
         }
 
         const { eventStore, environmentStore } = stores;
+        const { flagResolver } = config;
 
         const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
             async () => environmentStore.getAll(),
@@ -244,7 +245,14 @@ export default class MetricsMonitor {
         const clientSdkVersionUsage = createCounter({
             name: 'client_sdk_versions',
             help: 'Which sdk versions are being used',
-            labelNames: ['sdk_name', 'sdk_version'],
+            labelNames: [
+                'sdk_name',
+                'sdk_version',
+                'platformName',
+                'platformVersion',
+                'yggdrasilVersion',
+                'specVersion',
+            ],
         });
 
         const productionChanges30 = createGauge({
@@ -784,15 +792,36 @@ export default class MetricsMonitor {
             }
         });
 
-        eventStore.on(CLIENT_REGISTER, (m) => {
-            if (m.sdkVersion && m.sdkVersion.indexOf(':') > -1) {
-                const [sdkName, sdkVersion] = m.sdkVersion.split(':');
+        eventStore.on(CLIENT_REGISTER, (heartbeatEvent: ISdkHeartbeat) => {
+            if (!heartbeatEvent.sdkName || !heartbeatEvent.sdkVersion) {
+                return;
+            }
+
+            if (flagResolver.isEnabled('extendedMetrics')) {
                 clientSdkVersionUsage.increment({
-                    sdk_name: sdkName,
-                    sdk_version: sdkVersion,
+                    sdk_name: heartbeatEvent.sdkName,
+                    sdk_version: heartbeatEvent.sdkVersion,
+                    platformName:
+                        heartbeatEvent.metadata?.platformName ?? 'not-set',
+                    platformVersion:
+                        heartbeatEvent.metadata?.platformVersion ?? 'not-set',
+                    yggdrasilVersion:
+                        heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-set',
+                    specVersion:
+                        heartbeatEvent.metadata?.specVersion ?? 'not-set',
+                });
+            } else {
+                clientSdkVersionUsage.increment({
+                    sdk_name: heartbeatEvent.sdkName,
+                    sdk_version: heartbeatEvent.sdkVersion,
+                    platformName: 'not-set',
+                    platformVersion: 'not-set',
+                    yggdrasilVersion: 'not-set',
+                    specVersion: 'not-set',
                 });
             }
         });
+
         eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
             projectEnvironmentsDisabled.increment({ project_id: project });
         });

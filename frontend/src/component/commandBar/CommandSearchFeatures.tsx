@@ -8,10 +8,12 @@ import { useEffect } from 'react';
 interface ICommandBar {
     searchString: string;
     setSearchedFlagCount: (count: number) => void;
+    onClick: () => void;
 }
-export const CommandFeatures = ({
+export const CommandSearchFeatures = ({
     searchString,
     setSearchedFlagCount,
+    onClick,
 }: ICommandBar) => {
     const { features = [] } = useFeatureSearch(
         {
@@ -21,6 +23,7 @@ export const CommandFeatures = ({
         {
             revalidateOnFocus: false,
         },
+        'command-bar-cache',
     );
 
     const flags: CommandResultGroupItem[] = features.map((feature) => ({
@@ -34,6 +37,11 @@ export const CommandFeatures = ({
     }, [JSON.stringify(flags)]);
 
     return (
-        <CommandResultGroup groupName={'Flags'} icon={'flag'} items={flags} />
+        <CommandResultGroup
+            groupName={'Flags'}
+            icon={'flag'}
+            items={flags}
+            onClick={onClick}
+        />
     );
 };

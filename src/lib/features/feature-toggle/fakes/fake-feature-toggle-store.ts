@@ -77,8 +77,10 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new Error('Method not implemented.');
     }
 
-    async count(query: Partial<IFeatureToggleStoreQuery>): Promise<number> {
-        return this.features.filter(this.getFilterQuery(query)).length;
+    async count(
+        query: Partial<IFeatureToggleStoreQuery> = { archived: false },
+    ): Promise<number> {
+        return this.getAll(query).then((features) => features.length);
     }
 
     async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
@@ -92,16 +94,16 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     private getFilterQuery(query: Partial<IFeatureToggleStoreQuery>) {
         return (f) => {
             let projectMatch = true;
-            if (query.project) {
+            if ('project' in query) {
                 projectMatch = f.project === query.project;
             }
             let archiveMatch = true;
-            if (query.archived) {
-                archiveMatch = f.archived === query.archived;
+            if ('archived' in query) {
+                archiveMatch = (f.archived ?? false) === query.archived;
             }
             let staleMatch = true;
-            if (query.stale) {
-                staleMatch = f.stale === query.stale;
+            if ('stale' in query) {
+                staleMatch = (f.stale ?? false) === query.stale;
             }
             return projectMatch && archiveMatch && staleMatch;
         };
@@ -141,8 +143,10 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new NotFoundError(`Could not find feature with name ${key}`);
     }
 
-    async getAll(): Promise<FeatureToggle[]> {
-        return this.features.filter((f) => !f.archived);
+    async getAll(
+        query: Partial<IFeatureToggleStoreQuery> = { archived: false },
+    ): Promise<FeatureToggle[]> {
+        return this.features.filter(this.getFilterQuery(query));
     }
 
     async getFeatureMetadata(name: string): Promise<FeatureToggle> {

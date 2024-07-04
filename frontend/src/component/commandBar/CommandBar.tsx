@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -13,7 +13,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import { useOnBlur } from 'hooks/useOnBlur';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
@@ -22,10 +21,11 @@ import { CommandPageSuggestions } from './CommandPageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { CommandFeatures } from './CommandFeatures';
+import { CommandSearchFeatures } from './CommandSearchFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { CommandRecent } from './CommandRecent';
-import { CommandPages } from './CommandPages';
+import { CommandQuickSuggestions } from './CommandQuickSuggestions';
+import { CommandSearchPages } from './CommandSearchPages';
+import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
@@ -35,7 +35,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     top: '39px',
     zIndex: 4,
     borderTop: theme.spacing(0),
-    padding: theme.spacing(4, 0, 1.5),
+    padding: theme.spacing(1.5, 0, 1.5),
     borderRadius: 0,
     borderBottomLeftRadius: theme.spacing(1),
     borderBottomRightRadius: theme.spacing(1),
@@ -72,11 +72,6 @@ const StyledSearch = styled('div')(({ theme }) => ({
     padding: '3px 5px 3px 12px',
     width: '100%',
     zIndex: 3,
-    '&:focus-within': {
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        borderBottom: '0px',
-    },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -109,6 +104,7 @@ export const CommandBar = () => {
         CommandResultGroupItem[]
     >([]);
     const [searchedFlagCount, setSearchedFlagCount] = useState(0);
+    const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
     const { routes } = useRoutes();
     const allRoutes: Record<string, IPageRouteInfo> = {};
@@ -166,11 +162,21 @@ export const CommandBar = () => {
                 },
             });
         }
+        setHasNoResults(noResultsFound);
     }, 200);
+
+    useEffect(() => {
+        debouncedSetSearchState(value);
+    }, [searchedFlagCount]);
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
         setValue(value);
+    };
+
+    const clearSearchValue = () => {
+        onSearchChange('');
+        setShowSuggestions(false);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -188,6 +194,7 @@ export const CommandBar = () => {
         },
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
+        setShowSuggestions(false);
         if (searchContainerRef.current?.contains(document.activeElement)) {
             searchInputRef.current?.blur();
         }
@@ -195,12 +202,36 @@ export const CommandBar = () => {
     const placeholder = `Command bar (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
-    useOnBlur(searchContainerRef, hideSuggestions);
-
+    const onKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            setShowSuggestions(false);
+        } else if (
+            event.keyCode >= 48 &&
+            event.keyCode <= 110 &&
+            !hasNoResults
+        ) {
+            searchInputRef.current?.focus();
+        }
+    };
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <RecentlyVisitedRecorder />
-            <StyledSearch>
+            <StyledSearch
+                sx={{
+                    borderBottomLeftRadius: (theme) =>
+                        showSuggestions
+                            ? 0
+                            : theme.shape.borderRadiusExtraLarge,
+                    borderBottomRightRadius: (theme) =>
+                        showSuggestions
+                            ? 0
+                            : theme.shape.borderRadiusExtraLarge,
+                    borderBottom: (theme) =>
+                        showSuggestions
+                            ? '0px'
+                            : `1px solid ${theme.palette.neutral.border}`,
+                }}
+            >
                 <SearchIcon
                     sx={{
                         mr: 1,
@@ -248,26 +279,45 @@ export const CommandBar = () => {
             <ConditionallyRender
                 condition={Boolean(value) && showSuggestions}
                 show={
-                    <CommandResultsPaper>
+                    <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                         {searchString !== undefined && (
-                            <CommandFeatures
+                            <CommandSearchFeatures
                                 searchString={searchString}
                                 setSearchedFlagCount={setSearchedFlagCount}
+                                onClick={clearSearchValue}
                             />
                         )}
                         <CommandResultGroup
                             groupName={'Projects'}
                             icon={'flag'}
+                            onClick={clearSearchValue}
                             items={searchedProjects}
                         />
-                        <CommandPages items={searchedPages} />
+                        <CommandSearchPages
+                            items={searchedPages}
+                            onClick={clearSearchValue}
+                        />
+                        <ConditionallyRender
+                            condition={hasNoResults}
+                            show={
+                                <CommandBarFeedback
+                                    onSubmit={hideSuggestions}
+                                />
+                            }
+                        />
                     </CommandResultsPaper>
                 }
                 elseShow={
                     showSuggestions && (
-                        <CommandResultsPaper>
-                            <CommandRecent routes={allRoutes} />
-                            <CommandPageSuggestions routes={allRoutes} />
+                        <CommandResultsPaper onKeyDownCapture={onKeyDown}>
+                            <CommandQuickSuggestions
+                                routes={allRoutes}
+                                onClick={clearSearchValue}
+                            />
+                            <CommandPageSuggestions
+                                routes={allRoutes}
+                                onClick={clearSearchValue}
+                            />
                         </CommandResultsPaper>
                     )
                 }

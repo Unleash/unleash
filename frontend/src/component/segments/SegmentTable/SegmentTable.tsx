@@ -29,15 +29,41 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+
+const useSegmentLimit = (segmentsLimit: number, segmentsCount: number) => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const limitReached =
+        resourceLimitsEnabled && segmentsCount >= segmentsLimit;
+
+    return {
+        limitReached,
+        limitMessage: limitReached
+            ? `Limit of ${segmentsCount} segments reached`
+            : undefined,
+    };
+};
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
-    const { segments, loading } = useSegments();
+    const { segments, loading: loadingSegments } = useSegments();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
         sortBy: [{ id: 'createdAt' }],
         hiddenColumns: ['description'],
     });
+    const { uiConfig, loading: loadingConfig } = useUiConfig();
+    const segmentLimit = uiConfig.resourceLimits.segments;
+    const segmentCount = segments?.length || 0;
+
+    const { limitReached, limitMessage } = useSegmentLimit(
+        segmentLimit,
+        segmentCount,
+    );
+
+    const createSegmentDisabled =
+        loadingSegments || loadingConfig || limitReached;
 
     const data = useMemo(() => {
         if (!segments) {
@@ -112,15 +138,18 @@ export const SegmentTable = () => {
                                 onChange={setGlobalFilter}
                             />
                             <PageHeader.Divider />
-                            <CreateSegmentButton />
+                            <CreateSegmentButton
+                                disabled={createSegmentDisabled}
+                                tooltip={limitMessage}
+                            />
                         </>
                     }
                 />
             }
-            isLoading={loading}
+            isLoading={loadingSegments}
         >
             <ConditionallyRender
-                condition={!loading && data.length === 0}
+                condition={!loadingSegments && data.length === 0}
                 show={
                     <TablePlaceholder>
                         <SegmentEmpty />

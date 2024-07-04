@@ -22,7 +22,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-export const isFeatureLimitReached = (
+export const isProjectFeatureLimitReached = (
     featureLimit: number | null | undefined,
     currentFeatureCount: number,
 ): boolean => {
@@ -98,7 +98,7 @@ const CreateFeature = () => {
         navigate(GO_BACK);
     };
 
-    const featureLimitReached = isFeatureLimitReached(
+    const projectFlagLimitReached = isProjectFeatureLimitReached(
         projectInfo.featureLimit,
         featuresCount(projectInfo),
     );
@@ -113,7 +113,7 @@ const CreateFeature = () => {
             formatApiCode={formatApiCode}
         >
             <ConditionallyRender
-                condition={featureLimitReached}
+                condition={projectFlagLimitReached}
                 show={
                     <StyledAlert severity='error'>
                         <strong>Feature flag project limit reached. </strong> To
@@ -145,7 +145,7 @@ const CreateFeature = () => {
             >
                 <CreateButton
                     name='feature flag'
-                    disabled={featureLimitReached}
+                    disabled={projectFlagLimitReached}
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-testid={CF_CREATE_BTN_ID}

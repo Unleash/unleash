@@ -40,14 +40,18 @@ export const DeleteProject = ({
     const navigate = useNavigate();
     return (
         <StyledContainer>
+            <p>
+                Before you can delete a project, you must first archive all the
+                feature flags associated with it
+                {isEnterprise() && automatedActionsEnabled
+                    ? 'and disable all actions that are in it'
+                    : ''}
+                .
+            </p>
             <ConditionallyRender
                 condition={featureCount > 0 || actionsCount > 0}
                 show={
                     <>
-                        <p>
-                            Before you can delete a project, you must first
-                            archive all the feature flags associated with it.
-                        </p>
                         <p>
                             Currently there are{' '}
                             <strong>{featureCount} feature flags active</strong>

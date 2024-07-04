@@ -7,6 +7,7 @@ import useToast from 'hooks/useToast';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { Typography } from '@mui/material';
 
 interface IDeleteProjectDialogueProps {
     project: string;
@@ -51,13 +52,15 @@ export const DeleteProjectDialogue = ({
             onClose={onClose}
             title='Really delete project'
         >
-            This will irreversibly remove the project, all feature flags
-            archived in it, all API keys scoped to only this project
-            <ConditionallyRender
-                condition={isEnterprise() && automatedActionsEnabled}
-                show=', and all actions configured for it'
-            />
-            .
+            <Typography>
+                This will irreversibly remove the project, all feature flags
+                archived in it, all API keys scoped to only this project
+                <ConditionallyRender
+                    condition={isEnterprise() && automatedActionsEnabled}
+                    show=', and all actions configured for it'
+                />
+                .
+            </Typography>
         </Dialogue>
     );
 };

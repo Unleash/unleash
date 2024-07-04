@@ -17,6 +17,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useGlobalFeatureSearch } from '../FeatureToggleList/useGlobalFeatureSearch';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -31,6 +33,18 @@ export const isProjectFeatureLimitReached = (
         featureLimit !== undefined &&
         featureLimit <= currentFeatureCount
     );
+};
+
+const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const limitReached = resourceLimitsEnabled && flagCount >= flagLimit;
+
+    return {
+        limitReached,
+        limitMessage: limitReached
+            ? `You have reached the instance-wide limit of ${flagLimit} feature flags.`
+            : undefined,
+    };
 };
 
 const CreateFeature = () => {
@@ -60,6 +74,16 @@ const CreateFeature = () => {
 
     const { createFeatureToggle, loading } = useFeatureApi();
 
+    const { total: totalFlags, loading: loadingTotalFlagCount } =
+        useGlobalFeatureSearch();
+
+    const {
+        limitReached: globalFlagLimitReached,
+        limitMessage: globalFlagLimitMessage,
+    } = useGlobalFlagLimit(
+        uiConfig.resourceLimits.featureFlags,
+        totalFlags ?? 0,
+    );
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
@@ -102,6 +126,7 @@ const CreateFeature = () => {
         projectInfo.featureLimit,
         featuresCount(projectInfo),
     );
+
     return (
         <FormTemplate
             loading={loading}
@@ -145,7 +170,7 @@ const CreateFeature = () => {
             >
                 <CreateButton
                     name='feature flag'
-                    disabled={projectFlagLimitReached}
+                    disabled={loadingTotalFlagCount || projectFlagLimitReached}
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-testid={CF_CREATE_BTN_ID}

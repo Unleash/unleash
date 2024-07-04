@@ -37,7 +37,7 @@ interface ITokenRow extends ITokenInsert {
 }
 
 const createTokenRowReducer =
-    (allowOrphanedWildcardTokens?: boolean) => (acc, tokenRow) => {
+    (allowOrphanedWildcardTokens: boolean) => (acc, tokenRow) => {
         const { project, ...token } = tokenRow;
         if (!acc[tokenRow.secret]) {
             if (
@@ -88,7 +88,7 @@ const toRow = (newToken: IApiTokenCreate) => ({
 
 const toTokens = (
     rows: any[],
-    allowOrphanedWildcardTokens?: boolean,
+    allowOrphanedWildcardTokens: boolean,
 ): IApiToken[] => {
     const tokens = rows.reduce(
         createTokenRowReducer(allowOrphanedWildcardTokens),

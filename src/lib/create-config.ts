@@ -683,7 +683,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             1,
             parseEnvVarNumber(
                 process.env.UNLEASH_FLAGS_LIMIT,
-                options?.resourceLimits?.flags || 250,
+                options?.resourceLimits?.flags || 5000,
             ),
         ),
     };

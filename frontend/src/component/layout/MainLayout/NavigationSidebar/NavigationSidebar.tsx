@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import { type FC, useState } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import { useNavigationMode } from './useNavigationMode';
 import { ShowAdmin, ShowHide } from './ShowHide';
 import { useRoutes } from './useRoutes';
@@ -66,6 +66,10 @@ export const NavigationSidebar = () => {
 
     const { lastViewed: lastViewedFlags } = useLastViewedFlags();
     const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
+
+    useEffect(() => {
+        setActiveItem(initialPathname);
+    }, [initialPathname]);
 
     return (
         <StretchContainer>

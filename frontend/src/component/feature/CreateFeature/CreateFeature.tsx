@@ -47,11 +47,6 @@ const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
     };
 };
 
-const resolveDisabledMessage = (
-    globalFlagLimitReached: boolean,
-    projectFlagLimitReached: boolean,
-) => {};
-
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);

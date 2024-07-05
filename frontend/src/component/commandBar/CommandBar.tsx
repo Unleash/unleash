@@ -215,9 +215,10 @@ export const CommandBar = () => {
     };
 
     const onBlur = (evt: React.FocusEvent) => {
-        if (evt.relatedTarget === null) {
-            hideSuggestions();
-        } else if (!searchContainerRef.current?.contains(evt.relatedTarget)) {
+        if (
+            evt.relatedTarget === null ||
+            !searchContainerRef.current?.contains(evt.relatedTarget)
+        ) {
             hideSuggestions();
         }
     };

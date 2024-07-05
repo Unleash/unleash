@@ -106,7 +106,6 @@ export const CommandBar = () => {
     const [searchedFlagCount, setSearchedFlagCount] = useState(0);
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
-    const [selectedIndex, setSelectedIndex] = useState(-1);
     const { routes } = useRoutes();
     const allRoutes: Record<string, IPageRouteInfo> = {};
     for (const route of [
@@ -170,10 +169,6 @@ export const CommandBar = () => {
         debouncedSetSearchState(value);
     }, [searchedFlagCount]);
 
-    useEffect(() => {
-        setSelectedIndex(-1);
-    }, [value, showSuggestions]);
-
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
         setValue(value);
@@ -209,29 +204,37 @@ export const CommandBar = () => {
     useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
         const allCommandBarLinks =
             searchContainerRef.current?.querySelectorAll('ul > a');
-        if (
-            allCommandBarLinks &&
-            allCommandBarLinks.length > selectedIndex + 1
-        ) {
-            const newIndex = selectedIndex + 1;
-            setSelectedIndex(newIndex);
-            (allCommandBarLinks[newIndex] as HTMLElement).focus();
-        }
+        if (!allCommandBarLinks) return;
+
+        let selectedIndex = -1;
+
+        allCommandBarLinks.forEach((link, index) => {
+            if (link === document.activeElement) {
+                selectedIndex = index;
+            }
+        });
+
+        const newIndex = selectedIndex + 1;
+
+        (allCommandBarLinks[newIndex] as HTMLElement).focus();
     });
     useKeyboardShortcut({ key: 'ArrowUp', preventDefault: true }, () => {
-        if (selectedIndex > 0) {
-            const allCommandBarLinks =
-                searchContainerRef.current?.querySelectorAll('ul > a');
-            if (
-                allCommandBarLinks &&
-                allCommandBarLinks.length >= selectedIndex
-            ) {
-                const newIndex = selectedIndex - 1;
-                setSelectedIndex(newIndex);
-                (allCommandBarLinks[newIndex] as HTMLElement).focus();
+        const allCommandBarLinks =
+            searchContainerRef.current?.querySelectorAll('ul > a');
+        if (!allCommandBarLinks) return;
+
+        let selectedIndex = -1;
+        allCommandBarLinks.forEach((link, index) => {
+            if (link === document.activeElement) {
+                selectedIndex = index;
             }
+        });
+
+        const newIndex = selectedIndex - 1;
+
+        if (newIndex >= 0) {
+            (allCommandBarLinks[newIndex] as HTMLElement).focus();
         } else {
-            setSelectedIndex(-1);
             const element = searchInputRef.current;
             if (element) {
                 element.focus();

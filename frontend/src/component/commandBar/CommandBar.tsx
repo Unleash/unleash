@@ -201,6 +201,53 @@ export const CommandBar = () => {
     });
     const placeholder = `Command bar (${hotkey})`;
 
+    const findCommandBarLinksAndSelectedIndex = () => {
+        const allCommandBarLinks =
+            searchContainerRef.current?.querySelectorAll('ul > a');
+        if (!allCommandBarLinks || allCommandBarLinks.length === 0) return;
+
+        let selectedIndex = -1;
+
+        allCommandBarLinks.forEach((link, index) => {
+            if (link === document.activeElement) {
+                selectedIndex = index;
+            }
+        });
+
+        return { allCommandBarLinks, selectedIndex };
+    };
+
+    useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
+        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
+        if (!itemsAndIndex) return;
+        const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
+
+        const newIndex = selectedIndex + 1;
+        if (newIndex >= allCommandBarLinks.length) return;
+
+        (allCommandBarLinks[newIndex] as HTMLElement).focus();
+    });
+    useKeyboardShortcut({ key: 'ArrowUp', preventDefault: true }, () => {
+        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
+        if (!itemsAndIndex) return;
+        const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
+
+        const newIndex = selectedIndex - 1;
+
+        if (newIndex >= 0) {
+            (allCommandBarLinks[newIndex] as HTMLElement).focus();
+        } else {
+            const element = searchInputRef.current;
+            if (element) {
+                element.focus();
+                element.setSelectionRange(
+                    element.value.length,
+                    element.value.length,
+                );
+            }
+        }
+    });
+
     useOnClickOutside([searchContainerRef], hideSuggestions);
     const onKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Escape') {

@@ -36,7 +36,7 @@ test('if only global level is reached, the projectFlagLimitReached property is f
 
 test('if only the project limit is reached, the limit message talks about the project limit', () => {
     const { result } = renderHook(() =>
-        useFlagLimits({ limit: 50, count: 5 }, { limit: 5, count: 5 }),
+        useFlagLimits({ limit: 2, count: 1 }, { limit: 1, count: 1 }),
     );
 
     expect(result.current).toMatchObject({
@@ -48,7 +48,7 @@ test('if only the project limit is reached, the limit message talks about the pr
 
 test('if neither limit is reached, the limit message is undefined', () => {
     const { result } = renderHook(() =>
-        useFlagLimits({ limit: 50, count: 5 }, { limit: 50, count: 5 }),
+        useFlagLimits({ limit: 1, count: 0 }, { limit: 1, count: 0 }),
     );
 
     expect(result.current).toMatchObject({

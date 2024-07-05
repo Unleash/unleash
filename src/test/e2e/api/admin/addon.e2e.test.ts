@@ -27,15 +27,13 @@ afterAll(async () => {
 });
 
 test('gets all addons', async () => {
-    expect.assertions(3);
-
-    return app.request
+    await app.request
         .get('/api/admin/addons')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
             expect(res.body.addons.length).toBe(0);
-            expect(res.body.providers.length).toBe(5);
+            expect(res.body.providers.length).toBe(6);
             expect(res.body.providers[0].name).toBe('webhook');
         });
 });

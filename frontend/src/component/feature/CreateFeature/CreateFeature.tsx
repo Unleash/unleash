@@ -47,6 +47,11 @@ const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
     };
 };
 
+const resolveDisabledMessage = (
+    globalFlagLimitReached: boolean,
+    projectFlagLimitReached: boolean,
+) => {};
+
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
@@ -84,6 +89,7 @@ const CreateFeature = () => {
         uiConfig.resourceLimits.featureFlags,
         totalFlags ?? 0,
     );
+
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
@@ -126,6 +132,12 @@ const CreateFeature = () => {
         projectInfo.featureLimit,
         featuresCount(projectInfo),
     );
+
+    const disabledMessage = globalFlagLimitReached
+        ? globalFlagLimitMessage
+        : projectFlagLimitReached
+          ? `You have reached the project limit of ${projectInfo.featureLimit} feature flags.`
+          : undefined;
 
     return (
         <FormTemplate
@@ -170,10 +182,18 @@ const CreateFeature = () => {
             >
                 <CreateButton
                     name='feature flag'
-                    disabled={loadingTotalFlagCount || projectFlagLimitReached}
+                    disabled={
+                        loadingTotalFlagCount ||
+                        globalFlagLimitReached ||
+                        projectFlagLimitReached
+                    }
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-testid={CF_CREATE_BTN_ID}
+                    tooltipProps={{
+                        title: disabledMessage,
+                        arrow: true,
+                    }}
                 />
             </FeatureForm>
         </FormTemplate>

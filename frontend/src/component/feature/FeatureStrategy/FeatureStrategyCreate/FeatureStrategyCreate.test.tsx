@@ -95,6 +95,8 @@ describe('NewFeatureStrategyCreate', () => {
 
         const titleEl = await screen.findByText('Gradual rollout');
         expect(titleEl).toBeInTheDocument();
+        const saveButton = await screen.findByText('Save strategy');
+        expect(saveButton).not.toBeDisabled();
 
         const slider = await screen.findByRole('slider', { name: /rollout/i });
         expect(slider).toHaveValue('100');

@@ -86,6 +86,10 @@ export const setupUiConfigEndpoint = () => {
         environment: 'enterprise',
         flags: {
             newStrategyConfiguration: true,
+            resourceLimits: true,
+        },
+        resourceLimits: {
+            featureEnvironmentStrategies: 2,
         },
         unleashUrl: 'example.com',
     });

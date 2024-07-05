@@ -22,8 +22,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { Badge } from 'component/common/Badge/Badge';
-import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -117,19 +115,6 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const useStrategyLimit = (strategyCount: number) => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const { uiConfig } = useUiConfig();
-    const featureEnvironmentStrategiesLimit =
-        uiConfig.resourceLimits?.featureEnvironmentStrategies || 100;
-    const limitReached =
-        resourceLimitsEnabled &&
-        strategyCount >= featureEnvironmentStrategiesLimit;
-    const limitMessage = `Limit of ${featureEnvironmentStrategiesLimit} strategies reached`;
-
-    return { limitReached, limitMessage };
-};
-
 const FeatureOverviewEnvironment = ({
     env,
 }: IFeatureOverviewEnvironmentProps) => {
@@ -145,10 +130,6 @@ const FeatureOverviewEnvironment = ({
     );
     const featureEnvironment = feature?.environments.find(
         (featureEnvironment) => featureEnvironment.name === env.name,
-    );
-
-    const { limitMessage, limitReached } = useStrategyLimit(
-        featureEnvironment?.strategies.length || 0,
     );
 
     return (
@@ -198,11 +179,6 @@ const FeatureOverviewEnvironment = ({
                                         environmentId={env.name}
                                         variant='outlined'
                                         size='small'
-                                        disableReason={
-                                            limitReached
-                                                ? limitMessage
-                                                : undefined
-                                        }
                                     />
                                     <FeatureStrategyIcons
                                         strategies={
@@ -245,11 +221,6 @@ const FeatureOverviewEnvironment = ({
                                                 projectId={projectId}
                                                 featureId={featureId}
                                                 environmentId={env.name}
-                                                disableReason={
-                                                    limitReached
-                                                        ? limitMessage
-                                                        : undefined
-                                                }
                                             />
                                         </Box>
                                         <EnvironmentFooter

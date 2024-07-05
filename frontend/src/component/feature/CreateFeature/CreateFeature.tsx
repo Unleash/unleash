@@ -47,7 +47,7 @@ const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
     };
 };
 
-const useFlagLimits = (
+export const useFlagLimits = (
     globalFlags: { limit: number; count: number },
     projectFlags: { limit?: number; count: number },
 ) => {

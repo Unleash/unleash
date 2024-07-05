@@ -207,20 +207,25 @@ export const CommandBar = () => {
     const placeholder = `Command bar (${hotkey})`;
 
     useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
-        const all = searchContainerRef.current?.querySelectorAll('ul > a');
-        if (all && all.length > selectedIndex) {
+        const allCommandBarLinks =
+            searchContainerRef.current?.querySelectorAll('ul > a');
+        if (allCommandBarLinks && allCommandBarLinks.length > selectedIndex) {
             const newIndex = selectedIndex + 1;
             setSelectedIndex(newIndex);
-            (all[newIndex] as HTMLElement).focus();
+            (allCommandBarLinks[newIndex] as HTMLElement).focus();
         }
     });
     useKeyboardShortcut({ key: 'ArrowUp', preventDefault: true }, () => {
         if (selectedIndex > 0) {
-            const all = searchContainerRef.current?.querySelectorAll('ul > a');
-            if (all && all.length >= selectedIndex) {
+            const allCommandBarLinks =
+                searchContainerRef.current?.querySelectorAll('ul > a');
+            if (
+                allCommandBarLinks &&
+                allCommandBarLinks.length >= selectedIndex
+            ) {
                 const newIndex = selectedIndex - 1;
                 setSelectedIndex(newIndex);
-                (all[newIndex] as HTMLElement).focus();
+                (allCommandBarLinks[newIndex] as HTMLElement).focus();
             }
         } else {
             setSelectedIndex(-1);

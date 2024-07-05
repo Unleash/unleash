@@ -16,7 +16,8 @@ export const SegmentDocsValuesInfo = () => {
                 target='_blank'
                 rel='noreferrer'
             >
-                at most {segmentValuesLimit} across all of its contraints
+                at most {segmentValuesLimit} values across all of its
+                constraints
             </a>
             . <SegmentLimitsLink />
         </Alert>

@@ -1,4 +1,4 @@
-import { Autocomplete, Button, styled, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,10 @@ import {
 import { SegmentProjectAlert } from './SegmentProjectAlert';
 import { sortStrategiesByFeature } from './SegmentDelete/SegmentDeleteUsedSegment/sort-strategies';
 import type { IFeatureStrategy } from 'interfaces/strategy';
+import { useUiFlag } from '../../hooks/useUiFlag';
+import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
+import { useSegments } from '../../hooks/api/getters/useSegments/useSegments';
+import { Limit } from '../common/Limit/Limit';
 
 interface ISegmentFormPartOneProps {
     name: string;
@@ -62,6 +66,32 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
+const LimitContainer = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    alignItems: 'flex-end',
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+}));
+
+const useSegmentLimit = () => {
+    const { segments, loading: loadingSegments } = useSegments();
+    const { uiConfig, loading: loadingConfig } = useUiConfig();
+    const segmentsLimit = uiConfig.resourceLimits.segments;
+    const segmentsCount = segments?.length || 0;
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const limitReached =
+        resourceLimitsEnabled && segmentsCount >= segmentsLimit;
+
+    return {
+        limit: segmentsLimit,
+        limitReached,
+        currentCount: segmentsCount,
+        loading: loadingSegments || loadingConfig,
+        resourceLimitsEnabled,
+    };
+};
+
 export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     name,
     description,
@@ -76,6 +106,13 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     const projectId = useOptionalPathParam('projectId');
     const navigate = useNavigate();
     const { projects, loading: loadingProjects } = useProjects();
+    const {
+        limitReached,
+        limit,
+        currentCount,
+        loading: loadingSegmentLimit,
+        resourceLimitsEnabled,
+    } = useSegmentLimit();
 
     const {
         strategies,
@@ -106,7 +143,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
         setSelectedProject(projects.find(({ id }) => id === project) ?? null);
     }, [project, projects]);
 
-    const loading = loadingProjects && loadingStrategies;
+    const loading = loadingProjects || loadingStrategies || loadingSegmentLimit;
 
     return (
         <StyledForm>
@@ -165,13 +202,32 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     }
                 />
             </StyledContainer>
+
+            <LimitContainer>
+                <ConditionallyRender
+                    condition={resourceLimitsEnabled}
+                    show={
+                        <Limit
+                            name='segments'
+                            limit={limit}
+                            currentValue={currentCount}
+                        />
+                    }
+                />
+            </LimitContainer>
+
             <StyledButtonContainer>
                 <Button
                     type='button'
                     variant='contained'
                     color='primary'
                     onClick={() => setCurrentStep(2)}
-                    disabled={name.length === 0 || Boolean(errors.name)}
+                    disabled={
+                        loading ||
+                        limitReached ||
+                        name.length === 0 ||
+                        Boolean(errors.name)
+                    }
                     data-testid={SEGMENT_NEXT_BTN_ID}
                 >
                     Next

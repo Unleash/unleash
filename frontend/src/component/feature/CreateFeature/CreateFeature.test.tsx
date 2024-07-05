@@ -32,16 +32,15 @@ const setupApi = ({
         },
     });
 
-    testServerRoute(server, '/api/admin/???', {
-        tokens: Array.from({ length: flagCount }).map((_, i) => ({
-            secret: 'super-secret',
-            tokenName: `token—name-${i}`,
-            type: 'client',
+    testServerRoute(server, '/api/admin/search/features', {
+        total: flagCount,
+        features: Array.from({ length: flagCount }).map((_, i) => ({
+            name: `flag-${i}`,
         })),
     });
 };
 
-test('should allow you to create API tokens when there are fewer apiTokens than the limit', async () => {
+test("should allow you to create feature flags when you're below the global limit", async () => {
     setupApi({ flagLimit: 3, flagCount: 2 });
 
     render(
@@ -57,10 +56,34 @@ test('should allow you to create API tokens when there are fewer apiTokens than 
         },
     );
 
-    screen.debug();
+    await waitFor(async () => {
+        const button = await screen.findByRole('button', {
+            name: /create feature flag/i,
+        });
+        expect(button).not.toBeDisabled();
+    });
+});
+
+test("should not allow you to create API tokens when you're at the global limit", async () => {
+    setupApi({ flagLimit: 3, flagCount: 3 });
+
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId/create-toggle'
+                element={<CreateFeature />}
+            />
+        </Routes>,
+        {
+            route: '/projects/default/create-toggle',
+            permissions: [{ permission: CREATE_FEATURE }],
+        },
+    );
 
     await waitFor(async () => {
-        const button = await screen.findByRole('button');
-        expect(button).not.toBeDisabled();
+        const button = await screen.findByRole('button', {
+            name: /create feature flag/i,
+        });
+        expect(button).toBeDisabled();
     });
 });

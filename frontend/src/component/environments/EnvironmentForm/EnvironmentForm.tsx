@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 import type React from 'react';
 import Input from 'component/common/Input/Input';
 import EnvironmentTypeSelector from './EnvironmentTypeSelector/EnvironmentTypeSelector';
@@ -16,6 +16,7 @@ interface IEnvironmentForm {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     children?: React.ReactNode;
+    Limit?: React.ReactNode;
 }
 
 const StyledForm = styled('form')({
@@ -52,6 +53,14 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
+const LimitContainer = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    alignItems: 'flex-end',
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+}));
+
 const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     children,
     handleSubmit,
@@ -64,6 +73,7 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     errors,
     mode,
     clearErrors,
+    Limit,
 }) => {
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -93,6 +103,9 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                     value={type}
                 />
             </StyledContainer>
+
+            <LimitContainer>{Limit}</LimitContainer>
+
             <StyledButtonContainer>
                 {children}
                 <StyledCancelButton onClick={handleCancel}>

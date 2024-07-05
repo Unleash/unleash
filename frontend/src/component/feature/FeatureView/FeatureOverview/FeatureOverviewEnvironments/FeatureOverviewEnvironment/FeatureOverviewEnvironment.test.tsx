@@ -3,11 +3,7 @@ import { render } from 'utils/testRenderer';
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment';
 import { Route, Routes } from 'react-router-dom';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import type { IFeatureStrategy } from 'interfaces/strategy';
 
-const strategy = {
-    name: 'default',
-} as IFeatureStrategy;
 const environmentWithoutStrategies = {
     name: 'production',
     enabled: true,

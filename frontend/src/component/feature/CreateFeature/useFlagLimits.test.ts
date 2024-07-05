@@ -12,7 +12,10 @@ vi.mock('hooks/useUiFlag', async (importOriginal) => {
 
 test('if both global and project-level limits are reached, then the error message shows the message for instance-wide limits', () => {
     const { result } = renderHook(() =>
-        useFlagLimits({ limit: 1, count: 1 }, { limit: 1, count: 1 }),
+        useFlagLimits({
+            global: { limit: 1, count: 1 },
+            project: { limit: 1, count: 1 },
+        }),
     );
 
     expect(result.current).toMatchObject({
@@ -24,7 +27,10 @@ test('if both global and project-level limits are reached, then the error messag
 
 test('if only global level is reached, the projectFlagLimitReached property is false', () => {
     const { result } = renderHook(() =>
-        useFlagLimits({ limit: 1, count: 1 }, { limit: 1, count: 0 }),
+        useFlagLimits({
+            global: { limit: 1, count: 1 },
+            project: { limit: 1, count: 0 },
+        }),
     );
 
     expect(result.current).toMatchObject({
@@ -36,7 +42,10 @@ test('if only global level is reached, the projectFlagLimitReached property is f
 
 test('if only the project limit is reached, the limit message talks about the project limit', () => {
     const { result } = renderHook(() =>
-        useFlagLimits({ limit: 2, count: 1 }, { limit: 1, count: 1 }),
+        useFlagLimits({
+            global: { limit: 2, count: 1 },
+            project: { limit: 1, count: 1 },
+        }),
     );
 
     expect(result.current).toMatchObject({
@@ -48,7 +57,10 @@ test('if only the project limit is reached, the limit message talks about the pr
 
 test('if neither limit is reached, the limit message is undefined', () => {
     const { result } = renderHook(() =>
-        useFlagLimits({ limit: 1, count: 0 }, { limit: 1, count: 0 }),
+        useFlagLimits({
+            global: { limit: 1, count: 0 },
+            project: { limit: 1, count: 0 },
+        }),
     );
 
     expect(result.current).toMatchObject({

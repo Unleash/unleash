@@ -47,24 +47,26 @@ const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
     };
 };
 
-export const useFlagLimits = (
-    globalFlags: { limit: number; count: number },
-    projectFlags: { limit?: number; count: number },
-) => {
+type FlagLimitsProps = {
+    global: { limit: number; count: number };
+    project: { limit?: number; count: number };
+};
+
+export const useFlagLimits = ({ global, project }: FlagLimitsProps) => {
     const {
         limitReached: globalFlagLimitReached,
         limitMessage: globalLimitMessage,
-    } = useGlobalFlagLimit(globalFlags.limit, globalFlags.count);
+    } = useGlobalFlagLimit(global.limit, global.count);
 
     const projectFlagLimitReached = isProjectFeatureLimitReached(
-        projectFlags.limit,
-        projectFlags.count,
+        project.limit,
+        project.count,
     );
 
     const limitMessage = globalFlagLimitReached
         ? globalLimitMessage
         : projectFlagLimitReached
-          ? `You have reached the project limit of ${projectFlags.limit} feature flags.`
+          ? `You have reached the project limit of ${project.limit} feature flags.`
           : undefined;
 
     return {
@@ -105,16 +107,16 @@ const CreateFeature = () => {
         useGlobalFeatureSearch();
 
     const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
-        useFlagLimits(
-            {
+        useFlagLimits({
+            global: {
                 limit: uiConfig.resourceLimits.featureFlags,
                 count: totalFlags ?? 0,
             },
-            {
+            project: {
                 limit: projectInfo.featureLimit,
                 count: featuresCount(projectInfo),
             },
-        );
+        });
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();

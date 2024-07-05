@@ -239,12 +239,10 @@ export const CommandBar = () => {
             const element = searchInputRef.current;
             if (element) {
                 element.focus();
-                setTimeout(() => {
-                    element.setSelectionRange(
-                        element.value.length,
-                        element.value.length,
-                    );
-                }, 5);
+                element.setSelectionRange(
+                    element.value.length,
+                    element.value.length,
+                );
             }
         }
     });

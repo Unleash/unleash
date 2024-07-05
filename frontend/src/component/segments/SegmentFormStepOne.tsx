@@ -20,9 +20,9 @@ import {
 import { SegmentProjectAlert } from './SegmentProjectAlert';
 import { sortStrategiesByFeature } from './SegmentDelete/SegmentDeleteUsedSegment/sort-strategies';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { useUiFlag } from '../../hooks/useUiFlag';
-import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useSegments } from '../../hooks/api/getters/useSegments/useSegments';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { Limit } from '../common/Limit/Limit';
 
 interface ISegmentFormPartOneProps {

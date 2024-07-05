@@ -47,6 +47,33 @@ const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
     };
 };
 
+const useFlagLimits = (
+    globalFlags: { limit: number; count: number },
+    projectFlags: { limit?: number; count: number },
+) => {
+    const {
+        limitReached: globalLimitReached,
+        limitMessage: globalLimitMessage,
+    } = useGlobalFlagLimit(globalFlags.limit, globalFlags.count);
+
+    const projectLimitReached = isProjectFeatureLimitReached(
+        projectFlags.limit,
+        projectFlags.count,
+    );
+
+    const limitMessage = globalLimitReached
+        ? globalLimitMessage
+        : projectLimitReached
+          ? `You have reached the project limit of ${projectFlags.limit} feature flags.`
+          : undefined;
+
+    return {
+        limitMessage,
+        globalLimitReached,
+        projectLimitReached,
+    };
+};
+
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
@@ -77,13 +104,17 @@ const CreateFeature = () => {
     const { total: totalFlags, loading: loadingTotalFlagCount } =
         useGlobalFeatureSearch();
 
-    const {
-        limitReached: globalFlagLimitReached,
-        limitMessage: globalFlagLimitMessage,
-    } = useGlobalFlagLimit(
-        uiConfig.resourceLimits.featureFlags,
-        totalFlags ?? 0,
-    );
+    const { globalLimitReached, projectLimitReached, limitMessage } =
+        useFlagLimits(
+            {
+                limit: uiConfig.resourceLimits.featureFlags,
+                count: totalFlags ?? 0,
+            },
+            {
+                limit: projectInfo.featureLimit,
+                count: featuresCount(projectInfo),
+            },
+        );
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -123,17 +154,6 @@ const CreateFeature = () => {
         navigate(GO_BACK);
     };
 
-    const projectFlagLimitReached = isProjectFeatureLimitReached(
-        projectInfo.featureLimit,
-        featuresCount(projectInfo),
-    );
-
-    const disabledMessage = globalFlagLimitReached
-        ? globalFlagLimitMessage
-        : projectFlagLimitReached
-          ? `You have reached the project limit of ${projectInfo.featureLimit} feature flags.`
-          : undefined;
-
     return (
         <FormTemplate
             loading={loading}
@@ -145,7 +165,7 @@ const CreateFeature = () => {
             formatApiCode={formatApiCode}
         >
             <ConditionallyRender
-                condition={projectFlagLimitReached}
+                condition={projectLimitReached}
                 show={
                     <StyledAlert severity='error'>
                         <strong>Feature flag project limit reached. </strong> To
@@ -179,14 +199,14 @@ const CreateFeature = () => {
                     name='feature flag'
                     disabled={
                         loadingTotalFlagCount ||
-                        globalFlagLimitReached ||
-                        projectFlagLimitReached
+                        globalLimitReached ||
+                        projectLimitReached
                     }
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-testid={CF_CREATE_BTN_ID}
                     tooltipProps={{
-                        title: disabledMessage,
+                        title: limitMessage,
                         arrow: true,
                     }}
                 />

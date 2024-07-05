@@ -11,8 +11,10 @@ import type {
     IUserUpdateFields,
 } from '../types/stores/user-store';
 import type { Db } from './db';
+import bcrypt from 'bcryptjs';
 
 const TABLE = 'users';
+const PASSWORD_HASH_TABLE = 'used_passwords';
 
 const USER_COLUMNS_PUBLIC = [
     'id',
@@ -24,6 +26,8 @@ const USER_COLUMNS_PUBLIC = [
     'is_service',
     'scim_id',
 ];
+
+const USED_PASSWORDS = ['user_id', 'password_hash', 'used_at'];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
@@ -69,6 +73,35 @@ class UserStore implements IUserStore {
     constructor(db: Db, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
+    }
+
+    async passwordPreviouslyUsed(
+        userId: number,
+        password: string,
+    ): Promise<boolean> {
+        const previouslyUsedPasswords = await this.db(
+            PASSWORD_HASH_TABLE,
+        ).where({ user_id: userId });
+        return previouslyUsedPasswords.some((row) =>
+            bcrypt.compareSync(password, row.password_hash),
+        );
+    }
+
+    async deletePasswordsUsedMoreThanNTimesAgo(
+        userId: number,
+        keepLastN: number,
+    ): Promise<void> {
+        await this.db.raw(
+            `
+            WITH UserPasswords AS (
+                SELECT user_id, password_hash, used_at, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY used_at DESC) AS rn
+            FROM ${PASSWORD_HASH_TABLE}
+            WHERE user_id = ?)
+            DELETE FROM ${PASSWORD_HASH_TABLE} WHERE user_id = ? AND (user_id, password_hash, used_at) NOT IN (SELECT user_id, password_hash, used_at FROM UserPasswords WHERE rn <= ?
+            );
+        `,
+            [userId, userId, keepLastN],
+        );
     }
 
     async update(id: number, fields: IUserUpdateFields): Promise<User> {
@@ -177,10 +210,24 @@ class UserStore implements IUserStore {
         return item.password_hash;
     }
 
-    async setPasswordHash(userId: number, passwordHash: string): Promise<void> {
-        return this.activeUsers().where('id', userId).update({
+    async setPasswordHash(
+        userId: number,
+        passwordHash: string,
+        disallowNPreviousPasswords: number,
+    ): Promise<void> {
+        await this.activeUsers().where('id', userId).update({
             password_hash: passwordHash,
         });
+        if (passwordHash) {
+            await this.db(PASSWORD_HASH_TABLE).insert({
+                user_id: userId,
+                password_hash: passwordHash,
+            });
+            await this.deletePasswordsUsedMoreThanNTimesAgo(
+                userId,
+                disallowNPreviousPasswords,
+            );
+        }
     }
 
     async incLoginAttempts(user: User): Promise<void> {

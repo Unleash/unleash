@@ -15,6 +15,13 @@ class UserStoreMock implements IUserStore {
         this.idSeq = 1;
         this.data = [];
     }
+
+    passwordPreviouslyUsed(
+        _userId: number,
+        _passwordHash: string,
+    ): Promise<boolean> {
+        return Promise.resolve(false);
+    }
     countServiceAccounts(): Promise<number> {
         return Promise.resolve(0);
     }

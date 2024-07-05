@@ -17,6 +17,7 @@ async function getSetup() {
     await stores.userStore.setPasswordHash(
         currentUser.id,
         await bcrypt.hash(oldPassword, 10),
+        5,
     );
 
     const config = createTestConfig({

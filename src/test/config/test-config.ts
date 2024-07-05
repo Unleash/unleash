@@ -13,6 +13,7 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 }
 
 export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
+    getLogger.setMuteError(true);
     const testConfig: IUnleashOptions = {
         getLogger,
         authentication: { type: IAuthType.NONE, createAdminUser: false },

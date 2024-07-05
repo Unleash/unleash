@@ -38,6 +38,7 @@ import PasswordMismatch from '../error/password-mismatch';
 import type EventService from '../features/events/event-service';
 
 import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
+import { PasswordPreviouslyUsed } from '../error/password-previously-used';
 
 export interface ICreateUser {
     name?: string;
@@ -62,6 +63,7 @@ export interface ILoginUserRequest {
 }
 
 const saltRounds = 10;
+const disallowNPreviousPasswords = 5;
 
 class UserService {
     private logger: Logger;
@@ -164,7 +166,11 @@ class UserService {
                     username,
                 });
                 const passwordHash = await bcrypt.hash(password, saltRounds);
-                await this.store.setPasswordHash(user.id, passwordHash);
+                await this.store.setPasswordHash(
+                    user.id,
+                    passwordHash,
+                    disallowNPreviousPasswords,
+                );
                 await this.accessService.setUserRootRole(
                     user.id,
                     RoleName.ADMIN,
@@ -232,7 +238,11 @@ class UserService {
 
         if (password) {
             const passwordHash = await bcrypt.hash(password, saltRounds);
-            await this.store.setPasswordHash(user.id, passwordHash);
+            await this.store.setPasswordHash(
+                user.id,
+                passwordHash,
+                disallowNPreviousPasswords,
+            );
         }
 
         const userCreated = await this.getUser(user.id);
@@ -387,8 +397,20 @@ class UserService {
 
     async changePassword(userId: number, password: string): Promise<void> {
         this.validatePassword(password);
+        const previouslyUsed = await this.store.passwordPreviouslyUsed(
+            userId,
+            password,
+        );
+        if (previouslyUsed) {
+            throw new PasswordPreviouslyUsed();
+        }
         const passwordHash = await bcrypt.hash(password, saltRounds);
-        await this.store.setPasswordHash(userId, passwordHash);
+
+        await this.store.setPasswordHash(
+            userId,
+            passwordHash,
+            disallowNPreviousPasswords,
+        );
         await this.sessionService.deleteSessionsForUser(userId);
         await this.resetTokenService.expireExistingTokensForUser(userId);
     }

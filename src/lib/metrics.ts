@@ -248,10 +248,10 @@ export default class MetricsMonitor {
             labelNames: [
                 'sdk_name',
                 'sdk_version',
-                'platformName',
-                'platformVersion',
-                'yggdrasilVersion',
-                'specVersion',
+                'platform_name',
+                'platform_version',
+                'yggdrasil_version',
+                'spec_version',
             ],
         });
 
@@ -801,23 +801,23 @@ export default class MetricsMonitor {
                 clientSdkVersionUsage.increment({
                     sdk_name: heartbeatEvent.sdkName,
                     sdk_version: heartbeatEvent.sdkVersion,
-                    platformName:
+                    platform_name:
                         heartbeatEvent.metadata?.platformName ?? 'not-set',
-                    platformVersion:
+                    platform_version:
                         heartbeatEvent.metadata?.platformVersion ?? 'not-set',
-                    yggdrasilVersion:
+                    yggdrasil_version:
                         heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-set',
-                    specVersion:
+                    spec_version:
                         heartbeatEvent.metadata?.specVersion ?? 'not-set',
                 });
             } else {
                 clientSdkVersionUsage.increment({
                     sdk_name: heartbeatEvent.sdkName,
                     sdk_version: heartbeatEvent.sdkVersion,
-                    platformName: 'not-set',
-                    platformVersion: 'not-set',
-                    yggdrasilVersion: 'not-set',
-                    specVersion: 'not-set',
+                    platform_name: 'not-set',
+                    platform_version: 'not-set',
+                    yggdrasil_version: 'not-set',
+                    spec_version: 'not-set',
                 });
             }
         });

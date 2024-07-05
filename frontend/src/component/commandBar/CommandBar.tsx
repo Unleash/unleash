@@ -43,6 +43,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     wordBreak: 'break-word',
+    border: `1px solid ${theme.palette.neutral.border}`,
 }));
 
 const StyledContainer = styled('div', {

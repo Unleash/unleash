@@ -204,7 +204,7 @@ export const CommandBar = () => {
     useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
         const allCommandBarLinks =
             searchContainerRef.current?.querySelectorAll('ul > a');
-        if (!allCommandBarLinks) return;
+        if (!allCommandBarLinks || allCommandBarLinks.length === 0) return;
 
         let selectedIndex = -1;
 
@@ -221,7 +221,7 @@ export const CommandBar = () => {
     useKeyboardShortcut({ key: 'ArrowUp', preventDefault: true }, () => {
         const allCommandBarLinks =
             searchContainerRef.current?.querySelectorAll('ul > a');
-        if (!allCommandBarLinks) return;
+        if (!allCommandBarLinks || allCommandBarLinks.length === 0) return;
 
         let selectedIndex = -1;
         allCommandBarLinks.forEach((link, index) => {

@@ -106,6 +106,7 @@ export const CommandBar = () => {
     const [searchedFlagCount, setSearchedFlagCount] = useState(0);
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
+    const [selectedIndex, setSelectedIndex] = useState(-1);
     const { routes } = useRoutes();
     const allRoutes: Record<string, IPageRouteInfo> = {};
     for (const route of [
@@ -169,6 +170,10 @@ export const CommandBar = () => {
         debouncedSetSearchState(value);
     }, [searchedFlagCount]);
 
+    useEffect(() => {
+        setSelectedIndex(-1);
+    }, [value, showSuggestions]);
+
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
         setValue(value);
@@ -200,6 +205,37 @@ export const CommandBar = () => {
         }
     });
     const placeholder = `Command bar (${hotkey})`;
+
+    useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
+        const all = searchContainerRef.current?.querySelectorAll('ul > a');
+        if (all && all.length > selectedIndex) {
+            const newIndex = selectedIndex + 1;
+            setSelectedIndex(newIndex);
+            (all[newIndex] as HTMLElement).focus();
+        }
+    });
+    useKeyboardShortcut({ key: 'ArrowUp', preventDefault: true }, () => {
+        if (selectedIndex > 0) {
+            const all = searchContainerRef.current?.querySelectorAll('ul > a');
+            if (all && all.length >= selectedIndex) {
+                const newIndex = selectedIndex - 1;
+                setSelectedIndex(newIndex);
+                (all[newIndex] as HTMLElement).focus();
+            }
+        } else {
+            setSelectedIndex(-1);
+            const element = searchInputRef.current;
+            if (element) {
+                element.focus();
+                setTimeout(() => {
+                    element.setSelectionRange(
+                        element.value.length,
+                        element.value.length,
+                    );
+                }, 5);
+            }
+        }
+    });
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     const onKeyDown = (event: React.KeyboardEvent) => {

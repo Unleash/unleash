@@ -209,7 +209,10 @@ export const CommandBar = () => {
     useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
         const allCommandBarLinks =
             searchContainerRef.current?.querySelectorAll('ul > a');
-        if (allCommandBarLinks && allCommandBarLinks.length > selectedIndex) {
+        if (
+            allCommandBarLinks &&
+            allCommandBarLinks.length > selectedIndex + 1
+        ) {
             const newIndex = selectedIndex + 1;
             setSelectedIndex(newIndex);
             (allCommandBarLinks[newIndex] as HTMLElement).focus();

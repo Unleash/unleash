@@ -201,7 +201,7 @@ export const CommandBar = () => {
     });
     const placeholder = `Command bar (${hotkey})`;
 
-    useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
+    const findCommandBarLinksAndSelectedIndex = () => {
         const allCommandBarLinks =
             searchContainerRef.current?.querySelectorAll('ul > a');
         if (!allCommandBarLinks || allCommandBarLinks.length === 0) return;
@@ -213,6 +213,14 @@ export const CommandBar = () => {
                 selectedIndex = index;
             }
         });
+
+        return { allCommandBarLinks, selectedIndex };
+    };
+
+    useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
+        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
+        if (!itemsAndIndex) return;
+        const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
 
         const newIndex = selectedIndex + 1;
         if (newIndex >= allCommandBarLinks.length) return;
@@ -220,16 +228,9 @@ export const CommandBar = () => {
         (allCommandBarLinks[newIndex] as HTMLElement).focus();
     });
     useKeyboardShortcut({ key: 'ArrowUp', preventDefault: true }, () => {
-        const allCommandBarLinks =
-            searchContainerRef.current?.querySelectorAll('ul > a');
-        if (!allCommandBarLinks || allCommandBarLinks.length === 0) return;
-
-        let selectedIndex = -1;
-        allCommandBarLinks.forEach((link, index) => {
-            if (link === document.activeElement) {
-                selectedIndex = index;
-            }
-        });
+        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
+        if (!itemsAndIndex) return;
+        const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
 
         const newIndex = selectedIndex - 1;
 

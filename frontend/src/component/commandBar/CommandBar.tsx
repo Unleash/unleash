@@ -215,6 +215,7 @@ export const CommandBar = () => {
         });
 
         const newIndex = selectedIndex + 1;
+        if (newIndex >= allCommandBarLinks.length) return;
 
         (allCommandBarLinks[newIndex] as HTMLElement).focus();
     });

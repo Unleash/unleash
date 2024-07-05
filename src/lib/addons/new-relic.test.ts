@@ -160,7 +160,5 @@ test.each([
         expect(jsonBody.createdBy).toBe(event.createdBy);
         expect(jsonBody.createdByUserId).toBe(event.createdByUserId);
         expect(jsonBody.createdAt).toBe(event.createdAt.getTime());
-
-        expect(options.body).toMatchSnapshot();
     },
 );

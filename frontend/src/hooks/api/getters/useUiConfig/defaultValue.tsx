@@ -43,5 +43,6 @@ export const defaultValue: IUiConfig = {
         projects: 500,
         segments: 300,
         apiTokens: 2000,
+        featureFlags: 5000,
     },
 };

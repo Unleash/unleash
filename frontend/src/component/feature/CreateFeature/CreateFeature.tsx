@@ -52,25 +52,25 @@ const useFlagLimits = (
     projectFlags: { limit?: number; count: number },
 ) => {
     const {
-        limitReached: globalLimitReached,
+        limitReached: globalFlagLimitReached,
         limitMessage: globalLimitMessage,
     } = useGlobalFlagLimit(globalFlags.limit, globalFlags.count);
 
-    const projectLimitReached = isProjectFeatureLimitReached(
+    const projectFlagLimitReached = isProjectFeatureLimitReached(
         projectFlags.limit,
         projectFlags.count,
     );
 
-    const limitMessage = globalLimitReached
+    const limitMessage = globalFlagLimitReached
         ? globalLimitMessage
-        : projectLimitReached
+        : projectFlagLimitReached
           ? `You have reached the project limit of ${projectFlags.limit} feature flags.`
           : undefined;
 
     return {
         limitMessage,
-        globalLimitReached,
-        projectLimitReached,
+        globalFlagLimitReached,
+        projectFlagLimitReached,
     };
 };
 
@@ -104,7 +104,7 @@ const CreateFeature = () => {
     const { total: totalFlags, loading: loadingTotalFlagCount } =
         useGlobalFeatureSearch();
 
-    const { globalLimitReached, projectLimitReached, limitMessage } =
+    const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
         useFlagLimits(
             {
                 limit: uiConfig.resourceLimits.featureFlags,
@@ -165,7 +165,7 @@ const CreateFeature = () => {
             formatApiCode={formatApiCode}
         >
             <ConditionallyRender
-                condition={projectLimitReached}
+                condition={projectFlagLimitReached}
                 show={
                     <StyledAlert severity='error'>
                         <strong>Feature flag project limit reached. </strong> To
@@ -199,8 +199,8 @@ const CreateFeature = () => {
                     name='feature flag'
                     disabled={
                         loadingTotalFlagCount ||
-                        globalLimitReached ||
-                        projectLimitReached
+                        globalFlagLimitReached ||
+                        projectFlagLimitReached
                     }
                     permission={CREATE_FEATURE}
                     projectId={project}

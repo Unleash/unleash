@@ -49,27 +49,31 @@ export const DeleteProject = ({
                 .
             </p>
             <ConditionallyRender
-                condition={featureCount > 0 || actionsCount > 0}
+                condition={featureCount > 0}
                 show={
-                    <>
-                        <p>
-                            Currently there are{' '}
-                            <strong>{featureCount} feature flags active</strong>
-                        </p>
-                        <ConditionallyRender
-                            condition={
-                                isEnterprise() && automatedActionsEnabled
-                            }
-                            show={
-                                <p>
-                                    Currently there are{' '}
-                                    <strong>
-                                        {actionsCount} enabled actions
-                                    </strong>
-                                </p>
-                            }
-                        />
-                    </>
+                    <p>
+                        Currently there {featureCount <= 1 ? 'is' : 'are'}{' '}
+                        <strong>
+                            {featureCount} active feature{' '}
+                            {featureCount === 1 ? 'flag' : 'flags'}.
+                        </strong>
+                    </p>
+                }
+            />
+            <ConditionallyRender
+                condition={
+                    isEnterprise() &&
+                    automatedActionsEnabled &&
+                    actionsCount > 0
+                }
+                show={
+                    <p>
+                        Currently there {actionsCount <= 1 ? 'is' : 'are'}{' '}
+                        <strong>
+                            {actionsCount} enabled{' '}
+                            {actionsCount === 1 ? 'action' : 'actions'}.
+                        </strong>
+                    </p>
                 }
             />
             <p>

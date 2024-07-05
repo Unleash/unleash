@@ -69,13 +69,13 @@ const ButtonItemIcon = ({
 };
 
 export const RecentlyVisitedPathButton = ({
+    keyName,
     path,
-    key,
     name,
     onClick,
 }: {
     path: string;
-    key: string;
+    keyName: string;
     name: string;
     onClick: () => void;
 }) => {
@@ -95,7 +95,7 @@ export const RecentlyVisitedPathButton = ({
 
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={path}
@@ -116,11 +116,11 @@ export const RecentlyVisitedPathButton = ({
 
 export const RecentlyVisitedProjectButton = ({
     projectId,
-    key,
+    keyName,
     onClick,
 }: {
     projectId: string;
-    key: string;
+    keyName: string;
     onClick: () => void;
 }) => {
     const { trackEvent } = usePlausibleTracker();
@@ -141,7 +141,7 @@ export const RecentlyVisitedProjectButton = ({
     if (projectDeleted) return null;
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={`/projects/${projectId}`}
@@ -161,12 +161,12 @@ export const RecentlyVisitedProjectButton = ({
 };
 
 export const RecentlyVisitedFeatureButton = ({
-    key,
+    keyName,
     projectId,
     featureId,
     onClick,
 }: {
-    key: string;
+    keyName: string;
     projectId: string;
     featureId: string;
     onClick: () => void;
@@ -185,7 +185,7 @@ export const RecentlyVisitedFeatureButton = ({
     };
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={`/projects/${projectId}/features/${featureId}`}

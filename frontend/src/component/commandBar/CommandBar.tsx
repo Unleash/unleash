@@ -39,7 +39,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     borderRadius: 0,
     borderBottomLeftRadius: theme.spacing(1),
     borderBottomRightRadius: theme.spacing(1),
-    boxShadow: '0px 8px 20px rgba(33, 33, 33, 0.15)',
+    boxShadow: theme.shadows[2],
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     wordBreak: 'break-word',

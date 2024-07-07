@@ -564,22 +564,26 @@ export default class ProjectService {
             auditUser,
         );
 
-        const allTokens = await this.apiTokenStore.getAll();
-        const projectTokens = allTokens.filter(
-            (token) =>
-                (token.projects &&
-                    token.projects.length === 1 &&
-                    token.projects[0] === id) ||
-                token.project === id,
-        );
+        if (this.flagResolver.isEnabled('cleanApiTokenWhenOrphaned')) {
+            const allTokens = await this.apiTokenStore.getAll();
+            const projectTokens = allTokens.filter(
+                (token) =>
+                    (token.projects &&
+                        token.projects.length === 1 &&
+                        token.projects[0] === id) ||
+                    token.project === id,
+            );
 
-        await this.projectStore.delete(id);
+            await this.projectStore.delete(id);
 
-        await Promise.all(
-            projectTokens.map((token) =>
-                this.apiTokenStore.delete(token.secret),
-            ),
-        );
+            await Promise.all(
+                projectTokens.map((token) =>
+                    this.apiTokenStore.delete(token.secret),
+                ),
+            );
+        } else {
+            await this.projectStore.delete(id);
+        }
 
         await this.eventService.storeEvent(
             new ProjectDeletedEvent({

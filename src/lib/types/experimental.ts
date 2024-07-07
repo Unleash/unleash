@@ -63,7 +63,8 @@ export type IFlagKey =
     | 'flagCreator'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
-    | 'extendedMetrics';
+    | 'extendedMetrics'
+    | 'cleanApiTokenWhenOrphaned';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -302,6 +303,10 @@ const flags: IFlags = {
     ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
+        false,
+    ),
+    cleanApiTokenWhenOrphaned: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CLEAN_API_TOKEN_WHEN_ORPHANED,
         false,
     ),
 };

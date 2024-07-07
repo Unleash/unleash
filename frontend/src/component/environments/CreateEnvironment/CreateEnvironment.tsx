@@ -16,10 +16,13 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { Limit } from 'component/common/Limit/Limit';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const environmentLimit = uiConfig.resourceLimits.environments;
     const navigate = useNavigate();
     const { environments } = useEnvironments();
@@ -71,7 +74,7 @@ const CreateEnvironment = () => {
 
     return (
         <ConditionallyRender
-            condition={canCreateMoreEnvs}
+            condition={resourceLimitsEnabled || canCreateMoreEnvs}
             show={
                 <FormTemplate
                     loading={loading}
@@ -101,8 +104,24 @@ const CreateEnvironment = () => {
                         setType={setType}
                         mode='Create'
                         clearErrors={clearErrors}
+                        Limit={
+                            <ConditionallyRender
+                                condition={resourceLimitsEnabled}
+                                show={
+                                    <Limit
+                                        name='environments'
+                                        limit={environmentLimit}
+                                        currentValue={environments.length}
+                                    />
+                                }
+                            />
+                        }
                     >
-                        <CreateButton name='environment' permission={ADMIN} />
+                        <CreateButton
+                            name='environment'
+                            permission={ADMIN}
+                            disabled={!canCreateMoreEnvs}
+                        />
                     </EnvironmentForm>
                 </FormTemplate>
             }

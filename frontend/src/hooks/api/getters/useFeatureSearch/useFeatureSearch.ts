@@ -26,7 +26,7 @@ const fallbackData: SearchFeaturesSchema = {
 };
 
 const SWR_CACHE_SIZE = 10;
-const PREFIX_KEY = 'api/admin/search/features?';
+const PATH = 'api/admin/search/features?';
 
 const createFeatureSearch = () => {
     const internalCache: InternalCache = {};
@@ -55,17 +55,19 @@ const createFeatureSearch = () => {
     return (
         params: SearchFeaturesParams,
         options: SWRConfiguration = {},
+        cachePrefix: string = '',
     ): UseFeatureSearchOutput => {
         const { KEY, fetcher } = getFeatureSearchFetcher(params);
+        const swrKey = `${cachePrefix}${KEY}`;
         const cacheId = params.project || '';
-        useClearSWRCache(KEY, PREFIX_KEY, SWR_CACHE_SIZE);
+        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
 
         useEffect(() => {
             initCache(params.project || '');
         }, []);
 
         const { data, error, mutate, isLoading } = useSWR<SearchFeaturesSchema>(
-            KEY,
+            swrKey,
             fetcher,
             options,
         );
@@ -106,7 +108,7 @@ const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
                 .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
         ),
     ).toString();
-    const KEY = `${PREFIX_KEY}${urlSearchParams}`;
+    const KEY = `${PATH}${urlSearchParams}`;
     const fetcher = () => {
         const path = formatApiPath(KEY);
         return fetch(path, {

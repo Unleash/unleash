@@ -239,40 +239,47 @@ test('Should collect metrics for database', async () => {
 
 test('Should collect metrics for client sdk versions', async () => {
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-java:5.0.0',
+        sdkName: 'unleash-client-java',
+        sdkVersion: '5.0.0',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-java:5.0.0',
+        sdkName: 'unleash-client-java',
+        sdkVersion: '5.0.0',
     });
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-java:5.0.0',
+        sdkName: 'unleash-client-java',
+        sdkVersion: '5.0.0',
     });
     const metrics = await prometheusRegister.getSingleMetricAsString(
         'client_sdk_versions',
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 3/,
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0"\} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
-        sdkVersion: 'unleash-client-node:3.2.5',
+        sdkName: 'unleash-client-node',
+        sdkVersion: '3.2.5',
     });
     const newmetrics = await prometheusRegister.getSingleMetricAsString(
         'client_sdk_versions',
     );
     expect(newmetrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\} 4/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 4/,
     );
 });
 

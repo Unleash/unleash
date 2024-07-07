@@ -36,6 +36,25 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { Limit } from 'component/common/Limit/Limit';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+
+const useStrategyLimit = (strategyCount: number) => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const { uiConfig } = useUiConfig();
+    const featureEnvironmentStrategiesLimit =
+        uiConfig.resourceLimits?.featureEnvironmentStrategies || 100;
+    const limitReached =
+        resourceLimitsEnabled &&
+        strategyCount >= featureEnvironmentStrategiesLimit;
+
+    return {
+        resourceLimitsEnabled,
+        limit: featureEnvironmentStrategiesLimit,
+        limitReached,
+    };
+};
 
 export const FeatureStrategyCreate = () => {
     const [tab, setTab] = useState(0);
@@ -70,6 +89,12 @@ export const FeatureStrategyCreate = () => {
     const navigate = useNavigate();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const featureEnvironment = feature?.environments.find(
+        (featureEnvironment) => featureEnvironment.name === environmentId,
+    );
+    const strategyCount = featureEnvironment?.strategies.length || 0;
+    const { limit, limitReached, resourceLimitsEnabled } =
+        useStrategyLimit(strategyCount);
     const ref = useRef<IFeatureToggle>(feature);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
@@ -221,6 +246,20 @@ export const FeatureStrategyCreate = () => {
                         editable
                     />
                 }
+                Limit={
+                    <ConditionallyRender
+                        condition={resourceLimitsEnabled}
+                        show={
+                            <Limit
+                                name='strategies in this environment'
+                                shortName='strategies'
+                                currentValue={strategyCount}
+                                limit={limit}
+                            />
+                        }
+                    />
+                }
+                disabled={limitReached}
             />
             {staleDataNotification}
         </FormTemplate>

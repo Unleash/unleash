@@ -100,6 +100,7 @@ exports[`should create default config 1`] = `
       "enableLicenseChecker": false,
       "encryptEmails": false,
       "estimateTrafficDataCost": false,
+      "extendedMetrics": false,
       "extendedUsageMetrics": false,
       "featureLifecycle": false,
       "featureSearchFeedback": {
@@ -200,8 +201,10 @@ exports[`should create default config 1`] = `
     "constraintValues": 250,
     "environments": 50,
     "featureEnvironmentStrategies": 30,
+    "featureFlags": 5000,
     "projects": 500,
     "segmentValues": 1000,
+    "segments": 300,
     "signalEndpoints": 5,
     "signalTokensPerEndpoint": 5,
     "strategySegments": 5,

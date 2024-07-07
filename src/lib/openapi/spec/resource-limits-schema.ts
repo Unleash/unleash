@@ -17,6 +17,9 @@ export const resourceLimitsSchema = {
         'constraintValues',
         'environments',
         'projects',
+        'apiTokens',
+        'segments',
+        'featureFlags',
     ],
     additionalProperties: false,
     properties: {
@@ -95,6 +98,18 @@ export const resourceLimitsSchema = {
             minimum: 1,
             example: 500,
             description: 'The maximum number of projects allowed.',
+        },
+        segments: {
+            type: 'integer',
+            example: 300,
+            description: 'The maximum number of segments allowed.',
+        },
+        featureFlags: {
+            type: 'integer',
+            minimum: 1,
+            example: 5000,
+            description:
+                'The maximum number of feature flags you can have at the same time. Archived flags do not count towards this limit.',
         },
     },
     components: {},

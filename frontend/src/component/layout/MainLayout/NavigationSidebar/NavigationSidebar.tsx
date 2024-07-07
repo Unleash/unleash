@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import { type FC, useState } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import { useNavigationMode } from './useNavigationMode';
 import { ShowAdmin, ShowHide } from './ShowHide';
 import { useRoutes } from './useRoutes';
@@ -15,6 +15,7 @@ import {
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
+import { NewInUnleash } from './NewInUnleash/NewInUnleash';
 
 export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     onClick,
@@ -23,6 +24,7 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
 
     return (
         <>
+            <NewInUnleash onItemClick={onClick} />
             <PrimaryNavigationList mode='full' onClick={onClick} />
             <SecondaryNavigationList
                 routes={routes.mainNavRoutes}
@@ -65,8 +67,13 @@ export const NavigationSidebar = () => {
     const { lastViewed: lastViewedFlags } = useLastViewedFlags();
     const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
 
+    useEffect(() => {
+        setActiveItem(initialPathname);
+    }, [initialPathname]);
+
     return (
         <StretchContainer>
+            <NewInUnleash mode={mode} onMiniModeClick={() => setMode('full')} />
             <PrimaryNavigationList
                 mode={mode}
                 onClick={setActiveItem}

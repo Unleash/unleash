@@ -219,5 +219,5 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
         dependentFeaturesService,
         featureLifecycleReadModel,
     );
-    return { featureToggleService, featureToggleStore };
+    return { featureToggleService, featureToggleStore, projectStore };
 };

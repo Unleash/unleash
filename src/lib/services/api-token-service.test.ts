@@ -1,10 +1,6 @@
-import { ApiTokenService } from './api-token-service';
 import { createTestConfig } from '../../test/config/test-config';
 import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
 import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
-import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
-import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
-import FakeEventStore from '../../test/fixtures/fake-event-store';
 import {
     ADMIN_TOKEN_USER,
     API_TOKEN_CREATED,
@@ -13,10 +9,8 @@ import {
     TEST_AUDIT_USER,
 } from '../types';
 import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
-import EventService from '../features/events/event-service';
-import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
-import { createFakeEventsService } from '../../lib/features';
 import { extractAuditInfoFromUser } from '../util';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
 
 test('Should init api token', async () => {
     const token = {
@@ -37,19 +31,10 @@ test('Should init api token', async () => {
             },
         },
     });
-    const apiTokenStore = new FakeApiTokenStore();
-    const environmentStore = new FakeEnvironmentStore();
+    const { apiTokenStore } = createFakeApiTokenService(config);
     const insertCalled = new Promise((resolve) => {
         apiTokenStore.on('insert', resolve);
     });
-
-    const eventService = createFakeEventsService(config);
-
-    new ApiTokenService(
-        { apiTokenStore, environmentStore },
-        config,
-        eventService,
-    );
 
     await insertCalled;
 
@@ -69,30 +54,14 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     };
 
     const config: IUnleashConfig = createTestConfig({});
-    const apiTokenStore = new FakeApiTokenStore();
-    const environmentStore = new FakeEnvironmentStore();
-
-    const eventService = new EventService(
-        {
-            eventStore: new FakeEventStore(),
-            featureTagStore: new FakeFeatureTagStore(),
-        },
-        config,
-    );
-
+    const { environmentStore, apiTokenService } =
+        createFakeApiTokenService(config);
     await environmentStore.create({
         name: 'default',
         enabled: true,
-        protected: true,
         type: 'test',
         sortOrder: 1,
     });
-
-    const apiTokenService = new ApiTokenService(
-        { apiTokenStore, environmentStore },
-        config,
-        eventService,
-    );
 
     await apiTokenService.createApiTokenWithProjects(token);
     await apiTokenService.fetchActiveTokens();
@@ -111,30 +80,16 @@ test('Api token operations should all have events attached', async () => {
     };
 
     const config: IUnleashConfig = createTestConfig({});
-    const apiTokenStore = new FakeApiTokenStore();
-    const environmentStore = new FakeEnvironmentStore();
 
-    const eventService = new EventService(
-        {
-            eventStore: new FakeEventStore(),
-            featureTagStore: new FakeFeatureTagStore(),
-        },
-        config,
-    );
-
+    const { environmentStore, apiTokenService, eventService } =
+        createFakeApiTokenService(config);
     await environmentStore.create({
         name: 'default',
         enabled: true,
-        protected: true,
         type: 'test',
         sortOrder: 1,
     });
 
-    const apiTokenService = new ApiTokenService(
-        { apiTokenStore, environmentStore },
-        config,
-        eventService,
-    );
     const saved = await apiTokenService.createApiTokenWithProjects(token);
     const newExpiry = addDays(new Date(), 30);
     await apiTokenService.updateExpiry(
@@ -171,17 +126,8 @@ test('Api token operations should all have events attached', async () => {
 
 test('getUserForToken should get a user with admin token user id and token name', async () => {
     const config = createTestConfig();
-    const apiTokenStore = new FakeApiTokenStore();
-    const environmentStore = new FakeEnvironmentStore();
-
-    const eventService = createFakeEventsService(config);
-
-    const tokenService = new ApiTokenService(
-        { apiTokenStore, environmentStore },
-        config,
-        eventService,
-    );
-    const token = await tokenService.createApiTokenWithProjects(
+    const { apiTokenService } = createFakeApiTokenService(config);
+    const token = await apiTokenService.createApiTokenWithProjects(
         {
             environment: '*',
             projects: ['*'],
@@ -191,7 +137,7 @@ test('getUserForToken should get a user with admin token user id and token name'
         extractAuditInfoFromUser(ADMIN_TOKEN_USER as IUser),
     );
 
-    const user = await tokenService.getUserForToken(token.secret);
+    const user = await apiTokenService.getUserForToken(token.secret);
     expect(user).toBeDefined();
     expect(user!.username).toBe(token.tokenName);
     expect(user!.internalAdminTokenUserId).toBe(ADMIN_TOKEN_USER.id);
@@ -209,14 +155,8 @@ describe('API token getTokenWithCache', () => {
 
     const setup = (options?: IUnleashOptions) => {
         const config: IUnleashConfig = createTestConfig(options);
-        const apiTokenStore = new FakeApiTokenStore();
-        const environmentStore = new FakeEnvironmentStore();
-
-        const apiTokenService = new ApiTokenService(
-            { apiTokenStore, environmentStore },
-            config,
-            createFakeEventsService(config),
-        );
+        const { apiTokenService, apiTokenStore } =
+            createFakeApiTokenService(config);
         return {
             apiTokenService,
             apiTokenStore,

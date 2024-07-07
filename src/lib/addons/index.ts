@@ -2,6 +2,7 @@ import Webhook from './webhook';
 import SlackAddon from './slack';
 import TeamsAddon from './teams';
 import DatadogAddon from './datadog';
+import NewRelicAddon from './new-relic';
 import type Addon from './addon';
 import type { LogProvider } from '../logger';
 import SlackAppAddon from './slack-app';
@@ -22,6 +23,7 @@ export const getAddons: (args: {
         new SlackAppAddon({ getLogger, unleashUrl }),
         new TeamsAddon({ getLogger, unleashUrl }),
         new DatadogAddon({ getLogger, unleashUrl }),
+        new NewRelicAddon({ getLogger, unleashUrl }),
     ];
 
     return addons.reduce((map, addon) => {

@@ -14,6 +14,8 @@ import {
     IconRenderer,
     StyledProjectIcon,
 } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import InsightsIcon from '@mui/icons-material/Insights';
+import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -48,14 +50,38 @@ export interface CommandResultGroupItem {
     description?: string | null;
 }
 
-export const RecentlyVisitedPathButton = ({
+const ButtonItemIcon = ({
     path,
-    key,
+}: {
+    path: string;
+}) => {
+    if (path === '/projects') {
+        return <StyledProjectIcon />;
+    }
+    if (path === '/playground') {
+        return <PlaygroundIcon />;
+    }
+    if (path === '/insights') {
+        return <InsightsIcon />;
+    }
+
+    return <IconRenderer path={path} />;
+};
+
+export const RecentlyVisitedPathButton = ({
+    keyName,
+    path,
     name,
-}: { path: string; key: string; name: string }) => {
+    onClick,
+}: {
+    path: string;
+    keyName: string;
+    name: string;
+    onClick: () => void;
+}) => {
     const { trackEvent } = usePlausibleTracker();
 
-    const onClick = () => {
+    const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -64,23 +90,20 @@ export const RecentlyVisitedPathButton = ({
                 pageType: name,
             },
         });
+        onClick();
     };
 
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={path}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
-                <ConditionallyRender
-                    condition={path === '/projects'}
-                    show={<StyledProjectIcon />}
-                    elseShow={<IconRenderer path={path} />}
-                />
+                <ButtonItemIcon path={path} />
             </StyledListItemIcon>
             <StyledListItemText>
                 <StyledButtonTypography color='textPrimary'>
@@ -93,13 +116,18 @@ export const RecentlyVisitedPathButton = ({
 
 export const RecentlyVisitedProjectButton = ({
     projectId,
-    key,
-}: { projectId: string; key: string }) => {
+    keyName,
+    onClick,
+}: {
+    projectId: string;
+    keyName: string;
+    onClick: () => void;
+}) => {
     const { trackEvent } = usePlausibleTracker();
     const { project, loading } = useProjectOverview(projectId);
     const projectDeleted = !project.name && !loading;
 
-    const onClick = () => {
+    const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,
@@ -107,17 +135,18 @@ export const RecentlyVisitedProjectButton = ({
                 eventTarget: 'Projects',
             },
         });
+        onClick();
     };
 
     if (projectDeleted) return null;
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={`/projects/${projectId}`}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
                 <StyledProjectIcon />
@@ -132,15 +161,17 @@ export const RecentlyVisitedProjectButton = ({
 };
 
 export const RecentlyVisitedFeatureButton = ({
-    key,
+    keyName,
     projectId,
     featureId,
+    onClick,
 }: {
-    key: string;
+    keyName: string;
     projectId: string;
     featureId: string;
+    onClick: () => void;
 }) => {
-    const onClick = () => {
+    const onItemClick = () => {
         const { trackEvent } = usePlausibleTracker();
 
         trackEvent('command-bar', {
@@ -150,15 +181,16 @@ export const RecentlyVisitedFeatureButton = ({
                 eventTarget: 'Flags',
             },
         });
+        onClick();
     };
     return (
         <ListItemButton
-            key={key}
+            key={keyName}
             dense={true}
             component={Link}
             to={`/projects/${projectId}/features/${featureId}`}
             sx={listItemButtonStyle}
-            onClick={onClick}
+            onClick={onItemClick}
         >
             <StyledListItemIcon>
                 <Icon>{'flag'}</Icon>

@@ -38,7 +38,6 @@ const pages = [
     '/segments',
     '/tag-types',
     '/applications',
-    '/strategies',
 ];
 
 export const CommandPageSuggestions = ({

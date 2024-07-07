@@ -12,7 +12,7 @@ import type {
 import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
 import type { IStrategyStore } from '../../../types/stores/strategy-store';
 import type { IClientInstanceStore } from '../../../types/stores/client-instance-store';
-import type { IClientApp } from '../../../types/model';
+import type { IClientApp, ISdkHeartbeat } from '../../../types/model';
 import { clientRegisterSchema } from '../shared/schema';
 
 import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
@@ -105,7 +105,22 @@ export default class ClientInstanceService {
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
         this.seenClients[this.clientKey(value)] = value;
-        this.eventStore.emit(CLIENT_REGISTER, value);
+
+        if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {
+            const [sdkName, sdkVersion] = value.sdkVersion.split(':');
+            const heartbeatEvent: ISdkHeartbeat = {
+                sdkName,
+                sdkVersion,
+                metadata: {
+                    platformName: data.platformName,
+                    platformVersion: data.platformVersion,
+                    yggdrasilVersion: data.yggdrasilVersion,
+                    specVersion: data.specVersion,
+                },
+            };
+
+            this.eventStore.emit(CLIENT_REGISTER, heartbeatEvent);
+        }
     }
 
     async announceUnannounced(): Promise<void> {

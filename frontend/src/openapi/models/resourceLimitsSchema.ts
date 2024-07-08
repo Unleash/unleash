@@ -30,6 +30,8 @@ export interface ResourceLimitsSchema {
     environments: number;
     /** The maximum number of values for a single constraint. */
     constraintValues: number;
+    /** The maximum number of constraints for a single strategy. */
+    constraints: number;
     /** The maximum number of projects allowed. */
     projects: number;
     /** The maximum number of segments allowed. */

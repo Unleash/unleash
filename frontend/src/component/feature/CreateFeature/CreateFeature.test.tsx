@@ -45,10 +45,10 @@ describe('button states', () => {
             },
         );
 
-        await waitFor(async () => {
-            const button = await screen.findByRole('button', {
-                name: /create feature flag/i,
-            });
+        const button = await screen.findByRole('button', {
+            name: /create feature flag/i,
+        });
+        await waitFor(() => {
             expect(button).not.toBeDisabled();
         });
     });
@@ -69,10 +69,10 @@ describe('button states', () => {
             },
         );
 
-        await waitFor(async () => {
-            const button = await screen.findByRole('button', {
-                name: /create feature flag/i,
-            });
+        const button = await screen.findByRole('button', {
+            name: /create feature flag/i,
+        });
+        await waitFor(() => {
             expect(button).toBeDisabled();
         });
     });
@@ -94,11 +94,7 @@ describe('limit component', () => {
             },
         );
 
-        await waitFor(async () => {
-            await screen.findByText(
-                'You have reached the limit for feature flags',
-            );
-        });
+        await screen.findByText('You have reached the limit for feature flags');
     });
 
     test('should show approaching limit info', async () => {
@@ -116,10 +112,6 @@ describe('limit component', () => {
             },
         );
 
-        await waitFor(async () => {
-            await screen.findByText(
-                'You are nearing the limit for feature flags',
-            );
-        });
+        await screen.findByText('You are nearing the limit for feature flags');
     });
 });

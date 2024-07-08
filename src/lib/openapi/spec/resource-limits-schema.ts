@@ -20,6 +20,7 @@ export const resourceLimitsSchema = {
         'apiTokens',
         'segments',
         'featureFlags',
+        'constraints',
     ],
     additionalProperties: false,
     properties: {
@@ -79,6 +80,12 @@ export const resourceLimitsSchema = {
             example: 250,
             description:
                 'The maximum number of values for a single constraint.',
+        },
+        constraints: {
+            type: 'integer',
+            example: 30,
+            description:
+                'The maximum number of constraints in a single strategy.',
         },
         environments: {
             type: 'integer',

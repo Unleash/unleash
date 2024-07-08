@@ -2,13 +2,13 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
     SortableTableHeader,
-    TableCell,
-    TablePlaceholder,
     Table,
     TableBody,
+    TableCell,
+    TablePlaceholder,
     TableRow,
 } from 'component/common/Table';
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useMediaQuery } from '@mui/material';
@@ -29,21 +29,6 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
-
-const useSegmentLimit = (segmentsLimit: number, segmentsCount: number) => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const limitReached =
-        resourceLimitsEnabled && segmentsCount >= segmentsLimit;
-
-    return {
-        limitReached,
-        limitMessage: limitReached
-            ? `Limit of ${segmentsCount} segments reached`
-            : undefined,
-    };
-};
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
@@ -53,17 +38,6 @@ export const SegmentTable = () => {
         sortBy: [{ id: 'createdAt' }],
         hiddenColumns: ['description'],
     });
-    const { uiConfig, loading: loadingConfig } = useUiConfig();
-    const segmentLimit = uiConfig.resourceLimits.segments;
-    const segmentCount = segments?.length || 0;
-
-    const { limitReached, limitMessage } = useSegmentLimit(
-        segmentLimit,
-        segmentCount,
-    );
-
-    const createSegmentDisabled =
-        loadingSegments || loadingConfig || limitReached;
 
     const data = useMemo(() => {
         if (!segments) {
@@ -138,10 +112,7 @@ export const SegmentTable = () => {
                                 onChange={setGlobalFilter}
                             />
                             <PageHeader.Divider />
-                            <CreateSegmentButton
-                                disabled={createSegmentDisabled}
-                                tooltip={limitMessage}
-                            />
+                            <CreateSegmentButton />
                         </>
                     }
                 />

@@ -663,6 +663,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
                 options?.resourceLimits?.constraintValues || 250,
             ),
         ),
+        constraints: Math.max(
+            0,
+            parseEnvVarNumber(process.env.UNLEASH_CONSTRAINTS_LIMIT, 30),
+        ),
         environments: parseEnvVarNumber(
             process.env.UNLEASH_ENVIRONMENTS_LIMIT,
             50,

@@ -119,3 +119,20 @@ test('should set values', async () => {
     expect(errors).toEqual(['']);
     expect(values).toEqual(['1', '2', '3']);
 });
+
+test('should show limit reached indicator', async () => {
+    setupApi();
+    render(
+        <FreeTextInput
+            error=''
+            values={['1', '2', '3']}
+            setValues={(newValues) => {}}
+            setError={(newError: string) => {}}
+            removeValue={() => {}}
+        />,
+    );
+
+    await screen.findByText(
+        'You have reached the limit for single constraint values',
+    );
+});

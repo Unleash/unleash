@@ -100,7 +100,9 @@ const styledTypography = (theme: Theme) => ({
 });
 
 const LimitContainer = styled(Box)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
+    '&:has(*)': {
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const FeatureForm: React.FC<IFeatureToggleForm> = ({

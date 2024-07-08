@@ -206,7 +206,7 @@ const CreateFeature = () => {
                             <Limit
                                 name='feature flags'
                                 limit={uiConfig.resourceLimits.featureFlags}
-                                currentValue={5_000 ?? totalFlags ?? 0}
+                                currentValue={totalFlags ?? 0}
                             />
                         }
                     />

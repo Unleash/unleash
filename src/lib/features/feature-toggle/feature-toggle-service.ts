@@ -387,19 +387,24 @@ class FeatureToggleService {
         }
     }
 
-    validateConstraintValuesLimit(updatedConstrains: IConstraint[]) {
+    validateConstraintsLimit(updatedConstrains: IConstraint[]) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
 
-        const limit = this.resourceLimits.constraintValues;
+        const constraintsLimit = this.resourceLimits.constraints;
+        if (updatedConstrains.length > constraintsLimit) {
+            throw new ExceedsLimitError(`constraints`, constraintsLimit);
+        }
+
+        const constraintValuesLimit = this.resourceLimits.constraintValues;
         const constraintOverLimit = updatedConstrains.find(
             (constraint) =>
                 Array.isArray(constraint.values) &&
-                constraint.values?.length > limit,
+                constraint.values?.length > constraintValuesLimit,
         );
         if (constraintOverLimit) {
             throw new ExceedsLimitError(
                 `content values for ${constraintOverLimit.contextName}`,
-                limit,
+                constraintValuesLimit,
             );
         }
     }
@@ -649,7 +654,7 @@ class FeatureToggleService {
             strategyConfig.constraints &&
             strategyConfig.constraints.length > 0
         ) {
-            this.validateConstraintValuesLimit(strategyConfig.constraints);
+            this.validateConstraintsLimit(strategyConfig.constraints);
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
             );
@@ -808,7 +813,7 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
-                this.validateConstraintValuesLimit(updates.constraints);
+                this.validateConstraintsLimit(updates.constraints);
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );

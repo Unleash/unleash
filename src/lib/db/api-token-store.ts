@@ -5,7 +5,7 @@ import type { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import type { IApiTokenStore } from '../types/stores/api-token-store';
 import {
-    type ApiTokenType,
+    ApiTokenType,
     type IApiToken,
     type IApiTokenCreate,
     isAllProjects,
@@ -13,6 +13,7 @@ import {
 import { ALL_PROJECTS } from '../util/constants';
 import type { Db } from './db';
 import { inTransaction } from './transaction';
+import type { IFlagResolver } from '../types';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';
@@ -35,33 +36,44 @@ interface ITokenRow extends ITokenInsert {
     project: string;
 }
 
-const tokenRowReducer = (acc, tokenRow) => {
-    const { project, ...token } = tokenRow;
-    if (!acc[tokenRow.secret]) {
-        acc[tokenRow.secret] = {
-            secret: token.secret,
-            tokenName: token.token_name ? token.token_name : token.username,
-            type: token.type.toLowerCase(),
-            project: ALL,
-            projects: [ALL],
-            environment: token.environment ? token.environment : ALL,
-            expiresAt: token.expires_at,
-            createdAt: token.created_at,
-            alias: token.alias,
-            seenAt: token.seen_at,
-            username: token.token_name ? token.token_name : token.username,
-        };
-    }
-    const currentToken = acc[tokenRow.secret];
-    if (tokenRow.project) {
-        if (isAllProjects(currentToken.projects)) {
-            currentToken.projects = [];
+const createTokenRowReducer =
+    (allowOrphanedWildcardTokens: boolean) => (acc, tokenRow) => {
+        const { project, ...token } = tokenRow;
+        if (!acc[tokenRow.secret]) {
+            if (
+                !allowOrphanedWildcardTokens &&
+                !tokenRow.project &&
+                !tokenRow.secret.startsWith('*:') &&
+                (tokenRow.type === ApiTokenType.CLIENT ||
+                    tokenRow.type === ApiTokenType.FRONTEND)
+            ) {
+                return acc;
+            }
+
+            acc[tokenRow.secret] = {
+                secret: token.secret,
+                tokenName: token.token_name ? token.token_name : token.username,
+                type: token.type.toLowerCase(),
+                project: ALL,
+                projects: [ALL],
+                environment: token.environment ? token.environment : ALL,
+                expiresAt: token.expires_at,
+                createdAt: token.created_at,
+                alias: token.alias,
+                seenAt: token.seen_at,
+                username: token.token_name ? token.token_name : token.username,
+            };
         }
-        currentToken.projects.push(tokenRow.project);
-        currentToken.project = currentToken.projects.join(',');
-    }
-    return acc;
-};
+        const currentToken = acc[tokenRow.secret];
+        if (tokenRow.project) {
+            if (isAllProjects(currentToken.projects)) {
+                currentToken.projects = [];
+            }
+            currentToken.projects.push(tokenRow.project);
+            currentToken.project = currentToken.projects.join(',');
+        }
+        return acc;
+    };
 
 const toRow = (newToken: IApiTokenCreate) => ({
     username: newToken.tokenName ?? newToken.username,
@@ -74,8 +86,14 @@ const toRow = (newToken: IApiTokenCreate) => ({
     alias: newToken.alias || null,
 });
 
-const toTokens = (rows: any[]): IApiToken[] => {
-    const tokens = rows.reduce(tokenRowReducer, {});
+const toTokens = (
+    rows: any[],
+    allowOrphanedWildcardTokens: boolean,
+): IApiToken[] => {
+    const tokens = rows.reduce(
+        createTokenRowReducer(allowOrphanedWildcardTokens),
+        {},
+    );
     return Object.values(tokens);
 };
 
@@ -86,7 +104,14 @@ export class ApiTokenStore implements IApiTokenStore {
 
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private readonly flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('api-tokens.js');
         this.timer = (action: string) =>
@@ -94,6 +119,7 @@ export class ApiTokenStore implements IApiTokenStore {
                 store: 'api-tokens',
                 action,
             });
+        this.flagResolver = flagResolver;
     }
 
     async count(): Promise<number> {
@@ -120,7 +146,10 @@ export class ApiTokenStore implements IApiTokenStore {
         const stopTimer = this.timer('getAll');
         const rows = await this.makeTokenProjectQuery();
         stopTimer();
-        return toTokens(rows);
+        const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
+            'allowOrphanedWildcardTokens',
+        );
+        return toTokens(rows, allowOrphanedWildcardTokens);
     }
 
     async getAllActive(): Promise<IApiToken[]> {
@@ -129,7 +158,10 @@ export class ApiTokenStore implements IApiTokenStore {
             .where('expires_at', 'IS', null)
             .orWhere('expires_at', '>', 'now()');
         stopTimer();
-        return toTokens(rows);
+        const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
+            'allowOrphanedWildcardTokens',
+        );
+        return toTokens(rows, allowOrphanedWildcardTokens);
     }
 
     private makeTokenProjectQuery() {
@@ -200,7 +232,10 @@ export class ApiTokenStore implements IApiTokenStore {
             key,
         );
         stopTimer();
-        return toTokens(row)[0];
+        const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
+            'allowOrphanedWildcardTokens',
+        );
+        return toTokens(row, allowOrphanedWildcardTokens)[0];
     }
 
     async delete(secret: string): Promise<void> {
@@ -217,7 +252,10 @@ export class ApiTokenStore implements IApiTokenStore {
             .where({ secret })
             .returning('*');
         if (rows.length > 0) {
-            return toTokens(rows)[0];
+            const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
+                'allowOrphanedWildcardTokens',
+            );
+            return toTokens(rows, allowOrphanedWildcardTokens)[0];
         }
         throw new NotFoundError('Could not find api-token.');
     }

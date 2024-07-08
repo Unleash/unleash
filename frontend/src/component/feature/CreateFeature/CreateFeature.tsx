@@ -17,12 +17,14 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useGlobalFeatureSearch } from '../FeatureToggleList/useGlobalFeatureSearch';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-export const isFeatureLimitReached = (
+export const isProjectFeatureLimitReached = (
     featureLimit: number | null | undefined,
     currentFeatureCount: number,
 ): boolean => {
@@ -31,6 +33,47 @@ export const isFeatureLimitReached = (
         featureLimit !== undefined &&
         featureLimit <= currentFeatureCount
     );
+};
+
+const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const limitReached = resourceLimitsEnabled && flagCount >= flagLimit;
+
+    return {
+        limitReached,
+        limitMessage: limitReached
+            ? `You have reached the instance-wide limit of ${flagLimit} feature flags.`
+            : undefined,
+    };
+};
+
+type FlagLimitsProps = {
+    global: { limit: number; count: number };
+    project: { limit?: number; count: number };
+};
+
+export const useFlagLimits = ({ global, project }: FlagLimitsProps) => {
+    const {
+        limitReached: globalFlagLimitReached,
+        limitMessage: globalLimitMessage,
+    } = useGlobalFlagLimit(global.limit, global.count);
+
+    const projectFlagLimitReached = isProjectFeatureLimitReached(
+        project.limit,
+        project.count,
+    );
+
+    const limitMessage = globalFlagLimitReached
+        ? globalLimitMessage
+        : projectFlagLimitReached
+          ? `You have reached the project limit of ${project.limit} feature flags.`
+          : undefined;
+
+    return {
+        limitMessage,
+        globalFlagLimitReached,
+        projectFlagLimitReached,
+    };
 };
 
 const CreateFeature = () => {
@@ -59,6 +102,21 @@ const CreateFeature = () => {
     const { project: projectInfo } = useProjectOverview(project);
 
     const { createFeatureToggle, loading } = useFeatureApi();
+
+    const { total: totalFlags, loading: loadingTotalFlagCount } =
+        useGlobalFeatureSearch();
+
+    const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
+        useFlagLimits({
+            global: {
+                limit: uiConfig.resourceLimits.featureFlags,
+                count: totalFlags ?? 0,
+            },
+            project: {
+                limit: projectInfo.featureLimit,
+                count: featuresCount(projectInfo),
+            },
+        });
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -98,10 +156,6 @@ const CreateFeature = () => {
         navigate(GO_BACK);
     };
 
-    const featureLimitReached = isFeatureLimitReached(
-        projectInfo.featureLimit,
-        featuresCount(projectInfo),
-    );
     return (
         <FormTemplate
             loading={loading}
@@ -113,7 +167,7 @@ const CreateFeature = () => {
             formatApiCode={formatApiCode}
         >
             <ConditionallyRender
-                condition={featureLimitReached}
+                condition={projectFlagLimitReached}
                 show={
                     <StyledAlert severity='error'>
                         <strong>Feature flag project limit reached. </strong> To
@@ -145,10 +199,18 @@ const CreateFeature = () => {
             >
                 <CreateButton
                     name='feature flag'
-                    disabled={featureLimitReached}
+                    disabled={
+                        loadingTotalFlagCount ||
+                        globalFlagLimitReached ||
+                        projectFlagLimitReached
+                    }
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-testid={CF_CREATE_BTN_ID}
+                    tooltipProps={{
+                        title: limitMessage,
+                        arrow: true,
+                    }}
                 />
             </FeatureForm>
         </FormTemplate>

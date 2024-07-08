@@ -47,6 +47,50 @@ describe('Strategy limits', () => {
         );
     });
 
+    test('Should not allow to exceed constraints limit', async () => {
+        const LIMIT = 1;
+        const { featureToggleService, featureToggleStore } =
+            createFakeFeatureToggleService({
+                getLogger,
+                flagResolver: alwaysOnFlagResolver,
+                resourceLimits: {
+                    constraints: LIMIT,
+                },
+            } as unknown as IUnleashConfig);
+
+        const addStrategy = (constraints: IConstraint[]) =>
+            featureToggleService.unprotectedCreateStrategy(
+                {
+                    name: 'default',
+                    featureName: 'feature',
+                    constraints: constraints,
+                } as IStrategyConfig,
+                { projectId: 'default', featureName: 'feature' } as any,
+                {} as IAuditUser,
+            );
+        await featureToggleStore.create('default', {
+            name: 'feature',
+            createdByUserId: 1,
+        });
+
+        await expect(
+            addStrategy([
+                {
+                    values: ['1'],
+                    operator: 'IN',
+                    contextName: 'accountId',
+                },
+                {
+                    values: ['2'],
+                    operator: 'IN',
+                    contextName: 'accountId',
+                },
+            ]),
+        ).rejects.toThrow(
+            "Failed to create constraints. You can't create more than the established limit of 1",
+        );
+    });
+
     test('Should not allow to exceed constraint values limit', async () => {
         const LIMIT = 3;
         const { featureToggleService, featureToggleStore } =

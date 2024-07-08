@@ -2492,13 +2492,13 @@ test('deleting a project with archived flags should result in any remaining arch
 });
 
 test('should also delete api tokens that were only bound to deleted project', async () => {
-    const project2 = 'some';
+    const project = 'some';
     const tokenName = 'test';
 
     await projectService.createProject(
         {
-            id: project2,
-            name: 'Test Project 2',
+            id: project,
+            name: 'Test Project 1',
         },
         user,
         auditUser,
@@ -2508,18 +2508,27 @@ test('should also delete api tokens that were only bound to deleted project', as
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
-        project: project2,
+        project: project,
     });
 
-    await projectService.deleteProject(project2, user, auditUser);
+    await projectService.deleteProject(project, user, auditUser);
     const deletedToken = await apiTokenService.getToken(token.secret);
     expect(deletedToken).toBeUndefined();
 });
 
 test('should not delete project bound api tokens still bound to project', async () => {
-    const project2 = 'token-deleted-project';
-    const project3 = 'token-not-deleted-project';
+    const project1 = 'token-deleted-project';
+    const project2 = 'token-not-deleted-project';
     const tokenName = 'test';
+
+    await projectService.createProject(
+        {
+            id: project1,
+            name: 'Test Project 1',
+        },
+        user,
+        auditUser,
+    );
 
     await projectService.createProject(
         {
@@ -2530,32 +2539,32 @@ test('should not delete project bound api tokens still bound to project', async 
         auditUser,
     );
 
-    await projectService.createProject(
-        {
-            id: project3,
-            name: 'Test Project 3',
-        },
-        user,
-        auditUser,
-    );
-
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
-        projects: [project2, project3],
+        projects: [project1, project2],
     });
 
-    await projectService.deleteProject(project2, user, auditUser);
+    await projectService.deleteProject(project1, user, auditUser);
     const fetchedToken = await apiTokenService.getToken(token.secret);
     expect(fetchedToken).not.toBeUndefined();
-    expect(fetchedToken.project).toBe(project3);
+    expect(fetchedToken.project).toBe(project2);
 });
 
 test('should delete project bound api tokens when all projects they belong to are deleted', async () => {
-    const project2 = 'token-deleted-project-1';
-    const project3 = 'token-deleted-project-2';
+    const project1 = 'token-deleted-project-1';
+    const project2 = 'token-deleted-project-2';
     const tokenName = 'test';
+
+    await projectService.createProject(
+        {
+            id: project1,
+            name: 'Test Project 1',
+        },
+        user,
+        auditUser,
+    );
 
     await projectService.createProject(
         {
@@ -2566,24 +2575,15 @@ test('should delete project bound api tokens when all projects they belong to ar
         auditUser,
     );
 
-    await projectService.createProject(
-        {
-            id: project3,
-            name: 'Test Project 3',
-        },
-        user,
-        auditUser,
-    );
-
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         tokenName,
         environment: DEFAULT_ENV,
-        projects: [project2, project3],
+        projects: [project1, project2],
     });
 
+    await projectService.deleteProject(project1, user, auditUser);
     await projectService.deleteProject(project2, user, auditUser);
-    await projectService.deleteProject(project3, user, auditUser);
     const fetchedToken = await apiTokenService.getToken(token.secret);
     expect(fetchedToken).toBeUndefined();
 });

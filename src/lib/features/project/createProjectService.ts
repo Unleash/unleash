@@ -111,7 +111,12 @@ export const createProjectService = (
         eventService,
     );
 
-    const apiTokenStore = new ApiTokenStore(db, eventBus, getLogger);
+    const apiTokenStore = new ApiTokenStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 

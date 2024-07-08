@@ -10,7 +10,7 @@ import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender'
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    border: `2px solid ${theme.palette.background.application}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     width: '100%',
 }));
@@ -33,7 +33,7 @@ const Header = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
     alignItems: 'center',
     fontWeight: 'bold',
-    borderBottom: `1px solid ${theme.palette.background.application}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     padding: theme.spacing(3, 4),
     fontSize: theme.typography.h2.fontSize,
 }));
@@ -43,7 +43,7 @@ const Footer = styled(Box)(({ theme }) => ({
 }));
 
 const Main = styled(Box)(({ theme }) => ({
-    borderBottom: `1px solid ${theme.palette.background.application}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     padding: theme.spacing(3, 4),
 }));
 
@@ -68,7 +68,7 @@ export const Limit: FC<{
     currentValue: number;
     onClose?: () => void;
 }> = ({ name, shortName, limit, currentValue, onClose }) => {
-    const percentageLimit = Math.round((currentValue / limit) * 100);
+    const percentageLimit = Math.floor((currentValue / limit) * 100);
     const belowLimit = currentValue < limit;
     const threshold = 80;
 

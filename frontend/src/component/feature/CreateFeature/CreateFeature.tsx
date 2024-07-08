@@ -19,6 +19,7 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useGlobalFeatureSearch } from '../FeatureToggleList/useGlobalFeatureSearch';
+import { Limit } from 'component/common/Limit/Limit';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -105,6 +106,8 @@ const CreateFeature = () => {
 
     const { total: totalFlags, loading: loadingTotalFlagCount } =
         useGlobalFeatureSearch();
+
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
 
     const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
         useFlagLimits({
@@ -196,6 +199,18 @@ const CreateFeature = () => {
                 mode='Create'
                 clearErrors={clearErrors}
                 featureNaming={projectInfo.featureNaming}
+                Limit={
+                    <ConditionallyRender
+                        condition={resourceLimitsEnabled}
+                        show={
+                            <Limit
+                                name='feature flags'
+                                limit={uiConfig.resourceLimits.featureFlags}
+                                currentValue={5_000 ?? totalFlags ?? 0}
+                            />
+                        }
+                    />
+                }
             >
                 <CreateButton
                     name='feature flag'

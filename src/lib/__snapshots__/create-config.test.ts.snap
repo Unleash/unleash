@@ -76,6 +76,7 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "adminTokenKillSwitch": false,
+      "allowOrphanedWildcardTokens": false,
       "anonymiseEventLog": false,
       "anonymizeProjectOwners": false,
       "automatedActions": false,

@@ -79,7 +79,7 @@ test('editor users should only get client or frontend tokens', async () => {
         projects: [],
         tokenName: '',
         username: 'test',
-        secret: '1234',
+        secret: '*:environment.1234',
         type: ApiTokenType.CLIENT,
     });
 
@@ -88,7 +88,7 @@ test('editor users should only get client or frontend tokens', async () => {
         projects: [],
         tokenName: '',
         username: 'frontend',
-        secret: '12345',
+        secret: '*:environment.12345',
         type: ApiTokenType.FRONTEND,
     });
 
@@ -97,7 +97,7 @@ test('editor users should only get client or frontend tokens', async () => {
         projects: [],
         tokenName: '',
         username: 'test',
-        secret: 'sdfsdf2d',
+        secret: '*:*.sdfsdf2d',
         type: ApiTokenType.ADMIN,
     });
 
@@ -141,7 +141,7 @@ test('viewer users should not be allowed to fetch tokens', async () => {
         projects: [],
         tokenName: '',
         username: 'test',
-        secret: '1234',
+        secret: '*:environment.1234',
         type: ApiTokenType.CLIENT,
     });
 
@@ -150,7 +150,7 @@ test('viewer users should not be allowed to fetch tokens', async () => {
         projects: [],
         tokenName: '',
         username: 'test',
-        secret: 'sdfsdf2d',
+        secret: '*:*.sdfsdf2d',
         type: ApiTokenType.ADMIN,
     });
 
@@ -553,7 +553,7 @@ describe('Fine grained API token permissions', () => {
                 tokenName: '',
 
                 username: 'client',
-                secret: 'client_secret',
+                secret: '*:environment.client_secret',
                 type: ApiTokenType.CLIENT,
             });
 
@@ -562,7 +562,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'admin',
-                secret: 'sdfsdf2admin_secret',
+                secret: '*:*.sdfsdf2admin_secret',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
@@ -570,7 +570,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'frontender',
-                secret: 'sdfsdf2dfrontend_Secret',
+                secret: '*:environment:sdfsdf2dfrontend_Secret',
                 type: ApiTokenType.FRONTEND,
             });
             await request
@@ -637,7 +637,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'client',
-                secret: 'client_secret_1234',
+                secret: '*:environment.client_secret_1234',
                 type: ApiTokenType.CLIENT,
             });
 
@@ -646,7 +646,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'admin',
-                secret: 'admin_secret_1234',
+                secret: '*:*.admin_secret_1234',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
@@ -654,7 +654,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'frontender',
-                secret: 'frontend_secret_1234',
+                secret: '*:environment.frontend_secret_1234',
                 type: ApiTokenType.FRONTEND,
             });
             await request
@@ -699,7 +699,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'client',
-                secret: 'client_secret_4321',
+                secret: '*:environment.client_secret_4321',
                 type: ApiTokenType.CLIENT,
             });
 
@@ -708,7 +708,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'admin',
-                secret: 'admin_secret_4321',
+                secret: '*:*.admin_secret_4321',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
@@ -716,7 +716,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'frontender',
-                secret: 'frontend_secret_4321',
+                secret: '*:environment.frontend_secret_4321',
                 type: ApiTokenType.FRONTEND,
             });
             await request
@@ -760,7 +760,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'client',
-                secret: 'client_secret_4321',
+                secret: '*:environment.client_secret_4321',
                 type: ApiTokenType.CLIENT,
             });
             await stores.apiTokenStore.insert({
@@ -768,7 +768,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'admin',
-                secret: 'admin_secret_4321',
+                secret: '*:*.admin_secret_4321',
                 type: ApiTokenType.ADMIN,
             });
             await stores.apiTokenStore.insert({
@@ -776,7 +776,7 @@ describe('Fine grained API token permissions', () => {
                 projects: [],
                 tokenName: '',
                 username: 'frontender',
-                secret: 'frontend_secret_4321',
+                secret: '*:environment.frontend_secret_4321',
                 type: ApiTokenType.FRONTEND,
             });
             await request
@@ -848,7 +848,7 @@ describe('Fine grained API token permissions', () => {
                     projects: [],
                     tokenName: '',
                     username: 'cilent',
-                    secret: 'update_client_token',
+                    secret: '*:environment.update_client_token',
                     type: ApiTokenType.CLIENT,
                 });
                 await request
@@ -910,7 +910,7 @@ describe('Fine grained API token permissions', () => {
                     projects: [],
                     tokenName: '',
                     username: 'frontend',
-                    secret: 'update_frontend_token',
+                    secret: '*:environment.update_frontend_token',
                     type: ApiTokenType.FRONTEND,
                 });
                 await request
@@ -973,7 +973,7 @@ describe('Fine grained API token permissions', () => {
                     tokenName: '',
 
                     username: 'admin',
-                    secret: 'update_admin_token',
+                    secret: '*:*.update_admin_token',
                     type: ApiTokenType.ADMIN,
                 });
                 await request
@@ -1038,7 +1038,7 @@ describe('Fine grained API token permissions', () => {
                     projects: [],
                     tokenName: '',
                     username: 'cilent',
-                    secret: 'delete_client_token',
+                    secret: '*:environment.delete_client_token',
                     type: ApiTokenType.CLIENT,
                 });
                 await request
@@ -1100,7 +1100,7 @@ describe('Fine grained API token permissions', () => {
                     projects: [],
                     tokenName: '',
                     username: 'frontend',
-                    secret: 'delete_frontend_token',
+                    secret: '*:environment.delete_frontend_token',
                     type: ApiTokenType.FRONTEND,
                 });
                 await request
@@ -1161,7 +1161,7 @@ describe('Fine grained API token permissions', () => {
                     projects: [],
                     tokenName: '',
                     username: 'admin',
-                    secret: 'delete_admin_token',
+                    secret: '*:*:delete_admin_token',
                     type: ApiTokenType.ADMIN,
                 });
                 await request

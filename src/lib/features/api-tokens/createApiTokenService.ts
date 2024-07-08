@@ -15,7 +15,12 @@ export const createApiTokenService = (
     config: IUnleashConfig,
 ): ApiTokenService => {
     const { eventBus, getLogger } = config;
-    const apiTokenStore = new ApiTokenStore(db, eventBus, getLogger);
+    const apiTokenStore = new ApiTokenStore(
+        db,
+        eventBus,
+        getLogger,
+        config.flagResolver,
+    );
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
     const eventService = createEventsService(db, config);
 

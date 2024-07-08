@@ -12,6 +12,9 @@ import {
     useConstraintAccordionList,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { NewConstraintAccordionList } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
+import { Limit } from 'component/common/Limit/Limit';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -60,6 +63,20 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
+const useConstraintLimit = (constraintsCount: number) => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const { uiConfig } = useUiConfig();
+    const constraintsLimit = uiConfig.resourceLimits?.constraints || 30;
+    const limitReached =
+        resourceLimitsEnabled && constraintsCount >= constraintsLimit;
+
+    return {
+        resourceLimitsEnabled,
+        limit: constraintsLimit,
+        limitReached,
+    };
+};
+
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
@@ -72,6 +89,8 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
             setConstraints,
             ref as RefObject<IConstraintAccordionListRef>,
         );
+        const { resourceLimitsEnabled, limit, limitReached } =
+            useConstraintLimit(constraints.length);
 
         if (context.length === 0) {
             return null;
@@ -113,14 +132,34 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                 constraints={constraints}
                                 state={state}
                             />
+
+                            <Box
+                                sx={(theme) => ({
+                                    marginTop: theme.spacing(2),
+                                    marginBottom: theme.spacing(2),
+                                })}
+                            >
+                                <ConditionallyRender
+                                    condition={resourceLimitsEnabled}
+                                    show={
+                                        <Limit
+                                            name='constraints in this strategy'
+                                            shortName='constraints'
+                                            currentValue={constraints.length}
+                                            limit={limit}
+                                        />
+                                    }
+                                />
+                            </Box>
+
                             <Button
-                                sx={{ marginTop: '1rem' }}
                                 type='button'
                                 onClick={onAdd}
                                 startIcon={<Add />}
                                 variant='outlined'
                                 color='primary'
                                 data-testid='ADD_CONSTRAINT_BUTTON'
+                                disabled={Boolean(limitReached)}
                             >
                                 Add constraint
                             </Button>

@@ -80,5 +80,5 @@ export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
         return <LinkCell to={`/projects/${item}`} title={item} />;
     }
 
-    return '';
+    return null;
 };

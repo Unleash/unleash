@@ -396,7 +396,6 @@ class FeatureToggleService {
         }
 
         const constraintValuesLimit = this.resourceLimits.constraintValues;
-
         const constraintOverLimit = updatedConstrains.find(
             (constraint) =>
                 Array.isArray(constraint.values) &&

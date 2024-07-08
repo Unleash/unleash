@@ -41,4 +41,7 @@ export interface ResourceLimitsSchema {
      * total number of tokens across all projects in your
      * organization. */
     apiTokens: number;
+    /** The maximum number of feature flags you can have at the same
+     * time. Archived flags do not count towards this limit. */
+    featureFlags: number;
 }

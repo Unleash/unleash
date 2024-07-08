@@ -28,50 +28,66 @@ const setupApi = ({
     });
 };
 
-test("should allow you to create feature flags when you're below the global limit", async () => {
-    setupApi({ flagLimit: 3, flagCount: 2 });
+describe('button states', () => {
+    test("should allow you to create feature flags when you're below the global limit", async () => {
+        setupApi({ flagLimit: 3, flagCount: 2 });
 
-    render(
-        <Routes>
-            <Route
-                path='/projects/:projectId/create-toggle'
-                element={<CreateFeature />}
-            />
-        </Routes>,
-        {
-            route: '/projects/default/create-toggle',
-            permissions: [{ permission: CREATE_FEATURE }],
-        },
-    );
+        render(
+            <Routes>
+                <Route
+                    path='/projects/:projectId/create-toggle'
+                    element={<CreateFeature />}
+                />
+            </Routes>,
+            {
+                route: '/projects/default/create-toggle',
+                permissions: [{ permission: CREATE_FEATURE }],
+            },
+        );
 
-    await waitFor(async () => {
         const button = await screen.findByRole('button', {
             name: /create feature flag/i,
         });
-        expect(button).not.toBeDisabled();
+        await waitFor(() => {
+            expect(button).not.toBeDisabled();
+        });
     });
 });
 
-test("should not allow you to create API tokens when you're at the global limit", async () => {
-    setupApi({ flagLimit: 3, flagCount: 3 });
+describe('limit component', () => {
+    test('should show limit reached info', async () => {
+        setupApi({ flagLimit: 1, flagCount: 1 });
+        render(
+            <Routes>
+                <Route
+                    path='/projects/:projectId/create-toggle'
+                    element={<CreateFeature />}
+                />
+            </Routes>,
+            {
+                route: '/projects/default/create-toggle',
+                permissions: [{ permission: CREATE_FEATURE }],
+            },
+        );
 
-    render(
-        <Routes>
-            <Route
-                path='/projects/:projectId/create-toggle'
-                element={<CreateFeature />}
-            />
-        </Routes>,
-        {
-            route: '/projects/default/create-toggle',
-            permissions: [{ permission: CREATE_FEATURE }],
-        },
-    );
+        await screen.findByText('You have reached the limit for feature flags');
+    });
 
-    await waitFor(async () => {
-        const button = await screen.findByRole('button', {
-            name: /create feature flag/i,
-        });
-        expect(button).toBeDisabled();
+    test('should show approaching limit info', async () => {
+        setupApi({ flagLimit: 10, flagCount: 9 });
+        render(
+            <Routes>
+                <Route
+                    path='/projects/:projectId/create-toggle'
+                    element={<CreateFeature />}
+                />
+            </Routes>,
+            {
+                route: '/projects/default/create-toggle',
+                permissions: [{ permission: CREATE_FEATURE }],
+            },
+        );
+
+        await screen.findByText('You are nearing the limit for feature flags');
     });
 });

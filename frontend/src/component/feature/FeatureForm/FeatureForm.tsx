@@ -7,6 +7,7 @@ import {
     type Theme,
     Typography,
     Link,
+    Box,
 } from '@mui/material';
 import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
 import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from 'utils/testIds';
@@ -43,6 +44,7 @@ interface IFeatureToggleForm {
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     children?: React.ReactNode;
+    Limit?: React.ReactNode;
 }
 
 const StyledForm = styled('form')({
@@ -79,7 +81,6 @@ const StyledTypeDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledButtonContainer = styled('div')({
-    marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
 });
@@ -97,6 +98,12 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 const styledTypography = (theme: Theme) => ({
     margin: theme.spacing(1, 0),
 });
+
+const LimitContainer = styled(Box)(({ theme }) => ({
+    '&:has(*)': {
+        marginBottom: theme.spacing(2),
+    },
+}));
 
 const FeatureForm: React.FC<IFeatureToggleForm> = ({
     children,
@@ -117,6 +124,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     errors,
     mode,
     clearErrors,
+    Limit,
 }) => {
     const { featureTypes } = useFeatureTypes();
     const navigate = useNavigate();
@@ -256,6 +264,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     />
                 </StyledRow>
             </StyledFormControl>
+            <LimitContainer>{Limit}</LimitContainer>
             <StyledButtonContainer>
                 {children}
                 <StyledCancelButton onClick={handleCancel}>

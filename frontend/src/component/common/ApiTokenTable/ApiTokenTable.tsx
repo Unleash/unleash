@@ -9,7 +9,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
-const hiddenColumnsMedium = ['Icon', 'createdAt', 'seenAt'];
+const hiddenColumnsNotExtraLarge = ['Icon', 'createdAt', 'seenAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 
 interface IApiTokenTableProps {
@@ -33,13 +33,13 @@ export const ApiTokenTable = ({
     globalFilter,
     prepareRow,
 }: IApiTokenTableProps) => {
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
+    const isNotExtraLarge = useMediaQuery(theme.breakpoints.down('xl'));
 
     useConditionallyHiddenColumns(
         [
             {
-                condition: isMediumScreen,
-                columns: hiddenColumnsMedium,
+                condition: isNotExtraLarge,
+                columns: hiddenColumnsNotExtraLarge,
             },
             {
                 condition: compact,

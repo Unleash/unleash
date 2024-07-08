@@ -10,6 +10,7 @@ import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender'
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    backgroundColor: theme.palette.background.default,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     width: '100%',

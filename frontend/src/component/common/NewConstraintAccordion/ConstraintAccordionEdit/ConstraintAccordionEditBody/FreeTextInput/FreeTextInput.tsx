@@ -56,7 +56,6 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 const LimitContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.background.default,
     '&:has(*)': {
         marginTop: theme.spacing(2),
     },

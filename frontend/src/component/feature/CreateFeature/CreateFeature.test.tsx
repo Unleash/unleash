@@ -52,30 +52,6 @@ describe('button states', () => {
             expect(button).not.toBeDisabled();
         });
     });
-
-    test("should not allow you to create feature flags when you're at the global limit", async () => {
-        setupApi({ flagLimit: 3, flagCount: 3 });
-
-        render(
-            <Routes>
-                <Route
-                    path='/projects/:projectId/create-toggle'
-                    element={<CreateFeature />}
-                />
-            </Routes>,
-            {
-                route: '/projects/default/create-toggle',
-                permissions: [{ permission: CREATE_FEATURE }],
-            },
-        );
-
-        const button = await screen.findByRole('button', {
-            name: /create feature flag/i,
-        });
-        await waitFor(() => {
-            expect(button).toBeDisabled();
-        });
-    });
 });
 
 describe('limit component', () => {

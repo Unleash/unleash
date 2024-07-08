@@ -2552,7 +2552,7 @@ test('should not delete project bound api tokens still bound to project', async 
     expect(fetchedToken.project).toBe(project2);
 });
 
-test('should delete project bound api tokens when all projects they belong to are deleted', async () => {
+test('should delete project-bound api tokens when all projects they belong to are deleted', async () => {
     const project1 = 'token-deleted-project-1';
     const project2 = 'token-deleted-project-2';
     const tokenName = 'test';

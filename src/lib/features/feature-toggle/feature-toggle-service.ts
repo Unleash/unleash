@@ -387,7 +387,7 @@ class FeatureToggleService {
         }
     }
 
-    validateConstraintValuesLimit(updatedConstrains: IConstraint[]) {
+    validateConstraintsLimit(updatedConstrains: IConstraint[]) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
 
         const constraintsLimit = this.resourceLimits.constraints;
@@ -655,7 +655,7 @@ class FeatureToggleService {
             strategyConfig.constraints &&
             strategyConfig.constraints.length > 0
         ) {
-            this.validateConstraintValuesLimit(strategyConfig.constraints);
+            this.validateConstraintsLimit(strategyConfig.constraints);
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
             );
@@ -814,7 +814,7 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
-                this.validateConstraintValuesLimit(updates.constraints);
+                this.validateConstraintsLimit(updates.constraints);
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );

@@ -9,7 +9,7 @@ import { RoleName } from '../../types/model';
 import { randomId } from '../../util/random-id';
 import EnvironmentService from '../project-environments/environment-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
-import { ApiTokenService, EventService } from '../../services';
+import { type ApiTokenService, EventService } from '../../services';
 import { FeatureEnvironmentEvent } from '../../types/events';
 import { addDays, subDays } from 'date-fns';
 import {
@@ -30,6 +30,7 @@ import type { User } from '../../server-impl';
 import { BadDataError, InvalidOperationError } from '../../error';
 import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util';
 import { ApiTokenType } from '../../types/models/api-token';
+import { createApiTokenService } from '../api-tokens/createApiTokenService';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -91,7 +92,7 @@ beforeAll(async () => {
 
     environmentService = new EnvironmentService(stores, config, eventService);
     projectService = createProjectService(db.rawDatabase, config);
-    apiTokenService = new ApiTokenService(stores, config, eventService);
+    apiTokenService = createApiTokenService(db.rawDatabase, config);
 });
 beforeEach(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');

@@ -7,12 +7,23 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
     constructor(db: Db) {
         this.db = db;
     }
+
+    private activeStrategies() {
+        return this.db('feature_strategies')
+            .leftJoin(
+                'features',
+                'features.name',
+                'feature_strategies.feature_name',
+            )
+            .where('features.archived_at', null);
+    }
+
     async getMaxFeatureEnvironmentStrategies(): Promise<{
         feature: string;
         environment: string;
         count: number;
     } | null> {
-        const rows = await this.db('feature_strategies')
+        const rows = await this.activeStrategies()
             .select('feature_name', 'environment')
             .count('id as strategy_count')
             .groupBy('feature_name', 'environment')
@@ -32,7 +43,7 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
         feature: string;
         count: number;
     } | null> {
-        const rows = await this.db('feature_strategies')
+        const rows = await this.activeStrategies()
             .select('feature_name')
             .count('id as strategy_count')
             .groupBy('feature_name')
@@ -52,7 +63,7 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
         environment: string;
         count: number;
     } | null> {
-        const rows = await this.db('feature_strategies')
+        const rows = await this.activeStrategies()
             .select(
                 'feature_name',
                 'environment',
@@ -60,9 +71,9 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
                     "MAX(coalesce(jsonb_array_length(constraint_value->'values'), 0)) as max_values_count",
                 ),
             )
-            .from(
+            .crossJoin(
                 this.db.raw(
-                    'feature_strategies, jsonb_array_elements(constraints) AS constraint_value',
+                    `jsonb_array_elements(constraints) AS constraint_value`,
                 ),
             )
             .groupBy('feature_name', 'environment')
@@ -77,12 +88,13 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
               }
             : null;
     }
+
     async getMaxConstraintsPerStrategy(): Promise<{
         feature: string;
         environment: string;
         count: number;
     } | null> {
-        const rows = await this.db('feature_strategies')
+        const rows = await this.activeStrategies()
             .select(
                 'feature_name',
                 'environment',

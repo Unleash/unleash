@@ -21,7 +21,7 @@ export const NewUser = () => {
     const { authDetails } = useAuthDetails();
     const { setToastApiError } = useToast();
     const navigate = useNavigate();
-    const [apiError, setApiError] = useState(false);
+    const [apiError, setApiError] = useState('');
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const {
@@ -61,10 +61,13 @@ export const NewUser = () => {
             if (res.status === OK) {
                 navigate('/login?reset=true');
             } else {
-                setApiError(true);
+                setApiError(
+                    'Something went wrong when attempting to update your password. This could be due to unstable internet connectivity. If retrying the request does not work, please try again later.',
+                );
             }
         } catch (e) {
-            setApiError(true);
+            const error = formatUnknownError(e);
+            setApiError(error);
         }
     };
 
@@ -199,8 +202,12 @@ export const NewUser = () => {
                             Set a password for your account.
                         </Typography>
                         <ConditionallyRender
-                            condition={apiError && isValidToken}
-                            show={<ResetPasswordError />}
+                            condition={isValidToken}
+                            show={
+                                <ResetPasswordError>
+                                    {apiError}
+                                </ResetPasswordError>
+                            }
                         />
                         <ResetPasswordForm onSubmit={onSubmit} />
                     </>

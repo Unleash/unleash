@@ -1,59 +1,55 @@
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IPasswordMatcherProps {
     started: boolean;
-    matchingPasswords: boolean;
+    passwordsDoNotMatch: boolean;
+    sameAsOldPassword?: boolean;
 }
 
-const StyledMatcherContainer = styled('div')(({ theme }) => ({
-    position: 'relative',
-    paddingTop: theme.spacing(0.5),
-}));
-
-const StyledMatcher = styled(Typography, {
-    shouldForwardProp: (prop) => prop !== 'matchingPasswords',
-})<{ matchingPasswords: boolean }>(({ theme, matchingPasswords }) => ({
-    position: 'absolute',
-    bottom: '-8px',
+const StyledMatcher = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'error',
+})<{ error: boolean }>(({ theme, error }) => ({
     display: 'flex',
     alignItems: 'center',
-    color: matchingPasswords
-        ? theme.palette.primary.main
-        : theme.palette.error.main,
+    lineHeight: 1,
+    color: error ? theme.palette.error.main : theme.palette.primary.main,
 }));
 
 const StyledMatcherCheckIcon = styled(CheckIcon)(({ theme }) => ({
     marginRight: '5px',
 }));
 
+const StyledMatcherErrorIcon = styled(CloseIcon)({
+    marginRight: '5px',
+});
+
 const PasswordMatcher = ({
     started,
-    matchingPasswords,
+    passwordsDoNotMatch,
+    sameAsOldPassword = false,
 }: IPasswordMatcherProps) => {
+    const error = passwordsDoNotMatch || sameAsOldPassword;
+
+    if (!started) return null;
+
+    const label = passwordsDoNotMatch
+        ? 'Passwords do not match'
+        : sameAsOldPassword
+          ? 'Cannot be the same as the old password'
+          : 'Passwords match';
+
     return (
-        <StyledMatcherContainer>
+        <StyledMatcher data-loading error={error}>
             <ConditionallyRender
-                condition={started}
-                show={
-                    <StyledMatcher
-                        variant='body2'
-                        data-loading
-                        matchingPasswords={matchingPasswords}
-                    >
-                        <StyledMatcherCheckIcon />{' '}
-                        <ConditionallyRender
-                            condition={matchingPasswords}
-                            show={<Typography> Passwords match</Typography>}
-                            elseShow={
-                                <Typography> Passwords do not match</Typography>
-                            }
-                        />
-                    </StyledMatcher>
-                }
-            />
-        </StyledMatcherContainer>
+                condition={error}
+                show={<StyledMatcherErrorIcon />}
+                elseShow={<StyledMatcherCheckIcon />}
+            />{' '}
+            <span>{label}</span>
+        </StyledMatcher>
     );
 };
 

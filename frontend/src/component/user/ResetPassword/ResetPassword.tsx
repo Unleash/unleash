@@ -11,6 +11,7 @@ import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
 import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledDiv = styled('div')(({ theme }) => ({
     width: '350px',
@@ -32,7 +33,7 @@ const ResetPassword = () => {
     const { authDetails } = useAuthDetails();
     const ref = useLoading(loading || actionLoading);
     const navigate = useNavigate();
-    const [hasApiError, setHasApiError] = useState(false);
+    const [apiError, setApiError] = useState('');
     const passwordDisabled = authDetails?.defaultHidden === true;
 
     const onSubmit = async (password: string) => {
@@ -40,12 +41,15 @@ const ResetPassword = () => {
             const res = await resetPassword({ token, password });
             if (res.status === OK) {
                 navigate('/login?reset=true');
-                setHasApiError(false);
+                setApiError('');
             } else {
-                setHasApiError(true);
+                setApiError(
+                    'Something went wrong when attempting to update your password. This could be due to unstable internet connectivity. If retrying the request does not work, please try again later.',
+                );
             }
         } catch (e) {
-            setHasApiError(true);
+            const error = formatUnknownError(e);
+            setApiError(error);
         }
     };
 
@@ -62,10 +66,9 @@ const ResetPassword = () => {
                                     Reset password
                                 </StyledTypography>
 
-                                <ConditionallyRender
-                                    condition={hasApiError}
-                                    show={<ResetPasswordError />}
-                                />
+                                <ResetPasswordError>
+                                    {apiError}
+                                </ResetPasswordError>
                                 <ResetPasswordForm onSubmit={onSubmit} />
                             </>
                         }

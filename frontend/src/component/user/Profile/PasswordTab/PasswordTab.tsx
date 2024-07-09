@@ -34,10 +34,20 @@ export const PasswordTab = () => {
     const [oldPassword, setOldPassword] = useState('');
     const { changePassword } = usePasswordApi();
 
+    const passwordsDoNotMatch = password !== confirmPassword;
+    const sameAsOldPassword = oldPassword === confirmPassword;
+    const allPasswordsFilled =
+        password.length > 0 &&
+        confirmPassword.length > 0 &&
+        oldPassword.length > 0;
+
+    const hasError =
+        !allPasswordsFilled || passwordsDoNotMatch || sameAsOldPassword;
+
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        if (password !== confirmPassword) {
+        if (hasError) {
             return;
         } else if (!validPassword) {
             setError(PASSWORD_FORMAT_MESSAGE);
@@ -125,8 +135,9 @@ export const PasswordTab = () => {
                         />
                         <PasswordMatcher
                             data-loading
-                            started={Boolean(password && confirmPassword)}
-                            matchingPasswords={password === confirmPassword}
+                            started={allPasswordsFilled}
+                            passwordsDoNotMatch={passwordsDoNotMatch}
+                            sameAsOldPassword={sameAsOldPassword}
                         />
                         <Button
                             data-loading
@@ -134,6 +145,7 @@ export const PasswordTab = () => {
                             color='primary'
                             type='submit'
                             onClick={submit}
+                            disabled={hasError}
                         >
                             Save
                         </Button>

@@ -177,14 +177,14 @@ test('Trying to reset password with same token twice does not work', async () =>
         .post('/auth/reset/password')
         .send({
             token,
-            password,
+            password: `${password}test`,
         })
         .expect(200);
     await app.request
         .post('/auth/reset/password')
         .send({
             token,
-            password,
+            password: `${password}othertest`,
         })
         .expect(401)
         .expect((res) => {
@@ -245,7 +245,7 @@ test('Calling reset endpoint with already existing session should logout/destroy
         .post('/auth/reset/password')
         .send({
             token,
-            password,
+            password: `${password}newpassword`,
         })
         .expect(200);
     await request.get('/api/admin/projects').expect(401); // we no longer have a valid session after using the reset password endpoint

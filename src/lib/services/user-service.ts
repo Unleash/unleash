@@ -12,7 +12,6 @@ import User, {
 import isEmail from '../util/is-email';
 import type { AccessService } from './access-service';
 import type ResetTokenService from './reset-token-service';
-import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
 import type { EmailService } from './email-service';
@@ -38,6 +37,8 @@ import PasswordMismatch from '../error/password-mismatch';
 import type EventService from '../features/events/event-service';
 
 import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
+import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
+import { RateLimitError } from '../error/rate-limit-error';
 
 export interface ICreateUser {
     name?: string;
@@ -62,6 +63,7 @@ export interface ILoginUserRequest {
 }
 
 const saltRounds = 10;
+const disallowNPreviousPasswords = 5;
 
 class UserService {
     private logger: Logger;
@@ -164,7 +166,11 @@ class UserService {
                     username,
                 });
                 const passwordHash = await bcrypt.hash(password, saltRounds);
-                await this.store.setPasswordHash(user.id, passwordHash);
+                await this.store.setPasswordHash(
+                    user.id,
+                    passwordHash,
+                    disallowNPreviousPasswords,
+                );
                 await this.accessService.setUserRootRole(
                     user.id,
                     RoleName.ADMIN,
@@ -232,7 +238,11 @@ class UserService {
 
         if (password) {
             const passwordHash = await bcrypt.hash(password, saltRounds);
-            await this.store.setPasswordHash(user.id, passwordHash);
+            await this.store.setPasswordHash(
+                user.id,
+                passwordHash,
+                disallowNPreviousPasswords,
+            );
         }
 
         const userCreated = await this.getUser(user.id);
@@ -388,9 +398,30 @@ class UserService {
     async changePassword(userId: number, password: string): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
-        await this.store.setPasswordHash(userId, passwordHash);
+
+        await this.store.setPasswordHash(
+            userId,
+            passwordHash,
+            disallowNPreviousPasswords,
+        );
         await this.sessionService.deleteSessionsForUser(userId);
         await this.resetTokenService.expireExistingTokensForUser(userId);
+    }
+
+    async changePasswordWithPreviouslyUsedPasswordCheck(
+        userId: number,
+        password: string,
+    ): Promise<void> {
+        const previouslyUsed =
+            await this.store.getPasswordsPreviouslyUsed(userId);
+        const usedBefore = previouslyUsed.some((previouslyUsed) =>
+            bcrypt.compareSync(password, previouslyUsed),
+        );
+        if (usedBefore) {
+            throw new PasswordPreviouslyUsedError();
+        }
+
+        await this.changePassword(userId, password);
     }
 
     async changePasswordWithVerification(
@@ -406,7 +437,10 @@ class UserService {
             );
         }
 
-        await this.changePassword(userId, newPassword);
+        await this.changePasswordWithPreviouslyUsedPasswordCheck(
+            userId,
+            newPassword,
+        );
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {
@@ -437,15 +471,16 @@ class UserService {
     async resetPassword(token: string, password: string): Promise<void> {
         this.validatePassword(password);
         const user = await this.getUserForToken(token);
-        const allowed = await this.resetTokenService.useAccessToken({
+
+        await this.changePasswordWithPreviouslyUsedPasswordCheck(
+            user.id,
+            password,
+        );
+
+        await this.resetTokenService.useAccessToken({
             userId: user.id,
             token,
         });
-        if (allowed) {
-            await this.changePassword(user.id, password);
-        } else {
-            throw new InvalidTokenError();
-        }
     }
 
     async createResetPasswordEmail(
@@ -460,7 +495,9 @@ class UserService {
             throw new NotFoundError(`Could not find ${receiverEmail}`);
         }
         if (this.passwordResetTimeouts[receiver.id]) {
-            return;
+            throw new RateLimitError(
+                'You can only send one new reset password email per minute, per user. Please try again later.',
+            );
         }
 
         const resetLink = await this.resetTokenService.createResetPasswordUrl(

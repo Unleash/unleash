@@ -14,6 +14,7 @@ import type { IUser } from 'interfaces/user';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(5),
@@ -37,7 +38,7 @@ const ChangePassword = ({
     const [validPassword, setValidPassword] = useState(false);
     const { classes: themeStyles } = useThemeStyles();
     const { changePassword } = useAdminUsersApi();
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
 
     const updateField: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         setError(undefined);
@@ -66,8 +67,9 @@ const ChangePassword = ({
                 type: 'success',
             });
         } catch (error: unknown) {
-            console.warn(error);
-            setError(PASSWORD_FORMAT_MESSAGE);
+            const formattedError = formatUnknownError(error);
+            setError(formattedError);
+            setToastApiError(formattedError);
         }
     };
 
@@ -134,7 +136,7 @@ const ChangePassword = ({
                 />
                 <PasswordMatcher
                     started={Boolean(data.password && data.confirm)}
-                    matchingPasswords={data.password === data.confirm}
+                    passwordsDoNotMatch={data.password !== data.confirm}
                 />
             </form>
         </Dialogue>

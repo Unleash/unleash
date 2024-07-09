@@ -22,13 +22,13 @@ describe('ProjectsList', () => {
         expect(links[0]).toHaveTextContent('project');
     });
 
-    it('should render asterisk if no projects are passed', async () => {
+    it('should render "*" if no projects are passed', async () => {
         const { container } = render(<ProjectsList />);
 
         expect(container.textContent).toEqual('*');
     });
 
-    it('should render asterisk if empty projects array is passed', async () => {
+    it('should render "*" if empty projects array is passed', async () => {
         const { container } = render(<ProjectsList projects={[]} />);
 
         expect(container.textContent).toEqual('*');
@@ -42,5 +42,17 @@ describe('ProjectsList', () => {
         );
 
         expect(container.textContent).toContain('4 projects');
+    });
+
+    it('should render "*" if project is "*" and no projects are passed', async () => {
+        const { container } = render(<ProjectsList project='*' />);
+
+        expect(container.textContent).toEqual('*');
+    });
+
+    it('should render "*" if projects has only "*"', async () => {
+        const { container } = render(<ProjectsList projects={['*']} />);
+
+        expect(container.textContent).toEqual('*');
     });
 });

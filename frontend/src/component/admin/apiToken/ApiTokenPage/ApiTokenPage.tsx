@@ -25,8 +25,6 @@ export const ApiTokenPage = () => {
     const { deleteToken } = useApiTokensApi();
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
@@ -103,8 +101,6 @@ export const ApiTokenPage = () => {
                     headerGroups={headerGroups}
                     setHiddenColumns={setHiddenColumns}
                     prepareRow={prepareRow}
-                    getTableBodyProps={getTableBodyProps}
-                    getTableProps={getTableProps}
                     rows={rows}
                     columns={columns}
                     globalFilter={globalFilter}

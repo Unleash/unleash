@@ -525,7 +525,10 @@ describe('Should not be able to use any of previous 5 passwords', () => {
             password,
         });
         await expect(
-            userService.changePassword(user.id, password),
+            userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                password,
+            ),
         ).rejects.toThrow(new PasswordPreviouslyUsed());
     });
     test('Is still able to change password to one not used', async () => {
@@ -539,7 +542,10 @@ describe('Should not be able to use any of previous 5 passwords', () => {
             password,
         });
         await expect(
-            userService.changePassword(user.id, 'internalScreaming$123'),
+            userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                'internalScreaming$123',
+            ),
         ).resolves.not.toThrow();
     });
     test('Remembers 5 passwords', async () => {
@@ -553,10 +559,30 @@ describe('Should not be able to use any of previous 5 passwords', () => {
             password,
         });
         for (let i = 0; i < 5; i++) {
-            await userService.changePassword(user.id, `${password}${i}`);
+            await userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                `${password}${i}`,
+            );
         }
         await expect(
-            userService.changePassword(user.id, `${password}`),
+            userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                `${password}`,
+            ),
         ).resolves.not.toThrow(); // We've added 5 new passwords, so the original should work again
+    });
+    test('Can bypass check by directly calling the changePassword method', async () => {
+        const name = 'can-bypass-check-like-a-boss';
+        const email = `${name}@test.com`;
+        const password = 'externalScreaming$123';
+        const user = await userService.createUser({
+            email,
+            rootRole: customRole.id,
+            name,
+            password,
+        });
+        await expect(
+            userService.changePassword(user.id, `${password}`),
+        ).resolves.not.toThrow(); // By bypassing the check, we can still set the same password as currently set
     });
 });

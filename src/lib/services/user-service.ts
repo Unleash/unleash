@@ -397,13 +397,6 @@ class UserService {
 
     async changePassword(userId: number, password: string): Promise<void> {
         this.validatePassword(password);
-        const previouslyUsed = await this.store.passwordPreviouslyUsed(
-            userId,
-            password,
-        );
-        if (previouslyUsed) {
-            throw new PasswordPreviouslyUsed();
-        }
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         await this.store.setPasswordHash(
@@ -413,6 +406,21 @@ class UserService {
         );
         await this.sessionService.deleteSessionsForUser(userId);
         await this.resetTokenService.expireExistingTokensForUser(userId);
+    }
+
+    async changePasswordWithPreviouslyUsedPasswordCheck(
+        userId: number,
+        password: string,
+    ): Promise<void> {
+        const previouslyUsed = await this.store.passwordPreviouslyUsed(
+            userId,
+            password,
+        );
+        if (previouslyUsed) {
+            throw new PasswordPreviouslyUsed();
+        }
+
+        await this.changePassword(userId, password);
     }
 
     async changePasswordWithVerification(
@@ -428,7 +436,10 @@ class UserService {
             );
         }
 
-        await this.changePassword(userId, newPassword);
+        await this.changePasswordWithPreviouslyUsedPasswordCheck(
+            userId,
+            newPassword,
+        );
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {
@@ -464,7 +475,10 @@ class UserService {
             token,
         });
         if (allowed) {
-            await this.changePassword(user.id, password);
+            await this.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                password,
+            );
         } else {
             throw new InvalidTokenError();
         }

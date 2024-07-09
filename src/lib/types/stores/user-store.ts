@@ -33,7 +33,7 @@ export interface IUserStore extends Store<IUser, number> {
         passwordHash: string,
         disallowNPreviousPasswords: number,
     ): Promise<void>;
-    passwordPreviouslyUsed(userId: number, password: string): Promise<boolean>;
+    getPasswordsPreviouslyUsed(userId: number): Promise<string[]>;
     incLoginAttempts(user: IUser): Promise<void>;
     successfullyLogin(user: IUser): Promise<void>;
     count(): Promise<number>;

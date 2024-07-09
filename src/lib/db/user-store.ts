@@ -11,7 +11,6 @@ import type {
     IUserUpdateFields,
 } from '../types/stores/user-store';
 import type { Db } from './db';
-import bcrypt from 'bcryptjs';
 
 const TABLE = 'users';
 const PASSWORD_HASH_TABLE = 'used_passwords';
@@ -75,16 +74,11 @@ class UserStore implements IUserStore {
         this.logger = getLogger('user-store.ts');
     }
 
-    async passwordPreviouslyUsed(
-        userId: number,
-        password: string,
-    ): Promise<boolean> {
-        const previouslyUsedPasswords = await this.db(
-            PASSWORD_HASH_TABLE,
-        ).where({ user_id: userId });
-        return previouslyUsedPasswords.some((row) =>
-            bcrypt.compareSync(password, row.password_hash),
-        );
+    async getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {
+        const previouslyUsedPasswords = await this.db(PASSWORD_HASH_TABLE)
+            .select('password_hash')
+            .where({ user_id: userId });
+        return previouslyUsedPasswords.map((row) => row.password_hash);
     }
 
     async deletePasswordsUsedMoreThanNTimesAgo(

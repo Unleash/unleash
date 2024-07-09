@@ -412,11 +412,12 @@ class UserService {
         userId: number,
         password: string,
     ): Promise<void> {
-        const previouslyUsed = await this.store.passwordPreviouslyUsed(
-            userId,
-            password,
+        const previouslyUsed =
+            await this.store.getPasswordsPreviouslyUsed(userId);
+        const usedBefore = previouslyUsed.some((previouslyUsed) =>
+            bcrypt.compareSync(password, previouslyUsed),
         );
-        if (previouslyUsed) {
+        if (usedBefore) {
             throw new PasswordPreviouslyUsedError();
         }
 

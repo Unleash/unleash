@@ -212,16 +212,14 @@ class UserStore implements IUserStore {
         await this.activeUsers().where('id', userId).update({
             password_hash: passwordHash,
         });
-        if (passwordHash) {
-            await this.db(PASSWORD_HASH_TABLE).insert({
-                user_id: userId,
-                password_hash: passwordHash,
-            });
-            await this.deletePasswordsUsedMoreThanNTimesAgo(
-                userId,
-                disallowNPreviousPasswords,
-            );
-        }
+        await this.db(PASSWORD_HASH_TABLE).insert({
+            user_id: userId,
+            password_hash: passwordHash,
+        });
+        await this.deletePasswordsUsedMoreThanNTimesAgo(
+            userId,
+            disallowNPreviousPasswords,
+        );
     }
 
     async incLoginAttempts(user: User): Promise<void> {

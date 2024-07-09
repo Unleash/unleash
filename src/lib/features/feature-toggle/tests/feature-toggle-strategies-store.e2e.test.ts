@@ -305,7 +305,7 @@ describe('max metrics collection', () => {
         } as const;
     };
 
-    const strategyWithConstrains = (
+    const strategyWithConstraints = (
         feature: string,
         constraint: IConstraint,
     ) => {
@@ -343,18 +343,18 @@ describe('max metrics collection', () => {
 
         const maxValueCount = 100;
         await featureStrategiesStore.createStrategyFeatureEnv(
-            strategyWithConstrains(flagA.name, bigConstraint(maxValueCount)),
+            strategyWithConstraints(flagA.name, bigConstraint(maxValueCount)),
         );
         await featureStrategiesStore.createStrategyFeatureEnv(
-            strategyWithConstrains(flagB.name, {
+            strategyWithConstraints(flagB.name, {
                 operator: 'IN',
                 contextName: 'appName',
             }),
         );
         await featureStrategiesStore.createStrategyFeatureEnv(
-            strategyWithConstrains(
+            strategyWithConstraints(
                 flagC.name,
-                bigConstraint(maxValueCount + 10),
+                bigConstraint(maxValueCount + 1),
             ),
         );
 

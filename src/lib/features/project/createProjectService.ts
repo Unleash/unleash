@@ -45,6 +45,8 @@ import { ProjectOwnersReadModel } from './project-owners-read-model';
 import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model';
 import { FakeProjectFlagCreatorsReadModel } from './fake-project-flag-creators-read-model';
 import { ProjectFlagCreatorsReadModel } from './project-flag-creators-read-model';
+import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
+import { ApiTokenStore } from '../../db/api-token-store';
 
 export const createProjectService = (
     db: Db,
@@ -109,6 +111,13 @@ export const createProjectService = (
         eventService,
     );
 
+    const apiTokenStore = new ApiTokenStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
+
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
     return new ProjectService(
@@ -123,6 +132,7 @@ export const createProjectService = (
             projectStatsStore,
             projectOwnersReadModel,
             projectFlagCreatorsReadModel,
+            apiTokenStore,
         },
         config,
         accessService,
@@ -153,6 +163,7 @@ export const createFakeProjectService = (
     const { featureToggleService } = createFakeFeatureToggleService(config);
     const favoriteFeaturesStore = new FakeFavoriteFeaturesStore();
     const favoriteProjectsStore = new FakeFavoriteProjectsStore();
+    const apiTokenStore = new FakeApiTokenStore();
     const eventService = new EventService(
         {
             eventStore,
@@ -188,6 +199,7 @@ export const createFakeProjectService = (
             featureTypeStore,
             accountStore,
             projectStatsStore,
+            apiTokenStore,
         },
         config,
         accessService,

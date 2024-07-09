@@ -53,6 +53,7 @@ import {
     type ProjectCreated,
     type IProjectOwnersReadModel,
     ADMIN,
+    type IApiTokenStore,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -144,6 +145,8 @@ export default class ProjectService {
 
     private accountStore: IAccountStore;
 
+    private apiTokenStore: IApiTokenStore;
+
     private favoritesService: FavoritesService;
 
     private eventService: EventService;
@@ -168,6 +171,7 @@ export default class ProjectService {
             featureTypeStore,
             accountStore,
             projectStatsStore,
+            apiTokenStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -180,6 +184,7 @@ export default class ProjectService {
             | 'accountStore'
             | 'projectStatsStore'
             | 'featureTypeStore'
+            | 'apiTokenStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -198,6 +203,7 @@ export default class ProjectService {
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
+        this.apiTokenStore = apiTokenStore;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
         this.privateProjectChecker = privateProjectChecker;
@@ -558,7 +564,26 @@ export default class ProjectService {
             auditUser,
         );
 
-        await this.projectStore.delete(id);
+        if (this.flagResolver.isEnabled('cleanApiTokenWhenOrphaned')) {
+            const allTokens = await this.apiTokenStore.getAll();
+            const projectTokens = allTokens.filter(
+                (token) =>
+                    (token.projects &&
+                        token.projects.length === 1 &&
+                        token.projects[0] === id) ||
+                    token.project === id,
+            );
+
+            await this.projectStore.delete(id);
+
+            await Promise.all(
+                projectTokens.map((token) =>
+                    this.apiTokenStore.delete(token.secret),
+                ),
+            );
+        } else {
+            await this.projectStore.delete(id);
+        }
 
         await this.eventService.storeEvent(
             new ProjectDeletedEvent({

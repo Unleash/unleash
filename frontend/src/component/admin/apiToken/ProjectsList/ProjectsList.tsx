@@ -58,27 +58,26 @@ export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
         );
     }
 
-    if ((projects?.length === 1 && projects?.[0] === '*') || project === '*') {
-        return (
-            <TextCell>
-                <HtmlTooltip
-                    title='ALL current and future projects'
-                    placement='bottom'
-                    arrow
-                >
-                    <span>
-                        <Highlighter search={searchQuery}>*</Highlighter>
-                    </span>
-                </HtmlTooltip>
-            </TextCell>
-        );
-    }
-
-    if (projectsList.length === 1 || project) {
+    if (
+        (projectsList.length === 1 && projectsList[0] !== '*') ||
+        (project && project !== '*')
+    ) {
         const item = project || projectsList[0];
 
         return <LinkCell to={`/projects/${item}`} title={item} />;
     }
 
-    return null;
+    return (
+        <TextCell>
+            <HtmlTooltip
+                title='ALL current and future projects'
+                placement='bottom'
+                arrow
+            >
+                <span>
+                    <Highlighter search={searchQuery}>*</Highlighter>
+                </span>
+            </HtmlTooltip>
+        </TextCell>
+    );
 };

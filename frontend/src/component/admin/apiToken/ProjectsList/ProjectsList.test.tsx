@@ -22,16 +22,16 @@ describe('ProjectsList', () => {
         expect(links[0]).toHaveTextContent('project');
     });
 
-    it('should render no text if no projects are passed', async () => {
+    it('should render "*" if no projects are passed', async () => {
         const { container } = render(<ProjectsList />);
 
-        expect(container.textContent).toEqual('');
+        expect(container.textContent).toEqual('*');
     });
 
-    it('should render no text if empty projects array is passed', async () => {
+    it('should render "*" if empty projects array is passed', async () => {
         const { container } = render(<ProjectsList projects={[]} />);
 
-        expect(container.textContent).toEqual('');
+        expect(container.textContent).toEqual('*');
     });
 
     it('should show the number of projects', async () => {

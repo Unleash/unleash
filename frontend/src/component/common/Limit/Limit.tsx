@@ -68,7 +68,8 @@ export const Limit: FC<{
     limit: number;
     currentValue: number;
     onClose?: () => void;
-}> = ({ name, shortName, limit, currentValue, onClose }) => {
+    className?: string;
+}> = ({ name, shortName, limit, currentValue, onClose, className }) => {
     const percentageLimit = Math.floor((currentValue / limit) * 100);
     const belowLimit = currentValue < limit;
     const threshold = 80;
@@ -78,7 +79,7 @@ export const Limit: FC<{
     }
 
     return (
-        <StyledBox>
+        <StyledBox className={className}>
             <Header>
                 <ConditionallyRender
                     condition={belowLimit}

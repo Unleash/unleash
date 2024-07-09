@@ -25,6 +25,7 @@ import {
 import { MultiSelectConfigButton } from './ConfigButtons/MultiSelectConfigButton';
 import { SingleSelectConfigButton } from './ConfigButtons/SingleSelectConfigButton';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
+import { Box, styled } from '@mui/material';
 
 type FormProps = {
     projectId: string;
@@ -51,6 +52,7 @@ type FormProps = {
     overrideDocumentation: (args: { text: string; icon: ReactNode }) => void;
     clearDocumentationOverride: () => void;
     children?: React.ReactNode;
+    Limit?: React.ReactNode;
 };
 
 const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
@@ -104,8 +106,15 @@ const configButtonData = {
     },
 };
 
+const LimitContainer = styled(Box)(({ theme }) => ({
+    '&:has(*)': {
+        padding: theme.spacing(4, 6, 0, 6),
+    },
+}));
+
 export const NewProjectForm: React.FC<FormProps> = ({
     children,
+    Limit,
     handleSubmit,
     projectName,
     projectDesc,
@@ -324,6 +333,7 @@ export const NewProjectForm: React.FC<FormProps> = ({
                     }
                 />
             </OptionButtons>
+            <LimitContainer>{Limit}</LimitContainer>
             <FormActions>{children}</FormActions>
         </StyledForm>
     );

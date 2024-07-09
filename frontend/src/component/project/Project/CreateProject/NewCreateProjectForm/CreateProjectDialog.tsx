@@ -15,6 +15,10 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, styled } from '@mui/material';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { Limit } from 'component/common/Limit/Limit';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ICreateProjectDialogProps {
     open: boolean;
@@ -41,11 +45,28 @@ const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     stroke: theme.palette.common.white,
 }));
 
+const useProjectLimit = () => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const { projects, loading: loadingProjects } = useProjects();
+    const { uiConfig, loading: loadingConfig } = useUiConfig();
+    const projectsLimit = uiConfig.resourceLimits?.projects;
+    const limitReached =
+        resourceLimitsEnabled && projects.length >= projectsLimit;
+
+    return {
+        resourceLimitsEnabled,
+        limit: projectsLimit,
+        currentValue: projects.length,
+        limitReached,
+        loading: loadingConfig || loadingProjects,
+    };
+};
+
 export const CreateProjectDialog = ({
     open,
     onClose,
 }: ICreateProjectDialogProps) => {
-    const { createProject, loading } = useProjectApi();
+    const { createProject, loading: creatingProject } = useProjectApi();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
@@ -130,6 +151,14 @@ export const CreateProjectDialog = ({
         }
     };
 
+    const {
+        resourceLimitsEnabled,
+        limit,
+        currentValue,
+        limitReached,
+        loading: loadingLimit,
+    } = useProjectLimit();
+
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
@@ -164,12 +193,26 @@ export const CreateProjectDialog = ({
                     setProjectDesc={setProjectDesc}
                     overrideDocumentation={setDocumentation}
                     clearDocumentationOverride={clearDocumentationOverride}
+                    Limit={
+                        <ConditionallyRender
+                            condition={resourceLimitsEnabled}
+                            show={
+                                <Limit
+                                    name='projects'
+                                    limit={limit}
+                                    currentValue={currentValue}
+                                />
+                            }
+                        />
+                    }
                 >
                     <Button onClick={onClose}>Cancel</Button>
                     <CreateButton
                         name='project'
                         permission={CREATE_PROJECT}
-                        disabled={loading}
+                        disabled={
+                            creatingProject || limitReached || loadingLimit
+                        }
                         data-testid={CREATE_PROJECT_BTN}
                     />
                 </NewProjectForm>

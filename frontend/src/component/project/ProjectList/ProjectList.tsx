@@ -24,7 +24,6 @@ import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { groupProjects } from './group-projects';
 import { ProjectGroup } from './ProjectGroup';
 import { CreateProjectDialog } from '../Project/CreateProject/NewCreateProjectForm/CreateProjectDialog';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -54,7 +53,6 @@ const NAVIGATE_TO_CREATE_PROJECT = 'NAVIGATE_TO_CREATE_PROJECT';
 function resolveCreateButtonData(
     isOss: boolean,
     hasAccess: boolean,
-    limitReached: boolean,
 ): ICreateButtonData {
     if (isOss) {
         return {
@@ -80,13 +78,6 @@ function resolveCreateButtonData(
             },
             disabled: true,
         };
-    } else if (limitReached) {
-        return {
-            tooltip: {
-                title: 'Limit of allowed projects reached',
-            },
-            disabled: true,
-        };
     } else {
         return {
             tooltip: { title: 'Click to create a new project' },
@@ -94,13 +85,6 @@ function resolveCreateButtonData(
         };
     }
 }
-
-const useProjectLimit = (projectsLimit: number, projectCount: number) => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const limitReached = resourceLimitsEnabled && projectCount >= projectsLimit;
-
-    return limitReached;
-};
 
 const ProjectCreationButton: FC<{ projectCount: number }> = ({
     projectCount,
@@ -111,15 +95,9 @@ const ProjectCreationButton: FC<{ projectCount: number }> = ({
     const { hasAccess } = useContext(AccessContext);
     const { isOss, uiConfig, loading } = useUiConfig();
 
-    const limitReached = useProjectLimit(
-        uiConfig.resourceLimits.projects,
-        projectCount,
-    );
-
     const createButtonData = resolveCreateButtonData(
         isOss(),
         hasAccess(CREATE_PROJECT),
-        limitReached,
     );
 
     return (

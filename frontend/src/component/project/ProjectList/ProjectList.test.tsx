@@ -20,11 +20,11 @@ const setupApi = () => {
     });
 
     testServerRoute(server, '/api/admin/projects', {
-        projects: [],
+        projects: [{ name: 'existing' }],
     });
 };
 
-test('Enabled new project button when limits, version and permission allow for it', async () => {
+test('Enabled new project button when version and permission allow for it and limit is reached', async () => {
     setupApi();
     render(<ProjectListNew />, {
         permissions: [{ permission: CREATE_PROJECT }],

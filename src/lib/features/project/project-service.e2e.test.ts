@@ -2516,7 +2516,7 @@ test('should also delete api tokens that were only bound to deleted project', as
     expect(deletedToken).toBeUndefined();
 });
 
-test('should not delete project bound api tokens still bound to project', async () => {
+test('should not delete project-bound api tokens still bound to project', async () => {
     const project1 = 'token-deleted-project';
     const project2 = 'token-not-deleted-project';
     const tokenName = 'test';

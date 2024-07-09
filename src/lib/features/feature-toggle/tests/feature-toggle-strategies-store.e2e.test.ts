@@ -5,6 +5,7 @@ import dbInit, {
 } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
 import type {
+    IConstraint,
     IFeatureStrategiesReadModel,
     IProjectStore,
     IUnleashStores,
@@ -294,6 +295,32 @@ describe('max metrics collection', () => {
         });
     });
 
+    const bigConstraint = (maxValueCount: number) => {
+        return {
+            values: Array.from({ length: maxValueCount }, (_, i) =>
+                i.toString(),
+            ),
+            operator: 'IN',
+            contextName: 'appName',
+        } as const;
+    };
+
+    const strategyWithConstrains = (
+        feature: string,
+        constraint: IConstraint,
+    ) => {
+        return {
+            strategyName: 'gradualRollout',
+            projectId: 'default',
+            environment: 'default',
+            featureName: feature,
+            constraints: [constraint],
+
+            sortOrder: 0,
+            parameters: {},
+        };
+    };
+
     test('Read feature with max number of constraint values', async () => {
         const flagA = await featureToggleStore.create('default', {
             name: randomId(),
@@ -305,48 +332,33 @@ describe('max metrics collection', () => {
             createdByUserId: 9999,
         });
 
+        const flagC = await featureToggleStore.create('default', {
+            name: randomId(),
+            createdByUserId: 9999,
+        });
+
         const maxConstraintValuesBefore =
             await featureStrategiesReadModel.getMaxConstraintValues();
         expect(maxConstraintValuesBefore).toBe(null);
 
         const maxValueCount = 100;
-        await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
-            projectId: 'default',
-            environment: 'default',
-            featureName: flagA.name,
-            constraints: [
-                {
-                    values: ['only one'],
-                    operator: 'IN',
-                    contextName: 'appName',
-                },
-                {
-                    values: Array.from({ length: maxValueCount }, (_, i) =>
-                        i.toString(),
-                    ),
-                    operator: 'IN',
-                    contextName: 'appName',
-                },
-            ],
+        await featureStrategiesStore.createStrategyFeatureEnv(
+            strategyWithConstrains(flagA.name, bigConstraint(maxValueCount)),
+        );
+        await featureStrategiesStore.createStrategyFeatureEnv(
+            strategyWithConstrains(flagB.name, {
+                operator: 'IN',
+                contextName: 'appName',
+            }),
+        );
+        await featureStrategiesStore.createStrategyFeatureEnv(
+            strategyWithConstrains(
+                flagC.name,
+                bigConstraint(maxValueCount + 10),
+            ),
+        );
 
-            sortOrder: 0,
-            parameters: {},
-        });
-        await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
-            projectId: 'default',
-            environment: 'default',
-            featureName: flagB.name,
-            constraints: [
-                {
-                    operator: 'IN',
-                    contextName: 'appName',
-                },
-            ],
-            sortOrder: 0,
-            parameters: {},
-        });
+        await featureToggleStore.archive(flagC.name);
 
         const maxConstraintValues =
             await featureStrategiesReadModel.getMaxConstraintValues();

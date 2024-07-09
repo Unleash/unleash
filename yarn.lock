@@ -982,11 +982,11 @@ __metadata:
   linkType: hard
 
 "@cyclonedx/yarn-plugin-cyclonedx@npm:^1.0.0-rc.7":
-  version: 1.0.0
-  resolution: "@cyclonedx/yarn-plugin-cyclonedx@npm:1.0.0"
+  version: 1.0.1
+  resolution: "@cyclonedx/yarn-plugin-cyclonedx@npm:1.0.1"
   bin:
     cyclonedx-yarn: bin/cyclonedx-yarn-cli.js
-  checksum: 10c0/1e401ddb9942fe2028ae7b8b9ed5a016e032aa8c702bbdc506352aa16c66e9494ddfa0118aae93facad48b154fd085a1f2e8c735dca0ef20175094643923b7de
+  checksum: 10c0/0390f3fdc6066ac958e6830db37e78af436cf92f74823f793c8b34e057e3593ccfea69535ce9571e25d38a649f37805ad6724c59551fc88dc02a4353d488f97f
   languageName: node
   linkType: hard
 

@@ -136,7 +136,7 @@ const ChangePassword = ({
                 />
                 <PasswordMatcher
                     started={Boolean(data.password && data.confirm)}
-                    matchingPasswords={data.password === data.confirm}
+                    passwordsDoNotMatch={data.password !== data.confirm}
                 />
             </form>
         </Dialogue>

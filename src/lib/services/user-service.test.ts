@@ -549,7 +549,9 @@ test('Should throttle password reset email', async () => {
     await expect(attempt1).resolves.toBeInstanceOf(URL);
 
     const attempt2 = service.createResetPasswordEmail('known@example.com');
-    await expect(attempt2).resolves.toBe(undefined);
+    await expect(attempt2).rejects.toThrow(
+        'You can only send one new reset password email per minute, per user. Please try again later.',
+    );
 
     jest.runAllTimers();
 

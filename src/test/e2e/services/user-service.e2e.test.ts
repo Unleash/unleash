@@ -27,7 +27,7 @@ import {
     USER_UPDATED,
 } from '../../../lib/types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
-import { PasswordPreviouslyUsed } from '../../../lib/error/password-previously-used';
+import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -529,7 +529,7 @@ describe('Should not be able to use any of previous 5 passwords', () => {
                 user.id,
                 password,
             ),
-        ).rejects.toThrow(new PasswordPreviouslyUsed());
+        ).rejects.toThrow(new PasswordPreviouslyUsedError());
     });
     test('Is still able to change password to one not used', async () => {
         const name = 'new-password-is-allowed';

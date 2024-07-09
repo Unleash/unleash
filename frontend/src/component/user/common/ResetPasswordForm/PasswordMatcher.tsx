@@ -18,9 +18,9 @@ const StyledMatcher = styled('div', {
     color: error ? theme.palette.error.main : theme.palette.primary.main,
 }));
 
-const StyledMatcherCheckIcon = styled(CheckIcon)(({ theme }) => ({
+const StyledMatcherCheckIcon = styled(CheckIcon)({
     marginRight: '5px',
-}));
+});
 
 const StyledMatcherErrorIcon = styled(CloseIcon)({
     marginRight: '5px',

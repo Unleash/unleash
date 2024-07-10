@@ -59,7 +59,9 @@ Call it `avif` and enable it in the `development` environment.
 
 Next, generate an API token to authenticate calls made to Unleash servers from your project.
 
-> **Note** We require an API token as part of your flag configuration to ensure that only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access and thus controls how they can be distributed to applications that need it, and by whom.
+:::info
+Unleash requires SDKs to be set up with an API token. This is to ensure that only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access. 
+:::
 
 From your project view on the platform, go to "Project Settings" and then "API Access". Or click "API Access" on the sidebar.
 

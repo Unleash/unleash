@@ -51,7 +51,7 @@ Password: unleash4all
 
 Click the ‘New feature flag’ button to create a new feature flag.
 
-![Create a new feature flag](../ruby/new-ff.png)
+![The "new feature flag" button is located on the project page](../ruby/new-ff.png)
 
 Call it `avif` and enable it in the `development` environment.
 

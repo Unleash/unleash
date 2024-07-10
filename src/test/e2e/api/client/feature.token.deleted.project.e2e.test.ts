@@ -23,7 +23,17 @@ const feature3 = 'f3.p2.token.access';
 
 beforeAll(async () => {
     db = await dbInit('feature_api_api_access_client_deletion', getLogger);
-    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    cleanApiTokenWhenOrphaned: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
     apiTokenService = app.services.apiTokenService;
 
     const { featureToggleServiceV2, environmentService } = app.services;

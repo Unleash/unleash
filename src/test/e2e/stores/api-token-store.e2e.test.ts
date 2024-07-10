@@ -11,6 +11,10 @@ beforeAll(async () => {
     stores = db.stores;
 });
 
+afterEach(async () => {
+    await db.reset();
+});
+
 afterAll(async () => {
     await db.destroy();
 });
@@ -34,4 +38,114 @@ test('get token returns the token when exists', async () => {
     expect(foundToken.environment).toBe(newToken.environment);
     expect(foundToken.tokenName).toBe(newToken.tokenName);
     expect(foundToken.type).toBe(newToken.type);
+});
+
+describe('count deprecated tokens', () => {
+    test('should return 0 for all deprecated tokens', async () => {
+        const deprecatedTokens =
+            await stores.apiTokenStore.countDeprecatedTokens();
+
+        expect(deprecatedTokens).toEqual({
+            activeLegacyTokens: 0,
+            activeOrphanedTokens: 0,
+            legacyTokens: 0,
+            orphanedTokens: 0,
+        });
+    });
+
+    test('should return 1 for legacy tokens', async () => {
+        await stores.apiTokenStore.insert({
+            secret: 'be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
+            environment: 'default',
+            type: ApiTokenType.ADMIN,
+            projects: [],
+            tokenName: 'admin-test-token',
+        });
+
+        const deprecatedTokens =
+            await stores.apiTokenStore.countDeprecatedTokens();
+
+        expect(deprecatedTokens).toEqual({
+            activeLegacyTokens: 0,
+            activeOrphanedTokens: 0,
+            legacyTokens: 1,
+            orphanedTokens: 0,
+        });
+    });
+
+    test('should return 1 for orphaned tokens', async () => {
+        await stores.apiTokenStore.insert({
+            secret: 'deleted-project:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: [],
+            tokenName: 'admin-test-token',
+        });
+
+        const deprecatedTokens =
+            await stores.apiTokenStore.countDeprecatedTokens();
+
+        expect(deprecatedTokens).toEqual({
+            activeLegacyTokens: 0,
+            activeOrphanedTokens: 0,
+            legacyTokens: 0,
+            orphanedTokens: 1,
+        });
+    });
+
+    test('should not count wildcard tokens as orphaned', async () => {
+        await stores.apiTokenStore.insert({
+            secret: '*:*.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: [],
+            tokenName: 'client-test-token',
+        });
+
+        const deprecatedTokens =
+            await stores.apiTokenStore.countDeprecatedTokens();
+
+        expect(deprecatedTokens).toEqual({
+            activeLegacyTokens: 0,
+            activeOrphanedTokens: 0,
+            legacyTokens: 0,
+            orphanedTokens: 0,
+        });
+    });
+
+    test('should count active tokens based on seen_at', async () => {
+        const legacyTokenSecret =
+            'be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178';
+        const orphanedTokenSecret =
+            '[]:production.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178';
+        await stores.apiTokenStore.insert({
+            secret: legacyTokenSecret,
+            environment: 'default',
+            type: ApiTokenType.ADMIN,
+            projects: [],
+            tokenName: 'admin-test-token',
+        });
+        await stores.apiTokenStore.insert({
+            secret: orphanedTokenSecret,
+            environment: 'default',
+            type: ApiTokenType.FRONTEND,
+            projects: [],
+            tokenName: 'frontend-test-token',
+        });
+
+        await stores.apiTokenStore.markSeenAt([
+            legacyTokenSecret,
+            orphanedTokenSecret,
+        ]);
+
+        const deprecatedTokens =
+            await stores.apiTokenStore.countDeprecatedTokens();
+
+        expect(deprecatedTokens).toEqual({
+            activeLegacyTokens: 1,
+            activeOrphanedTokens: 1,
+            legacyTokens: 1,
+            orphanedTokens: 1,
+        });
+    });
 });

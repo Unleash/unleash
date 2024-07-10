@@ -125,6 +125,12 @@ class InstanceAdminController extends Controller {
                 variantCount: 100,
                 enabledCount: 200,
             },
+            deprecatedTokens: {
+                orphanedTokens: 0,
+                activeOrphanedTokens: 0,
+                legacyTokens: 0,
+                activeLegacyTokens: 0,
+            },
         };
     }
 

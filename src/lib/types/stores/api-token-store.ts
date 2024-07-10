@@ -8,4 +8,10 @@ export interface IApiTokenStore extends Store<IApiToken, string> {
     markSeenAt(secrets: string[]): Promise<void>;
     count(): Promise<number>;
     countByType(): Promise<Map<string, number>>;
+    countDeprecatedTokens(): Promise<{
+        orphanedTokens: number;
+        activeOrphanedTokens: number;
+        legacyTokens: number;
+        activeLegacyTokens: number;
+    }>;
 }

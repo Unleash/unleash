@@ -321,6 +321,26 @@ export default class MetricsMonitor {
             labelNames: ['project_id'],
         });
 
+        const orphanedTokensTotal = createGauge({
+            name: 'orphaned_api_tokens_total',
+            help: 'Number of API tokens without a project',
+        });
+
+        const orphanedTokensActive = createGauge({
+            name: 'orphaned_api_tokens_active',
+            help: 'Number of API tokens without a project, last seen within 3 months',
+        });
+
+        const legacyTokensTotal = createGauge({
+            name: 'legacy_api_tokens_total',
+            help: 'Number of API tokens with v1 format',
+        });
+
+        const legacyTokensActive = createGauge({
+            name: 'legacy_api_tokens_active',
+            help: 'Number of API tokens with v1 format, last seen within 3 months',
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -393,6 +413,22 @@ export default class MetricsMonitor {
                 for (const [type, value] of stats.apiTokens) {
                     apiTokens.labels({ type }).set(value);
                 }
+
+                orphanedTokensTotal.reset();
+                orphanedTokensTotal.set(stats.deprecatedTokens.orphanedTokens);
+
+                orphanedTokensActive.reset();
+                orphanedTokensActive.set(
+                    stats.deprecatedTokens.activeOrphanedTokens,
+                );
+
+                legacyTokensTotal.reset();
+                legacyTokensTotal.set(stats.deprecatedTokens.legacyTokens);
+
+                legacyTokensActive.reset();
+                legacyTokensActive.set(
+                    stats.deprecatedTokens.activeLegacyTokens,
+                );
 
                 if (maxEnvironmentStrategies) {
                     maxFeatureEnvironmentStrategies.reset();

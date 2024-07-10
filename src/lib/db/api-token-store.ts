@@ -43,7 +43,8 @@ const createTokenRowReducer =
             if (
                 !allowOrphanedWildcardTokens &&
                 !tokenRow.project &&
-                !tokenRow.secret.startsWith('*:') &&
+                tokenRow.secret.includes(':') && // Exclude legacy tokens
+                !tokenRow.secret.startsWith('*:') && // Exclude intentionally wildcard
                 (tokenRow.type === ApiTokenType.CLIENT ||
                     tokenRow.type === ApiTokenType.FRONTEND)
             ) {
@@ -269,5 +270,44 @@ export class ApiTokenStore implements IApiTokenStore {
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }
+    }
+
+    async countDeprecatedTokens(): Promise<{
+        orphanedTokens: number;
+        activeOrphanedTokens: number;
+        legacyTokens: number;
+        activeLegacyTokens: number;
+    }> {
+        const allLegacy = await this.makeTokenProjectQuery()
+            .whereNull('token_project_link.project')
+            .andWhere('tokens.secret', 'NOT LIKE', '%:%');
+
+        const activeLegacy = await this.makeTokenProjectQuery()
+            .whereNull('token_project_link.project')
+            .andWhere('tokens.secret', 'NOT LIKE', '%:%')
+            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'");
+
+        const orphanedTokensQuery = this.makeTokenProjectQuery()
+            .whereNull('token_project_link.project')
+            .andWhere('tokens.secret', 'NOT LIKE', '*:%') // Exclude intentionally wildcard tokens
+            .andWhere('tokens.secret', 'LIKE', '%:%') // Exclude legacy tokens
+            .andWhere((builder) => {
+                builder
+                    .where('tokens.type', ApiTokenType.CLIENT)
+                    .orWhere('tokens.type', ApiTokenType.FRONTEND);
+            });
+
+        const allOrphaned = await orphanedTokensQuery.clone();
+
+        const activeOrphaned = await orphanedTokensQuery
+            .clone()
+            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'");
+
+        return {
+            orphanedTokens: allOrphaned.length,
+            activeOrphanedTokens: activeOrphaned.length,
+            legacyTokens: allLegacy.length,
+            activeLegacyTokens: activeLegacy.length,
+        };
     }
 }

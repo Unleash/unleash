@@ -200,7 +200,9 @@ cargo add tokio --features full
 cargo add unleash-api-client --features reqwest
 ```
 
-There are a few dependencies, and here's why: We need an HTTP client to make the request, and `serde` to deserialize the Unleash response. Our SDK is constantly polling Unleash to retrieve the value of feature flags, and caches that in memory. We don't want to block your app while this happens, so we need an async runtime. We're picking `tokio`.
+There are a few dependencies, and here's why: We need an HTTP client to make the request, and `serde` to deserialize the Unleash response. Our SDK is constantly polling Unleash to retrieve the value of feature flags, and caches that in memory. 
+
+We want to let you choose the nature of that concurrency, so we're compatible with `async-std`, `tokio` and standard threads. We're picking `tokio` here.
 
 ```rust
 use enum_map::Enum;

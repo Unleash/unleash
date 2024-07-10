@@ -270,7 +270,7 @@ fn process_images(
 
 ## 5. Verify the toggle experience
 
-Now that we’ve connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment. Disable the flag and you should only see the WebP conversion.
+Now that we’ve connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you should only see the WebP conversion.
 
 > **Note:** An update to a feature flag may take 30 seconds to propagate.
 

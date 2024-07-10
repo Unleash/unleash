@@ -5,6 +5,20 @@ import { hoursToSeconds } from 'date-fns';
 
 const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
     if (config.secureHeaders) {
+        const includeUnsafeInline = !config.flagResolver.isEnabled(
+            'removeUnsafeInlineStyleSrc',
+        );
+        const styleSrc = ["'self'"];
+        if (includeUnsafeInline) {
+            styleSrc.push("'unsafe-inline'");
+        }
+        styleSrc.push(
+            'cdn.getunleash.io',
+            'fonts.googleapis.com',
+            'fonts.gstatic.com',
+            'data:',
+            ...config.additionalCspAllowedDomains.styleSrc,
+        );
         const defaultHelmet = helmet({
             hsts: {
                 maxAge: hoursToSeconds(24 * 365 * 2), // 2 non-leap years
@@ -26,15 +40,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'fonts.gstatic.com',
                         ...config.additionalCspAllowedDomains.fontSrc,
                     ],
-                    styleSrc: [
-                        "'self'",
-                        "'unsafe-inline'",
-                        'cdn.getunleash.io',
-                        'fonts.googleapis.com',
-                        'fonts.gstatic.com',
-                        'data:',
-                        ...config.additionalCspAllowedDomains.styleSrc,
-                    ],
+                    styleSrc,
                     scriptSrc: [
                         "'self'",
                         'cdn.getunleash.io',

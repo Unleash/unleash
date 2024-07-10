@@ -272,7 +272,9 @@ fn process_images(
 
 Now that we’ve connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you should only see the WebP conversion.
 
-> **Note:** An update to a feature flag may take 30 seconds to propagate.
+:::info
+Your feature flag configuration will only update as often as your SDK polls Unleash. The default polling interval for the Rust SDK is 15 seconds, but you can set whatever interval works best for your use case.
+:::
 
 ## Conclusion
 

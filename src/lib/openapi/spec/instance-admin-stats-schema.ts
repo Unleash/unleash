@@ -227,6 +227,40 @@ export const instanceAdminStatsSchema = {
             example:
                 'b023323477abb1eb145bebf3cdb30a1c2063e3edc1f7ae474ed8ed6c80de9a3b',
         },
+        deprecatedTokens: {
+            type: 'object',
+            description:
+                'The number of active users in the last 7, 30 and 90 days',
+            properties: {
+                orphanedTokens: {
+                    type: 'number',
+                    description:
+                        'The number of API tokens that had all projects deleted',
+                    example: 5,
+                    minimum: 0,
+                },
+                activeOrphanedTokens: {
+                    type: 'number',
+                    description:
+                        'The number of orphaned tokens active in the last 90 days',
+                    example: 2,
+                    minimum: 0,
+                },
+                legacyTokens: {
+                    type: 'number',
+                    description: 'The number of API tokens in the v1 format',
+                    example: 4,
+                    minimum: 0,
+                },
+                activeLegacyTokens: {
+                    type: 'number',
+                    description:
+                        'The number of legacy tokens active in the last 90 days',
+                    example: 1,
+                    minimum: 0,
+                },
+            },
+        },
     },
     components: {},
 } as const;

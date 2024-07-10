@@ -41,7 +41,40 @@ test('get token returns the token when exists', async () => {
 });
 
 describe('count deprecated tokens', () => {
-    test('should return 0 for all deprecated tokens', async () => {
+    test('should return 0 if there is no legacy or orphaned tokens', async () => {
+        await stores.projectStore.create({
+            id: 'test',
+            name: 'test',
+        });
+        await stores.apiTokenStore.insert({
+            secret: '*:*.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
+            environment: 'default',
+            type: ApiTokenType.ADMIN,
+            projects: [],
+            tokenName: 'admin-token',
+        });
+        await stores.apiTokenStore.insert({
+            secret: 'default:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            tokenName: 'client-token',
+        });
+        await stores.apiTokenStore.insert({
+            secret: '*:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178',
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: [],
+            tokenName: 'client-wildcard-token',
+        });
+        await stores.apiTokenStore.insert({
+            secret: '[]:production.3d6bdada42ddbd63a019d26955178be44368985f7fb3237c584ef86f',
+            environment: 'default',
+            type: ApiTokenType.FRONTEND,
+            projects: ['default', 'test'],
+            tokenName: 'frontend-token',
+        });
+
         const deprecatedTokens =
             await stores.apiTokenStore.countDeprecatedTokens();
 

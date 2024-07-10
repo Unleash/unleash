@@ -304,7 +304,7 @@ const flags: IFlags = {
     ),
     allowOrphanedWildcardTokens: parseEnvVarBoolean(
         process.env.UNLEASH_ORPHANED_TOKENS_KILL_SWITCH,
-        false,
+        true,
     ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,

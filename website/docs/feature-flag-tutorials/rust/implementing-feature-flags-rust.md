@@ -110,7 +110,7 @@ use image::io::Reader as ImageReader;
 use ravif::{Encoder as AvifEncoder, Img};
 use rgb::FromSlice;
 use std::error::Error;
-use unleash_api_client::{client, config::EnvironmentConfig};
+use std::fs;
 use webp::Encoder as WebPEncoder;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -118,7 +118,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Convert to WebP
     let webp_data = WebPEncoder::from_image(&img)?.encode(75.0);
-    std::fs::write("output.webp", webp_data.to_vec())?;
+    fs::write("output.webp", webp_data.to_vec())?;
 
     Ok(())
 }
@@ -145,7 +145,7 @@ use image::io::Reader as ImageReader;
 use ravif::{Encoder as AvifEncoder, Img};
 use rgb::FromSlice;
 use std::error::Error;
-use unleash_api_client::{client, config::EnvironmentConfig};
+use std::fs;
 use webp::Encoder as WebPEncoder;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -153,7 +153,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Convert to WebP
     let webp_data = WebPEncoder::from_image(&img)?.encode(75.0);
-    std::fs::write("output.webp", webp_data.to_vec())?;
+    fs::write("output.webp", webp_data.to_vec())?;
 
     // Convert to AVIF
     let rgba_image = img.to_rgba8();
@@ -163,7 +163,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         rgba_image.width() as usize,
         rgba_image.height() as usize,
     ))?;
-    std::fs::write("output.avif", avif_data.avif_file)?;
+    fs::write("output.avif", avif_data.avif_file)?;
 
     Ok(())
 }
@@ -207,10 +207,12 @@ use enum_map::Enum;
 use image::io::Reader as ImageReader;
 use ravif::{Encoder as AvifEncoder, Img};
 use rgb::FromSlice;
+use std::error::Error;
+use std::fs;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tokio::time::sleep;
-use unleash_api_client::client;
+use unleash_api_client::client::ClientBuilder;
 use webp::Encoder as WebPEncoder;
 
 #[derive(Debug, Deserialize, Serialize, Enum, Clone)]
@@ -219,8 +221,8 @@ enum Flags {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
-    let client = client::ClientBuilder::default().into_client::<Flags, reqwest::Client>(
+async fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
+    let client = ClientBuilder::default().into_client::<Flags, reqwest::Client>(
         "http://localhost:4242/api",
         "unleash-rust-client-example",
         "unleash-rust-client-example",
@@ -237,7 +239,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
 
         // allow tokio::join to finish
         client.stop_poll().await;
-        Ok::<(), Box<dyn std::error::Error + Send + Sync + 'static>>(())
+        Ok::<(), Box<dyn Error + Send + Sync + 'static>>(())
     });
 
     Ok(())
@@ -245,7 +247,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
 
 fn process_images(
     convert_to_avif: bool,
-) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
+) -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
     let img = ImageReader::open("input.png")?.decode()?;
 
     if convert_to_avif {
@@ -257,12 +259,12 @@ fn process_images(
             rgba_image.width() as usize,
             rgba_image.height() as usize,
         ))?;
-        std::fs::write("output.avif", avif_data.avif_file)?;
+        fs::write("output.avif", avif_data.avif_file)?;
         println!("Image conversion to AVIF completed successfully.");
     } else {
         // Convert to WebP
         let webp_data = WebPEncoder::from_image(&img)?.encode(75.0);
-        std::fs::write("output.webp", webp_data.to_vec())?;
+        fs::write("output.webp", webp_data.to_vec())?;
         println!("Image conversion to WebP completed successfully.");
     }
 

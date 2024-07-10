@@ -187,7 +187,7 @@ Now, let’s connect our project to Unleash so that you can toggle that feature 
 You’ll need 3 things:
 
 -   The Unleash SDK installed.
--   The URL of your Unleash instance’s API. It’s `[http://localhost:4242/api/](http://localhost:4242/api/)` for your local version. You’ll want to replace it with your remote instance.
+-   The URL of your Unleash instance’s API. It’s `http://localhost:4242/api/` for your local version. You’ll want to replace it with your remote instance.
 -   The API token we created on our Unleash instance, feel free to create another one if you can’t find it.
 
 Let's first install all the SDK and all its dependencies.

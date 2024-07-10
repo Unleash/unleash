@@ -1,8 +1,12 @@
 import { styled, Tab } from '@mui/material';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 
-export const StyledDiv = styled('div')(() => ({
+export const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
+    maxWidth: '90%',
+    [theme.breakpoints.down('md')]: {
+        maxWidth: '70%',
+    },
 }));
 
 export const StyledTopRow = styled('div')(() => ({
@@ -20,6 +24,7 @@ export const StyledColumn = styled('div')(() => ({
 export const StyledName = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h1.fontSize,
     textOverflow: 'ellipsis',
+    overflow: 'hidden',
     whiteSpace: 'nowrap',
 }));
 

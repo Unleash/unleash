@@ -216,6 +216,7 @@ export const Project = () => {
                                 )}
                                 show={
                                     <PermissionIconButton
+                                        sx={{ ml: '50px' }}
                                         permission={UPDATE_FEATURE}
                                         projectId={projectId}
                                         onClick={() => setModalOpen(true)}

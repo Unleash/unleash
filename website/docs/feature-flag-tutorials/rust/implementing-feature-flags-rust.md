@@ -95,7 +95,7 @@ Add the following dependencies:
 cargo add image ravif rgb webp
 ```
 
-We use the `image`, `webp` and `ravif` crates to convert images to WebP and Avif, respectively. The `unleash_api_client` crate is used to communicate with the Unleash server. The `tokio` and `reqwest` crates are used to make this connection asynchronous.
+We use the `image`, `webp` and `ravif` crates to convert images to WebP and Avif, respectively. The `unleash_api_client` crate is used to communicate with the Unleash server. The `tokio` crate is used to make this connection asynchronous.
 
 Final step before we start coding: Download this image or add an image of your own and call it "input.png." Make sure it's in the same folder.
 

@@ -1,11 +1,10 @@
+import { Fragment, type FC } from 'react';
 import { styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Fragment, type FC } from 'react';
-import WarningIcon from '@mui/icons-material/WarningAmberRounded';
 import ErrorIcon from '@mui/icons-material/ReportGmailerrorredRounded';
 import { Link } from 'react-router-dom';
 
@@ -17,11 +16,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const StyledWarningIcon = styled(WarningIcon)(({ theme }) => ({
-    color: theme.palette.warning.main,
-    marginBottom: theme.spacing(0.5),
-    marginLeft: theme.spacing(0.5),
-}));
 const StyledErrorIcon = styled(ErrorIcon)(({ theme }) => ({
     color: theme.palette.error.main,
     marginBottom: theme.spacing(0.5),
@@ -97,8 +91,8 @@ export const ProjectsList: FC<IProjectsListProps> = ({
             return (
                 <>
                     ALL current and future projects. This is an orphaned token
-                    with it's project deleted.
-                    {/* FIXME: more actionable info */}
+                    with it's project deleted. This token gives more access than
+                    it was intended to and should be deleted.
                 </>
             );
         }
@@ -116,7 +110,7 @@ export const ProjectsList: FC<IProjectsListProps> = ({
             );
         }
 
-        return 'All projects';
+        return 'ALL current and future projects.';
     };
 
     return (
@@ -125,7 +119,6 @@ export const ProjectsList: FC<IProjectsListProps> = ({
                 <StyledContainer>
                     <Highlighter search={searchQuery}>*</Highlighter>
                     {!isWildcard && !isLegacy && <StyledErrorIcon />}
-                    {isLegacy && <StyledWarningIcon />}
                 </StyledContainer>
             </HtmlTooltip>
         </TextCell>

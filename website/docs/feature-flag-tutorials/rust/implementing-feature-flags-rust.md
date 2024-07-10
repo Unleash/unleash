@@ -287,4 +287,4 @@ All done! Now you know how to add feature flags with Unleash in Rust. You’ve l
 -   Initialise the Unleash client and provide it with an async runtime
 -   Grab the value of a feature flag with the Rust SDK
 
-Thank you
+Thank you!

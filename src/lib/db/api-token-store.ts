@@ -278,16 +278,25 @@ export class ApiTokenStore implements IApiTokenStore {
         legacyTokens: number;
         activeLegacyTokens: number;
     }> {
-        const allLegacy = await this.makeTokenProjectQuery()
-            .whereNull('token_project_link.project')
-            .andWhere('tokens.secret', 'NOT LIKE', '%:%');
+        const allLegacyCount = await this.db<ITokenRow>(`${TABLE} as tokens`)
+            .where('tokens.secret', 'NOT LIKE', '%:%')
+            .count()
+            .first()
+            .then((res) => Number(res?.count));
 
-        const activeLegacy = await this.makeTokenProjectQuery()
-            .whereNull('token_project_link.project')
-            .andWhere('tokens.secret', 'NOT LIKE', '%:%')
-            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'");
+        const activeLegacyCount = await this.db<ITokenRow>(`${TABLE} as tokens`)
+            .where('tokens.secret', 'NOT LIKE', '%:%')
+            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
+            .count()
+            .first()
+            .then((res) => Number(res?.count));
 
-        const orphanedTokensQuery = this.makeTokenProjectQuery()
+        const orphanedTokensQuery = this.db<ITokenRow>(`${TABLE} as tokens`)
+            .leftJoin(
+                `${API_LINK_TABLE} as token_project_link`,
+                'tokens.secret',
+                'token_project_link.secret',
+            )
             .whereNull('token_project_link.project')
             .andWhere('tokens.secret', 'NOT LIKE', '*:%') // Exclude intentionally wildcard tokens
             .andWhere('tokens.secret', 'LIKE', '%:%') // Exclude legacy tokens
@@ -297,17 +306,24 @@ export class ApiTokenStore implements IApiTokenStore {
                     .orWhere('tokens.type', ApiTokenType.FRONTEND);
             });
 
-        const allOrphaned = await orphanedTokensQuery.clone();
-
-        const activeOrphaned = await orphanedTokensQuery
+        const allOrphanedCount = await orphanedTokensQuery
             .clone()
-            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'");
+            .count()
+            .first()
+            .then((res) => Number(res?.count));
+
+        const activeOrphanedCount = await orphanedTokensQuery
+            .clone()
+            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
+            .count()
+            .first()
+            .then((res) => Number(res?.count));
 
         return {
-            orphanedTokens: allOrphaned.length,
-            activeOrphanedTokens: activeOrphaned.length,
-            legacyTokens: allLegacy.length,
-            activeLegacyTokens: activeLegacy.length,
+            orphanedTokens: allOrphanedCount || 0,
+            activeOrphanedTokens: activeOrphanedCount || 0,
+            legacyTokens: allLegacyCount || 0,
+            activeLegacyTokens: activeLegacyCount || 0,
         };
     }
 }

@@ -5,6 +5,8 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Fragment, type FC } from 'react';
+import WarningIcon from '@mui/icons-material/WarningAmberRounded';
+import ErrorIcon from '@mui/icons-material/ReportGmailerrorredRounded';
 import { Link } from 'react-router-dom';
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -15,12 +17,35 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
+const StyledWarningIcon = styled(WarningIcon)(({ theme }) => ({
+    color: theme.palette.warning.main,
+    marginBottom: theme.spacing(0.5),
+    marginLeft: theme.spacing(0.5),
+}));
+const StyledErrorIcon = styled(ErrorIcon)(({ theme }) => ({
+    color: theme.palette.error.main,
+    marginBottom: theme.spacing(0.5),
+    marginLeft: theme.spacing(0.5),
+}));
+
+const StyledContainer = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+});
+
 interface IProjectsListProps {
     project?: string;
     projects?: string | string[];
+    isWildcard?: boolean;
+    isLegacy?: boolean;
 }
 
-export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
+export const ProjectsList: FC<IProjectsListProps> = ({
+    projects,
+    project,
+    isWildcard,
+    isLegacy,
+}) => {
     const { searchQuery } = useSearchHighlightContext();
 
     const projectsList =
@@ -67,16 +92,41 @@ export const ProjectsList: FC<IProjectsListProps> = ({ projects, project }) => {
         return <LinkCell to={`/projects/${item}`} title={item} />;
     }
 
+    const getTitle = () => {
+        if (!isWildcard && !isLegacy) {
+            return (
+                <>
+                    ALL current and future projects. This is an orphaned token
+                    with it's project deleted.
+                    {/* FIXME: more actionable info */}
+                </>
+            );
+        }
+
+        if (isLegacy) {
+            return (
+                <>
+                    ALL current and future projects. This token has v1 format.
+                    Read more about{' '}
+                    <a href='https://docs.getunleash.io/reference/api-tokens-and-client-keys#format'>
+                        token formats
+                    </a>
+                    .
+                </>
+            );
+        }
+
+        return 'All projects';
+    };
+
     return (
         <TextCell>
-            <HtmlTooltip
-                title='ALL current and future projects'
-                placement='bottom'
-                arrow
-            >
-                <span>
+            <HtmlTooltip title={getTitle()} placement='bottom' arrow>
+                <StyledContainer>
                     <Highlighter search={searchQuery}>*</Highlighter>
-                </span>
+                    {!isWildcard && !isLegacy && <StyledErrorIcon />}
+                    {isLegacy && <StyledWarningIcon />}
+                </StyledContainer>
             </HtmlTooltip>
         </TextCell>
     );

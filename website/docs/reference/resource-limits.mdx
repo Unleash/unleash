@@ -1,22 +1,25 @@
 ---
 title: Resource Limits
 ---
+import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::info Beta feature
 Resource limits are currently in beta.
 :::
 
-To ensure that Unleash operates smoothly, it includes resource limits for some of the key resources that you can create. The limit for each resource can vary between the different unleash plans, and some plans may enforce stricter limits than what the Unleash system can handle. Refer to the [Unleash pricing & plans](https://www.getunleash.io/pricing) page for more information on plan-specific limits
+<Figure caption="When you're close to reaching the limit for a resource, you'll see a warning in the Unleash UI. The warning will tell you what the limit is, how close you are to reaching it, and how you can increase the limit." img="/img/project-limit-warning.png" />
 
-Those limits are:
+To ensure that Unleash operates smoothly, it includes resource limits for some of the key resources that you can create. The limit for each resource can vary between the different unleash plans.
+
+The resources and their respective limits are:
 
 | Resource                                               | OSS limit | Pro limit | Enterprise limit | Environment variable                           |
 |--------------------------------------------------------|----------:|----------:|-----------------:|------------------------------------------------|
 | [Feature flags](feature-toggles.mdx)                   |     5,000 |     5,000 |           50,000 | `UNLEASH_FEATURE_FLAGS_LIMIT`                  |
-| [Projects](projects.md)                                |         1 |       500 |              500 | `UNLEASH_PROJECTS_LIMIT`                       |
+| [Projects](projects.md)                                |         1 |         3 |              500 | `UNLEASH_PROJECTS_LIMIT`                       |
 | [Segments](segments.mdx)                               |       300 |       300 |              300 | `UNLEASH_SEGMENTS_LIMIT`                       |
 | [API tokens](api-tokens-and-client-keys.mdx)           |     2,000 |     2,000 |            2,000 | `UNLEASH_API_TOKENS_LIMIT`                     |
-| [Environments](environments.md)                        |         2 |        50 |               50 | `UNLEASH_ENVIRONMENTS_LIMIT`                   |
+| [Environments](environments.md)                        |         2 |         2 |               50 | `UNLEASH_ENVIRONMENTS_LIMIT`                   |
 | [Strategies](activation-strategies.md) per environment |        30 |        30 |               30 | `UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT` |
 | [Constraints](strategy-constraints.md) per strategy    |        30 |        30 |               30 | `UNLEASH_CONSTRAINTS_LIMIT`                    |
 | Values per constraint                                  |       250 |       250 |            1,000 | `UNLEASH_CONSTRAINT_VALUES_LIMIT`              |
@@ -29,13 +32,8 @@ Those limits are:
 
 ## Overriding the limits
 
+With two exceptions, all the limits can be overridden through the use of their respective environment variables. However, while it is possible to override these limits, we advise against it in most cases. If you feel that you're unable to do what you need to do because of the limits, we'd love to hear from you.
 
-### Limits you can't override
+If you operate a self-hosted Unleash instance, you can adjust the limit yourself. For hosted users of Unleash, you'll need to reach out and talk to your Unleash contact.
 
-smooth
-
-All limits can be expanded.
-
-You will be notified before reaching the limits
-
-![A warning element explaining that you are close to reaching the limit for projects. It tells you what the limit is, how close you are, and how to increase the limit.](/img/project-limit-warning.png)
+The only limits that can't be changed, are the limits for projects and environments for OSS instances.

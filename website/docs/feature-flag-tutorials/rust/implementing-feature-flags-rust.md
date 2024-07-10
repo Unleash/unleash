@@ -133,7 +133,7 @@ cargo run
 
 You should see another image named `output.webp` in your folder. Make sure that the image is the same and that the compression worked correctly.
 
-![Another image named `output.webp` is now in your folder](./webp-image-in-folder.png)
+![Project directory containing the newly created `output.webp`](./webp-image-in-folder.png)
 
 ## 3. Add Avif support
 

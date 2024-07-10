@@ -353,6 +353,7 @@ export default class MetricsMonitor {
                     stageDurationByProject,
                     largestProjectEnvironments,
                     largestFeatureEnvironments,
+                    deprecatedTokens,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
@@ -366,6 +367,7 @@ export default class MetricsMonitor {
                     stores.largestResourcesReadModel.getLargestFeatureEnvironments(
                         1,
                     ),
+                    stores.apiTokenStore.countDeprecatedTokens(),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -415,20 +417,16 @@ export default class MetricsMonitor {
                 }
 
                 orphanedTokensTotal.reset();
-                orphanedTokensTotal.set(stats.deprecatedTokens.orphanedTokens);
+                orphanedTokensTotal.set(deprecatedTokens.orphanedTokens);
 
                 orphanedTokensActive.reset();
-                orphanedTokensActive.set(
-                    stats.deprecatedTokens.activeOrphanedTokens,
-                );
+                orphanedTokensActive.set(deprecatedTokens.activeOrphanedTokens);
 
                 legacyTokensTotal.reset();
-                legacyTokensTotal.set(stats.deprecatedTokens.legacyTokens);
+                legacyTokensTotal.set(deprecatedTokens.legacyTokens);
 
                 legacyTokensActive.reset();
-                legacyTokensActive.set(
-                    stats.deprecatedTokens.activeLegacyTokens,
-                );
+                legacyTokensActive.set(deprecatedTokens.activeLegacyTokens);
 
                 if (maxEnvironmentStrategies) {
                     maxFeatureEnvironmentStrategies.reset();

@@ -61,12 +61,6 @@ export interface InstanceStats {
         enabledCount: number;
         variantCount: number;
     };
-    deprecatedTokens: {
-        orphanedTokens: number;
-        activeOrphanedTokens: number;
-        legacyTokens: number;
-        activeLegacyTokens: number;
-    };
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -256,7 +250,6 @@ export class InstanceStatsService {
             featureImports,
             productionChanges,
             previousDayMetricsBucketsCount,
-            deprecatedTokens,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -280,7 +273,6 @@ export class InstanceStatsService {
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
             this.getProductionChanges(),
             this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
-            this.apiTokenStore.countDeprecatedTokens(),
         ]);
 
         return {
@@ -313,7 +305,6 @@ export class InstanceStatsService {
             featureImports,
             productionChanges,
             previousDayMetricsBucketsCount,
-            deprecatedTokens,
         };
     }
 

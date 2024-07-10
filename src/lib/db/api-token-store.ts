@@ -43,7 +43,7 @@ const createTokenRowReducer =
             if (
                 !allowOrphanedWildcardTokens &&
                 !tokenRow.project &&
-                tokenRow.secret.includes(':') && // Exclude legacy tokens
+                tokenRow.secret.includes(':') && // Exclude v1 tokens
                 !tokenRow.secret.startsWith('*:') && // Exclude intentionally wildcard
                 (tokenRow.type === ApiTokenType.CLIENT ||
                     tokenRow.type === ApiTokenType.FRONTEND)

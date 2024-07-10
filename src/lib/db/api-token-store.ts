@@ -278,18 +278,18 @@ export class ApiTokenStore implements IApiTokenStore {
         legacyTokens: number;
         activeLegacyTokens: number;
     }> {
-        const allLegacyCount = await this.db<ITokenRow>(`${TABLE} as tokens`)
+        const allLegacyCount = this.db<ITokenRow>(`${TABLE} as tokens`)
             .where('tokens.secret', 'NOT LIKE', '%:%')
             .count()
             .first()
-            .then((res) => Number(res?.count));
+            .then((res) => Number(res?.count) || 0);
 
-        const activeLegacyCount = await this.db<ITokenRow>(`${TABLE} as tokens`)
+        const activeLegacyCount = this.db<ITokenRow>(`${TABLE} as tokens`)
             .where('tokens.secret', 'NOT LIKE', '%:%')
             .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
             .count()
             .first()
-            .then((res) => Number(res?.count));
+            .then((res) => Number(res?.count) || 0);
 
         const orphanedTokensQuery = this.db<ITokenRow>(`${TABLE} as tokens`)
             .leftJoin(
@@ -306,24 +306,36 @@ export class ApiTokenStore implements IApiTokenStore {
                     .orWhere('tokens.type', ApiTokenType.FRONTEND);
             });
 
-        const allOrphanedCount = await orphanedTokensQuery
+        const allOrphanedCount = orphanedTokensQuery
             .clone()
             .count()
             .first()
-            .then((res) => Number(res?.count));
+            .then((res) => Number(res?.count) || 0);
 
-        const activeOrphanedCount = await orphanedTokensQuery
+        const activeOrphanedCount = orphanedTokensQuery
             .clone()
             .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
             .count()
             .first()
-            .then((res) => Number(res?.count));
+            .then((res) => Number(res?.count) || 0);
+
+        const [
+            orphanedTokens,
+            activeOrphanedTokens,
+            legacyTokens,
+            activeLegacyTokens,
+        ] = await Promise.all([
+            allOrphanedCount,
+            activeOrphanedCount,
+            allLegacyCount,
+            activeLegacyCount,
+        ]);
 
         return {
-            orphanedTokens: allOrphanedCount || 0,
-            activeOrphanedTokens: activeOrphanedCount || 0,
-            legacyTokens: allLegacyCount || 0,
-            activeLegacyTokens: activeLegacyCount || 0,
+            orphanedTokens,
+            activeOrphanedTokens,
+            legacyTokens,
+            activeLegacyTokens,
         };
     }
 }

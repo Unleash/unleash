@@ -67,7 +67,7 @@ From your project view on the platform, go to "Project Settings" and then "API A
 
 Select the ‘New API token’ button or copy an existing token.
 
-![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
+![The API token button in API Access view](/img/tutorial-create-api-token.png)
 
 Name the API token and select the “Server-side SDK (Client)” token type. You can read more about [Unleash API tokens in our documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens).
 

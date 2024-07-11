@@ -75,7 +75,7 @@ Name the API token and select the “Server-side SDK (Client)” token type. You
 
 After that, the token should have access to the “development” environment, as shown in the platform screenshot below.
 
-![Image of the API token list](/img/tutorial-api-token-list.png)
+![Unleash's API token list](/img/tutorial-api-token-list.png)
 
 The API token you generated can be managed in the API Access view in your project settings. It will come in handy later.
 

@@ -71,7 +71,7 @@ Select the ‘New API token’ button or copy an existing token.
 
 Name the API token and select the “Server-side SDK (Client)” token type. You can read more about [Unleash API tokens in our documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens).
 
-![Selecting the API token type](/img/tutorial-api-token-type.png).
+![Selecting the API token type](/img/tutorial-api-token-type.png)
 
 After that, the token should have access to the “development” environment, as shown in the platform screenshot below.
 

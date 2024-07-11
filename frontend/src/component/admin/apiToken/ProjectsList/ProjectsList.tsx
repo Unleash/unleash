@@ -95,10 +95,7 @@ export const ProjectsList: FC<IProjectsListProps> = ({
                 title={
                     isOrphanedToken ? (
                         <>
-                            ALL current and future projects. This is an orphaned
-                            token with it's project deleted. This token gives
-                            more access than it was intended to and should be
-                            deleted.
+                            This is an orphaned token. All of its original projects have been deleted and it now has access to all current and future projects. You should stop using this token and delete it. It will lose access to all projects at a later date.
                         </>
                     ) : (
                         'ALL current and future projects.'

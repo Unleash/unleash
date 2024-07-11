@@ -137,7 +137,7 @@ You should see another image named `output.webp` in your folder. Make sure that 
 
 ## 3. Add Avif support
 
-Now let's add support for Avif. We'll use a crate named `ravif` for this, which is a pure Rust converter. Later down the line, we'll rely on a boolean feature flag to toggle between the WebP and the Avif conversion.
+Now let's add support for Avif. We'll use a crate named `ravif` for this, which is a pure Rust converter. Later down the line, we'll rely on a feature flag to toggle between the WebP and the Avif conversion.
 
 ```rust
 

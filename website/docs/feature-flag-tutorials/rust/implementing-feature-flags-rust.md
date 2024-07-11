@@ -101,7 +101,7 @@ We use the `image`, `webp` and `ravif` crates to convert images to WebP and Avif
 
 Final step before we start coding: Download this image or add an image of your own and call it "input.png." Make sure it's in the same folder.
 
-![The Great Wave off Kanagawa, to be used as an input image for our program](input.png)
+!["The Great Wave off Kanagawa" by Hokusai. A woodblock print of a cresting wave.](input.png)
 
 Let's write some Rust code to convert the image to WebP. We're relying on the `webp` crate which gives us a straightforward `WebPEncoder::from_image(&img)` method. We'll then use the feature flag that we just created to toggle the conversion to Avif rather than WebP.
 

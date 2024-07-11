@@ -78,4 +78,18 @@ export default class FakeApiTokenStore
         t.expiresAt = expiresAt;
         return t;
     }
+
+    async countDeprecatedTokens(): Promise<{
+        orphanedTokens: number;
+        activeOrphanedTokens: number;
+        legacyTokens: number;
+        activeLegacyTokens: number;
+    }> {
+        return {
+            orphanedTokens: 0,
+            activeOrphanedTokens: 0,
+            legacyTokens: 0,
+            activeLegacyTokens: 0,
+        };
+    }
 }

@@ -35,6 +35,8 @@ async function resetDatabase(knex) {
         knex.table('tag_types').del(),
         knex.table('addons').del(),
         knex.table('users').del(),
+        knex.table('api_tokens').del(),
+        knex.table('api_token_project').del(),
         knex
             .table('reset_tokens')
             .del(),

@@ -43,7 +43,8 @@ const createTokenRowReducer =
             if (
                 !allowOrphanedWildcardTokens &&
                 !tokenRow.project &&
-                !tokenRow.secret.startsWith('*:') &&
+                tokenRow.secret.includes(':') && // Exclude v1 tokens
+                !tokenRow.secret.startsWith('*:') && // Exclude intentionally wildcard
                 (tokenRow.type === ApiTokenType.CLIENT ||
                     tokenRow.type === ApiTokenType.FRONTEND)
             ) {
@@ -269,5 +270,72 @@ export class ApiTokenStore implements IApiTokenStore {
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }
+    }
+
+    async countDeprecatedTokens(): Promise<{
+        orphanedTokens: number;
+        activeOrphanedTokens: number;
+        legacyTokens: number;
+        activeLegacyTokens: number;
+    }> {
+        const allLegacyCount = this.db<ITokenRow>(`${TABLE} as tokens`)
+            .where('tokens.secret', 'NOT LIKE', '%:%')
+            .count()
+            .first()
+            .then((res) => Number(res?.count) || 0);
+
+        const activeLegacyCount = this.db<ITokenRow>(`${TABLE} as tokens`)
+            .where('tokens.secret', 'NOT LIKE', '%:%')
+            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
+            .count()
+            .first()
+            .then((res) => Number(res?.count) || 0);
+
+        const orphanedTokensQuery = this.db<ITokenRow>(`${TABLE} as tokens`)
+            .leftJoin(
+                `${API_LINK_TABLE} as token_project_link`,
+                'tokens.secret',
+                'token_project_link.secret',
+            )
+            .whereNull('token_project_link.project')
+            .andWhere('tokens.secret', 'NOT LIKE', '*:%') // Exclude intentionally wildcard tokens
+            .andWhere('tokens.secret', 'LIKE', '%:%') // Exclude legacy tokens
+            .andWhere((builder) => {
+                builder
+                    .where('tokens.type', ApiTokenType.CLIENT)
+                    .orWhere('tokens.type', ApiTokenType.FRONTEND);
+            });
+
+        const allOrphanedCount = orphanedTokensQuery
+            .clone()
+            .count()
+            .first()
+            .then((res) => Number(res?.count) || 0);
+
+        const activeOrphanedCount = orphanedTokensQuery
+            .clone()
+            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
+            .count()
+            .first()
+            .then((res) => Number(res?.count) || 0);
+
+        const [
+            orphanedTokens,
+            activeOrphanedTokens,
+            legacyTokens,
+            activeLegacyTokens,
+        ] = await Promise.all([
+            allOrphanedCount,
+            activeOrphanedCount,
+            allLegacyCount,
+            activeLegacyCount,
+        ]);
+
+        return {
+            orphanedTokens,
+            activeOrphanedTokens,
+            legacyTokens,
+            activeLegacyTokens,
+        };
     }
 }

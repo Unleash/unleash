@@ -3,12 +3,12 @@ import { FavoriteIconButton } from 'component/common/FavoriteIconButton/Favorite
 
 export const StyledDiv = styled('div')(() => ({
     display: 'flex',
+    overflow: 'hidden',
 }));
 
 export const StyledTopRow = styled('div')(() => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
     width: '100%',
 }));
 
@@ -21,6 +21,7 @@ export const StyledName = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h1.fontSize,
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    overflow: 'hidden',
 }));
 
 export const StyledTitle = styled('span')(({ theme }) => ({
@@ -60,6 +61,7 @@ export const StyledProjectTitle = styled('span')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: theme.spacing(2),
+    overflow: 'hidden',
 }));
 
 export const StyledSeparator = styled('div')(({ theme }) => ({

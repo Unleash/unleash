@@ -95,7 +95,7 @@ const ResetPasswordForm = ({ onSubmit }: IResetPasswordProps) => {
 
             <PasswordMatcher
                 started={started}
-                matchingPasswords={matchingPasswords}
+                passwordsDoNotMatch={!matchingPasswords}
             />
             <StyledButton
                 variant='contained'

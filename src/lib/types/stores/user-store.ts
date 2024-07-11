@@ -28,7 +28,12 @@ export interface IUserStore extends Store<IUser, number> {
     getAllWithId(userIdList: number[]): Promise<IUser[]>;
     getByQuery(idQuery: IUserLookup): Promise<IUser>;
     getPasswordHash(userId: number): Promise<string>;
-    setPasswordHash(userId: number, passwordHash: string): Promise<void>;
+    setPasswordHash(
+        userId: number,
+        passwordHash: string,
+        disallowNPreviousPasswords: number,
+    ): Promise<void>;
+    getPasswordsPreviouslyUsed(userId: number): Promise<string[]>;
     incLoginAttempts(user: IUser): Promise<void>;
     successfullyLogin(user: IUser): Promise<void>;
     count(): Promise<number>;

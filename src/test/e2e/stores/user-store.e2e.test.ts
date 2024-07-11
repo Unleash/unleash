@@ -60,7 +60,7 @@ test('Should require email or username', async () => {
 test('should set password_hash for user', async () => {
     const store = stores.userStore;
     const user = await store.insert({ email: 'admin@mail.com' });
-    await store.setPasswordHash(user.id, 'rubbish');
+    await store.setPasswordHash(user.id, 'rubbish', 5);
     const hash = await store.getPasswordHash(user.id);
 
     expect(hash).toBe('rubbish');

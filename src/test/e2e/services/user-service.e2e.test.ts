@@ -27,6 +27,7 @@ import {
     USER_UPDATED,
 } from '../../../lib/types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
+import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -510,4 +511,78 @@ test('should support a custom root role id when logging in and creating user via
     const permissions = await accessService.getPermissionsForUser(user);
     expect(permissions).toHaveLength(1);
     expect(permissions[0].permission).toBe(CREATE_ADDON);
+});
+
+describe('Should not be able to use any of previous 5 passwords', () => {
+    test('throws exception when trying to use a previously used password', async () => {
+        const name = 'same-password-is-not-allowed';
+        const email = `${name}@test.com`;
+        const password = 'externalScreaming$123';
+        const user = await userService.createUser({
+            email,
+            rootRole: customRole.id,
+            name,
+            password,
+        });
+        await expect(
+            userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                password,
+            ),
+        ).rejects.toThrow(new PasswordPreviouslyUsedError());
+    });
+    test('Is still able to change password to one not used', async () => {
+        const name = 'new-password-is-allowed';
+        const email = `${name}@test.com`;
+        const password = 'externalScreaming$123';
+        const user = await userService.createUser({
+            email,
+            rootRole: customRole.id,
+            name,
+            password,
+        });
+        await expect(
+            userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                'internalScreaming$123',
+            ),
+        ).resolves.not.toThrow();
+    });
+    test('Remembers 5 passwords', async () => {
+        const name = 'remembers-5-passwords-like-a-boss';
+        const email = `${name}@test.com`;
+        const password = 'externalScreaming$123';
+        const user = await userService.createUser({
+            email,
+            rootRole: customRole.id,
+            name,
+            password,
+        });
+        for (let i = 0; i < 5; i++) {
+            await userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                `${password}${i}`,
+            );
+        }
+        await expect(
+            userService.changePasswordWithPreviouslyUsedPasswordCheck(
+                user.id,
+                `${password}`,
+            ),
+        ).resolves.not.toThrow(); // We've added 5 new passwords, so the original should work again
+    });
+    test('Can bypass check by directly calling the changePassword method', async () => {
+        const name = 'can-bypass-check-like-a-boss';
+        const email = `${name}@test.com`;
+        const password = 'externalScreaming$123';
+        const user = await userService.createUser({
+            email,
+            rootRole: customRole.id,
+            name,
+            password,
+        });
+        await expect(
+            userService.changePassword(user.id, `${password}`),
+        ).resolves.not.toThrow(); // By bypassing the check, we can still set the same password as currently set
+    });
 });

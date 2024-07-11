@@ -29,6 +29,8 @@ export const UnleashApiErrorTypes = [
     'OwaspValidationError',
     'ForbiddenError',
     'ExceedsLimitError',
+    'PasswordPreviouslyUsedError',
+    'RateLimitError',
     // server errors; not the end user's fault
     'InternalError',
 ] as const;

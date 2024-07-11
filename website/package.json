@@ -71,7 +71,7 @@
     "@tsconfig/docusaurus": "2.0.3",
     "babel-loader": "9.1.3",
     "enhanced-resolve": "5.17.0",
-    "react-router": "6.24.0",
+    "react-router": "6.24.1",
     "replace-in-file": "7.2.0",
     "typescript": "5.4.5"
   },

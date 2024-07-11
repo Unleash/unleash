@@ -171,9 +171,9 @@
  "devDependencies": {
   "@apidevtools/swagger-parser": "10.1.0",
   "@babel/core": "7.24.7",
-  "@biomejs/biome": "1.8.2",
+  "@biomejs/biome": "^1.8.3",
   "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",
-  "@swc/core": "1.6.5",
+  "@swc/core": "1.6.7",
   "@swc/jest": "0.2.36",
   "@types/bcryptjs": "2.4.6",
   "@types/cors": "2.8.17",

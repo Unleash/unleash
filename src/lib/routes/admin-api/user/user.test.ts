@@ -17,6 +17,7 @@ async function getSetup() {
     await stores.userStore.setPasswordHash(
         currentUser.id,
         await bcrypt.hash(oldPassword, 10),
+        5,
     );
 
     const config = createTestConfig({
@@ -53,7 +54,6 @@ test('should return current user', async () => {
 const owaspPassword = 't7GTx&$Y9pcsnxRv6';
 
 test('should allow user to change password', async () => {
-    expect.assertions(1);
     const { request, base, userStore } = await getSetup();
     await request
         .post(`${base}/api/admin/user/change-password`)

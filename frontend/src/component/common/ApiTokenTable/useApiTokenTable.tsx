@@ -61,10 +61,7 @@ export const useApiTokenTable = (
                     <ProjectsList
                         project={props.row.original.project}
                         projects={props.row.original.projects}
-                        isWildcard={props.row.original.secret?.startsWith?.(
-                            '*:',
-                        )}
-                        isLegacy={!props.row.original.secret?.includes?.(':')}
+                        secret={props.row.original.secret}
                     />
                 ),
                 width: 160,

@@ -7,6 +7,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import ErrorIcon from '@mui/icons-material/Error';
 import { Link } from 'react-router-dom';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -30,15 +31,13 @@ const StyledContainer = styled('div')({
 interface IProjectsListProps {
     project?: string;
     projects?: string | string[];
-    isWildcard?: boolean;
-    isLegacy?: boolean;
+    secret?: string;
 }
 
 export const ProjectsList: FC<IProjectsListProps> = ({
     projects,
     project,
-    isWildcard,
-    isLegacy,
+    secret,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -86,39 +85,34 @@ export const ProjectsList: FC<IProjectsListProps> = ({
         return <LinkCell to={`/projects/${item}`} title={item} />;
     }
 
-    const getTitle = () => {
-        if (!isWildcard && !isLegacy) {
-            return (
-                <>
-                    ALL current and future projects. This is an orphaned token
-                    with it's project deleted. This token gives more access than
-                    it was intended to and should be deleted.
-                </>
-            );
-        }
-
-        if (isLegacy) {
-            return (
-                <>
-                    ALL current and future projects. This token has v1 format.
-                    Read more about{' '}
-                    <a href='https://docs.getunleash.io/reference/api-tokens-and-client-keys#format'>
-                        token formats
-                    </a>
-                    .
-                </>
-            );
-        }
-
-        return 'ALL current and future projects.';
-    };
+    const tokenFormat = secret?.includes(':') ? 'v2' : 'v1'; // see https://docs.getunleash.io/reference/api-tokens-and-client-keys#format
+    const isWildcardToken = secret?.startsWith('*:');
+    const isOrphanedToken = tokenFormat === 'v2' && !isWildcardToken;
 
     return (
         <TextCell>
-            <HtmlTooltip title={getTitle()} placement='bottom' arrow>
+            <HtmlTooltip
+                title={
+                    isOrphanedToken ? (
+                        <>
+                            ALL current and future projects. This is an orphaned
+                            token with it's project deleted. This token gives
+                            more access than it was intended to and should be
+                            deleted.
+                        </>
+                    ) : (
+                        'ALL current and future projects.'
+                    )
+                }
+                placement='bottom'
+                arrow
+            >
                 <StyledContainer>
                     <Highlighter search={searchQuery}>*</Highlighter>
-                    {!isWildcard && !isLegacy && <StyledErrorIcon />}
+                    <ConditionallyRender
+                        condition={isOrphanedToken}
+                        show={<StyledErrorIcon aria-label='Orphaned token' />}
+                    />
                 </StyledContainer>
             </HtmlTooltip>
         </TextCell>

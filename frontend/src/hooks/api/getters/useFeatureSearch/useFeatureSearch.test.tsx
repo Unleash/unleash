@@ -49,7 +49,7 @@ describe('useFeatureSearch', () => {
             total: 1,
         });
         render(<TestComponent params={{ project: 'project1' }} />);
-        await screen.findByText(/Features:/);
+        await screen.findByText(/Features: Feature1/);
         await screen.findByText(
             'Cache: api/admin/search/features?project=project1',
         );
@@ -59,7 +59,7 @@ describe('useFeatureSearch', () => {
             total: 1,
         });
         render(<TestComponent params={{ project: 'project2' }} />);
-        await screen.findByText(/Features:/);
+        await screen.findByText(/Features: Feature2/);
         await screen.findByText(
             'Cache: api/admin/search/features?project=project1api/admin/search/features?project=project2',
         );

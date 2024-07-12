@@ -64,4 +64,32 @@ describe('useFeatureSearch', () => {
             'Cache: api/admin/search/features?project=project1api/admin/search/features?project=project2',
         );
     });
+
+    test('should overwrite cache total with 0 if the next result has 0 values', async () => {
+        const project = 'project3';
+        testServerRoute(
+            server,
+            `/api/admin/search/features?project=${project}`,
+            {
+                features: [{ name: 'Feature1' }],
+                total: 1,
+            },
+        );
+
+        render(<TestComponent params={{ project }} />);
+
+        await screen.findByText(/Total: 1/);
+
+        testServerRoute(
+            server,
+            `/api/admin/search/features?project=${project}`,
+            {
+                features: [],
+                total: 0,
+            },
+        );
+
+        render(<TestComponent params={{ project }} />);
+        await screen.findByText(/Total: 0/);
+    });
 });

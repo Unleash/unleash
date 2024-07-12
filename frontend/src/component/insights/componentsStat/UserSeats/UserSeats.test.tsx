@@ -31,7 +31,7 @@ test('User seats display when seats are available', async () => {
     await screen.findByText('2/20 seats used');
 });
 
-test('User seats display when seats are available', async () => {
+test('User seats does not display when seats are not available', async () => {
     setupApiWithSeats(undefined);
 
     render(<UserSeats />);

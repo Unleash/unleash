@@ -149,9 +149,19 @@ module.exports = {
                     ],
                 },
                 {
-                    type: 'doc',
+                    type: 'category',
                     label: 'iOS',
-                    id: 'feature-flag-tutorials/ios/implementing-feature-flags',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/ios/implementing-feature-flags',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/ios/examples',
+                        },
+                    ],
                 },
                 {
                     type: 'doc',

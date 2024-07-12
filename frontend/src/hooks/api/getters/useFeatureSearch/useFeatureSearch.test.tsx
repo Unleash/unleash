@@ -87,7 +87,7 @@ describe('useFeatureSearch', () => {
         });
 
         // force fetch
-        const button = await screen.findByRole('button');
+        const button = await screen.findByRole('button', { name: 'refetch' });
         button.click();
 
         rerender(<TestComponent params={{ project }} />);

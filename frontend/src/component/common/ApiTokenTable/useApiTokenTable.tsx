@@ -61,6 +61,7 @@ export const useApiTokenTable = (
                     <ProjectsList
                         project={props.row.original.project}
                         projects={props.row.original.projects}
+                        secret={props.row.original.secret}
                     />
                 ),
                 width: 160,

@@ -232,6 +232,7 @@ module.exports = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/scim',
+                        'reference/resource-limits',
                         'reference/rbac',
                         'reference/search-operators',
                         'reference/segments',

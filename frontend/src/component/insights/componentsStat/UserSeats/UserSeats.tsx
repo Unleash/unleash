@@ -39,7 +39,7 @@ export const UserSeats = () => {
         const percentageSeats = Math.floor((users.length / seats) * 100);
 
         return (
-            <Box sx={{ mt: 4 }}>
+            <Box>
                 <TotalSeatsRow>
                     <LicenseIcon />
                     <Typography sx={{ flex: 1 }}>User seats</Typography>

@@ -78,7 +78,7 @@ const createFeatureSearch = () => {
 
         const cacheValues = get(cacheId);
 
-        if (data?.total) {
+        if (data?.total !== undefined) {
             set(cacheId, 'total', data.total);
         }
 

@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -22,17 +25,45 @@ import {
     CREATE_CLIENT_API_TOKEN,
     CREATE_FRONTEND_API_TOKEN,
 } from '@server/types/permissions';
+import { Limit } from 'component/common/Limit/Limit';
 
 const pageTitle = 'Create API token';
 interface ICreateApiTokenProps {
     modal?: boolean;
 }
+
+const StyledLimit = styled(Limit)(({ theme }) => ({
+    margin: theme.spacing(2, 0, 4),
+}));
+
+const useApiTokenLimit = () => {
+    const resourceLimitsEnabled = useUiFlag('resourceLimits');
+    const { tokens, loading: loadingTokens } = useApiTokens();
+    const { uiConfig, loading: loadingConfig } = useUiConfig();
+    const apiTokensLimit = uiConfig.resourceLimits.apiTokens;
+
+    return {
+        resourceLimitsEnabled,
+        limit: apiTokensLimit,
+        currentValue: tokens.length,
+        limitReached: resourceLimitsEnabled && tokens.length >= apiTokensLimit,
+        loading: loadingConfig || loadingTokens,
+    };
+};
+
 export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
+    const {
+        resourceLimitsEnabled,
+        limit,
+        currentValue,
+        limitReached,
+        loading: loadingLimit,
+    } = useApiTokenLimit();
 
     const {
         getApiTokenPayload,
@@ -50,7 +81,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         apiTokenTypes,
     } = useApiTokenForm();
 
-    const { createToken, loading } = useApiTokensApi();
+    const { createToken, loading: loadingCreateToken } = useApiTokensApi();
     const { refetch } = useApiTokens();
 
     usePageTitle(pageTitle);
@@ -96,7 +127,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     return (
         <FormTemplate
-            loading={loading}
+            loading={loadingCreateToken}
             title={pageTitle}
             modal={modal}
             description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature flag configurations and post usage metrics."
@@ -116,6 +147,9 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                             CREATE_CLIENT_API_TOKEN,
                             CREATE_FRONTEND_API_TOKEN,
                         ]}
+                        disabled={
+                            limitReached || loadingLimit || loadingCreateToken
+                        }
                     />
                 }
             >
@@ -141,6 +175,17 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                     type={type}
                     environment={environment}
                     setEnvironment={setEnvironment}
+                />
+                <ConditionallyRender
+                    condition={resourceLimitsEnabled}
+                    show={
+                        <StyledLimit
+                            name='API tokens'
+                            shortName='tokens'
+                            currentValue={currentValue}
+                            limit={limit}
+                        />
+                    }
                 />
             </ApiTokenForm>
             <ConfirmToken

@@ -8,9 +8,9 @@ import { useSWRConfig } from 'swr';
 const server = testServerSetup();
 
 const TestComponent: FC<{ params: { project: string } }> = ({ params }) => {
-    const { loading, error, features, total } = useFeatureSearch(params);
+    const { loading, error, features, total, refetch } =
+        useFeatureSearch(params);
     const { cache } = useSWRConfig();
-
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -21,6 +21,9 @@ const TestComponent: FC<{ params: { project: string } }> = ({ params }) => {
 
     return (
         <div>
+            <button type='button' onClick={refetch}>
+                refetch
+            </button>
             <div>Features: {features.map((f) => f.name).join(', ')}</div>
             <div>Total: {total}</div>
             <div>Cache: {[...cache.keys()]}</div>
@@ -48,6 +51,7 @@ describe('useFeatureSearch', () => {
             features: [{ name: 'Feature1' }],
             total: 1,
         });
+
         render(<TestComponent params={{ project: 'project1' }} />);
         await screen.findByText(/Features: Feature1/);
         await screen.findByText(
@@ -67,29 +71,26 @@ describe('useFeatureSearch', () => {
 
     test('should overwrite cache total with 0 if the next result has 0 values', async () => {
         const project = 'project3';
-        testServerRoute(
-            server,
-            `/api/admin/search/features?project=${project}`,
-            {
-                features: [{ name: 'Feature1' }],
-                total: 1,
-            },
-        );
+        const url = `/api/admin/search/features?project=${project}`;
+        testServerRoute(server, url, {
+            features: [{ name: 'Feature1' }],
+            total: 1,
+        });
 
-        render(<TestComponent params={{ project }} />);
+        const { rerender } = render(<TestComponent params={{ project }} />);
 
         await screen.findByText(/Total: 1/);
 
-        testServerRoute(
-            server,
-            `/api/admin/search/features?project=${project}`,
-            {
-                features: [],
-                total: 0,
-            },
-        );
+        testServerRoute(server, url, {
+            features: [],
+            total: 0,
+        });
 
-        render(<TestComponent params={{ project }} />);
+        // force fetch
+        const button = await screen.findByRole('button');
+        button.click();
+
+        rerender(<TestComponent params={{ project }} />);
         await screen.findByText(/Total: 0/);
     });
 });

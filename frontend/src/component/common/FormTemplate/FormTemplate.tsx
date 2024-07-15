@@ -17,7 +17,11 @@ import useToast from 'hooks/useToast';
 import React from 'react';
 import { type ReactNode, useState } from 'react';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
-import { formTemplateSidebarWidth } from './FormTemplate.styles';
+import {
+    formTemplateFixedSidebarWidth,
+    formTemplateFormWidth,
+    formTemplateSidebarWidth,
+} from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
@@ -72,12 +76,14 @@ const StyledMobileGuidanceWrapper = styled('div', {
         : {}),
 }));
 
-const StyledMain = styled('div')(({ theme }) => ({
+const StyledMain = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'useFixedSidebar',
+})<{ useFixedSidebar?: boolean }>(({ theme, useFixedSidebar }) => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
-    width: '100%',
+    width: useFixedSidebar ? 'unset' : formTemplateFormWidth,
     [theme.breakpoints.down(1100)]: {
         width: '100%',
     },
@@ -313,7 +319,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     </StyledMobileGuidanceWrapper>
                 }
             />
-            <StyledMain>
+            <StyledMain useFixedSidebar={useFixedSidebar}>
                 <StyledFormContent
                     disablePadding={disablePadding}
                     compactPadding={compactPadding}
@@ -497,7 +503,10 @@ const Guidance: React.FC<IGuidanceProps> = (props) => {
 
 const FixedGuidance: React.FC<IGuidanceProps> = (props) => {
     return (
-        <StyledSidebar sidebarWidth='420px' fixedCodeHeight='300px'>
+        <StyledSidebar
+            sidebarWidth={formTemplateFixedSidebarWidth}
+            fixedCodeHeight='300px'
+        >
             <GuidanceContent {...props} fixedDocumentationHeight='170px' />
         </StyledSidebar>
     );

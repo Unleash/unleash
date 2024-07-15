@@ -50,10 +50,10 @@ export const App = () => {
 
     return (
         <SWRProvider>
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<Loader type='fullscreen' />}>
                 <ConditionallyRender
                     condition={!hasFetchedAuth}
-                    show={<Loader />}
+                    show={<Loader type='fullscreen' />}
                     elseShow={
                         <Demo>
                             <>

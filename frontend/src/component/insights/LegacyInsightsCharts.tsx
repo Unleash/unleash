@@ -71,7 +71,7 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
-export const InsightsCharts: VFC<IChartsProps> = ({
+export const LegacyInsightsCharts: VFC<IChartsProps> = ({
     projects,
     flags,
     users,

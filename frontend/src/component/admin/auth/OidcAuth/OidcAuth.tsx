@@ -50,6 +50,7 @@ export const OidcAuth = () => {
     const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
+    
     useEffect(() => {
         if (config.discoverUrl) {
             setData(config);

@@ -56,6 +56,7 @@ process.nextTick(async () => {
                         flagCreator: true,
                         resourceLimits: true,
                         extendedMetrics: true,
+                        insightsV2: true,
                     },
                 },
                 authentication: {

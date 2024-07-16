@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'cleanApiTokenWhenOrphaned'
     | 'allowOrphanedWildcardTokens'
-    | 'removeUnsafeInlineStyleSrc';
+    | 'removeUnsafeInlineStyleSrc'
+    | 'insightsV2';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -317,6 +318,10 @@ const flags: IFlags = {
     ),
     removeUnsafeInlineStyleSrc: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
+        false,
+    ),
+    insightsV2: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INSIGHTS_V2,
         false,
     ),
 };

@@ -10,6 +10,9 @@ import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { InsightsHeader } from './components/InsightsHeader/InsightsHeader';
 import { useInsightsData } from './hooks/useInsightsData';
 import { InsightsCharts } from './InsightsCharts';
+import { LegacyInsightsCharts } from './LegacyInsightsCharts';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StickyWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'scrolled',
@@ -50,6 +53,8 @@ export const Insights: VFC = () => {
         window.addEventListener('scroll', handleScroll);
     }
 
+    const showInsightsV2 = useUiFlag('insightsV2');
+
     return (
         <>
             <StickyWrapper scrolled={scrolled}>
@@ -69,10 +74,22 @@ export const Insights: VFC = () => {
                     }
                 />
             </StickyWrapper>
-            <InsightsCharts
-                loading={loading}
-                projects={projects}
-                {...insightsData}
+            <ConditionallyRender
+                condition={showInsightsV2}
+                show={
+                    <InsightsCharts
+                        loading={loading}
+                        projects={projects}
+                        {...insightsData}
+                    />
+                }
+                elseShow={
+                    <LegacyInsightsCharts
+                        loading={loading}
+                        projects={projects}
+                        {...insightsData}
+                    />
+                }
             />
         </>
     );

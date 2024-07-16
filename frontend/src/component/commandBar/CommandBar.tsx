@@ -171,12 +171,6 @@ export const CommandBar = () => {
         debouncedSetSearchState(value);
     }, [searchedFlagCount]);
 
-    useEffect(() => {
-        if (!searchLoading) {
-            selectFirstItem();
-        }
-    }, [searchLoading, searchString]);
-
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
         setValue(value);
@@ -270,13 +264,6 @@ export const CommandBar = () => {
             }
         },
     );
-
-    const selectFirstItem = () => {
-        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
-        if (!itemsAndIndex) return;
-        const { allCommandBarLinks } = itemsAndIndex;
-        (allCommandBarLinks[0] as HTMLElement).focus();
-    };
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     const onKeyDown = (event: React.KeyboardEvent) => {

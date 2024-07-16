@@ -170,7 +170,13 @@ module.exports = {
                         type: 'doc',
                         id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
                     },
-                    items: [],
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/rust/examples'
+                        }
+                    ],
                 },
                 {
                     type: 'doc',

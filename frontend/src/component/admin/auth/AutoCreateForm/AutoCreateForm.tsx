@@ -23,12 +23,14 @@ interface IAutoCreateFormProps {
         value: string | boolean | number | undefined,
     ) => void;
     onUpdateRole: (role: IRole | null) => void;
+    disabled?: boolean;
 }
 
 export const AutoCreateForm = ({
     data = { enabled: false, autoCreate: false },
     setValue,
     onUpdateRole,
+    disabled = false,
 }: IAutoCreateFormProps) => {
     const { roles } = useRoles();
 
@@ -69,7 +71,7 @@ export const AutoCreateForm = ({
                                 onChange={updateAutoCreate}
                                 name='enabled'
                                 checked={data.autoCreate}
-                                disabled={!data.enabled}
+                                disabled={!data.enabled || disabled}
                             />
                         }
                         label='Auto-create users'
@@ -90,7 +92,9 @@ export const AutoCreateForm = ({
                             roles={roles}
                             value={resolveRole(data)}
                             setValue={onUpdateRole}
-                            disabled={!data.autoCreate || !data.enabled}
+                            disabled={
+                                !data.autoCreate || !data.enabled || disabled
+                            }
                             required
                             hideDescription
                         />
@@ -110,7 +114,7 @@ export const AutoCreateForm = ({
                         onChange={updateField}
                         label='Email domains'
                         name='emailDomains'
-                        disabled={!data.autoCreate || !data.enabled}
+                        disabled={!data.autoCreate || !data.enabled || disabled}
                         required={Boolean(data.autoCreate)}
                         value={data.emailDomains || ''}
                         placeholder='@company.com, @anotherCompany.com'

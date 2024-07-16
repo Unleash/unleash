@@ -11,6 +11,7 @@ interface SsoGroupSettingsProps {
         addGroupsScope: boolean;
     };
     setValue: (name: string, value: string | boolean) => void;
+    disabled?: boolean;
 }
 
 export const SsoGroupSettings = ({
@@ -22,6 +23,7 @@ export const SsoGroupSettings = ({
         addGroupsScope: false,
     },
     setValue,
+    disabled = false,
 }: SsoGroupSettingsProps) => {
     const updateGroupSyncing = () => {
         setValue('enableGroupSyncing', !data.enableGroupSyncing);
@@ -53,7 +55,7 @@ export const SsoGroupSettings = ({
                                 value={data.enableGroupSyncing}
                                 name='enableGroupSyncing'
                                 checked={data.enableGroupSyncing}
-                                disabled={!data.enabled}
+                                disabled={!data.enabled || disabled}
                             />
                         }
                         label={data.enableGroupSyncing ? 'Enabled' : 'Disabled'}
@@ -74,7 +76,7 @@ export const SsoGroupSettings = ({
                         label='Group JSON Path'
                         name='groupJsonPath'
                         value={data.groupJsonPath}
-                        disabled={!data.enableGroupSyncing}
+                        disabled={!data.enableGroupSyncing || disabled}
                         style={{ width: '400px' }}
                         variant='outlined'
                         size='small'
@@ -99,7 +101,9 @@ export const SsoGroupSettings = ({
                                     <Switch
                                         onChange={updateAddGroupScope}
                                         value={data.addGroupsScope}
-                                        disabled={!data.enableGroupSyncing}
+                                        disabled={
+                                            !data.enableGroupSyncing || disabled
+                                        }
                                         name='addGroupsScope'
                                         checked={data.addGroupsScope}
                                     />

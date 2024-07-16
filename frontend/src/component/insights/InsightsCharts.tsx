@@ -21,7 +21,6 @@ import type {
 } from 'openapi';
 import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
-import { chartInfo } from './chart-info';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IChartsProps {
@@ -53,22 +52,10 @@ interface IChartsProps {
     allMetricsDatapoints: string[];
 }
 
-const StyledGrid = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: `repeat(2, 1fr)`,
-    gridAutoRows: 'auto',
+const StyledContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
     gap: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-        gridTemplateColumns: `300px 1fr`,
-    },
-}));
-
-const ChartWidget = styled(Widget)(({ theme }) => ({
-    [theme.breakpoints.down('md')]: {
-        gridColumnStart: 'span 2',
-        order: 2,
-    },
 }));
 
 export const InsightsCharts: VFC<IChartsProps> = ({
@@ -100,11 +87,14 @@ export const InsightsCharts: VFC<IChartsProps> = ({
 
     return (
         <>
-            <StyledGrid>
+            <StyledContainer>
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <Widget {...chartInfo.totalUsers}>
+                        <Widget
+                            title='Total users'
+                            tooltip='Total number of current users.'
+                        >
                             <UserStats
                                 count={users.total}
                                 active={users.active}
@@ -115,9 +105,16 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                     }
                     elseShow={
                         <Widget
-                            {...(isOneProjectSelected
-                                ? chartInfo.usersInProject
-                                : chartInfo.avgUsersPerProject)}
+                            title={
+                                isOneProjectSelected
+                                    ? 'Users in project'
+                                    : 'Users per project on average'
+                            }
+                            tooltip={
+                                isOneProjectSelected
+                                    ? 'Average number of users for selected projects.'
+                                    : 'Number of users in selected projects.'
+                            }
                         >
                             <UserStats
                                 count={summary.averageUsers}
@@ -129,23 +126,32 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <ChartWidget {...chartInfo.users}>
+                        <Widget
+                            title='Users'
+                            tooltip='How the number of users changes over time.'
+                        >
                             <UsersChart
                                 userTrends={userTrends}
                                 isLoading={loading}
                             />
-                        </ChartWidget>
+                        </Widget>
                     }
                     elseShow={
-                        <ChartWidget {...chartInfo.usersPerProject}>
+                        <Widget
+                            title='Users per project'
+                            tooltip='How the number of users changes over time for the selected projects.'
+                        >
                             <UsersPerProjectChart
                                 projectFlagTrends={groupedProjectsData}
                                 isLoading={loading}
                             />
-                        </ChartWidget>
+                        </Widget>
                     }
                 />
-                <Widget {...chartInfo.totalFlags}>
+                <Widget
+                    title='Total flags'
+                    tooltip='Active flags (not archived) that currently exist across the selected projects.'
+                >
                     <FlagStats
                         count={showAllProjects ? flags.total : summary.total}
                         flagsPerUser={
@@ -157,27 +163,36 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <ChartWidget {...chartInfo.flags}>
+                        <Widget
+                            title='Number of flags'
+                            tooltip='How the number of flags has changed over time across all projects.'
+                        >
                             <FlagsChart
                                 flagTrends={flagTrends}
                                 isLoading={loading}
                             />
-                        </ChartWidget>
+                        </Widget>
                     }
                     elseShow={
-                        <ChartWidget {...chartInfo.flagsPerProject}>
+                        <Widget
+                            title='Flags per project'
+                            tooltip='How the number of flags changes over time for the selected projects.'
+                        >
                             <FlagsProjectChart
                                 projectFlagTrends={groupedProjectsData}
                                 isLoading={loading}
                             />
-                        </ChartWidget>
+                        </Widget>
                     }
                 />
                 <ConditionallyRender
                     condition={isEnterprise()}
                     show={
                         <>
-                            <Widget {...chartInfo.averageHealth}>
+                            <Widget
+                                title='Average health'
+                                tooltip='Average health is the current percentage of flags in the selected projects that are not stale or potentially stale.'
+                            >
                                 <HealthStats
                                     value={summary.averageHealth}
                                     healthy={summary.active}
@@ -185,67 +200,93 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                                     potentiallyStale={summary.potentiallyStale}
                                 />
                             </Widget>
-                            <ChartWidget
-                                {...(showAllProjects
-                                    ? chartInfo.overallHealth
-                                    : chartInfo.healthPerProject)}
+                            <Widget
+                                title={
+                                    showAllProjects
+                                        ? 'Overall Health'
+                                        : 'Health per project'
+                                }
+                                tooltip={
+                                    showAllProjects
+                                        ? 'How the overall health changes over time across all projects.'
+                                        : 'How the overall health changes over time for the selected projects.'
+                                }
                             >
                                 <ProjectHealthChart
                                     projectFlagTrends={groupedProjectsData}
                                     isAggregate={showAllProjects}
                                     isLoading={loading}
                                 />
-                            </ChartWidget>
-                            <Widget {...chartInfo.medianTimeToProduction}>
+                            </Widget>
+                            <Widget
+                                title='Median time to production'
+                                tooltip={`How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.`}
+                            >
                                 <TimeToProduction
                                     daysToProduction={
                                         summary.medianTimeToProduction
                                     }
                                 />
                             </Widget>
-                            <ChartWidget
-                                {...(showAllProjects
-                                    ? chartInfo.timeToProduction
-                                    : chartInfo.timeToProductionPerProject)}
+                            <Widget
+                                title={
+                                    showAllProjects
+                                        ? 'Time to production'
+                                        : 'Time to production per project'
+                                }
+                                tooltip={
+                                    showAllProjects
+                                        ? 'How the median time to production changes over time across all projects.'
+                                        : 'How the average time to production changes over time for the selected projects.'
+                                }
                             >
                                 <TimeToProductionChart
                                     projectFlagTrends={groupedProjectsData}
                                     isAggregate={showAllProjects}
                                     isLoading={loading}
                                 />
-                            </ChartWidget>
+                            </Widget>
                         </>
                     }
                 />
-            </StyledGrid>
-            <ConditionallyRender
-                condition={isEnterprise()}
-                show={
-                    <>
-                        <Widget
-                            {...(showAllProjects
-                                ? chartInfo.metrics
-                                : chartInfo.metricsPerProject)}
-                        >
-                            <MetricsSummaryChart
-                                metricsSummaryTrends={groupedMetricsData}
-                                allDatapointsSorted={allMetricsDatapoints}
-                                isAggregate={showAllProjects}
-                                isLoading={loading}
-                            />
-                        </Widget>
-                        <Widget
-                            {...chartInfo.updates}
-                            sx={{ mt: (theme) => theme.spacing(2) }}
-                        >
-                            <UpdatesPerEnvironmentTypeChart
-                                environmentTypeTrends={environmentTypeTrends}
-                                isLoading={loading}
-                            />
-                        </Widget>
-                    </>
-                }
-            />
+                <ConditionallyRender
+                    condition={isEnterprise()}
+                    show={
+                        <>
+                            <Widget
+                                title={
+                                    showAllProjects
+                                        ? 'Flag evaluation metrics'
+                                        : 'Flag evaluation metrics per project'
+                                }
+                                tooltip={
+                                    showAllProjects
+                                        ? 'Summary of all flag evaluations reported by SDKs across all projects.'
+                                        : 'Summary of all flag evaluations reported by SDKs for the selected projects.'
+                                }
+                            >
+                                <MetricsSummaryChart
+                                    metricsSummaryTrends={groupedMetricsData}
+                                    allDatapointsSorted={allMetricsDatapoints}
+                                    isAggregate={showAllProjects}
+                                    isLoading={loading}
+                                />
+                            </Widget>
+                            <Widget
+                                title='Updates per environment type'
+                                tooltip='Summary of all configuration updates per environment type.'
+                            >
+                                <UpdatesPerEnvironmentTypeChart
+                                    environmentTypeTrends={
+                                        environmentTypeTrends
+                                    }
+                                    isLoading={loading}
+                                />
+                            </Widget>
+                        </>
+                    }
+                />
+            </StyledContainer>
         </>
     );
 };

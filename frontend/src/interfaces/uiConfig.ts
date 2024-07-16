@@ -30,7 +30,7 @@ export interface IUiConfig {
     strategySegmentsLimit?: number;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
-    oidcLocked?: boolean;
+    oidcConfiguredThroughEnv?: boolean;
 }
 
 export interface IProclamationToast {

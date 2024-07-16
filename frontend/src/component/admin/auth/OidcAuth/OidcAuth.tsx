@@ -46,11 +46,11 @@ type State = typeof initialState & {
 export const OidcAuth = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const { oidcLocked } = uiConfig;
+    const { oidcConfiguredThroughEnv } = uiConfig;
     const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
-    
+
     useEffect(() => {
         if (config.discoverUrl) {
             setData(config);
@@ -110,7 +110,7 @@ export const OidcAuth = () => {
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
                     <ConditionallyRender
-                        condition={Boolean(oidcLocked)}
+                        condition={Boolean(oidcConfiguredThroughEnv)}
                         show={
                             <Alert sx={{ mb: 2 }} severity='warning'>
                                 OIDC setup is currently controlled via
@@ -160,7 +160,7 @@ export const OidcAuth = () => {
                                 />
                             }
                             label={data.enabled ? 'Enabled' : 'Disabled'}
-                            disabled={oidcLocked}
+                            disabled={oidcConfiguredThroughEnv}
                         />
                     </Grid>
                 </Grid>
@@ -175,7 +175,7 @@ export const OidcAuth = () => {
                             label='Discover URL'
                             name='discoverUrl'
                             value={data.discoverUrl}
-                            disabled={!data.enabled || oidcLocked}
+                            disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
@@ -193,7 +193,7 @@ export const OidcAuth = () => {
                             label='Client ID'
                             name='clientId'
                             value={data.clientId}
-                            disabled={!data.enabled || oidcLocked}
+                            disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
@@ -214,7 +214,7 @@ export const OidcAuth = () => {
                             label='Client Secret'
                             name='secret'
                             value={data.secret}
-                            disabled={!data.enabled || oidcLocked}
+                            disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
@@ -237,7 +237,10 @@ export const OidcAuth = () => {
                                 <Switch
                                     onChange={updateSingleSignOut}
                                     value={data.enableSingleSignOut}
-                                    disabled={!data.enabled || oidcLocked}
+                                    disabled={
+                                        !data.enabled ||
+                                        oidcConfiguredThroughEnv
+                                    }
                                     name='enableSingleSignOut'
                                     checked={data.enableSingleSignOut}
                                 />
@@ -268,7 +271,7 @@ export const OidcAuth = () => {
                             label='ACR Values'
                             name='acrValues'
                             value={data.acrValues}
-                            disabled={!data.enabled || oidcLocked}
+                            disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
@@ -279,14 +282,14 @@ export const OidcAuth = () => {
                     ssoType='OIDC'
                     data={data}
                     setValue={setValue}
-                    disabled={oidcLocked}
+                    disabled={oidcConfiguredThroughEnv}
                 />
 
                 <AutoCreateForm
                     data={data}
                     setValue={setValue}
                     onUpdateRole={onUpdateRole}
-                    disabled={oidcLocked}
+                    disabled={oidcConfiguredThroughEnv}
                 />
                 <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
@@ -315,7 +318,7 @@ export const OidcAuth = () => {
                                         e.target.value,
                                     )
                                 }
-                                disabled={oidcLocked}
+                                disabled={oidcConfiguredThroughEnv}
                             >
                                 {/*consider these from API or constants. */}
                                 <MenuItem value='RS256'>RS256</MenuItem>
@@ -332,7 +335,7 @@ export const OidcAuth = () => {
                             variant='contained'
                             color='primary'
                             type='submit'
-                            disabled={loading || oidcLocked}
+                            disabled={loading || oidcConfiguredThroughEnv}
                         >
                             Save
                         </Button>{' '}

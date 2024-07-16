@@ -53,10 +53,22 @@ interface IChartsProps {
     allMetricsDatapoints: string[];
 }
 
-const StyledContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
+const StyledGrid = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: `repeat(2, 1fr)`,
+    gridAutoRows: 'auto',
     gap: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: `300px 1fr`,
+    },
+}));
+
+const ChartWidget = styled(Widget)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        gridColumnStart: 'span 2',
+        order: 2,
+    },
 }));
 
 export const InsightsCharts: VFC<IChartsProps> = ({
@@ -88,7 +100,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
 
     return (
         <>
-            <StyledContainer>
+            <StyledGrid>
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
@@ -117,20 +129,20 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <Widget {...chartInfo.users}>
+                        <ChartWidget {...chartInfo.users}>
                             <UsersChart
                                 userTrends={userTrends}
                                 isLoading={loading}
                             />
-                        </Widget>
+                        </ChartWidget>
                     }
                     elseShow={
-                        <Widget {...chartInfo.usersPerProject}>
+                        <ChartWidget {...chartInfo.usersPerProject}>
                             <UsersPerProjectChart
                                 projectFlagTrends={groupedProjectsData}
                                 isLoading={loading}
                             />
-                        </Widget>
+                        </ChartWidget>
                     }
                 />
                 <Widget {...chartInfo.totalFlags}>
@@ -145,20 +157,20 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                 <ConditionallyRender
                     condition={showAllProjects}
                     show={
-                        <Widget {...chartInfo.flags}>
+                        <ChartWidget {...chartInfo.flags}>
                             <FlagsChart
                                 flagTrends={flagTrends}
                                 isLoading={loading}
                             />
-                        </Widget>
+                        </ChartWidget>
                     }
                     elseShow={
-                        <Widget {...chartInfo.flagsPerProject}>
+                        <ChartWidget {...chartInfo.flagsPerProject}>
                             <FlagsProjectChart
                                 projectFlagTrends={groupedProjectsData}
                                 isLoading={loading}
                             />
-                        </Widget>
+                        </ChartWidget>
                     }
                 />
                 <ConditionallyRender
@@ -173,7 +185,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                                     potentiallyStale={summary.potentiallyStale}
                                 />
                             </Widget>
-                            <Widget
+                            <ChartWidget
                                 {...(showAllProjects
                                     ? chartInfo.overallHealth
                                     : chartInfo.healthPerProject)}
@@ -183,7 +195,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                                     isAggregate={showAllProjects}
                                     isLoading={loading}
                                 />
-                            </Widget>
+                            </ChartWidget>
                             <Widget {...chartInfo.medianTimeToProduction}>
                                 <TimeToProduction
                                     daysToProduction={
@@ -191,7 +203,7 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                                     }
                                 />
                             </Widget>
-                            <Widget
+                            <ChartWidget
                                 {...(showAllProjects
                                     ? chartInfo.timeToProduction
                                     : chartInfo.timeToProductionPerProject)}
@@ -201,38 +213,39 @@ export const InsightsCharts: VFC<IChartsProps> = ({
                                     isAggregate={showAllProjects}
                                     isLoading={loading}
                                 />
-                            </Widget>
+                            </ChartWidget>
                         </>
                     }
                 />
-                <ConditionallyRender
-                    condition={isEnterprise()}
-                    show={
-                        <>
-                            <Widget
-                                {...(showAllProjects
-                                    ? chartInfo.metrics
-                                    : chartInfo.metricsPerProject)}
-                            >
-                                <MetricsSummaryChart
-                                    metricsSummaryTrends={groupedMetricsData}
-                                    allDatapointsSorted={allMetricsDatapoints}
-                                    isAggregate={showAllProjects}
-                                    isLoading={loading}
-                                />
-                            </Widget>
-                            <Widget {...chartInfo.updates}>
-                                <UpdatesPerEnvironmentTypeChart
-                                    environmentTypeTrends={
-                                        environmentTypeTrends
-                                    }
-                                    isLoading={loading}
-                                />
-                            </Widget>
-                        </>
-                    }
-                />
-            </StyledContainer>
+            </StyledGrid>
+            <ConditionallyRender
+                condition={isEnterprise()}
+                show={
+                    <>
+                        <Widget
+                            {...(showAllProjects
+                                ? chartInfo.metrics
+                                : chartInfo.metricsPerProject)}
+                        >
+                            <MetricsSummaryChart
+                                metricsSummaryTrends={groupedMetricsData}
+                                allDatapointsSorted={allMetricsDatapoints}
+                                isAggregate={showAllProjects}
+                                isLoading={loading}
+                            />
+                        </Widget>
+                        <Widget
+                            {...chartInfo.updates}
+                            sx={{ mt: (theme) => theme.spacing(2) }}
+                        >
+                            <UpdatesPerEnvironmentTypeChart
+                                environmentTypeTrends={environmentTypeTrends}
+                                isLoading={loading}
+                            />
+                        </Widget>
+                    </>
+                }
+            />
         </>
     );
 };

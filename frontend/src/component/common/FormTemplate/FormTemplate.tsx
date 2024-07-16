@@ -83,7 +83,7 @@ const StyledMain = styled('div', {
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
-    width: useFixedSidebar ? 'unset' : formTemplateFormWidth,
+    width: useFixedSidebar ? 'initial' : formTemplateFormWidth,
     [theme.breakpoints.down(1100)]: {
         width: '100%',
     },

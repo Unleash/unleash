@@ -4,13 +4,12 @@ import { useFeedback } from 'component/feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import {
     Button,
-    Typography,
     styled,
+    Typography,
     useMediaQuery,
     useTheme,
 } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ShareLink } from './ShareLink/ShareLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 type DashboardHeaderProps = {
@@ -94,7 +93,6 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
                             }
                         />
                         <StyledActionButtons>
-                            <ShareLink />
                             <Button
                                 startIcon={<ReviewsOutlined />}
                                 variant='outlined'

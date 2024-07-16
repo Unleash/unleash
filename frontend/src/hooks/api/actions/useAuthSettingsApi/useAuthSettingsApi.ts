@@ -12,8 +12,9 @@ export const handleBadRequest = async (
     if (!setErrors) return;
     if (res) {
         const data = await res.json();
-        setErrors({ message: data.message });
-        throw new Error(data.message);
+        const message = data.details?.[0]?.message ?? data.message;
+        setErrors({ message });
+        throw new Error(message);
     }
 
     throw new Error();

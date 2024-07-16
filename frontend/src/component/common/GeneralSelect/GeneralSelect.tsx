@@ -6,6 +6,7 @@ import {
     Select,
     type SelectProps,
     type SelectChangeEvent,
+    styled,
 } from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
@@ -34,6 +35,10 @@ export interface IGeneralSelectProps extends Omit<SelectProps, 'onChange'> {
     visuallyHideLabel?: boolean;
 }
 
+const StyledFormControl = styled(FormControl)({
+    maxWidth: '100%',
+});
+
 const GeneralSelect: React.FC<IGeneralSelectProps> = ({
     name,
     value = '',
@@ -54,7 +59,7 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
     };
 
     return (
-        <FormControl
+        <StyledFormControl
             variant='outlined'
             size='small'
             classes={classes}
@@ -90,7 +95,7 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
                     </MenuItem>
                 ))}
             </Select>
-        </FormControl>
+        </StyledFormControl>
     );
 };
 

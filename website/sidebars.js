@@ -154,6 +154,15 @@ module.exports = {
                     id: 'feature-flag-tutorials/ios/implementing-feature-flags',
                 },
                 {
+                    type: 'category',
+                    label: 'Rust',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
+                    },
+                    items: [],
+                },
+                {
                     type: 'doc',
                     label: 'Serverless',
                     id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',

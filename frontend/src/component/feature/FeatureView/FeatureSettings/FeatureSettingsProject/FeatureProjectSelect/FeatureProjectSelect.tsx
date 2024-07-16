@@ -31,7 +31,7 @@ const FeatureProjectSelect = ({
             label: project.name,
             title: project.description,
             sx: {
-                textWrap: 'auto',
+                whiteSpace: 'pre-line',
             },
         };
     };

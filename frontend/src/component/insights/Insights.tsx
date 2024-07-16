@@ -53,7 +53,7 @@ export const Insights: VFC = () => {
         window.addEventListener('scroll', handleScroll);
     }
 
-    const showInsightsV2 = useUiFlag('insightsV2');
+    const isInsightsV2Enabled = useUiFlag('insightsV2');
 
     return (
         <>
@@ -75,7 +75,7 @@ export const Insights: VFC = () => {
                 />
             </StickyWrapper>
             <ConditionallyRender
-                condition={showInsightsV2}
+                condition={isInsightsV2Enabled}
                 show={
                     <InsightsCharts
                         loading={loading}

@@ -79,6 +79,13 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
                 label={visuallyHideLabel ? '' : label}
                 id={id}
                 value={value}
+                MenuProps={{
+                    sx: {
+                        '.MuiPopover-paper.MuiMenu-paper': {
+                            width: 'min-content',
+                        },
+                    },
+                }}
                 IconComponent={KeyboardArrowDownOutlined}
                 {...rest}
             >

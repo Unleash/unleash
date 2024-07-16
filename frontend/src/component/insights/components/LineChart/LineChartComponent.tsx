@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useState, type VFC } from 'react';
+import { type ReactNode, useMemo, useState, type FC } from 'react';
 import {
     CategoryScale,
     LinearScale,
@@ -81,14 +81,14 @@ const customHighlightPlugin = {
     },
 };
 
-const LineChartComponent: VFC<{
+const LineChartComponent: FC<{
     data: ChartData<'line', unknown>;
     aspectRatio?: number;
     cover?: ReactNode;
     overrideOptions?: ChartOptions<'line'>;
     TooltipComponent?: ({
         tooltip,
-    }: { tooltip: TooltipState | null }) => ReturnType<VFC>;
+    }: { tooltip: TooltipState | null }) => ReturnType<FC>;
 }> = ({
     data,
     aspectRatio = 2.5,

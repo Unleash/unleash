@@ -109,7 +109,7 @@ export const OidcAuth = () => {
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
                     <ConditionallyRender
-                        condition={oidcLocked}
+                        condition={oidcLocked === true}
                         show={
                             <Alert sx={{ mb: 2 }} severity='warning'>
                                 OIDC setup is currently controlled via

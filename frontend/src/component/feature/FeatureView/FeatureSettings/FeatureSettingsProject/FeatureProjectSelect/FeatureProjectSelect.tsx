@@ -30,6 +30,9 @@ const FeatureProjectSelect = ({
             key: project.id,
             label: project.name,
             title: project.description,
+            sx: {
+                textWrap: 'auto',
+            },
         };
     };
 

@@ -65,11 +65,13 @@ export const Insights: VFC = () => {
                             onChange={setProjects}
                             dataTestId={'DASHBOARD_PROJECT_SELECT'}
                             limitTags={1}
-                            sx={{
+                            sx={(theme) => ({
                                 flex: 1,
-                                maxWidth: '360px',
-                                width: '100%',
-                            }}
+                                width: '300px',
+                                [theme.breakpoints.down('sm')]: {
+                                    width: '100%',
+                                },
+                            })}
                         />
                     }
                 />

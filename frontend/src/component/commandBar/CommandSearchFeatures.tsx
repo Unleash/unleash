@@ -4,18 +4,21 @@ import {
 } from './RecentlyVisited/CommandResultGroup';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { useEffect } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ICommandBar {
     searchString: string;
     setSearchedFlagCount: (count: number) => void;
     onClick: () => void;
+    setSearchLoading: (loading: boolean) => void;
 }
 export const CommandSearchFeatures = ({
     searchString,
     setSearchedFlagCount,
     onClick,
+    setSearchLoading,
 }: ICommandBar) => {
-    const { features = [] } = useFeatureSearch(
+    const { features = [], loading } = useFeatureSearch(
         {
             query: searchString,
             limit: '3',
@@ -36,12 +39,21 @@ export const CommandSearchFeatures = ({
         setSearchedFlagCount(flags.length);
     }, [JSON.stringify(flags)]);
 
+    useEffect(() => {
+        setSearchLoading(loading);
+    }, [loading]);
+
     return (
-        <CommandResultGroup
-            groupName={'Flags'}
-            icon={'flag'}
-            items={flags}
-            onClick={onClick}
+        <ConditionallyRender
+            condition={!loading}
+            show={
+                <CommandResultGroup
+                    groupName={'Flags'}
+                    icon={'flag'}
+                    items={flags}
+                    onClick={onClick}
+                />
+            }
         />
     );
 };

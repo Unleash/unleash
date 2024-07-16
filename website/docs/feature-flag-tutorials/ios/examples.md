@@ -7,14 +7,13 @@ In our [iOS feature flag tutorial](/feature-flag-tutorials/ios), we implemented 
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 
--   Gradual Rollouts for iOS Apps
--   Canary Deployments in iOS
--   A/B Testing in iOS
--   Feature Flag Analytics and Reporting in iOS
--   Feature Flag Audit Logs in iOS
--   Change Management & Feature Flag Approvals in iOS
--   Flag Automation & Workflow Integration for iOS Apps
--   Common Usage Examples of iOS Feature Flags
+-   [Gradual Rollouts for iOS Apps](#gradual-rollouts-for-ios-apps)
+-   [Canary Deployments in iOS](#canary-deployments-in-ios)
+-   [A/B Testing in iOS](#ab-testing-in-ios)
+-   [Feature Flag Analytics and Reporting in iOS](#feature-flag-analytics-and-reporting-in-ios)
+-   [Feature Flag Audit Logs in iOS](#feature-flag-audit-logs-in-ios)
+-   [Change Management & Feature Flag Approvals in iOS](#change-management--feature-flag-approvals-in-ios)
+-   [Flag Automation & Workflow Integration for iOS Apps](#flag-automation--workflow-integration-for-ios-apps)
 
 ## Gradual Rollouts for iOS Apps
 
@@ -295,7 +294,7 @@ Read our documentation on [Event logs](/reference/event-log) and [APIs](/referen
 
 ## Change Management & Feature Flag Approvals in iOS
 
-Unleash makes it easy to toggle a feature. But the more users you have, the more risk with unexpected changes occurring. That’s why we implemented an approval workflow within Unleash Enterprise for making a change to a feature flag. This functions similar to GitHub's pull requests, and models a Git review workflow. You could have one or more approvals required to reduce risk of someone changing something they shouldn’t. It helps development teams to have access only to what they _need_. For example, you can use Unleash to track changes to your React feature flag’s configuration.
+Unleash makes it easy to toggle a feature. But the more users you have, the more risk with unexpected changes occurring. That’s why we implemented an approval workflow within Unleash Enterprise for making a change to a feature flag. This functions similar to GitHub's pull requests, and models a Git review workflow. You could have one or more approvals required to reduce risk of someone changing something they shouldn’t. It helps development teams to have access only to what they _need_. For example, you can use Unleash to track changes to your iOS feature flag’s configuration.
 
 In Unleash Enterprise, we have a change request feature in your project settings to manage your feature flag approvals. When someone working in a project needs to update the status of a flag or strategy, they can follow our approval workflow to ensure that one or more team members review the change request.
 

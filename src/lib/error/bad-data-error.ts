@@ -117,10 +117,14 @@ const enumMessage = (
 };
 
 export const fromOpenApiValidationError =
-    (requestBody: object) =>
+    (request: { body: object; query: object }) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
-        const propertyName = instancePath.substring('/body/'.length);
+        const [errorSource, startTrimLength] = instancePath.startsWith('/body')
+            ? [request.body, '/body/'.length]
+            : [request.query, '/query/'.length];
+
+        const propertyName = instancePath.substring(startTrimLength);
 
         switch (validationError.keyword) {
             case 'required':
@@ -139,24 +143,24 @@ export const fromOpenApiValidationError =
                     message,
                     params.allowedValues,
                     getProp(
-                        requestBody,
-                        instancePath.substring('/body/'.length).split('/'),
+                        errorSource,
+                        instancePath.substring(startTrimLength).split('/'),
                     ),
                 );
 
             case 'oneOf':
                 return oneOfMessage(propertyName, validationError.message);
             default:
-                return genericErrorMessage(requestBody, propertyName, message);
+                return genericErrorMessage(errorSource, propertyName, message);
         }
     };
 
 export const fromOpenApiValidationErrors = (
-    requestBody: object,
+    request: { body: object; query: object },
     validationErrors: [ErrorObject, ...ErrorObject[]],
 ): BadDataError => {
     const [firstDetail, ...remainingDetails] = validationErrors.map(
-        fromOpenApiValidationError(requestBody),
+        fromOpenApiValidationError(request),
     );
 
     return new BadDataError(

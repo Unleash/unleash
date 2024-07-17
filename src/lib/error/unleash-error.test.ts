@@ -56,7 +56,9 @@ describe('OpenAPI error conversion', () => {
             message: "should have required property 'enabled'",
         };
 
-        const result = fromOpenApiValidationError({})(error);
+        const result = fromOpenApiValidationError({ body: {}, query: {} })(
+            error,
+        );
 
         expect(result).toMatchObject({
             message:
@@ -83,7 +85,10 @@ describe('OpenAPI error conversion', () => {
 
         const parameterValue = [];
         const result = fromOpenApiValidationError({
-            parameters: parameterValue,
+            body: {
+                parameters: parameterValue,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -111,9 +116,12 @@ describe('OpenAPI error conversion', () => {
             };
 
             const result = fromOpenApiValidationError({
-                secret: 'blah',
-                username: 'string2',
-                type: 'admin',
+                body: {
+                    secret: 'blah',
+                    username: 'string2',
+                    type: 'admin',
+                },
+                query: {},
             })(error);
 
             expect(result).toMatchObject({
@@ -148,7 +156,10 @@ describe('OpenAPI error conversion', () => {
 
         const requestDescription = 'A pattern that does not match.';
         const result = fromOpenApiValidationError({
-            description: requestDescription,
+            body: {
+                description: requestDescription,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -167,14 +178,17 @@ describe('OpenAPI error conversion', () => {
             message: 'must be equal to one of the allowed values',
         };
 
-        const request = [
-            {
-                name: 'variant',
-                weight: 500,
-                weightType: 'party',
-                stickiness: 'userId',
-            },
-        ];
+        const request = {
+            body: [
+                {
+                    name: 'variant',
+                    weight: 500,
+                    weightType: 'party',
+                    stickiness: 'userId',
+                },
+            ],
+            query: {},
+        };
 
         const result = fromOpenApiValidationError(request)(error);
 
@@ -202,7 +216,10 @@ describe('OpenAPI error conversion', () => {
 
         const requestDescription = 'Longer than the max length';
         const result = fromOpenApiValidationError({
-            description: requestDescription,
+            body: {
+                description: requestDescription,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -233,7 +250,10 @@ describe('OpenAPI error conversion', () => {
 
         const propertyValue = 6;
         const result = fromOpenApiValidationError({
-            newprop: propertyValue,
+            body: {
+                newprop: propertyValue,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -278,7 +298,10 @@ describe('OpenAPI error conversion', () => {
 
         // create an error and serialize it as it would be shown to the end user.
         const serializedUnleashError: ApiErrorSchema =
-            fromOpenApiValidationErrors({ newprop: 7 }, errors).toJSON();
+            fromOpenApiValidationErrors(
+                { body: { newprop: 7 }, query: {} },
+                errors,
+            ).toJSON();
 
         expect(serializedUnleashError).toMatchObject({
             name: 'BadDataError',
@@ -305,9 +328,10 @@ describe('OpenAPI error conversion', () => {
                 message: 'should NOT have additional properties',
             };
 
-            const error = fromOpenApiValidationError({ bogus: 5 })(
-                openApiError,
-            );
+            const error = fromOpenApiValidationError({
+                body: { bogus: 5 },
+                query: {},
+            })(openApiError);
 
             expect(error).toMatchObject({
                 message: expect.stringContaining(
@@ -322,9 +346,12 @@ describe('OpenAPI error conversion', () => {
 
         it('gives useful messages for nested properties', () => {
             const request2 = {
-                nestedObject: {
-                    nested2: { extraPropertyName: 'illegal property' },
+                body: {
+                    nestedObject: {
+                        nested2: { extraPropertyName: 'illegal property' },
+                    },
                 },
+                query: {},
             };
             const openApiError = {
                 keyword: 'additionalProperties',
@@ -360,7 +387,10 @@ describe('OpenAPI error conversion', () => {
         };
 
         const result = fromOpenApiValidationError({
-            nestedObject: { a: { b: [] } },
+            body: {
+                nestedObject: { a: { b: [] } },
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -382,7 +412,10 @@ describe('OpenAPI error conversion', () => {
 
         const illegalValue = 'illegal string';
         const result = fromOpenApiValidationError({
-            nestedObject: { a: { b: illegalValue } },
+            body: {
+                nestedObject: { a: { b: illegalValue } },
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -391,6 +424,32 @@ describe('OpenAPI error conversion', () => {
         });
 
         expect(result.message).toMatch(/\bnestedObject\/a\/b\b/);
+    });
+
+    it('handles query parameter errors', () => {
+        const error = {
+            instancePath: '/query/from',
+            schemaPath: '#/properties/query/properties/from/format',
+            keyword: 'format',
+            params: { format: 'date' },
+            message: 'must match format "date"',
+        };
+        const query = { from: '01-2020-01' };
+
+        const result = fromOpenApiValidationError({ body: {}, query })(error);
+
+        expect(result).toMatchObject({
+            message:
+                // it tells the user what the format is
+                expect.stringContaining(error.params.format),
+        });
+
+        // it tells the user which property it pertains to
+        expect(result.message).toContain('from');
+        // it tells the user what they provided
+        expect(result.message).toContain(query.from);
+        // it tells the user that the value is in the query parameter
+        expect(result.message).toContain('query');
     });
 });
 

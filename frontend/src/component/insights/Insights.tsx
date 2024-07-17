@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import {
@@ -29,6 +29,20 @@ const StickyContainer = styled(Sticky)(({ theme }) => ({
     transition: 'padding 0.3s ease',
 }));
 
+/**
+ * @deprecated remove with insightsV2 flag
+ */
+const StickyWrapper = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'scrolled',
+})<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.sticky,
+    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
+}));
+
 const StyledProjectSelect = styled(ProjectSelect)(({ theme }) => ({
     flex: 1,
     width: '300px',
@@ -37,6 +51,9 @@ const StyledProjectSelect = styled(ProjectSelect)(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated remove with insightsV2 flag
+ */
 const LegacyInsights: FC = () => {
     const [scrolled, setScrolled] = useState(false);
     const { insights, loading, error } = useInsights();
@@ -84,7 +101,7 @@ const LegacyInsights: FC = () => {
                 projects={projects}
                 {...insightsData}
             />
-        </>
+        </StyledWrapper>
     );
 };
 
@@ -119,8 +136,8 @@ const NewInsights = () => {
     }
 
     return (
-        <>
-            <StickyWrapper scrolled={scrolled}>
+        <StyledWrapper>
+            <StickyWrapper>
                 <InsightsHeader
                     actions={
                         <InsightsFilters state={state} onChange={setState} />
@@ -136,8 +153,10 @@ const NewInsights = () => {
     );
 };
 
-export const Insights: VFC = () => {
+export const Insights: FC = () => {
     const isInsightsV2Enabled = useUiFlag('insightsV2');
+
     if (isInsightsV2Enabled) return <NewInsights />;
+
     return <LegacyInsights />;
 };

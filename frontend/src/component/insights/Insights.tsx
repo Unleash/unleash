@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import { Box, styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
@@ -12,9 +12,26 @@ import { useInsightsData } from './hooks/useInsightsData';
 import { InsightsCharts } from './InsightsCharts';
 import { LegacyInsightsCharts } from './LegacyInsightsCharts';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { Sticky } from 'component/common/Sticky/Sticky';
 import { InsightsFilters } from './InsightsFilters';
 import { FilterItemParam } from '../../utils/serializeQueryParams';
 
+const StyledWrapper = styled('div')(({ theme }) => ({
+    paddingTop: theme.spacing(1),
+}));
+
+const StickyContainer = styled(Sticky)(({ theme }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.sticky,
+    padding: theme.spacing(2, 0),
+    background: theme.palette.background.application,
+    transition: 'padding 0.3s ease',
+}));
+
+/**
+ * @deprecated remove with insightsV2 flag
+ */
 const StickyWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'scrolled',
 })<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
@@ -34,7 +51,10 @@ const StyledProjectSelect = styled(ProjectSelect)(({ theme }) => ({
     },
 }));
 
-const LegacyInsights = () => {
+/**
+ * @deprecated remove with insightsV2 flag
+ */
+const LegacyInsights: FC = () => {
     const [scrolled, setScrolled] = useState(false);
     const { insights, loading, error } = useInsights();
     const stateConfig = {
@@ -63,8 +83,8 @@ const LegacyInsights = () => {
     }
 
     return (
-        <>
-            <StickyWrapper scrolled={scrolled}>
+        <StyledWrapper>
+            <StickyContainer>
                 <InsightsHeader
                     actions={
                         <StyledProjectSelect
@@ -75,13 +95,13 @@ const LegacyInsights = () => {
                         />
                     }
                 />
-            </StickyWrapper>
+            </StickyContainer>
             <LegacyInsightsCharts
                 loading={loading}
                 projects={projects}
                 {...insightsData}
             />
-        </>
+        </StyledWrapper>
     );
 };
 
@@ -116,8 +136,8 @@ const NewInsights = () => {
     }
 
     return (
-        <>
-            <StickyWrapper scrolled={scrolled}>
+        <StyledWrapper>
+            <StickyWrapper>
                 <InsightsHeader
                     actions={
                         <InsightsFilters state={state} onChange={setState} />
@@ -129,12 +149,14 @@ const NewInsights = () => {
                 projects={projects}
                 {...insightsData}
             />
-        </>
+        </StyledWrapper>
     );
 };
 
-export const Insights: VFC = () => {
+export const Insights: FC = () => {
     const isInsightsV2Enabled = useUiFlag('insightsV2');
+
     if (isInsightsV2Enabled) return <NewInsights />;
+
     return <LegacyInsights />;
 };

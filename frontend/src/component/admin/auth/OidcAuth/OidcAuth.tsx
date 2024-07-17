@@ -113,8 +113,8 @@ export const OidcAuth = () => {
                         condition={Boolean(oidcConfiguredThroughEnv)}
                         show={
                             <Alert sx={{ mb: 2 }} severity='warning'>
-                                OIDC setup is currently controlled via
-                                environment variables. Please see the{' '}
+                                OIDC is currently configured via environment
+                                variables. Please refer to the{' '}
                                 <a
                                     href='https://www.unleash-hosted.com/docs/enterprise-authentication'
                                     target='_blank'
@@ -122,8 +122,8 @@ export const OidcAuth = () => {
                                 >
                                     documentation
                                 </a>{' '}
-                                to learn how to set the correct environment
-                                variables
+                                for detailed instructions on how to set up OIDC
+                                using these variables.
                             </Alert>
                         }
                     />

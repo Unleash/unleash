@@ -31,6 +31,7 @@ export interface IUiConfig {
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
+    samlConfiguredThroughEnv?: boolean;
 }
 
 export interface IProclamationToast {

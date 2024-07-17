@@ -111,6 +111,7 @@ export * from './import-toggles-validate-schema';
 export * from './inactive-user-schema';
 export * from './inactive-users-schema';
 export * from './instance-admin-stats-schema';
+export * from './integration-event-schema';
 export * from './legal-value-schema';
 export * from './login-schema';
 export * from './maintenance-schema';

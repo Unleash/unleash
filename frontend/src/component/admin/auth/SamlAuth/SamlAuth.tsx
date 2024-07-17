@@ -104,8 +104,8 @@ export const SamlAuth = () => {
                         condition={Boolean(samlConfiguredThroughEnv)}
                         show={
                             <Alert sx={{ mb: 2 }} severity='warning'>
-                                SAML is currently controlled via environment
-                                variables. Please see the{' '}
+                                SAML is currently configured via environment
+                                variables. Please refer to the{' '}
                                 <a
                                     href='https://www.unleash-hosted.com/docs/enterprise-authentication'
                                     target='_blank'
@@ -113,8 +113,8 @@ export const SamlAuth = () => {
                                 >
                                     documentation
                                 </a>{' '}
-                                to learn how to use environment variables for
-                                configuring SAML
+                                for detailed instructions on how to set up SAML
+                                using these variables.
                             </Alert>
                         }
                     />

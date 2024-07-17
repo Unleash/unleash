@@ -23,7 +23,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-interface IChartsProps {
+export interface IChartsProps {
     flags: InstanceInsightsSchema['flags'];
     flagTrends: InstanceInsightsSchema['flagTrends'];
     projectsData: InstanceInsightsSchema['projectFlagTrends'];

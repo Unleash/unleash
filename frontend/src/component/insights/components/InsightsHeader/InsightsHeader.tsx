@@ -18,6 +18,7 @@ type DashboardHeaderProps = {
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
+    alignItems: 'center',
     gap: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
@@ -33,7 +34,6 @@ const StyledActionButtons = styled('div')(({ theme }) => ({
 const StyledExternalActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    width: 300,
     [theme.breakpoints.down('md')]: {
         width: '100%',
     },

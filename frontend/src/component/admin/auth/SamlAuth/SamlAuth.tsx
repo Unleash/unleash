@@ -17,6 +17,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
 import type { IRole } from 'interfaces/role';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 const initialState = {
     enabled: false,
@@ -40,6 +41,7 @@ type State = typeof initialState & {
 export const SamlAuth = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
+    const { samlConfiguredThroughEnv } = uiConfig;
     const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('saml');
     const { updateSettings, errors, loading } = useAuthSettingsApi('saml');
@@ -98,6 +100,24 @@ export const SamlAuth = () => {
         <>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
+                    <ConditionallyRender
+                        condition={Boolean(samlConfiguredThroughEnv)}
+                        show={
+                            <Alert sx={{ mb: 2 }} severity='warning'>
+                                SAML is currently controlled via environment
+                                variables. Please see the{' '}
+                                <a
+                                    href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                                    target='_blank'
+                                    rel='noreferrer'
+                                >
+                                    documentation
+                                </a>{' '}
+                                to learn how to use environment variables for
+                                configuring SAML
+                            </Alert>
+                        }
+                    />
                     <Alert severity='info'>
                         Please read the{' '}
                         <a
@@ -128,6 +148,7 @@ export const SamlAuth = () => {
                                     value={data.enabled}
                                     name='enabled'
                                     checked={data.enabled}
+                                    disabled={samlConfiguredThroughEnv}
                                 />
                             }
                             label={data.enabled ? 'Enabled' : 'Disabled'}
@@ -145,7 +166,7 @@ export const SamlAuth = () => {
                             label='Entity ID'
                             name='entityId'
                             value={data.entityId}
-                            disabled={!data.enabled}
+                            disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
@@ -167,7 +188,7 @@ export const SamlAuth = () => {
                             label='Single Sign-On URL'
                             name='signOnUrl'
                             value={data.signOnUrl}
-                            disabled={!data.enabled}
+                            disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
@@ -189,7 +210,7 @@ export const SamlAuth = () => {
                             label='X.509 Certificate'
                             name='certificate'
                             value={data.certificate}
-                            disabled={!data.enabled}
+                            disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '100%' }}
                             InputProps={{
                                 style: {
@@ -221,7 +242,7 @@ export const SamlAuth = () => {
                             label='Single Sign-out URL'
                             name='signOutUrl'
                             value={data.signOutUrl}
-                            disabled={!data.enabled}
+                            disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
@@ -244,7 +265,7 @@ export const SamlAuth = () => {
                             label='X.509 Certificate'
                             name='spCertificate'
                             value={data.spCertificate}
-                            disabled={!data.enabled}
+                            disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '100%' }}
                             InputProps={{
                                 style: {
@@ -265,12 +286,14 @@ export const SamlAuth = () => {
                     ssoType='SAML'
                     data={data}
                     setValue={setValue}
+                    disabled={samlConfiguredThroughEnv}
                 />
 
                 <AutoCreateForm
                     data={data}
                     setValue={setValue}
                     onUpdateRole={onUpdateRole}
+                    disabled={samlConfiguredThroughEnv}
                 />
                 <Grid container spacing={3}>
                     <Grid item md={5}>
@@ -278,7 +301,7 @@ export const SamlAuth = () => {
                             variant='contained'
                             color='primary'
                             type='submit'
-                            disabled={loading}
+                            disabled={loading || samlConfiguredThroughEnv}
                         >
                             Save
                         </Button>{' '}

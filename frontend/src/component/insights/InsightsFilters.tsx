@@ -48,7 +48,7 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
                           label: 'Project',
                           icon: 'topic',
                           options: projectsOptions,
-                          filterKey: 'projects',
+                          filterKey: 'project',
                           singularOperators: ['IS'],
                           pluralOperators: ['IS_ANY_OF'],
                       },

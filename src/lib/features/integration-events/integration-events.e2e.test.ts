@@ -5,14 +5,12 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { TEST_AUDIT_USER } from '../../types';
-import type {
-    IntegrationEventsStore,
-    IntegrationEventWriteModel,
-} from './integration-events-store';
+import type { IntegrationEventsService } from './integration-events-service';
+import type { IntegrationEventWriteModel } from './integration-events-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let integrationEventsStore: IntegrationEventsStore;
+let integrationEventsService: IntegrationEventsService;
 let integrationId: number;
 
 const EVENT_SUCCESS: IntegrationEventWriteModel = {
@@ -50,7 +48,7 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
-    integrationEventsStore = db.stores.integrationEventsStore;
+    integrationEventsService = app.services.integrationEventsService;
 });
 
 beforeEach(async () => {
@@ -80,11 +78,11 @@ const insertPastEvent = async (
     event: IntegrationEventWriteModel,
     date: Date,
 ): Promise<void> => {
-    const { id } = await integrationEventsStore.insert(event);
+    const newEvent = await integrationEventsService.registerEvent(event);
 
     await db.rawDatabase.raw(
         `UPDATE integration_events SET created_at = ? WHERE id = ?`,
-        [date, id],
+        [date, newEvent!.id],
     );
 };
 
@@ -99,10 +97,10 @@ const getTestEventFailed = () => ({
 });
 
 test('insert and fetch integration events', async () => {
-    await integrationEventsStore.insert(getTestEventSuccess());
-    await integrationEventsStore.insert(getTestEventFailed());
+    await integrationEventsService.registerEvent(getTestEventSuccess());
+    await integrationEventsService.registerEvent(getTestEventFailed());
 
-    const events = await integrationEventsStore.getPaginatedEvents(
+    const events = await integrationEventsService.getPaginatedEvents(
         integrationId,
         10,
         0,
@@ -114,10 +112,10 @@ test('insert and fetch integration events', async () => {
 });
 
 test('paginate to latest event', async () => {
-    await integrationEventsStore.insert(getTestEventSuccess());
-    await integrationEventsStore.insert(getTestEventFailed());
+    await integrationEventsService.registerEvent(getTestEventSuccess());
+    await integrationEventsService.registerEvent(getTestEventFailed());
 
-    const events = await integrationEventsStore.getPaginatedEvents(
+    const events = await integrationEventsService.getPaginatedEvents(
         integrationId,
         1,
         0,
@@ -128,10 +126,10 @@ test('paginate to latest event', async () => {
 });
 
 test('paginate to second most recent event', async () => {
-    await integrationEventsStore.insert(getTestEventSuccess());
-    await integrationEventsStore.insert(getTestEventFailed());
+    await integrationEventsService.registerEvent(getTestEventSuccess());
+    await integrationEventsService.registerEvent(getTestEventFailed());
 
-    const events = await integrationEventsStore.getPaginatedEvents(
+    const events = await integrationEventsService.getPaginatedEvents(
         integrationId,
         1,
         1,
@@ -164,11 +162,11 @@ test('clean up events, keeping events from the last 2 hours', async () => {
     await insertPastEvent(getTestEventFailed(), twoDaysAgo);
     await insertPastEvent(getTestEventSuccess(), longTimeAgo);
     await insertPastEvent(getTestEventFailed(), oneHourAgo);
-    await integrationEventsStore.insert(getTestEventSuccess());
+    await integrationEventsService.registerEvent(getTestEventSuccess());
 
-    await integrationEventsStore.cleanUpEvents();
+    await integrationEventsService.cleanUpEvents();
 
-    const events = await integrationEventsStore.getPaginatedEvents(
+    const events = await integrationEventsService.getPaginatedEvents(
         integrationId,
         10,
         0,
@@ -181,12 +179,12 @@ test('clean up events, keeping events from the last 2 hours', async () => {
 
 test('clean up events, keeping the last 100 events', async () => {
     for (let i = 0; i < 200; i++) {
-        await integrationEventsStore.insert(getTestEventSuccess());
+        await integrationEventsService.registerEvent(getTestEventSuccess());
     }
 
-    await integrationEventsStore.cleanUpEvents();
+    await integrationEventsService.cleanUpEvents();
 
-    const events = await integrationEventsStore.getPaginatedEvents(
+    const events = await integrationEventsService.getPaginatedEvents(
         integrationId,
         200,
         0,

@@ -54,6 +54,7 @@ import type { InactiveUsersService } from '../users/inactive/inactive-users-serv
 import type { ProjectInsightsService } from '../features/project-insights/project-insights-service';
 import type { JobService } from '../features/scheduler/job-service';
 import type { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -118,4 +119,5 @@ export interface IUnleashServices {
     jobService: JobService;
     featureLifecycleService: FeatureLifecycleService;
     transactionalFeatureLifecycleService: WithTransactional<FeatureLifecycleService>;
+    integrationEventsService: IntegrationEventsService;
 }

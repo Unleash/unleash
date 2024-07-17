@@ -134,6 +134,7 @@ import {
     createApiTokenService,
     createFakeApiTokenService,
 } from '../features/api-tokens/createApiTokenService';
+import { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -191,11 +192,16 @@ export const createServices = (
         ? withTransactional(createTagTypeService(config), db)
         : withFakeTransactional(createFakeTagTypeService(config));
     const tagTypeService = transactionalTagTypeService;
+    const integrationEventsService = new IntegrationEventsService(
+        stores,
+        config,
+    );
     const addonService = new AddonService(
         stores,
         config,
         tagTypeService,
         eventService,
+        integrationEventsService,
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
@@ -436,6 +442,7 @@ export const createServices = (
         jobService,
         featureLifecycleService,
         transactionalFeatureLifecycleService,
+        integrationEventsService,
     };
 };
 
@@ -484,4 +491,5 @@ export {
     ProjectInsightsService,
     JobService,
     FeatureLifecycleService,
+    IntegrationEventsService,
 };

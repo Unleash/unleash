@@ -120,11 +120,11 @@ export const fromOpenApiValidationError =
     (request: { body: object; query: object }) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
-        const [errorSource, startTrimLength] = instancePath.startsWith('/body')
+        const [errorSource, substringOffset] = instancePath.startsWith('/body')
             ? [request.body, '/body/'.length]
             : [request.query, '/query/'.length];
 
-        const propertyName = instancePath.substring(startTrimLength);
+        const propertyName = instancePath.substring(substringOffset);
 
         switch (validationError.keyword) {
             case 'required':
@@ -144,7 +144,7 @@ export const fromOpenApiValidationError =
                     params.allowedValues,
                     getProp(
                         errorSource,
-                        instancePath.substring(startTrimLength).split('/'),
+                        instancePath.substring(substringOffset).split('/'),
                     ),
                 );
 

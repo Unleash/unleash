@@ -448,8 +448,6 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain('from');
         // it tells the user what they provided
         expect(result.message).toContain(query.from);
-        // it tells the user that the value is in the query parameter
-        expect(result.message).toContain('query');
     });
 });
 

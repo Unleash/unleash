@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 import { Box, Paper, styled } from '@mui/material';
 import { UserStats } from './componentsStat/UserStats/UserStats';
 import { UsersChart } from './componentsChart/UsersChart/UsersChart';
@@ -69,30 +69,9 @@ const StyledWidget = styled(Paper)(({ theme }) => ({
     },
 }));
 
-const Widget: FC<{ children: ReactNode; enterpriseOnly?: boolean }> = ({
-    children,
-    enterpriseOnly,
-}) => {
-    const { isEnterprise } = useUiConfig();
-
-    if (enterpriseOnly && !isEnterprise()) {
-        return null;
-    }
-
-    return <StyledWidget>{children}</StyledWidget>;
-};
-
 const StyledWidgetContent = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
     width: '100%',
-}));
-
-const StyledChartContainer = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    minWidth: 0, // bugfix, see: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128
-    flexGrow: 1,
-    margin: 'auto 0',
-    padding: theme.spacing(3),
 }));
 
 const StyledWidgetStats = styled(Box)<{ width?: number }>(
@@ -109,6 +88,14 @@ const StyledWidgetStats = styled(Box)<{ width?: number }>(
     }),
 );
 
+const StyledChartContainer = styled(Box)(({ theme }) => ({
+    position: 'relative',
+    minWidth: 0, // bugfix, see: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128
+    flexGrow: 1,
+    margin: 'auto 0',
+    padding: theme.spacing(3),
+}));
+
 export const InsightsCharts: FC<IChartsProps> = ({
     projects,
     flags,
@@ -124,6 +111,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
 }) => {
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
+    const { isEnterprise } = useUiConfig();
 
     function getFlagsPerUser(
         flags: InstanceInsightsSchemaFlags,
@@ -141,7 +129,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 condition={showAllProjects}
                 show={
                     <>
-                        <Widget>
+                        <StyledWidget>
                             <StyledWidgetStats>
                                 <WidgetTitle title='Total users' />
                                 <UserStats
@@ -157,8 +145,8 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                     isLoading={loading}
                                 />
                             </StyledChartContainer>
-                        </Widget>
-                        <Widget>
+                        </StyledWidget>
+                        <StyledWidget>
                             <StyledWidgetStats width={275}>
                                 <WidgetTitle title='Flags' />
                                 <FlagStats
@@ -173,12 +161,12 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                     isLoading={loading}
                                 />
                             </StyledChartContainer>
-                        </Widget>
+                        </StyledWidget>
                     </>
                 }
                 elseShow={
                     <>
-                        <Widget>
+                        <StyledWidget>
                             <StyledWidgetStats>
                                 <WidgetTitle
                                     title={
@@ -203,8 +191,8 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                     isLoading={loading}
                                 />
                             </StyledChartContainer>
-                        </Widget>
-                        <Widget>
+                        </StyledWidget>
+                        <StyledWidget>
                             <StyledWidgetStats width={275}>
                                 <WidgetTitle title='Flags' />
                                 <FlagStats
@@ -219,74 +207,89 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                     isLoading={loading}
                                 />
                             </StyledChartContainer>
-                        </Widget>
+                        </StyledWidget>
                     </>
                 }
             />
-            <Widget enterpriseOnly>
-                <StyledWidgetStats width={250}>
-                    <WidgetTitle title='Health' />
-                    <HealthStats
-                        value={summary.averageHealth}
-                        healthy={summary.active}
-                        stale={summary.stale}
-                        potentiallyStale={summary.potentiallyStale}
-                    />
-                </StyledWidgetStats>
-                <StyledChartContainer>
-                    <ProjectHealthChart
-                        projectFlagTrends={groupedProjectsData}
-                        isAggregate={showAllProjects}
-                        isLoading={loading}
-                    />
-                </StyledChartContainer>
-            </Widget>
-            <Widget enterpriseOnly>
-                <StyledWidgetStats>
-                    <WidgetTitle
-                        title='Median time to production'
-                        tooltip={`How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.`}
-                    />
-                    <TimeToProduction
-                        daysToProduction={summary.medianTimeToProduction}
-                    />
-                </StyledWidgetStats>
-                <StyledChartContainer>
-                    <TimeToProductionChart
-                        projectFlagTrends={groupedProjectsData}
-                        isAggregate={showAllProjects}
-                        isLoading={loading}
-                    />
-                </StyledChartContainer>
-            </Widget>
-            <Widget enterpriseOnly>
-                <StyledWidgetContent>
-                    <WidgetTitle
-                        title='Flag evaluation metrics'
-                        tooltip='Summary of all flag evaluations reported by SDKs.'
-                    />
-                    <StyledChartContainer>
-                        <MetricsSummaryChart
-                            metricsSummaryTrends={groupedMetricsData}
-                            allDatapointsSorted={allMetricsDatapoints}
-                            isAggregate={showAllProjects}
-                            isLoading={loading}
-                        />
-                    </StyledChartContainer>
-                </StyledWidgetContent>
-            </Widget>
-            <Widget enterpriseOnly>
-                <StyledWidgetContent>
-                    <WidgetTitle
-                        title='Updates per environment type'
-                        tooltip='Summary of all configuration updates per environment type.'
-                    />
-                    <UpdatesPerEnvironmentTypeChart
-                        environmentTypeTrends={environmentTypeTrends}
-                        isLoading={loading}
-                    />
-                </StyledWidgetContent>
-            </Widget>
+            <ConditionallyRender
+                condition={isEnterprise()}
+                show={
+                    <>
+                        <StyledWidget>
+                            <StyledWidgetStats width={250}>
+                                <WidgetTitle title='Health' />
+                                <HealthStats
+                                    value={summary.averageHealth}
+                                    healthy={summary.active}
+                                    stale={summary.stale}
+                                    potentiallyStale={summary.potentiallyStale}
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <ProjectHealthChart
+                                    projectFlagTrends={groupedProjectsData}
+                                    isAggregate={showAllProjects}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </StyledWidget>
+                        <StyledWidget>
+                            <StyledWidgetStats>
+                                <WidgetTitle
+                                    title='Median time to production'
+                                    tooltip={`How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.`}
+                                />
+                                <TimeToProduction
+                                    daysToProduction={
+                                        summary.medianTimeToProduction
+                                    }
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <TimeToProductionChart
+                                    projectFlagTrends={groupedProjectsData}
+                                    isAggregate={showAllProjects}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </StyledWidget>
+                        <StyledWidget>
+                            <StyledWidgetContent>
+                                <WidgetTitle
+                                    title='Flag evaluation metrics'
+                                    tooltip='Summary of all flag evaluations reported by SDKs.'
+                                />
+                                <StyledChartContainer>
+                                    <MetricsSummaryChart
+                                        metricsSummaryTrends={
+                                            groupedMetricsData
+                                        }
+                                        allDatapointsSorted={
+                                            allMetricsDatapoints
+                                        }
+                                        isAggregate={showAllProjects}
+                                        isLoading={loading}
+                                    />
+                                </StyledChartContainer>
+                            </StyledWidgetContent>
+                        </StyledWidget>
+                        <StyledWidget>
+                            <StyledWidgetContent>
+                                <WidgetTitle
+                                    title='Updates per environment type'
+                                    tooltip='Summary of all configuration updates per environment type.'
+                                />
+                                <UpdatesPerEnvironmentTypeChart
+                                    environmentTypeTrends={
+                                        environmentTypeTrends
+                                    }
+                                    isLoading={loading}
+                                />
+                            </StyledWidgetContent>
+                        </StyledWidget>
+                    </>
+                }
+            />
         </StyledContainer>
     );
 };

@@ -24,7 +24,7 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { chartInfo } from './chart-info';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
-interface IChartsProps {
+export interface IChartsProps {
     flags: InstanceInsightsSchema['flags'];
     flagTrends: InstanceInsightsSchema['flagTrends'];
     projectsData: InstanceInsightsSchema['projectFlagTrends'];

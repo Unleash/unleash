@@ -9,7 +9,7 @@ import {
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { InsightsHeader } from './components/InsightsHeader/InsightsHeader';
 import { useInsightsData } from './hooks/useInsightsData';
-import { InsightsCharts } from './InsightsCharts';
+import { type IChartsProps, InsightsCharts } from './InsightsCharts';
 import { LegacyInsightsCharts } from './LegacyInsightsCharts';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Sticky } from 'component/common/Sticky/Sticky';
@@ -105,11 +105,15 @@ const LegacyInsights: FC = () => {
     );
 };
 
-const NewInsights = () => {
+interface InsightsProps {
+    ChartComponent?: FC<IChartsProps>;
+}
+
+export const NewInsights: FC<InsightsProps> = ({ ChartComponent }) => {
     const [scrolled, setScrolled] = useState(false);
 
     const stateConfig = {
-        projects: FilterItemParam,
+        project: FilterItemParam,
         from: FilterItemParam,
         to: FilterItemParam,
     };
@@ -119,7 +123,7 @@ const NewInsights = () => {
         state.to?.values[0],
     );
 
-    const projects = state.projects?.values ?? [allOption.id];
+    const projects = state.project?.values ?? [allOption.id];
 
     const insightsData = useInsightsData(insights, projects);
 
@@ -137,18 +141,20 @@ const NewInsights = () => {
 
     return (
         <StyledWrapper>
-            <StickyWrapper>
+            <StickyContainer>
                 <InsightsHeader
                     actions={
                         <InsightsFilters state={state} onChange={setState} />
                     }
                 />
-            </StickyWrapper>
-            <InsightsCharts
-                loading={loading}
-                projects={projects}
-                {...insightsData}
-            />
+            </StickyContainer>
+            {ChartComponent && (
+                <ChartComponent
+                    loading={loading}
+                    projects={projects}
+                    {...insightsData}
+                />
+            )}
         </StyledWrapper>
     );
 };
@@ -156,7 +162,8 @@ const NewInsights = () => {
 export const Insights: FC = () => {
     const isInsightsV2Enabled = useUiFlag('insightsV2');
 
-    if (isInsightsV2Enabled) return <NewInsights />;
+    if (isInsightsV2Enabled)
+        return <NewInsights ChartComponent={InsightsCharts} />;
 
     return <LegacyInsights />;
 };

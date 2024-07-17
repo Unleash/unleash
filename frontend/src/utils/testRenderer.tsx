@@ -13,6 +13,7 @@ import { UIProviderContainer } from '../component/providers/UIProvider/UIProvide
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import { QueryParamProvider } from 'use-query-params';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
+import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 
 export const render = (
     ui: JSX.Element,
@@ -48,7 +49,9 @@ export const render = (
                             <QueryParamProvider adapter={ReactRouter6Adapter}>
                                 <ThemeProvider>
                                     <AnnouncerProvider>
-                                        {children}
+                                        <StickyProvider>
+                                            {children}
+                                        </StickyProvider>
                                     </AnnouncerProvider>
                                 </ThemeProvider>
                             </QueryParamProvider>

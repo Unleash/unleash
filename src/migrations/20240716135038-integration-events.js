@@ -3,7 +3,7 @@ exports.up = function (db, cb) {
         `
         CREATE TABLE IF NOT EXISTS integration_events
         (
-            id SERIAL PRIMARY KEY NOT NULL,
+            id BIGSERIAL PRIMARY KEY NOT NULL,
             integration_id INTEGER NOT NULL REFERENCES addons(id) ON DELETE CASCADE,
             created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
             state TEXT NOT NULL,

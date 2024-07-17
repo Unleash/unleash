@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Widget } from './components/Widget/Widget';
@@ -71,7 +71,7 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
-export const InsightsCharts: VFC<IChartsProps> = ({
+export const InsightsCharts: FC<IChartsProps> = ({
     projects,
     flags,
     users,

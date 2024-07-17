@@ -1,5 +1,5 @@
-import { useState, type VFC } from 'react';
-import { Box, styled } from '@mui/material';
+import { useState, type FC } from 'react';
+import { styled } from '@mui/material';
 import { ArrayParam, withDefault } from 'use-query-params';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import {
@@ -13,19 +13,22 @@ import { InsightsCharts } from './InsightsCharts';
 import { LegacyInsightsCharts } from './LegacyInsightsCharts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { Sticky } from 'component/common/Sticky/Sticky';
 
-const StickyWrapper = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'scrolled',
-})<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
+const StyledWrapper = styled('div')(({ theme }) => ({
+    paddingTop: theme.spacing(1),
+}));
+
+const StickyContainer = styled(Sticky)(({ theme }) => ({
     position: 'sticky',
     top: 0,
     zIndex: theme.zIndex.sticky,
-    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+    padding: theme.spacing(2, 0),
     background: theme.palette.background.application,
     transition: 'padding 0.3s ease',
 }));
 
-export const Insights: VFC = () => {
+export const Insights: FC = () => {
     const [scrolled, setScrolled] = useState(false);
     const { insights, loading, error } = useInsights();
     const stateConfig = {
@@ -56,8 +59,8 @@ export const Insights: VFC = () => {
     const isInsightsV2Enabled = useUiFlag('insightsV2');
 
     return (
-        <>
-            <StickyWrapper scrolled={scrolled}>
+        <StyledWrapper>
+            <StickyContainer>
                 <InsightsHeader
                     actions={
                         <ProjectSelect
@@ -73,7 +76,7 @@ export const Insights: VFC = () => {
                         />
                     }
                 />
-            </StickyWrapper>
+            </StickyContainer>
             <ConditionallyRender
                 condition={isInsightsV2Enabled}
                 show={
@@ -91,6 +94,6 @@ export const Insights: VFC = () => {
                     />
                 }
             />
-        </>
+        </StyledWrapper>
     );
 };

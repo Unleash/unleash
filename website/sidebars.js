@@ -174,8 +174,8 @@ module.exports = {
                         {
                             type: 'doc',
                             label: 'Examples',
-                            id: 'feature-flag-tutorials/rust/examples'
-                        }
+                            id: 'feature-flag-tutorials/rust/examples',
+                        },
                     ],
                 },
                 {

@@ -20,7 +20,8 @@ import type {
 import type { GroupedDataByProject } from './hooks/useGroupedProjectTrends';
 import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { WidgetTitle } from './components/WIdgetTitle/WIdgetTitle';
+import { WidgetTitle } from './components/WIdgetTitle/WidgetTitle';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IChartsProps {
     flags: InstanceInsightsSchema['flags'];
@@ -61,11 +62,11 @@ const StyledWidget = styled(Paper)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     boxShadow: 'none',
     display: 'flex',
-    // flexDirection: 'column',
+    flexWrap: 'wrap',
     [theme.breakpoints.up('md')]: {
         flexDirection: 'row',
+        flexWrap: 'nowrap',
     },
-    // alignItems: 'stretch',
 }));
 
 const Widget: FC<{ children: ReactNode; enterpriseOnly?: boolean }> = ({
@@ -81,12 +82,10 @@ const Widget: FC<{ children: ReactNode; enterpriseOnly?: boolean }> = ({
     return <StyledWidget>{children}</StyledWidget>;
 };
 
-// const WidgetContentSidebar: FC<{ children: ReactNode; width?: number }> = ({ children, width }) => (
-
-// );
-
-// <Widget>
-//    <WidgetSidebar />
+const StyledWidgetContent = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(3),
+    width: '100%',
+}));
 
 const StyledChartContainer = styled(Box)(({ theme }) => ({
     position: 'relative',
@@ -102,6 +101,7 @@ const StyledWidgetStats = styled(Box)<{ width?: number }>(
         flexDirection: 'column',
         gap: theme.spacing(2),
         padding: theme.spacing(3),
+        minWidth: '100%',
         [theme.breakpoints.up('md')]: {
             minWidth: `${width}px`,
             borderRight: `1px solid ${theme.palette.background.application}`,
@@ -122,7 +122,6 @@ export const InsightsCharts: FC<IChartsProps> = ({
     allMetricsDatapoints,
     loading,
 }) => {
-    const { isEnterprise } = useUiConfig();
     const showAllProjects = projects[0] === allOption.id;
     const isOneProjectSelected = projects.length === 1;
 
@@ -136,10 +135,96 @@ export const InsightsCharts: FC<IChartsProps> = ({
             : flagsPerUserCalculation.toFixed(2);
     }
 
-    const universalComponents = (
-        <>
+    return (
+        <StyledContainer>
+            <ConditionallyRender
+                condition={showAllProjects}
+                show={
+                    <>
+                        <Widget>
+                            <StyledWidgetStats>
+                                <WidgetTitle title='Total users' />
+                                <UserStats
+                                    count={users.total}
+                                    active={users.active}
+                                    inactive={users.inactive}
+                                    isLoading={loading}
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <UsersChart
+                                    userTrends={userTrends}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </Widget>
+                        <Widget>
+                            <StyledWidgetStats width={275}>
+                                <WidgetTitle title='Flags' />
+                                <FlagStats
+                                    count={flags.total}
+                                    flagsPerUser={getFlagsPerUser(flags, users)}
+                                    isLoading={loading}
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <FlagsChart
+                                    flagTrends={flagTrends}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </Widget>
+                    </>
+                }
+                elseShow={
+                    <>
+                        <Widget>
+                            <StyledWidgetStats>
+                                <WidgetTitle
+                                    title={
+                                        isOneProjectSelected
+                                            ? 'Users in project'
+                                            : 'Users per project on average'
+                                    }
+                                    tooltip={
+                                        isOneProjectSelected
+                                            ? 'Number of users in selected projects.'
+                                            : 'Average number of users for selected projects.'
+                                    }
+                                />
+                                <UserStats
+                                    count={summary.averageUsers}
+                                    isLoading={loading}
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <UsersPerProjectChart
+                                    projectFlagTrends={groupedProjectsData}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </Widget>
+                        <Widget>
+                            <StyledWidgetStats width={275}>
+                                <WidgetTitle title='Flags' />
+                                <FlagStats
+                                    count={summary.total}
+                                    flagsPerUser={''}
+                                    isLoading={loading}
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <FlagsProjectChart
+                                    projectFlagTrends={groupedProjectsData}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </Widget>
+                    </>
+                }
+            />
             <Widget enterpriseOnly>
-                <div>
+                <StyledWidgetStats width={250}>
                     <WidgetTitle title='Health' />
                     <HealthStats
                         value={summary.averageHealth}
@@ -147,7 +232,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
                         stale={summary.stale}
                         potentiallyStale={summary.potentiallyStale}
                     />
-                </div>
+                </StyledWidgetStats>
                 <StyledChartContainer>
                     <ProjectHealthChart
                         projectFlagTrends={groupedProjectsData}
@@ -157,7 +242,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 </StyledChartContainer>
             </Widget>
             <Widget enterpriseOnly>
-                <div>
+                <StyledWidgetStats>
                     <WidgetTitle
                         title='Median time to production'
                         tooltip={`How long does it currently take on average from when a feature flag was created until it was enabled in a "production" type environment. This is calculated only from feature flags of the type "release" and is the median across the selected projects.`}
@@ -165,7 +250,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
                     <TimeToProduction
                         daysToProduction={summary.medianTimeToProduction}
                     />
-                </div>
+                </StyledWidgetStats>
                 <StyledChartContainer>
                     <TimeToProductionChart
                         projectFlagTrends={groupedProjectsData}
@@ -175,7 +260,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 </StyledChartContainer>
             </Widget>
             <Widget enterpriseOnly>
-                <div>
+                <StyledWidgetContent>
                     <WidgetTitle
                         title='Flag evaluation metrics'
                         tooltip='Summary of all flag evaluations reported by SDKs.'
@@ -188,107 +273,20 @@ export const InsightsCharts: FC<IChartsProps> = ({
                             isLoading={loading}
                         />
                     </StyledChartContainer>
-                </div>
+                </StyledWidgetContent>
             </Widget>
             <Widget enterpriseOnly>
-                <WidgetTitle
-                    title='Updates per environment type'
-                    tooltip='Summary of all configuration updates per environment type.'
-                />
-                <UpdatesPerEnvironmentTypeChart
-                    environmentTypeTrends={environmentTypeTrends}
-                    isLoading={loading}
-                />
-            </Widget>
-        </>
-    );
-
-    if (showAllProjects) {
-        return (
-            <StyledContainer>
-                <Widget>
-                    <StyledWidgetStats>
-                        <WidgetTitle title='Total users' />
-                        <UserStats
-                            count={users.total}
-                            active={users.active}
-                            inactive={users.inactive}
-                            isLoading={loading}
-                        />
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
-                        <UsersChart
-                            userTrends={userTrends}
-                            isLoading={loading}
-                        />
-                    </StyledChartContainer>
-                </Widget>
-                <Widget>
-                    <StyledWidgetStats width={250}>
-                        <WidgetTitle title='Flags' />
-                        <FlagStats
-                            count={flags.total}
-                            flagsPerUser={getFlagsPerUser(flags, users)}
-                            isLoading={loading}
-                        />
-                    </StyledWidgetStats>
-                    <StyledChartContainer>
-                        <FlagsChart
-                            flagTrends={flagTrends}
-                            isLoading={loading}
-                        />
-                    </StyledChartContainer>
-                </Widget>
-                {universalComponents}
-            </StyledContainer>
-        );
-    }
-
-    return (
-        <StyledContainer>
-            <Widget>
-                <StyledWidgetStats>
+                <StyledWidgetContent>
                     <WidgetTitle
-                        title={
-                            isOneProjectSelected
-                                ? 'Users in project'
-                                : 'Users per project on average'
-                        }
-                        tooltip={
-                            isOneProjectSelected
-                                ? 'Number of users in selected projects.'
-                                : 'Average number of users for selected projects.'
-                        }
+                        title='Updates per environment type'
+                        tooltip='Summary of all configuration updates per environment type.'
                     />
-                    <UserStats
-                        count={summary.averageUsers}
+                    <UpdatesPerEnvironmentTypeChart
+                        environmentTypeTrends={environmentTypeTrends}
                         isLoading={loading}
                     />
-                </StyledWidgetStats>
-                <StyledChartContainer>
-                    <UsersPerProjectChart
-                        projectFlagTrends={groupedProjectsData}
-                        isLoading={loading}
-                    />
-                </StyledChartContainer>
+                </StyledWidgetContent>
             </Widget>
-            <Widget>
-                <StyledWidgetStats width={250}>
-                    <WidgetTitle title='Flags' />
-                    <FlagStats
-                        count={summary.total}
-                        flagsPerUser={''}
-                        isLoading={loading}
-                    />
-                </StyledWidgetStats>
-                <StyledChartContainer>
-                    <FlagsProjectChart
-                        projectFlagTrends={groupedProjectsData}
-                        isLoading={loading}
-                    />
-                </StyledChartContainer>
-            </Widget>
-            {universalComponents}
         </StyledContainer>
     );
 };

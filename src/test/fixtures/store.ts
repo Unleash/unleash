@@ -17,6 +17,7 @@ import FakeEnvironmentStore from '../../lib/features/project-environments/fake-e
 import FakeStrategiesStore from './fake-strategies-store';
 import type {
     IImportTogglesStore,
+    IntegrationEventsStore,
     IPrivateProjectStore,
     IUnleashStores,
 } from '../../lib/types';
@@ -107,6 +108,7 @@ const createStores: () => IUnleashStores = () => {
         featureStrategiesReadModel: new FakeFeatureStrategiesReadModel(),
         featureLifecycleReadModel: new FakeFeatureLifecycleReadModel(),
         largestResourcesReadModel: new FakeLargestResourcesReadModel(),
+        integrationEventsStore: {} as IntegrationEventsStore,
     };
 };
 

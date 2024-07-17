@@ -117,10 +117,14 @@ const enumMessage = (
 };
 
 export const fromOpenApiValidationError =
-    (requestBody: object) =>
+    (request: { body: object; query: object }) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
-        const propertyName = instancePath.substring('/body/'.length);
+        const [errorSource, substringOffset] = instancePath.startsWith('/body')
+            ? [request.body, '/body/'.length]
+            : [request.query, '/query/'.length];
+
+        const propertyName = instancePath.substring(substringOffset);
 
         switch (validationError.keyword) {
             case 'required':
@@ -139,28 +143,28 @@ export const fromOpenApiValidationError =
                     message,
                     params.allowedValues,
                     getProp(
-                        requestBody,
-                        instancePath.substring('/body/'.length).split('/'),
+                        errorSource,
+                        instancePath.substring(substringOffset).split('/'),
                     ),
                 );
 
             case 'oneOf':
                 return oneOfMessage(propertyName, validationError.message);
             default:
-                return genericErrorMessage(requestBody, propertyName, message);
+                return genericErrorMessage(errorSource, propertyName, message);
         }
     };
 
 export const fromOpenApiValidationErrors = (
-    requestBody: object,
+    request: { body: object; query: object },
     validationErrors: [ErrorObject, ...ErrorObject[]],
 ): BadDataError => {
     const [firstDetail, ...remainingDetails] = validationErrors.map(
-        fromOpenApiValidationError(requestBody),
+        fromOpenApiValidationError(request),
     );
 
     return new BadDataError(
-        "Request validation failed: the payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
+        "Request validation failed: your request doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
         [firstDetail, ...remainingDetails],
     );
 };

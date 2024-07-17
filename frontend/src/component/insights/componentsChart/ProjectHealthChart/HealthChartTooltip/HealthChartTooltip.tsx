@@ -33,80 +33,66 @@ const getHealthBadgeColor = (health?: number | null) => {
 };
 
 const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
-    if (stale + potentiallyStale === 0) {
-        return (
+    const healthyFlagCount = total - stale - potentiallyStale;
+
+    return (
+        <>
             <HorizontalDistributionChart
-                sections={[{ type: 'default', value: 100 }]}
+                sections={[
+                    {
+                        type: 'error',
+                        value: (stale / total) * 100,
+                    },
+                    {
+                        type: 'warning',
+                        value: (potentiallyStale / total) * 100,
+                    },
+                    {
+                        type: 'success',
+                        value: (healthyFlagCount / total) * 100,
+                    },
+                ]}
                 size='small'
             />
-        );
-    } else {
-        const healthyFlagCount = total - stale - potentiallyStale;
-
-        return (
-            <>
-                <HorizontalDistributionChart
-                    sections={[{ type: 'default', value: 100 }]}
-                    size='small'
-                />
-
-                <HorizontalDistributionChart
-                    sections={[
-                        {
-                            type: 'error',
-                            value: (stale / total) * 100,
-                        },
-                        {
-                            type: 'warning',
-                            value: (potentiallyStale / total) * 100,
-                        },
-                        {
-                            type: 'success',
-                            value: (healthyFlagCount / total) * 100,
-                        },
-                    ]}
-                    size='small'
-                />
+            <Typography
+                variant='body2'
+                component='p'
+                sx={(theme) => ({ marginTop: theme.spacing(0.5) })}
+            >
                 <Typography
-                    variant='body2'
-                    component='p'
-                    sx={(theme) => ({ marginTop: theme.spacing(0.5) })}
+                    component='span'
+                    sx={(theme) => ({
+                        color: theme.palette.error.border,
+                    })}
                 >
-                    <Typography
-                        component='span'
-                        sx={(theme) => ({
-                            color: theme.palette.error.border,
-                        })}
-                    >
-                        {'● '}
-                    </Typography>
-                    Stale flags: {stale}
+                    {'● '}
                 </Typography>
-                <Typography variant='body2' component='p'>
-                    <Typography
-                        component='span'
-                        sx={(theme) => ({
-                            color: theme.palette.warning.border,
-                        })}
-                    >
-                        {'● '}
-                    </Typography>
-                    Potentially stale flags: {potentiallyStale}
+                Stale flags: {stale}
+            </Typography>
+            <Typography variant='body2' component='p'>
+                <Typography
+                    component='span'
+                    sx={(theme) => ({
+                        color: theme.palette.warning.border,
+                    })}
+                >
+                    {'● '}
                 </Typography>
-                <Typography variant='body2' component='p'>
-                    <Typography
-                        component='span'
-                        sx={(theme) => ({
-                            color: theme.palette.success.border,
-                        })}
-                    >
-                        {'● '}
-                    </Typography>
-                    Healthy flags: {healthyFlagCount}
+                Potentially stale flags: {potentiallyStale}
+            </Typography>
+            <Typography variant='body2' component='p'>
+                <Typography
+                    component='span'
+                    sx={(theme) => ({
+                        color: theme.palette.success.border,
+                    })}
+                >
+                    {'● '}
                 </Typography>
-            </>
-        );
-    }
+                Healthy flags: {healthyFlagCount}
+            </Typography>
+        </>
+    );
 };
 
 export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({

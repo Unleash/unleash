@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { useTheme } from '@mui/material';
 
@@ -9,7 +9,7 @@ interface IHealthStatsProps {
     potentiallyStale: number;
 }
 
-export const HealthStats: VFC<IHealthStatsProps> = ({
+export const HealthStats: FC<IHealthStatsProps> = ({
     value,
     healthy,
     stale,

@@ -1,5 +1,5 @@
 import 'chartjs-adapter-date-fns';
-import { useMemo, type VFC } from 'react';
+import { type FC, useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
@@ -20,7 +20,7 @@ interface IProjectHealthChartProps {
     isLoading?: boolean;
 }
 
-export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
+export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     projectFlagTrends,
     isAggregate,
     isLoading,

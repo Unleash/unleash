@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Divider, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
@@ -81,7 +81,7 @@ const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => (
     </>
 );
 
-export const HealthTooltip: VFC<{ tooltip: TooltipState | null }> = ({
+export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
     const data = tooltip?.dataPoints.map((point) => {

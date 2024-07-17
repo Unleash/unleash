@@ -44,7 +44,7 @@ const missingRequiredPropertyMessage = (
     missingPropertyName: string,
 ) => {
     const path = constructPath(pathToParentObject, missingPropertyName);
-    const message = `The \`${path}\` property is required. It was not present on the data you sent.`;
+    const message = `The \`${path}\` value is required. It was not present on the data you sent.`;
     return {
         path,
         message,
@@ -74,7 +74,7 @@ const genericErrorMessage = (
     const input = getProp(requestBody, propertyName.split('/'));
 
     const youSent = JSON.stringify(input);
-    const message = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
+    const message = `The \`${propertyName}\` value ${errorMessage}. You sent ${youSent}.`;
     return {
         message,
         path: propertyName,
@@ -86,7 +86,7 @@ const oneOfMessage = (
     errorMessage: string = 'is invalid',
 ) => {
     const errorPosition =
-        propertyName === '' ? 'root object' : `"${propertyName}" property`;
+        propertyName === '' ? 'root object' : `"${propertyName}" value`;
 
     const message = `The ${errorPosition} ${errorMessage}. The data you provided matches more than one option in the schema. These options are mutually exclusive. Please refer back to the schema and remove any excess properties.`;
 
@@ -102,13 +102,13 @@ const enumMessage = (
     allowedValues: string[],
     suppliedValue: string | null | undefined,
 ) => {
-    const fullMessage = `The \`${propertyName}\` property ${
+    const fullMessage = `The \`${propertyName}\` value ${
         message ?? 'must match one of the allowed values'
     }: ${allowedValues
         .map((value) => `"${value}"`)
         .join(
             ', ',
-        )}. You provided "${suppliedValue}", which is not valid. Please use one of the allowed values instead..`;
+        )}. You provided "${suppliedValue}", which is not valid. Please use one of the allowed values instead.`;
 
     return {
         message: fullMessage,
@@ -164,7 +164,7 @@ export const fromOpenApiValidationErrors = (
     );
 
     return new BadDataError(
-        "Request validation failed: the payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
+        "Request validation failed: your request doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
         [firstDetail, ...remainingDetails],
     );
 };

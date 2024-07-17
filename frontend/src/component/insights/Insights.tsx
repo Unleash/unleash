@@ -15,7 +15,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { InsightsFilters } from './InsightsFilters';
 import { FilterItemParam } from '../../utils/serializeQueryParams';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(1),
@@ -97,15 +96,10 @@ const LegacyInsights: FC = () => {
                     }
                 />
             </StickyContainer>
-            <ConditionallyRender
-                condition={!!window.HTMLCanvasElement}
-                show={
-                    <LegacyInsightsCharts
-                        loading={loading}
-                        projects={projects}
-                        {...insightsData}
-                    />
-                }
+            <LegacyInsightsCharts
+                loading={loading}
+                projects={projects}
+                {...insightsData}
             />
         </StyledWrapper>
     );

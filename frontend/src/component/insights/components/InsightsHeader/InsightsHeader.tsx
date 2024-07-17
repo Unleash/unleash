@@ -18,6 +18,7 @@ type DashboardHeaderProps = {
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
+    alignItems: 'center',
     gap: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',

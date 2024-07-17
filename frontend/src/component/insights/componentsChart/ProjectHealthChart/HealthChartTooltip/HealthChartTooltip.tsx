@@ -4,7 +4,6 @@ import { Box, Divider, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -34,69 +33,80 @@ const getHealthBadgeColor = (health?: number | null) => {
 };
 
 const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
-    const healthyFlagCount = total - stale - potentiallyStale;
-    return (
-        <>
+    if (stale + potentiallyStale === 0) {
+        return (
             <HorizontalDistributionChart
                 sections={[{ type: 'default', value: 100 }]}
                 size='small'
             />
-            <HorizontalDistributionChart
-                sections={[
-                    {
-                        type: 'error',
-                        value: (stale / total) * 100,
-                    },
-                    {
-                        type: 'warning',
-                        value: (potentiallyStale / total) * 100,
-                    },
-                    {
-                        type: 'success',
-                        value: (healthyFlagCount / total) * 100,
-                    },
-                ]}
-                size='small'
-            />
-            <Typography
-                variant='body2'
-                component='p'
-                sx={(theme) => ({ marginTop: theme.spacing(0.5) })}
-            >
+        );
+    } else {
+        const healthyFlagCount = total - stale - potentiallyStale;
+
+        return (
+            <>
+                <HorizontalDistributionChart
+                    sections={[{ type: 'default', value: 100 }]}
+                    size='small'
+                />
+
+                <HorizontalDistributionChart
+                    sections={[
+                        {
+                            type: 'error',
+                            value: (stale / total) * 100,
+                        },
+                        {
+                            type: 'warning',
+                            value: (potentiallyStale / total) * 100,
+                        },
+                        {
+                            type: 'success',
+                            value: (healthyFlagCount / total) * 100,
+                        },
+                    ]}
+                    size='small'
+                />
                 <Typography
-                    component='span'
-                    sx={(theme) => ({
-                        color: theme.palette.error.border,
-                    })}
+                    variant='body2'
+                    component='p'
+                    sx={(theme) => ({ marginTop: theme.spacing(0.5) })}
                 >
-                    {'● '}
+                    <Typography
+                        component='span'
+                        sx={(theme) => ({
+                            color: theme.palette.error.border,
+                        })}
+                    >
+                        {'● '}
+                    </Typography>
+                    Stale flags: {stale}
                 </Typography>
-                Stale flags: {stale}
-            </Typography>
-            <Typography variant='body2' component='p'>
-                <Typography
-                    component='span'
-                    sx={(theme) => ({
-                        color: theme.palette.warning.border,
-                    })}
-                >
-                    {'● '}
+                <Typography variant='body2' component='p'>
+                    <Typography
+                        component='span'
+                        sx={(theme) => ({
+                            color: theme.palette.warning.border,
+                        })}
+                    >
+                        {'● '}
+                    </Typography>
+                    Potentially stale flags: {potentiallyStale}
                 </Typography>
-                Potentially stale flags: {potentiallyStale}
-            </Typography>
-            <Typography variant='body2' component='p'>
-                <Typography
-                    component='span'
-                    sx={(theme) => ({
-                        color: theme.palette.success.border,
-                    })}
-                >
-                    {'● '}
+                <Typography variant='body2' component='p'>
+                    <Typography
+                        component='span'
+                        sx={(theme) => ({
+                            color: theme.palette.success.border,
+                        })}
+                    >
+                        {'● '}
+                    </Typography>
+                    Healthy flags: {healthyFlagCount}
                 </Typography>
-                Healthy flags: {healthyFlagCount}
-            </Typography>
-        </>
-    );
+            </>
+        );
+    }
 };
 
 export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
@@ -169,12 +179,7 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                     >
                         Total flags: {point.value.total}
                     </Typography>
-                    <ConditionallyRender
-                        condition={Boolean(
-                            point.value.stale || point.value.potentiallyStale,
-                        )}
-                        show={<Distribution {...point.value} />}
-                    />
+                    <Distribution {...point.value} />{' '}
                 </StyledTooltipItemContainer>
             )) || null}
         </Box>

@@ -11,8 +11,9 @@ import { InsightsHeader } from './components/InsightsHeader/InsightsHeader';
 import { useInsightsData } from './hooks/useInsightsData';
 import { InsightsCharts } from './InsightsCharts';
 import { LegacyInsightsCharts } from './LegacyInsightsCharts';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { InsightsFilters } from './InsightsFilters';
+import { FilterItemParam } from '../../utils/serializeQueryParams';
 
 const StickyWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'scrolled',
@@ -33,7 +34,7 @@ const StyledProjectSelect = styled(ProjectSelect)(({ theme }) => ({
     },
 }));
 
-export const Insights: VFC = () => {
+const LegacyInsights = () => {
     const [scrolled, setScrolled] = useState(false);
     const { insights, loading, error } = useInsights();
     const stateConfig = {
@@ -61,8 +62,6 @@ export const Insights: VFC = () => {
         window.addEventListener('scroll', handleScroll);
     }
 
-    const isInsightsV2Enabled = useUiFlag('insightsV2');
-
     return (
         <>
             <StickyWrapper scrolled={scrolled}>
@@ -77,23 +76,65 @@ export const Insights: VFC = () => {
                     }
                 />
             </StickyWrapper>
-            <ConditionallyRender
-                condition={isInsightsV2Enabled}
-                show={
-                    <InsightsCharts
-                        loading={loading}
-                        projects={projects}
-                        {...insightsData}
-                    />
-                }
-                elseShow={
-                    <LegacyInsightsCharts
-                        loading={loading}
-                        projects={projects}
-                        {...insightsData}
-                    />
-                }
+            <LegacyInsightsCharts
+                loading={loading}
+                projects={projects}
+                {...insightsData}
             />
         </>
     );
+};
+
+const NewInsights = () => {
+    const [scrolled, setScrolled] = useState(false);
+
+    const stateConfig = {
+        projects: FilterItemParam,
+        from: FilterItemParam,
+        to: FilterItemParam,
+    };
+    const [state, setState] = usePersistentTableState('insights', stateConfig);
+    const { insights, loading, error } = useInsights(
+        state.from?.values[0],
+        state.to?.values[0],
+    );
+
+    const projects = state.projects?.values ?? [allOption.id];
+
+    const insightsData = useInsightsData(insights, projects);
+
+    const handleScroll = () => {
+        if (!scrolled && window.scrollY > 0) {
+            setScrolled(true);
+        } else if (scrolled && window.scrollY === 0) {
+            setScrolled(false);
+        }
+    };
+
+    if (typeof window !== 'undefined') {
+        window.addEventListener('scroll', handleScroll);
+    }
+
+    return (
+        <>
+            <StickyWrapper scrolled={scrolled}>
+                <InsightsHeader
+                    actions={
+                        <InsightsFilters state={state} onChange={setState} />
+                    }
+                />
+            </StickyWrapper>
+            <InsightsCharts
+                loading={loading}
+                projects={projects}
+                {...insightsData}
+            />
+        </>
+    );
+};
+
+export const Insights: VFC = () => {
+    const isInsightsV2Enabled = useUiFlag('insightsV2');
+    if (isInsightsV2Enabled) return <NewInsights />;
+    return <LegacyInsights />;
 };

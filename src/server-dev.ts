@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         resourceLimits: true,
                         extendedMetrics: true,
                         insightsV2: true,
+                        integrationEvents: true,
                     },
                 },
                 authentication: {

@@ -28,6 +28,14 @@ const StickyContainer = styled(Sticky)(({ theme }) => ({
     transition: 'padding 0.3s ease',
 }));
 
+const StyledProjectSelect = styled(ProjectSelect)(({ theme }) => ({
+    flex: 1,
+    width: '300px',
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
+}));
+
 export const Insights: FC = () => {
     const [scrolled, setScrolled] = useState(false);
     const { insights, loading, error } = useInsights();
@@ -63,16 +71,11 @@ export const Insights: FC = () => {
             <StickyContainer>
                 <InsightsHeader
                     actions={
-                        <ProjectSelect
+                        <StyledProjectSelect
                             selectedProjects={projects}
                             onChange={setProjects}
                             dataTestId={'DASHBOARD_PROJECT_SELECT'}
                             limitTags={1}
-                            sx={{
-                                flex: 1,
-                                maxWidth: '360px',
-                                width: '100%',
-                            }}
                         />
                     }
                 />

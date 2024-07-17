@@ -33,7 +33,6 @@ const StyledActionButtons = styled('div')(({ theme }) => ({
 const StyledExternalActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    width: 300,
     [theme.breakpoints.down('md')]: {
         width: '100%',
     },

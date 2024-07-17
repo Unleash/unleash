@@ -127,6 +127,7 @@ exports[`should create default config 1`] = `
       "flagCreator": false,
       "googleAuthEnabled": false,
       "insightsV2": false,
+      "integrationEvents": false,
       "killInsightsUI": false,
       "killScheduledChangeRequestCache": false,
       "maintenanceMode": false,

@@ -7,6 +7,7 @@ type ValidationErrorDescription = {
     message: string;
     path?: string;
 };
+
 class BadDataError extends UnleashError {
     statusCode = 400;
 
@@ -67,13 +68,11 @@ const additionalPropertiesMessage = (
 };
 
 const genericErrorMessage = (
-    requestBody: object,
     propertyName: string,
+    propertyValue: object,
     errorMessage: string = 'is invalid',
 ) => {
-    const input = getProp(requestBody, propertyName.split('/'));
-
-    const youSent = JSON.stringify(input);
+    const youSent = JSON.stringify(propertyValue);
     const message = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
         message,
@@ -117,24 +116,24 @@ const enumMessage = (
 };
 
 export const fromOpenApiValidationError =
-    (request: { body: object; query: object }) =>
+    (data: object) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
-        const [errorSource, substringOffset] = instancePath.startsWith('/body')
-            ? [request.body, '/body/'.length]
-            : [request.query, '/query/'.length];
 
-        const propertyName = instancePath.substring(substringOffset);
+        const propertyValue = getProp(
+            data,
+            instancePath.split('/').filter(Boolean),
+        );
 
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(
-                    propertyName,
+                    instancePath,
                     params.missingProperty,
                 );
             case 'additionalProperties':
                 return additionalPropertiesMessage(
-                    propertyName,
+                    instancePath,
                     params.additionalProperty,
                 );
             case 'enum':
@@ -142,25 +141,26 @@ export const fromOpenApiValidationError =
                     instancePath.substring(instancePath.lastIndexOf('/') + 1),
                     message,
                     params.allowedValues,
-                    getProp(
-                        errorSource,
-                        instancePath.substring(substringOffset).split('/'),
-                    ),
+                    propertyValue,
                 );
 
             case 'oneOf':
-                return oneOfMessage(propertyName, validationError.message);
+                return oneOfMessage(instancePath, validationError.message);
             default:
-                return genericErrorMessage(errorSource, propertyName, message);
+                return genericErrorMessage(
+                    instancePath,
+                    propertyValue,
+                    message,
+                );
         }
     };
 
 export const fromOpenApiValidationErrors = (
-    request: { body: object; query: object },
+    data: object,
     validationErrors: [ErrorObject, ...ErrorObject[]],
 ): BadDataError => {
     const [firstDetail, ...remainingDetails] = validationErrors.map(
-        fromOpenApiValidationError(request),
+        fromOpenApiValidationError(data),
     );
 
     return new BadDataError(

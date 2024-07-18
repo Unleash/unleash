@@ -4,6 +4,7 @@ import { Box, Divider, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -165,7 +166,12 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                     >
                         Total flags: {point.value.total}
                     </Typography>
-                    <Distribution {...point.value} />{' '}
+                    <ConditionallyRender
+                        condition={Boolean(
+                            point.value.stale || point.value.potentiallyStale,
+                        )}
+                        show={<Distribution {...point.value} />}
+                    />
                 </StyledTooltipItemContainer>
             )) || null}
         </Box>

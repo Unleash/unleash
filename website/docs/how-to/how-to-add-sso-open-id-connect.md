@@ -76,3 +76,45 @@ Log out of Unleash and sign back in again. You should now be presented with the 
 ![Verify SSO](/img/sso-oidc-verify.png)
 
 Success!
+
+## Configuration via Environment variables (Since Unleash Enterprise 6.1.0)
+
+Beware, configuring OIDC through environment variables will disable editing settings in the Administration GUI. If you want to fallback to the GUI, make sure
+the OIDC_ENABLED is not set and then restart Unleash.
+
+### Step 1 Setup required variables for OIDC (minimal setup)
+
+| Variable name      | Purpose                                                               | Required | Example values                                                |
+|--------------------|-----------------------------------------------------------------------|----------|---------------------------------------------------------------|
+| OIDC_ENABLED       | Tells Unleash to use environment variables for configuring OIDC       | yes      | true / false (false will turn off OIDC login)                 |
+| OIDC_DISCOVER_URL  | Tells Unleash how to configure OIDC                                   | yes      | https://myoidchost.azure.com/.well-known/openid-configuration | 
+| OIDC_CLIENT_ID     | The OIDC client ID of this application.                               | yes      | FB87266D-CDDB-4BCF-BB1F-8392FD0EDC1B                          |
+| OIDC_CLIENT_SECRET | Shared secret from OpenID server. Used to authenticate login requests | yes      | qjcVfeFjEfoYAF3AEsX2IMUWYuUzAbXO                              |
+
+Once these are configured OIDC should be working.
+
+### Step 2 (optional) - Auto create users from specific email domains
+
+| Variable name                  | Purpose                                                                                        | Required | Example values              |
+|--------------------------------|------------------------------------------------------------------------------------------------|----------|-----------------------------|
+| OIDC_AUTO_CREATE               | Tells Unleash to auto create users from the specific domains in OIDC_AUTO_CREATE_EMAIL_DOMAINS | no       | true / false                |
+| OIDC_AUTO_CREATE_EMAIL_DOMAINS | A comma separated list of domains to auto-create users for                                     | no       | getunleash.io,getunleash.ai | 
+
+### Step 3 (optional) Enable group syncing
+
+| Variable name               | Purpose                                                                                                  | Required   | Example values              |
+|-----------------------------|----------------------------------------------------------------------------------------------------------|------------|-----------------------------|
+| Variable name               | Purpose                                                                                                  | Required   | Possible values             |
+| --------------------------- | -------------------------------------------------------------------------------------------------------- | ---------- | -----------------           |
+| OIDC_ENABLE_GROUP_SYNCING   | Tell Unleash to setup group syncing from OIDC login requests                                             | No         | true or false               |
+| OIDC_GROUP_JSON_PATH        | a json path expression telling where in the response Unleash can find the group membership information   | No         | groups                      |
+| OIDC_ADD_GROUPS_SCOPE       | Tells Unleash to add the `groups` access scope to the request                                            | No         | true / false                |                                                                    
+| OIDC_DEFAULT_ROOT_ROLE      | Which role to grant users auto created from SSO, defaults to Viewer                                      | No         | 'Viewer', 'Editor', 'Admin' |
+
+### Step 4 (optional) - Further customizations
+
+| Variable name                   | Purpose                                                                                                                                                                          | Required | Example values      |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------------|
+| OIDC_ACR_VALUES                 | Authentication Context Class Reference, used to request extra values in the acr claim returned from the server. If multiple values are required, they should be space separated. | no       |
+| OIDC_ID_TOKEN_SIGNING_ALGORITHM | Only use this if your provider is failing with unsupported algorithm, the default should be fine here                                                                            | No       | RS256, RS384, RS512 |
+| OIDC_ENABLE_SINGLE_SIGN_OUT     | Should Unleash call the single signout of the OIDC endpoint (defaults to false)                                                                                                  | No       | true / false        |

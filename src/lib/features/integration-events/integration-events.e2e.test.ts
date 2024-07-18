@@ -78,11 +78,11 @@ const insertPastEvent = async (
     event: IntegrationEventWriteModel,
     date: Date,
 ): Promise<void> => {
-    const newEvent = await integrationEventsService.registerEvent(event);
+    const { id } = await integrationEventsService.registerEvent(event);
 
     await db.rawDatabase.raw(
         `UPDATE integration_events SET created_at = ? WHERE id = ?`,
-        [date, newEvent!.id],
+        [date, id],
     );
 };
 

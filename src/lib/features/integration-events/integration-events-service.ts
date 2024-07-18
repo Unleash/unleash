@@ -25,10 +25,6 @@ export class IntegrationEventsService {
         this.logger = getLogger('integration-events-service');
     }
 
-    isEnabled(): boolean {
-        return this.flagResolver.isEnabled('integrationEvents');
-    }
-
     async getPaginatedEvents(
         id: number,
         limit: number,
@@ -43,14 +39,12 @@ export class IntegrationEventsService {
 
     async registerEvent(
         integrationEvent: IntegrationEventWriteModel,
-    ): Promise<IntegrationEventSchema | undefined> {
-        if (!this.isEnabled()) return;
-
+    ): Promise<IntegrationEventSchema> {
         return this.integrationEventsStore.insert(integrationEvent);
     }
 
     async cleanUpEvents(): Promise<void> {
-        if (!this.isEnabled()) return;
+        if (!this.flagResolver.isEnabled('integrationEvents')) return;
 
         await this.integrationEventsStore.cleanUpEvents();
     }

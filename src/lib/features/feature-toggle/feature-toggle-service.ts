@@ -390,11 +390,11 @@ class FeatureToggleService {
         }
     }
 
-    validateConstraintsLimit(updatedConstrains: IConstraint[]) {
+    validateConstraintsLimit(updatedConstraints: IConstraint[]) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
 
         const constraintsLimit = this.resourceLimits.constraints;
-        if (updatedConstrains.length > constraintsLimit) {
+        if (updatedConstraints.length > constraintsLimit) {
             throwExceedsLimitError(this.eventBus, {
                 resource: `constraints`,
                 limit: constraintsLimit,
@@ -402,7 +402,7 @@ class FeatureToggleService {
         }
 
         const constraintValuesLimit = this.resourceLimits.constraintValues;
-        const constraintOverLimit = updatedConstrains.find(
+        const constraintOverLimit = updatedConstraints.find(
             (constraint) =>
                 Array.isArray(constraint.values) &&
                 constraint.values?.length > constraintValuesLimit,

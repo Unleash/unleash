@@ -403,7 +403,7 @@ class FeatureToggleService {
         );
         if (constraintOverLimit) {
             throw new ExceedsLimitError(
-                `content values for ${constraintOverLimit.contextName}`,
+                `constraint values for ${constraintOverLimit.contextName}`,
                 constraintValuesLimit,
             );
         }

@@ -37,6 +37,7 @@ export const useProjectFeatureSearch = (
         sortOrder: withDefault(StringParam, 'desc'),
         columns: ArrayParam,
         tag: FilterItemParam,
+        state: FilterItemParam,
         createdAt: FilterItemParam,
         type: FilterItemParam,
         ...(flagCreatorEnabled ? { createdBy: FilterItemParam } : {}),

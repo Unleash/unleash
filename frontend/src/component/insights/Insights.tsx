@@ -17,7 +17,7 @@ import { InsightsFilters } from './InsightsFilters';
 import { FilterItemParam } from '../../utils/serializeQueryParams';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
-    paddingTop: theme.spacing(1),
+    paddingTop: theme.spacing(2),
 }));
 
 const StickyContainer = styled(Sticky)(({ theme }) => ({

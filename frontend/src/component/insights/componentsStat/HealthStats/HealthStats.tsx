@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useThemeMode } from 'hooks/useThemeMode';
-import { useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 
 interface IHealthStatsProps {
     value?: string | number;
@@ -8,6 +8,11 @@ interface IHealthStatsProps {
     stale: number;
     potentiallyStale: number;
 }
+
+const StyledSvg = styled('svg')(() => ({
+    maxWidth: '250px',
+    margin: '0 auto',
+}));
 
 export const HealthStats: FC<IHealthStatsProps> = ({
     value,
@@ -20,7 +25,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
     const theme = useTheme();
 
     return (
-        <svg
+        <StyledSvg
             viewBox='0 0 268 281'
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
@@ -307,6 +312,6 @@ export const HealthStats: FC<IHealthStatsProps> = ({
                     />
                 </linearGradient>
             </defs>
-        </svg>
+        </StyledSvg>
     );
 };

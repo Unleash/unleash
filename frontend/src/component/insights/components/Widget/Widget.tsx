@@ -13,6 +13,9 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'relative',
 }));
 
+/**
+ * @deprecated remove with insightsV2 flag
+ */
 export const Widget: FC<{
     title: ReactNode;
     tooltip?: ReactNode;

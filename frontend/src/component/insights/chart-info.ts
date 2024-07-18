@@ -1,3 +1,6 @@
+/**
+ * @deprecated remove with insightsV2 flag
+ */
 export const chartInfo = {
     totalUsers: {
         title: 'Total users',

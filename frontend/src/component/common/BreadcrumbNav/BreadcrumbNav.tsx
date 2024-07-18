@@ -53,7 +53,7 @@ const BreadcrumbNav = () => {
         )
         .map(decodeURI);
 
-    if (paths.length === 0) {
+    if (location.pathname === '/insights') {
         return null;
     }
 

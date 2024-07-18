@@ -71,6 +71,9 @@ const ChartWidget = styled(Widget)(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated remove with insightsV2 flag
+ */
 export const LegacyInsightsCharts: VFC<IChartsProps> = ({
     projects,
     flags,

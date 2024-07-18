@@ -31,6 +31,7 @@ export const scheduleServices = async (
         lastSeenService,
         frontendApiService,
         clientMetricsServiceV2,
+        integrationEventsService,
     } = services;
 
     schedulerService.schedule(
@@ -165,4 +166,10 @@ export const scheduleServices = async (
             'setFeatureCreatedByUserIdFromEvents',
         );
     }
+
+    schedulerService.schedule(
+        integrationEventsService.cleanUpEvents.bind(integrationEventsService),
+        minutesToMilliseconds(15),
+        'cleanUpIntegrationEvents',
+    );
 };

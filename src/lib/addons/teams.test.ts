@@ -10,9 +10,22 @@ import {
 import TeamsAddon from './teams';
 
 import noLogger from '../../test/fixtures/no-logger';
-import { SYSTEM_USER_ID } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    SYSTEM_USER_ID,
+} from '../types';
+import type { IntegrationEventsService } from '../services';
 
 let fetchRetryCalls: any[];
+
+const INTEGRATION_ID = 1337;
+const ARGS: IAddonConfig = {
+    getLogger: noLogger,
+    unleashUrl: 'http://some-unleash-url',
+    integrationEventsService: {} as IntegrationEventsService,
+    flagResolver: {} as IFlagResolver,
+};
 
 jest.mock(
     './addon',
@@ -34,14 +47,15 @@ jest.mock(
                 });
                 return Promise.resolve({ status: 200 });
             }
+
+            async registerEvent(_) {
+                return Promise.resolve();
+            }
         },
 );
 
 test('Should call teams webhook', async () => {
-    const addon = new TeamsAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new TeamsAddon(ARGS);
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
@@ -60,17 +74,14 @@ test('Should call teams webhook', async () => {
         url: 'http://hooks.office.com',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test('Should call teams webhook for archived toggle', async () => {
-    const addon = new TeamsAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new TeamsAddon(ARGS);
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
@@ -87,17 +98,14 @@ test('Should call teams webhook for archived toggle', async () => {
         url: 'http://hooks.office.com',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test('Should call teams webhook for archived toggle with project info', async () => {
-    const addon = new TeamsAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new TeamsAddon(ARGS);
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
@@ -115,17 +123,14 @@ test('Should call teams webhook for archived toggle with project info', async ()
         url: 'http://hooks.office.com',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test(`Should call teams webhook for toggled environment`, async () => {
-    const addon = new TeamsAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new TeamsAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -144,7 +149,7 @@ test(`Should call teams webhook for toggled environment`, async () => {
         url: 'http://hooks.slack.com',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls).toHaveLength(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
@@ -152,10 +157,7 @@ test(`Should call teams webhook for toggled environment`, async () => {
 });
 
 test('Should include custom headers in call to teams', async () => {
-    const addon = new TeamsAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new TeamsAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -175,7 +177,7 @@ test('Should include custom headers in call to teams', async () => {
         customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls).toHaveLength(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);

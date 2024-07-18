@@ -9,9 +9,22 @@ import type { Logger } from '../logger';
 import SlackAddon from './slack';
 
 import noLogger from '../../test/fixtures/no-logger';
-import { SYSTEM_USER_ID } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    SYSTEM_USER_ID,
+} from '../types';
+import type { IntegrationEventsService } from '../services';
 
 let fetchRetryCalls: any[] = [];
+
+const INTEGRATION_ID = 1337;
+const ARGS: IAddonConfig = {
+    getLogger: noLogger,
+    unleashUrl: 'http://some-unleash-url',
+    integrationEventsService: {} as IntegrationEventsService,
+    flagResolver: {} as IFlagResolver,
+};
 
 jest.mock(
     './addon',
@@ -33,14 +46,15 @@ jest.mock(
                 });
                 return Promise.resolve({ status: 200 });
             }
+
+            async registerEvent(_) {
+                return Promise.resolve();
+            }
         },
 );
 
 test('Should call slack webhook', async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
@@ -62,17 +76,14 @@ test('Should call slack webhook', async () => {
         defaultChannel: 'general',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test('Should call slack webhook for archived toggle', async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -90,17 +101,14 @@ test('Should call slack webhook for archived toggle', async () => {
         defaultChannel: 'general',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test('Should call slack webhook for archived toggle with project info', async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -119,17 +127,14 @@ test('Should call slack webhook for archived toggle with project info', async ()
         defaultChannel: 'general',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test(`Should call webhook for toggled environment`, async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -149,7 +154,7 @@ test(`Should call webhook for toggled environment`, async () => {
         defaultChannel: 'general',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls).toHaveLength(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
@@ -157,10 +162,7 @@ test(`Should call webhook for toggled environment`, async () => {
 });
 
 test('Should use default channel', async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 3,
         createdAt: new Date(),
@@ -180,7 +182,7 @@ test('Should use default channel', async () => {
         defaultChannel: 'some-channel',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
     const req = JSON.parse(fetchRetryCalls[0].options.body);
 
@@ -188,10 +190,7 @@ test('Should use default channel', async () => {
 });
 
 test('Should override default channel with data from tag', async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 4,
         createdAt: new Date(),
@@ -217,7 +216,7 @@ test('Should override default channel with data from tag', async () => {
         defaultChannel: 'some-channel',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
     const req = JSON.parse(fetchRetryCalls[0].options.body);
 
@@ -225,10 +224,7 @@ test('Should override default channel with data from tag', async () => {
 });
 
 test('Should post to all channels in tags', async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 5,
         createdAt: new Date(),
@@ -258,7 +254,7 @@ test('Should post to all channels in tags', async () => {
         defaultChannel: 'some-channel',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
     const req1 = JSON.parse(fetchRetryCalls[0].options.body);
     const req2 = JSON.parse(fetchRetryCalls[1].options.body);
@@ -269,10 +265,7 @@ test('Should post to all channels in tags', async () => {
 });
 
 test('Should include custom headers from parameters in call to service', async () => {
-    const addon = new SlackAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new SlackAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -293,7 +286,7 @@ test('Should include custom headers from parameters in call to service', async (
         customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls).toHaveLength(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);

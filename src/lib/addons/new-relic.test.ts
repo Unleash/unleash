@@ -2,6 +2,8 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
+    type IFlagResolver,
+    type IAddonConfig,
     type IEvent,
 } from '../types';
 import type { Logger } from '../logger';
@@ -11,10 +13,19 @@ import NewRelicAddon, { type INewRelicParameters } from './new-relic';
 import noLogger from '../../test/fixtures/no-logger';
 import { gunzip } from 'node:zlib';
 import { promisify } from 'util';
+import type { IntegrationEventsService } from '../services';
 
 const asyncGunzip = promisify(gunzip);
 
 let fetchRetryCalls: any[] = [];
+
+const INTEGRATION_ID = 1337;
+const ARGS: IAddonConfig = {
+    getLogger: noLogger,
+    unleashUrl: 'http://some-unleash-url',
+    integrationEventsService: {} as IntegrationEventsService,
+    flagResolver: {} as IFlagResolver,
+};
 
 jest.mock(
     './addon',
@@ -35,6 +46,10 @@ jest.mock(
                     backoff,
                 });
                 return Promise.resolve({ status: 200 });
+            }
+
+            async registerEvent(_) {
+                return Promise.resolve();
             }
         },
 );
@@ -59,12 +74,9 @@ const defaultEvent = {
 } as IEvent;
 
 const makeAddHandleEvent = (event: IEvent, parameters: INewRelicParameters) => {
-    const addon = new NewRelicAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new NewRelicAddon(ARGS);
 
-    return () => addon.handleEvent(event, parameters);
+    return () => addon.handleEvent(event, parameters, INTEGRATION_ID);
 };
 
 test.each([

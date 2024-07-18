@@ -312,7 +312,7 @@ export class ApiTokenService {
             const currentTokenCount = await this.store.count();
             const limit = this.resourceLimits.apiTokens;
             if (currentTokenCount >= limit) {
-                throwExceedsLimitError('api token', limit, this.eventBus);
+                throwExceedsLimitError(this.eventBus, 'api token', limit);
             }
         }
     }

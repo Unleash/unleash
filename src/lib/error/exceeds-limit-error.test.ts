@@ -11,9 +11,13 @@ it('emits events event when created through the external function', () => {
     const limit = 10;
 
     expect(() =>
-        throwExceedsLimitError(resource, limit, {
-            emit: emitEvent,
-        } as unknown as EventEmitter),
+        throwExceedsLimitError(
+            {
+                emit: emitEvent,
+            } as unknown as EventEmitter,
+            resource,
+            limit,
+        ),
     ).toThrow(ExceedsLimitError);
 
     expect(emitEvent).toHaveBeenCalledWith(EXCEEDS_LIMIT, {

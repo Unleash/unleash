@@ -13,10 +13,14 @@ export class ExceedsLimitError extends GenericUnleashError {
 }
 
 export const throwExceedsLimitError = (
+    eventBus: EventEmitter,
     resource: string,
     limit: number,
-    eventBus: EventEmitter,
+    resourceGroupName?: string,
 ) => {
-    eventBus.emit(EXCEEDS_LIMIT, { resource, limit });
+    eventBus.emit(EXCEEDS_LIMIT, {
+        resource: resourceGroupName ?? resource,
+        limit,
+    });
     throw new ExceedsLimitError(resource, limit);
 };

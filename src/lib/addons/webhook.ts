@@ -50,6 +50,7 @@ export default class Webhook extends Addon {
                 state = 'successWithErrors';
                 stateDetails =
                     'Could not parse the JSON in the customHeaders parameter.';
+                this.logger.warn(stateDetails);
             }
         }
         const requestOpts = {

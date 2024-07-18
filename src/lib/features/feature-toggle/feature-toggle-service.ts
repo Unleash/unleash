@@ -383,7 +383,7 @@ class FeatureToggleService {
             )
         ).length;
         if (existingCount >= limit) {
-            throw new ExceedsLimitError('strategy', limit);
+            throw new ExceedsLimitError('strategy', limit, this.eventBus);
         }
     }
 
@@ -392,7 +392,11 @@ class FeatureToggleService {
 
         const constraintsLimit = this.resourceLimits.constraints;
         if (updatedConstrains.length > constraintsLimit) {
-            throw new ExceedsLimitError(`constraints`, constraintsLimit);
+            throw new ExceedsLimitError(
+                `constraints`,
+                constraintsLimit,
+                this.eventBus,
+            );
         }
 
         const constraintValuesLimit = this.resourceLimits.constraintValues;
@@ -405,6 +409,7 @@ class FeatureToggleService {
             throw new ExceedsLimitError(
                 `constraint values for ${constraintOverLimit.contextName}`,
                 constraintValuesLimit,
+                this.eventBus,
             );
         }
     }
@@ -1181,7 +1186,11 @@ class FeatureToggleService {
             const currentFlagCount = await this.featureToggleStore.count();
             const limit = this.resourceLimits.featureFlags;
             if (currentFlagCount >= limit) {
-                throw new ExceedsLimitError('feature flag', limit);
+                throw new ExceedsLimitError(
+                    'feature flag',
+                    limit,
+                    this.eventBus,
+                );
             }
         }
     }

@@ -341,6 +341,12 @@ export default class MetricsMonitor {
             help: 'Number of API tokens with v1 format, last seen within 3 months',
         });
 
+        const exceedsLimitErrorCount = createCounter({
+            name: 'exceeds_limit_error_count',
+            help: 'The number of exceeds limit errors registered by this instance.',
+            labelNames: ['resource', 'limit'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();

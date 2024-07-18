@@ -136,7 +136,7 @@ export class SegmentService implements ISegmentService {
         const segmentCount = await this.segmentStore.count();
 
         if (segmentCount >= limit) {
-            throw new ExceedsLimitError('segment', limit);
+            throw new ExceedsLimitError('segment', limit, this.config.eventBus);
         }
     }
 

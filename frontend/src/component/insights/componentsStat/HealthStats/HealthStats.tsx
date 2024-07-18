@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { styled, useTheme } from '@mui/material';
 
@@ -14,7 +14,7 @@ const StyledSvg = styled('svg')(() => ({
     margin: '0 auto',
 }));
 
-export const HealthStats: VFC<IHealthStatsProps> = ({
+export const HealthStats: FC<IHealthStatsProps> = ({
     value,
     healthy,
     stale,

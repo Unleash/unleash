@@ -1,5 +1,5 @@
 import 'chartjs-adapter-date-fns';
-import { useMemo, type VFC } from 'react';
+import { type FC, useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
 import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
@@ -20,7 +20,21 @@ interface IProjectHealthChartProps {
     isLoading?: boolean;
 }
 
-export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
+type WeekData = {
+    total: number;
+    stale: number;
+    potentiallyStale: number;
+    week: string;
+    date?: string;
+};
+
+const calculateHealth = (item: WeekData) =>
+    (
+        ((item.total - item.stale - item.potentiallyStale) / item.total) *
+        100
+    ).toFixed(2);
+
+export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     projectFlagTrends,
     isAggregate,
     isLoading,
@@ -46,7 +60,8 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
                         (acc, item) => {
                             if (item) {
                                 acc.total += item.total;
-                                acc.stale += item.stale + item.potentiallyStale;
+                                acc.stale += item.stale;
+                                acc.potentiallyStale += item.potentiallyStale;
                             }
                             if (!acc.date) {
                                 acc.date = item?.date;
@@ -56,13 +71,9 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
                         {
                             total: 0,
                             stale: 0,
+                            potentiallyStale: 0,
                             week: label,
-                        } as {
-                            total: number;
-                            stale: number;
-                            week: string;
-                            date?: string;
-                        },
+                        } as WeekData,
                     );
             })
             .sort((a, b) => (a.week > b.week ? 1 : -1));
@@ -71,14 +82,11 @@ export const ProjectHealthChart: VFC<IProjectHealthChartProps> = ({
                 {
                     label: 'Health',
                     data: weeks.map((item) => ({
-                        health: item.total
-                            ? (
-                                  ((item.total - item.stale) / item.total) *
-                                  100
-                              ).toFixed(2)
-                            : undefined,
+                        health: item.total ? calculateHealth(item) : undefined,
                         date: item.date,
                         total: item.total,
+                        stale: item.stale,
+                        potentiallyStale: item.potentiallyStale,
                     })),
                     borderColor: theme.palette.primary.light,
                     backgroundColor: fillGradientPrimary,

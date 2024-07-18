@@ -75,6 +75,7 @@ export const ProjectFeatureToggles = ({
         tag: tableState.tag,
         createdAt: tableState.createdAt,
         type: tableState.type,
+        state: tableState.state,
         ...(flagCreatorEnabled ? { createdBy: tableState.createdBy } : {}),
     };
 

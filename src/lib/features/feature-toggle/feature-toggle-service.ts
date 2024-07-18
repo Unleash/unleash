@@ -383,7 +383,10 @@ class FeatureToggleService {
             )
         ).length;
         if (existingCount >= limit) {
-            throwExceedsLimitError(this.eventBus, 'strategy', limit);
+            throwExceedsLimitError(this.eventBus, {
+                resource: 'strategy',
+                limit,
+            });
         }
     }
 
@@ -392,11 +395,10 @@ class FeatureToggleService {
 
         const constraintsLimit = this.resourceLimits.constraints;
         if (updatedConstrains.length > constraintsLimit) {
-            throwExceedsLimitError(
-                this.eventBus,
-                `constraints`,
-                constraintsLimit,
-            );
+            throwExceedsLimitError(this.eventBus, {
+                resource: `constraints`,
+                limit: constraintsLimit,
+            });
         }
 
         const constraintValuesLimit = this.resourceLimits.constraintValues;
@@ -406,12 +408,11 @@ class FeatureToggleService {
                 constraint.values?.length > constraintValuesLimit,
         );
         if (constraintOverLimit) {
-            throwExceedsLimitError(
-                this.eventBus,
-                `constraint values for ${constraintOverLimit.contextName}`,
-                constraintValuesLimit,
-                'constraint values',
-            );
+            throwExceedsLimitError(this.eventBus, {
+                resource: `constraint values for ${constraintOverLimit.contextName}`,
+                limit: constraintValuesLimit,
+                resourceNameOverride: 'constraint values',
+            });
         }
     }
 
@@ -1187,7 +1188,10 @@ class FeatureToggleService {
             const currentFlagCount = await this.featureToggleStore.count();
             const limit = this.resourceLimits.featureFlags;
             if (currentFlagCount >= limit) {
-                throwExceedsLimitError(this.eventBus, 'feature flag', limit);
+                throwExceedsLimitError(this.eventBus, {
+                    resource: 'feature flag',
+                    limit,
+                });
             }
         }
     }

@@ -329,7 +329,10 @@ export default class ProjectService {
         const projectCount = await this.projectStore.count();
 
         if (projectCount >= limit) {
-            throwExceedsLimitError(this.eventBus, 'project', limit);
+            throwExceedsLimitError(this.eventBus, {
+                resource: 'project',
+                limit,
+            });
         }
     }
 

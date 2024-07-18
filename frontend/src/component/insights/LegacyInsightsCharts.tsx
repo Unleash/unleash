@@ -8,7 +8,7 @@ import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/Use
 import { FlagStats } from './componentsStat/FlagStats/FlagStats';
 import { FlagsChart } from './componentsChart/FlagsChart/FlagsChart';
 import { FlagsProjectChart } from './componentsChart/FlagsProjectChart/FlagsProjectChart';
-import { HealthStats } from './componentsStat/HealthStats/HealthStats';
+import { LegacyHealthStats } from './componentsStat/HealthStats/LegacyHealthStats';
 import { ProjectHealthChart } from './componentsChart/ProjectHealthChart/ProjectHealthChart';
 import { TimeToProduction } from './componentsStat/TimeToProduction/TimeToProduction';
 import { TimeToProductionChart } from './componentsChart/TimeToProductionChart/TimeToProductionChart';
@@ -181,7 +181,7 @@ export const LegacyInsightsCharts: VFC<IChartsProps> = ({
                     show={
                         <>
                             <Widget {...chartInfo.averageHealth}>
-                                <HealthStats
+                                <LegacyHealthStats
                                     value={summary.averageHealth}
                                     healthy={summary.active}
                                     stale={summary.stale}

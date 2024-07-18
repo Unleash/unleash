@@ -4,26 +4,21 @@ import TeamsAddon from './teams';
 import DatadogAddon from './datadog';
 import NewRelicAddon from './new-relic';
 import type Addon from './addon';
-import type { LogProvider } from '../logger';
 import SlackAppAddon from './slack-app';
-import type { IFlagResolver } from '../types';
+import type { IAddonConfig } from '../types';
 
 export interface IAddonProviders {
     [key: string]: Addon;
 }
 
-export const getAddons: (args: {
-    getLogger: LogProvider;
-    unleashUrl: string;
-    flagResolver: IFlagResolver;
-}) => IAddonProviders = ({ getLogger, unleashUrl, flagResolver }) => {
+export const getAddons: (args: IAddonConfig) => IAddonProviders = (args) => {
     const addons: Addon[] = [
-        new Webhook({ getLogger }),
-        new SlackAddon({ getLogger, unleashUrl }),
-        new SlackAppAddon({ getLogger, unleashUrl }),
-        new TeamsAddon({ getLogger, unleashUrl }),
-        new DatadogAddon({ getLogger, unleashUrl }),
-        new NewRelicAddon({ getLogger, unleashUrl }),
+        new Webhook(args),
+        new SlackAddon(args),
+        new SlackAppAddon(args),
+        new TeamsAddon(args),
+        new DatadogAddon(args),
+        new NewRelicAddon(args),
     ];
 
     return addons.reduce((map, addon) => {

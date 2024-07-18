@@ -7,6 +7,8 @@ import type { IProjectStats } from '../features/project/project-service';
 import type { CreateFeatureStrategySchema } from '../openapi';
 import type { ProjectEnvironment } from '../features/project/project-store-type';
 import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
+import type { IFlagResolver } from './experimental';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -376,6 +378,8 @@ export interface IAddonAlert {
 export interface IAddonConfig {
     getLogger: LogProvider;
     unleashUrl: string;
+    integrationEventsService: IntegrationEventsService;
+    flagResolver: IFlagResolver;
 }
 
 export interface IUserWithRole {

@@ -201,6 +201,7 @@ export const createServices = (
         config,
         tagTypeService,
         eventService,
+        integrationEventsService,
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);

@@ -67,6 +67,7 @@ export default class AddonService {
         }: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>,
         tagTypeService: TagTypeService,
         eventService: EventService,
+        integrationEventsService,
         addons?: IAddonProviders,
     ) {
         this.addonStore = addonStore;
@@ -80,6 +81,7 @@ export default class AddonService {
             getAddons({
                 getLogger,
                 unleashUrl: server.unleashUrl,
+                integrationEventsService,
                 flagResolver,
             });
         this.sensitiveParams = this.loadSensitiveParams(this.addonProviders);
@@ -145,6 +147,7 @@ export default class AddonService {
                         addonProviders[addon.provider].handleEvent(
                             event,
                             addon.parameters,
+                            addon.id,
                         ),
                     );
             });

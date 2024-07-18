@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Divider, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
@@ -33,55 +33,70 @@ const getHealthBadgeColor = (health?: number | null) => {
     return 'error';
 };
 
-const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => (
-    <>
-        <HorizontalDistributionChart
-            sections={[{ type: 'default', value: 100 }]}
-            size='small'
-        />
-        <HorizontalDistributionChart
-            sections={[
-                {
-                    type: 'error',
-                    value: (stale / total) * 100,
-                },
-                {
-                    type: 'warning',
-                    value: (potentiallyStale / total) * 100,
-                },
-            ]}
-            size='small'
-        />
-        <Typography
-            variant='body2'
-            component='p'
-            sx={(theme) => ({ marginTop: theme.spacing(0.5) })}
-        >
-            <Typography
-                component='span'
-                sx={(theme) => ({
-                    color: theme.palette.error.border,
-                })}
-            >
-                {'● '}
-            </Typography>
-            Stale flags: {stale}
-        </Typography>
-        <Typography variant='body2' component='p'>
-            <Typography
-                component='span'
-                sx={(theme) => ({
-                    color: theme.palette.warning.border,
-                })}
-            >
-                {'● '}
-            </Typography>
-            Potentially stale flags: {potentiallyStale}
-        </Typography>
-    </>
-);
+const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
+    const healthyFlagCount = total - stale - potentiallyStale;
 
-export const HealthTooltip: VFC<{ tooltip: TooltipState | null }> = ({
+    return (
+        <>
+            <HorizontalDistributionChart
+                sections={[
+                    {
+                        type: 'error',
+                        value: (stale / total) * 100,
+                    },
+                    {
+                        type: 'warning',
+                        value: (potentiallyStale / total) * 100,
+                    },
+                    {
+                        type: 'success',
+                        value: (healthyFlagCount / total) * 100,
+                    },
+                ]}
+                size='small'
+            />
+            <Typography
+                variant='body2'
+                component='p'
+                sx={(theme) => ({ marginTop: theme.spacing(0.5) })}
+            >
+                <Typography
+                    component='span'
+                    sx={(theme) => ({
+                        color: theme.palette.error.border,
+                    })}
+                >
+                    {'● '}
+                </Typography>
+                Stale flags: {stale}
+            </Typography>
+            <Typography variant='body2' component='p'>
+                <Typography
+                    component='span'
+                    sx={(theme) => ({
+                        color: theme.palette.warning.border,
+                    })}
+                >
+                    {'● '}
+                </Typography>
+                Potentially stale flags: {potentiallyStale}
+            </Typography>
+            <Typography variant='body2' component='p'>
+                <Typography
+                    component='span'
+                    sx={(theme) => ({
+                        color: theme.palette.success.border,
+                    })}
+                >
+                    {'● '}
+                </Typography>
+                Healthy flags: {healthyFlagCount}
+            </Typography>
+        </>
+    );
+};
+
+export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
     const data = tooltip?.dataPoints.map((point) => {

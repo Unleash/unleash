@@ -39,6 +39,7 @@ export default class DatadogAddon extends Addon {
     async handleEvent(
         event: IEvent,
         parameters: IDatadogParameters,
+        integrationId: number,
     ): Promise<void> {
         const {
             url = 'https://api.datadoghq.com/api/v1/events',

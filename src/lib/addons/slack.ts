@@ -32,6 +32,7 @@ export default class SlackAddon extends Addon {
     async handleEvent(
         event: IEvent,
         parameters: ISlackAddonParameters,
+        integrationId: number,
     ): Promise<void> {
         const {
             url,

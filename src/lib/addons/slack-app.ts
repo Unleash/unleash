@@ -44,6 +44,7 @@ export default class SlackAppAddon extends Addon {
     async handleEvent(
         event: IEvent,
         parameters: ISlackAppAddonParameters,
+        integrationId: number,
     ): Promise<void> {
         try {
             const { accessToken, defaultChannels } = parameters;

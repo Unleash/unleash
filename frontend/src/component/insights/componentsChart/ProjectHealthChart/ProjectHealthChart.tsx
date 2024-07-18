@@ -20,6 +20,16 @@ interface IProjectHealthChartProps {
     isLoading?: boolean;
 }
 
+const calculateHealth = (item: {
+    total: number;
+    stale: number;
+    potentiallyStale: number;
+}) =>
+    (
+        ((item.total - item.stale - item.potentiallyStale) / item.total) *
+        100
+    ).toFixed(2);
+
 export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
     projectFlagTrends,
     isAggregate,
@@ -74,15 +84,7 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                 {
                     label: 'Health',
                     data: weeks.map((item) => ({
-                        health: item.total
-                            ? (
-                                  ((item.total -
-                                      item.stale -
-                                      item.potentiallyStale) /
-                                      item.total) *
-                                  100
-                              ).toFixed(2)
-                            : undefined,
+                        health: item.total ? calculateHealth(item) : undefined,
                         date: item.date,
                         total: item.total,
                         stale: item.stale,

@@ -74,12 +74,12 @@ const StyledWidgetContent = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
-const StyledWidgetStats = styled(Box)<{ width?: number }>(
-    ({ theme, width = 300 }) => ({
+const StyledWidgetStats = styled(Box)<{ width?: number; padding?: number }>(
+    ({ theme, width = 300, padding = 3 }) => ({
         display: 'flex',
         flexDirection: 'column',
         gap: theme.spacing(2),
-        padding: theme.spacing(3),
+        padding: theme.spacing(padding),
         minWidth: '100%',
         [theme.breakpoints.up('md')]: {
             minWidth: `${width}px`,
@@ -216,13 +216,13 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 show={
                     <>
                         <StyledWidget>
-                            <StyledWidgetStats width={288}>
-                                <WidgetTitle title='Health' />
+                            <StyledWidgetStats width={350} padding={0}>
                                 <HealthStats
                                     value={summary.averageHealth}
                                     healthy={summary.active}
                                     stale={summary.stale}
                                     potentiallyStale={summary.potentiallyStale}
+                                    title={<WidgetTitle title='Health' />}
                                 />
                             </StyledWidgetStats>
                             <StyledChartContainer>

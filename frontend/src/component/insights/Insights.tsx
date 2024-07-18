@@ -38,7 +38,7 @@ const StickyWrapper = styled(Box, {
     position: 'sticky',
     top: 0,
     zIndex: theme.zIndex.sticky,
-    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(0, 0, 2),
+    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(2, 0, 2),
     background: theme.palette.background.application,
     transition: 'padding 0.3s ease',
 }));
@@ -84,7 +84,7 @@ const LegacyInsights: FC = () => {
 
     return (
         <StyledWrapper>
-            <StickyContainer>
+            <StickyWrapper>
                 <InsightsHeader
                     actions={
                         <StyledProjectSelect
@@ -95,7 +95,7 @@ const LegacyInsights: FC = () => {
                         />
                     }
                 />
-            </StickyContainer>
+            </StickyWrapper>
             <LegacyInsightsCharts
                 loading={loading}
                 projects={projects}

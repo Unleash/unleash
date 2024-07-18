@@ -34,7 +34,7 @@ export const InitialRedirect = () => {
     }, [getRedirect]);
 
     if (loading) {
-        return <Loader />;
+        return <Loader type='fullscreen' />;
     }
 
     return null;

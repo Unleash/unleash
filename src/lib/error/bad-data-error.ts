@@ -126,7 +126,7 @@ export const fromOpenApiValidationError =
             : instancePath.startsWith('/query')
               ? [(data as { query: object }).query, '/query/'.length]
               : // This is not validating body or query, so we can assume this is manually validating plain data
-                [data!, 1];
+                [data, 1];
 
         const propertyName = instancePath.substring(substringOffset);
 

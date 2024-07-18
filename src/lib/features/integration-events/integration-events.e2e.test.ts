@@ -141,6 +141,19 @@ test('paginate to second most recent event', async () => {
     expect(events[0].state).toBe('success');
 });
 
+test('paginate to non-existing event, returning empty array', async () => {
+    await integrationEventsStore.insert(getTestEventSuccess());
+    await integrationEventsStore.insert(getTestEventFailed());
+
+    const events = await integrationEventsStore.getPaginatedEvents(
+        integrationId,
+        1,
+        999,
+    );
+
+    expect(events).toHaveLength(0);
+});
+
 test('clean up events, keeping events from the last 2 hours', async () => {
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
     const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);

@@ -16,6 +16,9 @@ test('Should not allow to exceed segment limit', async () => {
         resourceLimits: {
             segments: LIMIT,
         },
+        eventBus: {
+            emit: () => {},
+        },
     } as unknown as IUnleashConfig);
 
     const createSegment = (name: string) =>

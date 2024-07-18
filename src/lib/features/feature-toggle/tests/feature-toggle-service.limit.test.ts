@@ -125,7 +125,7 @@ describe('Strategy limits', () => {
                 },
             ]),
         ).rejects.toThrow(
-            "Failed to create content values for userId. You can't create more than the established limit of 3",
+            "Failed to create constraint values for userId. You can't create more than the established limit of 3",
         );
     });
 });

@@ -34,7 +34,8 @@ import { addMinutes, isPast } from 'date-fns';
 import metricsHelper from '../util/metrics-helper';
 import { FUNCTION_TIME } from '../metric-events';
 import type { ResourceLimitsSchema } from '../openapi';
-import { ExceedsLimitError } from '../error/exceeds-limit-error';
+import { throwExceedsLimitError } from '../error/exceeds-limit-error';
+import type EventEmitter from 'events';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -73,6 +74,8 @@ export class ApiTokenService {
 
     private resourceLimits: ResourceLimitsSchema;
 
+    private eventBus: EventEmitter;
+
     constructor(
         {
             apiTokenStore,
@@ -109,6 +112,8 @@ export class ApiTokenService {
                 className: 'ApiTokenService',
                 functionName,
             });
+
+        this.eventBus = config.eventBus;
     }
 
     /**
@@ -307,7 +312,10 @@ export class ApiTokenService {
             const currentTokenCount = await this.store.count();
             const limit = this.resourceLimits.apiTokens;
             if (currentTokenCount >= limit) {
-                throw new ExceedsLimitError('api token', limit);
+                throwExceedsLimitError(this.eventBus, {
+                    resource: 'api token',
+                    limit,
+                });
             }
         }
     }

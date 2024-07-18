@@ -17,6 +17,9 @@ test('Should not allow to exceed project limit', async () => {
         resourceLimits: {
             projects: LIMIT,
         },
+        eventBus: {
+            emit: () => {},
+        },
     } as unknown as IUnleashConfig);
 
     const createProject = (name: string) =>

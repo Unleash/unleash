@@ -109,7 +109,7 @@ import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type EventEmitter from 'node:events';
 import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type';
 import type { ResourceLimitsSchema } from '../../openapi';
-import { ExceedsLimitError } from '../../error/exceeds-limit-error';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 
 interface IFeatureContext {
     featureName: string;
@@ -383,7 +383,10 @@ class FeatureToggleService {
             )
         ).length;
         if (existingCount >= limit) {
-            throw new ExceedsLimitError('strategy', limit);
+            throwExceedsLimitError(this.eventBus, {
+                resource: 'strategy',
+                limit,
+            });
         }
     }
 
@@ -392,7 +395,10 @@ class FeatureToggleService {
 
         const constraintsLimit = this.resourceLimits.constraints;
         if (updatedConstrains.length > constraintsLimit) {
-            throw new ExceedsLimitError(`constraints`, constraintsLimit);
+            throwExceedsLimitError(this.eventBus, {
+                resource: `constraints`,
+                limit: constraintsLimit,
+            });
         }
 
         const constraintValuesLimit = this.resourceLimits.constraintValues;
@@ -402,10 +408,11 @@ class FeatureToggleService {
                 constraint.values?.length > constraintValuesLimit,
         );
         if (constraintOverLimit) {
-            throw new ExceedsLimitError(
-                `content values for ${constraintOverLimit.contextName}`,
-                constraintValuesLimit,
-            );
+            throwExceedsLimitError(this.eventBus, {
+                resource: `constraint values for ${constraintOverLimit.contextName}`,
+                limit: constraintValuesLimit,
+                resourceNameOverride: 'constraint values',
+            });
         }
     }
 
@@ -1181,7 +1188,10 @@ class FeatureToggleService {
             const currentFlagCount = await this.featureToggleStore.count();
             const limit = this.resourceLimits.featureFlags;
             if (currentFlagCount >= limit) {
-                throw new ExceedsLimitError('feature flag', limit);
+                throwExceedsLimitError(this.eventBus, {
+                    resource: 'feature flag',
+                    limit,
+                });
             }
         }
     }

@@ -2,7 +2,12 @@ import { register } from 'prom-client';
 import EventEmitter from 'events';
 import type { IEventStore } from './types/stores/event-store';
 import { createTestConfig } from '../test/config/test-config';
-import { DB_TIME, FUNCTION_TIME, REQUEST_TIME } from './metric-events';
+import {
+    DB_TIME,
+    EXCEEDS_LIMIT,
+    FUNCTION_TIME,
+    REQUEST_TIME,
+} from './metric-events';
 import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
@@ -329,4 +334,18 @@ test('should collect metrics for lifecycle', async () => {
     expect(metrics).toMatch(/feature_lifecycle_stage_duration/);
     expect(metrics).toMatch(/feature_lifecycle_stage_count_by_project/);
     expect(metrics).toMatch(/feature_lifecycle_stage_entered/);
+});
+
+test('should collect limit exceeded metrics', async () => {
+    eventBus.emit(EXCEEDS_LIMIT, {
+        resource: 'feature flags',
+        limit: '5000',
+    });
+
+    const recordedMetric = await prometheusRegister.getSingleMetricAsString(
+        'exceeds_limit_error',
+    );
+    expect(recordedMetric).toMatch(
+        /exceeds_limit_error{resource=\"feature flags\",limit=\"5000\"} 1/,
+    );
 });

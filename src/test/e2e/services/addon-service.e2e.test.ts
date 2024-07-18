@@ -7,7 +7,7 @@ import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service';
 import { FEATURE_CREATED } from '../../../lib/types/events';
-import { EventService } from '../../../lib/services';
+import { EventService, IntegrationEventsService } from '../../../lib/services';
 
 const addonProvider = { simple: new SimpleAddon() };
 
@@ -24,11 +24,16 @@ beforeAll(async () => {
     stores = db.stores;
     const eventService = new EventService(stores, config);
     const tagTypeService = new TagTypeService(stores, config, eventService);
+    const integrationEventsService = new IntegrationEventsService(
+        stores,
+        config,
+    );
     addonService = new AddonService(
         stores,
         config,
         tagTypeService,
         eventService,
+        integrationEventsService,
         addonProvider,
     );
 });

@@ -22,7 +22,7 @@ let fetchRetryCalls: any[] = [];
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger: noLogger,
-    unleashUrl: 'http://some-unleash-url',
+    unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
     flagResolver: {} as IFlagResolver,
 };

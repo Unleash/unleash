@@ -12,7 +12,7 @@ import type { IFlagResolver, IntegrationEventsService } from '../internals';
 
 const ARGS: IAddonConfig = {
     getLogger,
-    unleashUrl: 'http://some-unleash-url',
+    unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
     flagResolver: {} as IFlagResolver,
 };

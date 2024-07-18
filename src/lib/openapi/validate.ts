@@ -41,14 +41,15 @@ export const validateSchema = <S = SchemaId>(
 };
 
 export const throwOnInvalidSchema = <S = SchemaId>(
-    data: object,
     schema: S,
+    data: object,
 ): void => {
     const validationErrors = validateSchema(schema, data);
     if (validationErrors) {
-        throw fromOpenApiValidationErrors(
-            data,
-            validationErrors.errors as [ErrorObject, ...ErrorObject[]],
-        );
+        const [firstError, ...remainingErrors] = validationErrors.errors;
+        throw fromOpenApiValidationErrors(data, [
+            firstError,
+            ...remainingErrors,
+        ]);
     }
 };

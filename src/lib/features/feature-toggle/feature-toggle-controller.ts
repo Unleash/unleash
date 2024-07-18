@@ -1063,7 +1063,7 @@ export default class ProjectFeaturesController extends Controller {
 
         const { newDocument } = applyPatch(strategy, patch);
 
-        throwOnInvalidSchema(newDocument, featureStrategySchema.$id);
+        throwOnInvalidSchema(featureStrategySchema.$id, newDocument);
 
         const updatedStrategy = await this.startTransaction(async (tx) =>
             this.transactionalFeatureToggleService(tx).updateStrategy(

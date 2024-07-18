@@ -68,13 +68,11 @@ const additionalPropertiesMessage = (
 };
 
 const genericErrorMessage = (
-    requestBody: object,
     propertyName: string,
+    propertyValue: object,
     errorMessage: string = 'is invalid',
 ) => {
-    const input = getProp(requestBody, propertyName.split('/'));
-
-    const youSent = JSON.stringify(input);
+    const youSent = JSON.stringify(propertyValue);
     const message = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
         message,
@@ -121,24 +119,21 @@ export const fromOpenApiValidationError =
     (data: object) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
-        const [errorSource, substringOffset] = instancePath.startsWith('/body')
-            ? [(data as { body: object }).body, '/body/'.length]
-            : instancePath.startsWith('/query')
-              ? [(data as { query: object }).query, '/query/'.length]
-              : // This is not validating body or query, so we can assume this is manually validating plain data
-                [data, 1];
 
-        const propertyName = instancePath.substring(substringOffset);
+        const propertyValue = getProp(
+            data,
+            instancePath.split('/').filter(Boolean),
+        );
 
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(
-                    propertyName,
+                    instancePath,
                     params.missingProperty,
                 );
             case 'additionalProperties':
                 return additionalPropertiesMessage(
-                    propertyName,
+                    instancePath,
                     params.additionalProperty,
                 );
             case 'enum':
@@ -146,16 +141,17 @@ export const fromOpenApiValidationError =
                     instancePath.substring(instancePath.lastIndexOf('/') + 1),
                     message,
                     params.allowedValues,
-                    getProp(
-                        errorSource,
-                        instancePath.substring(substringOffset).split('/'),
-                    ),
+                    propertyValue,
                 );
 
             case 'oneOf':
-                return oneOfMessage(propertyName, validationError.message);
+                return oneOfMessage(instancePath, validationError.message);
             default:
-                return genericErrorMessage(errorSource, propertyName, message);
+                return genericErrorMessage(
+                    instancePath,
+                    propertyValue,
+                    message,
+                );
         }
     };
 

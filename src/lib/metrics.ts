@@ -341,8 +341,8 @@ export default class MetricsMonitor {
             help: 'Number of API tokens with v1 format, last seen within 3 months',
         });
 
-        const exceedsLimitErrorCount = createCounter({
-            name: 'exceeds_limit_error_count',
+        const exceedsLimitErrorCounter = createCounter({
+            name: 'exceeds_limit_error',
             help: 'The number of exceeds limit errors registered by this instance.',
             labelNames: ['resource', 'limit'],
         });
@@ -402,6 +402,18 @@ export default class MetricsMonitor {
                     (entered: { stage: string; feature: string }) => {
                         featureLifecycleStageEnteredCounter
                             .labels({ stage: entered.stage })
+                            .inc();
+                    },
+                );
+
+                eventBus.on(
+                    events.EXCEEDS_LIMIT,
+                    ({
+                        resource,
+                        limit,
+                    }: { resource: string; limit: number }) => {
+                        exceedsLimitErrorCounter
+                            .labels({ resource, limit })
                             .inc();
                     },
                 );

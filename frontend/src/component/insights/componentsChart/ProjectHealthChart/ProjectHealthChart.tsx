@@ -20,11 +20,15 @@ interface IProjectHealthChartProps {
     isLoading?: boolean;
 }
 
-const calculateHealth = (item: {
+type WeekData = {
     total: number;
     stale: number;
     potentiallyStale: number;
-}) =>
+    week: string;
+    date?: string;
+};
+
+const calculateHealth = (item: WeekData) =>
     (
         ((item.total - item.stale - item.potentiallyStale) / item.total) *
         100
@@ -69,13 +73,7 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                             stale: 0,
                             potentiallyStale: 0,
                             week: label,
-                        } as {
-                            total: number;
-                            stale: number;
-                            potentiallyStale: number;
-                            week: string;
-                            date?: string;
-                        },
+                        } as WeekData,
                     );
             })
             .sort((a, b) => (a.week > b.week ? 1 : -1));

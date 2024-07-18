@@ -317,6 +317,49 @@ describe('OpenAPI error conversion', () => {
         });
     });
 
+    it('Handles any data, not only requests', () => {
+        const errors: [ErrorObject, ...ErrorObject[]] = [
+            {
+                keyword: 'maximum',
+                instancePath: '/newprop',
+                schemaPath:
+                    '#/components/schemas/addonCreateUpdateSchema/properties/newprop/maximum',
+                params: {
+                    comparison: '<=',
+                    limit: 5,
+                    exclusive: false,
+                },
+                message: 'should be <= 5',
+            },
+            {
+                keyword: 'required',
+                instancePath: '/',
+                schemaPath:
+                    '#/components/schemas/addonCreateUpdateSchema/required',
+                params: {
+                    missingProperty: 'enabled',
+                },
+                message: "should have required property 'enabled'",
+            },
+        ];
+
+        const serializedUnleashError: ApiErrorSchema =
+            fromOpenApiValidationErrors({ newprop: 7 }, errors).toJSON();
+
+        expect(serializedUnleashError).toMatchObject({
+            name: 'BadDataError',
+            message: expect.stringContaining('`details`'),
+            details: [
+                {
+                    message: expect.stringContaining('newprop'),
+                },
+                {
+                    message: expect.stringContaining('enabled'),
+                },
+            ],
+        });
+    });
+
     describe('Disallowed additional properties', () => {
         it('gives useful messages for base-level properties', () => {
             const openApiError = {

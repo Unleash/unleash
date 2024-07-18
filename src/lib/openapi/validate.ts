@@ -1,6 +1,7 @@
 import Ajv, { type ErrorObject } from 'ajv';
 import { type SchemaId, schemas } from './index';
 import { omitKeys } from '../util/omit-keys';
+import { fromOpenApiValidationErrors } from '../error/bad-data-error';
 
 export interface ISchemaValidationErrors<S = SchemaId> {
     schema: S;
@@ -36,5 +37,18 @@ export const validateSchema = <S = SchemaId>(
             schema,
             errors: ajv.errors ?? [],
         };
+    }
+};
+
+export const throwOnInvalidSchema = <S = SchemaId>(
+    data: object,
+    schema: S,
+): void => {
+    const validationErrors = validateSchema(schema, data);
+    if (validationErrors) {
+        throw fromOpenApiValidationErrors(
+            data,
+            validationErrors.errors as [ErrorObject, ...ErrorObject[]],
+        );
     }
 };

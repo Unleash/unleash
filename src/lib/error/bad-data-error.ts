@@ -7,6 +7,7 @@ type ValidationErrorDescription = {
     message: string;
     path?: string;
 };
+
 class BadDataError extends UnleashError {
     statusCode = 400;
 
@@ -117,12 +118,15 @@ const enumMessage = (
 };
 
 export const fromOpenApiValidationError =
-    (request: { body: object; query: object }) =>
+    (data: object) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
         const [errorSource, substringOffset] = instancePath.startsWith('/body')
-            ? [request.body, '/body/'.length]
-            : [request.query, '/query/'.length];
+            ? [(data as { body: object }).body, '/body/'.length]
+            : instancePath.startsWith('/query')
+              ? [(data as { query: object }).query, '/query/'.length]
+              : // This is not validating body or query, so we can assume this is manually validating plain data
+                [data!, 1];
 
         const propertyName = instancePath.substring(substringOffset);
 
@@ -156,11 +160,11 @@ export const fromOpenApiValidationError =
     };
 
 export const fromOpenApiValidationErrors = (
-    request: { body: object; query: object },
+    data: object,
     validationErrors: [ErrorObject, ...ErrorObject[]],
 ): BadDataError => {
     const [firstDetail, ...remainingDetails] = validationErrors.map(
-        fromOpenApiValidationError(request),
+        fromOpenApiValidationError(data),
     );
 
     return new BadDataError(

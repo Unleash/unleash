@@ -410,6 +410,7 @@ class FeatureToggleService {
                 this.eventBus,
                 `constraint values for ${constraintOverLimit.contextName}`,
                 constraintValuesLimit,
+                'constraint values',
             );
         }
     }

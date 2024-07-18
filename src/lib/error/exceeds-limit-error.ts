@@ -16,10 +16,10 @@ export const throwExceedsLimitError = (
     eventBus: EventEmitter,
     resource: string,
     limit: number,
-    resourceGroupName?: string,
+    resourceNameOverride?: string,
 ) => {
     eventBus.emit(EXCEEDS_LIMIT, {
-        resource: resourceGroupName ?? resource,
+        resource: resourceNameOverride ?? resource,
         limit,
     });
     throw new ExceedsLimitError(resource, limit);

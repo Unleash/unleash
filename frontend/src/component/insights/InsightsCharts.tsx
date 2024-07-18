@@ -216,7 +216,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 show={
                     <>
                         <StyledWidget>
-                            <StyledWidgetStats width={250}>
+                            <StyledWidgetStats width={288}>
                                 <WidgetTitle title='Health' />
                                 <HealthStats
                                     value={summary.averageHealth}

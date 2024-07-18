@@ -84,7 +84,7 @@ import type {
     IProjectQuery,
 } from './project-store-type';
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
-import { ExceedsLimitError } from '../../error/exceeds-limit-error';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 
 type Days = number;
@@ -329,7 +329,7 @@ export default class ProjectService {
         const projectCount = await this.projectStore.count();
 
         if (projectCount >= limit) {
-            throw new ExceedsLimitError('project', limit, this.eventBus);
+            throwExceedsLimitError('project', limit, this.eventBus);
         }
     }
 

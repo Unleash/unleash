@@ -109,7 +109,7 @@ import { allSettledWithRejection } from '../../util/allSettledWithRejection';
 import type EventEmitter from 'node:events';
 import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type';
 import type { ResourceLimitsSchema } from '../../openapi';
-import { ExceedsLimitError } from '../../error/exceeds-limit-error';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 
 interface IFeatureContext {
     featureName: string;
@@ -383,7 +383,7 @@ class FeatureToggleService {
             )
         ).length;
         if (existingCount >= limit) {
-            throw new ExceedsLimitError('strategy', limit, this.eventBus);
+            throwExceedsLimitError('strategy', limit, this.eventBus);
         }
     }
 
@@ -392,7 +392,7 @@ class FeatureToggleService {
 
         const constraintsLimit = this.resourceLimits.constraints;
         if (updatedConstrains.length > constraintsLimit) {
-            throw new ExceedsLimitError(
+            throwExceedsLimitError(
                 `constraints`,
                 constraintsLimit,
                 this.eventBus,
@@ -406,7 +406,7 @@ class FeatureToggleService {
                 constraint.values?.length > constraintValuesLimit,
         );
         if (constraintOverLimit) {
-            throw new ExceedsLimitError(
+            throwExceedsLimitError(
                 `constraint values for ${constraintOverLimit.contextName}`,
                 constraintValuesLimit,
                 this.eventBus,
@@ -1186,11 +1186,7 @@ class FeatureToggleService {
             const currentFlagCount = await this.featureToggleStore.count();
             const limit = this.resourceLimits.featureFlags;
             if (currentFlagCount >= limit) {
-                throw new ExceedsLimitError(
-                    'feature flag',
-                    limit,
-                    this.eventBus,
-                );
+                throwExceedsLimitError('feature flag', limit, this.eventBus);
             }
         }
     }

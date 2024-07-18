@@ -1,19 +1,22 @@
-import type EventEmitter from 'events';
 import { GenericUnleashError } from './unleash-error';
 import { EXCEEDS_LIMIT } from '../metric-events';
+import type EventEmitter from 'events';
 
 export class ExceedsLimitError extends GenericUnleashError {
-    private constructor(
-        resource: string,
-        limit: number,
-        eventBus?: EventEmitter,
-    ) {
+    constructor(resource: string, limit: number) {
         super({
             name: 'ExceedsLimitError',
             message: `Failed to create ${resource}. You can't create more than the established limit of ${limit}.`,
             statusCode: 400,
         });
-
-        eventBus?.emit(EXCEEDS_LIMIT, { resource, limit });
     }
 }
+
+export const throwExceedsLimitError = (
+    resource: string,
+    limit: number,
+    eventBus: EventEmitter,
+) => {
+    eventBus.emit(EXCEEDS_LIMIT, { resource, limit });
+    throw new ExceedsLimitError(resource, limit);
+};

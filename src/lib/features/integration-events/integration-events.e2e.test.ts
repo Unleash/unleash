@@ -140,10 +140,10 @@ test('paginate to second most recent event', async () => {
 });
 
 test('paginate to non-existing event, returning empty array', async () => {
-    await integrationEventsStore.insert(getTestEventSuccess());
-    await integrationEventsStore.insert(getTestEventFailed());
+    await integrationEventsService.registerEvent(getTestEventSuccess());
+    await integrationEventsService.registerEvent(getTestEventFailed());
 
-    const events = await integrationEventsStore.getPaginatedEvents(
+    const events = await integrationEventsService.getPaginatedEvents(
         integrationId,
         1,
         999,

@@ -50,6 +50,7 @@ import { FeatureStrategiesReadModel } from '../features/feature-toggle/feature-s
 import { FeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model';
 import { LargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model';
 import { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
+import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -175,6 +176,7 @@ export const createStores = (
         ),
         largestResourcesReadModel: new LargestResourcesReadModel(db),
         integrationEventsStore: new IntegrationEventsStore(db, { eventBus }),
+        featureCollaboratorsReadModel: new FeatureCollaboratorsReadModel(db),
     };
 };
 

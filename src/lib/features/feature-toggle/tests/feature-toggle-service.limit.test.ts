@@ -91,7 +91,7 @@ describe('Strategy limits', () => {
         );
     });
 
-    test("Should allow you to save a value that's above the limit, as long as it is no more than the previous value", () => {
+    test('Should not throw limit exceeded errors if the new number of constraints is less than or equal to the previous number', () => {
         const LIMIT = 1;
         const { featureToggleService } = createFakeFeatureToggleService({
             getLogger,

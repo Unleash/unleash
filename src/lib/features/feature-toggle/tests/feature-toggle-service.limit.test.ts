@@ -91,22 +91,15 @@ describe('Strategy limits', () => {
         );
     });
 
-    test("Should allow you to save a value that's above the limit, as long as it is no more than the previous value", async () => {
-        let activateResourceLimits = false;
-
+    test("Should allow you to save a value that's above the limit, as long as it is no more than the previous value", () => {
         const LIMIT = 1;
-        const { featureToggleService, featureToggleStore } =
-            createFakeFeatureToggleService({
-                getLogger,
-                flagResolver: {
-                    isEnabled() {
-                        return activateResourceLimits;
-                    },
-                },
-                resourceLimits: {
-                    constraints: LIMIT,
-                },
-            } as unknown as IUnleashConfig);
+        const { featureToggleService } = createFakeFeatureToggleService({
+            getLogger,
+            flagResolver: alwaysOnFlagResolver,
+            resourceLimits: {
+                constraints: LIMIT,
+            },
+        } as unknown as IUnleashConfig);
 
         const constraints: IConstraint[] = [
             {
@@ -126,38 +119,11 @@ describe('Strategy limits', () => {
             },
         ];
 
-        const addStrategy = (constraints: IConstraint[]) =>
-            featureToggleService.unprotectedCreateStrategy(
-                {
-                    name: 'default',
-                    featureName: 'feature',
-                    constraints: constraints,
-                } as IStrategyConfig,
-                { projectId: 'default', featureName: 'feature' } as any,
-                {} as IAuditUser,
-            );
-        await featureToggleStore.create('default', {
-            name: 'feature',
-            createdByUserId: 1,
-        });
-        const strat = await addStrategy(constraints);
-
-        activateResourceLimits = true;
-
-        const updateStrategy = (newConstraints) =>
-            featureToggleService.unprotectedUpdateStrategy(
-                strat.id,
-                {
-                    constraints: newConstraints,
-                },
-                { projectId: 'default', featureName: 'feature' } as any,
-                {} as IAuditUser,
-            );
-
-        // check that you can save the same amount of constraints
-        await updateStrategy(constraints);
-        // check that you can save fewer constraints but still over the limit
-        await updateStrategy(constraints.slice(0, 2));
+        featureToggleService.validateConstraintsLimit(constraints, constraints);
+        featureToggleService.validateConstraintsLimit(
+            constraints.slice(0, 2),
+            constraints,
+        );
     });
 
     test('Should not allow to exceed constraint values limit', async () => {

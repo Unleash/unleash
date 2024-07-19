@@ -120,12 +120,12 @@ describe('Strategy limits', () => {
         ];
 
         featureToggleService.validateConstraintsLimit({
-            updatedConstraints: constraints,
-            existingConstraints: constraints,
+            updated: constraints,
+            existing: constraints,
         });
         featureToggleService.validateConstraintsLimit({
-            updatedConstraints: constraints.slice(0, 2),
-            existingConstraints: constraints,
+            updated: constraints.slice(0, 2),
+            existing: constraints,
         });
     });
 

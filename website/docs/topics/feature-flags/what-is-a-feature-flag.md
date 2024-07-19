@@ -1,3 +1,9 @@
+---
+title: What is a feature flag?
+slug: /what-is-a-feature-flag
+description: Feature flags, also known as feature toggles, allow developers to enable or disable features or code paths dynamically.
+---
+
 Feature flags, also known as feature toggles, allow developers to enable or disable features or code paths dynamically. This approach helps manage the deployment of new features, perform A/B testing, roll out features gradually, and provide quick rollback capabilities.
 
 ### The Concept

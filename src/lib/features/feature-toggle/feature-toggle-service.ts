@@ -390,7 +390,7 @@ class FeatureToggleService {
         }
     }
 
-    validateConstraintsLimit(constraints: {
+    private validateConstraintsLimit(constraints: {
         updated: IConstraint[];
         existing: IConstraint[];
     }) {

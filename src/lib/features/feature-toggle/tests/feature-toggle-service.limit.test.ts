@@ -8,6 +8,7 @@ import type {
     IUser,
 } from '../../../types';
 import getLogger from '../../../../test/fixtures/no-logger';
+import { ExceedsLimitError } from '../../../error/exceeds-limit-error';
 
 const alwaysOnFlagResolver = {
     isEnabled() {
@@ -91,11 +92,21 @@ describe('Strategy limits', () => {
         );
     });
 
-    test('Should not throw limit exceeded errors if the new number of constraints is less than or equal to the previous number', () => {
+    test('Should not throw limit exceeded errors if the new number of constraints is less than or equal to the previous number', async () => {
+        let activateResourceLimits = false;
+
         const LIMIT = 1;
-        const { featureToggleService } = createFakeFeatureToggleService({
+        const {
+            featureToggleService,
+            featureToggleStore,
+            featureStrategiesStore,
+        } = createFakeFeatureToggleService({
             getLogger,
-            flagResolver: alwaysOnFlagResolver,
+            flagResolver: {
+                isEnabled() {
+                    return activateResourceLimits;
+                },
+            },
             resourceLimits: {
                 constraints: LIMIT,
             },
@@ -119,14 +130,46 @@ describe('Strategy limits', () => {
             },
         ];
 
-        featureToggleService.validateConstraintsLimit({
-            updated: constraints,
-            existing: constraints,
+        await featureToggleStore.create('default', {
+            name: 'feature',
+            createdByUserId: 1,
         });
-        featureToggleService.validateConstraintsLimit({
-            updated: constraints.slice(0, 2),
-            existing: constraints,
+        await featureStrategiesStore.createFeature({
+            name: 'feature',
+            createdByUserId: 1,
         });
+
+        const strat = await featureToggleService.unprotectedCreateStrategy(
+            {
+                name: 'default',
+                featureName: 'feature',
+                constraints: constraints,
+            } as IStrategyConfig,
+            { projectId: 'default', featureName: 'feature' } as any,
+            {} as IAuditUser,
+        );
+
+        activateResourceLimits = true;
+
+        const updateStrategy = (newConstraints) =>
+            featureToggleService.unprotectedUpdateStrategy(
+                strat.id,
+                {
+                    constraints: newConstraints,
+                },
+                { projectId: 'default', featureName: 'feature' } as any,
+                {} as IAuditUser,
+            );
+
+        // check that you can save the same amount of constraints
+        await updateStrategy(constraints);
+        // check that you can save fewer constraints but still over the limit
+        await updateStrategy(constraints.slice(0, 2));
+
+        // check that you can't save more constraints
+        await expect(async () =>
+            updateStrategy([...constraints, ...constraints]),
+        ).rejects.toThrow(new ExceedsLimitError('constraints', LIMIT));
     });
 
     test('Should not allow to exceed constraint values limit', async () => {

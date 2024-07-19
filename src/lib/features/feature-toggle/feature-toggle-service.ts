@@ -408,10 +408,23 @@ class FeatureToggleService {
         }
 
         const constraintValuesLimit = this.resourceLimits.constraintValues;
+        const coompareWithExistingValues =
+            constraints.existing.length === constraints.updated.length;
         const constraintOverLimit = constraints.updated.find(
-            (constraint) =>
-                Array.isArray(constraint.values) &&
-                constraint.values?.length > constraintValuesLimit,
+            (constraint, i) => {
+                const updatedConstraintValueCount =
+                    constraint.values?.length ?? 0;
+                const overLimit =
+                    Array.isArray(constraint.values) &&
+                    updatedConstraintValueCount > constraintValuesLimit;
+                if (!overLimit) return false;
+                const allowAnyway = coompareWithExistingValues
+                    ? (constraints.existing[i].values?.length ?? 0) >=
+                      updatedConstraintValueCount
+                    : false;
+
+                return !allowAnyway;
+            },
         );
         if (constraintOverLimit) {
             throwExceedsLimitError(this.eventBus, {

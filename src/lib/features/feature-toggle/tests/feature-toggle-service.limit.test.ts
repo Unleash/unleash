@@ -195,6 +195,73 @@ describe('Strategy limits', () => {
             "Failed to create constraint values for userId. You can't create more than the established limit of 3",
         );
     });
+
+    test('Should not throw limit exceeded errors for constraint values if the new values are less than or equal to the old values AND there have been no other constraint updates (re-ordering or deleting)', async () => {
+        const LIMIT = 1;
+        const { featureToggleService, featureStrategiesStore } =
+            createFakeFeatureToggleService({
+                getLogger,
+                flagResolver: alwaysOnFlagResolver,
+                resourceLimits: {
+                    constraintValues: LIMIT,
+                },
+            } as unknown as IUnleashConfig);
+
+        const constraints = (valueCount: number) =>
+            [
+                {
+                    values: Array.from({ length: valueCount }).map((_, i) =>
+                        i.toString(),
+                    ),
+                    operator: 'IN',
+                    contextName: 'appName',
+                },
+                {
+                    values: ['a', 'b', 'c'],
+                    operator: 'IN',
+                    contextName: 'appName',
+                },
+            ] as IConstraint[];
+
+        const flagName = 'feature';
+
+        await featureStrategiesStore.createFeature({
+            name: flagName,
+            createdByUserId: 1,
+        });
+
+        const initialConstraintValueCount = LIMIT + 2;
+        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
+            parameters: {},
+            strategyName: 'default',
+            featureName: flagName,
+            constraints: constraints(initialConstraintValueCount),
+            projectId: 'default',
+            environment: 'default',
+        });
+
+        const updateStrategy = (valueCount) =>
+            featureToggleService.unprotectedUpdateStrategy(
+                strategy.id,
+                {
+                    constraints: constraints(valueCount),
+                },
+                { projectId: 'default', featureName: 'feature' } as any,
+                {} as IAuditUser,
+            );
+
+        // check that you can save the same amount of constraint values
+        await updateStrategy(initialConstraintValueCount);
+        // check that you can save fewer constraint values but still over the limit
+        await updateStrategy(initialConstraintValueCount - 1);
+
+        // check that you can't save more constraints
+        await expect(async () =>
+            updateStrategy(initialConstraintValueCount + 1),
+        ).rejects.toThrow(
+            new ExceedsLimitError('constraint values for appName', LIMIT),
+        );
+    });
 });
 
 describe('Flag limits', () => {

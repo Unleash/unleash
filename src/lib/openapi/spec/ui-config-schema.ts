@@ -168,6 +168,18 @@ export const uiConfigSchema = {
         versionInfo: {
             $ref: '#/components/schemas/versionSchema',
         },
+        oidcConfiguredThroughEnv: {
+            type: 'boolean',
+            description:
+                'Whether the OIDC configuration is set through environment variables or not.',
+            example: false,
+        },
+        samlConfiguredThroughEnv: {
+            type: 'boolean',
+            description:
+                'Whether the SAML configuration is set through environment variables or not.',
+            example: false,
+        },
     },
     components: {
         schemas: {

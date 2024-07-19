@@ -135,6 +135,8 @@ import {
     createFakeApiTokenService,
 } from '../features/api-tokens/createApiTokenService';
 import { IntegrationEventsService } from '../features/integration-events/integration-events-service';
+import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
+import { FakeFeatureCollaboratorsReadModel } from '../features/feature-toggle/fake-feature-collaborators-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -263,6 +265,10 @@ export const createServices = (
         ? createFeatureSearchService(config)(db)
         : createFakeFeatureSearchService(config);
 
+    const featureCollaboratorsReadModel = db
+        ? new FeatureCollaboratorsReadModel(db)
+        : new FakeFeatureCollaboratorsReadModel();
+
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
@@ -274,6 +280,7 @@ export const createServices = (
         dependentFeaturesReadModel,
         dependentFeaturesService,
         featureLifecycleReadModel,
+        featureCollaboratorsReadModel,
     );
     const transactionalEnvironmentService = db
         ? withTransactional(createEnvironmentService(config), db)

@@ -1,6 +1,7 @@
 import {
     FEATURE_POTENTIALLY_STALE_ON,
     type IBaseEvent,
+    type IFeatureCollaboratorsReadModel,
     type IUnleashConfig,
     type IUnleashStores,
 } from '../types';
@@ -68,6 +69,7 @@ test('Should only store events for potentially stale on', async () => {
         {} as IDependentFeaturesReadModel,
         {} as DependentFeaturesService,
         {} as IFeatureLifecycleReadModel,
+        {} as IFeatureCollaboratorsReadModel,
     );
 
     await featureToggleService.updatePotentiallyStaleFeatures();

@@ -99,6 +99,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    featureCollaborators: true,
                 },
             },
         },

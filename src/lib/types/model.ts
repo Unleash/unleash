@@ -9,6 +9,7 @@ import type { ProjectEnvironment } from '../features/project/project-store-type'
 import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { IFlagResolver } from './experimental';
+import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -114,6 +115,7 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     dependencies: IDependency[];
     children: string[];
     lifecycle: IFeatureLifecycleStage | undefined;
+    collaborators?: { users: Collaborator[] };
 }
 
 // @deprecated

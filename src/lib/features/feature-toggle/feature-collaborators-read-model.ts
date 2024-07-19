@@ -31,6 +31,8 @@ export class FeatureCollaboratorsReadModel
             .join('users', 'recent_events.created_by_user_id', 'users.id')
             .orderBy('recent_events.max_created_at', 'desc');
 
+        console.log(query.toQuery());
+
         const rows = await query;
 
         return rows.map((row) => {

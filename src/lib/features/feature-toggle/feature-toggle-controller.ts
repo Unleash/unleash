@@ -705,6 +705,19 @@ export default class ProjectFeaturesController extends Controller {
         ) {
             return {
                 ...feature,
+                ...(feature.collaborators
+                    ? {
+                          collaborators: {
+                              ...feature.collaborators,
+                              users: feature.collaborators.users.map(
+                                  (user) => ({
+                                      ...user,
+                                      name: anonymise(user.name),
+                                  }),
+                              ),
+                          },
+                      }
+                    : {}),
                 createdBy: {
                     ...feature.createdBy,
                     name: anonymise(feature.createdBy?.name),

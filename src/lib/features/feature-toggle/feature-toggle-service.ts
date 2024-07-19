@@ -20,6 +20,7 @@ import {
     type IAuditUser,
     type IConstraint,
     type IDependency,
+    type IFeatureCollaboratorsReadModel,
     type IFeatureEnvironmentInfo,
     type IFeatureEnvironmentStore,
     type IFeatureLifecycleStage,
@@ -110,6 +111,7 @@ import type EventEmitter from 'node:events';
 import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model-type';
 import type { ResourceLimitsSchema } from '../../openapi';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
+import type { Collaborator } from './types/feature-collaborators-read-model-type';
 
 interface IFeatureContext {
     featureName: string;
@@ -177,6 +179,8 @@ class FeatureToggleService {
 
     private featureLifecycleReadModel: IFeatureLifecycleReadModel;
 
+    private featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel;
+
     private dependentFeaturesService: DependentFeaturesService;
 
     private eventBus: EventEmitter;
@@ -221,6 +225,7 @@ class FeatureToggleService {
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
         dependentFeaturesService: DependentFeaturesService,
         featureLifecycleReadModel: IFeatureLifecycleReadModel,
+        featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -240,6 +245,7 @@ class FeatureToggleService {
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.dependentFeaturesService = dependentFeaturesService;
         this.featureLifecycleReadModel = featureLifecycleReadModel;
+        this.featureCollaboratorsReadModel = featureCollaboratorsReadModel;
         this.eventBus = eventBus;
         this.resourceLimits = resourceLimits;
     }
@@ -1088,10 +1094,19 @@ class FeatureToggleService {
         let dependencies: IDependency[] = [];
         let children: string[] = [];
         let lifecycle: IFeatureLifecycleStage | undefined = undefined;
-        [dependencies, children, lifecycle] = await Promise.all([
+        let collaborators: Collaborator[] = [];
+        const featureCollaboratorsEnabled = this.flagResolver.isEnabled(
+            'featureCollaborators',
+        );
+        [dependencies, children, lifecycle, collaborators] = await Promise.all([
             this.dependentFeaturesReadModel.getParents(featureName),
             this.dependentFeaturesReadModel.getChildren([featureName]),
             this.featureLifecycleReadModel.findCurrentStage(featureName),
+            featureCollaboratorsEnabled
+                ? this.featureCollaboratorsReadModel.getFeatureCollaborators(
+                      featureName,
+                  )
+                : Promise.resolve([]),
         ]);
 
         if (environmentVariants) {
@@ -1106,6 +1121,9 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
+                ...(featureCollaboratorsEnabled
+                    ? { collaborators: { users: collaborators } }
+                    : {}),
             };
         } else {
             const result =
@@ -1119,6 +1137,9 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
+                ...(featureCollaboratorsEnabled
+                    ? { collaborators: { users: collaborators } }
+                    : {}),
             };
         }
     }

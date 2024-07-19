@@ -66,7 +66,10 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'cleanApiTokenWhenOrphaned'
     | 'allowOrphanedWildcardTokens'
-    | 'removeUnsafeInlineStyleSrc';
+    | 'removeUnsafeInlineStyleSrc'
+    | 'insightsV2'
+    | 'integrationEvents'
+    | 'featureCollaborators';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -305,7 +308,7 @@ const flags: IFlags = {
     ),
     allowOrphanedWildcardTokens: parseEnvVarBoolean(
         process.env.UNLEASH_ORPHANED_TOKENS_KILL_SWITCH,
-        false,
+        true,
     ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
@@ -317,6 +320,18 @@ const flags: IFlags = {
     ),
     removeUnsafeInlineStyleSrc: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
+        false,
+    ),
+    insightsV2: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INSIGHTS_V2,
+        false,
+    ),
+    integrationEvents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
+        false,
+    ),
+    featureCollaborators: parseEnvVarBoolean(
+        process.env.UNEASH_EXPERIMENTAL_FEATURE_COLLABORATORS,
         false,
     ),
 };

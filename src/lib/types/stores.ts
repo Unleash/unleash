@@ -46,6 +46,7 @@ import { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-
 import { IFeatureStrategiesReadModel } from '../features/feature-toggle/types/feature-strategies-read-model-type';
 import { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type';
 import { ILargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model-type';
+import type { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -96,6 +97,7 @@ export interface IUnleashStores {
     featureStrategiesReadModel: IFeatureStrategiesReadModel;
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
     largestResourcesReadModel: ILargestResourcesReadModel;
+    integrationEventsStore: IntegrationEventsStore;
 }
 
 export {
@@ -145,4 +147,5 @@ export {
     IFeatureStrategiesReadModel,
     IFeatureLifecycleReadModel,
     ILargestResourcesReadModel,
+    type IntegrationEventsStore,
 };

@@ -64,7 +64,7 @@ export class OpenApiService {
         app.use((err, req, res, next) => {
             if (err?.status && err.validationErrors) {
                 const apiError = fromOpenApiValidationErrors(
-                    req.body,
+                    req,
                     err.validationErrors,
                 );
 

@@ -97,6 +97,7 @@ export const CommandBar = () => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [searchLoading, setSearchLoading] = useState(false);
     const [searchString, setSearchString] = useState(undefined);
     const [searchedProjects, setSearchedProjects] = useState<
         CommandResultGroupItem[]
@@ -215,39 +216,54 @@ export const CommandBar = () => {
             }
         });
 
-        return { allCommandBarLinks, selectedIndex };
+        return {
+            allCommandBarLinks,
+            selectedIndex,
+        };
     };
 
-    useKeyboardShortcut({ key: 'ArrowDown', preventDefault: true }, () => {
-        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
-        if (!itemsAndIndex) return;
-        const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
+    useKeyboardShortcut(
+        {
+            key: 'ArrowDown',
+            preventDefault: true,
+        },
+        () => {
+            const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
+            if (!itemsAndIndex) return;
+            const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
 
-        const newIndex = selectedIndex + 1;
-        if (newIndex >= allCommandBarLinks.length) return;
+            const newIndex = selectedIndex + 1;
+            if (newIndex >= allCommandBarLinks.length) return;
 
-        (allCommandBarLinks[newIndex] as HTMLElement).focus();
-    });
-    useKeyboardShortcut({ key: 'ArrowUp', preventDefault: true }, () => {
-        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
-        if (!itemsAndIndex) return;
-        const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
-
-        const newIndex = selectedIndex - 1;
-
-        if (newIndex >= 0) {
             (allCommandBarLinks[newIndex] as HTMLElement).focus();
-        } else {
-            const element = searchInputRef.current;
-            if (element) {
-                element.focus();
-                element.setSelectionRange(
-                    element.value.length,
-                    element.value.length,
-                );
+        },
+    );
+    useKeyboardShortcut(
+        {
+            key: 'ArrowUp',
+            preventDefault: true,
+        },
+        () => {
+            const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
+            if (!itemsAndIndex) return;
+            const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
+
+            const newIndex = selectedIndex - 1;
+
+            if (newIndex >= 0) {
+                (allCommandBarLinks[newIndex] as HTMLElement).focus();
+            } else {
+                const element = searchInputRef.current;
+                if (element) {
+                    element.focus();
+                    element.setSelectionRange(
+                        element.value.length,
+                        element.value.length,
+                    );
+                }
             }
-        }
-    });
+        },
+    );
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     const onKeyDown = (event: React.KeyboardEvent) => {
@@ -346,24 +362,32 @@ export const CommandBar = () => {
                                 searchString={searchString}
                                 setSearchedFlagCount={setSearchedFlagCount}
                                 onClick={clearSearchValue}
+                                setSearchLoading={setSearchLoading}
                             />
                         )}
-                        <CommandResultGroup
-                            groupName={'Projects'}
-                            icon={'flag'}
-                            onClick={clearSearchValue}
-                            items={searchedProjects}
-                        />
-                        <CommandSearchPages
-                            items={searchedPages}
-                            onClick={clearSearchValue}
-                        />
                         <ConditionallyRender
-                            condition={hasNoResults}
+                            condition={!searchLoading}
                             show={
-                                <CommandBarFeedback
-                                    onSubmit={hideSuggestions}
-                                />
+                                <>
+                                    <CommandResultGroup
+                                        groupName={'Projects'}
+                                        icon={'flag'}
+                                        onClick={clearSearchValue}
+                                        items={searchedProjects}
+                                    />
+                                    <CommandSearchPages
+                                        items={searchedPages}
+                                        onClick={clearSearchValue}
+                                    />
+                                    <ConditionallyRender
+                                        condition={hasNoResults}
+                                        show={
+                                            <CommandBarFeedback
+                                                onSubmit={hideSuggestions}
+                                            />
+                                        }
+                                    />
+                                </>
                             }
                         />
                     </CommandResultsPaper>

@@ -26,7 +26,7 @@ import type { IPrivateProjectChecker } from '../private-project/privateProjectCh
 import type EventService from '../events/event-service';
 import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
 import type { ResourceLimitsSchema } from '../../openapi';
-import { ExceedsLimitError } from '../../error/exceeds-limit-error';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -136,7 +136,10 @@ export class SegmentService implements ISegmentService {
         const segmentCount = await this.segmentStore.count();
 
         if (segmentCount >= limit) {
-            throw new ExceedsLimitError('segment', limit);
+            throwExceedsLimitError(this.config.eventBus, {
+                resource: 'segment',
+                limit,
+            });
         }
     }
 

@@ -7,6 +7,7 @@ type ValidationErrorDescription = {
     message: string;
     path?: string;
 };
+
 class BadDataError extends UnleashError {
     statusCode = 400;
 
@@ -67,13 +68,11 @@ const additionalPropertiesMessage = (
 };
 
 const genericErrorMessage = (
-    requestBody: object,
     propertyName: string,
+    propertyValue: object,
     errorMessage: string = 'is invalid',
 ) => {
-    const input = getProp(requestBody, propertyName.split('/'));
-
-    const youSent = JSON.stringify(input);
+    const youSent = JSON.stringify(propertyValue);
     const message = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
         message,
@@ -117,20 +116,24 @@ const enumMessage = (
 };
 
 export const fromOpenApiValidationError =
-    (requestBody: object) =>
+    (data: object) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
-        const propertyName = instancePath.substring('/body/'.length);
+
+        const propertyValue = getProp(
+            data,
+            instancePath.split('/').filter(Boolean),
+        );
 
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(
-                    propertyName,
+                    instancePath,
                     params.missingProperty,
                 );
             case 'additionalProperties':
                 return additionalPropertiesMessage(
-                    propertyName,
+                    instancePath,
                     params.additionalProperty,
                 );
             case 'enum':
@@ -138,29 +141,30 @@ export const fromOpenApiValidationError =
                     instancePath.substring(instancePath.lastIndexOf('/') + 1),
                     message,
                     params.allowedValues,
-                    getProp(
-                        requestBody,
-                        instancePath.substring('/body/'.length).split('/'),
-                    ),
+                    propertyValue,
                 );
 
             case 'oneOf':
-                return oneOfMessage(propertyName, validationError.message);
+                return oneOfMessage(instancePath, validationError.message);
             default:
-                return genericErrorMessage(requestBody, propertyName, message);
+                return genericErrorMessage(
+                    instancePath,
+                    propertyValue,
+                    message,
+                );
         }
     };
 
 export const fromOpenApiValidationErrors = (
-    requestBody: object,
+    data: object,
     validationErrors: [ErrorObject, ...ErrorObject[]],
 ): BadDataError => {
     const [firstDetail, ...remainingDetails] = validationErrors.map(
-        fromOpenApiValidationError(requestBody),
+        fromOpenApiValidationError(data),
     );
 
     return new BadDataError(
-        "Request validation failed: the payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
+        "Request validation failed: your request doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
         [firstDetail, ...remainingDetails],
     );
 };

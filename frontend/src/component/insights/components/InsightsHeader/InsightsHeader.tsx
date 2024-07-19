@@ -4,13 +4,12 @@ import { useFeedback } from 'component/feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import {
     Button,
-    Typography,
     styled,
+    Typography,
     useMediaQuery,
     useTheme,
 } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ShareLink } from './ShareLink/ShareLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 type DashboardHeaderProps = {
@@ -19,6 +18,7 @@ type DashboardHeaderProps = {
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
+    alignItems: 'center',
     gap: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
@@ -34,7 +34,6 @@ const StyledActionButtons = styled('div')(({ theme }) => ({
 const StyledExternalActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    width: 300,
     [theme.breakpoints.down('md')]: {
         width: '100%',
     },
@@ -94,7 +93,6 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
                             }
                         />
                         <StyledActionButtons>
-                            <ShareLink />
                             <Button
                                 startIcon={<ReviewsOutlined />}
                                 variant='outlined'

@@ -84,7 +84,8 @@ import type {
     IProjectQuery,
 } from './project-store-type';
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
-import { ExceedsLimitError } from '../../error/exceeds-limit-error';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
+import type EventEmitter from 'events';
 
 type Days = number;
 type Count = number;
@@ -159,6 +160,8 @@ export default class ProjectService {
 
     private resourceLimits: ResourceLimitsSchema;
 
+    private eventBus: EventEmitter;
+
     constructor(
         {
             projectStore,
@@ -215,6 +218,7 @@ export default class ProjectService {
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
         this.resourceLimits = config.resourceLimits;
+        this.eventBus = config.eventBus;
     }
 
     async getProjects(
@@ -325,7 +329,10 @@ export default class ProjectService {
         const projectCount = await this.projectStore.count();
 
         if (projectCount >= limit) {
-            throw new ExceedsLimitError('project', limit);
+            throwExceedsLimitError(this.eventBus, {
+                resource: 'project',
+                limit,
+            });
         }
     }
 

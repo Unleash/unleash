@@ -30,6 +30,8 @@ export interface IUiConfig {
     strategySegmentsLimit?: number;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
+    oidcConfiguredThroughEnv?: boolean;
+    samlConfiguredThroughEnv?: boolean;
 }
 
 export interface IProclamationToast {
@@ -89,6 +91,8 @@ export type UiFlags = {
     commandBarUI?: boolean;
     flagCreator?: boolean;
     resourceLimits?: boolean;
+    insightsV2?: boolean;
+    featureCollaborators?: boolean;
 };
 
 export interface IVersionInfo {

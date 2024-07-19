@@ -97,7 +97,9 @@ export const ProjectHealth: FC<{ health: ProjectInsightsSchemaHealth }> = ({
                         <StatusWithDot>
                             <Dot color={theme.palette.error.border} />
                             <Box sx={{ fontWeight: 'bold' }}>Stale</Box>
-                            <Link to={`/projects/${projectId}`}>
+                            <Link
+                                to={`/projects/${projectId}?state=IS%3Astale`}
+                            >
                                 (view flags)
                             </Link>
                         </StatusWithDot>

@@ -82,7 +82,9 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
         experimental: {
-            flags: {},
+            flags: {
+                cleanApiTokenWhenOrphaned: true,
+            },
         },
     });
     eventService = new EventService(stores, config);

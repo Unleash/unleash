@@ -76,7 +76,7 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "adminTokenKillSwitch": false,
-      "allowOrphanedWildcardTokens": false,
+      "allowOrphanedWildcardTokens": true,
       "anonymiseEventLog": false,
       "anonymizeProjectOwners": false,
       "automatedActions": false,
@@ -104,6 +104,7 @@ exports[`should create default config 1`] = `
       "estimateTrafficDataCost": false,
       "extendedMetrics": false,
       "extendedUsageMetrics": false,
+      "featureCollaborators": false,
       "featureLifecycle": false,
       "featureSearchFeedback": {
         "enabled": false,
@@ -126,6 +127,8 @@ exports[`should create default config 1`] = `
       "filterInvalidClientMetrics": false,
       "flagCreator": false,
       "googleAuthEnabled": false,
+      "insightsV2": false,
+      "integrationEvents": false,
       "killInsightsUI": false,
       "killScheduledChangeRequestCache": false,
       "maintenanceMode": false,

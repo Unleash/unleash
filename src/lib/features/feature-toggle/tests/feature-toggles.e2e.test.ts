@@ -1500,7 +1500,7 @@ test('Can patch a strategy based on id', async () => {
                 strategy!.id
             }`,
         )
-        .send([{ op: 'replace', path: '/parameters/rollout', value: 42 }])
+        .send([{ op: 'replace', path: '/parameters/rollout', value: '42' }])
         .expect(200);
     await app.request
         .get(

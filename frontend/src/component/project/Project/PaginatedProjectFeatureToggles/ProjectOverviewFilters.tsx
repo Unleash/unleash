@@ -35,7 +35,26 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
             value: String(creator.id),
         }));
 
+        const stateOptions = [
+            {
+                label: 'Active',
+                value: 'active',
+            },
+            {
+                label: 'Stale',
+                value: 'stale',
+            },
+        ];
+
         const availableFilters: IFilterItem[] = [
+            {
+                label: 'State',
+                icon: 'hexagon',
+                options: stateOptions,
+                filterKey: 'state',
+                singularOperators: ['IS', 'IS_NOT'],
+                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            },
             {
                 label: 'Tags',
                 icon: 'label',

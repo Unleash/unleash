@@ -32,6 +32,7 @@ import {
     type FeatureSchema,
     featuresSchema,
     type FeaturesSchema,
+    featureStrategySchema,
     type FeatureStrategySchema,
     getStandardResponses,
     type ParametersSchema,
@@ -54,6 +55,7 @@ import type {
 } from '../../db/transaction';
 import { BadDataError } from '../../error';
 import { anonymise } from '../../util';
+import { throwOnInvalidSchema } from '../../openapi/validate';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -1060,6 +1062,9 @@ export default class ProjectFeaturesController extends Controller {
         const strategy = await this.featureService.getStrategy(strategyId);
 
         const { newDocument } = applyPatch(strategy, patch);
+
+        throwOnInvalidSchema(featureStrategySchema.$id, newDocument);
+
         const updatedStrategy = await this.startTransaction(async (tx) =>
             this.transactionalFeatureToggleService(tx).updateStrategy(
                 strategyId,

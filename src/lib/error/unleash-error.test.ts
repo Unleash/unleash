@@ -56,13 +56,15 @@ describe('OpenAPI error conversion', () => {
             message: "should have required property 'enabled'",
         };
 
-        const result = fromOpenApiValidationError({})(error);
+        const result = fromOpenApiValidationError({ body: {}, query: {} })(
+            error,
+        );
 
         expect(result).toMatchObject({
             message:
                 // it tells the user that the property is required
                 expect.stringContaining('required'),
-            path: 'enabled',
+            path: '/body/enabled',
         });
 
         // it tells the user the name of the missing property
@@ -83,14 +85,17 @@ describe('OpenAPI error conversion', () => {
 
         const parameterValue = [];
         const result = fromOpenApiValidationError({
-            parameters: parameterValue,
+            body: {
+                parameters: parameterValue,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
             message:
                 // it provides the message
                 expect.stringContaining(error.message),
-            path: 'parameters',
+            path: '/body/parameters',
         });
 
         // it tells the user what they provided
@@ -111,26 +116,25 @@ describe('OpenAPI error conversion', () => {
             };
 
             const result = fromOpenApiValidationError({
-                secret: 'blah',
-                username: 'string2',
-                type: 'admin',
+                body: {
+                    secret: 'blah',
+                    username: 'string2',
+                    type: 'admin',
+                },
+                query: {},
             })(error);
 
             expect(result).toMatchObject({
                 message:
                     // it provides the message
                     expect.stringContaining(error.message),
-                path: instancePath.substring('/body/'.length),
+                path: instancePath,
             });
 
             // it tells the user what happened
             expect(result.message).toContain('matches more than one option');
             // it tells the user what part of the request body this pertains to
-            expect(result.message).toContain(
-                instancePath === '/body'
-                    ? 'root object'
-                    : `"${instancePath.substring('/body/'.length)}" property`,
-            );
+            expect(result.message).toContain(`"${instancePath}" property`);
         },
     );
 
@@ -148,12 +152,15 @@ describe('OpenAPI error conversion', () => {
 
         const requestDescription = 'A pattern that does not match.';
         const result = fromOpenApiValidationError({
-            description: requestDescription,
+            body: {
+                description: requestDescription,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
             message: expect.stringContaining(error.params.pattern),
-            path: 'description',
+            path: '/body/description',
         });
         expect(result.message).toContain('description');
     });
@@ -167,14 +174,17 @@ describe('OpenAPI error conversion', () => {
             message: 'must be equal to one of the allowed values',
         };
 
-        const request = [
-            {
-                name: 'variant',
-                weight: 500,
-                weightType: 'party',
-                stickiness: 'userId',
-            },
-        ];
+        const request = {
+            body: [
+                {
+                    name: 'variant',
+                    weight: 500,
+                    weightType: 'party',
+                    stickiness: 'userId',
+                },
+            ],
+            query: {},
+        };
 
         const result = fromOpenApiValidationError(request)(error);
 
@@ -202,7 +212,10 @@ describe('OpenAPI error conversion', () => {
 
         const requestDescription = 'Longer than the max length';
         const result = fromOpenApiValidationError({
-            description: requestDescription,
+            body: {
+                description: requestDescription,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -233,7 +246,10 @@ describe('OpenAPI error conversion', () => {
 
         const propertyValue = 6;
         const result = fromOpenApiValidationError({
-            newprop: propertyValue,
+            body: {
+                newprop: propertyValue,
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
@@ -278,6 +294,52 @@ describe('OpenAPI error conversion', () => {
 
         // create an error and serialize it as it would be shown to the end user.
         const serializedUnleashError: ApiErrorSchema =
+            fromOpenApiValidationErrors(
+                { body: { newprop: 7 }, query: {} },
+                errors,
+            ).toJSON();
+
+        expect(serializedUnleashError).toMatchObject({
+            name: 'BadDataError',
+            message: expect.stringContaining('`details`'),
+            details: [
+                {
+                    message: expect.stringContaining('newprop'),
+                },
+                {
+                    message: expect.stringContaining('enabled'),
+                },
+            ],
+        });
+    });
+
+    it('Handles any data, not only requests', () => {
+        const errors: [ErrorObject, ...ErrorObject[]] = [
+            {
+                keyword: 'maximum',
+                instancePath: '/newprop',
+                schemaPath:
+                    '#/components/schemas/addonCreateUpdateSchema/properties/newprop/maximum',
+                params: {
+                    comparison: '<=',
+                    limit: 5,
+                    exclusive: false,
+                },
+                message: 'should be <= 5',
+            },
+            {
+                keyword: 'required',
+                instancePath: '/',
+                schemaPath:
+                    '#/components/schemas/addonCreateUpdateSchema/required',
+                params: {
+                    missingProperty: 'enabled',
+                },
+                message: "should have required property 'enabled'",
+            },
+        ];
+
+        const serializedUnleashError: ApiErrorSchema =
             fromOpenApiValidationErrors({ newprop: 7 }, errors).toJSON();
 
         expect(serializedUnleashError).toMatchObject({
@@ -294,6 +356,36 @@ describe('OpenAPI error conversion', () => {
         });
     });
 
+    it('Handles invalid data gracefully', () => {
+        const errors: [ErrorObject, ...ErrorObject[]] = [
+            {
+                keyword: 'maximum',
+                instancePath: '/body/newprop',
+                schemaPath:
+                    '#/components/schemas/addonCreateUpdateSchema/properties/body/newprop/maximum',
+                params: {
+                    comparison: '<=',
+                    limit: 5,
+                    exclusive: false,
+                },
+                message: 'should be <= 5',
+            },
+        ];
+
+        const serializedUnleashError: ApiErrorSchema =
+            fromOpenApiValidationErrors({}, errors).toJSON();
+
+        expect(serializedUnleashError).toMatchObject({
+            name: 'BadDataError',
+            message: expect.stringContaining('`details`'),
+            details: [
+                {
+                    message: expect.stringContaining('newprop'),
+                },
+            ],
+        });
+    });
+
     describe('Disallowed additional properties', () => {
         it('gives useful messages for base-level properties', () => {
             const openApiError = {
@@ -305,26 +397,30 @@ describe('OpenAPI error conversion', () => {
                 message: 'should NOT have additional properties',
             };
 
-            const error = fromOpenApiValidationError({ bogus: 5 })(
-                openApiError,
-            );
+            const error = fromOpenApiValidationError({
+                body: { bogus: 5 },
+                query: {},
+            })(openApiError);
 
             expect(error).toMatchObject({
                 message: expect.stringContaining(
                     openApiError.params.additionalProperty,
                 ),
-                path: 'bogus',
+                path: '/body/bogus',
             });
 
-            expect(error.message).toMatch(/\broot\b/i);
+            expect(error.message).toMatch(/\bbody\b/i);
             expect(error.message).toMatch(/\badditional properties\b/i);
         });
 
         it('gives useful messages for nested properties', () => {
             const request2 = {
-                nestedObject: {
-                    nested2: { extraPropertyName: 'illegal property' },
+                body: {
+                    nestedObject: {
+                        nested2: { extraPropertyName: 'illegal property' },
+                    },
                 },
+                query: {},
             };
             const openApiError = {
                 keyword: 'additionalProperties',
@@ -338,8 +434,8 @@ describe('OpenAPI error conversion', () => {
             const error = fromOpenApiValidationError(request2)(openApiError);
 
             expect(error).toMatchObject({
-                message: expect.stringContaining('nestedObject/nested2'),
-                path: 'nestedObject/nested2/extraPropertyName',
+                message: expect.stringContaining('/body/nestedObject/nested2'),
+                path: '/body/nestedObject/nested2/extraPropertyName',
             });
 
             expect(error.message).toContain(
@@ -360,12 +456,15 @@ describe('OpenAPI error conversion', () => {
         };
 
         const result = fromOpenApiValidationError({
-            nestedObject: { a: { b: [] } },
+            body: {
+                nestedObject: { a: { b: [] } },
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
             message: expect.stringMatching(/\bnestedObject\/a\/b\b/),
-            path: 'nestedObject/a/b',
+            path: '/body/nestedObject/a/b',
         });
 
         expect(result.message).toContain('[]');
@@ -382,15 +481,42 @@ describe('OpenAPI error conversion', () => {
 
         const illegalValue = 'illegal string';
         const result = fromOpenApiValidationError({
-            nestedObject: { a: { b: illegalValue } },
+            body: {
+                nestedObject: { a: { b: illegalValue } },
+            },
+            query: {},
         })(error);
 
         expect(result).toMatchObject({
             message: expect.stringContaining(illegalValue),
-            path: 'nestedObject/a/b',
+            path: '/body/nestedObject/a/b',
         });
 
         expect(result.message).toMatch(/\bnestedObject\/a\/b\b/);
+    });
+
+    it('handles query parameter errors', () => {
+        const error = {
+            instancePath: '/query/from',
+            schemaPath: '#/properties/query/properties/from/format',
+            keyword: 'format',
+            params: { format: 'date' },
+            message: 'must match format "date"',
+        };
+        const query = { from: '01-2020-01' };
+
+        const result = fromOpenApiValidationError({ body: {}, query })(error);
+
+        expect(result).toMatchObject({
+            message:
+                // it tells the user what the format is
+                expect.stringContaining(error.params.format),
+        });
+
+        // it tells the user which property it pertains to
+        expect(result.message).toContain('from');
+        // it tells the user what they provided
+        expect(result.message).toContain(query.from);
     });
 });
 

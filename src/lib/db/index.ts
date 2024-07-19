@@ -49,6 +49,7 @@ import { ProjectFlagCreatorsReadModel } from '../features/project/project-flag-c
 import { FeatureStrategiesReadModel } from '../features/feature-toggle/feature-strategies-read-model';
 import { FeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model';
 import { LargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model';
+import { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -173,6 +174,7 @@ export const createStores = (
             config.flagResolver,
         ),
         largestResourcesReadModel: new LargestResourcesReadModel(db),
+        integrationEventsStore: new IntegrationEventsStore(db, { eventBus }),
     };
 };
 

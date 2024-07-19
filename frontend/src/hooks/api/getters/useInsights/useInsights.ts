@@ -12,9 +12,11 @@ interface IUseInsightsDataOutput {
 }
 
 export const useInsights = (
+    from = '',
+    to = '',
     options?: SWRConfiguration,
 ): IUseInsightsDataOutput => {
-    const path = formatApiPath('api/admin/insights');
+    const path = formatApiPath(`api/admin/insights?from=${from}&to=${to}`);
 
     const { data, error } = useSWR<InstanceInsightsSchema>(
         path,

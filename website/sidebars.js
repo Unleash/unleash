@@ -149,9 +149,34 @@ module.exports = {
                     ],
                 },
                 {
-                    type: 'doc',
+                    type: 'category',
                     label: 'iOS',
-                    id: 'feature-flag-tutorials/ios/implementing-feature-flags',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/ios/implementing-feature-flags',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/ios/examples',
+                        },
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Rust',
+                    link: {
+                        type: 'doc',
+                        id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'Examples',
+                            id: 'feature-flag-tutorials/rust/examples',
+                        },
+                    ],
                 },
                 {
                     type: 'doc',
@@ -232,6 +257,7 @@ module.exports = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/scim',
+                        'reference/resource-limits',
                         'reference/rbac',
                         'reference/search-operators',
                         'reference/segments',

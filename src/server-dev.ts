@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         extendedMetrics: true,
                         insightsV2: true,
                         integrationEvents: true,
+                        featureCollaborators: true,
                     },
                 },
                 authentication: {

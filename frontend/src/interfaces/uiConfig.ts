@@ -92,6 +92,7 @@ export type UiFlags = {
     flagCreator?: boolean;
     resourceLimits?: boolean;
     insightsV2?: boolean;
+    featureCollaborators?: boolean;
 };
 
 export interface IVersionInfo {

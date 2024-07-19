@@ -211,7 +211,7 @@ describe('Webhook integration', () => {
             integrationId: INTEGRATION_ID,
             state: 'success',
             stateDetails:
-                'Webhook request was successful with status code: 200',
+                'Webhook request was successful with status code: 200.',
             event: serializeDates(event),
             details: {
                 url: parameters.url,

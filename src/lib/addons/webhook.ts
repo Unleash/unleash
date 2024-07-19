@@ -24,7 +24,7 @@ export default class Webhook extends Addon {
         integrationId: number,
     ): Promise<void> {
         let state: IntegrationEventState = 'success';
-        let stateDetails = '';
+        const stateDetails: string[] = [];
 
         const { url, bodyTemplate, contentType, authorization, customHeaders } =
             parameters;
@@ -47,10 +47,11 @@ export default class Webhook extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                state = 'successWithErrors';
-                stateDetails =
+                const errorMessage =
                     'Could not parse the JSON in the customHeaders parameter.';
-                this.logger.warn(stateDetails);
+                state = 'successWithErrors';
+                stateDetails.push(errorMessage);
+                this.logger.warn(errorMessage);
             }
         }
         const requestOpts = {
@@ -69,16 +70,20 @@ export default class Webhook extends Addon {
         );
 
         if (res.ok) {
-            stateDetails = `Webhook request was successful with status code: ${res.status}`;
+            stateDetails.push(
+                `Webhook request was successful with status code: ${res.status}.`,
+            );
         } else {
             state = 'failed';
-            stateDetails = `Webhook request failed with status code: ${res.status}`;
+            stateDetails.push(
+                `Webhook request failed with status code: ${res.status}.`,
+            );
         }
 
         this.registerEvent({
             integrationId,
             state,
-            stateDetails,
+            stateDetails: stateDetails.join('\n'),
             event: serializeDates(event),
             details: {
                 url,

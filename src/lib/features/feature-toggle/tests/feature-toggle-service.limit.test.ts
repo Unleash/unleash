@@ -119,11 +119,14 @@ describe('Strategy limits', () => {
             },
         ];
 
-        featureToggleService.validateConstraintsLimit(constraints, constraints);
-        featureToggleService.validateConstraintsLimit(
-            constraints.slice(0, 2),
-            constraints,
-        );
+        featureToggleService.validateConstraintsLimit({
+            updatedConstraints: constraints,
+            existingConstraints: constraints,
+        });
+        featureToggleService.validateConstraintsLimit({
+            updatedConstraints: constraints.slice(0, 2),
+            existingConstraints: constraints,
+        });
     });
 
     test('Should not allow to exceed constraint values limit', async () => {

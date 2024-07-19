@@ -390,16 +390,17 @@ class FeatureToggleService {
         }
     }
 
-    validateConstraintsLimit(
-        updatedConstraints: IConstraint[],
-        existingConstraints: IConstraint[],
-    ) {
+    validateConstraintsLimit(constraints: {
+        updatedConstraints: IConstraint[];
+        existingConstraints: IConstraint[];
+    }) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
 
         const constraintsLimit = this.resourceLimits.constraints;
         if (
-            updatedConstraints.length > constraintsLimit &&
-            updatedConstraints.length > existingConstraints.length
+            constraints.updatedConstraints.length > constraintsLimit &&
+            constraints.updatedConstraints.length >
+                constraints.existingConstraints.length
         ) {
             throwExceedsLimitError(this.eventBus, {
                 resource: `constraints`,
@@ -408,7 +409,7 @@ class FeatureToggleService {
         }
 
         const constraintValuesLimit = this.resourceLimits.constraintValues;
-        const constraintOverLimit = updatedConstraints.find(
+        const constraintOverLimit = constraints.updatedConstraints.find(
             (constraint) =>
                 Array.isArray(constraint.values) &&
                 constraint.values?.length > constraintValuesLimit,
@@ -667,7 +668,10 @@ class FeatureToggleService {
             strategyConfig.constraints &&
             strategyConfig.constraints.length > 0
         ) {
-            this.validateConstraintsLimit(strategyConfig.constraints, []);
+            this.validateConstraintsLimit({
+                updatedConstraints: strategyConfig.constraints,
+                existingConstraints: [],
+            });
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
             );
@@ -826,10 +830,10 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
-                this.validateConstraintsLimit(
-                    updates.constraints,
-                    existingStrategy.constraints,
-                );
+                this.validateConstraintsLimit({
+                    updatedConstraints: updates.constraints,
+                    existingConstraints: existingStrategy.constraints,
+                });
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );

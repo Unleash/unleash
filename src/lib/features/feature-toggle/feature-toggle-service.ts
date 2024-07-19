@@ -396,23 +396,39 @@ class FeatureToggleService {
     }) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
 
-        const constraintsLimit = this.resourceLimits.constraints;
+        const {
+            constraints: constraintsLimit,
+            constraintValues: constraintValuesLimit,
+        } = this.resourceLimits;
+
         if (
             constraints.updated.length > constraintsLimit &&
             constraints.updated.length > constraints.existing.length
         ) {
             throwExceedsLimitError(this.eventBus, {
-                resource: `constraints`,
+                resource: 'constraints',
                 limit: constraintsLimit,
             });
         }
 
-        const constraintValuesLimit = this.resourceLimits.constraintValues;
+        const isSameLength =
+            constraints.existing.length === constraints.updated.length;
         const constraintOverLimit = constraints.updated.find(
-            (constraint) =>
-                Array.isArray(constraint.values) &&
-                constraint.values?.length > constraintValuesLimit,
+            (constraint, i) => {
+                const updatedCount = constraint.values?.length ?? 0;
+                const existingCount =
+                    constraints.existing[i]?.values?.length ?? 0;
+
+                const isOverLimit =
+                    Array.isArray(constraint.values) &&
+                    updatedCount > constraintValuesLimit;
+                const allowAnyway =
+                    isSameLength && existingCount >= updatedCount;
+
+                return isOverLimit && !allowAnyway;
+            },
         );
+
         if (constraintOverLimit) {
             throwExceedsLimitError(this.eventBus, {
                 resource: `constraint values for ${constraintOverLimit.contextName}`,
@@ -421,7 +437,6 @@ class FeatureToggleService {
             });
         }
     }
-
     async validateStrategyType(
         strategyName: string | undefined,
     ): Promise<void> {

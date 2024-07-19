@@ -396,36 +396,39 @@ class FeatureToggleService {
     }) {
         if (!this.flagResolver.isEnabled('resourceLimits')) return;
 
-        const constraintsLimit = this.resourceLimits.constraints;
+        const {
+            constraints: constraintsLimit,
+            constraintValues: constraintValuesLimit,
+        } = this.resourceLimits;
+
         if (
             constraints.updated.length > constraintsLimit &&
             constraints.updated.length > constraints.existing.length
         ) {
             throwExceedsLimitError(this.eventBus, {
-                resource: `constraints`,
+                resource: 'constraints',
                 limit: constraintsLimit,
             });
         }
 
-        const constraintValuesLimit = this.resourceLimits.constraintValues;
-        const coompareWithExistingValues =
+        const isSameLength =
             constraints.existing.length === constraints.updated.length;
         const constraintOverLimit = constraints.updated.find(
             (constraint, i) => {
-                const updatedConstraintValueCount =
-                    constraint.values?.length ?? 0;
-                const overLimit =
-                    Array.isArray(constraint.values) &&
-                    updatedConstraintValueCount > constraintValuesLimit;
-                if (!overLimit) return false;
-                const allowAnyway = coompareWithExistingValues
-                    ? (constraints.existing[i].values?.length ?? 0) >=
-                      updatedConstraintValueCount
-                    : false;
+                const updatedCount = constraint.values?.length ?? 0;
+                const existingCount =
+                    constraints.existing[i]?.values?.length ?? 0;
 
-                return !allowAnyway;
+                const isOverLimit =
+                    Array.isArray(constraint.values) &&
+                    updatedCount > constraintValuesLimit;
+                const allowAnyway =
+                    isSameLength && existingCount >= updatedCount;
+
+                return isOverLimit && !allowAnyway;
             },
         );
+
         if (constraintOverLimit) {
             throwExceedsLimitError(this.eventBus, {
                 resource: `constraint values for ${constraintOverLimit.contextName}`,
@@ -434,7 +437,6 @@ class FeatureToggleService {
             });
         }
     }
-
     async validateStrategyType(
         strategyName: string | undefined,
     ): Promise<void> {

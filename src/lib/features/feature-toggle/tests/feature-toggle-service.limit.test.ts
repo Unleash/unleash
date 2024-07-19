@@ -94,17 +94,14 @@ describe('Strategy limits', () => {
 
     test('Should not throw limit exceeded errors if the new number of constraints is less than or equal to the previous number', async () => {
         const LIMIT = 1;
-        const {
-            featureToggleService,
-            featureToggleStore,
-            featureStrategiesStore,
-        } = createFakeFeatureToggleService({
-            getLogger,
-            flagResolver: alwaysOnFlagResolver,
-            resourceLimits: {
-                constraints: LIMIT,
-            },
-        } as unknown as IUnleashConfig);
+        const { featureToggleService, featureStrategiesStore } =
+            createFakeFeatureToggleService({
+                getLogger,
+                flagResolver: alwaysOnFlagResolver,
+                resourceLimits: {
+                    constraints: LIMIT,
+                },
+            } as unknown as IUnleashConfig);
 
         const constraints: IConstraint[] = [
             {
@@ -124,29 +121,25 @@ describe('Strategy limits', () => {
             },
         ];
 
-        await featureToggleStore.create('default', {
-            name: 'feature',
-            createdByUserId: 1,
-        });
+        const flagName = 'feature';
+
         await featureStrategiesStore.createFeature({
-            name: 'feature',
+            name: flagName,
             createdByUserId: 1,
         });
 
-        const strat = await featureStrategiesStore.createStrategyFeatureEnv({
+        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
             parameters: {},
             strategyName: 'default',
-            featureName: 'feature',
+            featureName: flagName,
             constraints: constraints,
             projectId: 'default',
             environment: 'default',
         });
 
-        console.log('created strat', strat);
-
         const updateStrategy = (newConstraints) =>
             featureToggleService.unprotectedUpdateStrategy(
-                strat.id,
+                strategy.id,
                 {
                     constraints: newConstraints,
                 },

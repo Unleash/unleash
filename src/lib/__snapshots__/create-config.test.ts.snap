@@ -104,6 +104,7 @@ exports[`should create default config 1`] = `
       "estimateTrafficDataCost": false,
       "extendedMetrics": false,
       "extendedUsageMetrics": false,
+      "featureCollaborators": false,
       "featureLifecycle": false,
       "featureSearchFeedback": {
         "enabled": false,

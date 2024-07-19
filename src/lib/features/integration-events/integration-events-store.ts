@@ -7,6 +7,8 @@ export type IntegrationEventWriteModel = Omit<
     'id' | 'createdAt'
 >;
 
+export type IntegrationEventState = IntegrationEventWriteModel['state'];
+
 export class IntegrationEventsStore extends CRUDStore<
     IntegrationEventSchema,
     IntegrationEventWriteModel

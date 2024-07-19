@@ -1,9 +1,11 @@
 import fetch from 'make-fetch-happen';
 import { addonDefinitionSchema } from './addon-schema';
-import type { IUnleashConfig } from '../types/option';
 import type { Logger } from '../logger';
-import type { IAddonDefinition } from '../types/model';
+import type { IAddonConfig, IAddonDefinition } from '../types/model';
 import type { IEvent } from '../types/events';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
+import type { IntegrationEventWriteModel } from '../features/integration-events/integration-events-store';
+import type { IFlagResolver } from '../types';
 
 export default abstract class Addon {
     logger: Logger;
@@ -12,9 +14,13 @@ export default abstract class Addon {
 
     _definition: IAddonDefinition;
 
+    integrationEventsService: IntegrationEventsService;
+
+    flagResolver: IFlagResolver;
+
     constructor(
         definition: IAddonDefinition,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger, integrationEventsService, flagResolver }: IAddonConfig,
     ) {
         this.logger = getLogger(`addon/${definition.name}`);
         const { error } = addonDefinitionSchema.validate(definition);
@@ -27,6 +33,8 @@ export default abstract class Addon {
         }
         this._name = definition.name;
         this._definition = definition;
+        this.integrationEventsService = integrationEventsService;
+        this.flagResolver = flagResolver;
     }
 
     get name(): string {
@@ -60,13 +68,25 @@ export default abstract class Addon {
                 } status code ${e.code}`,
                 e,
             );
-            res = { statusCode: e.code, ok: false };
+            res = { status: e.code, ok: false };
         }
         return res;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    abstract handleEvent(event: IEvent, parameters: any): Promise<void>;
+    abstract handleEvent(
+        event: IEvent,
+        parameters: any,
+        integrationId: number,
+    ): Promise<void>;
+
+    async registerEvent(
+        integrationEvent: IntegrationEventWriteModel,
+    ): Promise<void> {
+        if (this.flagResolver.isEnabled('integrationEvents')) {
+            await this.integrationEventsService.registerEvent(integrationEvent);
+        }
+    }
 
     destroy?(): void;
 }

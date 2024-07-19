@@ -44,6 +44,7 @@ export default class NewRelicAddon extends Addon {
     async handleEvent(
         event: IEvent,
         parameters: INewRelicParameters,
+        integrationId: number,
     ): Promise<void> {
         const { url, licenseKey, customHeaders, bodyTemplate } = parameters;
         const context = {

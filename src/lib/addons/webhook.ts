@@ -1,8 +1,9 @@
 import Mustache from 'mustache';
 import Addon from './addon';
 import definition from './webhook-definition';
-import type { LogProvider } from '../logger';
 import type { IEvent } from '../types/events';
+import { type IAddonConfig, serializeDates } from '../types';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
 
 interface IParameters {
     url: string;
@@ -13,11 +14,18 @@ interface IParameters {
 }
 
 export default class Webhook extends Addon {
-    constructor(args: { getLogger: LogProvider }) {
+    constructor(args: IAddonConfig) {
         super(definition, args);
     }
 
-    async handleEvent(event: IEvent, parameters: IParameters): Promise<void> {
+    async handleEvent(
+        event: IEvent,
+        parameters: IParameters,
+        integrationId: number,
+    ): Promise<void> {
+        let state: IntegrationEventState = 'success';
+        let stateDetails = '';
+
         const { url, bodyTemplate, contentType, authorization, customHeaders } =
             parameters;
         const context = {
@@ -39,9 +47,10 @@ export default class Webhook extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                this.logger.warn(
-                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
-                );
+                state = 'successWithErrors';
+                stateDetails =
+                    'Could not parse the JSON in the customHeaders parameter.';
+                this.logger.warn(stateDetails);
             }
         }
         const requestOpts = {
@@ -58,5 +67,24 @@ export default class Webhook extends Addon {
         this.logger.info(
             `Handled event "${event.type}". Status code: ${res.status}`,
         );
+
+        if (res.ok) {
+            stateDetails = `Webhook request was successful with status code: ${res.status}`;
+        } else {
+            state = 'failed';
+            stateDetails = `Webhook request failed with status code: ${res.status}`;
+        }
+
+        this.registerEvent({
+            integrationId,
+            state,
+            stateDetails,
+            event: serializeDates(event),
+            details: {
+                url,
+                contentType,
+                body,
+            },
+        });
     }
 }

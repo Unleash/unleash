@@ -9,8 +9,18 @@ import type { Logger } from '../logger';
 import DatadogAddon from './datadog';
 
 import noLogger from '../../test/fixtures/no-logger';
+import type { IAddonConfig, IFlagResolver } from '../types';
+import type { IntegrationEventsService } from '../services';
 
 let fetchRetryCalls: any[] = [];
+
+const INTEGRATION_ID = 1337;
+const ARGS: IAddonConfig = {
+    getLogger: noLogger,
+    unleashUrl: 'http://some-url.com',
+    integrationEventsService: {} as IntegrationEventsService,
+    flagResolver: {} as IFlagResolver,
+};
 
 jest.mock(
     './addon',
@@ -32,14 +42,15 @@ jest.mock(
                 });
                 return Promise.resolve({ status: 200 });
             }
+
+            async registerEvent(_) {
+                return Promise.resolve();
+            }
         },
 );
 
 test('Should call datadog webhook', async () => {
-    const addon = new DatadogAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new DatadogAddon(ARGS);
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
@@ -59,17 +70,14 @@ test('Should call datadog webhook', async () => {
         apiKey: 'fakeKey',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test('Should call datadog webhook  for archived toggle', async () => {
-    const addon = new DatadogAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new DatadogAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -87,17 +95,14 @@ test('Should call datadog webhook  for archived toggle', async () => {
         apiKey: 'fakeKey',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test('Should call datadog webhook  for archived toggle with project info', async () => {
-    const addon = new DatadogAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new DatadogAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -116,17 +121,14 @@ test('Should call datadog webhook  for archived toggle with project info', async
         apiKey: 'fakeKey',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
 test('Should call datadog webhook for toggled environment', async () => {
-    const addon = new DatadogAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new DatadogAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -146,7 +148,7 @@ test('Should call datadog webhook for toggled environment', async () => {
         apiKey: 'fakeKey',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls).toHaveLength(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
@@ -154,10 +156,7 @@ test('Should call datadog webhook for toggled environment', async () => {
 });
 
 test('Should include customHeaders in headers when calling service', async () => {
-    const addon = new DatadogAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new DatadogAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -177,7 +176,7 @@ test('Should include customHeaders in headers when calling service', async () =>
         apiKey: 'fakeKey',
         customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
     };
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls).toHaveLength(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
@@ -186,10 +185,7 @@ test('Should include customHeaders in headers when calling service', async () =>
 });
 
 test('Should not include source_type_name when included in the config', async () => {
-    const addon = new DatadogAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new DatadogAddon(ARGS);
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -210,7 +206,7 @@ test('Should not include source_type_name when included in the config', async ()
         sourceTypeName: 'my-custom-source-type',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls).toHaveLength(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatch(
@@ -221,10 +217,7 @@ test('Should not include source_type_name when included in the config', async ()
 });
 
 test('Should call datadog webhook with JSON when template set', async () => {
-    const addon = new DatadogAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
+    const addon = new DatadogAddon(ARGS);
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
@@ -246,7 +239,7 @@ test('Should call datadog webhook with JSON when template set', async () => {
             '{\n  "event": "{{event.type}}",\n  "createdBy": "{{event.createdBy}}"\n}',
     };
 
-    await addon.handleEvent(event, parameters);
+    await addon.handleEvent(event, parameters, INTEGRATION_ID);
     expect(fetchRetryCalls.length).toBe(1);
     expect(fetchRetryCalls[0].url).toBe(parameters.url);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();

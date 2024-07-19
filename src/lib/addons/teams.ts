@@ -24,6 +24,7 @@ export default class TeamsAddon extends Addon {
     async handleEvent(
         event: IEvent,
         parameters: ITeamsParameters,
+        integrationId: number,
     ): Promise<void> {
         const { url, customHeaders } = parameters;
         const { createdBy } = event;

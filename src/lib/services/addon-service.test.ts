@@ -15,8 +15,9 @@ import type { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import type { IAddonProviders } from '../addons';
 import EventService from '../features/events/event-service';
-import { SYSTEM_USER, TEST_AUDIT_USER } from '../types';
+import { type IFlagResolver, SYSTEM_USER, TEST_AUDIT_USER } from '../types';
 import EventEmitter from 'node:events';
+import { IntegrationEventsService } from '../internals';
 
 const MASKED_VALUE = '*****';
 
@@ -35,6 +36,10 @@ function getSetup() {
         { getLogger },
         eventService,
     );
+    const integrationEventsService = new IntegrationEventsService(stores, {
+        getLogger,
+        flagResolver: {} as IFlagResolver,
+    });
 
     addonProvider = { simple: new SimpleAddon() };
     return {
@@ -47,6 +52,7 @@ function getSetup() {
             },
             tagTypeService,
             eventService,
+            integrationEventsService,
             addonProvider,
         ),
         eventService,

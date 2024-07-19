@@ -4,6 +4,9 @@ Feature flags, also known as feature toggles, allow developers to enable or disa
 
 Feature flags work by wrapping a piece of code with a conditional statement that checks the status of a variable, called a flag. If the flag is enabled, the new code executes; if not, the existing or alternative code path runs. That flag can then be toggled (hence, feature toggles) dynamically at runtime. This enables features to be merged into the main codebase but remain dormant until they are ready to be activated.
 
+<Figure img="/img/feature-flag-example.png" caption="At its most basic level, a feature flag is a conditional statement that checks the status of a variable. The value of the variable determines if the code path is enabled or disabled."/>
+
+
 ### Benefits of Feature Flags
 
 Feature flags are a key part of DevOps, and help speed up the software development process. Feature flags:
@@ -25,6 +28,9 @@ Feature flags facilitate A/B testing by allowing different user segments to expe
 #### Kill Switches and Rollbacks
 
 Kill switches provide the ability to quickly disable a feature if it starts causing issues in production. This minimizes the impact on users and allows for immediate rollback without requiring a new deployment. Read more about how to do [Kill Switches](https://www.getunleash.io/feature-flag-use-cases-software-kill-switches) and [Rollbacks](https://www.getunleash.io/feature-flag-use-cases-rollbacks) with Unleash.
+
+<Figure img="/img/feature-flag-rollback.png" caption="Feature flags provide the ability to turn off code paths in production without deploying new code. This is useful when unexpected bugs pop up or in break-glass scenarios."/>
+
 
 #### Trunk-Based Development
 

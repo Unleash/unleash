@@ -18,14 +18,19 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_strategy_auth_api_serial', getLogger);
-    app = await setupAppWithAuth(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
-                anonymiseEventLog: true,
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    anonymiseEventLog: true,
+                    featureCollaborators: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterEach(async () => {
@@ -140,7 +145,7 @@ test('Should not be possible auto-enable feature flag without CREATE_FEATURE_STR
         .expect(403);
 });
 
-test('Should read flag creator', async () => {
+test('Should read flag creator and collaborators', async () => {
     const email = 'user@getunleash.io';
     const url = '/api/admin/projects/default/features/';
     const name = 'creator.flag';
@@ -153,10 +158,14 @@ test('Should read flag creator', async () => {
         TEST_AUDIT_USER,
     );
 
-    await db.stores.featureToggleStore.create('default', {
-        name,
-        createdByUserId: user.id,
-    });
+    await app.services.featureToggleService.createFeatureToggle(
+        'default',
+        {
+            name,
+            createdByUserId: user.id,
+        },
+        { id: user.id, username: 'irrelevant', ip: '::1' },
+    );
 
     await app.request.post('/auth/demo/login').send({
         email,
@@ -166,10 +175,16 @@ test('Should read flag creator', async () => {
         .get(`${url}/${name}`)
         .expect(200);
 
-    expect(feature.createdBy).toEqual({
+    const expectedUser = {
         id: user.id,
         name: '3957b71c0@unleash.run',
         imageUrl:
             'https://gravatar.com/avatar/3957b71c0a6d2528f03b423f432ed2efe855d263400f960248a1080493d9d68a?s=42&d=retro&r=g',
+    };
+
+    expect(feature.createdBy).toEqual(expectedUser);
+
+    expect(feature.collaborators).toStrictEqual({
+        users: [expectedUser],
     });
 });

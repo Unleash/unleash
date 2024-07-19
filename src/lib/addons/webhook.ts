@@ -24,7 +24,7 @@ export default class Webhook extends Addon {
         integrationId: number,
     ): Promise<void> {
         let state: IntegrationEventState = 'success';
-        let stateDetails = '';
+        const stateDetails: string[] = [];
 
         const { url, bodyTemplate, contentType, authorization, customHeaders } =
             parameters;
@@ -47,10 +47,11 @@ export default class Webhook extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                state = 'successWithErrors';
-                stateDetails =
+                const detailMessage =
                     'Could not parse the JSON in the customHeaders parameter.';
-                this.logger.warn(stateDetails);
+                state = 'successWithErrors';
+                stateDetails.push(detailMessage);
+                this.logger.warn(detailMessage);
             }
         }
         const requestOpts = {
@@ -64,21 +65,23 @@ export default class Webhook extends Addon {
         };
         const res = await this.fetchRetry(url, requestOpts);
 
-        this.logger.info(
-            `Handled event "${event.type}". Status code: ${res.status}`,
-        );
+        this.logger.info(`Handled event "${event.type}".`);
 
         if (res.ok) {
-            stateDetails = `Webhook request was successful with status code: ${res.status}`;
+            const detailMessage = `Webhook request was successful with status code: ${res.status}.`;
+            stateDetails.push(detailMessage);
+            this.logger.info(detailMessage);
         } else {
+            const detailMessage = `Webhook request failed with status code: ${res.status}.`;
             state = 'failed';
-            stateDetails = `Webhook request failed with status code: ${res.status}`;
+            stateDetails.push(detailMessage);
+            this.logger.warn(detailMessage);
         }
 
         this.registerEvent({
             integrationId,
             state,
-            stateDetails,
+            stateDetails: stateDetails.join('\n'),
             event: serializeDates(event),
             details: {
                 url,

@@ -255,7 +255,7 @@ describe('Strategy limits', () => {
         // check that you can save fewer constraint values but still over the limit
         await updateStrategy(initialConstraintValueCount - 1);
 
-        // check that you can't save more constraints
+        // check that you can't save more constraint values
         await expect(async () =>
             updateStrategy(initialConstraintValueCount + 1),
         ).rejects.toThrow(

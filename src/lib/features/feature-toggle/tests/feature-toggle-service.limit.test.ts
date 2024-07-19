@@ -93,8 +93,6 @@ describe('Strategy limits', () => {
     });
 
     test('Should not throw limit exceeded errors if the new number of constraints is less than or equal to the previous number', async () => {
-        let activateResourceLimits = false;
-
         const LIMIT = 1;
         const {
             featureToggleService,
@@ -102,11 +100,7 @@ describe('Strategy limits', () => {
             featureStrategiesStore,
         } = createFakeFeatureToggleService({
             getLogger,
-            flagResolver: {
-                isEnabled() {
-                    return activateResourceLimits;
-                },
-            },
+            flagResolver: alwaysOnFlagResolver,
             resourceLimits: {
                 constraints: LIMIT,
             },
@@ -139,17 +133,16 @@ describe('Strategy limits', () => {
             createdByUserId: 1,
         });
 
-        const strat = await featureToggleService.unprotectedCreateStrategy(
-            {
-                name: 'default',
-                featureName: 'feature',
-                constraints: constraints,
-            } as IStrategyConfig,
-            { projectId: 'default', featureName: 'feature' } as any,
-            {} as IAuditUser,
-        );
+        const strat = await featureStrategiesStore.createStrategyFeatureEnv({
+            parameters: {},
+            strategyName: 'default',
+            featureName: 'feature',
+            constraints: constraints,
+            projectId: 'default',
+            environment: 'default',
+        });
 
-        activateResourceLimits = true;
+        console.log('created strat', strat);
 
         const updateStrategy = (newConstraints) =>
             featureToggleService.unprotectedUpdateStrategy(

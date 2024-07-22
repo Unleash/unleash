@@ -190,7 +190,7 @@ export default class SlackAppAddon extends Addon {
     registerEarlyFailureEvent(
         integrationId: number,
         event: IEvent,
-        earlyFailureMessage,
+        earlyFailureMessage: string,
     ): void {
         this.registerEvent({
             integrationId,

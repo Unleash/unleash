@@ -4,7 +4,7 @@ import useSWRInfinite, {
     type SWRInfiniteKeyLoader,
 } from 'swr/infinite';
 import { formatApiPath } from 'utils/formatPath';
-import type { IntegrationEventsSchema } from '@server/openapi/spec/integration-events-schema';
+import type { IntegrationEvents } from 'interfaces/integrationEvent';
 import { useUiFlag } from 'hooks/useUiFlag';
 import AccessContext from 'contexts/AccessContext';
 import handleErrorResponses from '../httpErrorResponseHandler';
@@ -25,7 +25,7 @@ export const useIntegrationEvents = (
 
     const getKey: SWRInfiniteKeyLoader = (
         pageIndex: number,
-        previousPageData: IntegrationEventsSchema,
+        previousPageData: IntegrationEvents,
     ) => {
         // Does not meet conditions
         if (!integrationId || !isAdmin || !integrationEventsEnabled)
@@ -43,7 +43,7 @@ export const useIntegrationEvents = (
     };
 
     const { data, error, size, setSize, mutate } =
-        useSWRInfinite<IntegrationEventsSchema>(getKey, fetcher, {
+        useSWRInfinite<IntegrationEvents>(getKey, fetcher, {
             ...options,
             revalidateAll: true,
         });

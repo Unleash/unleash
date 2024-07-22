@@ -65,6 +65,13 @@ export interface IFeatureToggle {
         name: string;
         imageUrl: string;
     };
+    collaborators?: {
+        users: Array<{
+            id: number;
+            name: string;
+            imageUrl: string;
+        }>;
+    };
 }
 
 export interface IDependency {

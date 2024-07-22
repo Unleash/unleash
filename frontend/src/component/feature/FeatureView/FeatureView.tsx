@@ -50,6 +50,7 @@ import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
+import { Contributors as Collaborators } from './Contributors';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -113,8 +114,14 @@ const StyledSeparator = styled('div')(({ theme }) => ({
     height: '1px',
 }));
 
+const StyledTabRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+}));
+
 const StyledTabContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 4),
+    flex: '1',
 }));
 
 const StyledTabButton = styled(Tab)(({ theme }) => ({
@@ -355,23 +362,26 @@ export const FeatureView = () => {
                     </StyledToolbarContainer>
                 </StyledInnerContainer>
                 <StyledSeparator />
-                <StyledTabContainer>
-                    <Tabs
-                        value={activeTab.path}
-                        indicatorColor='primary'
-                        textColor='primary'
-                    >
-                        {tabData.map((tab) => (
-                            <StyledTabButton
-                                key={tab.title}
-                                label={tab.title}
-                                value={tab.path}
-                                onClick={() => navigate(tab.path)}
-                                data-testid={`TAB-${tab.title}`}
-                            />
-                        ))}
-                    </Tabs>
-                </StyledTabContainer>
+                <StyledTabRow>
+                    <StyledTabContainer>
+                        <Tabs
+                            value={activeTab.path}
+                            indicatorColor='primary'
+                            textColor='primary'
+                        >
+                            {tabData.map((tab) => (
+                                <StyledTabButton
+                                    key={tab.title}
+                                    label={tab.title}
+                                    value={tab.path}
+                                    onClick={() => navigate(tab.path)}
+                                    data-testid={`TAB-${tab.title}`}
+                                />
+                            ))}
+                        </Tabs>
+                    </StyledTabContainer>
+                    <Collaborators collaborators={feature.collaborators} />
+                </StyledTabRow>
             </StyledHeader>
             <Routes>
                 <Route path='metrics' element={<FeatureMetrics />} />

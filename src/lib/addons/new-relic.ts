@@ -2,7 +2,12 @@ import Addon from './addon';
 
 import definition from './new-relic-definition';
 import Mustache from 'mustache';
-import type { IAddonConfig, IEvent, IEventType } from '../types';
+import {
+    type IAddonConfig,
+    type IEvent,
+    type IEventType,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -10,6 +15,7 @@ import {
 } from './feature-event-formatter-md';
 import { gzip } from 'node:zlib';
 import { promisify } from 'util';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
 
 const asyncGzip = promisify(gzip);
 
@@ -46,6 +52,9 @@ export default class NewRelicAddon extends Addon {
         parameters: INewRelicParameters,
         integrationId: number,
     ): Promise<void> {
+        let state: IntegrationEventState = 'success';
+        const stateDetails: string[] = [];
+
         const { url, licenseKey, customHeaders, bodyTemplate } = parameters;
         const context = {
             event,
@@ -74,9 +83,11 @@ export default class NewRelicAddon extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                this.logger.warn(
-                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
-                );
+                state = 'successWithErrors';
+                const badHeadersMessage =
+                    'Could not parse the JSON in the customHeaders parameter.';
+                stateDetails.push(badHeadersMessage);
+                this.logger.warn(badHeadersMessage);
             }
         }
 
@@ -92,8 +103,29 @@ export default class NewRelicAddon extends Addon {
         };
 
         const res = await this.fetchRetry(url, requestOpts);
-        this.logger.info(
-            `Handled event ${event.type}. Status codes=${res.status}`,
-        );
+
+        this.logger.info(`Handled event "${event.type}".`);
+
+        if (res.ok) {
+            const successMessage = `New Relic Events API request was successful with status code: ${res.status}.`;
+            stateDetails.push(successMessage);
+            this.logger.info(successMessage);
+        } else {
+            state = 'failed';
+            const failedMessage = `New Relic Events API request failed with status code: ${res.status}.`;
+            stateDetails.push(failedMessage);
+            this.logger.warn(failedMessage);
+        }
+
+        this.registerEvent({
+            integrationId,
+            state,
+            stateDetails: stateDetails.join('\n'),
+            event: serializeDates(event),
+            details: {
+                url,
+                body,
+            },
+        });
     }
 }

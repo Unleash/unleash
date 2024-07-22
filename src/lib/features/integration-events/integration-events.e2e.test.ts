@@ -1,7 +1,7 @@
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     type IUnleashTest,
-    setupAppWithAuth,
+    setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { TEST_AUDIT_USER } from '../../types';
@@ -37,7 +37,7 @@ const EVENT_FAILED: IntegrationEventWriteModel = {
 
 beforeAll(async () => {
     db = await dbInit('integration_events', getLogger);
-    app = await setupAppWithAuth(
+    app = await setupAppWithCustomConfig(
         db.stores,
         {
             experimental: {
@@ -191,4 +191,17 @@ test('clean up events, keeping the last 100 events', async () => {
     );
 
     expect(events).toHaveLength(100);
+});
+
+test('return events from the API', async () => {
+    await integrationEventsService.registerEvent(getTestEventSuccess());
+    await integrationEventsService.registerEvent(getTestEventFailed());
+
+    const { body } = await app.request.get(
+        `/api/admin/addons/${integrationId}/events`,
+    );
+
+    expect(body.integrationEvents).toHaveLength(2);
+    expect(body.integrationEvents[0].state).toBe('failed');
+    expect(body.integrationEvents[1].state).toBe('success');
 });

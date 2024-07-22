@@ -57,9 +57,9 @@ export default class SlackAddon extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
+                state = 'successWithErrors';
                 const detailMessage =
                     'Could not parse the JSON in the customHeaders parameter.';
-                state = 'successWithErrors';
                 stateDetails.push(detailMessage);
                 this.logger.warn(detailMessage);
             }
@@ -113,13 +113,13 @@ export default class SlackAddon extends Addon {
             stateDetails.push(detailMessage);
             this.logger.info(detailMessage);
         } else if (failedRequests.length === results.length) {
-            const detailMessage = `All (${results.length}) Slack webhook requests failed with status codes: ${codes}.`;
             state = 'failed';
+            const detailMessage = `All (${results.length}) Slack webhook requests failed with status codes: ${codes}.`;
             stateDetails.push(detailMessage);
             this.logger.warn(detailMessage);
         } else {
-            const detailMessage = `Some (${failedRequests.length} of ${results.length}) Slack webhook requests failed. Status codes: ${codes}.`;
             state = 'successWithErrors';
+            const detailMessage = `Some (${failedRequests.length} of ${results.length}) Slack webhook requests failed. Status codes: ${codes}.`;
             stateDetails.push(detailMessage);
             this.logger.warn(detailMessage);
         }
@@ -133,7 +133,7 @@ export default class SlackAddon extends Addon {
                 url,
                 channels: slackChannels,
                 username,
-                text,
+                message: text,
             },
         });
     }

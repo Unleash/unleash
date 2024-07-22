@@ -13,13 +13,14 @@ import {
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
-import type { IAddonConfig } from '../types/model';
+import { type IAddonConfig, serializeDates } from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
 
 interface ISlackAppAddonParameters {
     accessToken: string;
@@ -46,30 +47,42 @@ export default class SlackAppAddon extends Addon {
         parameters: ISlackAppAddonParameters,
         integrationId: number,
     ): Promise<void> {
+        let state: IntegrationEventState = 'success';
+        const stateDetails: string[] = [];
+        let channels: string[] = [];
+        let message = '';
+
         try {
             const { accessToken, defaultChannels } = parameters;
             if (!accessToken) {
-                this.logger.warn('No access token provided.');
+                const noAccessTokenMessage = 'No access token provided.';
+                this.logger.warn(noAccessTokenMessage);
+                this.registerEarlyFailureEvent(
+                    integrationId,
+                    event,
+                    noAccessTokenMessage,
+                );
                 return;
             }
 
             const taggedChannels = this.findTaggedChannels(event);
-            const eventChannels = [
-                ...new Set(
-                    taggedChannels.concat(
-                        this.getDefaultChannels(defaultChannels),
-                    ),
-                ),
-            ];
+            channels = this.getUniqueArray(
+                taggedChannels.concat(this.getDefaultChannels(defaultChannels)),
+            );
 
-            if (!eventChannels.length) {
-                this.logger.debug(
-                    `No Slack channels found for event ${event.type}.`,
+            if (!channels.length) {
+                const noSlackChannelsMessage = `No Slack channels found for event ${event.type}.`;
+                this.logger.debug(noSlackChannelsMessage);
+                this.registerEarlyFailureEvent(
+                    integrationId,
+                    event,
+                    noSlackChannelsMessage,
                 );
                 return;
             }
+
             this.logger.debug(
-                `Found candidate channels: ${JSON.stringify(eventChannels)}.`,
+                `Found candidate channels: ${JSON.stringify(channels)}.`,
             );
 
             if (!this.slackClient || this.accessToken !== accessToken) {
@@ -84,6 +97,7 @@ export default class SlackAppAddon extends Addon {
             }
 
             const { text, url } = this.msgFormatter.format(event);
+            message = text;
 
             const blocks: (Block | KnownBlock)[] = [
                 {
@@ -113,7 +127,7 @@ export default class SlackAppAddon extends Addon {
                 });
             }
 
-            const requests = eventChannels.map((name) => {
+            const requests = channels.map((name) => {
                 return this.slackClient!.chat.postMessage({
                     channel: name,
                     text,
@@ -123,21 +137,71 @@ export default class SlackAppAddon extends Addon {
 
             const results = await Promise.allSettled(requests);
 
-            results
-                .filter(({ status }) => status === 'rejected')
-                .map(({ reason }: PromiseRejectedResult) =>
-                    this.logError(event, reason),
-                );
-
-            this.logger.info(
-                `Handled event ${event.type} dispatching ${
-                    results.filter(({ status }) => status === 'fulfilled')
-                        .length
-                } out of ${requests.length} messages successfully.`,
+            const failedRequests = results.filter(
+                ({ status }) => status === 'rejected',
             );
+            const errors = this.getUniqueArray(
+                failedRequests.map(({ reason }: PromiseRejectedResult) =>
+                    this.parseError(reason),
+                ),
+            ).join(' ');
+
+            if (failedRequests.length === 0) {
+                const successMessage = `All (${results.length}) Slack client calls were successful.`;
+                stateDetails.push(successMessage);
+                this.logger.info(successMessage);
+            } else if (failedRequests.length === results.length) {
+                state = 'failed';
+                const failedMessage = `All (${results.length}) Slack client calls failed with the following errors: ${errors}`;
+                stateDetails.push(failedMessage);
+                this.logger.warn(failedMessage);
+            } else {
+                state = 'successWithErrors';
+                const successWithErrorsMessage = `Some (${failedRequests.length} of ${results.length}) Slack client calls failed. Errors: ${errors}`;
+                stateDetails.push(successWithErrorsMessage);
+                this.logger.warn(successWithErrorsMessage);
+            }
         } catch (error) {
-            this.logError(event, error);
+            state = 'failed';
+            const eventErrorMessage = `Error handling event ${event.type}.`;
+            stateDetails.push(eventErrorMessage);
+            this.logger.warn(eventErrorMessage);
+            const errorMessage = this.parseError(error);
+            stateDetails.push(errorMessage);
+            this.logger.warn(errorMessage, error);
+        } finally {
+            this.registerEvent({
+                integrationId,
+                state,
+                stateDetails: stateDetails.join('\n'),
+                event: serializeDates(event),
+                details: {
+                    channels,
+                    message,
+                },
+            });
         }
+    }
+
+    getUniqueArray<T>(arr: T[]): T[] {
+        return [...new Set(arr)];
+    }
+
+    registerEarlyFailureEvent(
+        integrationId: number,
+        event: IEvent,
+        earlyFailureMessage,
+    ): void {
+        this.registerEvent({
+            integrationId,
+            state: 'failed',
+            stateDetails: earlyFailureMessage,
+            event: serializeDates(event),
+            details: {
+                channels: [],
+                message: '',
+            },
+        });
     }
 
     findTaggedChannels({ tags }: Pick<IEvent, 'tags'>): string[] {
@@ -156,39 +220,27 @@ export default class SlackAppAddon extends Addon {
         return [];
     }
 
-    logError(event: IEvent, error: Error | CodedError): void {
-        if (!('code' in error)) {
-            this.logger.warn(`Error handling event ${event.type}.`, error);
-            return;
+    parseError(error: Error | CodedError): string {
+        if ('code' in error) {
+            if (error.code === ErrorCode.PlatformError) {
+                const { data } = error as WebAPIPlatformError;
+                return `A platform error occurred: ${JSON.stringify(data)}`;
+            }
+            if (error.code === ErrorCode.RequestError) {
+                const { original } = error as WebAPIRequestError;
+                return `A request error occurred: ${JSON.stringify(original)}`;
+            }
+            if (error.code === ErrorCode.RateLimitedError) {
+                const { retryAfter } = error as WebAPIRateLimitedError;
+                return `A rate limit error occurred: retry after ${retryAfter} seconds`;
+            }
+            if (error.code === ErrorCode.HTTPError) {
+                const { statusCode } = error as WebAPIHTTPError;
+                return `An HTTP error occurred: status code ${statusCode}`;
+            }
         }
 
-        if (error.code === ErrorCode.PlatformError) {
-            const { data } = error as WebAPIPlatformError;
-            this.logger.warn(
-                `Error handling event ${event.type}. A platform error occurred: ${JSON.stringify(data)}`,
-                error,
-            );
-        } else if (error.code === ErrorCode.RequestError) {
-            const { original } = error as WebAPIRequestError;
-            this.logger.warn(
-                `Error handling event ${event.type}. A request error occurred: ${JSON.stringify(original)}`,
-                error,
-            );
-        } else if (error.code === ErrorCode.RateLimitedError) {
-            const { retryAfter } = error as WebAPIRateLimitedError;
-            this.logger.warn(
-                `Error handling event ${event.type}. A rate limit error occurred: retry after ${retryAfter} seconds`,
-                error,
-            );
-        } else if (error.code === ErrorCode.HTTPError) {
-            const { statusCode } = error as WebAPIHTTPError;
-            this.logger.warn(
-                `Error handling event ${event.type}. An HTTP error occurred: status code ${statusCode}`,
-                error,
-            );
-        } else {
-            this.logger.warn(`Error handling event ${event.type}.`, error);
-        }
+        return error.message;
     }
 }
 

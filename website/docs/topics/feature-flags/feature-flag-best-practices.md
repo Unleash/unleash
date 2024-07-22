@@ -1,5 +1,5 @@
 ---
-title: 11 Principles for building and scaling feature flag systems
+title: "Feature flags: Best practices for building and scaling feature flag systems"
 ---
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
@@ -10,17 +10,18 @@ There are 11 principles for building a large-scale feature flag system. These pr
 
 These principles are:
 
-- [1. Enable run-time control. Control flags dynamically, not using config files.](#1-enable-run-time-control-control-flags-dynamically-not-using-config-files)
-- [2. Never expose PII. Follow the principle of least privilege.](#2-never-expose-pii-follow-the-principle-of-least-privilege)
-- [3. Evaluate flags as close to the user as possible. Reduce latency.](#3-evaluate-flags-as-close-to-the-user-as-possible-reduce-latency)
-- [4. Scale Horizontally. Decouple reading and writing flags.](#4-scale-horizontally-decouple-reading-and-writing-flags)
-- [5. Limit payloads. Feature flag payload should be as small as possible.](#5-limit-payloads-feature-flag-payload-should-be-as-small-as-possible)
-- [6. Design for failure. Favor availability over consistency.](#6-design-for-failure-favor-availability-over-consistency)
-- [7. Make feature flags short-lived. Do not confuse flags with application configuration.](#7-make-feature-flags-short-lived-do-not-confuse-flags-with-application-configuration)
-- [8. Use unique names across all applications. Enforce naming conventions.](#8-use-unique-names-across-all-applications-enforce-naming-conventions)
-- [9. Choose open by default. Democratize feature flag access.](#9-choose-open-by-default-democratize-feature-flag-access)
-- [10. Do no harm. Prioritize consistent user experience.](#10-do-no-harm-prioritize-consistent-user-experience)
-- [11. Enable traceability. Make it easy to understand flag evaluation.](#11-enable-traceability-make-it-easy-to-understand-flag-evaluation)
+-   [Background](#background)
+-   [1. Enable run-time control. Control flags dynamically, not using config files.](#1-enable-run-time-control-control-flags-dynamically-not-using-config-files)
+-   [2. Never expose PII. Follow the principle of least privilege.](#2-never-expose-pii-follow-the-principle-of-least-privilege)
+-   [3. Evaluate flags as close to the user as possible. Reduce latency.](#3-evaluate-flags-as-close-to-the-user-as-possible-reduce-latency)
+-   [4. Scale Horizontally. Decouple reading and writing flags.](#4-scale-horizontally-decouple-reading-and-writing-flags)
+-   [5. Limit payloads. Feature flag payload should be as small as possible.](#5-limit-payloads-feature-flag-payload-should-be-as-small-as-possible)
+-   [6. Design for failure. Favor availability over consistency.](#6-design-for-failure-favor-availability-over-consistency)
+-   [7. Make feature flags short-lived. Do not confuse flags with application configuration.](#7-make-feature-flags-short-lived-do-not-confuse-flags-with-application-configuration)
+-   [8. Use unique names across all applications. Enforce naming conventions.](#8-use-unique-names-across-all-applications-enforce-naming-conventions)
+-   [9. Choose open by default. Democratize feature flag access.](#9-choose-open-by-default-democratize-feature-flag-access)
+-   [10. Do no harm. Prioritize consistent user experience.](#10-do-no-harm-prioritize-consistent-user-experience)
+-   [11. Enable traceability. Make it easy to understand flag evaluation.](#11-enable-traceability-make-it-easy-to-understand-flag-evaluation)
 
 ## Background
 

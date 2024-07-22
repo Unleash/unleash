@@ -39,167 +39,187 @@ module.exports = {
         'welcome',
         'quickstart',
         {
-            label: 'Feature Flag Best Practices',
-            collapsed: true,
+            label: 'Feature Flags Developer Guide',
             type: 'category',
             link: {
                 type: 'generated-index',
-                title: 'Feature Flag Best Practices',
+                title: 'Feature Flag Developer Guide',
                 description:
-                    'Principles and recommendations for best practices of using feature flags.',
+                    'What are feature flags? And other concepts to get you started.',
                 slug: '/topics',
             },
             items: [
-                'topics/feature-flags/feature-flag-best-practices',
-                'topics/feature-flags/best-practices-using-feature-flags-at-scale',
-                'topics/feature-flag-migration/feature-flag-migration-best-practices',
-                'topics/a-b-testing',
+                {
+                    label: 'Feature Flag Concepts',
+                    collapsed: true,
+                    type: 'category',
+                    items: ['topics/concepts/what-is-a-feature-flag'],
+                },
+                {
+                    label: 'Feature Flag Best Practices',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Feature Flag Best Practices',
+                        description:
+                            'Principles and recommendations for best practices of using feature flags.',
+                        slug: 'topics/feature-flags/',
+                    },
+                    items: [
+                        'topics/feature-flags/feature-flag-best-practices',
+                        'topics/feature-flags/best-practices-using-feature-flags-at-scale',
+                        'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                        'topics/a-b-testing',
+                    ],
+                },
+                {
+                    label: 'Feature Flag Tutorials',
+                    type: 'category',
+                    collapsed: true,
+                    link: {
+                        type: 'generated-index',
+                        title: 'Feature Flag Tutorials',
+                        description:
+                            'Tutorials to implement feature flags with your framework.',
+                        slug: 'feature-flag-tutorials',
+                    },
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'React',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'feature-flag-tutorials/react/examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Python',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/python/implementing-feature-flags',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'feature-flag-tutorials/python/examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Java',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/java/implementing-feature-flags',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Spring Boot',
+                                    id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Spring Boot Examples',
+                                    id: 'feature-flag-tutorials/java/spring-boot-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Ruby',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'feature-flag-tutorials/ruby/ruby-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: '.NET',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'feature-flag-tutorials/dotnet/dotnet-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'iOS',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/ios/implementing-feature-flags',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'feature-flag-tutorials/ios/examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Rust',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'feature-flag-tutorials/rust/rust-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Serverless',
+                            id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Flutter',
+                            id: 'feature-flag-tutorials/flutter/a-b-testing',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Next.js',
+                            id: 'feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'SvelteKit',
+                            id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
+                        },
+                    ],
+                },
             ],
         },
-        {
-            label: 'Feature Flag Tutorials',
-            type: 'category',
-            collapsed: true,
-            link: {
-                type: 'generated-index',
-                title: 'Feature Flag Tutorials',
-                description:
-                    'Tutorials to implement feature flags with your framework.',
-                slug: 'feature-flag-tutorials',
-            },
-            items: [
-                {
-                    type: 'category',
-                    label: 'React',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/react/implementing-feature-flags',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Examples',
-                            id: 'feature-flag-tutorials/react/examples',
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Python',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/python/implementing-feature-flags',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Examples',
-                            id: 'feature-flag-tutorials/python/examples',
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Java',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/java/implementing-feature-flags',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Spring Boot',
-                            id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
-                        },
-                        {
-                            type: 'doc',
-                            label: 'Spring Boot Examples',
-                            id: 'feature-flag-tutorials/java/spring-boot-examples',
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Ruby',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Examples',
-                            id: 'feature-flag-tutorials/ruby/ruby-examples',
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: '.NET',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Examples',
-                            id: 'feature-flag-tutorials/dotnet/dotnet-examples',
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'iOS',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/ios/implementing-feature-flags',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Examples',
-                            id: 'feature-flag-tutorials/ios/examples',
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Rust',
-                    link: {
-                        type: 'doc',
-                        id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
-                    },
-                    items: [
-                        {
-                            type: 'doc',
-                            label: 'Examples',
-                            id: 'feature-flag-tutorials/rust/rust-examples',
-                        },
-                    ],
-                },
-                {
-                    type: 'doc',
-                    label: 'Serverless',
-                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
-                },
-                {
-                    type: 'doc',
-                    label: 'Flutter',
-                    id: 'feature-flag-tutorials/flutter/a-b-testing',
-                },
-                {
-                    type: 'doc',
-                    label: 'Next.js',
-                    id: 'feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs',
-                },
-                {
-                    type: 'doc',
-                    label: 'SvelteKit',
-                    id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
-                },
-            ],
-        },
+
         {
             label: 'Understanding Unleash',
             collapsed: false,

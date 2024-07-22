@@ -63,7 +63,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Features',
         description:
-            'Create, update, and delete [features flags](https://docs.getunleash.io/reference/feature-toggles).',
+            'Create, update, and delete [feature flags](https://docs.getunleash.io/reference/feature-toggles).',
     },
     {
         name: 'Frontend API',

@@ -186,7 +186,7 @@ You'll need the following variables at the very least
 
 | Variable name      | Purpose                                                    | Required | Possible values                                                                   |
 |--------------------|------------------------------------------------------------|----------|-----------------------------------------------------------------------------------|
-| SAML_AUTO_CREATE   | Tell Unleash to auto create users that sign in through SSO | No       | true or false (though false is the same as not setting it at all)                 |
+| SAML_AUTO_CREATE   | Tell Unleash to auto create users that sign in through SSO | No       | true or false (though false is the same as not setting it at all. Defaults to false)                 |
 | SAML_EMAIL_DOMAINS | These domains will have users auto created                 | No       | Comma-separated list of email domains that you want Unleash to accept users from. |
 
 ### Step 3 (optional) - Add sign-out config
@@ -204,5 +204,5 @@ disk or pass in the contents of `private.pem` as a string. You'll need the follo
 
 | Variable name             | Purpose                                                                                                | Required | Possible values |
 |---------------------------|--------------------------------------------------------------------------------------------------------|----------|-----------------|
-| SAML_ENABLE_GROUP_SYNCING | Tell Unleash to setup group syncing from SAML login requests                                           | No       | true or false   |
+| SAML_ENABLE_GROUP_SYNCING | Tell Unleash to setup group syncing from SAML login requests (defaults to false)                                           | No       | true or false   |
 | SAML_GROUP_JSON_PATH      | a json path expression telling where in the response Unleash can find the group membership information | No       |                 |

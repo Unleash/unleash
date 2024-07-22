@@ -105,9 +105,9 @@ Once these are configured OIDC should be working.
 | Variable name               | Purpose                                                                                                  | Required   | Example values              |
 |-----------------------------|----------------------------------------------------------------------------------------------------------|------------|-----------------------------|
 | --------------------------- | -------------------------------------------------------------------------------------------------------- | ---------- | -----------------           |
-| OIDC_ENABLE_GROUP_SYNCING   | Tell Unleash to setup group syncing from OIDC login requests                                             | No         | true or false               |
+| OIDC_ENABLE_GROUP_SYNCING   | Tell Unleash to setup group syncing from OIDC login requests (defaults to false)                                             | No         | true or false               |
 | OIDC_GROUP_JSON_PATH        | a json path expression telling where in the response Unleash can find the group membership information   | No         | groups                      |
-| OIDC_ADD_GROUPS_SCOPE       | Tells Unleash to add the `groups` access scope to the request                                            | No         | true / false                |                                                                    
+| OIDC_ADD_GROUPS_SCOPE       | Tells Unleash to add the `groups` access scope to the request (defaults to false)                                            | No         | true / false                |                                                                    
 | OIDC_DEFAULT_ROOT_ROLE      | Which role to grant users auto created from SSO, defaults to Viewer                                      | No         | 'Viewer', 'Editor', 'Admin' |
 
 ### Step 4 (optional) - Further customizations

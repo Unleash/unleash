@@ -87,7 +87,7 @@ the OIDC_ENABLED is not set and then restart Unleash.
 | Variable name      | Purpose                                                               | Required | Example values                                                |
 |--------------------|-----------------------------------------------------------------------|----------|---------------------------------------------------------------|
 | OIDC_ENABLED       | Tells Unleash to use environment variables for configuring OIDC       | yes      | true / false (false will turn off OIDC login)                 |
-| OIDC_DISCOVER_URL  | Tells Unleash how to configure OIDC                                   | yes      | https://myoidchost.azure.com/.well-known/openid-configuration | 
+| OIDC_DISCOVER_URL  | URL used to dynamically retrieve the OIDC configuration        | yes      | https://myoidchost.azure.com/.well-known/openid-configuration | 
 | OIDC_CLIENT_ID     | The OIDC client ID of this application.                               | yes      | FB87266D-CDDB-4BCF-BB1F-8392FD0EDC1B                          |
 | OIDC_CLIENT_SECRET | Shared secret from OpenID server. Used to authenticate login requests | yes      | qjcVfeFjEfoYAF3AEsX2IMUWYuUzAbXO                              |
 

@@ -6,6 +6,7 @@ import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import type { FC } from 'react';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -70,6 +71,7 @@ export const Limit: FC<{
     onClose?: () => void;
     className?: string;
 }> = ({ name, shortName, limit, currentValue, onClose, className }) => {
+    const { isOss } = useUiConfig();
     const percentageLimit = Math.floor((currentValue / limit) * 100);
     const belowLimit = currentValue < limit;
     const threshold = 80;
@@ -77,6 +79,21 @@ export const Limit: FC<{
     if (percentageLimit < threshold) {
         return null;
     }
+
+    const footerContent = isOss() ? (
+        <>
+            Need help with resource limits? Try the the{' '}
+            <a href='https://slack.unleash.run'>Unleash community Slack</a>.
+        </>
+    ) : (
+        <>
+            If you need more than <strong>{limit}</strong> {shortName ?? name},
+            please reach out to us at{' '}
+            <a href='mailto:cs@getunleash.io?subject=Increase limit'>
+                cs@getunleash.io
+            </a>
+        </>
+    );
 
     return (
         <StyledBox className={className}>
@@ -135,13 +152,7 @@ export const Limit: FC<{
                     <Typography fontWeight='bold'>Limit: {limit}</Typography>
                 </LimitExplanation>
             </Main>
-            <Footer>
-                If you need more than <strong>{limit}</strong>{' '}
-                {shortName ?? name}, please reach out to us at{' '}
-                <a href='mailto:cs@getunleash.io?subject=Increase limit'>
-                    cs@getunleash.io
-                </a>
-            </Footer>
+            <Footer>{footerContent}</Footer>
         </StyledBox>
     );
 };

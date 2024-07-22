@@ -2,13 +2,14 @@ import Addon from './addon';
 
 import definition from './datadog-definition';
 import Mustache from 'mustache';
-import type { IAddonConfig } from '../types/model';
+import { type IAddonConfig, serializeDates } from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
 
 interface IDatadogParameters {
     url: string;
@@ -41,6 +42,9 @@ export default class DatadogAddon extends Addon {
         parameters: IDatadogParameters,
         integrationId: number,
     ): Promise<void> {
+        let state: IntegrationEventState = 'success';
+        const stateDetails: string[] = [];
+
         const {
             url = 'https://api.datadoghq.com/api/v1/events',
             apiKey,
@@ -75,9 +79,11 @@ export default class DatadogAddon extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                this.logger.warn(
-                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
-                );
+                state = 'successWithErrors';
+                const badHeadersMessage =
+                    'Could not parse the JSON in the customHeaders parameter.';
+                stateDetails.push(badHeadersMessage);
+                this.logger.warn(badHeadersMessage);
             }
         }
         const requestOpts = {
@@ -90,8 +96,29 @@ export default class DatadogAddon extends Addon {
             body: JSON.stringify(body),
         };
         const res = await this.fetchRetry(url, requestOpts);
-        this.logger.info(
-            `Handled event ${event.type}. Status codes=${res.status}`,
-        );
+
+        this.logger.info(`Handled event "${event.type}".`);
+
+        if (res.ok) {
+            const successMessage = `Datadog Events API request was successful with status code: ${res.status}.`;
+            stateDetails.push(successMessage);
+            this.logger.info(successMessage);
+        } else {
+            const failedMessage = `Datadog Events API request failed with status code: ${res.status}.`;
+            state = 'failed';
+            stateDetails.push(failedMessage);
+            this.logger.warn(failedMessage);
+        }
+
+        this.registerEvent({
+            integrationId,
+            state,
+            stateDetails: stateDetails.join('\n'),
+            event: serializeDates(event),
+            details: {
+                url,
+                body,
+            },
+        });
     }
 }

@@ -104,7 +104,6 @@ Once these are configured OIDC should be working.
 
 | Variable name               | Purpose                                                                                                  | Required   | Example values              |
 |-----------------------------|----------------------------------------------------------------------------------------------------------|------------|-----------------------------|
-| Variable name               | Purpose                                                                                                  | Required   | Possible values             |
 | --------------------------- | -------------------------------------------------------------------------------------------------------- | ---------- | -----------------           |
 | OIDC_ENABLE_GROUP_SYNCING   | Tell Unleash to setup group syncing from OIDC login requests                                             | No         | true or false               |
 | OIDC_GROUP_JSON_PATH        | a json path expression telling where in the response Unleash can find the group membership information   | No         | groups                      |

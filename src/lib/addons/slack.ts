@@ -57,11 +57,11 @@ export default class SlackAddon extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                const detailMessage =
-                    'Could not parse the JSON in the customHeaders parameter.';
                 state = 'successWithErrors';
-                stateDetails.push(detailMessage);
-                this.logger.warn(detailMessage);
+                const badHeadersMessage =
+                    'Could not parse the JSON in the customHeaders parameter.';
+                stateDetails.push(badHeadersMessage);
+                this.logger.warn(badHeadersMessage);
             }
         }
 
@@ -109,19 +109,19 @@ export default class SlackAddon extends Addon {
         this.logger.info(`Handled event ${event.type}.`);
 
         if (failedRequests.length === 0) {
-            const detailMessage = `All (${results.length}) Slack webhook requests were successful with status codes: ${codes}.`;
-            stateDetails.push(detailMessage);
-            this.logger.info(detailMessage);
+            const successMessage = `All (${results.length}) Slack webhook requests were successful with status codes: ${codes}.`;
+            stateDetails.push(successMessage);
+            this.logger.info(successMessage);
         } else if (failedRequests.length === results.length) {
-            const detailMessage = `All (${results.length}) Slack webhook requests failed with status codes: ${codes}.`;
             state = 'failed';
-            stateDetails.push(detailMessage);
-            this.logger.warn(detailMessage);
+            const failedMessage = `All (${results.length}) Slack webhook requests failed with status codes: ${codes}.`;
+            stateDetails.push(failedMessage);
+            this.logger.warn(failedMessage);
         } else {
-            const detailMessage = `Some (${failedRequests.length} of ${results.length}) Slack webhook requests failed. Status codes: ${codes}.`;
             state = 'successWithErrors';
-            stateDetails.push(detailMessage);
-            this.logger.warn(detailMessage);
+            const successWithErrorsMessage = `Some (${failedRequests.length} of ${results.length}) Slack webhook requests failed. Status codes: ${codes}.`;
+            stateDetails.push(successWithErrorsMessage);
+            this.logger.warn(successWithErrorsMessage);
         }
 
         this.registerEvent({
@@ -133,7 +133,7 @@ export default class SlackAddon extends Addon {
                 url,
                 channels: slackChannels,
                 username,
-                text,
+                message: text,
             },
         });
     }

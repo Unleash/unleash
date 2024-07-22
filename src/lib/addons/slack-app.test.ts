@@ -4,9 +4,11 @@ import { type ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 import {
     type IAddonConfig,
     type IFlagResolver,
+    serializeDates,
     SYSTEM_USER_ID,
 } from '../types';
 import type { IntegrationEventsService } from '../services';
+import type { Logger } from '../logger';
 
 const slackApiCalls: ChatPostMessageArguments[] = [];
 
@@ -18,6 +20,8 @@ const loggerMock = {
     fatal: jest.fn(),
 };
 const getLogger = jest.fn(() => loggerMock);
+
+const registerEventMock = jest.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
@@ -46,6 +50,22 @@ jest.mock('@slack/web-api', () => ({
         RATE_LIMITED: 'rate_limited',
     },
 }));
+
+jest.mock(
+    './addon',
+    () =>
+        class Addon {
+            logger: Logger;
+
+            constructor(_, { getLogger }) {
+                this.logger = getLogger('addon/test');
+            }
+
+            async registerEvent(event) {
+                return registerEventMock(event);
+            }
+        },
+);
 
 describe('SlackAppAddon', () => {
     let addon: SlackAppAddon;
@@ -78,6 +98,7 @@ describe('SlackAppAddon', () => {
         jest.useFakeTimers();
         slackApiCalls.length = 0;
         postMessage.mockClear();
+        registerEventMock.mockClear();
         addon = new SlackAppAddon(ARGS);
     });
 
@@ -187,8 +208,7 @@ describe('SlackAppAddon', () => {
         );
 
         expect(loggerMock.warn).toHaveBeenCalledWith(
-            `Error handling event ${event.type}. A platform error occurred: ${JSON.stringify(mockError.data)}`,
-            expect.any(Object),
+            `All (1) Slack client calls failed with the following errors: A platform error occurred: ${JSON.stringify(mockError.data)}`,
         );
     });
 
@@ -219,11 +239,39 @@ describe('SlackAppAddon', () => {
 
         expect(postMessage).toHaveBeenCalledTimes(3);
         expect(loggerMock.warn).toHaveBeenCalledWith(
-            `Error handling event ${FEATURE_ENVIRONMENT_ENABLED}. A platform error occurred: ${JSON.stringify(mockError.data)}`,
-            expect.any(Object),
+            `Some (1 of 3) Slack client calls failed. Errors: A platform error occurred: ${JSON.stringify(mockError.data)}`,
         );
-        expect(loggerMock.info).toHaveBeenCalledWith(
-            `Handled event ${FEATURE_ENVIRONMENT_ENABLED} dispatching 2 out of 3 messages successfully.`,
+    });
+
+    test('Should call registerEvent', async () => {
+        const eventWith2Tags: IEvent = {
+            ...event,
+            tags: [
+                { type: 'slack', value: 'general' },
+                { type: 'slack', value: 'another-channel-1' },
+            ],
+        };
+
+        await addon.handleEvent(
+            eventWith2Tags,
+            {
+                accessToken,
+                defaultChannels: 'another-channel-1, another-channel-2',
+            },
+            INTEGRATION_ID,
         );
+
+        expect(registerEventMock).toHaveBeenCalledTimes(1);
+        expect(registerEventMock).toHaveBeenCalledWith({
+            integrationId: INTEGRATION_ID,
+            state: 'success',
+            stateDetails: 'All (3) Slack client calls were successful.',
+            event: serializeDates(eventWith2Tags),
+            details: {
+                channels: ['general', 'another-channel-1', 'another-channel-2'],
+                message:
+                    '*some@user.com* enabled *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* for the *development* environment in project *<http://some-url.com/projects/default|default>*',
+            },
+        });
     });
 });

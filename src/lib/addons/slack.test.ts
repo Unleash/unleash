@@ -336,7 +336,8 @@ describe('Slack integration', () => {
                 url: parameters.url,
                 channels: ['general'],
                 username: 'Unleash',
-                text: '*some@user.com* disabled *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* for the *development* environment in project *<http://some-url.com/projects/default|default>*',
+                message:
+                    '*some@user.com* disabled *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* for the *development* environment in project *<http://some-url.com/projects/default|default>*',
             },
         });
     });

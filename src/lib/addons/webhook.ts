@@ -26,8 +26,13 @@ export default class Webhook extends Addon {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
-        const { url, bodyTemplate, contentType, authorization, customHeaders } =
-            parameters;
+        const {
+            url,
+            bodyTemplate,
+            contentType = 'application/json',
+            authorization,
+            customHeaders,
+        } = parameters;
         const context = {
             event,
             // Stringify twice to avoid escaping in Mustache
@@ -35,11 +40,13 @@ export default class Webhook extends Addon {
         };
 
         let body: string | undefined;
+        let sendingEvent = false;
 
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
             body = Mustache.render(bodyTemplate, context);
         } else {
             body = JSON.stringify(event);
+            sendingEvent = true;
         }
 
         let extraHeaders = {};
@@ -57,7 +64,7 @@ export default class Webhook extends Addon {
         const requestOpts = {
             method: 'POST',
             headers: {
-                'Content-Type': contentType || 'application/json',
+                'Content-Type': contentType,
                 Authorization: authorization || undefined,
                 ...extraHeaders,
             },
@@ -86,7 +93,7 @@ export default class Webhook extends Addon {
             details: {
                 url,
                 contentType,
-                body,
+                body: sendingEvent ? event : body,
             },
         });
     }

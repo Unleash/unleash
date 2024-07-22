@@ -1,12 +1,13 @@
 import Addon from './addon';
 
 import teamsDefinition from './teams-definition';
-import type { IAddonConfig } from '../types/model';
+import { type IAddonConfig, serializeDates } from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
 
 interface ITeamsParameters {
     url: string;
@@ -26,6 +27,9 @@ export default class TeamsAddon extends Addon {
         parameters: ITeamsParameters,
         integrationId: number,
     ): Promise<void> {
+        let state: IntegrationEventState = 'success';
+        const stateDetails: string[] = [];
+
         const { url, customHeaders } = parameters;
         const { createdBy } = event;
         const { text, url: featureLink } = this.msgFormatter.format(event);
@@ -68,9 +72,11 @@ export default class TeamsAddon extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                this.logger.warn(
-                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
-                );
+                state = 'successWithErrors';
+                const detailMessage =
+                    'Could not parse the JSON in the customHeaders parameter.';
+                stateDetails.push(detailMessage);
+                this.logger.warn(detailMessage);
             }
         }
 
@@ -80,8 +86,29 @@ export default class TeamsAddon extends Addon {
             body: JSON.stringify(body),
         };
         const res = await this.fetchRetry(url, requestOpts);
-        this.logger.info(
-            `Handled event ${event.type}. Status codes=${res.status}`,
-        );
+
+        this.logger.info(`Handled event "${event.type}".`);
+
+        if (res.ok) {
+            const detailMessage = `Teams webhook request was successful with status code: ${res.status}.`;
+            stateDetails.push(detailMessage);
+            this.logger.info(detailMessage);
+        } else {
+            const detailMessage = `Teams webhook request failed with status code: ${res.status}.`;
+            state = 'failed';
+            stateDetails.push(detailMessage);
+            this.logger.warn(detailMessage);
+        }
+
+        this.registerEvent({
+            integrationId,
+            state,
+            stateDetails: stateDetails.join('\n'),
+            event: serializeDates(event),
+            details: {
+                url,
+                body,
+            },
+        });
     }
 }

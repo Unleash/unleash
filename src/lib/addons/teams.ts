@@ -73,10 +73,10 @@ export default class TeamsAddon extends Addon {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
                 state = 'successWithErrors';
-                const detailMessage =
+                const badHeadersMessage =
                     'Could not parse the JSON in the customHeaders parameter.';
-                stateDetails.push(detailMessage);
-                this.logger.warn(detailMessage);
+                stateDetails.push(badHeadersMessage);
+                this.logger.warn(badHeadersMessage);
             }
         }
 
@@ -90,14 +90,14 @@ export default class TeamsAddon extends Addon {
         this.logger.info(`Handled event "${event.type}".`);
 
         if (res.ok) {
-            const detailMessage = `Teams webhook request was successful with status code: ${res.status}.`;
-            stateDetails.push(detailMessage);
-            this.logger.info(detailMessage);
+            const successMessage = `Teams webhook request was successful with status code: ${res.status}.`;
+            stateDetails.push(successMessage);
+            this.logger.info(successMessage);
         } else {
-            const detailMessage = `Teams webhook request failed with status code: ${res.status}.`;
             state = 'failed';
-            stateDetails.push(detailMessage);
-            this.logger.warn(detailMessage);
+            const failedMessage = `Teams webhook request failed with status code: ${res.status}.`;
+            stateDetails.push(failedMessage);
+            this.logger.warn(failedMessage);
         }
 
         this.registerEvent({

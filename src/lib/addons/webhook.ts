@@ -54,11 +54,11 @@ export default class Webhook extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                const detailMessage =
-                    'Could not parse the JSON in the customHeaders parameter.';
                 state = 'successWithErrors';
-                stateDetails.push(detailMessage);
-                this.logger.warn(detailMessage);
+                const badHeadersMessage =
+                    'Could not parse the JSON in the customHeaders parameter.';
+                stateDetails.push(badHeadersMessage);
+                this.logger.warn(badHeadersMessage);
             }
         }
         const requestOpts = {
@@ -75,14 +75,14 @@ export default class Webhook extends Addon {
         this.logger.info(`Handled event "${event.type}".`);
 
         if (res.ok) {
-            const detailMessage = `Webhook request was successful with status code: ${res.status}.`;
-            stateDetails.push(detailMessage);
-            this.logger.info(detailMessage);
+            const successMessage = `Webhook request was successful with status code: ${res.status}.`;
+            stateDetails.push(successMessage);
+            this.logger.info(successMessage);
         } else {
-            const detailMessage = `Webhook request failed with status code: ${res.status}.`;
             state = 'failed';
-            stateDetails.push(detailMessage);
-            this.logger.warn(detailMessage);
+            const failedMessage = `Webhook request failed with status code: ${res.status}.`;
+            stateDetails.push(failedMessage);
+            this.logger.warn(failedMessage);
         }
 
         this.registerEvent({

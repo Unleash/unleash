@@ -1,6 +1,6 @@
 /**
  * Auto-generated file by update-openapi-spec-list.js. Do not edit.
- * To run it manually execute `node update-openapi-spec-list.js` from .husky
+ * To run it manually execute `yarn schema:update` or `node .husky/update-openapi-spec-list.js`
  */
 export * from './addon-create-update-schema';
 export * from './addon-parameter-schema';
@@ -112,6 +112,7 @@ export * from './inactive-user-schema';
 export * from './inactive-users-schema';
 export * from './instance-admin-stats-schema';
 export * from './integration-event-schema';
+export * from './integration-events-schema';
 export * from './legal-value-schema';
 export * from './login-schema';
 export * from './maintenance-schema';
@@ -210,5 +211,5 @@ export * from './variants-schema';
 export * from './version-schema';
 /**
  * Auto-generated file by update-openapi-spec-list.js. Do not edit.
- * To run it manually execute `node update-openapi-spec-list.js` from .husky
+ * To run it manually execute `yarn schema:update` or `node .husky/update-openapi-spec-list.js`
  */

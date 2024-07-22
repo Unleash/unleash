@@ -20,9 +20,7 @@ fs.readdir(directoryPath, (err, files) => {
     const script = path.basename(__filename);
     const message = `/**
  * Auto-generated file by ${script}. Do not edit.
- * To run it manually execute \`node ${script}\` from ${path.basename(
-     __dirname,
- )}
+ * To run it manually execute \`yarn schema:update\` or \`node ${path.basename(__dirname)}/${script}\`
  */\n`;
     fs.writeFileSync(indexPath, `${message}${exports}\n${message}`, (err) => {
         if (err) {

@@ -4,7 +4,7 @@ import useSWRInfinite, {
     type SWRInfiniteKeyLoader,
 } from 'swr/infinite';
 import { formatApiPath } from 'utils/formatPath';
-import type { IntegrationEventsSchema } from '@server/openapi/spec';
+import type { IntegrationEventsSchema } from '@server/openapi/spec/integration-events-schema';
 import { useUiFlag } from 'hooks/useUiFlag';
 import AccessContext from 'contexts/AccessContext';
 import handleErrorResponses from '../httpErrorResponseHandler';

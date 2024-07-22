@@ -26,8 +26,13 @@ export default class Webhook extends Addon {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
-        const { url, bodyTemplate, contentType, authorization, customHeaders } =
-            parameters;
+        const {
+            url,
+            bodyTemplate,
+            contentType = 'application/json',
+            authorization,
+            customHeaders,
+        } = parameters;
         const context = {
             event,
             // Stringify twice to avoid escaping in Mustache
@@ -35,11 +40,13 @@ export default class Webhook extends Addon {
         };
 
         let body: string | undefined;
+        let sendingEvent = false;
 
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
             body = Mustache.render(bodyTemplate, context);
         } else {
             body = JSON.stringify(event);
+            sendingEvent = true;
         }
 
         let extraHeaders = {};
@@ -47,17 +54,17 @@ export default class Webhook extends Addon {
             try {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
-                const detailMessage =
-                    'Could not parse the JSON in the customHeaders parameter.';
                 state = 'successWithErrors';
-                stateDetails.push(detailMessage);
-                this.logger.warn(detailMessage);
+                const badHeadersMessage =
+                    'Could not parse the JSON in the customHeaders parameter.';
+                stateDetails.push(badHeadersMessage);
+                this.logger.warn(badHeadersMessage);
             }
         }
         const requestOpts = {
             method: 'POST',
             headers: {
-                'Content-Type': contentType || 'application/json',
+                'Content-Type': contentType,
                 Authorization: authorization || undefined,
                 ...extraHeaders,
             },
@@ -68,14 +75,14 @@ export default class Webhook extends Addon {
         this.logger.info(`Handled event "${event.type}".`);
 
         if (res.ok) {
-            const detailMessage = `Webhook request was successful with status code: ${res.status}.`;
-            stateDetails.push(detailMessage);
-            this.logger.info(detailMessage);
+            const successMessage = `Webhook request was successful with status code: ${res.status}.`;
+            stateDetails.push(successMessage);
+            this.logger.info(successMessage);
         } else {
-            const detailMessage = `Webhook request failed with status code: ${res.status}.`;
             state = 'failed';
-            stateDetails.push(detailMessage);
-            this.logger.warn(detailMessage);
+            const failedMessage = `Webhook request failed with status code: ${res.status}.`;
+            stateDetails.push(failedMessage);
+            this.logger.warn(failedMessage);
         }
 
         this.registerEvent({
@@ -86,7 +93,7 @@ export default class Webhook extends Addon {
             details: {
                 url,
                 contentType,
-                body,
+                body: sendingEvent ? event : body,
             },
         });
     }

@@ -98,7 +98,7 @@ Once these are configured OIDC should be working.
 | Variable name                  | Purpose                                                                                        | Required | Example values              |
 |--------------------------------|------------------------------------------------------------------------------------------------|----------|-----------------------------|
 | OIDC_AUTO_CREATE               | Tells Unleash to auto create users from the specific domains in OIDC_AUTO_CREATE_EMAIL_DOMAINS | no       | true / false                |
-| OIDC_AUTO_CREATE_EMAIL_DOMAINS | A comma separated list of domains to auto-create users for                                     | no       | getunleash.io,getunleash.ai | 
+| OIDC_AUTO_CREATE_EMAIL_DOMAINS | A comma separated list of domains to auto-create users for, if not set accepts all domains     | no       | getunleash.io,getunleash.ai | 
 
 ### Step 3 (optional) Enable group syncing
 

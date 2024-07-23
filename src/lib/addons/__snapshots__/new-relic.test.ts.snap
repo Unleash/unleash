@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should call New Relic Event API for $type toggle 1`] = `
+exports[`New Relic integration Should call New Relic Event API for $type toggle 1`] = `
 {
   "Api-Key": "fakeLicenseKey",
   "Content-Encoding": "gzip",
@@ -8,7 +8,7 @@ exports[`Should call New Relic Event API for $type toggle 1`] = `
 }
 `;
 
-exports[`Should call New Relic Event API for FEATURE_ARCHIVED toggle with project info 1`] = `
+exports[`New Relic integration Should call New Relic Event API for FEATURE_ARCHIVED toggle with project info 1`] = `
 {
   "Api-Key": "fakeLicenseKey",
   "Content-Encoding": "gzip",
@@ -16,7 +16,7 @@ exports[`Should call New Relic Event API for FEATURE_ARCHIVED toggle with projec
 }
 `;
 
-exports[`Should call New Relic Event API for FEATURE_ARCHIVED with project info 1`] = `
+exports[`New Relic integration Should call New Relic Event API for FEATURE_ARCHIVED with project info 1`] = `
 {
   "Api-Key": "fakeLicenseKey",
   "Content-Encoding": "gzip",
@@ -24,7 +24,7 @@ exports[`Should call New Relic Event API for FEATURE_ARCHIVED with project info 
 }
 `;
 
-exports[`Should call New Relic Event API for custom body template 1`] = `
+exports[`New Relic integration Should call New Relic Event API for custom body template 1`] = `
 {
   "Api-Key": "fakeLicenseKey",
   "Content-Encoding": "gzip",
@@ -32,7 +32,7 @@ exports[`Should call New Relic Event API for custom body template 1`] = `
 }
 `;
 
-exports[`Should call New Relic Event API for customHeaders in headers when calling service 1`] = `
+exports[`New Relic integration Should call New Relic Event API for customHeaders in headers when calling service 1`] = `
 {
   "Api-Key": "fakeLicenseKey",
   "Content-Encoding": "gzip",
@@ -41,7 +41,7 @@ exports[`Should call New Relic Event API for customHeaders in headers when calli
 }
 `;
 
-exports[`Should call New Relic Event API for toggled environment 1`] = `
+exports[`New Relic integration Should call New Relic Event API for toggled environment 1`] = `
 {
   "Api-Key": "fakeLicenseKey",
   "Content-Encoding": "gzip",

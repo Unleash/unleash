@@ -5,6 +5,7 @@ import {
     type IFlagResolver,
     type IAddonConfig,
     type IEvent,
+    serializeDates,
 } from '../types';
 import type { Logger } from '../logger';
 
@@ -18,6 +19,7 @@ import type { IntegrationEventsService } from '../services';
 const asyncGunzip = promisify(gunzip);
 
 let fetchRetryCalls: any[] = [];
+const registerEventMock = jest.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
@@ -45,11 +47,11 @@ jest.mock(
                     retries,
                     backoff,
                 });
-                return Promise.resolve({ status: 200 });
+                return Promise.resolve({ ok: true, status: 200 });
             }
 
-            async registerEvent(_) {
-                return Promise.resolve();
+            async registerEvent(event) {
+                return registerEventMock(event);
             }
         },
 );
@@ -79,98 +81,132 @@ const makeAddHandleEvent = (event: IEvent, parameters: INewRelicParameters) => {
     return () => addon.handleEvent(event, parameters, INTEGRATION_ID);
 };
 
-test.each([
-    {
-        partialEvent: { type: FEATURE_CREATED },
-        test: '$type toggle',
-    },
-    {
-        partialEvent: {
-            type: FEATURE_ARCHIVED,
-            data: {
-                name: 'some-toggle',
-            },
-        },
-        test: 'FEATURE_ARCHIVED toggle with project info',
-    },
-    {
-        partialEvent: {
-            type: FEATURE_ARCHIVED,
-            project: 'some-project',
-            data: {
-                name: 'some-toggle',
-            },
-        },
-        test: 'FEATURE_ARCHIVED with project info',
-    },
-    {
-        partialEvent: {
-            type: FEATURE_ENVIRONMENT_DISABLED,
-            environment: 'development',
-        },
-        test: 'toggled environment',
-    },
-    {
-        partialEvent: {
-            type: FEATURE_ENVIRONMENT_DISABLED,
-            environment: 'development',
-        },
-        partialParameters: {
-            customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
-        },
-        test: 'customHeaders in headers when calling service',
-    },
-    {
-        partialEvent: {
-            type: FEATURE_ENVIRONMENT_DISABLED,
-            environment: 'development',
-        },
-        partialParameters: {
-            bodyTemplate:
-                '{\n  "eventType": "{{event.type}}",\n  "createdBy": "{{event.createdBy}}"\n}',
-        },
-        test: 'custom body template',
-    },
-] as Array<{
-    partialEvent: Partial<IEvent>;
-    partialParameters?: Partial<INewRelicParameters>;
-    test: String;
-}>)(
-    'Should call New Relic Event API for $test',
-    async ({ partialEvent, partialParameters }) => {
-        const event = {
-            ...defaultEvent,
-            ...partialEvent,
-        };
+describe('New Relic integration', () => {
+    beforeEach(() => {
+        registerEventMock.mockClear();
+    });
 
-        const parameters = {
-            ...defaultParameters,
-            ...partialParameters,
-        };
+    test.each([
+        {
+            partialEvent: { type: FEATURE_CREATED },
+            test: '$type toggle',
+        },
+        {
+            partialEvent: {
+                type: FEATURE_ARCHIVED,
+                data: {
+                    name: 'some-toggle',
+                },
+            },
+            test: 'FEATURE_ARCHIVED toggle with project info',
+        },
+        {
+            partialEvent: {
+                type: FEATURE_ARCHIVED,
+                project: 'some-project',
+                data: {
+                    name: 'some-toggle',
+                },
+            },
+            test: 'FEATURE_ARCHIVED with project info',
+        },
+        {
+            partialEvent: {
+                type: FEATURE_ENVIRONMENT_DISABLED,
+                environment: 'development',
+            },
+            test: 'toggled environment',
+        },
+        {
+            partialEvent: {
+                type: FEATURE_ENVIRONMENT_DISABLED,
+                environment: 'development',
+            },
+            partialParameters: {
+                customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
+            },
+            test: 'customHeaders in headers when calling service',
+        },
+        {
+            partialEvent: {
+                type: FEATURE_ENVIRONMENT_DISABLED,
+                environment: 'development',
+            },
+            partialParameters: {
+                bodyTemplate:
+                    '{\n  "eventType": "{{event.type}}",\n  "createdBy": "{{event.createdBy}}"\n}',
+            },
+            test: 'custom body template',
+        },
+    ] as Array<{
+        partialEvent: Partial<IEvent>;
+        partialParameters?: Partial<INewRelicParameters>;
+        test: String;
+    }>)(
+        'Should call New Relic Event API for $test',
+        async ({ partialEvent, partialParameters }) => {
+            const event = {
+                ...defaultEvent,
+                ...partialEvent,
+            };
 
-        const handleEvent = makeAddHandleEvent(event, parameters);
+            const parameters = {
+                ...defaultParameters,
+                ...partialParameters,
+            };
+
+            const handleEvent = makeAddHandleEvent(event, parameters);
+
+            await handleEvent();
+            expect(fetchRetryCalls.length).toBe(1);
+
+            const { url, options } = fetchRetryCalls[0];
+            const jsonBody = JSON.parse(
+                (await asyncGunzip(options.body)).toString(),
+            );
+
+            expect(url).toBe(parameters.url);
+            expect(options.method).toBe('POST');
+            expect(options.headers['Api-Key']).toBe(parameters.licenseKey);
+            expect(options.headers['Content-Type']).toBe('application/json');
+            expect(options.headers['Content-Encoding']).toBe('gzip');
+            expect(options.headers).toMatchSnapshot();
+
+            expect(jsonBody.eventType).toBe('UnleashServiceEvent');
+            expect(jsonBody.unleashEventType).toBe(event.type);
+            expect(jsonBody.featureName).toBe(event.data.name);
+            expect(jsonBody.environment).toBe(event.environment);
+            expect(jsonBody.createdBy).toBe(event.createdBy);
+            expect(jsonBody.createdByUserId).toBe(event.createdByUserId);
+            expect(jsonBody.createdAt).toBe(event.createdAt.getTime());
+        },
+    );
+
+    test('Should call registerEvent', async () => {
+        const handleEvent = makeAddHandleEvent(defaultEvent, defaultParameters);
 
         await handleEvent();
-        expect(fetchRetryCalls.length).toBe(1);
 
-        const { url, options } = fetchRetryCalls[0];
-        const jsonBody = JSON.parse(
-            (await asyncGunzip(options.body)).toString(),
-        );
-
-        expect(url).toBe(parameters.url);
-        expect(options.method).toBe('POST');
-        expect(options.headers['Api-Key']).toBe(parameters.licenseKey);
-        expect(options.headers['Content-Type']).toBe('application/json');
-        expect(options.headers['Content-Encoding']).toBe('gzip');
-        expect(options.headers).toMatchSnapshot();
-
-        expect(jsonBody.eventType).toBe('UnleashServiceEvent');
-        expect(jsonBody.unleashEventType).toBe(event.type);
-        expect(jsonBody.featureName).toBe(event.data.name);
-        expect(jsonBody.environment).toBe(event.environment);
-        expect(jsonBody.createdBy).toBe(event.createdBy);
-        expect(jsonBody.createdByUserId).toBe(event.createdByUserId);
-        expect(jsonBody.createdAt).toBe(event.createdAt.getTime());
-    },
-);
+        expect(registerEventMock).toHaveBeenCalledTimes(1);
+        expect(registerEventMock).toHaveBeenCalledWith({
+            integrationId: INTEGRATION_ID,
+            state: 'success',
+            stateDetails:
+                'New Relic Events API request was successful with status code: 200.',
+            event: serializeDates(defaultEvent),
+            details: {
+                url: defaultParameters.url,
+                body: {
+                    eventType: 'UnleashServiceEvent',
+                    unleashEventType: defaultEvent.type,
+                    featureName: defaultEvent.featureName,
+                    environment: defaultEvent.environment,
+                    createdBy: defaultEvent.createdBy,
+                    createdByUserId: defaultEvent.createdByUserId,
+                    createdAt: defaultEvent.createdAt.getTime(),
+                    ...defaultEvent.data,
+                },
+            },
+        });
+    });
+});

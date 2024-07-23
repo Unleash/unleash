@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { type Theme, styled } from '@mui/material';
 import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
@@ -11,13 +11,15 @@ type LastModifiedByProps = {
     imageUrl: string;
 };
 
+const gap = (theme: Theme) => theme.spacing(1);
+
 const LastModifiedByContainer = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas: `
-        'description description'
-        'avatar link'
+    'description description'
+    'avatar link'
     `,
-    gap: theme.spacing(1),
+    gap: gap(theme),
     alignItems: 'center',
     height: 'min-content',
     fontSize: theme.typography.body2.fontSize,
@@ -48,15 +50,35 @@ const LastModifiedBy: FC<LastModifiedByProps> = ({ id, name, imageUrl }) => {
 type CollaboratorListProps = {
     users: Array<{ id: number; name: string; imageUrl: string }>;
 };
+
+const CollaboratorListContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: gap(theme),
+    alignItems: 'flex-start',
+    height: 'min-content',
+    fontSize: theme.typography.body2.fontSize,
+}));
+
 const Collaborators: FC<CollaboratorListProps> = ({ users }) => {
-    return <GroupCardAvatars users={users} avatarLimit={8} />;
+    return (
+        <CollaboratorListContainer>
+            <span className='description'>Collaborators</span>
+            <GroupCardAvatars users={users} avatarLimit={8} />
+        </CollaboratorListContainer>
+    );
 };
 
 const Container = styled('article')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
     alignItems: 'center',
+    justifyContent: 'space-between',
+    marginInlineEnd: theme.spacing(4),
+    [theme.breakpoints.down('xl')]: {
+        display: 'none',
+    },
 }));
 
 type Props = {

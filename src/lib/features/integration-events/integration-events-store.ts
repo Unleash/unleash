@@ -1,4 +1,5 @@
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
+import type { Row } from '../../db/crud/row-type';
 import type { Db } from '../../db/db';
 import type { IntegrationEventSchema } from '../../openapi/spec/integration-event-schema';
 
@@ -11,7 +12,10 @@ export type IntegrationEventState = IntegrationEventWriteModel['state'];
 
 export class IntegrationEventsStore extends CRUDStore<
     IntegrationEventSchema,
-    IntegrationEventWriteModel
+    IntegrationEventWriteModel,
+    Row<IntegrationEventSchema>,
+    Row<IntegrationEventWriteModel>,
+    string
 > {
     constructor(db: Db, config: CrudStoreConfig) {
         super('integration_events', db, config);

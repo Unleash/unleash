@@ -19,11 +19,11 @@ export const integrationEventSchema = {
     additionalProperties: false,
     properties: {
         id: {
-            type: 'integer',
+            type: 'string',
+            pattern: '^[0-9]+$', // BigInt
             description:
-                "The integration event's ID. Integration event IDs are incrementing integers. In other words, a more recently created integration event will always have a higher ID than an older one.",
-            minimum: 1,
-            example: 7,
+                "The integration event's ID. Integration event IDs are incrementing integers. In other words, a more recently created integration event will always have a higher ID than an older one. This ID is represented as a string since it is a BigInt.",
+            example: '7',
         },
         integrationId: {
             type: 'integer',

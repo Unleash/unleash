@@ -28,6 +28,14 @@ const StyledAvatar = (component: typeof UserAvatar) =>
         },
     }));
 
+const StyledAvatarRaw = styled(UserAvatar)(({ theme }) => ({
+    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+    marginLeft: theme.spacing(-1),
+    '&:hover': {
+        outlineColor: theme.palette.primary.main,
+    },
+}));
+
 const StyledHeader = styled('h3')(({ theme }) => ({
     margin: theme.spacing(0, 0, 1),
     fontSize: theme.typography.caption.fontSize,
@@ -43,14 +51,20 @@ interface IGroupCardAvatarsProps {
     }[];
     header?: ReactNode;
     avatarLimit?: number;
-    avatarComponent?: typeof UserAvatar;
+    AvatarComponent?: typeof UserAvatar;
 }
+
+export const GCA = ({ AvatarComponent, ...props }: IGroupCardAvatarsProps) => {
+    const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar);
+
+    return <GroupCardAvatars AvatarComponent={Avatar} {...props} />;
+};
 
 export const GroupCardAvatars = ({
     users = [],
     header = null,
     avatarLimit = 9,
-    avatarComponent,
+    AvatarComponent,
 }: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>
@@ -79,6 +93,9 @@ export const GroupCardAvatars = ({
     }>();
 
     const onPopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+        if (event.currentTarget) {
+            console.log('event.currentTarget', event.currentTarget);
+        }
         setAnchorEl(event.currentTarget);
     };
 
@@ -86,9 +103,8 @@ export const GroupCardAvatars = ({
         setAnchorEl(null);
     };
 
+    // console.log('anchorEl', anchorEl);
     const avatarOpen = Boolean(anchorEl);
-
-    const Avatar = StyledAvatar(avatarComponent ?? UserAvatar);
 
     return (
         <StyledContainer>
@@ -99,10 +115,11 @@ export const GroupCardAvatars = ({
             />
             <StyledAvatars>
                 {shownUsers.map((user) => (
-                    <Avatar
+                    <AvatarComponent
                         key={objectId(user)}
                         user={{ ...user, id: objectId(user) }}
-                        onMouseEnter={(event) => {
+                        onMouseEnter={(event: any) => {
+                            // console.log('mouse enter event', event);
                             onPopoverOpen(event);
                             setPopupUser(user);
                         }}
@@ -111,7 +128,11 @@ export const GroupCardAvatars = ({
                 ))}
                 <ConditionallyRender
                     condition={users.length > avatarLimit}
-                    show={<Avatar>+{users.length - shownUsers.length}</Avatar>}
+                    show={
+                        <AvatarComponent>
+                            +{users.length - shownUsers.length}
+                        </AvatarComponent>
+                    }
                 />
                 <GroupPopover
                     open={avatarOpen}

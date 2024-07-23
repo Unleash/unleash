@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
-import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
+import { GCA } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import type { FC } from 'react';
@@ -42,7 +43,10 @@ const LastModifiedBy: FC<LastModifiedByProps> = ({ id, name, imageUrl }) => {
     return (
         <LastModifiedByContainer>
             <span className='description'>Last modified by</span>
-            <StyledAvatar className='avatar' user={{ id, name, imageUrl }} />
+            <HtmlTooltip arrow describeChild className='avatar' title={name}>
+                <StyledAvatar user={{ id, name, imageUrl }} hideTitle />
+            </HtmlTooltip>
+
             <Link className='link' to='logs'>
                 view change
             </Link>
@@ -66,11 +70,7 @@ const CollaboratorList: FC<CollaboratorListProps> = ({ users }) => {
     return (
         <CollaboratorListContainer>
             <span className='description'>Collaborators</span>
-            <GroupCardAvatars
-                users={users}
-                avatarLimit={8}
-                avatarComponent={StyledAvatar}
-            />
+            <GCA users={users} avatarLimit={8} AvatarComponent={StyledAvatar} />
         </CollaboratorListContainer>
     );
 };

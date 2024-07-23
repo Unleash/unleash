@@ -1,4 +1,4 @@
-import { type Theme, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IGroupUser } from 'interfaces/group';
 import type React from 'react';
@@ -19,23 +19,14 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const StyledAvatar = styled(UserAvatar, {
-    shouldForwardProp: (prop) => prop !== 'avatarDiameter',
-})<{ avatarDiameter?: (theme: Theme) => string }>(
-    ({ theme, avatarDiameter }) => ({
+const StyledAvatar = (component: typeof UserAvatar) =>
+    styled(component)(({ theme }) => ({
         outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
         marginLeft: theme.spacing(-1),
         '&:hover': {
             outlineColor: theme.palette.primary.main,
         },
-        ...(avatarDiameter
-            ? {
-                  width: avatarDiameter(theme),
-                  height: avatarDiameter(theme),
-              }
-            : {}),
-    }),
-);
+    }));
 
 const StyledHeader = styled('h3')(({ theme }) => ({
     margin: theme.spacing(0, 0, 1),
@@ -52,14 +43,14 @@ interface IGroupCardAvatarsProps {
     }[];
     header?: ReactNode;
     avatarLimit?: number;
-    avatarDiameter?: (theme: Theme) => string;
+    avatarComponent?: typeof UserAvatar;
 }
 
 export const GroupCardAvatars = ({
     users = [],
     header = null,
     avatarLimit = 9,
-    avatarDiameter,
+    avatarComponent,
 }: IGroupCardAvatarsProps) => {
     const shownUsers = useMemo(
         () =>
@@ -97,6 +88,8 @@ export const GroupCardAvatars = ({
 
     const avatarOpen = Boolean(anchorEl);
 
+    const Avatar = StyledAvatar(avatarComponent ?? UserAvatar);
+
     return (
         <StyledContainer>
             <ConditionallyRender
@@ -106,8 +99,7 @@ export const GroupCardAvatars = ({
             />
             <StyledAvatars>
                 {shownUsers.map((user) => (
-                    <StyledAvatar
-                        avatarDiameter={avatarDiameter}
+                    <Avatar
                         key={objectId(user)}
                         user={{ ...user, id: objectId(user) }}
                         onMouseEnter={(event) => {
@@ -119,11 +111,7 @@ export const GroupCardAvatars = ({
                 ))}
                 <ConditionallyRender
                     condition={users.length > avatarLimit}
-                    show={
-                        <StyledAvatar avatarDiameter={avatarDiameter}>
-                            +{users.length - shownUsers.length}
-                        </StyledAvatar>
-                    }
+                    show={<Avatar>+{users.length - shownUsers.length}</Avatar>}
                 />
                 <GroupPopover
                     open={avatarOpen}

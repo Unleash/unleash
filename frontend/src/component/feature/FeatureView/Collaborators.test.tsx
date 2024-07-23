@@ -8,9 +8,7 @@ test('renders nothing if collaborators is undefined', () => {
 });
 
 test('renders nothing if users is empty', () => {
-    const { container } = render(
-        <Collaborators collaborators={{ users: [] }} />,
-    );
+    const { container } = render(<Collaborators collaborators={[]} />);
 
     expect(container).toBeEmptyDOMElement();
 });

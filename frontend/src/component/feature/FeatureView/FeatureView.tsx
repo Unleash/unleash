@@ -381,7 +381,7 @@ export const FeatureView = () => {
                         condition={showCollaborators}
                         show={
                             <Collaborators
-                                collaborators={feature.collaborators}
+                                collaborators={feature.collaborators?.users}
                             />
                         }
                     />

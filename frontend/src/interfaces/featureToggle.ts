@@ -38,6 +38,16 @@ export type Lifecycle = {
     enteredStageAt: string;
 };
 
+export type Collaborator = {
+    id: number;
+    name: string;
+    imageUrl: string;
+};
+
+export type CollaboratorData = {
+    users: Collaborator[];
+};
+
 /**
  * @deprecated use FeatureSchema from openapi
  */
@@ -65,13 +75,7 @@ export interface IFeatureToggle {
         name: string;
         imageUrl: string;
     };
-    collaborators?: {
-        users: Array<{
-            id: number;
-            name: string;
-            imageUrl: string;
-        }>;
-    };
+    collaborators?: CollaboratorData;
 }
 
 export interface IDependency {

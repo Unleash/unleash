@@ -2,15 +2,9 @@ import { styled } from '@mui/material';
 import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
+import type { Collaborator } from 'interfaces/featureToggle';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
-
-type LastModifiedByProps = {
-    id: number;
-    name: string;
-    imageUrl: string;
-};
 
 const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(3),
@@ -39,7 +33,7 @@ const LastModifiedByContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const LastModifiedBy: FC<LastModifiedByProps> = ({ id, name, imageUrl }) => {
+const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
     return (
         <LastModifiedByContainer>
             <span className='description'>Last modified by</span>
@@ -54,10 +48,6 @@ const LastModifiedBy: FC<LastModifiedByProps> = ({ id, name, imageUrl }) => {
     );
 };
 
-type CollaboratorListProps = {
-    users: Array<{ id: number; name: string; imageUrl: string }>;
-};
-
 const CollaboratorListContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column',
@@ -66,12 +56,14 @@ const CollaboratorListContainer = styled('div')(({ theme }) => ({
     height: 'min-content',
 }));
 
-const CollaboratorList: FC<CollaboratorListProps> = ({ users }) => {
+const CollaboratorList: FC<{ collaborators: Collaborator[] }> = ({
+    collaborators,
+}) => {
     return (
         <CollaboratorListContainer>
             <span className='description'>Collaborators</span>
             <GroupCardAvatars
-                users={users}
+                users={collaborators}
                 avatarLimit={8}
                 AvatarComponent={StyledAvatar}
             />
@@ -92,20 +84,20 @@ const Container = styled('article')(({ theme }) => ({
 }));
 
 type Props = {
-    collaborators: IFeatureToggle['collaborators'];
+    collaborators: Collaborator[] | undefined;
 };
 
 export const Collaborators: FC<Props> = ({ collaborators }) => {
-    if (!collaborators || collaborators.users.length === 0) {
+    if (!collaborators || collaborators.length === 0) {
         return null;
     }
 
-    const lastModifiedBy = collaborators.users[0];
+    const lastModifiedBy = collaborators[0];
 
     return (
         <Container>
             <LastModifiedBy {...lastModifiedBy} />
-            <CollaboratorList users={collaborators.users} />
+            <CollaboratorList collaborators={collaborators} />
         </Container>
     );
 };

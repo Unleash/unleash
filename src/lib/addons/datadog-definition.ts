@@ -65,13 +65,21 @@ const dataDogDefinition: IAddonDefinition = {
             type: 'textfield',
         },
         {
+            name: 'jsonTemplate',
+            displayName: 'Use JSON body template',
+            description:
+                '(Optional) If enabled, entire template will be treated as a JSON request body instead of text parameter.',
+            required: false,
+            sensitive: false,
+            type: 'checkbox',
+        },
+        {
             name: 'bodyTemplate',
-            displayName: 'Body template',
+            displayName: 'Template',
             placeholder: `{
-  "event": "{{event.type}}",
-  "createdBy": "{{event.createdBy}}",
-  "featureToggle": "{{event.data.name}}",
-  "timestamp": "{{event.data.createdAt}}"
+  "title": 'Unleash notification update',
+  "text": "%%% \n {{eventMarkdown}} \n %%%",
+  "tags": "{{tags}}",
 }`,
             description:
                 '(Optional) The default format is a markdown string formatted by Unleash. You may override the format of the body using a mustache template.',

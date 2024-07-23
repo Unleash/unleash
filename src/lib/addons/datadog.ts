@@ -17,6 +17,7 @@ interface IDatadogParameters {
     sourceTypeName?: string;
     customHeaders?: string;
     bodyTemplate?: string;
+    jsonTemplate?: string;
 }
 
 interface DDRequestBody {
@@ -55,22 +56,29 @@ export default class DatadogAddon extends Addon {
 
         const context = {
             event,
+            eventMarkdown: this.msgFormatter.format(event).text,
+            tagsJson: event.tags?.map((tag) => `${tag.type}:${tag.value}`),
         };
 
-        let text: string;
+        let body: DDRequestBody;
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
-            text = Mustache.render(bodyTemplate, context);
+            if (parameters.jsonTemplate) {
+                body = Mustache.render(bodyTemplate, context);
+            } else {
+                body = {
+                    text: Mustache.render(bodyTemplate, context),
+                    title: 'Unleash notification update',
+                    tags: context.tagsJson,
+                };
+            }
         } else {
-            text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;
+            body = {
+                text: `%%% \n ${context.eventMarkdown} \n %%% `,
+                title: 'Unleash notification update',
+                tags: context.tagsJson,
+            };
         }
 
-        const { tags: eventTags } = event;
-        const tags = eventTags?.map((tag) => `${tag.type}:${tag.value}`);
-        const body: DDRequestBody = {
-            text: text,
-            title: 'Unleash notification update',
-            tags,
-        };
         if (sourceTypeName) {
             body.source_type_name = sourceTypeName;
         }

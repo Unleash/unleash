@@ -117,11 +117,9 @@ const StyledSeparator = styled('div')(({ theme }) => ({
 const StyledTabRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
-}));
-
-const StyledTabContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 4),
-    flex: '1',
+    gap: theme.spacing(4),
+    paddingInline: theme.spacing(4),
+    justifyContent: 'space-between',
 }));
 
 const StyledTabButton = styled(Tab)(({ theme }) => ({
@@ -363,23 +361,21 @@ export const FeatureView = () => {
                 </StyledInnerContainer>
                 <StyledSeparator />
                 <StyledTabRow>
-                    <StyledTabContainer>
-                        <Tabs
-                            value={activeTab.path}
-                            indicatorColor='primary'
-                            textColor='primary'
-                        >
-                            {tabData.map((tab) => (
-                                <StyledTabButton
-                                    key={tab.title}
-                                    label={tab.title}
-                                    value={tab.path}
-                                    onClick={() => navigate(tab.path)}
-                                    data-testid={`TAB-${tab.title}`}
-                                />
-                            ))}
-                        </Tabs>
-                    </StyledTabContainer>
+                    <Tabs
+                        value={activeTab.path}
+                        indicatorColor='primary'
+                        textColor='primary'
+                    >
+                        {tabData.map((tab) => (
+                            <StyledTabButton
+                                key={tab.title}
+                                label={tab.title}
+                                value={tab.path}
+                                onClick={() => navigate(tab.path)}
+                                data-testid={`TAB-${tab.title}`}
+                            />
+                        ))}
+                    </Tabs>
                     <Collaborators collaborators={feature.collaborators} />
                 </StyledTabRow>
             </StyledHeader>

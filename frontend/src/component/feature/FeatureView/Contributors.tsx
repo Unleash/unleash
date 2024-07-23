@@ -72,10 +72,9 @@ const Collaborators: FC<CollaboratorListProps> = ({ users }) => {
 const Container = styled('article')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    gap: theme.spacing(4),
+    gap: theme.spacing(10),
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginInlineEnd: theme.spacing(4),
     [theme.breakpoints.down('xl')]: {
         display: 'none',
     },

@@ -160,6 +160,7 @@ export const FeatureView = () => {
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
+    const showCollaborators = useUiFlag('featureCollaborators');
 
     const { feature, loading, error, status } = useFeature(
         projectId,
@@ -376,7 +377,14 @@ export const FeatureView = () => {
                             />
                         ))}
                     </Tabs>
-                    <Collaborators collaborators={feature.collaborators} />
+                    <ConditionallyRender
+                        condition={showCollaborators}
+                        show={
+                            <Collaborators
+                                collaborators={feature.collaborators}
+                            />
+                        }
+                    />
                 </StyledTabRow>
             </StyledHeader>
             <Routes>

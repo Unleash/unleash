@@ -60,7 +60,7 @@ const CollaboratorListContainer = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
-const Collaborators: FC<CollaboratorListProps> = ({ users }) => {
+const CollaboratorList: FC<CollaboratorListProps> = ({ users }) => {
     return (
         <CollaboratorListContainer>
             <span className='description'>Collaborators</span>
@@ -84,7 +84,7 @@ type Props = {
     collaborators: IFeatureToggle['collaborators'];
 };
 
-export const Contributors: FC<Props> = ({ collaborators }) => {
+export const Collaborators: FC<Props> = ({ collaborators }) => {
     if (!collaborators || collaborators.users.length === 0) {
         return null;
     }
@@ -94,7 +94,7 @@ export const Contributors: FC<Props> = ({ collaborators }) => {
     return (
         <Container>
             <LastModifiedBy {...lastModifiedBy} />
-            <Collaborators users={collaborators.users} />
+            <CollaboratorList users={collaborators.users} />
         </Container>
     );
 };

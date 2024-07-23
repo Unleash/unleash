@@ -50,7 +50,7 @@ import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { Contributors as Collaborators } from './Contributors';
+import { Collaborators } from './Collaborators';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,

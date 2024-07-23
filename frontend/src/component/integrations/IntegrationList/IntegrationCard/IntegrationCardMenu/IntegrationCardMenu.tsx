@@ -29,7 +29,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useUiFlag } from 'hooks/useUiFlag';
 import Visibility from '@mui/icons-material/Visibility';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
-import { IntegrationEventsModal } from '../../IntegrationEventsModal/IntegrationEventsModal';
+import { IntegrationEventsModal } from 'component/integrations/IntegrationEventsModal/IntegrationEventsModal';
 
 interface IIntegrationCardMenuProps {
     addon: AddonSchema;

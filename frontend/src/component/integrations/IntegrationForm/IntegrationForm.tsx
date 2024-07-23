@@ -53,7 +53,7 @@ import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStat
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { IntegrationEventsModal } from '../IntegrationList/IntegrationEventsModal/IntegrationEventsModal';
+import { IntegrationEventsModal } from '../IntegrationEventsModal/IntegrationEventsModal';
 import AccessContext from 'contexts/AccessContext';
 
 const StyledHeader = styled('div')(({ theme }) => ({

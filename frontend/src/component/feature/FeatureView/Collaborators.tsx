@@ -11,16 +11,21 @@ type LastModifiedByProps = {
     imageUrl: string;
 };
 
+const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+}));
+
 const LastModifiedByContainer = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas: `
     'description description'
     'avatar link'
     `,
-    gap: theme.spacing(1),
+    rowGap: theme.spacing(0.5),
+    columnGap: theme.spacing(1),
     alignItems: 'center',
     height: 'min-content',
-    fontSize: theme.typography.body2.fontSize,
 
     '.description': {
         gridArea: 'description',
@@ -37,9 +42,9 @@ const LastModifiedBy: FC<LastModifiedByProps> = ({ id, name, imageUrl }) => {
     return (
         <LastModifiedByContainer>
             <span className='description'>Last modified by</span>
-            <UserAvatar className='avatar' user={{ id, name, imageUrl }} />
+            <StyledAvatar className='avatar' user={{ id, name, imageUrl }} />
             <Link className='link' to='logs'>
-                View change
+                view change
             </Link>
         </LastModifiedByContainer>
     );
@@ -52,17 +57,20 @@ type CollaboratorListProps = {
 const CollaboratorListContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.5),
     alignItems: 'flex-start',
     height: 'min-content',
-    fontSize: theme.typography.body2.fontSize,
 }));
 
 const CollaboratorList: FC<CollaboratorListProps> = ({ users }) => {
     return (
         <CollaboratorListContainer>
             <span className='description'>Collaborators</span>
-            <GroupCardAvatars users={users} avatarLimit={8} />
+            <GroupCardAvatars
+                users={users}
+                avatarLimit={8}
+                avatarComponent={StyledAvatar}
+            />
         </CollaboratorListContainer>
     );
 };
@@ -73,6 +81,7 @@ const Container = styled('article')(({ theme }) => ({
     gap: theme.spacing(10),
     alignItems: 'center',
     justifyContent: 'space-between',
+    fontSize: `calc(0.9 * ${theme.typography.body2.fontSize})`,
     [theme.breakpoints.down('xl')]: {
         display: 'none',
     },

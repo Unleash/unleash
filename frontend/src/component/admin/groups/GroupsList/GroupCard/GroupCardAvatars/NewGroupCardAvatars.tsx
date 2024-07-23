@@ -88,9 +88,6 @@ const GroupCardAvatarsInner = ({
     }>();
 
     const onPopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-        if (event.currentTarget) {
-            console.log('event.currentTarget', event.currentTarget);
-        }
         setAnchorEl(event.currentTarget);
     };
 
@@ -98,7 +95,6 @@ const GroupCardAvatarsInner = ({
         setAnchorEl(null);
     };
 
-    // console.log('anchorEl', anchorEl);
     const avatarOpen = Boolean(anchorEl);
 
     return (
@@ -114,7 +110,6 @@ const GroupCardAvatarsInner = ({
                         key={objectId(user)}
                         user={{ ...user, id: objectId(user) }}
                         onMouseEnter={(event: any) => {
-                            // console.log('mouse enter event', event);
                             onPopoverOpen(event);
                             setPopupUser(user);
                         }}

@@ -1,4 +1,4 @@
-import { type Theme, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
@@ -11,15 +11,13 @@ type LastModifiedByProps = {
     imageUrl: string;
 };
 
-const gap = (theme: Theme) => theme.spacing(1);
-
 const LastModifiedByContainer = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas: `
     'description description'
     'avatar link'
     `,
-    gap: gap(theme),
+    gap: theme.spacing(1),
     alignItems: 'center',
     height: 'min-content',
     fontSize: theme.typography.body2.fontSize,
@@ -54,7 +52,7 @@ type CollaboratorListProps = {
 const CollaboratorListContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column',
-    gap: gap(theme),
+    gap: theme.spacing(1),
     alignItems: 'flex-start',
     height: 'min-content',
     fontSize: theme.typography.body2.fontSize,

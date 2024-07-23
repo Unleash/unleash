@@ -35,8 +35,6 @@ export const useFeature = (
         mutate().catch(console.warn);
     }, [mutate]);
 
-    console.log('data body ', data?.body);
-
     return {
         feature: data?.body || emptyFeature,
         refetchFeature,

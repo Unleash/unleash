@@ -55,12 +55,19 @@ export const GroupCardAvatars = ({
     return <GroupCardAvatarsInner AvatarComponent={Avatar} {...props} />;
 };
 
+type GroupCardAvatarsInnerProps = Omit<
+    IGroupCardAvatarsProps,
+    'AvatarComponent'
+> & {
+    AvatarComponent: typeof UserAvatar;
+};
+
 const GroupCardAvatarsInner = ({
     users = [],
     header = null,
     avatarLimit = 9,
     AvatarComponent,
-}: IGroupCardAvatarsProps) => {
+}: GroupCardAvatarsInnerProps) => {
     const shownUsers = useMemo(
         () =>
             users

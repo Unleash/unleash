@@ -67,9 +67,21 @@ module.exports = {
                         slug: 'topics/feature-flags/',
                     },
                     items: [
-                        'topics/feature-flags/feature-flag-best-practices',
-                        'topics/feature-flags/best-practices-using-feature-flags-at-scale',
-                        'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                        {
+                            type: 'doc',
+                            label: 'Building and scaling feature flag systems',
+                            id: 'topics/feature-flags/feature-flag-best-practices',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Using feature flags at scale',
+                            id: 'topics/feature-flags/best-practices-using-feature-flags-at-scale',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Migrating from homegrown feature management solutions',
+                            id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                        },
                         'topics/a-b-testing',
                     ],
                 },

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { GCA } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
+import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
@@ -70,7 +70,11 @@ const CollaboratorList: FC<CollaboratorListProps> = ({ users }) => {
     return (
         <CollaboratorListContainer>
             <span className='description'>Collaborators</span>
-            <GCA users={users} avatarLimit={8} AvatarComponent={StyledAvatar} />
+            <GroupCardAvatars
+                users={users}
+                avatarLimit={8}
+                AvatarComponent={StyledAvatar}
+            />
         </CollaboratorListContainer>
     );
 };

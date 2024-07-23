@@ -28,14 +28,6 @@ const StyledAvatar = (component: typeof UserAvatar) =>
         },
     }));
 
-const StyledAvatarRaw = styled(UserAvatar)(({ theme }) => ({
-    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
-    marginLeft: theme.spacing(-1),
-    '&:hover': {
-        outlineColor: theme.palette.primary.main,
-    },
-}));
-
 const StyledHeader = styled('h3')(({ theme }) => ({
     margin: theme.spacing(0, 0, 1),
     fontSize: theme.typography.caption.fontSize,
@@ -54,13 +46,16 @@ interface IGroupCardAvatarsProps {
     AvatarComponent?: typeof UserAvatar;
 }
 
-export const GCA = ({ AvatarComponent, ...props }: IGroupCardAvatarsProps) => {
+export const GroupCardAvatars = ({
+    AvatarComponent,
+    ...props
+}: IGroupCardAvatarsProps) => {
     const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar);
 
-    return <GroupCardAvatars AvatarComponent={Avatar} {...props} />;
+    return <GroupCardAvatarsInner AvatarComponent={Avatar} {...props} />;
 };
 
-export const GroupCardAvatars = ({
+const GroupCardAvatarsInner = ({
     users = [],
     header = null,
     avatarLimit = 9,

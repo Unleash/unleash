@@ -93,6 +93,7 @@ export type UiFlags = {
     resourceLimits?: boolean;
     insightsV2?: boolean;
     featureCollaborators?: boolean;
+    integrationEvents?: boolean;
 };
 
 export interface IVersionInfo {

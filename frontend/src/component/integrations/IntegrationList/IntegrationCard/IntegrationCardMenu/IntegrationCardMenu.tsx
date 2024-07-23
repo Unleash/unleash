@@ -14,6 +14,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Delete from '@mui/icons-material/Delete';
 import PowerSettingsNew from '@mui/icons-material/PowerSettingsNew';
 import {
+    ADMIN,
     DELETE_ADDON,
     UPDATE_ADDON,
 } from 'component/providers/AccessProvider/permissions';
@@ -24,6 +25,11 @@ import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import Visibility from '@mui/icons-material/Visibility';
+import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import { IntegrationEventsModal } from '../../IntegrationEventsModal/IntegrationEventsModal';
 
 interface IIntegrationCardMenuProps {
     addon: AddonSchema;
@@ -48,6 +54,8 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
     const { updateAddon, removeAddon } = useAddonsApi();
     const { refetchAddons } = useAddons();
     const { setToastData, setToastApiError } = useToast();
+    const [eventsModalOpen, setEventsModalOpen] = useState(false);
+    const integrationEventsEnabled = useUiFlag('integrationEvents');
 
     const closeMenu = () => {
         setIsMenuOpen(false);
@@ -123,6 +131,24 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 }}
                 onClose={handleMenuClick}
             >
+                <ConditionallyRender
+                    condition={integrationEventsEnabled}
+                    show={
+                        <PermissionHOC permission={ADMIN}>
+                            {({ hasAccess }) => (
+                                <MenuItem
+                                    onClick={() => setEventsModalOpen(true)}
+                                    disabled={!hasAccess}
+                                >
+                                    <ListItemIcon>
+                                        <Visibility />
+                                    </ListItemIcon>
+                                    <ListItemText>View events</ListItemText>
+                                </MenuItem>
+                            )}
+                        </PermissionHOC>
+                    }
+                />
                 <MenuItem
                     onClick={() => {
                         setIsToggleOpen(true);
@@ -151,6 +177,11 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 </MenuItem>
             </Menu>
 
+            <IntegrationEventsModal
+                addon={addon}
+                open={eventsModalOpen}
+                setOpen={setEventsModalOpen}
+            />
             <Dialogue
                 open={isToggleOpen}
                 onClick={toggleIntegration}

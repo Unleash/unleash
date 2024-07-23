@@ -2,11 +2,19 @@ import {
     type ChangeEventHandler,
     type FormEventHandler,
     type MouseEventHandler,
+    useContext,
     useEffect,
     useState,
     type VFC,
 } from 'react';
-import { Alert, Button, Divider, Typography } from '@mui/material';
+import {
+    Alert,
+    Button,
+    Divider,
+    Link,
+    styled,
+    Typography,
+} from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
@@ -44,6 +52,21 @@ import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { IntegrationEventsModal } from '../IntegrationList/IntegrationEventsModal/IntegrationEventsModal';
+import AccessContext from 'contexts/AccessContext';
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: theme.fontSizes.mainHeader,
+}));
+
+const StyledHeaderTitle = styled('h1')({
+    fontWeight: 'normal',
+});
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;
@@ -91,6 +114,10 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         containsErrors: false,
         parameters: {},
     });
+    const [eventsModalOpen, setEventsModalOpen] = useState(false);
+    const { isAdmin } = useContext(AccessContext);
+    const integrationEventsEnabled = useUiFlag('integrationEvents');
+
     const submitText = editMode ? 'Update' : 'Create';
     const url = `${uiConfig.unleashUrl}/api/admin/addons${
         editMode ? `/${(formValues as AddonSchema).id}` : ``
@@ -259,13 +286,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
 
     return (
         <FormTemplate
-            title={
-                <>
-                    {submitText}{' '}
-                    {displayName || (name ? capitalizeFirst(name) : '')}{' '}
-                    integration
-                </>
-            }
             description={description || ''}
             documentationLink={documentationUrl}
             documentationLinkLabel={`${
@@ -291,6 +311,21 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                 </StyledButtonContainer>
             }
         >
+            <StyledHeader>
+                <StyledHeaderTitle>
+                    {submitText}{' '}
+                    {displayName || (name ? capitalizeFirst(name) : '')}{' '}
+                    integration
+                </StyledHeaderTitle>
+                <ConditionallyRender
+                    condition={editMode && isAdmin && integrationEventsEnabled}
+                    show={
+                        <Link onClick={() => setEventsModalOpen(true)}>
+                            View events
+                        </Link>
+                    }
+                />
+            </StyledHeader>
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
                     <ConditionallyRender
@@ -403,6 +438,11 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                     </section>
                 </StyledContainer>
             </StyledForm>
+            <IntegrationEventsModal
+                addon={initialValues as AddonSchema}
+                open={eventsModalOpen}
+                setOpen={setEventsModalOpen}
+            />
         </FormTemplate>
     );
 };

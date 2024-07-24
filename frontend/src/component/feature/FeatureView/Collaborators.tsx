@@ -23,7 +23,7 @@ const LastModifiedByContainer = styled('div')(({ theme }) => ({
     height: 'min-content',
 }));
 
-const StyledDescription = styled(`span`)({ gridArea: 'description' });
+const StyledDescription = styled('span')({ gridArea: 'description' });
 const StyledTooltip = styled(HtmlTooltip)({ gridArea: 'avatar' });
 const StyledLink = styled(Link)({ gridArea: 'link' });
 

@@ -9,7 +9,7 @@ import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu';
 import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { IntegrationEventsLastEvent } from 'component/integrations/IntegrationEventsModal/IntegrationEventsLastEvent';
+import { IntegrationEventsLastEvent } from 'component/integrations/IntegrationEvents/IntegrationEventsLastEvent';
 
 type CardVariant = 'default' | 'stacked';
 

@@ -86,14 +86,12 @@ function resolveCreateButtonData(
     }
 }
 
-const ProjectCreationButton: FC<{ projectCount: number }> = ({
-    projectCount,
-}) => {
+const ProjectCreationButton: FC = () => {
     const [searchParams] = useSearchParams();
     const showCreateDialog = Boolean(searchParams.get('create'));
     const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
     const { hasAccess } = useContext(AccessContext);
-    const { isOss, uiConfig, loading } = useUiConfig();
+    const { isOss, loading } = useUiConfig();
 
     const createButtonData = resolveCreateButtonData(
         isOss(),

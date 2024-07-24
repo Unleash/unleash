@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { Collaborator } from 'interfaces/featureToggle';
 import type { FC } from 'react';
@@ -20,26 +21,23 @@ const LastModifiedByContainer = styled('div')(({ theme }) => ({
     columnGap: theme.spacing(1),
     alignItems: 'center',
     height: 'min-content',
-
-    '.description': {
-        gridArea: 'description',
-    },
-    '.avatar': {
-        gridArea: 'avatar',
-    },
-    '.link': {
-        gridArea: 'link',
-    },
 }));
+
+const StyledDescription = styled(`span`)({ gridArea: 'description' });
+const StyledTooltip = styled(HtmlTooltip)({ gridArea: 'avatar' });
+const StyledLink = styled(Link)({ gridArea: 'link' });
 
 const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
     return (
         <LastModifiedByContainer>
-            <span className='description'>Last modified by</span>
-            <StyledAvatar className='avatar' user={{ id, name, imageUrl }} />
-            <Link className='link' to='logs'>
-                view change
-            </Link>
+            <StyledDescription>Last modified by</StyledDescription>
+            <StyledTooltip arrow describeChild title={name}>
+                <span>
+                    <StyledAvatar user={{ id, name, imageUrl }} hideTitle />
+                </span>
+            </StyledTooltip>
+
+            <StyledLink to='logs'>view change</StyledLink>
         </LastModifiedByContainer>
     );
 };

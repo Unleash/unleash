@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
 import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { Collaborator } from 'interfaces/featureToggle';
 import type { FC } from 'react';
@@ -37,10 +36,7 @@ const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
     return (
         <LastModifiedByContainer>
             <span className='description'>Last modified by</span>
-            <HtmlTooltip arrow describeChild className='avatar' title={name}>
-                <StyledAvatar user={{ id, name, imageUrl }} hideTitle />
-            </HtmlTooltip>
-
+            <StyledAvatar className='avatar' user={{ id, name, imageUrl }} />
             <Link className='link' to='logs'>
                 view change
             </Link>

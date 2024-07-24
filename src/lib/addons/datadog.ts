@@ -17,7 +17,7 @@ interface IDatadogParameters {
     sourceTypeName?: string;
     customHeaders?: string;
     bodyTemplate?: string;
-    jsonTemplate?: string;
+    jsonTemplate?: 'true' | 'false';
 }
 
 interface DDRequestBody {
@@ -52,36 +52,37 @@ export default class DatadogAddon extends Addon {
             sourceTypeName,
             customHeaders,
             bodyTemplate,
+            jsonTemplate,
         } = parameters;
+        const isJsonTemplate = jsonTemplate === 'true';
 
         const context = {
             event,
             eventMarkdown: this.msgFormatter.format(event).text,
-            tagsJson: event.tags?.map((tag) => `${tag.type}:${tag.value}`),
+            tags: event.tags?.map((tag) => `${tag.type}:${tag.value}`),
+        };
+
+        const defaultTemplate: DDRequestBody = {
+            text: Mustache.render(`%%% \n {{eventMarkdown}} \n %%% `, context),
+            title: 'Unleash notification update',
+            tags: context.tags,
+            source_type_name: sourceTypeName,
         };
 
         let body: DDRequestBody;
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
-            if (parameters.jsonTemplate) {
-                body = Mustache.render(bodyTemplate, context);
+            if (isJsonTemplate) {
+                body = JSON.parse(Mustache.render(bodyTemplate, context));
             } else {
                 body = {
+                    ...defaultTemplate,
                     text: Mustache.render(bodyTemplate, context),
-                    title: 'Unleash notification update',
-                    tags: context.tagsJson,
                 };
             }
         } else {
-            body = {
-                text: `%%% \n ${context.eventMarkdown} \n %%% `,
-                title: 'Unleash notification update',
-                tags: context.tagsJson,
-            };
+            body = defaultTemplate;
         }
 
-        if (sourceTypeName) {
-            body.source_type_name = sourceTypeName;
-        }
         let extraHeaders = {};
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {

@@ -512,7 +512,7 @@ For PostgreSQL we recommend running with at least 1 CPU and at least 1Gi of memo
 
 #### Recommended
 
-Postgresql performance improves the more resources you throw at it, and if you have many connections active, you want more RAM, so a good recommendation is
+PostgreSQL performance improves the more resources you throw at it, and if you have many connections active, you want more RAM, so a good recommendation is:
 
 - 4CPUs and 16GB of memory, and at least 20Gi of SSD storage
 

@@ -105,8 +105,10 @@ export const IntegrationEventsModal = ({
                     </StyledHeaderRow>
                     <StyledHeaderRow>
                         <StyledSubtitle>
-                            All events older than the last 100 or older than the
-                            past 2 hours will be automatically deleted.
+                            Only the most recent event for each integration and
+                            the last 100 events from the past 2 hours will be
+                            kept. All other events will be automatically
+                            deleted.
                         </StyledSubtitle>
                     </StyledHeaderRow>
                 </StyledHeader>

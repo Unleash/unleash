@@ -5,6 +5,7 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { TEST_AUDIT_USER } from '../../types';
+import type { IAddonDto } from '../../types/stores/addon-store';
 import type { IntegrationEventsService } from './integration-events-service';
 import type { IntegrationEventWriteModel } from './integration-events-store';
 
@@ -35,6 +36,15 @@ const EVENT_FAILED: IntegrationEventWriteModel = {
     stateDetails: 'Better Call Saul!',
 };
 
+const INTEGRATION: IAddonDto = {
+    provider: 'webhook',
+    enabled: true,
+    parameters: {
+        url: 'http://some-test-url',
+    },
+    events: ['feature-created'],
+};
+
 beforeAll(async () => {
     db = await dbInit('integration_events', getLogger);
     app = await setupAppWithCustomConfig(
@@ -55,14 +65,7 @@ beforeEach(async () => {
     await db.reset();
 
     const { id } = await app.services.addonService.createAddon(
-        {
-            provider: 'webhook',
-            enabled: true,
-            parameters: {
-                url: 'http://some-test-url',
-            },
-            events: ['feature-created'],
-        },
+        INTEGRATION,
         TEST_AUDIT_USER,
     );
 
@@ -191,6 +194,45 @@ test('clean up events, keeping the last 100 events', async () => {
     );
 
     expect(events).toHaveLength(100);
+});
+
+test('clean up events, keeping the latest event for each integration', async () => {
+    const longTimeAgo = new Date('2000-01-01');
+
+    const { id: integrationId2 } = await app.services.addonService.createAddon(
+        INTEGRATION,
+        TEST_AUDIT_USER,
+    );
+
+    await insertPastEvent(getTestEventSuccess(), longTimeAgo);
+    await insertPastEvent(getTestEventFailed(), longTimeAgo);
+
+    await insertPastEvent(
+        { ...getTestEventSuccess(), integrationId: integrationId2 },
+        longTimeAgo,
+    );
+    await insertPastEvent(
+        { ...getTestEventFailed(), integrationId: integrationId2 },
+        longTimeAgo,
+    );
+
+    await integrationEventsService.cleanUpEvents();
+
+    const eventsIntegration1 =
+        await integrationEventsService.getPaginatedEvents(integrationId, 10, 0);
+
+    expect(eventsIntegration1).toHaveLength(1);
+    expect(eventsIntegration1[0].state).toBe('failed');
+
+    const eventsIntegration2 =
+        await integrationEventsService.getPaginatedEvents(
+            integrationId2,
+            10,
+            0,
+        );
+
+    expect(eventsIntegration2).toHaveLength(1);
+    expect(eventsIntegration2[0].state).toBe('failed');
 });
 
 test('return events from the API', async () => {

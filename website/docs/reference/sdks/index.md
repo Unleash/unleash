@@ -10,34 +10,32 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 ## Official SDKs
 
-
 <VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}/>
 
 ### Server-side SDKs:
 
-Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
+Server-side clients run on your server and communicate directly with your Unleash instance to evaluate your feature flags in their respective language. We provide these official clients:
 
-- [Go SDK](/docs/generated/sdks/server-side/go.md)
-- [Java SDK](/docs/generated/sdks/server-side/java.md)
-- [Node.js SDK](/docs/generated/sdks/server-side/node.md)
-- [PHP SDK](/docs/generated/sdks/server-side/php.md)
-- [Python SDK](/docs/generated/sdks/server-side/python.md)
-- [Ruby SDK](/docs/generated/sdks/server-side/ruby.md)
-- [Rust SDK](/docs/generated/sdks/server-side/rust.md)
-- [.NET SDK](/docs/generated/sdks/server-side/dotnet.md)
+-   [Go SDK](/docs/generated/sdks/server-side/go.md)
+-   [Java SDK](/docs/generated/sdks/server-side/java.md)
+-   [Node.js SDK](/docs/generated/sdks/server-side/node.md)
+-   [PHP SDK](/docs/generated/sdks/server-side/php.md)
+-   [Python SDK](/docs/generated/sdks/server-side/python.md)
+-   [Ruby SDK](/docs/generated/sdks/server-side/ruby.md)
+-   [Rust SDK](/docs/generated/sdks/server-side/rust.md)
+-   [.NET SDK](/docs/generated/sdks/server-side/dotnet.md)
 
 ### Client-side SDKs
 
-Client-side SDKs can connect to the [Unleash Proxy](../../generated/unleash-proxy.md) or to the [Unleash front-end API](../front-end-api.md), but _not_ to the regular Unleash client API.
+Client-side SDKs can connect to [Unleash Edge](/reference/unleash-edge) or to the [Unleash front-end API](../front-end-api.md), but _not_ to the regular Unleash client API.
 
-
-- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
-- [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
-- [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
-- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
-- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
-- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
-- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
+-   [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
+-   [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
+-   [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
+-   [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+-   [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+-   [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+-   [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
 
 ### Server-side SDK compatibility table
 
@@ -45,16 +43,18 @@ The below table shows what features the various server-side SDKs support. Note t
 
 **Legend**:
 
-- ✅: Implemented
-- ⭕: Not yet implemented, but we're looking into it
-- ❌: Not implemented, not planned
-- **N/A**: Not applicable to this SDK
+-   ✅: Implemented
+-   ⭕: Not yet implemented, but we're looking into it
+-   ❌: Not implemented, not planned
+-   **N/A**: Not applicable to this SDK
 
 :::note
 
 If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
 
 :::
+
+<!-- prettier-ignore-start -->
 
 | Capability | [Java](/docs/generated/sdks/server-side/java.md) | [Node.js](/docs/generated/sdks/server-side/node.md) | [Go](/docs/generated/sdks/server-side/go.md) | [Python](/docs/generated/sdks/server-side/python.md) | [Ruby](/docs/generated/sdks/server-side/ruby.md) | [.NET](/docs/generated/sdks/server-side/dotnet.md) | [PHP](/docs/generated/sdks/server-side/php.md) | [Rust](/docs/generated/sdks/server-side/rust.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -109,47 +109,47 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Bootstrap from file | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | Custom Bootstrap implementation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
+<!-- prettier-ignore-end -->
+
 ## Community SDKs ❤️ {#community-sdks}
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
-- Angular - TypeScript ([angular-unleash-proxy-client](https://github.com/Karelics/angular-unleash-proxy-client) by [Karelics](https://karelics.fi/unleash-feature-flags-with-gitlab/))
-- Angular - TypeScript ([ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client))
-- Clojure ([AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure))
-- C++ ([aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp))
-- ColdBox - CFML ([coldbox-modules/unleashsdk](https://github.com/coldbox-modules/unleashsdk))
-- Dart ([uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash))
-- Elixir ([afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex))
-- Haskell ([finn-no/unleash-client-haskell](https://github.com/finn-no/unleash-client-haskell))
-- Kotlin ([silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin))
-- Laravel - PHP ([mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash))
-- NestJS - Node.js ([pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash))
-- PHP ([minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php))
-- PHP - Symfony ([Stogon/unleash-bundle](https://github.com/Stogon/unleash-bundle))
-- React Native / Expo ([nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native))
-- Solid ([nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid))
-- _...your implementation for your favorite language._
+-   Angular - TypeScript ([angular-unleash-proxy-client](https://github.com/Karelics/angular-unleash-proxy-client) by [Karelics](https://karelics.fi/unleash-feature-flags-with-gitlab/))
+-   Angular - TypeScript ([ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client))
+-   Clojure ([AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure))
+-   C++ ([aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp))
+-   ColdBox - CFML ([coldbox-modules/unleashsdk](https://github.com/coldbox-modules/unleashsdk))
+-   Dart ([uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash))
+-   Elixir ([afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex))
+-   Haskell ([finn-no/unleash-client-haskell](https://github.com/finn-no/unleash-client-haskell))
+-   Kotlin ([silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin))
+-   Laravel - PHP ([mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash))
+-   NestJS - Node.js ([pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash))
+-   PHP ([minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php))
+-   PHP - Symfony ([Stogon/unleash-bundle](https://github.com/Stogon/unleash-bundle))
+-   React Native / Expo ([nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native))
+-   Solid ([nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid))
+-   _...your implementation for your favorite language._
 
 ### Implement your own SDK {#implement-your-own-sdk}
 
 If you can't find an SDK that fits your need, you can also develop your own SDK. To make implementation easier, check out these resources:
 
-- [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
-- [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
-
+-   [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
+-   [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
 
 ## Client-side SDK behavior
 
-The following section details the behavior of frontend / client-side SDKs when initializing and fetching flags with respect to network connectivity.  
+The following section details the behavior of frontend / client-side SDKs when initializing and fetching flags with respect to network connectivity.
 
-When the SDK is initialized in the application, an in memory repository is setup and synchronized against the frontent API using the configured token and context. Note that the frontend API is hosted by either the Unleash Proxy/Edge or the upstream Unleash instance directly.  
+When the SDK is initialized in the application, an in memory repository is setup and synchronized against the frontent API using the configured token and context. Note that the frontend API is hosted by either the Unleash Proxy/Edge or the upstream Unleash instance directly.
 
 1. All feature flag evaluation is performed by the Proxy/Edge or Unleash instance. A payload of all enabled flags and their variants (if applicable) is returned as a single request. Disabled flags are not included.
 
 2. When a page inside the application requests a feature flag, the SDK will return the flag state from memory. No network connection to the frontend API is performed.
-   
 3. The SDK periodically syncs with the frontend API to retrieve the latest set of enabled flags
-  
+
 ## Working offline
 
 Once they have been initialized, all Unleash clients will continue to work perfectly well without an internet connection or in the event that the Unleash Server has an outage.
@@ -164,8 +164,8 @@ By default, all SDKs reach out to the Unleash Server at startup to fetch their f
 
 Bootstrapping is also supported by the following front-end client SDKs:
 
-- [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
-- [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
-- [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
-- [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
-- [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
+-   [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
+-   [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+-   [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
+-   [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
+-   [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)

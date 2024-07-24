@@ -9,6 +9,7 @@ import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu';
 import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { IntegrationEventsLastEvent } from 'component/integrations/IntegrationEventsModal/IntegrationEventsLastEvent';
 
 type CardVariant = 'default' | 'stacked';
 
@@ -176,6 +177,10 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     condition={isExternal}
                     show={<StyledOpenInNewIcon />}
                     elseShow={<ChevronRightIcon />}
+                />
+                <IntegrationEventsLastEvent
+                    integration={addon}
+                    sx={{ ml: 'auto' }}
                 />
             </StyledAction>
         </StyledCard>

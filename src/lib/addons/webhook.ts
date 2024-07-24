@@ -4,6 +4,11 @@ import definition from './webhook-definition';
 import type { IEvent } from '../types/events';
 import { type IAddonConfig, serializeDates } from '../types';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+import {
+    type FeatureEventFormatter,
+    FeatureEventFormatterMd,
+    LinkStyle,
+} from './feature-event-formatter-md';
 
 interface IParameters {
     url: string;
@@ -14,8 +19,14 @@ interface IParameters {
 }
 
 export default class Webhook extends Addon {
+    private msgFormatter: FeatureEventFormatter;
+
     constructor(args: IAddonConfig) {
         super(definition, args);
+        this.msgFormatter = new FeatureEventFormatterMd(
+            args.unleashUrl,
+            LinkStyle.MD,
+        );
     }
 
     async handleEvent(
@@ -37,6 +48,7 @@ export default class Webhook extends Addon {
             event,
             // Stringify twice to avoid escaping in Mustache
             eventJson: JSON.stringify(JSON.stringify(event)),
+            eventMarkdown: this.msgFormatter.format(event).text,
         };
 
         let body: string | undefined;

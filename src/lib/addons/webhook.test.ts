@@ -112,6 +112,41 @@ describe('Webhook integration', () => {
         expect(call.options.body).toBe('feature-created on toggle some-toggle');
     });
 
+    test('should allow for eventJson and eventMarkdown in bodyTemplate', async () => {
+        const addon = new WebhookAddon(ARGS);
+        const event: IEvent = {
+            id: 1,
+            createdAt: new Date('2024-07-24T00:00:00.000Z'),
+            createdByUserId: SYSTEM_USER_ID,
+            type: FEATURE_CREATED,
+            createdBy: 'some@user.com',
+            featureName: 'some-toggle',
+            project: 'default',
+            data: {
+                name: 'some-toggle',
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            },
+        };
+
+        const parameters = {
+            url: 'http://test.webhook.com/plain',
+            bodyTemplate:
+                '{\n  "json": {{{eventJson}}},\n  "markdown": "{{eventMarkdown}}"\n}',
+            contentType: 'text/plain',
+        };
+
+        addon.handleEvent(event, parameters, INTEGRATION_ID);
+        const call = fetchRetryCalls[0];
+        expect(fetchRetryCalls.length).toBe(1);
+        expect(call.url).toBe(parameters.url);
+        expect(call.options.headers['Content-Type']).toBe('text/plain');
+        expect(call.options.body).toMatchSnapshot();
+        expect(JSON.parse(JSON.parse(call.options.body).json)).toEqual(
+            serializeDates(event),
+        );
+    });
+
     test('Should format event with "authorization"', () => {
         const addon = new WebhookAddon(ARGS);
         const event: IEvent = {

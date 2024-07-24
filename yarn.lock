@@ -2085,6 +2085,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mustache@npm:^4.2.5":
+  version: 4.2.5
+  resolution: "@types/mustache@npm:4.2.5"
+  checksum: 10c0/624975c39068d47407eadb89628aaff5ef60f3b7a71eef92a254310896a4e90518a01dcf71d95779ab2c986034a6ca5403d22fea237c67ff87f2e2b3fb794ea6
+  languageName: node
+  linkType: hard
+
 "@types/node-fetch@npm:*":
   version: 2.6.2
   resolution: "@types/node-fetch@npm:2.6.2"
@@ -9759,6 +9766,7 @@ __metadata:
     "@types/make-fetch-happen": "npm:10.0.4"
     "@types/memoizee": "npm:0.4.11"
     "@types/mime": "npm:3.0.4"
+    "@types/mustache": "npm:^4.2.5"
     "@types/node": "npm:20.14.10"
     "@types/nodemailer": "npm:6.4.15"
     "@types/owasp-password-strength-test": "npm:1.3.2"

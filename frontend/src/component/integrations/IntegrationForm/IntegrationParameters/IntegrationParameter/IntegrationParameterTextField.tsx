@@ -1,7 +1,9 @@
+import type { ChangeEvent } from 'react';
 import { TextField, Typography } from '@mui/material';
-import type { AddonParameterSchema, AddonSchema } from 'openapi';
-import type { ChangeEventHandler } from 'react';
 import { styled } from '@mui/material';
+import type { AddonParameterSchema, AddonSchema } from 'openapi';
+import { trim } from 'component/common/util';
+import type { IIntegrationParameterProps } from './IntegrationParameterTypes';
 
 const MASKED_VALUE = '*****';
 
@@ -18,7 +20,7 @@ const resolveType = ({ type = 'text', sensitive = false }, value: string) => {
 export interface IIntegrationParameterTextFieldProps {
     parametersErrors: Record<string, string>;
     definition: AddonParameterSchema;
-    setParameterValue: (param: string) => ChangeEventHandler<HTMLInputElement>;
+    setParameterValue: IIntegrationParameterProps['setParameterValue'];
     config: AddonSchema;
 }
 
@@ -38,6 +40,14 @@ export const IntegrationParameterTextField = ({
         typeof value === 'string' ? value : '',
     );
     const error = parametersErrors[definition.name];
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        const value =
+            trim(event?.target?.value) === ''
+                ? undefined
+                : event?.target?.value;
+        setParameterValue(definition.name, value);
+    };
 
     return (
         <StyledTextField
@@ -60,7 +70,7 @@ export const IntegrationParameterTextField = ({
             }}
             value={value}
             error={Boolean(error)}
-            onChange={setParameterValue(definition.name)}
+            onChange={onChange}
             variant='outlined'
             helperText={definition.description}
         />

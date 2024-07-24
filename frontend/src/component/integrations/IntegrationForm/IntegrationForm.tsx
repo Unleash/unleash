@@ -132,24 +132,17 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         setFormValues(({ enabled }) => ({ ...formValues, enabled: !enabled }));
     };
 
-    const setParameterValue =
-        (param: string): ChangeEventHandler<HTMLInputElement> =>
-        (event) => {
-            event.preventDefault();
-            const value =
-                trim(event.target.value) === ''
-                    ? undefined
-                    : event.target.value;
-            setFormValues(
-                produce((draft) => {
-                    if (value === undefined) {
-                        delete draft.parameters[param];
-                    } else {
-                        draft.parameters[param] = value;
-                    }
-                }),
-            );
-        };
+    const setParameterValue = (param: string, value: string | undefined) => {
+        setFormValues(
+            produce((draft) => {
+                if (value === undefined) {
+                    delete draft.parameters[param];
+                } else {
+                    draft.parameters[param] = value;
+                }
+            }),
+        );
+    };
 
     const setEventValues = (events: string[]) => {
         setFormValues(

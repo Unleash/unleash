@@ -1,15 +1,7 @@
-import type { ChangeEventHandler } from 'react';
 import { StyledAddonParameterContainer } from '../../IntegrationForm.styles';
-import type { AddonParameterSchema, AddonSchema } from 'openapi';
 import { IntegrationParameterTextField } from './IntegrationParameterTextField';
 import { IntegrationParameterCheckbox } from './IntegrationParameterCheckbox';
-
-export interface IIntegrationParameterProps {
-    parametersErrors: Record<string, string>;
-    definition: AddonParameterSchema;
-    setParameterValue: (param: string) => ChangeEventHandler<HTMLInputElement>;
-    config: AddonSchema;
-}
+import type { IIntegrationParameterProps } from './IntegrationParameterTypes';
 
 export const IntegrationParameter = ({
     definition,

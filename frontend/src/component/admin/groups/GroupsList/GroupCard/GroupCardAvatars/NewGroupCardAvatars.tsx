@@ -116,7 +116,7 @@ const GroupCardAvatarsInner = ({
                     <AvatarComponent
                         key={objectId(user)}
                         user={{ ...user, id: objectId(user) }}
-                        onMouseEnter={(event: any) => {
+                        onMouseEnter={(event) => {
                             onPopoverOpen(event);
                             setPopupUser(user);
                         }}

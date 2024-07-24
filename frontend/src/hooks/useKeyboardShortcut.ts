@@ -19,6 +19,7 @@ export const useKeyboardShortcut = (
             if (key !== event.key) {
                 return;
             }
+
             if (modifiers.includes('ctrl')) {
                 if (isAppleDevice) {
                     if (!event.metaKey) {

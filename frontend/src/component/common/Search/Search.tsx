@@ -134,8 +134,8 @@ export const Search = ({
 
     const hotkey = useKeyboardShortcut(
         {
-            modifiers: ['ctrl'],
-            key: 'k',
+            modifiers: ['ctrl', 'shift'],
+            key: 'K',
             preventDefault: true,
         },
         () => {

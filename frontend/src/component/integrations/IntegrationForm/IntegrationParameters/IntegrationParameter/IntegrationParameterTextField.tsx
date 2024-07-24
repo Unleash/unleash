@@ -2,6 +2,7 @@ import { TextField, Typography } from '@mui/material';
 import type { AddonParameterSchema, AddonSchema } from 'openapi';
 import type { ChangeEventHandler } from 'react';
 import { styled } from '@mui/material';
+import { Markdown } from 'component/common/Markdown/Markdown';
 
 const MASKED_VALUE = '*****';
 
@@ -62,7 +63,11 @@ export const IntegrationParameterTextField = ({
             error={Boolean(error)}
             onChange={setParameterValue(definition.name)}
             variant='outlined'
-            helperText={definition.description}
+            helperText={
+                definition.description ? (
+                    <Markdown>{definition.description}</Markdown>
+                ) : undefined
+            }
         />
     );
 };

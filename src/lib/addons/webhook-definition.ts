@@ -91,7 +91,7 @@ const webhookDefinition: IAddonDefinition = {
   "json": {{{eventJson}}}
 }`,
             description:
-                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events). You can use {{{eventJson}}} to include entire serialized event.",
+                '(Optional) You may format the body using a mustache template. If you don\'t specify anything, the format will be similar to the [events format](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events). You can use `{{{eventJson}}}` to include entire serialized event, and `"{{eventMarkdown}}"` for formatted description.',
             type: 'textfield',
             required: false,
             sensitive: false,

@@ -45,16 +45,17 @@ export class IntegrationEventsStore extends CRUDStore<
                     .limit(100);
             })
             .with('latest_per_integration', (qb) => {
-                qb.select(this.db.raw('DISTINCT ON (integration_id) id'))
+                qb.select(this.db.raw('MAX(id) as id'))
                     .from(this.tableName)
-                    .orderBy('integration_id')
-                    .orderBy('id', 'desc');
+                    .groupBy('integration_id');
             })
             .from(this.tableName)
-            .whereNotIn('id', this.db.select('id').from('latest_events'))
             .whereNotIn(
                 'id',
-                this.db.select('id').from('latest_per_integration'),
+                this.db
+                    .select('id')
+                    .from('latest_events')
+                    .union(this.db.select('id').from('latest_per_integration')),
             )
             .delete();
     }

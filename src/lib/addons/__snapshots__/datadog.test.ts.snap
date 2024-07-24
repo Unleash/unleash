@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Datadog integration JSON template options should parse tags and allow eventMarkdown with JSON template 1`] = `"{"title":"Unleash notification update","text":"%%% \\n *some@user.com* created *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* in project *[default](http://some-url.com/projects/default)* \\n %%%","tags":"test:1,test:2"}"`;
+
+exports[`Datadog integration JSON template options should use custom JSON template if option checked 1`] = `"{"title":"feature-created","text":"some@user.com"}"`;
+
+exports[`Datadog integration JSON template options should use default JSON template if option checked 1`] = `"{"text":"%%% \\n *some@user.com* created *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* in project *[default](http://some-url.com/projects/default)* \\n %%% ","title":"Unleash notification update","tags":["test:1","test:2"],"source_type_name":"my-custom-source-type"}"`;
+
 exports[`Datadog integration Should call datadog webhook  for archived toggle 1`] = `"{"text":"%%% \\n *some@user.com* archived *some-toggle* in project ** \\n %%% ","title":"Unleash notification update"}"`;
 
 exports[`Datadog integration Should call datadog webhook  for archived toggle with project info 1`] = `"{"text":"%%% \\n *some@user.com* archived *some-toggle* in project *[some-project](http://some-url.com/projects/some-project)* \\n %%% ","title":"Unleash notification update"}"`;

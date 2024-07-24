@@ -255,6 +255,75 @@ describe('Datadog integration', () => {
         expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
     });
 
+    describe('JSON template options', () => {
+        const event: IEvent = {
+            id: 1,
+            createdAt: new Date(),
+            type: FEATURE_CREATED,
+            createdBy: 'some@user.com',
+            createdByUserId: -1337,
+            featureName: 'some-toggle',
+            project: 'default',
+            data: {
+                name: 'some-toggle',
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            },
+            tags: [
+                { type: 'test', value: '1' },
+                { type: 'test', value: '2' },
+            ],
+        };
+
+        test('should use default JSON template if option checked', async () => {
+            const addon = new DatadogAddon(ARGS);
+            const parameters = {
+                url: 'http://api.datadoghq.com/api/v1/events',
+                apiKey: 'fakeKey',
+                jsonTemplate: 'true' as const,
+                sourceTypeName: 'my-custom-source-type',
+            };
+
+            await addon.handleEvent(event, parameters, INTEGRATION_ID);
+            expect(fetchRetryCalls.length).toBe(1);
+            expect(fetchRetryCalls[0].url).toBe(parameters.url);
+            expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        });
+
+        test('should use custom JSON template if option checked', async () => {
+            const addon = new DatadogAddon(ARGS);
+            const parameters = {
+                url: 'http://api.datadoghq.com/api/v1/events',
+                apiKey: 'fakeKey',
+                bodyTemplate:
+                    '{\n  "title": "{{event.type}}",\n  "text": "{{event.createdBy}}"\n}',
+                jsonTemplate: 'true' as const,
+                sourceTypeName: 'my-custom-source-type',
+            };
+
+            await addon.handleEvent(event, parameters, INTEGRATION_ID);
+            expect(fetchRetryCalls.length).toBe(1);
+            expect(fetchRetryCalls[0].url).toBe(parameters.url);
+            expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        });
+
+        test('should parse tags and allow eventMarkdown with JSON template', async () => {
+            const addon = new DatadogAddon(ARGS);
+            const parameters = {
+                url: 'http://api.datadoghq.com/api/v1/events',
+                apiKey: 'fakeKey',
+                bodyTemplate: `{ "title": "Unleash notification update", "text": "%%% \\n {{eventMarkdown}} \\n %%%", "tags": "{{tags}}" }`,
+                jsonTemplate: 'true' as const,
+                sourceTypeName: 'my-custom-source-type',
+            };
+
+            await addon.handleEvent(event, parameters, INTEGRATION_ID);
+            expect(fetchRetryCalls.length).toBe(1);
+            expect(fetchRetryCalls[0].url).toBe(parameters.url);
+            expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        });
+    });
+
     test('Should call registerEvent', async () => {
         const addon = new DatadogAddon(ARGS);
         const event: IEvent = {

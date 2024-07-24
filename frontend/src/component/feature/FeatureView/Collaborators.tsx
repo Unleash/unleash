@@ -23,21 +23,20 @@ const LastModifiedByContainer = styled('div')(({ theme }) => ({
     height: 'min-content',
 }));
 
-const StyledDescription = styled('span')({ gridArea: 'description' });
-const StyledTooltip = styled(HtmlTooltip)({ gridArea: 'avatar' });
-const StyledLink = styled(Link)({ gridArea: 'link' });
+const GridDescription = styled('span')({ gridArea: 'description' });
+const GridTooltip = styled(HtmlTooltip)({ gridArea: 'avatar' });
+const GridLink = styled(Link)({ gridArea: 'link' });
 
 const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
     return (
         <LastModifiedByContainer>
-            <StyledDescription>Last modified by</StyledDescription>
-            <StyledTooltip arrow describeChild title={name}>
+            <GridDescription>Last modified by</GridDescription>
+            <GridTooltip arrow describeChild title={name}>
                 <span>
                     <StyledAvatar user={{ id, name, imageUrl }} hideTitle />
                 </span>
-            </StyledTooltip>
-
-            <StyledLink to='logs'>view change</StyledLink>
+            </GridTooltip>
+            <GridLink to='logs'>view change</GridLink>
         </LastModifiedByContainer>
     );
 };

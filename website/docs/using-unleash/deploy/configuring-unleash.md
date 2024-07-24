@@ -502,7 +502,7 @@ Instead you must know whether you require an SSL connection ahead of time.
 
 #### Minimum
 
-For Postgresql we recommend running with at least 1 CPU and at least 1Gi of memory, as well as at least 5Gi of storage.
+For PostgreSQL we recommend running with at least 1 CPU and at least 1Gi of memory, as well as at least 5Gi of storage.
 
 | Provider | Machine                        |
 |----------|--------------------------------|

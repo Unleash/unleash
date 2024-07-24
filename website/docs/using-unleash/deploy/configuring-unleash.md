@@ -32,6 +32,22 @@ configured, you will not be able to allow your users to reset their own password
 
 For [more details, see here](./email-service.md)
 
+### Minimum and recommended specifications
+
+#### Minimum
+
+| Resource | Request | Limit |
+|----------|---------|-------|
+| CPU      | 250m    | 500m  |
+| Memory   | 200Mi   | 400Mi |
+
+#### Recommended
+
+| Resource | Request | Limit |
+|----------|---------|-------|
+| CPU      | 500m    | 1000m |
+| Memory   | 512Mi   | 1Gi   |
+
 ## Further customization
 
 In order to customize "anything" in Unleash you need to
@@ -481,6 +497,30 @@ same SSL modes that they support. As of version 8 (released on February 25th
 2020), [node-postgres no longer supports all sslmodes](https://node-postgres.com/announcements#2020-02-25). For this
 reason, Unleash cannot support all of Postgres' SSL modes. Specifically, Unleash **does not support** `sslmode=prefer`.
 Instead you must know whether you require an SSL connection ahead of time.
+
+### Recommended PostgreSQL spec
+
+#### Minimum
+
+For PostgreSQL we recommend running with at least 1 CPU and at least 1Gi of memory, as well as at least 5Gi of storage.
+
+| Provider | Machine                        |
+|----------|--------------------------------|
+| AWS      | db.t4g.medium (2CPU / 4GB mem) |
+| Azure    | B2s (2CPU / 4GB mem )          |
+| GCP      | 2 CPU / 4GB mem                |
+
+#### Recommended
+
+PostgreSQL performance improves the more resources you throw at it, and if you have many connections active, you want more RAM, so a good recommendation is:
+
+- 4CPUs and 16GB of memory, and at least 20Gi of SSD storage
+
+| Provider | Machine                                                             |
+|----------|---------------------------------------------------------------------|
+| AWS-RDS  | db.m6g.xlarge (4CPU / 16GB mem) or db.m5.xlarge (4cores / 16GB mem) |
+| Azure    | Standard_E2bds_v5 (2CPU / 16GB mem )                                |
+| GCP      | 4 CPU / 16GB mem                                                    |
 
 ### Troubleshooting: database pooling connection timeouts {#database-pooling-connection-timeouts}
 

@@ -70,7 +70,6 @@ const Container = styled('article')(({ theme }) => ({
     gap: theme.spacing(10),
     alignItems: 'center',
     justifyContent: 'space-between',
-    fontSize: `calc(0.9 * ${theme.typography.body2.fontSize})`,
     [theme.breakpoints.down('xl')]: {
         display: 'none',
     },

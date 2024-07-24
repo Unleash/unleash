@@ -26,17 +26,23 @@ export class IntegrationEventsStore extends CRUDStore<
         limit: number,
         offset: number,
     ): Promise<IntegrationEventSchema[]> {
+        const endTimer = this.timer('getPaginatedEvents');
+
         const rows = await this.db(this.tableName)
             .where('integration_id', id)
             .limit(limit)
             .offset(offset)
             .orderBy('id', 'desc');
 
+        endTimer();
+
         return rows.map(this.fromRow) as IntegrationEventSchema[];
     }
 
     async cleanUpEvents(): Promise<void> {
-        return this.db
+        const endTimer = this.timer('cleanUpEvents');
+
+        await this.db
             .with('latest_events', (qb) => {
                 qb.select('id')
                     .from(this.tableName)
@@ -58,5 +64,7 @@ export class IntegrationEventsStore extends CRUDStore<
                     .union(this.db.select('id').from('latest_per_integration')),
             )
             .delete();
+
+        endTimer();
     }
 }

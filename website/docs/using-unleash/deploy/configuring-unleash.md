@@ -498,7 +498,7 @@ same SSL modes that they support. As of version 8 (released on February 25th
 reason, Unleash cannot support all of Postgres' SSL modes. Specifically, Unleash **does not support** `sslmode=prefer`.
 Instead you must know whether you require an SSL connection ahead of time.
 
-### Recommended Postgres spec
+### Recommended PostgreSQL spec
 
 #### Minimum
 

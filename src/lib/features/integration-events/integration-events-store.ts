@@ -41,11 +41,21 @@ export class IntegrationEventsStore extends CRUDStore<
                 qb.select('id')
                     .from(this.tableName)
                     .whereRaw(`created_at >= now() - INTERVAL '2 hours'`)
-                    .orderBy('created_at', 'desc')
+                    .orderBy('id', 'desc')
                     .limit(100);
+            })
+            .with('latest_per_integration', (qb) => {
+                qb.select(this.db.raw('DISTINCT ON (integration_id) id'))
+                    .from(this.tableName)
+                    .orderBy('integration_id')
+                    .orderBy('id', 'desc');
             })
             .from(this.tableName)
             .whereNotIn('id', this.db.select('id').from('latest_events'))
+            .whereNotIn(
+                'id',
+                this.db.select('id').from('latest_per_integration'),
+            )
             .delete();
     }
 }

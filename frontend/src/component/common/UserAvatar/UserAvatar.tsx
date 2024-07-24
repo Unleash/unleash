@@ -9,21 +9,15 @@ import type { IUser } from 'interfaces/user';
 import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-const StyledAvatar = styled(Avatar, {
-    shouldForwardProp: (prop) => prop !== 'avatarWidth',
-})<{ avatarWidth?: (theme: Theme) => string }>(({ theme, avatarWidth }) => {
-    const width = avatarWidth ? avatarWidth(theme) : theme.spacing(3.5);
-
-    return {
-        width,
-        height: width,
-        margin: 'auto',
-        backgroundColor: theme.palette.secondary.light,
-        color: theme.palette.text.primary,
-        fontSize: theme.fontSizes.smallerBody,
-        fontWeight: theme.fontWeight.bold,
-    };
-});
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
+    margin: 'auto',
+    backgroundColor: theme.palette.secondary.light,
+    color: theme.palette.text.primary,
+    fontSize: theme.fontSizes.smallerBody,
+    fontWeight: theme.fontWeight.bold,
+}));
 
 export interface IUserAvatarProps extends AvatarProps {
     user?: Partial<
@@ -35,7 +29,6 @@ export interface IUserAvatarProps extends AvatarProps {
     onMouseLeave?: () => void;
     className?: string;
     sx?: SxProps<Theme>;
-    avatarWidth?: (theme: Theme) => string;
     hideTitle?: boolean;
 }
 

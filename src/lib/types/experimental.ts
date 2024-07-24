@@ -331,7 +331,7 @@ const flags: IFlags = {
         false,
     ),
     featureCollaborators: parseEnvVarBoolean(
-        process.env.UNEASH_EXPERIMENTAL_FEATURE_COLLABORATORS,
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_COLLABORATORS,
         false,
     ),
 };

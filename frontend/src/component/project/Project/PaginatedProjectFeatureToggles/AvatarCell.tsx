@@ -1,4 +1,4 @@
-import { type Theme, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type { FC } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -35,6 +35,11 @@ const StyledSecondaryText = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+}));
+
 export const AvatarCell =
     (onAvatarClick: (userId: number) => void): FC<AvatarCellProps> =>
     ({ row: { original } }) => {
@@ -67,14 +72,13 @@ export const AvatarCell =
                             </span>
                         </ScreenReaderOnly>
 
-                        <UserAvatar
+                        <StyledAvatar
                             hideTitle
                             user={{
                                 id: original.createdBy.id,
                                 name: original.createdBy.name,
                                 imageUrl: original.createdBy.imageUrl,
                             }}
-                            avatarWidth={(theme: Theme) => theme.spacing(3)}
                         />
                     </StyledAvatarButton>
                 </HtmlTooltip>

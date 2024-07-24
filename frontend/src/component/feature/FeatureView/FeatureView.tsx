@@ -50,6 +50,7 @@ import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
+import { Collaborators } from './Collaborators';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -113,8 +114,12 @@ const StyledSeparator = styled('div')(({ theme }) => ({
     height: '1px',
 }));
 
-const StyledTabContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 4),
+const StyledTabRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    gap: theme.spacing(4),
+    paddingInline: theme.spacing(4),
+    justifyContent: 'space-between',
 }));
 
 const StyledTabButton = styled(Tab)(({ theme }) => ({
@@ -155,6 +160,7 @@ export const FeatureView = () => {
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
+    const showCollaborators = useUiFlag('featureCollaborators');
 
     const { feature, loading, error, status } = useFeature(
         projectId,
@@ -355,7 +361,7 @@ export const FeatureView = () => {
                     </StyledToolbarContainer>
                 </StyledInnerContainer>
                 <StyledSeparator />
-                <StyledTabContainer>
+                <StyledTabRow>
                     <Tabs
                         value={activeTab.path}
                         indicatorColor='primary'
@@ -371,7 +377,15 @@ export const FeatureView = () => {
                             />
                         ))}
                     </Tabs>
-                </StyledTabContainer>
+                    <ConditionallyRender
+                        condition={showCollaborators}
+                        show={
+                            <Collaborators
+                                collaborators={feature.collaborators?.users}
+                            />
+                        }
+                    />
+                </StyledTabRow>
             </StyledHeader>
             <Routes>
                 <Route path='metrics' element={<FeatureMetrics />} />

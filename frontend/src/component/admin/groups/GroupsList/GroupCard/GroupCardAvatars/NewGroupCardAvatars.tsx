@@ -19,13 +19,14 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
-    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
-    marginLeft: theme.spacing(-1),
-    '&:hover': {
-        outlineColor: theme.palette.primary.main,
-    },
-}));
+const StyledAvatar = (component: typeof UserAvatar) =>
+    styled(component)(({ theme }) => ({
+        outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+        marginLeft: theme.spacing(-1),
+        '&:hover': {
+            outlineColor: theme.palette.primary.main,
+        },
+    }));
 
 const StyledHeader = styled('h3')(({ theme }) => ({
     margin: theme.spacing(0, 0, 1),
@@ -42,13 +43,31 @@ interface IGroupCardAvatarsProps {
     }[];
     header?: ReactNode;
     avatarLimit?: number;
+    AvatarComponent?: typeof UserAvatar;
 }
 
 export const GroupCardAvatars = ({
+    AvatarComponent,
+    ...props
+}: IGroupCardAvatarsProps) => {
+    const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar);
+
+    return <GroupCardAvatarsInner AvatarComponent={Avatar} {...props} />;
+};
+
+type GroupCardAvatarsInnerProps = Omit<
+    IGroupCardAvatarsProps,
+    'AvatarComponent'
+> & {
+    AvatarComponent: typeof UserAvatar;
+};
+
+const GroupCardAvatarsInner = ({
     users = [],
     header = null,
     avatarLimit = 9,
-}: IGroupCardAvatarsProps) => {
+    AvatarComponent,
+}: GroupCardAvatarsInnerProps) => {
     const shownUsers = useMemo(
         () =>
             users
@@ -94,7 +113,7 @@ export const GroupCardAvatars = ({
             />
             <StyledAvatars>
                 {shownUsers.map((user) => (
-                    <StyledAvatar
+                    <AvatarComponent
                         key={objectId(user)}
                         user={{ ...user, id: objectId(user) }}
                         onMouseEnter={(event) => {
@@ -107,9 +126,9 @@ export const GroupCardAvatars = ({
                 <ConditionallyRender
                     condition={users.length > avatarLimit}
                     show={
-                        <StyledAvatar>
+                        <AvatarComponent>
                             +{users.length - shownUsers.length}
-                        </StyledAvatar>
+                        </AvatarComponent>
                     }
                 />
                 <GroupPopover

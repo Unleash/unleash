@@ -27,7 +27,7 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 
-interface ICreateProjectDialogProps {
+interface ICreateFeatureDialogProps {
     open: boolean;
     onClose: () => void;
 }
@@ -64,7 +64,7 @@ const configButtonData = {
 export const CreateFeatureDialog = ({
     open,
     onClose,
-}: ICreateProjectDialogProps) => {
+}: ICreateFeatureDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
     const { uiConfig } = useUiConfig();

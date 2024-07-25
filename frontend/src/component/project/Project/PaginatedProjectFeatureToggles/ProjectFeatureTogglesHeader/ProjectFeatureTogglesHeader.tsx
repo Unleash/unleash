@@ -24,8 +24,8 @@ import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
-import { useFeedback } from '../../../../feedbackNew/useFeedback';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { useFeedback } from 'component/feedbackNew/useFeedback';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CreateFeatureDialog } from './CreateFeatureDialog';
 
 interface IProjectFeatureTogglesHeaderProps {

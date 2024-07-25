@@ -69,7 +69,8 @@ export type IFlagKey =
     | 'removeUnsafeInlineStyleSrc'
     | 'insightsV2'
     | 'integrationEvents'
-    | 'featureCollaborators';
+    | 'featureCollaborators'
+    | 'improveCreateFlagFlow';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -332,6 +333,10 @@ const flags: IFlags = {
     ),
     featureCollaborators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_COLLABORATORS,
+        false,
+    ),
+    improveCreateFlagFlow: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPROVE_CREATE_FLAG_FLOW,
         false,
     ),
 };

@@ -30,6 +30,11 @@ type FormProps = {
     setDescription: (newDescription: string) => void;
     setName: (newName: string) => void;
     validateName?: () => void;
+    testIds?: Partial<{
+        nameInput: string;
+        descriptionInput: string;
+        submitButton: string;
+    }>;
 };
 
 export const DialogFormTemplate: React.FC<FormProps> = ({

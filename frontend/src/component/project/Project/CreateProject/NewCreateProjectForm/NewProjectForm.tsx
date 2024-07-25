@@ -22,10 +22,10 @@ import {
     StyledInput,
     TopGrid,
 } from './NewProjectForm.styles';
-import { MultiSelectConfigButton } from './ConfigButtons/MultiSelectConfigButton';
-import { SingleSelectConfigButton } from './ConfigButtons/SingleSelectConfigButton';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 import { Box, styled } from '@mui/material';
+import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
+import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 
 type FormProps = {
     projectId: string;

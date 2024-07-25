@@ -1,24 +1,33 @@
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
+import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
+import StickinessIcon from '@mui/icons-material/FormatPaint';
+import ProjectModeIcon from '@mui/icons-material/Adjust';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { NewProjectForm } from './NewProjectForm';
-import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useState, type FormEvent } from 'react';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
-import { Button, Dialog, styled } from '@mui/material';
+import { Dialog, styled } from '@mui/material';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
+import { StyledDefinitionList } from './NewProjectForm.styles';
+import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
+import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { useStickinessOptions } from 'hooks/useStickinessOptions';
+import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 
 interface ICreateProjectDialogProps {
     open: boolean;
@@ -44,6 +53,57 @@ const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.common.white,
     stroke: theme.palette.common.white,
 }));
+
+const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
+const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
+
+const projectModeOptions = [
+    { value: 'open', label: 'open' },
+    { value: 'protected', label: 'protected' },
+    { value: 'private', label: 'private' },
+];
+
+const configButtonData = {
+    environments: {
+        icon: <EnvironmentsIcon />,
+        text: `Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.`,
+    },
+    stickiness: {
+        icon: <StickinessIcon />,
+        text: 'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+    },
+    mode: {
+        icon: <ProjectModeIcon />,
+        text: "A project's collaboration mode defines who should be allowed see your project and create change requests in it.",
+        additionalTooltipContent: (
+            <>
+                <p>The modes and their functions are:</p>
+                <StyledDefinitionList>
+                    <dt>Open</dt>
+                    <dd>
+                        Anyone can see the project and anyone can create change
+                        requests.
+                    </dd>
+                    <dt>Protected</dt>
+                    <dd>
+                        Anyone can see the project, but only admins and project
+                        members can submit change requests.
+                    </dd>
+                    <dt>Private</dt>
+                    <dd>
+                        Hides the project from users with the "viewer" root role
+                        who are not members of the project. Only project members
+                        and admins can submit change requests.
+                    </dd>
+                </StyledDefinitionList>
+            </>
+        ),
+    },
+    changeRequests: {
+        icon: <ChangeRequestIcon />,
+        text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
+    },
+};
 
 const useProjectLimit = () => {
     const resourceLimitsEnabled = useUiFlag('resourceLimits');
@@ -122,7 +182,7 @@ export const CreateProjectDialog = ({
 --data-raw '${JSON.stringify(projectPayload, undefined, 2)}'`;
     };
 
-    const handleSubmit = async (e: Event) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         clearErrors();
         const validName = validateName();
@@ -159,6 +219,29 @@ export const CreateProjectDialog = ({
         loading: loadingLimit,
     } = useProjectLimit();
 
+    const { isEnterprise } = useUiConfig();
+    const { environments: allEnvironments } = useEnvironments();
+    const activeEnvironments = allEnvironments.filter((env) => env.enabled);
+    const stickinessOptions = useStickinessOptions(projectStickiness);
+
+    const numberOfConfiguredChangeRequestEnvironments = Object.keys(
+        projectChangeRequestConfiguration,
+    ).length;
+    const changeRequestSelectorLabel =
+        numberOfConfiguredChangeRequestEnvironments > 1
+            ? `${numberOfConfiguredChangeRequestEnvironments} environments configured`
+            : numberOfConfiguredChangeRequestEnvironments === 1
+              ? `1 environment  configured`
+              : 'Configure change requests';
+
+    const availableChangeRequestEnvironments = (
+        projectEnvironments.size === 0
+            ? activeEnvironments
+            : activeEnvironments.filter((env) =>
+                  projectEnvironments.has(env.name),
+              )
+    ).map(({ name, type }) => ({ name, type }));
+
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
@@ -171,28 +254,13 @@ export const CreateProjectDialog = ({
                 formatApiCode={formatApiCode}
                 useFixedSidebar
             >
-                <NewProjectForm
-                    errors={errors}
-                    handleSubmit={handleSubmit}
-                    projectId={projectId}
-                    projectEnvironments={projectEnvironments}
-                    setProjectEnvironments={setProjectEnvironments}
-                    projectName={projectName}
-                    projectStickiness={projectStickiness}
-                    projectChangeRequestConfiguration={
-                        projectChangeRequestConfiguration
-                    }
-                    updateProjectChangeRequestConfig={
-                        updateProjectChangeRequestConfig
-                    }
-                    projectMode={projectMode}
-                    setProjectMode={setProjectMode}
-                    setProjectStickiness={setProjectStickiness}
-                    setProjectName={setProjectName}
-                    projectDesc={projectDesc}
-                    setProjectDesc={setProjectDesc}
-                    overrideDocumentation={setDocumentation}
-                    clearDocumentationOverride={clearDocumentationOverride}
+                <DialogFormTemplate
+                    resource='project'
+                    createButtonProps={{
+                        permission: CREATE_PROJECT,
+                        disabled:
+                            creatingProject || limitReached || loadingLimit,
+                    }}
                     Limit={
                         <ConditionallyRender
                             condition={resourceLimitsEnabled}
@@ -205,17 +273,159 @@ export const CreateProjectDialog = ({
                             }
                         />
                     }
-                >
-                    <Button onClick={onClose}>Cancel</Button>
-                    <CreateButton
-                        name='project'
-                        permission={CREATE_PROJECT}
-                        disabled={
-                            creatingProject || limitReached || loadingLimit
-                        }
-                        data-testid={CREATE_PROJECT_BTN}
-                    />
-                </NewProjectForm>
+                    handleSubmit={handleSubmit}
+                    name={projectName}
+                    setName={setProjectName}
+                    description={projectDesc}
+                    setDescription={setProjectDesc}
+                    errors={errors}
+                    icon={StyledProjectIcon}
+                    onClose={onClose}
+                    testIds={{
+                        nameInput: PROJECT_NAME_INPUT,
+                        descriptionInput: PROJECT_DESCRIPTION_INPUT,
+                        submitButton: CREATE_PROJECT_BTN,
+                    }}
+                    configButtons={
+                        <>
+                            <MultiSelectConfigButton
+                                tooltip={{
+                                    header: 'Select project environments',
+                                }}
+                                description={configButtonData.environments.text}
+                                selectedOptions={projectEnvironments}
+                                options={activeEnvironments.map((env) => ({
+                                    label: env.name,
+                                    value: env.name,
+                                }))}
+                                onChange={setProjectEnvironments}
+                                button={{
+                                    label:
+                                        projectEnvironments.size > 0
+                                            ? `${projectEnvironments.size} selected`
+                                            : 'All environments',
+                                    labelWidth: `${'all environments'.length}ch`,
+                                    icon: <EnvironmentsIcon />,
+                                }}
+                                search={{
+                                    label: 'Filter project environments',
+                                    placeholder: 'Select project environments',
+                                }}
+                                onOpen={() =>
+                                    setDocumentation(
+                                        configButtonData.environments,
+                                    )
+                                }
+                                onClose={clearDocumentationOverride}
+                            />
+
+                            <SingleSelectConfigButton
+                                tooltip={{
+                                    header: 'Set default project stickiness',
+                                }}
+                                description={configButtonData.stickiness.text}
+                                options={stickinessOptions.map(
+                                    ({ key, ...rest }) => ({
+                                        value: key,
+                                        ...rest,
+                                    }),
+                                )}
+                                onChange={(value: any) => {
+                                    setProjectStickiness(value);
+                                }}
+                                button={{
+                                    label: projectStickiness,
+                                    icon: <StickinessIcon />,
+                                    labelWidth: '12ch',
+                                }}
+                                search={{
+                                    label: 'Filter stickiness options',
+                                    placeholder: 'Select default stickiness',
+                                }}
+                                onOpen={() =>
+                                    setDocumentation(
+                                        configButtonData.stickiness,
+                                    )
+                                }
+                                onClose={clearDocumentationOverride}
+                            />
+
+                            <ConditionallyRender
+                                condition={isEnterprise()}
+                                show={
+                                    <SingleSelectConfigButton
+                                        tooltip={{
+                                            header: 'Set project collaboration mode',
+                                            additionalContent:
+                                                configButtonData.mode
+                                                    .additionalTooltipContent,
+                                        }}
+                                        description={configButtonData.mode.text}
+                                        options={projectModeOptions}
+                                        onChange={(value: any) => {
+                                            setProjectMode(value);
+                                        }}
+                                        button={{
+                                            label: projectMode,
+                                            icon: <ProjectModeIcon />,
+                                            labelWidth: `${`protected`.length}ch`,
+                                        }}
+                                        search={{
+                                            label: 'Filter project mode options',
+                                            placeholder: 'Select project mode',
+                                        }}
+                                        onOpen={() =>
+                                            setDocumentation(
+                                                configButtonData.mode,
+                                            )
+                                        }
+                                        onClose={clearDocumentationOverride}
+                                    />
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={isEnterprise()}
+                                show={
+                                    <ChangeRequestTableConfigButton
+                                        tooltip={{
+                                            header: 'Configure change requests',
+                                        }}
+                                        description={
+                                            configButtonData.changeRequests.text
+                                        }
+                                        activeEnvironments={
+                                            availableChangeRequestEnvironments
+                                        }
+                                        updateProjectChangeRequestConfiguration={
+                                            updateProjectChangeRequestConfig
+                                        }
+                                        button={{
+                                            label: changeRequestSelectorLabel,
+                                            icon: <ChangeRequestIcon />,
+                                            labelWidth: `${
+                                                'nn environments configured'
+                                                    .length
+                                            }ch`,
+                                        }}
+                                        search={{
+                                            label: 'Filter environments',
+                                            placeholder: 'Filter environments',
+                                        }}
+                                        projectChangeRequestConfiguration={
+                                            projectChangeRequestConfiguration
+                                        }
+                                        onOpen={() =>
+                                            setDocumentation(
+                                                configButtonData.changeRequests,
+                                            )
+                                        }
+                                        onClose={clearDocumentationOverride}
+                                    />
+                                }
+                            />
+                        </>
+                    }
+                />
             </FormTemplate>
         </StyledDialog>
     );

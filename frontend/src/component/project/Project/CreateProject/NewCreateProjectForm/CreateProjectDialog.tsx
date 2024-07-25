@@ -22,12 +22,12 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
-import { StyledDefinitionList } from './NewProjectForm.styles';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
+import { StyledDefinitionList } from './CreateProjectDialog.styles';
 
 interface ICreateProjectDialogProps {
     open: boolean;

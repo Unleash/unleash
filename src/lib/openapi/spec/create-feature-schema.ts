@@ -1,4 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
+import { tagSchema } from './tag-schema';
 
 export const createFeatureSchema = {
     $id: '#/components/schemas/createFeatureSchema',
@@ -32,14 +33,17 @@ export const createFeatureSchema = {
         },
         tags: {
             type: 'array',
+            description: 'Tags to add to the feature.',
             items: {
-                type: 'string',
-                example: 'simple:test',
+                $ref: '#/components/schemas/tagSchema',
             },
-            description: 'List of tags associated with the feature',
         },
     },
-    components: {},
+    components: {
+        schemas: {
+            tagSchema,
+        },
+    },
 } as const;
 
 export type CreateFeatureSchema = FromSchema<typeof createFeatureSchema>;

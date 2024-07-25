@@ -14,6 +14,7 @@ import { tagTypeSchema } from './tag-type-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { featureDependenciesSchema } from './feature-dependencies-schema';
 import { dependentFeatureSchema } from './dependent-feature-schema';
+import { tagSchema } from './tag-schema';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
@@ -194,6 +195,7 @@ export const exportResultSchema = {
             tagTypeSchema,
             featureDependenciesSchema,
             dependentFeatureSchema,
+            tagSchema,
         },
     },
 } as const;

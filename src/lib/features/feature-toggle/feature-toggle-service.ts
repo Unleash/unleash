@@ -1256,7 +1256,7 @@ class FeatureToggleService {
         await this.validateName(value.name);
         await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
 
-        const exists = await this.projectStore.hasProject(projectId);
+        const projectExists = await this.projectStore.hasProject(projectId);
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
             throw new InvalidOperationError(
@@ -1266,7 +1266,7 @@ class FeatureToggleService {
 
         await this.validateFeatureFlagLimit();
 
-        if (exists) {
+        if (projectExists) {
             let featureData: FeatureToggleInsert;
             if (isValidated) {
                 featureData = { createdByUserId: auditUser.id, ...value };
@@ -1299,6 +1299,16 @@ class FeatureToggleService {
                     environments.map((env) => env.environment),
                     value.variants,
                 );
+            }
+
+            if (value.tags && value.tags.length > 0) {
+                const mapTagsToFeatureTagInserts = value.tags.map((tag) => ({
+                    tagValue: tag.value,
+                    tagType: tag.type,
+                    createdByUserId: auditUser.id,
+                    featureName: featureName,
+                }));
+                await this.tagStore.tagFeatures(mapTagsToFeatureTagInserts);
             }
 
             await this.eventService.storeEvent(

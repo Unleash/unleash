@@ -30,6 +30,14 @@ export const createFeatureSchema = {
             description:
                 '`true` if the impression data collection is enabled for the feature, otherwise `false`.',
         },
+        tags: {
+            type: 'array',
+            items: {
+                type: 'string',
+                example: 'simple:test',
+            },
+            description: 'List of tags associated with the feature',
+        },
     },
     components: {},
 } as const;

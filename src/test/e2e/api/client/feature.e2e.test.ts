@@ -358,3 +358,25 @@ test('returns a feature flags impression data for a different project', async ()
             expect(projectFlag.impressionData).toBe(true);
         });
 });
+
+test('Can add tags while creating feature flag', async () => {
+    const featureName = 'test.feature.with.tagss';
+    const tags = [{ value: 'tag1', type: 'simple' }];
+
+    await app.request.post('/api/admin/tags').send(tags[0]);
+
+    await app.request.post('/api/admin/projects/default/features').send({
+        name: featureName,
+        type: 'killswitch',
+        tags,
+    });
+
+    const { body } = await app.request
+        .get(`/api/admin/features/${featureName}/tags`)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        tags,
+    });
+});

@@ -8,7 +8,10 @@ test('createFeatureSchema', () => {
         description:
             'Controls disabling of the comments section in case of an incident',
         impressionData: false,
-        tags: ['simple:test', 'simple:test2'],
+        tags: [
+            { type: 'simple', value: 'tag' },
+            { type: 'simple', value: 'mytag' },
+        ],
     };
 
     expect(

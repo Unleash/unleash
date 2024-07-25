@@ -30,11 +30,6 @@ type FormProps = {
     setDescription: (newDescription: string) => void;
     setName: (newName: string) => void;
     validateName?: () => void;
-    testIds?: Partial<{
-        nameInput: string;
-        descriptionInput: string;
-        submitButton: string;
-    }>;
 };
 
 export const DialogFormTemplate: React.FC<FormProps> = ({
@@ -78,6 +73,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         InputLabelProps={{
                             style: { fontSize: theme.typography.h1.fontSize },
                         }}
+                        data-testid='FORM_NAME_INPUT'
                         size='medium'
                     />
                 </ProjectNameContainer>
@@ -96,6 +92,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         InputLabelProps={{
                             style: { fontSize: theme.typography.h2.fontSize },
                         }}
+                        data-testid='FORM_DESCRIPTION_INPUT'
                     />
                 </ProjectDescriptionContainer>
             </TopGrid>
@@ -105,7 +102,11 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
             <LimitContainer>{Limit}</LimitContainer>
             <FormActions>
                 <Button onClick={onClose}>Cancel</Button>
-                <CreateButton name={resource} {...createButtonProps} />
+                <CreateButton
+                    data-testid='FORM_CREATE_BUTTON'
+                    name={resource}
+                    {...createButtonProps}
+                />
             </FormActions>
         </StyledForm>
     );

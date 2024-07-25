@@ -47,15 +47,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
-
 const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     fill: theme.palette.common.white,
     stroke: theme.palette.common.white,
 }));
-
-const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
-const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
 const projectModeOptions = [
     { value: 'open', label: 'open' },

@@ -94,6 +94,7 @@ export type UiFlags = {
     insightsV2?: boolean;
     featureCollaborators?: boolean;
     integrationEvents?: boolean;
+    improveCreateFlagFlow?: boolean;
 };
 
 export interface IVersionInfo {

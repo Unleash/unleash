@@ -46,6 +46,9 @@ export const ProjectDescriptionContainer = styled('div')({
 export const StyledInput = styled(Input)({
     width: '100%',
     fieldset: { border: 'none' },
+    'label::first-letter': {
+        textTransform: 'uppercase',
+    },
 });
 
 export const ConfigButtons = styled(StyledFormSection)(({ theme }) => ({

@@ -1,12 +1,11 @@
-import { Typography, styled } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
 export const StyledForm = styled('form')(({ theme }) => ({
     background: theme.palette.background.default,
 }));
 
-export const StyledFormSection = styled('div')(({ theme }) => ({
+const StyledFormSection = styled('div')(({ theme }) => ({
     '& + *': {
         borderBlockStart: `1px solid ${theme.palette.divider}`,
     },
@@ -16,16 +15,19 @@ export const StyledFormSection = styled('div')(({ theme }) => ({
 
 export const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     display: 'grid',
-    gridTemplateAreas:
-        '"icon header" "icon project-name" "icon project-description"',
+    gridTemplateAreas: `
+        "icon header"
+        ".    project-name"
+        ".    project-description"`,
     gridTemplateColumns: 'auto 1fr',
     gap: theme.spacing(4),
 }));
 
-export const StyledIcon = styled(ProjectIcon)(({ theme }) => ({
-    fill: theme.palette.primary.main,
-    stroke: theme.palette.primary.main,
-}));
+export const styleIcon = (Icon: React.ComponentType) =>
+    styled(Icon)(({ theme }) => ({
+        fill: theme.palette.primary.main,
+        stroke: theme.palette.primary.main,
+    }));
 
 export const StyledHeader = styled(Typography)({
     gridArea: 'header',
@@ -46,7 +48,7 @@ export const StyledInput = styled(Input)({
     fieldset: { border: 'none' },
 });
 
-export const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
+export const ConfigButtons = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
     gap: theme.spacing(2),
@@ -78,15 +80,8 @@ export const FormActions = styled(StyledFormSection)(({ theme }) => ({
     },
 }));
 
-export const StyledDefinitionList = styled('dl')(({ theme }) => ({
-    dt: {
-        fontWeight: 'bold',
-        '&:after': {
-            content: '":"',
-        },
-    },
-
-    'dd + dt': {
-        marginBlockStart: theme.spacing(1),
+export const LimitContainer = styled(Box)(({ theme }) => ({
+    '&:has(*)': {
+        padding: theme.spacing(4, 6, 0, 6),
     },
 }));

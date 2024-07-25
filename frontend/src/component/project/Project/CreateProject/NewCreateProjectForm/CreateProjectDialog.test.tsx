@@ -32,11 +32,15 @@ test('Enabled new project button when limits, version and permission allow for i
         permissions: [{ permission: CREATE_PROJECT }],
     });
 
-    const button = await screen.findByText('Create project');
+    const button = await screen.findByRole('button', {
+        name: 'Create project',
+    });
     expect(button).toBeDisabled();
 
     await waitFor(async () => {
-        const button = await screen.findByText('Create project');
+        const button = await screen.findByRole('button', {
+            name: 'Create project',
+        });
         expect(button).not.toBeDisabled();
     });
 });
@@ -49,6 +53,8 @@ test('Project limit reached', async () => {
 
     await screen.findByText('You have reached the limit for projects');
 
-    const button = await screen.findByText('Create project');
+    const button = await screen.findByRole('button', {
+        name: 'Create project',
+    });
     expect(button).toBeDisabled();
 });

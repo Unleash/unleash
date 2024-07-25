@@ -84,14 +84,14 @@ export const createProject_UI = (
     cy.intercept('POST', `/api/admin/projects`).as('createProject');
 
     cy.get("[data-testid='PROJECT_ID_INPUT']").type(projectName);
-    cy.get("[data-testid='PROJECT_NAME_INPUT']").type(projectName);
+    cy.get("[data-testid='FORM_NAME_INPUT']").type(projectName);
     cy.get("[id='stickiness-select']")
         .first()
         .click()
         .get(`[data-testid=SELECT_ITEM_ID-${defaultStickiness}`)
         .first()
         .click();
-    cy.get("[data-testid='CREATE_PROJECT_BTN']").click();
+    cy.get("[data-testid='FORM_CREATE_BTN']").click();
     cy.wait('@createProject');
     return cy.visit(`/projects/${projectName}`);
 };

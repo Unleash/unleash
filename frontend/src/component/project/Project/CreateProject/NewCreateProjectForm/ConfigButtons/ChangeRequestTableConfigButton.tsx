@@ -1,5 +1,4 @@
 import { type FC, useState, useMemo } from 'react';
-import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
 import { InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 import { ChangeRequestTable } from './ChangeRequestTable';
@@ -7,6 +6,10 @@ import {
     ScrollContainer,
     TableSearchInput,
 } from './ChangeRequestTableConfigButton.styles';
+import {
+    ConfigButton,
+    type ConfigButtonProps,
+} from 'component/common/DialogFormTemplate/ConfigButtons/ConfigButton';
 
 type ChangeRequestTableConfigButtonProps = Pick<
     ConfigButtonProps,

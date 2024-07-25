@@ -129,9 +129,7 @@ export const CreateFlagDialog = ({
             const payload = getTogglePayload();
             try {
                 await createFeatureToggle(project, payload);
-                navigate(`/projects/${project}/features/${name}`, {
-                    replace: true,
-                });
+                navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     title: 'Flag created successfully',
                     text: 'Now you can start using your flag.',
@@ -188,7 +186,8 @@ export const CreateFlagDialog = ({
                     description={description}
                     errors={errors}
                     handleSubmit={handleSubmit}
-                    Icon={<FlagIcon />}
+                    icon={FlagIcon}
+                    validateName={validateToggleName}
                     Limit={
                         <ConditionallyRender
                             condition={resourceLimitsEnabled}

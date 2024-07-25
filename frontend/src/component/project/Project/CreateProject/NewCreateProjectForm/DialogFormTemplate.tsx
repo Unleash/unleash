@@ -1,4 +1,4 @@
-import type { FormEventHandler, PropsWithChildren } from 'react';
+import type { FormEventHandler } from 'react';
 import theme from 'themes/theme';
 import {
     OptionButtons,
@@ -11,7 +11,7 @@ import {
     LimitContainer,
     FormActions,
 } from './NewProjectForm.styles';
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
 
@@ -20,7 +20,7 @@ type FormProps = {
     description: string;
     errors: { [key: string]: string };
     handleSubmit: FormEventHandler<HTMLFormElement>;
-    Icon: React.ReactNode;
+    icon: React.ComponentType;
     Limit: React.ReactNode;
     name: string;
     onClose: () => void;
@@ -28,10 +28,10 @@ type FormProps = {
     resource: string;
     setDescription: (newDescription: string) => void;
     setName: (newName: string) => void;
+    validateName?: () => void;
 };
 
-export const DialogFormTemplate: React.FC<PropsWithChildren<FormProps>> = ({
-    children,
+export const DialogFormTemplate: React.FC<FormProps> = ({
     Limit,
     handleSubmit,
     name,
@@ -39,16 +39,21 @@ export const DialogFormTemplate: React.FC<PropsWithChildren<FormProps>> = ({
     description,
     setDescription,
     errors,
-    Icon,
+    icon,
     resource,
     onClose,
     optionButtons,
     createButtonProps,
+    validateName = () => {},
 }) => {
+    const StyledIcon = styled(icon)(({ theme }) => ({
+        fill: theme.palette.primary.main,
+        stroke: theme.palette.primary.main,
+    }));
     return (
         <StyledForm onSubmit={handleSubmit}>
             <TopGrid>
-                {Icon}
+                <StyledIcon aria-hidden='true' />
                 <StyledHeader variant='h2'>Create {resource}</StyledHeader>
                 <ProjectNameContainer>
                     <StyledInput
@@ -58,6 +63,7 @@ export const DialogFormTemplate: React.FC<PropsWithChildren<FormProps>> = ({
                         onChange={(e) => setName(e.target.value)}
                         error={Boolean(errors.name)}
                         errorText={errors.name}
+                        onBlur={validateName}
                         onFocus={() => {
                             delete errors.name;
                         }}

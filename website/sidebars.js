@@ -445,6 +445,18 @@ module.exports = {
                             ],
                         },
                         {
+                            label: 'Unleash Proxy guides',
+                            type: 'category',
+                            link: {
+                                type: 'generated-index',
+                                title: 'How-to: The Unleash Proxy',
+                                description:
+                                    'Learn how to work with the Unleash Proxy',
+                                slug: '/how-to/proxy',
+                            },
+                            items: ['how-to/how-to-run-the-unleash-proxy'],
+                        },
+                        {
                             label: 'Feature flags, strategies, context',
                             type: 'category',
                             link: {

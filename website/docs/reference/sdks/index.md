@@ -143,7 +143,7 @@ If you can't find an SDK that fits your need, you can also develop your own SDK.
 
 The following section details the behavior of frontend / client-side SDKs when initializing and fetching flags with respect to network connectivity.
 
-When the SDK is initialized in the application, an in memory repository is setup and synchronized against the frontent API using the configured token and context. Note that the frontend API is hosted by either the Unleash Proxy/Edge or the upstream Unleash instance directly.
+When the SDK is initialized in the application, an in memory repository is setup and synchronized against the frontend API using the configured token and context. Note that the frontend API is hosted by either the Unleash Proxy/Edge or the upstream Unleash instance directly.
 
 1. All feature flag evaluation is performed by the Proxy/Edge or Unleash instance. A payload of all enabled flags and their variants (if applicable) is returned as a single request. Disabled flags are not included.
 

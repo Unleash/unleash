@@ -16,7 +16,7 @@ import Add from '@mui/icons-material/Add';
 import FileDownload from '@mui/icons-material/FileDownload';
 import { styled } from '@mui/material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -24,7 +24,9 @@ import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
-import { useFeedback } from '../../../../feedbackNew/useFeedback';
+import { useFeedback } from 'component/feedbackNew/useFeedback';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { CreateFeatureDialog } from './CreateFeatureDialog';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
@@ -39,6 +41,52 @@ interface IProjectFeatureTogglesHeaderProps {
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
+
+const FlagCreationButton: FC = () => {
+    const [searchParams] = useSearchParams();
+    const projectId = useRequiredPathParam('projectId');
+    const showCreateDialog = Boolean(searchParams.get('create'));
+    const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
+    const { loading } = useUiConfig();
+    const navigate = useNavigate();
+    const improveCreateFlagFlow = useUiFlag('improveCreateFlagFlow');
+
+    return (
+        <ConditionallyRender
+            condition={improveCreateFlagFlow}
+            show={
+                <>
+                    <StyledResponsiveButton
+                        onClick={() => setOpenCreateDialog(true)}
+                        maxWidth='960px'
+                        Icon={Add}
+                        disabled={loading}
+                        permission={CREATE_FEATURE}
+                        data-testid='NAVIGATE_TO_CREATE_FEATURE'
+                    >
+                        New feature flag
+                    </StyledResponsiveButton>
+                    <CreateFeatureDialog
+                        open={openCreateDialog}
+                        onClose={() => setOpenCreateDialog(false)}
+                    />
+                </>
+            }
+            elseShow={
+                <StyledResponsiveButton
+                    onClick={() => navigate(getCreateTogglePath(projectId))}
+                    maxWidth='960px'
+                    Icon={Add}
+                    projectId={projectId}
+                    permission={CREATE_FEATURE}
+                    data-testid='NAVIGATE_TO_CREATE_FEATURE'
+                >
+                    New feature flag
+                </StyledResponsiveButton>
+            }
+        />
+    );
+};
 
 export const ProjectFeatureTogglesHeader: FC<
     IProjectFeatureTogglesHeaderProps
@@ -57,7 +105,6 @@ export const ProjectFeatureTogglesHeader: FC<
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const featuresExportImportFlag = useUiFlag('featuresExportImport');
     const [showExportDialog, setShowExportDialog] = useState(false);
-    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const projectOverviewRefactorFeedback = useUiFlag(
         'projectOverviewRefactorFeedback',
@@ -178,18 +225,7 @@ export const ProjectFeatureTogglesHeader: FC<
                                 </Button>
                             }
                         />
-                        <StyledResponsiveButton
-                            onClick={() =>
-                                navigate(getCreateTogglePath(projectId))
-                            }
-                            maxWidth='960px'
-                            Icon={Add}
-                            projectId={projectId}
-                            permission={CREATE_FEATURE}
-                            data-testid='NAVIGATE_TO_CREATE_FEATURE'
-                        >
-                            New feature flag
-                        </StyledResponsiveButton>
+                        <FlagCreationButton />
                     </>
                 }
             >

@@ -500,27 +500,16 @@ Instead you must know whether you require an SSL connection ahead of time.
 
 ### Recommended PostgreSQL spec
 
-#### Minimum
-
-For PostgreSQL we recommend running with at least 1 CPU and at least 1Gi of memory, as well as at least 5Gi of storage.
+For PostgreSQL we recommend running with at least 1 CPU and at least 1Gi of memory, as well as at least 5Gi of SSD storage. From the cloud providers, look at:
 
 | Provider | Machine                        |
 |----------|--------------------------------|
-| AWS      | db.t4g.medium (2CPU / 4GB mem) |
+| AWS      | db.t4g.small (2CPU / 2GB mem)  |
 | Azure    | B2s (2CPU / 4GB mem )          |
 | GCP      | 2 CPU / 4GB mem                |
 
-#### Recommended
+Unleash SAAS runs on db.t4g.small and we're happy with that.
 
-PostgreSQL performance improves the more resources you throw at it, and if you have many connections active, you want more RAM, so a good recommendation is:
-
-- 4CPUs and 16GB of memory, and at least 20Gi of SSD storage
-
-| Provider | Machine                                                             |
-|----------|---------------------------------------------------------------------|
-| AWS-RDS  | db.m6g.xlarge (4CPU / 16GB mem) or db.m5.xlarge (4cores / 16GB mem) |
-| Azure    | Standard_E2bds_v5 (2CPU / 16GB mem )                                |
-| GCP      | 4 CPU / 16GB mem                                                    |
 
 ### Troubleshooting: database pooling connection timeouts {#database-pooling-connection-timeouts}
 

@@ -16,15 +16,16 @@ import Add from '@mui/icons-material/Add';
 import FileDownload from '@mui/icons-material/FileDownload';
 import { styled } from '@mui/material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import { useFeedback } from '../../../../feedbackNew/useFeedback';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { CreateFlagDialog } from './CreateFlagDialog';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
@@ -39,6 +40,32 @@ interface IProjectFeatureTogglesHeaderProps {
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
+
+const FlagCreationButton: FC = () => {
+    const [searchParams] = useSearchParams();
+    const showCreateDialog = Boolean(searchParams.get('create'));
+    const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
+    const { loading } = useUiConfig();
+
+    return (
+        <>
+            <StyledResponsiveButton
+                onClick={() => setOpenCreateDialog(true)}
+                maxWidth='960px'
+                Icon={Add}
+                disabled={loading}
+                permission={CREATE_FEATURE}
+                data-testid='NAVIGATE_TO_CREATE_FEATURE'
+            >
+                New feature flag
+            </StyledResponsiveButton>
+            <CreateFlagDialog
+                open={openCreateDialog}
+                onClose={() => setOpenCreateDialog(false)}
+            />
+        </>
+    );
+};
 
 export const ProjectFeatureTogglesHeader: FC<
     IProjectFeatureTogglesHeaderProps
@@ -178,18 +205,7 @@ export const ProjectFeatureTogglesHeader: FC<
                                 </Button>
                             }
                         />
-                        <StyledResponsiveButton
-                            onClick={() =>
-                                navigate(getCreateTogglePath(projectId))
-                            }
-                            maxWidth='960px'
-                            Icon={Add}
-                            projectId={projectId}
-                            permission={CREATE_FEATURE}
-                            data-testid='NAVIGATE_TO_CREATE_FEATURE'
-                        >
-                            New feature flag
-                        </StyledResponsiveButton>
+                        <FlagCreationButton />
                     </>
                 }
             >

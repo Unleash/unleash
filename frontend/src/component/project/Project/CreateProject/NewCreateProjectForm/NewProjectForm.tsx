@@ -21,11 +21,11 @@ import {
     StyledIcon,
     StyledInput,
     TopGrid,
+    LimitContainer,
 } from './NewProjectForm.styles';
 import { MultiSelectConfigButton } from './ConfigButtons/MultiSelectConfigButton';
 import { SingleSelectConfigButton } from './ConfigButtons/SingleSelectConfigButton';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
-import { Box, styled } from '@mui/material';
 
 type FormProps = {
     projectId: string;
@@ -105,12 +105,6 @@ const configButtonData = {
         text: 'Change requests can be configured per environment and require changes to go through an approval process before being applied.',
     },
 };
-
-const LimitContainer = styled(Box)(({ theme }) => ({
-    '&:has(*)': {
-        padding: theme.spacing(4, 6, 0, 6),
-    },
-}));
 
 export const NewProjectForm: React.FC<FormProps> = ({
     children,

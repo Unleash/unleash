@@ -1,4 +1,4 @@
-import { Typography, styled } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
@@ -44,6 +44,9 @@ export const ProjectDescriptionContainer = styled('div')({
 export const StyledInput = styled(Input)({
     width: '100%',
     fieldset: { border: 'none' },
+    'label::first-letter': {
+        textTransform: 'uppercase',
+    },
 });
 
 export const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
@@ -88,5 +91,11 @@ export const StyledDefinitionList = styled('dl')(({ theme }) => ({
 
     'dd + dt': {
         marginBlockStart: theme.spacing(1),
+    },
+}));
+
+export const LimitContainer = styled(Box)(({ theme }) => ({
+    '&:has(*)': {
+        padding: theme.spacing(4, 6, 0, 6),
     },
 }));

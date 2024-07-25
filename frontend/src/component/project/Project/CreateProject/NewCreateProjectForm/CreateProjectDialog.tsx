@@ -275,6 +275,7 @@ export const CreateProjectDialog = ({
                     errors={errors}
                     icon={StyledProjectIcon}
                     onClose={onClose}
+                    validateName={validateName}
                     configButtons={
                         <>
                             <MultiSelectConfigButton

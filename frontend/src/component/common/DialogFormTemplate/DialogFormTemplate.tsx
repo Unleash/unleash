@@ -1,7 +1,7 @@
 import type { FormEventHandler } from 'react';
 import theme from 'themes/theme';
 import {
-    OptionButtons,
+    ConfigButtons,
     ProjectDescriptionContainer,
     ProjectNameContainer,
     StyledForm,
@@ -25,7 +25,7 @@ type FormProps = {
     Limit?: React.ReactNode;
     name: string;
     onClose: () => void;
-    optionButtons: React.ReactNode;
+    configButtons: React.ReactNode;
     resource: string;
     setDescription: (newDescription: string) => void;
     setName: (newName: string) => void;
@@ -43,7 +43,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
     icon,
     resource,
     onClose,
-    optionButtons,
+    configButtons,
     createButtonProps,
     validateName = () => {},
 }) => {
@@ -95,7 +95,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                 </ProjectDescriptionContainer>
             </TopGrid>
 
-            <OptionButtons>{optionButtons}</OptionButtons>
+            <ConfigButtons>{configButtons}</ConfigButtons>
 
             <LimitContainer>{Limit}</LimitContainer>
             <FormActions>

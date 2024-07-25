@@ -48,7 +48,7 @@ export const StyledInput = styled(Input)({
     fieldset: { border: 'none' },
 });
 
-export const OptionButtons = styled(StyledFormSection)(({ theme }) => ({
+export const ConfigButtons = styled(StyledFormSection)(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
     gap: theme.spacing(2),

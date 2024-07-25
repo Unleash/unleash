@@ -128,7 +128,6 @@ export const CreateProjectDialog = ({
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const {
-        projectId,
         projectName,
         projectDesc,
         projectMode,
@@ -276,6 +275,7 @@ export const CreateProjectDialog = ({
                     errors={errors}
                     icon={StyledProjectIcon}
                     onClose={onClose}
+                    validateName={validateName}
                     configButtons={
                         <>
                             <MultiSelectConfigButton

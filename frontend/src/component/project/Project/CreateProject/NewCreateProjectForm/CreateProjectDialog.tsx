@@ -276,11 +276,6 @@ export const CreateProjectDialog = ({
                     errors={errors}
                     icon={StyledProjectIcon}
                     onClose={onClose}
-                    testIds={{
-                        nameInput: PROJECT_NAME_INPUT,
-                        descriptionInput: PROJECT_DESCRIPTION_INPUT,
-                        submitButton: CREATE_PROJECT_BTN,
-                    }}
                     configButtons={
                         <>
                             <MultiSelectConfigButton

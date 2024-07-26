@@ -258,7 +258,7 @@ export const CreateFeatureDialog = ({
                                             label:
                                                 currentProjectName ?? project,
                                             icon: configButtonData.project.icon,
-                                            labelWidth: '12ch',
+                                            labelWidth: '30ch',
                                         }}
                                         search={{
                                             label: 'Filter projects',

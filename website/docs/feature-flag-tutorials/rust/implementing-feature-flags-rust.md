@@ -197,7 +197,7 @@ cargo add tokio --features full
 cargo add unleash-api-client --features reqwest
 ```
 
-There are a few dependencies, and here's why: We need an HTTP client to make the request, and `serde` to deserialize the Unleash response. Our SDK is constantly polling Unleash to retrieve the value of feature flags, performs its own evaluation, and caches that in memory.
+There are a few dependencies, and here's why: We need an HTTP client to make the request, and `serde` to deserialize the Unleash response. Our SDK constantly polls Unleash to retrieve your feature flags, caches them and does the evaluation on the fly.
 
 We want to let you choose the nature of that concurrency, so we're compatible with `async-std`, `tokio` and standard threads. We're picking `tokio` here.
 

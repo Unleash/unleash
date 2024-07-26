@@ -2,7 +2,13 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { type ReactNode, useState, useContext, type FormEvent } from 'react';
+import {
+    type ReactNode,
+    useState,
+    useContext,
+    type FormEvent,
+    useMemo,
+} from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
@@ -169,6 +175,11 @@ export const CreateFeatureDialog = ({
         0,
     );
 
+    const currentProjectName = useMemo(() => {
+        const projectObject = projects.find((p) => p.id === project);
+        return projectObject?.name;
+    }, [project, projects]);
+
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
@@ -233,7 +244,8 @@ export const CreateFeatureDialog = ({
                                             setProject(value);
                                         }}
                                         button={{
-                                            label: project,
+                                            label:
+                                                currentProjectName ?? project,
                                             icon: configButtonData.project.icon,
                                             labelWidth: '12ch',
                                         }}

@@ -46,6 +46,7 @@ const BreadcrumbNav = () => {
                 item !== 'copy' &&
                 item !== 'features' &&
                 item !== 'features2' &&
+                // TODO: this can be removed after new create flag flow goes live
                 item !== 'create-toggle' &&
                 item !== 'settings' &&
                 item !== 'profile' &&

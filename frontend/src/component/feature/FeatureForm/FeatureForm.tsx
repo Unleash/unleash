@@ -197,6 +197,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     </StyledInputDescription>
                 }
             />
+            // TODO: this can be removed after new create flag flow goes live
             <FeatureProjectSelect
                 value={project}
                 onChange={(projectId) => {
@@ -213,7 +214,6 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 IconComponent={KeyboardArrowDownOutlined}
                 sx={styledSelectInput}
             />
-
             <StyledInputDescription>
                 How would you describe your feature flag?
             </StyledInputDescription>

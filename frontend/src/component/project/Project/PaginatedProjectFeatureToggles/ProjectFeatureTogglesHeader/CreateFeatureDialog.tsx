@@ -108,8 +108,8 @@ export const CreateFeatureDialog = ({
         text: string;
         link?: { url: string; label: string };
     } = {
-        icon: <FlagIcon aria-hidden='true' />,
         text: 'Feature flags are the core of Unleash.',
+        icon: <FlagIcon />,
         link: {
             url: 'https://docs.getunleash.io/reference/feature-toggles',
             label: 'Feature flags documentation',

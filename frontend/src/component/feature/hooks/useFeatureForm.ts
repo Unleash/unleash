@@ -17,7 +17,7 @@ const useFeatureForm = (
     const { validateFeatureToggleName } = useFeatureApi();
     const toggleQueryName = params.get('name');
     const [type, setType] = useState(initialType);
-    const [tags, setTags] = useState<Set<string>>(new Set());
+    const [tags, setTags] = useState<Set<ITag>>(new Set());
     const [name, setName] = useState(toggleQueryName || initialName);
     const [project, setProject] = useState(projectId || initialProject);
     const [description, setDescription] = useState(initialDescription);
@@ -50,11 +50,7 @@ const useFeatureForm = (
     }, [initialImpressionData]);
 
     const getTogglePayload = () => {
-        const splitTags: ITag[] = Array.from(tags).map((tag) => {
-            const [type, value] = tag.split(':');
-            return { type, value };
-        });
-        const tagsPayload = tags.size > 0 ? { tags: splitTags } : {};
+        const tagsPayload = tags.size > 0 ? { tags: Array.from(tags) } : {};
         return {
             type,
             name,

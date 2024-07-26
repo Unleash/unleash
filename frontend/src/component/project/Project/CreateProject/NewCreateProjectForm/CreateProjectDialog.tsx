@@ -128,7 +128,6 @@ export const CreateProjectDialog = ({
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const {
-        projectId,
         projectName,
         projectDesc,
         projectMode,

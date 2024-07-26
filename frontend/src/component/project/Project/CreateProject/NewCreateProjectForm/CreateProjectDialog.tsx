@@ -16,7 +16,6 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
@@ -28,6 +27,7 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 import { StyledDefinitionList } from './CreateProjectDialog.styles';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 
 interface ICreateProjectDialogProps {
     open: boolean;
@@ -45,11 +45,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiPaper-root > section': {
         overflowX: 'hidden',
     },
-}));
-
-const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
-    fill: theme.palette.common.white,
-    stroke: theme.palette.common.white,
 }));
 
 const projectModeOptions = [
@@ -151,8 +146,8 @@ export const CreateProjectDialog = ({
         text: string;
         link?: { url: string; label: string };
     } = {
-        icon: <StyledProjectIcon />,
-        text: 'Projects allows you to group feature flags together in the management UI.',
+        icon: <ProjectIcon />,
+        text: 'Projects allow you to group feature flags together in the management UI.',
         link: {
             url: 'https://docs.getunleash.io/reference/projects',
             label: 'Projects documentation',
@@ -273,7 +268,7 @@ export const CreateProjectDialog = ({
                     description={projectDesc}
                     setDescription={setProjectDesc}
                     errors={errors}
-                    icon={StyledProjectIcon}
+                    Icon={<ProjectIcon />}
                     onClose={onClose}
                     validateName={validateName}
                     configButtons={

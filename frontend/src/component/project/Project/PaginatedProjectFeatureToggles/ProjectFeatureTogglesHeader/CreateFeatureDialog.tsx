@@ -12,7 +12,6 @@ import {
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
@@ -32,6 +31,7 @@ import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -54,7 +54,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const configButtonData = {
     project: {
         icon: <ProjectIcon />,
-        text: 'Projects allows you to group feature flags together in the management UI.',
+        text: 'Projects allow you to group feature flags together in the management UI.',
     },
     type: {
         icon: <FlagIcon />,
@@ -205,7 +205,7 @@ export const CreateFeatureDialog = ({
                     description={description}
                     errors={errors}
                     handleSubmit={handleSubmit}
-                    icon={FlagIcon}
+                    Icon={<FlagIcon />}
                     validateName={validateToggleName}
                     Limit={
                         <ConditionallyRender

@@ -9,7 +9,7 @@ import {
     SignOutItem,
 } from './ListItems';
 import { Box, List, styled, Tooltip, Typography } from '@mui/material';
-import { IconRenderer, StyledProjectIcon } from './IconRenderer';
+import { IconRenderer } from './IconRenderer';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import SearchIcon from '@mui/icons-material/Search';
@@ -23,6 +23,7 @@ import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -119,7 +120,7 @@ export const RecentProjectsList: FC<{
                 onClick={onClick}
                 selected={false}
             >
-                <StyledProjectIcon />
+                <ProjectIcon />
             </DynamicListItem>
         </List>
     );
@@ -166,7 +167,7 @@ export const PrimaryNavigationList: FC<{
                 onClick={() => onClick('/projects')}
                 selected={activeItem === '/projects'}
             >
-                <StyledProjectIcon />
+                <ProjectIcon />
             </DynamicListItem>
             <DynamicListItem
                 href='/search'

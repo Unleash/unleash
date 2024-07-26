@@ -194,7 +194,7 @@ export const CreateFeatureDialog = ({
                     description={description}
                     errors={errors}
                     handleSubmit={handleSubmit}
-                    icon={FlagIcon}
+                    Icon={<FlagIcon />}
                     validateName={validateToggleName}
                     Limit={
                         <ConditionallyRender

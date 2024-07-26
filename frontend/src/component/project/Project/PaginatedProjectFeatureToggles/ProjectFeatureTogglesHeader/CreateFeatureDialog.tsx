@@ -57,20 +57,20 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const configButtonData = {
     project: {
         icon: <ProjectIcon />,
-        text: 'Projects allow you to group feature flags together in the management UI.',
+        text: 'Projects allow you to group feature flags together in the Unleash admin UI and in SDK payloads.',
     },
     tags: {
         icon: <Label />,
-        text: 'Tags are used to group flags together in Unleash.',
+        text: 'Tags are used to label flags in Unleash. They can be used when filtering flags in the UI. Additionally, they are used by some integrations.',
     },
     type: {
         icon: <FlagIcon />,
-        text: "A flag's type conveys its purpose.",
+        text: "A flag's type conveys its purpose. All types have the same capabilities, but choosing the right type signals what kind of flag it is. You can change this at any time.",
     },
 
     impressionData: {
         icon: <ImpressionDataIcon />,
-        text: 'Impression data is used to track how your flag is performing.',
+        text: `Impression data is used to track how your flag is performing. When enabled, you can subscribe to 'impression events' in the SDK and process them according to your needs.`,
     },
 };
 
@@ -108,8 +108,8 @@ export const CreateFeatureDialog = ({
         text: string;
         link?: { url: string; label: string };
     } = {
-        text: 'Feature flags are the core of Unleash.',
         icon: <FlagIcon />,
+        text: 'Feature flags are at the core of Unleash. Use them to control your feature rollouts.',
         link: {
             url: 'https://docs.getunleash.io/reference/feature-toggles',
             label: 'Feature flags documentation',

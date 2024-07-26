@@ -344,7 +344,9 @@ export const CreateFeatureDialog = ({
                                 description={
                                     configButtonData.impressionData.text
                                 }
-                                onChange={setImpressionData}
+                                onClick={() =>
+                                    setImpressionData(!impressionData)
+                                }
                                 button={{
                                     label: `Impression data ${impressionData ? 'on' : 'off'}`,
                                     icon: <ImpressionDataIcon />,

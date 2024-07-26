@@ -5,11 +5,11 @@ import { Button } from '@mui/material';
 
 type ToggleConfigButtonProps = Pick<
     ConfigButtonProps,
-    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip'
-> & { onChange: (value: boolean) => void; currentValue: boolean };
+    'button' | 'description' | 'tooltip'
+> & { onClick: () => void; currentValue: boolean };
 
 export function ToggleConfigButton({
-    onChange,
+    onClick,
     currentValue,
     button,
     tooltip,
@@ -32,7 +32,7 @@ export function ToggleConfigButton({
                 variant={currentValue ? 'contained' : 'outlined'}
                 color='primary'
                 startIcon={button.icon}
-                onClick={() => onChange(!currentValue)}
+                onClick={onClick}
                 disableElevation={true}
             >
                 <ButtonLabel labelWidth={button.labelWidth}>

@@ -1,18 +1,16 @@
 import Search from '@mui/icons-material/Search';
-import { type FC, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { InputAdornment, List, ListItemText } from '@mui/material';
 import { StyledDropdownSearch } from './shared.styles';
 import { StyledCheckbox, StyledListItem } from './DropdownList.styles';
 
-const useSelectionManagement = (
-    handleToggle: (value: string) => () => void,
-) => {
+function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
 
     const handleSelection = (
         event: React.KeyboardEvent,
         index: number,
-        filteredOptions: { label: string; value: string }[],
+        filteredOptions: { label: string; value: T }[],
     ) => {
         // we have to be careful not to prevent other keys e.g tab
         if (event.key === 'ArrowDown' && index < listRefs.current.length - 1) {
@@ -45,32 +43,32 @@ const useSelectionManagement = (
     };
 
     return { listRefs, handleSelection };
-};
+}
 
-export type DropdownListProps = {
-    options: Array<{ label: string; value: string }>;
-    onChange: (value: string) => void;
+export type DropdownListProps<T> = {
+    options: Array<{ label: string; value: T }>;
+    onChange: (value: T) => void;
     search: {
         label: string;
         placeholder: string;
     };
-    multiselect?: { selectedOptions: Set<string> };
+    multiselect?: { selectedOptions: Set<T> };
 };
 
-export const DropdownList: FC<DropdownListProps> = ({
+export function DropdownList<T = string>({
     options,
     onChange,
     search,
     multiselect,
-}) => {
+}: DropdownListProps<T>) {
     const [searchText, setSearchText] = useState('');
 
-    const onSelection = (selected: string) => {
+    const onSelection = (selected: T) => {
         onChange(selected);
     };
 
     const { listRefs, handleSelection } = useSelectionManagement(
-        (selected: string) => () => onSelection(selected),
+        (selected: T) => () => onSelection(selected),
     );
 
     const filteredOptions = options?.filter((option) =>
@@ -109,7 +107,7 @@ export const DropdownList: FC<DropdownListProps> = ({
                     return (
                         <StyledListItem
                             aria-describedby={labelId}
-                            key={option.value}
+                            key={`${option.label}@index`}
                             dense
                             disablePadding
                             tabIndex={0}
@@ -148,4 +146,4 @@ export const DropdownList: FC<DropdownListProps> = ({
             </List>
         </>
     );
-};
+}

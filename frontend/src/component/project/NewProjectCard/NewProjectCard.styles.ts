@@ -3,7 +3,6 @@ import { Card, Box } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import { flexRow } from 'themes/themeStyles';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 
 export const StyledProjectCard = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -79,15 +78,12 @@ export const StyledParagraphInfo = styled('p')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
-export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
-    fill: theme.palette.primary.main,
-    stroke: theme.palette.primary.main,
-}));
-
 export const StyledIconBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    padding: theme.spacing(1, 0.5, 0.5, 0),
+    display: 'grid',
+    placeItems: 'center',
+    padding: theme.spacing(0, 0.5, 0, 1),
     marginRight: theme.spacing(2),
     alignSelf: 'baseline',
+    color: theme.palette.primary.main,
+    height: '100%',
 }));

@@ -185,7 +185,6 @@ const StyledSidebar = styled('aside', {
         width: sidebarWidth || formTemplateSidebarWidth,
         [theme.breakpoints.down(1100)]: {
             width: '100%',
-            color: 'red',
         },
         [theme.breakpoints.down(500)]: {
             padding: theme.spacing(4, 2),
@@ -434,14 +433,11 @@ const GuidanceContent: React.FC<
     showLink = true,
     fixedDocumentationHeight,
 }) => {
-    const StyledDocumentationIconWrapper = styled('div')(({ theme }) => ({
+    const StyledDocumentationIconWrapper = styled('div')({
         height: '2rem',
         display: 'grid',
         placeItems: 'center',
-        svg: {
-            width: '100%',
-        },
-    }));
+    });
 
     const StyledDocumentationWrapper = styled('div')({
         height: fixedDocumentationHeight,

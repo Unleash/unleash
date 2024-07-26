@@ -55,6 +55,10 @@ const serverSideSdks = {
 
 const clientSideSdks = {
     'unleash-android-proxy-sdk': {
+        sidebarName: 'Android (legacy)',
+        slugName: 'android-proxy-legacy',
+    },
+    'unleash-android': {
         sidebarName: 'Android',
         slugName: 'android-proxy',
     },

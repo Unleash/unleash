@@ -10,7 +10,7 @@ import {
     TopGrid,
     LimitContainer,
     FormActions,
-    styleIcon,
+    IconWrapper,
 } from './DialogFormTemplate.styles';
 import { Button } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -21,7 +21,7 @@ type FormProps = {
     description: string;
     errors: { [key: string]: string };
     handleSubmit: FormEventHandler<HTMLFormElement>;
-    icon: React.ComponentType;
+    Icon: React.ReactNode;
     Limit?: React.ReactNode;
     name: string;
     onClose: () => void;
@@ -40,19 +40,17 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
     description,
     setDescription,
     errors,
-    icon,
+    Icon,
     resource,
     onClose,
     configButtons,
     createButtonProps,
     validateName = () => {},
 }) => {
-    const StyledIcon = styleIcon(icon);
-
     return (
         <StyledForm onSubmit={handleSubmit}>
             <TopGrid>
-                <StyledIcon aria-hidden='true' />
+                <IconWrapper>{Icon}</IconWrapper>
                 <StyledHeader variant='h2'>Create {resource}</StyledHeader>
                 <ProjectNameContainer>
                     <StyledInput

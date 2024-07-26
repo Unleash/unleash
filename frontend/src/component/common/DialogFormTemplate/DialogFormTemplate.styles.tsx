@@ -23,11 +23,9 @@ export const TopGrid = styled(StyledFormSection)(({ theme }) => ({
     gap: theme.spacing(4),
 }));
 
-export const styleIcon = (Icon: React.ComponentType) =>
-    styled(Icon)(({ theme }) => ({
-        fill: theme.palette.primary.main,
-        stroke: theme.palette.primary.main,
-    }));
+export const IconWrapper = styled('span')(({ theme }) => ({
+    color: theme.palette.primary.main,
+}));
 
 export const StyledHeader = styled(Typography)({
     gridArea: 'header',

@@ -9,12 +9,12 @@ import {
     StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
-    StyledProjectIcon,
 } from './NewProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
 import { ProjectOwners } from './ProjectOwners/ProjectOwners';
 import type { ProjectSchemaOwners } from 'openapi';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 
 interface IProjectCardProps {
     name: string;
@@ -43,7 +43,7 @@ export const ProjectCard = ({
         <StyledProjectCardBody>
             <StyledDivHeader>
                 <StyledIconBox>
-                    <StyledProjectIcon />
+                    <ProjectIcon />
                 </StyledIconBox>
                 <StyledBox data-loading>
                     <StyledCardTitle>{name}</StyledCardTitle>

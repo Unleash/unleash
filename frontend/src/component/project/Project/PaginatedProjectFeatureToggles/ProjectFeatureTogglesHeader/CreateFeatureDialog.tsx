@@ -31,7 +31,10 @@ import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
+import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
+import Label from '@mui/icons-material/Label';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -56,6 +59,10 @@ const configButtonData = {
         icon: <ProjectIcon />,
         text: 'Projects allow you to group feature flags together in the management UI.',
     },
+    tags: {
+        icon: <Label />,
+        text: 'Tags are used to group flags together in Unleash.',
+    },
     type: {
         icon: <FlagIcon />,
         text: "A flag's type conveys its purpose.",
@@ -79,6 +86,8 @@ export const CreateFeatureDialog = ({
     const {
         type,
         setType,
+        tags,
+        setTags,
         name,
         setName,
         project,
@@ -150,6 +159,7 @@ export const CreateFeatureDialog = ({
         useGlobalFeatureSearch();
 
     const { project: projectInfo } = useProjectOverview(project);
+    const { tags: allTags } = useAllTags();
 
     const resourceLimitsEnabled = useUiFlag('resourceLimits');
 
@@ -261,6 +271,34 @@ export const CreateFeatureDialog = ({
                                         onClose={clearDocumentationOverride}
                                     />
                                 }
+                            />
+                            <MultiSelectConfigButton
+                                tooltip={{
+                                    header: 'Select tags',
+                                }}
+                                description={configButtonData.tags.text}
+                                selectedOptions={tags}
+                                options={allTags.map((tag) => ({
+                                    label: `${tag.type}:${tag.value}`,
+                                    value: `${tag.type}:${tag.value}`,
+                                }))}
+                                onChange={setTags}
+                                button={{
+                                    label:
+                                        tags.size > 0
+                                            ? `${tags.size} selected`
+                                            : 'Tags',
+                                    labelWidth: `${'nn selected'.length}ch`,
+                                    icon: <Label />,
+                                }}
+                                search={{
+                                    label: 'Filter tags',
+                                    placeholder: 'Select tags',
+                                }}
+                                onOpen={() =>
+                                    setDocumentation(configButtonData.tags)
+                                }
+                                onClose={clearDocumentationOverride}
                             />
                             <SingleSelectConfigButton
                                 tooltip={{

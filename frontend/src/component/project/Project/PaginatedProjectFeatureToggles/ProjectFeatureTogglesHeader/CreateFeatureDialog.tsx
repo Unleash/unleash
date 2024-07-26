@@ -288,7 +288,7 @@ export const CreateFeatureDialog = ({
                                         tags.size > 0
                                             ? `${tags.size} selected`
                                             : 'Tags',
-                                    labelWidth: `9ch`,
+                                    labelWidth: `${'nn selected'.length}ch`,
                                     icon: <Label />,
                                 }}
                                 search={{

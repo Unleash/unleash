@@ -20,6 +20,7 @@ export const ButtonLabel = styled('span', {
     width: labelWidth || 'unset',
     overflowX: 'hidden',
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     [theme.breakpoints.down('sm')]: {
         width: 'max-content',
     },

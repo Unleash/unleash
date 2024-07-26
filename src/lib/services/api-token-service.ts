@@ -102,7 +102,7 @@ export class ApiTokenService {
             this.fetchActiveTokens();
         }
         this.updateLastSeen();
-        if (config.authentication.initApiTokens.length > 0) {
+        if (config.authentication.initApiTokens?.length > 0) {
             process.nextTick(async () =>
                 this.initApiTokens(config.authentication.initApiTokens),
             );

@@ -1,4 +1,4 @@
-import { Button, Popover, styled } from '@mui/material';
+import { Popover, styled } from '@mui/material';
 
 export const StyledDropdown = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -11,13 +11,6 @@ export const StyledDropdown = styled('div')(({ theme }) => ({
 export const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    },
-}));
-
-export const StyledButton = styled(Button)(({ theme }) => ({
-    svg: {
-        fill: theme.palette.primary.main,
-        stroke: theme.palette.primary.main,
     },
 }));
 

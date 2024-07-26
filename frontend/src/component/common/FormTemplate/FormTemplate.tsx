@@ -433,15 +433,11 @@ const GuidanceContent: React.FC<
     showLink = true,
     fixedDocumentationHeight,
 }) => {
-    const StyledDocumentationIconWrapper = styled('div')(({ theme }) => ({
+    const StyledDocumentationIconWrapper = styled('div')({
         height: '2rem',
         display: 'grid',
         placeItems: 'center',
-        svg: {
-            fill: theme.palette.common.white,
-            stroke: theme.palette.common.white,
-        },
-    }));
+    });
 
     const StyledDocumentationWrapper = styled('div')({
         height: fixedDocumentationHeight,

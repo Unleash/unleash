@@ -9,7 +9,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
-import { useUiFlag } from '../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const WarningContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

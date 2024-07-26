@@ -439,6 +439,8 @@ const GuidanceContent: React.FC<
         placeItems: 'center',
         svg: {
             width: '100%',
+            fill: theme.palette.common.white,
+            stroke: theme.palette.common.white,
         },
     }));
 

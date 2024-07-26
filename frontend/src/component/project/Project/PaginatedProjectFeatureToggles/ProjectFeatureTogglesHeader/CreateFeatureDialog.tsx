@@ -175,6 +175,15 @@ export const CreateFeatureDialog = ({
         0,
     );
 
+    const projectButtonLabelWidth = useMemo(() => {
+        const longestProjectName = projects.reduce(
+            (prev: number, type: { name: string }) =>
+                prev >= type.name.length ? prev : type.name.length,
+            0,
+        );
+        return `${Math.min(longestProjectName, 30)}ch`;
+    }, [projects]);
+
     const currentProjectName = useMemo(() => {
         const projectObject = projects.find((p) => p.id === project);
         return projectObject?.name;
@@ -247,7 +256,7 @@ export const CreateFeatureDialog = ({
                                             label:
                                                 currentProjectName ?? project,
                                             icon: configButtonData.project.icon,
-                                            labelWidth: '30ch',
+                                            labelWidth: projectButtonLabelWidth,
                                         }}
                                         search={{
                                             label: 'Filter projects',

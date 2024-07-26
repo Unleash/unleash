@@ -22,7 +22,6 @@ import {
     type IFeatureEnvironmentStore,
     type IFeatureNaming,
     type IFeatureToggleStore,
-    type IFeatureTypeStore,
     type IFlagResolver,
     type IProject,
     type IProjectApplications,
@@ -132,8 +131,6 @@ export default class ProjectService {
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
-    private featureTypeStore: IFeatureTypeStore;
-
     private environmentStore: IEnvironmentStore;
 
     private groupService: GroupService;
@@ -171,7 +168,6 @@ export default class ProjectService {
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
-            featureTypeStore,
             accountStore,
             projectStatsStore,
         }: Pick<
@@ -185,7 +181,6 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'accountStore'
             | 'projectStatsStore'
-            | 'featureTypeStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -204,7 +199,6 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureTypeStore = featureTypeStore;
         this.apiTokenService = apiTokenService;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;

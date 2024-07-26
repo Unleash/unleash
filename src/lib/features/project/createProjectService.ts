@@ -5,6 +5,7 @@ import { AccountStore } from '../../db/account-store';
 import EnvironmentStore from '../project-environments/environment-store';
 import {
     type AccessService,
+    ApiTokenService,
     EventService,
     FavoritesService,
     GroupService,
@@ -39,8 +40,6 @@ import {
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import FeatureTypeStore from '../../db/feature-type-store';
-import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 import { ProjectOwnersReadModel } from './project-owners-read-model';
 import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model';
 import { FakeProjectFlagCreatorsReadModel } from './fake-project-flag-creators-read-model';
@@ -76,7 +75,6 @@ export const createProjectService = (
         eventBus,
         getLogger,
     );
-    const featureTypeStore = new FeatureTypeStore(db, getLogger);
     const projectStatsStore = new ProjectStatsStore(db, eventBus, getLogger);
     const accessService: AccessService = createAccessService(db, config);
     const featureToggleService = createFeatureToggleService(db, config);
@@ -120,6 +118,12 @@ export const createProjectService = (
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
+    const apiTokenService = new ApiTokenService(
+        { apiTokenStore, environmentStore },
+        config,
+        eventService,
+    );
+
     return new ProjectService(
         {
             projectStore,
@@ -127,12 +131,10 @@ export const createProjectService = (
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
-            featureTypeStore,
             accountStore,
             projectStatsStore,
             projectOwnersReadModel,
             projectFlagCreatorsReadModel,
-            apiTokenStore,
         },
         config,
         accessService,
@@ -141,6 +143,7 @@ export const createProjectService = (
         favoriteService,
         eventService,
         privateProjectChecker,
+        apiTokenService,
     );
 };
 
@@ -157,7 +160,6 @@ export const createFakeProjectService = (
     const accountStore = new FakeAccountStore();
     const environmentStore = new FakeEnvironmentStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
-    const featureTypeStore = new FakeFeatureTypeStore();
     const projectStatsStore = new FakeProjectStatsStore();
     const { accessService } = createFakeAccessService(config);
     const { featureToggleService } = createFakeFeatureToggleService(config);
@@ -187,6 +189,12 @@ export const createFakeProjectService = (
 
     const privateProjectChecker = createFakePrivateProjectChecker();
 
+    const apiTokenService = new ApiTokenService(
+        { apiTokenStore, environmentStore },
+        config,
+        eventService,
+    );
+
     return new ProjectService(
         {
             projectStore,
@@ -196,10 +204,8 @@ export const createFakeProjectService = (
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
-            featureTypeStore,
             accountStore,
             projectStatsStore,
-            apiTokenStore,
         },
         config,
         accessService,
@@ -208,5 +214,6 @@ export const createFakeProjectService = (
         favoriteService,
         eventService,
         privateProjectChecker,
+        apiTokenService,
     );
 };

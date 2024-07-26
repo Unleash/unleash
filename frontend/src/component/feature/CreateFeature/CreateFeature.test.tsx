@@ -14,6 +14,7 @@ const setupApi = ({
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             resourceLimits: true,
+            improveCreateFlagFlow: true,
         },
         resourceLimits: {
             featureFlags: flagLimit,

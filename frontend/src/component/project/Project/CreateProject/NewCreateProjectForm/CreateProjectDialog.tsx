@@ -152,7 +152,7 @@ export const CreateProjectDialog = ({
         link?: { url: string; label: string };
     } = {
         icon: <StyledProjectIcon />,
-        text: 'Projects allows you to group feature flags together in the management UI.',
+        text: 'Projects allow you to group feature flags together in the management UI.',
         link: {
             url: 'https://docs.getunleash.io/reference/projects',
             label: 'Projects documentation',

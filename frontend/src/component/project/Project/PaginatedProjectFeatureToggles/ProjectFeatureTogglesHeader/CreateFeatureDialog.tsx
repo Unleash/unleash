@@ -48,7 +48,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const configButtonData = {
     project: {
         icon: <ProjectIcon />,
-        text: 'Projects allows you to group feature flags together in the management UI.',
+        text: 'Projects allow you to group feature flags together in the management UI.',
     },
     type: {
         icon: <FlagIcon />,

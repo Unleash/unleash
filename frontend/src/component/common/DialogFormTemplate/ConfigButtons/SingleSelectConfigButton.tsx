@@ -1,21 +1,21 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
 import { DropdownList, type DropdownListProps } from './DropdownList';
 
-type SingleSelectConfigButtonProps = Pick<
+type SingleSelectConfigButtonProps<T> = Pick<
     ConfigButtonProps,
     'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip'
 > &
-    Pick<DropdownListProps, 'search' | 'onChange' | 'options'>;
+    Pick<DropdownListProps<T>, 'search' | 'onChange' | 'options'>;
 
-export const SingleSelectConfigButton: FC<SingleSelectConfigButtonProps> = ({
+export function SingleSelectConfigButton<T = string>({
     onChange,
     ...props
-}) => {
+}: SingleSelectConfigButtonProps<T>) {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [recentlyClosed, setRecentlyClosed] = useState(false);
 
-    const handleChange = (value: any) => {
+    const handleChange = (value: T) => {
         onChange(value);
         setAnchorEl(null);
         props.onClose?.();
@@ -34,7 +34,7 @@ export const SingleSelectConfigButton: FC<SingleSelectConfigButtonProps> = ({
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
         >
-            <DropdownList {...props} onChange={handleChange} />
+            <DropdownList<T> {...props} onChange={handleChange} />
         </ConfigButton>
     );
-};
+}

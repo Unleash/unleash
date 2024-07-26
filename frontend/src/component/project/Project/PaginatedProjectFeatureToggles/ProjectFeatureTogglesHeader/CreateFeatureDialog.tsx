@@ -342,11 +342,11 @@ export const CreateFeatureDialog = ({
                                     configButtonData.impressionData.text
                                 }
                                 options={[
-                                    { label: 'On', value: 'true' },
-                                    { label: 'Off', value: 'false' },
+                                    { label: 'On', value: true },
+                                    { label: 'Off', value: false },
                                 ]}
-                                onChange={(value: string) => {
-                                    setImpressionData(value === 'true');
+                                onChange={(value: boolean) => {
+                                    setImpressionData(value);
                                 }}
                                 button={{
                                     label: `Impression data ${impressionData ? 'on' : 'off'}`,

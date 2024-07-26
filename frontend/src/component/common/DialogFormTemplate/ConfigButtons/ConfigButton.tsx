@@ -1,11 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { type FC, type ReactNode, useRef, type PropsWithChildren } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import {
     StyledDropdown,
     StyledPopover,
     ButtonLabel,
     StyledTooltipContent,
+    StyledButton,
 } from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -66,7 +67,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                     }
                     variant='custom'
                 >
-                    <Button
+                    <StyledButton
                         variant='outlined'
                         color='primary'
                         startIcon={button.icon}
@@ -79,7 +80,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                         <ButtonLabel labelWidth={button.labelWidth}>
                             {button.label}
                         </ButtonLabel>
-                    </Button>
+                    </StyledButton>
                 </TooltipResolver>
             </Box>
             <StyledPopover

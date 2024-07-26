@@ -6,7 +6,6 @@ import { type ReactNode, useState, useContext, type FormEvent } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
@@ -26,6 +25,7 @@ import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 
 interface ICreateFeatureDialogProps {
     open: boolean;

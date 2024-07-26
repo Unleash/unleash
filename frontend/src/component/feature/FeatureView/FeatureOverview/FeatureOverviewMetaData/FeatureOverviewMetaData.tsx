@@ -119,6 +119,8 @@ const FeatureOverviewMetaData = () => {
 
     const IconComponent = getFeatureTypeIcons(type);
 
+    console.log('feature.createdby', feature.createdBy);
+
     return (
         <StyledContainer>
             <StyledPaddingContainerTop>
@@ -236,7 +238,7 @@ const FeatureOverviewMetaData = () => {
                                         <span>{feature.createdBy?.name}</span>
                                     </StyledDetail>
                                     <StyledUserAvatar
-                                        src={feature.createdBy?.imageUrl}
+                                        user={feature.createdBy}
                                     />
                                 </StyledDetailsContainer>
                             </BodyItemWithIcon>

@@ -8,7 +8,7 @@ import {
 import type { IUser } from 'interfaces/user';
 import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
+import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3.5),
     height: theme.spacing(3.5),
@@ -66,23 +66,51 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
         }
     }
 
+    const StyledName = styled('div')(({ theme }) => ({
+        color: theme.palette.text.secondary,
+        fontSize: theme.typography.body2.fontSize,
+    }));
+    const StyledEmail = styled('div')(({ theme }) => ({
+        fontSize: theme.typography.body1.fontSize,
+    }));
+
     return (
-        <StyledAvatar
-            className={className}
-            sx={sx}
-            {...props}
-            data-loading
-            alt={user?.name || user?.email || user?.username || 'Gravatar'}
-            src={src}
-            title={title}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
+        <HtmlTooltip
+            arrow
+            describeChild
+            title={
+                <>
+                    <StyledName>
+                        {user?.name || user?.username} (id: {user?.id})
+                    </StyledName>
+                    <StyledEmail>{user?.email}</StyledEmail>
+                </>
+            }
         >
-            <ConditionallyRender
-                condition={Boolean(fallback)}
-                show={fallback}
-                elseShow={children}
-            />
-        </StyledAvatar>
+            <span>
+                <StyledAvatar
+                    className={className}
+                    sx={sx}
+                    {...props}
+                    data-loading
+                    alt={
+                        user?.name ||
+                        user?.email ||
+                        user?.username ||
+                        'Gravatar'
+                    }
+                    src={src}
+                    title={title}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                >
+                    <ConditionallyRender
+                        condition={Boolean(fallback)}
+                        show={fallback}
+                        elseShow={children}
+                    />
+                </StyledAvatar>
+            </span>
+        </HtmlTooltip>
     );
 };

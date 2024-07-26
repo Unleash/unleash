@@ -31,6 +31,7 @@ export function ToggleConfigButton({
                 color='primary'
                 startIcon={button.icon}
                 onClick={() => onChange(!currentValue)}
+                disableElevation={true}
             >
                 <ButtonLabel labelWidth={button.labelWidth}>
                     {button.label}

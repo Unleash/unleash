@@ -35,6 +35,7 @@ import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import Label from '@mui/icons-material/Label';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
+import type { ITag } from 'interfaces/tags';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -272,7 +273,7 @@ export const CreateFeatureDialog = ({
                                     />
                                 }
                             />
-                            <MultiSelectConfigButton
+                            <MultiSelectConfigButton<ITag>
                                 tooltip={{
                                     header: 'Select tags',
                                 }}
@@ -280,7 +281,7 @@ export const CreateFeatureDialog = ({
                                 selectedOptions={tags}
                                 options={allTags.map((tag) => ({
                                     label: `${tag.type}:${tag.value}`,
-                                    value: `${tag.type}:${tag.value}`,
+                                    value: tag,
                                 }))}
                                 onChange={setTags}
                                 button={{
@@ -334,7 +335,7 @@ export const CreateFeatureDialog = ({
                                 onClose={clearDocumentationOverride}
                             />
 
-                            <SingleSelectConfigButton
+                            <SingleSelectConfigButton<boolean>
                                 tooltip={{
                                     header: 'Enable or disable impression data',
                                 }}
@@ -342,11 +343,11 @@ export const CreateFeatureDialog = ({
                                     configButtonData.impressionData.text
                                 }
                                 options={[
-                                    { label: 'On', value: 'true' },
-                                    { label: 'Off', value: 'false' },
+                                    { label: 'On', value: true },
+                                    { label: 'Off', value: false },
                                 ]}
-                                onChange={(value: string) => {
-                                    setImpressionData(value === 'true');
+                                onChange={(value: boolean) => {
+                                    setImpressionData(value);
                                 }}
                                 button={{
                                     label: `Impression data ${impressionData ? 'on' : 'off'}`,

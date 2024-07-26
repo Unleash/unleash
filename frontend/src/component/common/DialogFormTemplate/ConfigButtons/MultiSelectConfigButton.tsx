@@ -1,24 +1,24 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import { ConfigButton, type ConfigButtonProps } from './ConfigButton';
 import { DropdownList, type DropdownListProps } from './DropdownList';
 
-type MultiSelectConfigButtonProps = Pick<
+type MultiSelectConfigButtonProps<T> = Pick<
     ConfigButtonProps,
     'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip'
 > &
-    Pick<DropdownListProps, 'search' | 'options'> & {
-        selectedOptions: Set<string>;
-        onChange: (values: Set<string>) => void;
+    Pick<DropdownListProps<T>, 'search' | 'options'> & {
+        selectedOptions: Set<T>;
+        onChange: (values: Set<T>) => void;
     };
 
-export const MultiSelectConfigButton: FC<MultiSelectConfigButtonProps> = ({
+export function MultiSelectConfigButton<T = string>({
     selectedOptions,
     onChange,
     ...rest
-}) => {
+}: MultiSelectConfigButtonProps<T>) {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
 
-    const handleToggle = (value: string) => {
+    const handleToggle = (value: T) => {
         if (selectedOptions.has(value)) {
             selectedOptions.delete(value);
         } else {
@@ -30,7 +30,7 @@ export const MultiSelectConfigButton: FC<MultiSelectConfigButtonProps> = ({
 
     return (
         <ConfigButton {...rest} anchorEl={anchorEl} setAnchorEl={setAnchorEl}>
-            <DropdownList
+            <DropdownList<T>
                 multiselect={{
                     selectedOptions,
                 }}
@@ -39,4 +39,4 @@ export const MultiSelectConfigButton: FC<MultiSelectConfigButtonProps> = ({
             />
         </ConfigButton>
     );
-};
+}

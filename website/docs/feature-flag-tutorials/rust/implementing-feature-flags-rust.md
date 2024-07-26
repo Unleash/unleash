@@ -8,13 +8,13 @@ Hello! In this tutorial we’ll show you how to add feature flags to your Rust a
 
 We love Rust here at Unleash, our own [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) is built with Rust and it's a core part of our product.
 
-- [Prerequisites](#prerequisites)
-- [1. Install a local feature flag provider](#1-install-a-local-feature-flag-provider)
-- [2. Convert an image to WebP](#2-convert-an-image-to-webp)
-- [3. Add Avif support](#3-add-avif-support)
-- [4. Add Unleash to your Rust app](#4-add-unleash-to-your-rust-app)
-- [5. Verify the toggle experience](#5-verify-the-toggle-experience)
-- [Conclusion](#conclusion)
+-   [Prerequisites](#prerequisites)
+-   [1. Install a local feature flag provider](#1-install-a-local-feature-flag-provider)
+-   [2. Convert an image to JPEG](#2-convert-an-image-to-jpeg)
+-   [3. Add WebP support](#3-add-webp-support)
+-   [4. Add Unleash to your Rust app](#4-add-unleash-to-your-rust-app)
+-   [5. Verify the toggle experience](#5-verify-the-toggle-experience)
+-   [Conclusion](#conclusion)
 
 ## Prerequisites
 
@@ -53,14 +53,14 @@ Click the ‘New feature flag’ button to create a new feature flag.
 
 ![The "new feature flag" button is located on the project page](../ruby/new-ff.png)
 
-Call it `avif` and enable it in the `development` environment.
+Call it `webp` and enable it in the `development` environment.
 
-![A feature flag called `avif` is now visible.](./enable-ff.png)
+![A feature flag called `webp` is now visible.](./enable-ff.png)
 
 Next, generate an API token to authenticate calls made to Unleash servers from your project.
 
 :::info
-Unleash requires SDKs to be set up with an API token. This is to ensure that only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access. 
+Unleash requires SDKs to be set up with an API token. This is to ensure that only applications with the correct authentication can access your feature flags in Unleash. API tokens are created by users with API management access.
 :::
 
 From your project view on the platform, go to "Project Settings" and then "API Access". Or click "API Access" on the sidebar.
@@ -81,7 +81,7 @@ The API token you generated can be managed in the API Access view in your projec
 
 Everything’s now setup on the Unleash side. Let’s go to the code.
 
-## 2. Convert an image to WebP
+## 2. Convert an image to JPEG
 
 Open a new tab in your terminal, and create a new Rust project (NOT in the unleash folder).
 
@@ -94,31 +94,32 @@ This will create a new project with a `Cargo.toml` file and a `src` folder.
 Add the following dependencies:
 
 ```sh
-cargo add image ravif rgb webp
+cargo add image webp
 ```
 
-We use the `image`, `webp` and `ravif` crates to convert images to WebP and Avif, respectively. The `unleash_api_client` crate is used to communicate with the Unleash server. The `tokio` crate is used to make this connection asynchronous.
+We use the `image` and `webp` crates to convert images to JPEG and WebP, respectively. The `unleash_api_client` crate is used to communicate with the Unleash server. The `tokio` crate will be used to make this connection asynchronous.
 
-Final step before we start coding: Download this image or add an image of your own and call it "input.png." Make sure it's in the same folder.
+Final step before we start coding: Download this image or add an image of your own to your folder. Call it "input.png." Make sure it's in the same folder as the rest of your cargo project.
 
 !["The Great Wave off Kanagawa" by Hokusai. A woodblock print of a cresting wave.](input.png)
 
-Let's write some Rust code to convert the image to WebP. We're relying on the `webp` crate which gives us a straightforward `WebPEncoder::from_image(&img)` method. We'll then use the feature flag that we just created to toggle the conversion to Avif rather than WebP.
+Let's write some Rust code to convert the image to jpeg. We're relying on the `image` crate to read and convert the image file. We'll then use the feature flag that we just created to toggle the conversion to WebP rather than JPEG.
 
 ```rust
-use image::io::Reader as ImageReader;
-use ravif::{Encoder as AvifEncoder, Img};
-use rgb::FromSlice;
-use std::error::Error;
-use std::fs;
-use webp::Encoder as WebPEncoder;
+use image::ImageReader;
+use std::{error::Error, fs};
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let img = ImageReader::open("input.png")?.decode()?;
+    println!("Hello, world!");
 
-    // Convert to WebP
-    let webp_data = WebPEncoder::from_image(&img)?.encode(75.0);
-    fs::write("output.webp", webp_data.to_vec())?;
+    process_image()?;
+
+    Ok(())
+}
+
+fn process_image() -> Result<(), Box<dyn Error>> {
+    let img = ImageReader::open("input.png")?.decode()?;
+    img.save_with_format("output.jpeg", image::ImageFormat::Jpeg)?;
 
     Ok(())
 }
@@ -131,46 +132,40 @@ Run the code
 cargo run
 ```
 
-You should see another image named `output.webp` in your folder. Make sure that the image is the same and that the compression worked correctly.
+You should see another image named `output.jpeg` in your folder. Make sure that the image is the same and that the compression worked correctly.
 
-![Project directory containing the newly created `output.webp`](./webp-image-in-folder.png)
+## 3. Add WebP support
 
-## 3. Add Avif support
-
-Now let's add support for Avif. We'll use a crate named `ravif` for this, which is a pure Rust converter. Later down the line, we'll rely on a feature flag to toggle between the WebP and the Avif conversion.
+Now let's add support for WebP. We'll use a crate named `webp` for this, which gives us a straightforward `Encoder::from_image(&img)` method.
 
 ```rust
-
-use image::io::Reader as ImageReader;
-use ravif::{Encoder as AvifEncoder, Img};
-use rgb::FromSlice;
-use std::error::Error;
-use std::fs;
-use webp::Encoder as WebPEncoder;
+use image::ImageReader;
+use std::{error::Error, fs};
+use webp::Encoder;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    println!("Hello, world!");
+
+    let is_webp = true;
+    process_image(is_webp)?;
+
+    Ok(())
+}
+
+fn process_image(is_webp: bool) -> Result<(), Box<dyn Error>> {
     let img = ImageReader::open("input.png")?.decode()?;
 
-    // Convert to WebP
-    let webp_data = WebPEncoder::from_image(&img)?.encode(75.0);
-    fs::write("output.webp", webp_data.to_vec())?;
-
-    // Convert to AVIF
-    let rgba_image = img.to_rgba8();
-    let pixels_rgba = rgba_image.as_raw().as_rgba();
-    let avif_data = AvifEncoder::new().with_quality(75.0).encode_rgba(Img::new(
-        pixels_rgba,
-        rgba_image.width() as usize,
-        rgba_image.height() as usize,
-    ))?;
-    fs::write("output.avif", avif_data.avif_file)?;
+    if is_webp {
+        let webp_data = Encoder::from_image(&img)?.encode(0.75);
+        fs::write("output.webp", webp_data.to_vec())?;
+    } else {
+        img.save_with_format("output.jpeg", image::ImageFormat::Jpeg)?;
+    }
 
     Ok(())
 }
 
 ```
-
-Not as easy as the `webp` crate, I had to use the `rgb` crate to turn our image into a format that `ravif` would accept, but it works. Be mindful of the `usize` when passing the width and height.
 
 Run the code again:
 
@@ -178,7 +173,9 @@ Run the code again:
 cargo run
 ```
 
-You should see another image named `output.avif` in your folder, alongside the `.webp` image. Make sure that all images are the same before continuing.
+You should see another image named `output.webp` in your folder, alongside the `.jpeg` image. Make sure that all images are the same before continuing.
+
+![Project directory containing the newly created `output.webp`](./webp-image-in-folder.png)
 
 ## 4. Add Unleash to your Rust app
 
@@ -200,26 +197,24 @@ cargo add tokio --features full
 cargo add unleash-api-client --features reqwest
 ```
 
-There are a few dependencies, and here's why: We need an HTTP client to make the request, and `serde` to deserialize the Unleash response. Our SDK is constantly polling Unleash to retrieve the value of feature flags, and caches that in memory. 
+There are a few dependencies, and here's why: We need an HTTP client to make the request, and `serde` to deserialize the Unleash response. Our SDK is constantly polling Unleash to retrieve the value of feature flags, performs its own evaluation, and caches that in memory.
 
 We want to let you choose the nature of that concurrency, so we're compatible with `async-std`, `tokio` and standard threads. We're picking `tokio` here.
 
 ```rust
 use enum_map::Enum;
-use image::io::Reader as ImageReader;
-use ravif::{Encoder as AvifEncoder, Img};
-use rgb::FromSlice;
+use image::ImageReader;
 use std::error::Error;
 use std::fs;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tokio::time::sleep;
 use unleash_api_client::client::ClientBuilder;
-use webp::Encoder as WebPEncoder;
+use webp::Encoder;
 
 #[derive(Debug, Deserialize, Serialize, Enum, Clone)]
 enum Flags {
-    avif,
+    webp,
 }
 
 #[tokio::main]
@@ -236,8 +231,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
         // Ensure we have features for this demo.
         sleep(Duration::from_millis(500)).await;
 
-        let avif = client.is_enabled(Flags::avif, None, false);
-        process_images(avif)?;
+        let is_webp = client.is_enabled(Flags::webp, None, false);
+        process_images(is_webp)?;
 
         // allow tokio::join to finish
         client.stop_poll().await;
@@ -247,27 +242,14 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
     Ok(())
 }
 
-fn process_images(
-    convert_to_avif: bool,
-) -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
+fn process_image(is_webp: bool) -> Result<(), Box<dyn Error>> {
     let img = ImageReader::open("input.png")?.decode()?;
 
-    if convert_to_avif {
-        // Convert to AVIF
-        let rgba_image = img.to_rgba8();
-        let pixels_rgba = rgba_image.as_raw().as_rgba();
-        let avif_data = AvifEncoder::new().with_quality(75.0).encode_rgba(Img::new(
-            pixels_rgba,
-            rgba_image.width() as usize,
-            rgba_image.height() as usize,
-        ))?;
-        fs::write("output.avif", avif_data.avif_file)?;
-        println!("Image conversion to AVIF completed successfully.");
-    } else {
-        // Convert to WebP
-        let webp_data = WebPEncoder::from_image(&img)?.encode(75.0);
+    if is_webp {
+        let webp_data = Encoder::from_image(&img)?.encode(0.75);
         fs::write("output.webp", webp_data.to_vec())?;
-        println!("Image conversion to WebP completed successfully.");
+    } else {
+        img.save_with_format("output.jpeg", image::ImageFormat::Jpeg)?;
     }
 
     Ok(())
@@ -286,7 +268,7 @@ Your feature flag configuration will only update as often as your SDK polls Unle
 
 All done! Now you know how to add feature flags with Unleash in Rust. You’ve learned how to:
 
--   Convert images to WebP and Avif using Rust
+-   Convert images to JPEG and WebP using Rust
 -   Install Unleash and create/enable a feature flag
 -   Initialise the Unleash client and provide it with an async runtime
 -   Grab the value of a feature flag with the Rust SDK

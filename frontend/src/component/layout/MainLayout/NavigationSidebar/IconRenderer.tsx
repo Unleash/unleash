@@ -27,9 +27,7 @@ import BillingIcon from '@mui/icons-material/CreditCardOutlined';
 import EventLogIcon from '@mui/icons-material/EventNoteOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import { ReactComponent as ProjectIcon } from 'assets/icons/projectIconSmall.svg';
 import type { FC } from 'react';
-import { styled } from '@mui/material';
 
 // TODO: move to routes
 const icons: Record<string, typeof SvgIcon> = {
@@ -71,12 +69,3 @@ export const IconRenderer: FC<{ path: string }> = ({ path }) => {
 
     return <IconComponent />;
 };
-
-export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
-    fill: theme.palette.neutral.main,
-    stroke: theme.palette.neutral.main,
-    // same as built-in icons
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    fontSize: theme.spacing(3),
-}));

@@ -1,7 +1,7 @@
 import type { IAuditUser, IFlagResolver, IUnleashConfig } from '../../types';
-import getLogger from '../../../test/fixtures/no-logger';
 import { createFakeProjectService } from './createProjectService';
 import type { IUser } from '../../types';
+import { createTestConfig } from '../../../test/config/test-config';
 
 const alwaysOnFlagResolver = {
     isEnabled() {
@@ -12,7 +12,7 @@ const alwaysOnFlagResolver = {
 test('Should not allow to exceed project limit', async () => {
     const LIMIT = 1;
     const projectService = createFakeProjectService({
-        getLogger,
+        ...createTestConfig(),
         flagResolver: alwaysOnFlagResolver,
         resourceLimits: {
             projects: LIMIT,

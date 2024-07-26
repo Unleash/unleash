@@ -22,7 +22,6 @@ import {
     type IFeatureEnvironmentStore,
     type IFeatureNaming,
     type IFeatureToggleStore,
-    type IFeatureTypeStore,
     type IFlagResolver,
     type IProject,
     type IProjectApplications,
@@ -53,7 +52,6 @@ import {
     type ProjectCreated,
     type IProjectOwnersReadModel,
     ADMIN,
-    type IApiTokenStore,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -86,6 +84,7 @@ import type {
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
+import type { ApiTokenService } from '../../services/api-token-service';
 
 type Days = number;
 type Count = number;
@@ -132,8 +131,6 @@ export default class ProjectService {
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
-    private featureTypeStore: IFeatureTypeStore;
-
     private environmentStore: IEnvironmentStore;
 
     private groupService: GroupService;
@@ -146,7 +143,7 @@ export default class ProjectService {
 
     private accountStore: IAccountStore;
 
-    private apiTokenStore: IApiTokenStore;
+    private apiTokenService: ApiTokenService;
 
     private favoritesService: FavoritesService;
 
@@ -171,10 +168,8 @@ export default class ProjectService {
             featureToggleStore,
             environmentStore,
             featureEnvironmentStore,
-            featureTypeStore,
             accountStore,
             projectStatsStore,
-            apiTokenStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -186,8 +181,6 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'accountStore'
             | 'projectStatsStore'
-            | 'featureTypeStore'
-            | 'apiTokenStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -196,6 +189,7 @@ export default class ProjectService {
         favoriteService: FavoritesService,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
+        apiTokenService: ApiTokenService,
     ) {
         this.projectStore = projectStore;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -205,8 +199,7 @@ export default class ProjectService {
         this.accessService = accessService;
         this.eventStore = eventStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureTypeStore = featureTypeStore;
-        this.apiTokenStore = apiTokenStore;
+        this.apiTokenService = apiTokenService;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
         this.privateProjectChecker = privateProjectChecker;
@@ -565,14 +558,14 @@ export default class ProjectService {
             archived: true,
         });
 
-        this.featureToggleService.deleteFeatures(
+        await this.featureToggleService.deleteFeatures(
             archivedFlags.map((flag) => flag.name),
             id,
             auditUser,
         );
 
         if (this.flagResolver.isEnabled('cleanApiTokenWhenOrphaned')) {
-            const allTokens = await this.apiTokenStore.getAll();
+            const allTokens = await this.apiTokenService.getAllTokens();
             const projectTokens = allTokens.filter(
                 (token) =>
                     (token.projects &&
@@ -585,7 +578,7 @@ export default class ProjectService {
 
             await Promise.all(
                 projectTokens.map((token) =>
-                    this.apiTokenStore.delete(token.secret),
+                    this.apiTokenService.delete(token.secret, auditUser),
                 ),
             );
         } else {

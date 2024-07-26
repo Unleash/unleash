@@ -34,6 +34,7 @@ import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/Co
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import Label from '@mui/icons-material/Label';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 
 interface ICreateFeatureDialogProps {
     open: boolean;

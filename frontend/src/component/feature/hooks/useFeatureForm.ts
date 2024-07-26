@@ -3,7 +3,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useQueryParams from 'hooks/useQueryParams';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import type { ITag } from '../../../interfaces/tags';
+import type { ITag } from 'interfaces/tags';
 
 const useFeatureForm = (
     initialName = '',

@@ -185,7 +185,6 @@ const StyledSidebar = styled('aside', {
         width: sidebarWidth || formTemplateSidebarWidth,
         [theme.breakpoints.down(1100)]: {
             width: '100%',
-            color: 'red',
         },
         [theme.breakpoints.down(500)]: {
             padding: theme.spacing(4, 2),

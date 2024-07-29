@@ -9,7 +9,6 @@ type ToggleConfigButtonProps = {
     label: string;
     icon: ReactNode;
     labelWidth?: string;
-    additionalTooltipContent?: ReactNode;
     tooltip: {
         header: string;
         description: string;

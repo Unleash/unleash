@@ -11,56 +11,48 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     height: theme.spacing(3),
 }));
 
-const LastModifiedByContainer = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplateAreas: `
-    'description description'
-    'avatar link'
-    `,
-    rowGap: theme.spacing(0.5),
-    columnGap: theme.spacing(1),
-    alignItems: 'center',
-    height: 'min-content',
-}));
-
-const GridDescription = styled('span')({ gridArea: 'description' });
-const GridTooltip = styled(HtmlTooltip)({ gridArea: 'avatar' });
-const GridLink = styled(Link)({ gridArea: 'link' });
-
-const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
-    return (
-        <LastModifiedByContainer>
-            <GridDescription>Last modified by</GridDescription>
-            <GridTooltip arrow describeChild title={name}>
-                <span>
-                    <StyledAvatar user={{ id, name, imageUrl }} hideTitle />
-                </span>
-            </GridTooltip>
-            <GridLink to='logs'>view change</GridLink>
-        </LastModifiedByContainer>
-    );
-};
-
-const CollaboratorListContainer = styled('div')(({ theme }) => ({
+const SectionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'column',
+    flexFlow: 'row',
     gap: theme.spacing(0.5),
     alignItems: 'flex-start',
     height: 'min-content',
 }));
 
+const LastModifiedByAvatarAndLink = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
+}));
+
+const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
+    return (
+        <SectionContainer>
+            <span>Last modified by</span>
+            <LastModifiedByAvatarAndLink>
+                <HtmlTooltip arrow describeChild title={name}>
+                    <span>
+                        <StyledAvatar user={{ id, name, imageUrl }} hideTitle />
+                    </span>
+                </HtmlTooltip>
+                <Link to='logs'>view change</Link>
+            </LastModifiedByAvatarAndLink>
+        </SectionContainer>
+    );
+};
+
 const CollaboratorList: FC<{ collaborators: Collaborator[] }> = ({
     collaborators,
 }) => {
     return (
-        <CollaboratorListContainer>
+        <SectionContainer>
             <span className='description'>Collaborators</span>
             <GroupCardAvatars
                 users={collaborators}
                 avatarLimit={8}
                 AvatarComponent={StyledAvatar}
             />
-        </CollaboratorListContainer>
+        </SectionContainer>
     );
 };
 

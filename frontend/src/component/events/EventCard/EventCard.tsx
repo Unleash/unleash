@@ -39,6 +39,10 @@ const StyledContainerListItem = styled('li')(({ theme }) => ({
         },
     },
 
+    '& dd': {
+        overflowWrap: 'anywhere',
+    },
+
     a: {
         color: theme.palette.links,
     },

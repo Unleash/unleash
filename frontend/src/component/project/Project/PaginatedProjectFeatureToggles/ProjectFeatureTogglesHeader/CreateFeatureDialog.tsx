@@ -339,19 +339,16 @@ export const CreateFeatureDialog = ({
                             <ToggleConfigButton
                                 tooltip={{
                                     header: 'Enable or disable impression data',
+                                    description:
+                                        configButtonData.impressionData.text,
                                 }}
                                 currentValue={impressionData}
-                                description={
-                                    configButtonData.impressionData.text
-                                }
                                 onClick={() =>
                                     setImpressionData(!impressionData)
                                 }
-                                button={{
-                                    label: `Impression data ${impressionData ? 'on' : 'off'}`,
-                                    icon: <ImpressionDataIcon />,
-                                    labelWidth: `${'impression data off'.length}ch`,
-                                }}
+                                label={`Impression data ${impressionData ? 'on' : 'off'}`}
+                                icon={<ImpressionDataIcon />}
+                                labelWidth={`${'impression data off'.length}ch`}
                             />
                         </>
                     }

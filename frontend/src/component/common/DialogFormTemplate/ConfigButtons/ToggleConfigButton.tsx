@@ -1,26 +1,36 @@
-import type { ConfigButtonProps } from './ConfigButton';
 import { ButtonLabel, StyledTooltipContent } from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { Button } from '@mui/material';
+import type { ReactNode } from 'react';
 
-type ToggleConfigButtonProps = Pick<
-    ConfigButtonProps,
-    'button' | 'description' | 'tooltip'
-> & { onClick: () => void; currentValue: boolean };
+type ToggleConfigButtonProps = {
+    onClick: () => void;
+    currentValue: boolean;
+    label: string;
+    icon: ReactNode;
+    labelWidth?: string;
+    additionalTooltipContent?: ReactNode;
+    tooltip: {
+        header: string;
+        description: string;
+        additionalContent?: ReactNode;
+    };
+};
 
 export function ToggleConfigButton({
     onClick,
     currentValue,
-    button,
+    label,
+    icon,
+    labelWidth,
     tooltip,
-    description,
 }: ToggleConfigButtonProps) {
     return (
         <TooltipResolver
             titleComponent={
                 <StyledTooltipContent>
                     <h3>{tooltip.header}</h3>
-                    <p>{description}</p>
+                    <p>{tooltip.description}</p>
                     {tooltip.additionalContent}
                 </StyledTooltipContent>
             }
@@ -31,13 +41,11 @@ export function ToggleConfigButton({
                 aria-checked={currentValue}
                 variant={currentValue ? 'contained' : 'outlined'}
                 color='primary'
-                startIcon={button.icon}
+                startIcon={icon}
                 onClick={onClick}
                 disableElevation={true}
             >
-                <ButtonLabel labelWidth={button.labelWidth}>
-                    {button.label}
-                </ButtonLabel>
+                <ButtonLabel labelWidth={labelWidth}>{label}</ButtonLabel>
             </Button>
         </TooltipResolver>
     );

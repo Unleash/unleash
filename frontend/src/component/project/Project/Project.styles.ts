@@ -17,7 +17,6 @@ export const StyledColumn = styled('div')(() => ({
 }));
 
 export const StyledName = styled('span')(({ theme }) => ({
-    fontSize: theme.typography.h1.fontSize,
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -54,7 +53,7 @@ export const StyledInnerContainer = styled('div')(({ theme }) => ({
 export const StyledProjectTitle = styled('span')(({ theme }) => ({
     margin: 0,
     width: '100%',
-    fontSize: theme.fontSizes.mainHeader,
+    fontSize: theme.typography.h1.fontSize,
     fontWeight: 'bold',
     display: 'flex',
     alignItems: 'center',

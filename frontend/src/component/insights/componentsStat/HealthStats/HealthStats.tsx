@@ -61,22 +61,22 @@ export const HealthStats: FC<IHealthStatsProps> = ({
             <StyledStatsRow>
                 <StyledIcon />
                 Instance health
-                <StyledMainValue>{`${value}%`}</StyledMainValue>
+                <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
             </StyledStatsRow>
         </StyledSection>
         <Divider />
         <StyledSection>
             <StyledStatsRow>
                 Healthy flags
-                <StyledValue>{healthy}</StyledValue>
+                <StyledValue>{healthy || 0}</StyledValue>
             </StyledStatsRow>
             <StyledStatsRow>
                 Stale flags
-                <StyledValue>{stale}</StyledValue>
+                <StyledValue>{stale || 0}</StyledValue>
             </StyledStatsRow>
             <StyledStatsRow>
                 Potencially stale flags
-                <StyledValue>{potentiallyStale}</StyledValue>
+                <StyledValue>{potentiallyStale || 0}</StyledValue>
             </StyledStatsRow>
         </StyledSection>
     </div>

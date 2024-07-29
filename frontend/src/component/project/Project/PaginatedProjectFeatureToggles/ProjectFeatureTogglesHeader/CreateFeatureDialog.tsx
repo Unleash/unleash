@@ -36,6 +36,7 @@ import Label from '@mui/icons-material/Label';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 import type { ITag } from 'interfaces/tags';
+import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -335,35 +336,19 @@ export const CreateFeatureDialog = ({
                                 onClose={clearDocumentationOverride}
                             />
 
-                            <SingleSelectConfigButton<boolean>
+                            <ToggleConfigButton
                                 tooltip={{
                                     header: 'Enable or disable impression data',
+                                    description:
+                                        configButtonData.impressionData.text,
                                 }}
-                                description={
-                                    configButtonData.impressionData.text
+                                currentValue={impressionData}
+                                onClick={() =>
+                                    setImpressionData(!impressionData)
                                 }
-                                options={[
-                                    { label: 'On', value: true },
-                                    { label: 'Off', value: false },
-                                ]}
-                                onChange={(value: boolean) => {
-                                    setImpressionData(value);
-                                }}
-                                button={{
-                                    label: `Impression data ${impressionData ? 'on' : 'off'}`,
-                                    icon: <ImpressionDataIcon />,
-                                    labelWidth: `${'impression data off'.length}ch`,
-                                }}
-                                search={{
-                                    label: 'Filter impression data states',
-                                    placeholder: 'Select impression data state',
-                                }}
-                                onOpen={() =>
-                                    setDocumentation(
-                                        configButtonData.impressionData,
-                                    )
-                                }
-                                onClose={clearDocumentationOverride}
+                                label={`Impression data ${impressionData ? 'on' : 'off'}`}
+                                icon={<ImpressionDataIcon />}
+                                labelWidth={`${'impression data off'.length}ch`}
                             />
                         </>
                     }

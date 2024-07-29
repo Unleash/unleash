@@ -3,12 +3,11 @@ import { FavoriteIconButton } from 'component/common/FavoriteIconButton/Favorite
 
 export const StyledDiv = styled('div')(() => ({
     display: 'flex',
-    overflow: 'hidden',
 }));
 
 export const StyledTopRow = styled('div')(() => ({
     display: 'grid',
-    gridTemplateColumns: '1fr auto',
+    gridTemplateColumns: 'minmax(0, 1fr) auto',
     width: '100%',
 }));
 

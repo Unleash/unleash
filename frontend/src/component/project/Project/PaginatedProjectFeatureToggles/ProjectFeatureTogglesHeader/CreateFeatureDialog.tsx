@@ -206,6 +206,7 @@ export const CreateFeatureDialog = ({
             >
                 <DialogFormTemplate
                     createButtonProps={{
+                        projectId: project,
                         disabled:
                             loading ||
                             loadingTotalFlagCount ||

@@ -58,7 +58,6 @@ export const StyledProjectTitle = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
     fontWeight: 'bold',
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
     gap: theme.spacing(2),
     overflow: 'hidden',

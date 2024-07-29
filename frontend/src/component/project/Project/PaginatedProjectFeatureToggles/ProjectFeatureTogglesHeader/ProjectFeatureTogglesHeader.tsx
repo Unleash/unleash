@@ -60,6 +60,7 @@ const FlagCreationButton: FC = () => {
                         onClick={() => setOpenCreateDialog(true)}
                         maxWidth='960px'
                         Icon={Add}
+                        projectId={projectId}
                         disabled={loading}
                         permission={CREATE_FEATURE}
                         data-testid='NAVIGATE_TO_CREATE_FEATURE'

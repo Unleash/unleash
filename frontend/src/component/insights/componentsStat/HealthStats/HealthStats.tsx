@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { Box, Divider, styled } from '@mui/material';
+import { Box, Divider, Link, styled } from '@mui/material';
 import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-health.svg';
 
 interface IHealthStatsProps {
@@ -14,6 +14,11 @@ const StyledStatsRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0.5, 2, 0.5, 2),
+}));
+
+const ExplanationRow = styled(StyledStatsRow)(({ theme }) => ({
+    flex: 1,
+    justifyContent: 'flex-end',
 }));
 
 const StyledIcon = styled(InstanceHealthIcon)(({ theme }) => ({
@@ -32,6 +37,12 @@ const StyledValue = styled(Box)(({ theme }) => ({
 const StyledSection = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     fontSize: theme.fontSizes.smallBody,
+}));
+
+const FlagsSection = styled(StyledSection)(({ theme }) => ({
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
 }));
 
 const StyledHeader = styled('div')(() => ({
@@ -65,7 +76,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
             </StyledStatsRow>
         </StyledSection>
         <Divider />
-        <StyledSection>
+        <FlagsSection>
             <StyledStatsRow>
                 Healthy flags
                 <StyledValue>{healthy}</StyledValue>
@@ -75,9 +86,18 @@ export const HealthStats: FC<IHealthStatsProps> = ({
                 <StyledValue>{stale}</StyledValue>
             </StyledStatsRow>
             <StyledStatsRow>
-                Potencially stale flags
+                Potentially stale flags
                 <StyledValue>{potentiallyStale}</StyledValue>
             </StyledStatsRow>
-        </StyledSection>
+            <ExplanationRow>
+                <Link
+                    href='https://docs.getunleash.io/reference/technical-debt'
+                    target='_blank'
+                    rel='noreferrer'
+                >
+                    What affects instance health?
+                </Link>
+            </ExplanationRow>
+        </FlagsSection>
     </div>
 );

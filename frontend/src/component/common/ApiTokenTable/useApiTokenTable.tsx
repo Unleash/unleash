@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import {
     useTable,
@@ -12,7 +11,7 @@ import {
 } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
-import Key from '@mui/icons-material/Key';
+import { ApiTokenIcon } from 'component/admin/apiToken/ApiTokenIcon/ApiTokenIcon';
 
 export const useApiTokenTable = (
     tokens: IApiToken[],
@@ -27,7 +26,9 @@ export const useApiTokenTable = (
         return [
             {
                 id: 'Icon',
-                Cell: () => <IconCell icon={<Key color='disabled' />} />,
+                Cell: (props: any) => (
+                    <ApiTokenIcon secret={props.row.original.secret} />
+                ),
                 disableSortBy: true,
                 disableGlobalFilter: true,
                 width: 50,
@@ -61,7 +62,6 @@ export const useApiTokenTable = (
                     <ProjectsList
                         project={props.row.original.project}
                         projects={props.row.original.projects}
-                        secret={props.row.original.secret}
                     />
                 ),
                 width: 160,

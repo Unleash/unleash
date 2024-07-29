@@ -222,7 +222,14 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                     healthy={summary.active}
                                     stale={summary.stale}
                                     potentiallyStale={summary.potentiallyStale}
-                                    title={<WidgetTitle title='Health' />}
+                                    title={
+                                        <WidgetTitle
+                                            title='Health'
+                                            tooltip={
+                                                'Percentage of flags that are not stale or potentially stale.'
+                                            }
+                                        />
+                                    }
                                 />
                             </StyledWidgetStats>
                             <StyledChartContainer>

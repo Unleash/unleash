@@ -30,6 +30,7 @@ import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
 import NotFoundError from './error/notfound-error';
 import { bearerTokenMiddleware } from './middleware/bearer-token-middleware';
 import { auditAccessMiddleware } from './middleware';
+import { originMiddleware } from './middleware/origin-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -176,6 +177,8 @@ export default async function getApp(
         baseUriPath,
         rbacMiddleware(config, stores, services.accessService),
     );
+
+    app.use(baseUriPath, originMiddleware(config));
 
     app.use(`${baseUriPath}/api/admin`, auditAccessMiddleware(config));
     app.use(

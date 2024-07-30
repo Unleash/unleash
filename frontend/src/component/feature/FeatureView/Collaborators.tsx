@@ -13,7 +13,7 @@ const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
 
 const SectionContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row',
+    flexFlow: 'column',
     gap: theme.spacing(0.5),
     alignItems: 'flex-start',
     height: 'min-content',
@@ -21,7 +21,7 @@ const SectionContainer = styled('div')(({ theme }) => ({
 
 const LastModifiedByAvatarAndLink = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'column',
+    flexFlow: 'row',
     gap: theme.spacing(1),
 }));
 

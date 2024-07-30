@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import type { FC } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 type AvatarCellProps = {
     row: {

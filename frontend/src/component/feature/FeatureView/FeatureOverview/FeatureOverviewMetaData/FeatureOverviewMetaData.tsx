@@ -119,8 +119,6 @@ const FeatureOverviewMetaData = () => {
 
     const IconComponent = getFeatureTypeIcons(type);
 
-    console.log('feature.createdby', feature.createdBy);
-
     return (
         <StyledContainer>
             <StyledPaddingContainerTop>

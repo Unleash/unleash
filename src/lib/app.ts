@@ -178,7 +178,7 @@ export default async function getApp(
         rbacMiddleware(config, stores, services.accessService),
     );
 
-    app.use(baseUriPath, originMiddleware(config));
+    app.use(`${baseUriPath}/api/admin`, originMiddleware(config));
 
     app.use(`${baseUriPath}/api/admin`, auditAccessMiddleware(config));
     app.use(

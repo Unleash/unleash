@@ -29,7 +29,7 @@ const useOwnersMap = () => {
         }
         if (owner.ownerType === 'group') {
             return {
-                name: owner.name || '',
+                name: owner.name,
                 description: 'group',
             };
         }

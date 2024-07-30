@@ -1,8 +1,7 @@
 import { styled } from '@mui/material';
 import type { FC } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
 
 type AvatarCellProps = {
     row: {
@@ -60,28 +59,25 @@ export const AvatarCell =
 
         return (
             <StyledContainer>
-                <HtmlTooltip arrow describeChild title={tooltipContent}>
-                    <StyledAvatarButton
-                        aria-disabled={ariaDisabled}
-                        onClick={clickAction}
-                    >
-                        <ScreenReaderOnly>
-                            <span>
-                                Show only flags created by{' '}
-                                {original.createdBy.name}
-                            </span>
-                        </ScreenReaderOnly>
+                <StyledAvatarButton
+                    aria-disabled={ariaDisabled}
+                    onClick={clickAction}
+                >
+                    <ScreenReaderOnly>
+                        <span>
+                            Show only flags created by {original.createdBy.name}
+                        </span>
+                    </ScreenReaderOnly>
 
-                        <StyledAvatar
-                            hideTitle
-                            user={{
-                                id: original.createdBy.id,
-                                name: original.createdBy.name,
-                                imageUrl: original.createdBy.imageUrl,
-                            }}
-                        />
-                    </StyledAvatarButton>
-                </HtmlTooltip>
+                    <StyledAvatar
+                        hideTitle
+                        user={{
+                            id: original.createdBy.id,
+                            name: original.createdBy.name,
+                            imageUrl: original.createdBy.imageUrl,
+                        }}
+                    />
+                </StyledAvatarButton>
             </StyledContainer>
         );
     };

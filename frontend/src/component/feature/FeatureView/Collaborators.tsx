@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
+import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { Collaborator } from 'interfaces/featureToggle';
 import type { FC } from 'react';
@@ -29,7 +29,7 @@ const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
         <SectionContainer>
             <span>Last modified by</span>
             <LastModifiedByAvatarAndLink>
-                <StyledAvatar user={{ id, name, imageUrl }} hideTitle />
+                <StyledAvatar user={{ id, name, imageUrl }} />
                 <Link to='logs'>view change</Link>
             </LastModifiedByAvatarAndLink>
         </SectionContainer>
@@ -42,7 +42,7 @@ const CollaboratorList: FC<{ collaborators: Collaborator[] }> = ({
     return (
         <SectionContainer>
             <span className='description'>Collaborators</span>
-            <GroupCardAvatars
+            <AvatarGroup
                 users={collaborators}
                 avatarLimit={8}
                 AvatarComponent={StyledAvatar}

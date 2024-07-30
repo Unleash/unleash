@@ -32,7 +32,7 @@ jobs:
       - name: Setup QEmu so we can build multiplatform
         uses: docker/setup-qemu-action@v3
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Docker meta configuration
         uses: docker/metadata-action@v5
         id: meta

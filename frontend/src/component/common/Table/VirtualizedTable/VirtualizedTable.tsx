@@ -89,27 +89,27 @@ export const VirtualizedTable = <T extends object>({
 
                     prepareRow(row);
 
+                    const { key, ...props } = row.getRowProps({
+                        style: { display: 'flex', top },
+                    });
+
                     return (
-                        <TableRow
-                            hover
-                            {...row.getRowProps({
-                                style: { display: 'flex', top },
+                        <TableRow {...props} hover key={key || row.id}>
+                            {row.cells.map((cell) => {
+                                const { key, ...props } = cell.getCellProps({
+                                    style: {
+                                        flex: cell.column.minWidth
+                                            ? '1 0 auto'
+                                            : undefined,
+                                    },
+                                });
+
+                                return (
+                                    <TableCell key={key} {...props}>
+                                        {cell.render('Cell')}
+                                    </TableCell>
+                                );
                             })}
-                            key={row.id}
-                        >
-                            {row.cells.map((cell) => (
-                                <TableCell
-                                    {...cell.getCellProps({
-                                        style: {
-                                            flex: cell.column.minWidth
-                                                ? '1 0 auto'
-                                                : undefined,
-                                        },
-                                    })}
-                                >
-                                    {cell.render('Cell')}
-                                </TableCell>
-                            ))}
                         </TableRow>
                     );
                 })}

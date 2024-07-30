@@ -101,12 +101,18 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environments: string[],
         context: SdkContextSchema,
-        limit: number,
         userId: number,
     ): Promise<{
         result: AdvancedPlaygroundFeatureEvaluationResult[];
         invalidContextProperties: string[];
     }> {
+        // used for runtime control, do not remove
+        const { payload } = this.flagResolver.getVariant('advancedPlayground');
+        const limit =
+            payload?.value && Number.isInteger(Number.parseInt(payload?.value))
+                ? Number.parseInt(payload?.value)
+                : 15000;
+
         const segments = await this.segmentReadModel.getActive();
 
         let filteredProjects: typeof projects = projects;

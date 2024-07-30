@@ -1,6 +1,6 @@
-import type { IFeatureToggle } from 'interfaces/featureToggle';
+import type { FeatureSchema } from 'openapi';
 
-export const emptyFeature: IFeatureToggle = {
+export const emptyFeature: FeatureSchema = {
     environments: [],
     name: '',
     type: '',

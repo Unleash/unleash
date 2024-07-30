@@ -30,90 +30,8 @@ export interface IUserAvatarProps extends AvatarProps {
     className?: string;
     sx?: SxProps<Theme>;
     hideTitle?: boolean;
+    disableTooltip?: boolean;
 }
-
-const ActualUserAvatar = () => {
-    // remember Admin, Admin token users, system users
-
-    const adminTokenUser = {
-        ownerType: 'user',
-        name: 'Unleash Admin Token User',
-        email: null,
-        imageUrl:
-            'https://gravatar.com/avatar/989553ee532211da1dfc7513e22e544afde4a4b06e03355448c1b1059e6a7e6d?s=42&d=retro&r=g',
-    };
-
-    const admin = {
-        ownerType: 'user',
-        name: 'admin',
-        email: null,
-        imageUrl:
-            'https://gravatar.com/avatar/8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918?s=42&d=retro&r=g',
-    };
-
-    const systemUserPayload = {
-        ownerType: 'system',
-    };
-    const systemUserArgument = {
-        name: '',
-        description: 'System',
-        imageUrl: `{uiConfig.unleashUrl}/logo-unleash.png`,
-    };
-
-    const user = {
-        ownerType: 'user',
-        name: 'Mateusz K',
-        email: 'mateusz@getunleash.ai',
-        imageUrl:
-            'https://gravatar.com/avatar/e8d327dcf41886ecb46697dca53d391aa3aa448b72a63a9dd8382dc32cc1651c?s=42&d=retro&r=g',
-    };
-
-    const userWithEverything = {
-        name: 'Mateusz K',
-        username: 'Big M',
-        email: 'mateusz@getunleash.ai',
-        id: 1,
-        imageUrl:
-            'https://gravatar.com/avatar/e8d327dcf41886ecb46697dca53d391aa3aa448b72a63a9dd8382dc32cc1651c?s=42&d=retro&r=g',
-    };
-};
-const TextAvatar = () => {
-    // two different use cases <- member count and group name
-    // groups from project access tabl e
-    const projectAccessGroup = {
-        id: 1,
-        name: 'unleash-e2e-7095756699593281', // <- this gets rendered in the tooltip
-        rootRole: null,
-        description: 'hello-world',
-        mappingsSSO: [],
-        createdBy: null,
-        createdAt: '2023-04-26T14:07:02.721Z',
-        scimId: null,
-        users: [
-            // ... omitted for brevity
-        ],
-        addedAt: '2024-05-30T08:27:43.870Z',
-        roleId: 4,
-        roles: [4],
-    };
-
-    const projectAccessCard = {
-        name: 'owner.name' || '',
-        description: 'group',
-    };
-};
-const ServiceAccountAvatar = () => {
-    // service accounts have names and usernames, but not emails
-    const serviceAccount = {
-        id: 5,
-        name: 'x',
-        username: 'service-x',
-        imageUrl:
-            'https://gravatar.com/avatar/efcfeb1fc37d313f4c7d34165628fe332501abe61062127ae24e1e89d9affcfa?s=42&d=retro&r=g',
-        // ...
-    };
-};
-const EmptyAvatar = () => {};
 
 const tooltipContent = (
     user: IUserAvatarProps['user'],
@@ -131,9 +49,20 @@ const tooltipContent = (
         return { main: mainIdentifier, secondary: secondaryInfo };
     } else if (secondaryInfo) {
         return { main: secondaryInfo };
+    } else if (user.id) {
+        return { main: `User ID: ${user.id}` };
     }
+
     return undefined;
 };
+
+const TooltipSecondaryContent = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+}));
+const TooltipMainContent = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+}));
 
 export const UserAvatar: FC<IUserAvatarProps> = ({
     user,
@@ -141,6 +70,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
     className,
     sx,
     children,
+    disableTooltip,
     ...props
 }) => {
     let fallback: string | undefined;
@@ -154,14 +84,6 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
             fallback = fallback[0].toUpperCase();
         }
     }
-
-    const StyledName = styled('div')(({ theme }) => ({
-        color: theme.palette.text.secondary,
-        fontSize: theme.typography.body2.fontSize,
-    }));
-    const StyledEmail = styled('div')(({ theme }) => ({
-        fontSize: theme.typography.body1.fontSize,
-    }));
 
     const Avatar = (
         <StyledAvatar
@@ -180,7 +102,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
         </StyledAvatar>
     );
 
-    const tooltip = tooltipContent(user);
+    const tooltip = disableTooltip ? undefined : tooltipContent(user);
     if (tooltip) {
         return (
             <HtmlTooltip
@@ -188,8 +110,10 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
                 describeChild
                 title={
                     <>
-                        <StyledName>{tooltip.secondary}</StyledName>
-                        <StyledEmail>{tooltip.main}</StyledEmail>
+                        <TooltipSecondaryContent>
+                            {tooltip.secondary}
+                        </TooltipSecondaryContent>
+                        <TooltipMainContent>{tooltip.main}</TooltipMainContent>
                     </>
                 }
             >

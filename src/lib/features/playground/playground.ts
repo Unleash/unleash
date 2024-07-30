@@ -118,19 +118,12 @@ export default class PlaygroundController extends Controller {
         res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
         const { user } = req;
-        // used for runtime control, do not remove
-        const { payload } = this.flagResolver.getVariant('advancedPlayground');
-        const limit =
-            payload?.value && Number.isInteger(Number.parseInt(payload?.value))
-                ? Number.parseInt(payload?.value)
-                : 15000;
 
         const { result, invalidContextProperties } =
             await this.playgroundService.evaluateAdvancedQuery(
                 req.body.projects || '*',
                 req.body.environments,
                 req.body.context,
-                limit,
                 extractUserIdFromUser(user),
             );
 

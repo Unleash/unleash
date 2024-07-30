@@ -18,8 +18,9 @@ export const originMiddleware = ({
         if (isUI) {
             logger.debug('UI request');
         } else {
-            logger.debug('API request');
-            logger.debug({ userAgent: req.headers['user-agent'] });
+            logger.debug('API request', {
+                userAgent: req.headers['user-agent'],
+            });
         }
 
         next();

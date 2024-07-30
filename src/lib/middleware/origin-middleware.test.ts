@@ -56,8 +56,7 @@ describe('originMiddleware', () => {
 
         middleware(req, res, next);
 
-        expect(loggerMock.debug).toHaveBeenCalledWith('API request');
-        expect(loggerMock.debug).toHaveBeenCalledWith({
+        expect(loggerMock.debug).toHaveBeenCalledWith('API request', {
             userAgent: TEST_USER_AGENT,
         });
     });

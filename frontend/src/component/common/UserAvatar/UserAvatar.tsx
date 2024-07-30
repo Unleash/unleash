@@ -24,12 +24,8 @@ export interface IUserAvatarProps extends AvatarProps {
         Pick<IUser, 'id' | 'name' | 'email' | 'username' | 'imageUrl'>
     >;
     src?: string;
-    title?: string;
-    onMouseEnter?: (event: any) => void;
-    onMouseLeave?: () => void;
     className?: string;
     sx?: SxProps<Theme>;
-    hideTitle?: boolean;
     disableTooltip?: boolean;
 }
 

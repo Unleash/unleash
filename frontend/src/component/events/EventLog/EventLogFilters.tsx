@@ -19,10 +19,20 @@ const flagLogFilters: IFilterItem[] = [
         dateOperators: ['IS'],
     },
     {
+        // todo fill this in with actual values
         label: 'Created by',
         icon: 'person',
         options: [],
         filterKey: 'createdBy',
+        singularOperators: ['IS'],
+        pluralOperators: ['IS_ANY_OF'],
+    },
+    {
+        // todo fill this in with actual values
+        label: 'Event type',
+        icon: 'announcement',
+        options: [],
+        filterKey: 'eventType',
         singularOperators: ['IS'],
         pluralOperators: ['IS_ANY_OF'],
     },

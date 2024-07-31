@@ -3,11 +3,13 @@ import type { IFeatureTagStore, IUnleashStores } from '../../types/stores';
 import type { Logger } from '../../logger';
 import type { IEventStore } from '../../types/stores/event-store';
 import type { IBaseEvent, IEventList } from '../../types/events';
-import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
 import type EventEmitter from 'events';
 import type { IApiUser, ITag, IUser } from '../../types';
 import { ApiTokenType } from '../../types/models/api-token';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
+import type { EventSearchQueryParametersSchema } from '../../openapi';
+import { validateDateString } from '../../util/validateDateString';
 
 export default class EventService {
     private logger: Logger;
@@ -40,9 +42,27 @@ export default class EventService {
         };
     }
 
-    async searchEvents(search: SearchEventsSchema): Promise<IEventList> {
-        const totalEvents = await this.eventStore.filteredCount(search);
-        const events = await this.eventStore.searchEvents(search);
+    async deprecatedSearchEvents(
+        search: DeprecatedSearchEventsSchema,
+    ): Promise<IEventList> {
+        const totalEvents =
+            await this.eventStore.deprecatedFilteredCount(search);
+        const events = await this.eventStore.deprecatedSearchEvents(search);
+        return {
+            events,
+            totalEvents,
+        };
+    }
+
+    async searchEvents(
+        search: EventSearchQueryParametersSchema,
+    ): Promise<IEventList> {
+        const totalEvents = await this.eventStore.searchEventsCount(search);
+        const events = await this.eventStore.searchEvents({
+            ...search,
+            createdAtFrom: validateDateString(search.createdAtFrom),
+            createdAtTo: validateDateString(search.createdAtTo),
+        });
         return {
             events,
             totalEvents,

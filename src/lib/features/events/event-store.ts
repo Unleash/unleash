@@ -9,12 +9,15 @@ import {
 import type { Logger, LogProvider } from '../../logger';
 import type { IEventStore } from '../../types/stores/event-store';
 import type { ITag } from '../../types/model';
-import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import { sharedEventEmitter } from '../../util/anyEventEmitter';
 import type { Db } from '../../db/db';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
+import type {
+    DeprecatedSearchEventsSchema,
+    EventSearchQueryParametersSchema,
+} from '../../openapi';
 
 const EVENT_COLUMNS = [
     'id',
@@ -125,7 +128,9 @@ class EventStore implements IEventStore {
         }
     }
 
-    async filteredCount(eventSearch: SearchEventsSchema): Promise<number> {
+    async deprecatedFilteredCount(
+        eventSearch: DeprecatedSearchEventsSchema,
+    ): Promise<number> {
         let query = this.db(TABLE);
         if (eventSearch.type) {
             query = query.andWhere({ type: eventSearch.type });
@@ -136,6 +141,21 @@ class EventStore implements IEventStore {
         if (eventSearch.feature) {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
+        const count = await query.count().first();
+        if (!count) {
+            return 0;
+        }
+        if (typeof count.count === 'string') {
+            return Number.parseInt(count.count, 10);
+        } else {
+            return count.count;
+        }
+    }
+
+    async searchEventsCount(
+        eventSearch: EventSearchQueryParametersSchema,
+    ): Promise<number> {
+        const query = this.buildSearchQuery(eventSearch);
         const count = await query.count().first();
         if (!count) {
             return 0;
@@ -320,7 +340,70 @@ class EventStore implements IEventStore {
         }
     }
 
-    async searchEvents(search: SearchEventsSchema = {}): Promise<IEvent[]> {
+    async searchEvents(
+        search: EventSearchQueryParametersSchema = {},
+    ): Promise<IEvent[]> {
+        const query = this.buildSearchQuery(search)
+            .select(EVENT_COLUMNS)
+            .orderBy('created_at', 'desc')
+            .limit(Number(search.limit) ?? 100)
+            .offset(Number(search.offset) ?? 0);
+
+        try {
+            return (await query).map(this.rowToEvent);
+        } catch (err) {
+            return [];
+        }
+    }
+
+    private buildSearchQuery(search: EventSearchQueryParametersSchema) {
+        let query = this.db.from<IEventTable>(TABLE);
+
+        if (search.type) {
+            query = query.andWhere({
+                type: search.type,
+            });
+        }
+
+        if (search.project) {
+            query = query.andWhere({
+                project: search.project,
+            });
+        }
+
+        if (search.feature) {
+            query = query.andWhere({
+                feature_name: search.feature,
+            });
+        }
+
+        if (search.query) {
+            query = query.where((where) =>
+                where
+                    .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
+                    .orWhereRaw('tags::text ILIKE ?', `%${search.query}%`)
+                    .orWhereRaw('pre_data::text ILIKE ?', `%${search.query}%`),
+            );
+        }
+
+        if (search.createdAtFrom) {
+            query = query.andWhere('created_at', '>=', search.createdAtFrom);
+        }
+
+        if (search.createdAtTo) {
+            query = query.andWhere('created_at', '<=', search.createdAtTo);
+        }
+
+        if (search.createdBy) {
+            query = query.andWhere('created_by', search.createdBy);
+        }
+
+        return query;
+    }
+
+    async deprecatedSearchEvents(
+        search: DeprecatedSearchEventsSchema = {},
+    ): Promise<IEvent[]> {
         let query = this.db
             .select(EVENT_COLUMNS)
             .from<IEventTable>(TABLE)

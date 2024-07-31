@@ -27,7 +27,9 @@ test('Trying to get events by name if db fails should yield empty list', async (
         client: 'pg',
     });
     const store = new EventStore(db, getLogger);
-    const events = await store.searchEvents({ type: 'application-created' });
+    const events = await store.deprecatedSearchEvents({
+        type: 'application-created',
+    });
     expect(events).toBeTruthy();
     expect(events.length).toBe(0);
     await db.destroy();

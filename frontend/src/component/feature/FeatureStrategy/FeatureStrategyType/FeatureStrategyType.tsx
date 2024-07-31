@@ -49,6 +49,7 @@ export const FeatureStrategyType = ({
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     editable={hasAccess}
+                    errors={errors}
                 />
             );
         case 'userWithId':

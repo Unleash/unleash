@@ -345,8 +345,9 @@ export const FeatureStrategyForm = ({
         return constraintCount + segmentCount;
     };
 
-    const showVariants =
-        strategy.parameters && 'stickiness' in strategy.parameters;
+    const showVariants = Boolean(
+        strategy.parameters && 'stickiness' in strategy.parameters,
+    );
 
     return (
         <>
@@ -527,10 +528,7 @@ export const FeatureStrategyForm = ({
                     condition={tab === 2}
                     show={
                         <ConditionallyRender
-                            condition={
-                                strategy.parameters != null &&
-                                'stickiness' in strategy.parameters
-                            }
+                            condition={showVariants}
                             show={StrategyVariants}
                         />
                     }

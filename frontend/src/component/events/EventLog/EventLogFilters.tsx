@@ -39,36 +39,30 @@ export const FlagLogFilters = () => {
 };
 
 const useProjectLogFilters = () => {
-    const { projects } = useProjects();
-
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
-    useEffect(() => {
-        const projectsOptions = (projects || []).map((project) => ({
-            label: project.name,
-            value: project.id,
-        }));
+    const { features } = useFeatureSearch({ project: 'default' });
 
-        const hasMultipleProjects = projectsOptions.length > 1;
+    useEffect(() => {
+        const flagOptions = (features || []).map((flag) => ({
+            label: flag.name,
+            value: flag.name,
+        }));
 
         const availableFilters: IFilterItem[] = [
             ...flagLogFilters,
-            ...(hasMultipleProjects
-                ? ([
-                      {
-                          label: 'Project',
-                          icon: 'topic',
-                          options: projectsOptions,
-                          filterKey: 'project',
-                          singularOperators: ['IS'],
-                          pluralOperators: ['IS_ANY_OF'],
-                      },
-                  ] as IFilterItem[])
-                : []),
+            {
+                label: 'Feature Flag',
+                icon: 'flag',
+                options: flagOptions,
+                filterKey: 'flag',
+                singularOperators: ['IS'],
+                pluralOperators: ['IS_ANY_OF'],
+            },
         ];
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(projects)]);
+    }, [JSON.stringify(features)]);
 
     return availableFilters;
 };
@@ -87,26 +81,26 @@ export const ProjectLogFilters = () => {
 
 export const GlobalLogFilters = () => {
     const projectFilters = useProjectLogFilters();
-    const { features } = useFeatureSearch({});
+    const { projects } = useProjects();
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
-        const flagOptions = (features || []).map((flag) => ({
-            label: flag.name,
-            value: flag.name,
+        const projectOptions = (projects || []).map((project) => ({
+            label: project.name,
+            value: project.id,
         }));
 
-        const hasMultipleFlags = flagOptions.length > 1;
+        const hasMultipleProjects = projectOptions.length > 1;
 
         const availableFilters: IFilterItem[] = [
             ...projectFilters,
-            ...(hasMultipleFlags
+            ...(hasMultipleProjects
                 ? ([
                       {
-                          label: 'Feature Flag',
-                          icon: 'flag',
-                          options: flagOptions,
-                          filterKey: 'flag',
+                          label: 'Project',
+                          icon: 'topic',
+                          options: projectOptions,
+                          filterKey: 'project',
                           singularOperators: ['IS'],
                           pluralOperators: ['IS_ANY_OF'],
                       },
@@ -115,7 +109,7 @@ export const GlobalLogFilters = () => {
         ];
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(projectFilters), JSON.stringify(features)]);
+    }, [JSON.stringify(projectFilters), JSON.stringify(projects)]);
     return (
         <Filters
             availableFilters={availableFilters}

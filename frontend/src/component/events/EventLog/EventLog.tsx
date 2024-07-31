@@ -14,11 +14,7 @@ import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import {
-    FlagLogFilters,
-    GlobalLogFilters,
-    ProjectLogFilters,
-} from './EventLogFilters';
+import { EventLogFilters } from './EventLogFilters';
 
 interface IEventLogProps {
     title: string;
@@ -71,6 +67,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
+    const logType = project ? 'project' : feature ? 'flag' : 'global';
     const count = events?.length || 0;
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
@@ -93,11 +90,8 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         >
             <ConditionallyRender
                 condition={isEnterprise() && showFilters}
-                show={<FlagLogFilters />}
+                show={<EventLogFilters logType={logType} />}
             />
-            <FlagLogFilters />
-            <ProjectLogFilters />
-            <GlobalLogFilters />
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}

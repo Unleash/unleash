@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import { Filters, type IFilterItem } from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
@@ -110,6 +110,7 @@ export const GlobalLogFilters = () => {
 
         setAvailableFilters(availableFilters);
     }, [JSON.stringify(projectFilters), JSON.stringify(projects)]);
+
     return (
         <Filters
             availableFilters={availableFilters}
@@ -119,74 +120,19 @@ export const GlobalLogFilters = () => {
     );
 };
 
-export const EventLogFilters = (
-    // {state, onChange,}
+type EventLogFiltersProps = {
+    logType: 'flag' | 'project' | 'global';
+};
+export const EventLogFilters: FC<EventLogFiltersProps> = (
+    { logType },
+    // {state, onChange,} // these are to fill in later to make the filters work
 ) => {
-    const { projects } = useProjects();
-
-    const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-
-    useEffect(() => {
-        const projectsOptions = (projects || []).map((project) => ({
-            label: project.name,
-            value: project.id,
-        }));
-
-        const hasMultipleProjects = projectsOptions.length > 1;
-
-        const availableFilters: IFilterItem[] = [
-            {
-                label: 'Date From',
-                icon: 'today',
-                options: [],
-                filterKey: 'from',
-                dateOperators: ['IS'],
-            },
-            {
-                label: 'Date To',
-                icon: 'today',
-                options: [],
-                filterKey: 'to',
-                dateOperators: ['IS'],
-            },
-            {
-                label: 'Feature Flag',
-                icon: 'flag',
-                options: [],
-                filterKey: 'flag',
-                singularOperators: ['IS'],
-                pluralOperators: ['IS_ANY_OF'],
-            },
-            ...(hasMultipleProjects
-                ? ([
-                      {
-                          label: 'Project',
-                          icon: 'topic',
-                          options: projectsOptions,
-                          filterKey: 'project',
-                          singularOperators: ['IS'],
-                          pluralOperators: ['IS_ANY_OF'],
-                      },
-                  ] as IFilterItem[])
-                : []),
-            {
-                label: 'Created by',
-                icon: 'person',
-                options: [],
-                filterKey: 'createdBy',
-                singularOperators: ['IS'],
-                pluralOperators: ['IS_ANY_OF'],
-            },
-        ];
-
-        setAvailableFilters(availableFilters);
-    }, [JSON.stringify(projects)]);
-
-    return (
-        <Filters
-            availableFilters={availableFilters}
-            state={{}}
-            onChange={(v) => console.log(v)}
-        />
-    );
+    switch (logType) {
+        case 'flag':
+            return <FlagLogFilters />;
+        case 'project':
+            return <ProjectLogFilters />;
+        case 'global':
+            return <GlobalLogFilters />;
+    }
 };

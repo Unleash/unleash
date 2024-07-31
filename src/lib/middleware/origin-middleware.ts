@@ -16,9 +16,9 @@ export const originMiddleware = ({
         const isUI = !req.headers.authorization;
 
         if (isUI) {
-            logger.debug('UI request', { method: req.method });
+            logger.info('UI request', { method: req.method });
         } else {
-            logger.debug('API request', {
+            logger.info('API request', {
                 method: req.method,
                 userAgent: req.headers['user-agent'],
             });

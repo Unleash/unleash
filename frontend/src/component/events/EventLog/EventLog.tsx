@@ -1,4 +1,4 @@
-import { Switch, FormControlLabel, useMediaQuery, Box } from '@mui/material';
+import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -82,12 +82,6 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
-            <ConditionallyRender
-                condition={!!displayInline}
-                show={<Box sx={{ mt: 4 }} />}
-            />
-
-            <div class='something'>filters!</div>
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}

@@ -11,7 +11,7 @@ const FeatureLog = () => {
         return null;
     }
 
-    return <EventLog title='Event log' feature={featureId} displayInline />;
+    return <EventLog title='Event log' feature={featureId} />;
 };
 
 export default FeatureLog;

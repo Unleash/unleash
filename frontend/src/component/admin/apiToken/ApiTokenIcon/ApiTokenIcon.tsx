@@ -3,7 +3,6 @@ import KeyIcon from '@mui/icons-material/Key';
 import WarningIcon from '@mui/icons-material/WarningAmber';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { Link } from '@mui/material';
 
 interface IApiTokenIconProps {
     project?: string;
@@ -28,14 +27,7 @@ export const ApiTokenIcon: FC<IApiTokenIconProps> = ({ secret }) => {
                                     original projects have been deleted and it
                                     now has access to all current and future
                                     projects. You should stop using this token
-                                    and delete it. Learn more in{' '}
-                                    <Link
-                                        target='_blank'
-                                        rel='noopener noreferrer'
-                                        href='https://docs.getunleash.io/advanced/impression_data'
-                                    >
-                                        release notes.
-                                    </Link>
+                                    and delete it.
                                 </p>
                             </div>
                         }

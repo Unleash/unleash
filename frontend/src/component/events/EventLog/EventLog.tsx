@@ -14,8 +14,7 @@ import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { Filters, type IFilterItem } from 'component/filter/Filters/Filters';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { EventLogFilters } from './EventLogFilters';
 
 interface IEventLogProps {
     title: string;
@@ -30,70 +29,6 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(2),
 }));
-
-const EventLogFilters = (
-    // {state, onChange,}
-) => {
-    const { projects } = useProjects();
-
-    const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-
-    useEffect(() => {
-        const projectsOptions = (projects || []).map((project) => ({
-            label: project.name,
-            value: project.id,
-        }));
-
-        const hasMultipleProjects = projectsOptions.length > 1;
-
-        const availableFilters: IFilterItem[] = [
-            {
-                label: 'Date From',
-                icon: 'today',
-                options: [],
-                filterKey: 'from',
-                dateOperators: ['IS'],
-            },
-            {
-                label: 'Date To',
-                icon: 'today',
-                options: [],
-                filterKey: 'to',
-                dateOperators: ['IS'],
-            },
-            {
-                label: 'Feature Flag',
-                icon: 'flag',
-                options: [],
-                filterKey: 'flag',
-                singularOperators: ['IS'],
-                pluralOperators: ['IS_ANY_OF'],
-            },
-            ...(hasMultipleProjects
-                ? ([
-                      {
-                          label: 'Project',
-                          icon: 'topic',
-                          options: projectsOptions,
-                          filterKey: 'project',
-                          singularOperators: ['IS'],
-                          pluralOperators: ['IS_ANY_OF'],
-                      },
-                  ] as IFilterItem[])
-                : []),
-        ];
-
-        setAvailableFilters(availableFilters);
-    }, [JSON.stringify(projects)]);
-
-    return (
-        <Filters
-            availableFilters={availableFilters}
-            state={{}}
-            onChange={(v) => console.log(v)}
-        />
-    );
-};
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');

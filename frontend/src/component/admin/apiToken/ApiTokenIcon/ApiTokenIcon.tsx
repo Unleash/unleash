@@ -42,10 +42,10 @@ export const ApiTokenIcon: FC<IApiTokenIconProps> = ({ secret }) => {
                         placement='bottom-start'
                         arrow
                     >
-                        {/* <ErrorIcon aria-label='Orphaned token' color='error' /> */}
                         <WarningIcon
                             aria-label='Orphaned token'
                             color='warning'
+                            data-testid='orphaned-token-icon'
                         />
                     </HtmlTooltip>
                 }

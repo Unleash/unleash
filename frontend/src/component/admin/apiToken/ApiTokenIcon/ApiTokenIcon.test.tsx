@@ -9,7 +9,7 @@ describe('ApiTokenIcon', () => {
             <ApiTokenIcon secret='test:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b' />,
         );
 
-        const errorIcon = await screen.findByTestId('ErrorIcon');
+        const errorIcon = await screen.findByTestId('orphaned-token-icon');
         expect(errorIcon).toBeInTheDocument();
     });
 
@@ -19,7 +19,7 @@ describe('ApiTokenIcon', () => {
             <ApiTokenIcon secret='test:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b' />,
         );
 
-        const errorIcon = await screen.findByTestId('ErrorIcon');
+        const errorIcon = await screen.findByTestId('orphaned-token-icon');
         user.hover(errorIcon);
 
         const tooltip = await screen.findByRole('tooltip');
@@ -31,7 +31,7 @@ describe('ApiTokenIcon', () => {
             <ApiTokenIcon secret='be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178' />,
         );
 
-        const errorIcon = await screen.queryByTestId('ErrorIcon');
+        const errorIcon = await screen.queryByTestId('orphaned-token-icon');
         expect(errorIcon).toBeNull();
     });
 
@@ -40,7 +40,7 @@ describe('ApiTokenIcon', () => {
             <ApiTokenIcon secret='*:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b' />,
         );
 
-        const errorIcon = await screen.queryByTestId('ErrorIcon');
+        const errorIcon = await screen.queryByTestId('orphaned-token-icon');
         expect(errorIcon).toBeNull();
     });
 });

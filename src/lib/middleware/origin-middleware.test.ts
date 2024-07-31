@@ -2,6 +2,8 @@ import { originMiddleware } from './origin-middleware';
 import type { IUnleashConfig } from '../types';
 import { createTestConfig } from '../../test/config/test-config';
 import type { Request, Response } from 'express';
+import { EventEmitter } from 'events';
+import { REQUEST_ORIGIN } from '../metric-events';
 
 const TEST_UNLEASH_TOKEN = 'TEST_UNLEASH_TOKEN';
 const TEST_USER_AGENT = 'TEST_USER_AGENT';
@@ -18,18 +20,23 @@ describe('originMiddleware', () => {
         fatal: jest.fn(),
     };
     const getLogger = jest.fn(() => loggerMock);
+    const eventBus = new EventEmitter();
+    eventBus.emit = jest.fn();
 
     let config: IUnleashConfig;
 
     beforeEach(() => {
-        config = createTestConfig({
-            getLogger,
-            experimental: {
-                flags: {
-                    originMiddleware: true,
+        config = {
+            ...createTestConfig({
+                getLogger,
+                experimental: {
+                    flags: {
+                        originMiddleware: true,
+                    },
                 },
-            },
-        });
+            }),
+            eventBus,
+        };
     });
 
     it('should call next', () => {
@@ -40,12 +47,27 @@ describe('originMiddleware', () => {
         expect(next).toHaveBeenCalled();
     });
 
-    it('should log UI request', () => {
+    it('should emit UI request origin event', () => {
         const middleware = originMiddleware(config);
 
         middleware(req, res, next);
 
-        expect(loggerMock.info).toHaveBeenCalledWith('UI request', {
+        expect(eventBus.emit).toHaveBeenCalledWith(REQUEST_ORIGIN, {
+            type: 'UI',
+            method: req.method,
+        });
+    });
+
+    it('should emit API request origin event', () => {
+        const middleware = originMiddleware(config);
+
+        req.headers.authorization = TEST_UNLEASH_TOKEN;
+        req.headers['user-agent'] = TEST_USER_AGENT;
+
+        middleware(req, res, next);
+
+        expect(eventBus.emit).toHaveBeenCalledWith(REQUEST_ORIGIN, {
+            type: 'API',
             method: req.method,
         });
     });

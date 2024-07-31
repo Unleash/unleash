@@ -12,6 +12,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useOnVisible } from 'hooks/useOnVisible';
 import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/system';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { Filters, type IFilterItem } from 'component/filter/Filters/Filters';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 interface IEventLogProps {
     title: string;
@@ -27,6 +31,70 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const EventLogFilters = (
+    // {state, onChange,}
+) => {
+    const { projects } = useProjects();
+
+    const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+
+    useEffect(() => {
+        const projectsOptions = (projects || []).map((project) => ({
+            label: project.name,
+            value: project.id,
+        }));
+
+        const hasMultipleProjects = projectsOptions.length > 1;
+
+        const availableFilters: IFilterItem[] = [
+            {
+                label: 'Date From',
+                icon: 'today',
+                options: [],
+                filterKey: 'from',
+                dateOperators: ['IS'],
+            },
+            {
+                label: 'Date To',
+                icon: 'today',
+                options: [],
+                filterKey: 'to',
+                dateOperators: ['IS'],
+            },
+            {
+                label: 'Feature Flag',
+                icon: 'flag',
+                options: [],
+                filterKey: 'flag',
+                singularOperators: ['IS'],
+                pluralOperators: ['IS_ANY_OF'],
+            },
+            ...(hasMultipleProjects
+                ? ([
+                      {
+                          label: 'Project',
+                          icon: 'topic',
+                          options: projectsOptions,
+                          filterKey: 'project',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
+        ];
+
+        setAvailableFilters(availableFilters);
+    }, [JSON.stringify(projects)]);
+
+    return (
+        <Filters
+            availableFilters={availableFilters}
+            state={{}}
+            onChange={(v) => console.log(v)}
+        />
+    );
+};
+
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useEventSearch(
@@ -37,6 +105,8 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const { isEnterprise } = useUiConfig();
+    const showFilters = useUiFlag('newEventSearch');
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
@@ -82,6 +152,10 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
+            <ConditionallyRender
+                condition={isEnterprise() && showFilters}
+                show={<EventLogFilters />}
+            />
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}

@@ -2,7 +2,10 @@ import fc, { type Arbitrary } from 'fast-check';
 import { clientFeature, clientFeatures } from '../../../arbitraries.test';
 import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test';
 import dbInit, { type ITestDb } from '../../helpers/database-init';
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
+import {
+    type IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import { type FeatureToggle, WeightType } from '../../../../lib/types/model';
 import getLogger from '../../../fixtures/no-logger';
 import {
@@ -21,7 +24,7 @@ let token: IApiToken;
 
 beforeAll(async () => {
     db = await dbInit('playground_api_serial', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
     const { apiTokenService } = app.services;
     token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.ADMIN,

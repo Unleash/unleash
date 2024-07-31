@@ -137,6 +137,10 @@ import {
 import { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
 import { FakeFeatureCollaboratorsReadModel } from '../features/feature-toggle/fake-feature-collaborators-read-model';
+import {
+    createFakePlaygroundService,
+    createPlaygroundService,
+} from '../features/playground/createPlaygroundService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -319,14 +323,9 @@ export const createServices = (
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
-    const playgroundService = new PlaygroundService(
-        config,
-        {
-            featureToggleServiceV2,
-            privateProjectChecker,
-        },
-        segmentReadModel,
-    );
+    const playgroundService = db
+        ? createPlaygroundService(db, config)
+        : createFakePlaygroundService(config);
 
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance(stores, config);

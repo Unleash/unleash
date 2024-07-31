@@ -1,7 +1,7 @@
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     type IUnleashTest,
-    setupApp,
+    setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import type { IUnleashStores } from '../../types';
 import getLogger from '../../../test/fixtures/no-logger';
@@ -23,7 +23,7 @@ beforeAll(async () => {
 
     await stores.featureToggleStore.create('default', flag);
 
-    app = await setupApp(stores);
+    app = await setupAppWithCustomConfig(stores, {}, db.rawDatabase);
 });
 
 afterAll(async () => {

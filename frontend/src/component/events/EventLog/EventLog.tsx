@@ -17,7 +17,6 @@ interface IEventLogProps {
     title: string;
     project?: string;
     feature?: string;
-    displayInline?: boolean;
 }
 
 const StyledEventsList = styled('ul')(({ theme }) => ({
@@ -28,12 +27,7 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const EventLog = ({
-    title,
-    project,
-    feature,
-    displayInline,
-}: IEventLogProps) => {
+export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useEventSearch(
         project,

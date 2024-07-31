@@ -74,8 +74,6 @@ export const EventLog = ({
 
     return (
         <PageContent
-            disablePadding={displayInline}
-            disableBorder={displayInline}
             header={
                 <PageHeader
                     title={`${title} (${countText})`}
@@ -90,14 +88,19 @@ export const EventLog = ({
                 </PageHeader>
             }
         >
-            {displayInline && <Box sx={{ mt: 4 }} />}
+            <ConditionallyRender
+                condition={!!displayInline}
+                show={<Box sx={{ mt: 4 }} />}
+            />
+
+            <div class='something'>filters!</div>
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
-                show={() => <p>No events found.</p>}
+                show={<p>No events found.</p>}
             />
             <ConditionallyRender
                 condition={Boolean(cache && cache.length > 0)}
-                show={() => (
+                show={
                     <StyledEventsList>
                         {cache?.map((entry) => (
                             <ConditionallyRender
@@ -108,7 +111,7 @@ export const EventLog = ({
                             />
                         ))}
                     </StyledEventsList>
-                )}
+                }
             />
             <div ref={fetchNextPageRef} />
         </PageContent>

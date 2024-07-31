@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         featureCollaborators: true,
                         improveCreateFlagFlow: true,
                         originMiddleware: true,
+                        newEventSearch: true,
                     },
                 },
                 authentication: {

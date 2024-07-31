@@ -71,7 +71,8 @@ export type IFlagKey =
     | 'integrationEvents'
     | 'featureCollaborators'
     | 'improveCreateFlagFlow'
-    | 'originMiddleware';
+    | 'originMiddleware'
+    | 'newEventSearch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -342,6 +343,10 @@ const flags: IFlags = {
     ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
+        false,
+    ),
+    newEventSearch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_EVENT_SEARCH,
         false,
     ),
 };

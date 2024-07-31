@@ -64,7 +64,6 @@ export type IFlagKey =
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
     | 'extendedMetrics'
-    | 'cleanApiTokenWhenOrphaned'
     | 'removeUnsafeInlineStyleSrc'
     | 'insightsV2'
     | 'integrationEvents'
@@ -311,10 +310,6 @@ const flags: IFlags = {
     ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
-        false,
-    ),
-    cleanApiTokenWhenOrphaned: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CLEAN_API_TOKEN_WHEN_ORPHANED,
         false,
     ),
     removeUnsafeInlineStyleSrc: parseEnvVarBoolean(

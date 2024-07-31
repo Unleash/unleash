@@ -347,6 +347,12 @@ export default class MetricsMonitor {
             labelNames: ['resource', 'limit'],
         });
 
+        const requestOriginCounter = createCounter({
+            name: 'request_origin_counter',
+            help: 'Number of authenticated requests, including origin information.',
+            labelNames: ['type', 'method'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -693,6 +699,16 @@ export default class MetricsMonitor {
         eventBus.on(events.PROXY_FEATURES_FOR_TOKEN_TIME, ({ duration }) => {
             mapFeaturesForClientDuration.observe(duration);
         });
+
+        events.onMetricEvent(
+            eventBus,
+            events.REQUEST_ORIGIN,
+            ({ type, method }) => {
+                if (flagResolver.isEnabled('originMiddleware')) {
+                    requestOriginCounter.increment({ type, method });
+                }
+            },
+        );
 
         eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {
             featureFlagUpdateTotal.increment({

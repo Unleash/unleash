@@ -82,6 +82,7 @@ exports[`should create default config 1`] = `
       "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
+      "changeRequestPlayground": false,
       "cleanApiTokenWhenOrphaned": false,
       "collectTrafficDataUsage": false,
       "commandBarUI": false,

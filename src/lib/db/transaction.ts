@@ -93,7 +93,7 @@ export function withRollback<S>(
     const service = serviceFactory(db) as WithRollback<S>;
 
     service.rollback = async <R>(fn: (service: S) => R) => {
-        const trx = await db.transaction({ isolationLevel: 'serializable' });
+        const trx = await db.transaction();
         try {
             const transactionService = serviceFactory(trx);
             const result = await fn(transactionService);

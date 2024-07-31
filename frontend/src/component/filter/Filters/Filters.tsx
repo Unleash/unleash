@@ -1,4 +1,4 @@
-import { useEffect, useState, type VFC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { Box, Icon, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AddFilterButton } from '../AddFilterButton';
@@ -57,7 +57,7 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
     },
 }));
 
-export const Filters: VFC<IFilterProps> = ({
+export const Filters: FC<IFilterProps> = ({
     state,
     onChange,
     availableFilters,

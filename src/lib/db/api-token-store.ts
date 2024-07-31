@@ -36,45 +36,33 @@ interface ITokenRow extends ITokenInsert {
     project: string;
 }
 
-const createTokenRowReducer =
-    (allowOrphanedWildcardTokens: boolean) => (acc, tokenRow) => {
-        const { project, ...token } = tokenRow;
-        if (!acc[tokenRow.secret]) {
-            if (
-                !allowOrphanedWildcardTokens &&
-                !tokenRow.project &&
-                tokenRow.secret.includes(':') && // Exclude v1 tokens
-                !tokenRow.secret.startsWith('*:') && // Exclude intentionally wildcard
-                (tokenRow.type === ApiTokenType.CLIENT ||
-                    tokenRow.type === ApiTokenType.FRONTEND)
-            ) {
-                return acc;
-            }
-
-            acc[tokenRow.secret] = {
-                secret: token.secret,
-                tokenName: token.token_name ? token.token_name : token.username,
-                type: token.type.toLowerCase(),
-                project: ALL,
-                projects: [ALL],
-                environment: token.environment ? token.environment : ALL,
-                expiresAt: token.expires_at,
-                createdAt: token.created_at,
-                alias: token.alias,
-                seenAt: token.seen_at,
-                username: token.token_name ? token.token_name : token.username,
-            };
+const tokenRowReducer = (acc, tokenRow) => {
+    const { project, ...token } = tokenRow;
+    if (!acc[tokenRow.secret]) {
+        acc[tokenRow.secret] = {
+            secret: token.secret,
+            tokenName: token.token_name ? token.token_name : token.username,
+            type: token.type.toLowerCase(),
+            project: ALL,
+            projects: [ALL],
+            environment: token.environment ? token.environment : ALL,
+            expiresAt: token.expires_at,
+            createdAt: token.created_at,
+            alias: token.alias,
+            seenAt: token.seen_at,
+            username: token.token_name ? token.token_name : token.username,
+        };
+    }
+    const currentToken = acc[tokenRow.secret];
+    if (tokenRow.project) {
+        if (isAllProjects(currentToken.projects)) {
+            currentToken.projects = [];
         }
-        const currentToken = acc[tokenRow.secret];
-        if (tokenRow.project) {
-            if (isAllProjects(currentToken.projects)) {
-                currentToken.projects = [];
-            }
-            currentToken.projects.push(tokenRow.project);
-            currentToken.project = currentToken.projects.join(',');
-        }
-        return acc;
-    };
+        currentToken.projects.push(tokenRow.project);
+        currentToken.project = currentToken.projects.join(',');
+    }
+    return acc;
+};
 
 const toRow = (newToken: IApiTokenCreate) => ({
     username: newToken.tokenName ?? newToken.username,
@@ -87,14 +75,8 @@ const toRow = (newToken: IApiTokenCreate) => ({
     alias: newToken.alias || null,
 });
 
-const toTokens = (
-    rows: any[],
-    allowOrphanedWildcardTokens: boolean,
-): IApiToken[] => {
-    const tokens = rows.reduce(
-        createTokenRowReducer(allowOrphanedWildcardTokens),
-        {},
-    );
+const toTokens = (rows: any[]): IApiToken[] => {
+    const tokens = rows.reduce(tokenRowReducer, {});
     return Object.values(tokens);
 };
 
@@ -147,10 +129,7 @@ export class ApiTokenStore implements IApiTokenStore {
         const stopTimer = this.timer('getAll');
         const rows = await this.makeTokenProjectQuery();
         stopTimer();
-        const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-            'allowOrphanedWildcardTokens',
-        );
-        return toTokens(rows, allowOrphanedWildcardTokens);
+        return toTokens(rows);
     }
 
     async getAllActive(): Promise<IApiToken[]> {
@@ -159,10 +138,7 @@ export class ApiTokenStore implements IApiTokenStore {
             .where('expires_at', 'IS', null)
             .orWhere('expires_at', '>', 'now()');
         stopTimer();
-        const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-            'allowOrphanedWildcardTokens',
-        );
-        return toTokens(rows, allowOrphanedWildcardTokens);
+        return toTokens(rows);
     }
 
     private makeTokenProjectQuery() {
@@ -233,10 +209,7 @@ export class ApiTokenStore implements IApiTokenStore {
             key,
         );
         stopTimer();
-        const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-            'allowOrphanedWildcardTokens',
-        );
-        return toTokens(row, allowOrphanedWildcardTokens)[0];
+        return toTokens(row)[0];
     }
 
     async delete(secret: string): Promise<void> {
@@ -253,10 +226,7 @@ export class ApiTokenStore implements IApiTokenStore {
             .where({ secret })
             .returning('*');
         if (rows.length > 0) {
-            const allowOrphanedWildcardTokens = this.flagResolver.isEnabled(
-                'allowOrphanedWildcardTokens',
-            );
-            return toTokens(rows, allowOrphanedWildcardTokens)[0];
+            return toTokens(rows)[0];
         }
         throw new NotFoundError('Could not find api-token.');
     }

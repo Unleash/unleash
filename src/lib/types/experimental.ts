@@ -65,7 +65,6 @@ export type IFlagKey =
     | 'resourceLimits'
     | 'extendedMetrics'
     | 'cleanApiTokenWhenOrphaned'
-    | 'allowOrphanedWildcardTokens'
     | 'removeUnsafeInlineStyleSrc'
     | 'insightsV2'
     | 'integrationEvents'
@@ -309,10 +308,6 @@ const flags: IFlags = {
     resourceLimits: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RESOURCE_LIMITS,
         false,
-    ),
-    allowOrphanedWildcardTokens: parseEnvVarBoolean(
-        process.env.UNLEASH_ORPHANED_TOKENS_KILL_SWITCH,
-        true,
     ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,

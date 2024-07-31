@@ -72,7 +72,8 @@ export type IFlagKey =
     | 'featureCollaborators'
     | 'improveCreateFlagFlow'
     | 'originMiddleware'
-    | 'newEventSearch';
+    | 'newEventSearch'
+    | 'changeRequestPlayground';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -347,6 +348,10 @@ const flags: IFlags = {
     ),
     newEventSearch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_EVENT_SEARCH,
+        false,
+    ),
+    changeRequestPlayground: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_PLAYGROUND,
         false,
     ),
 };

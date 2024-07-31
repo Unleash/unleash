@@ -1,4 +1,4 @@
-import { Switch, FormControlLabel, useMediaQuery, Box } from '@mui/material';
+import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -17,7 +17,6 @@ interface IEventLogProps {
     title: string;
     project?: string;
     feature?: string;
-    displayInline?: boolean;
 }
 
 const StyledEventsList = styled('ul')(({ theme }) => ({
@@ -28,12 +27,7 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const EventLog = ({
-    title,
-    project,
-    feature,
-    displayInline,
-}: IEventLogProps) => {
+export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useEventSearch(
         project,
@@ -74,8 +68,6 @@ export const EventLog = ({
 
     return (
         <PageContent
-            disablePadding={displayInline}
-            disableBorder={displayInline}
             header={
                 <PageHeader
                     title={`${title} (${countText})`}
@@ -90,14 +82,13 @@ export const EventLog = ({
                 </PageHeader>
             }
         >
-            {displayInline && <Box sx={{ mt: 4 }} />}
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
-                show={() => <p>No events found.</p>}
+                show={<p>No events found.</p>}
             />
             <ConditionallyRender
                 condition={Boolean(cache && cache.length > 0)}
-                show={() => (
+                show={
                     <StyledEventsList>
                         {cache?.map((entry) => (
                             <ConditionallyRender
@@ -108,7 +99,7 @@ export const EventLog = ({
                             />
                         ))}
                     </StyledEventsList>
-                )}
+                }
             />
             <div ref={fetchNextPageRef} />
         </PageContent>

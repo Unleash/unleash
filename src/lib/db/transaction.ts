@@ -36,8 +36,13 @@ export type DeferredServiceFactory<S> = (db: Knex) => S;
 export type ServiceFactory<S> = (
     config: IUnleashConfig,
 ) => DeferredServiceFactory<S>;
+
 export type WithTransactional<S> = S & {
     transactional: <R>(fn: (service: S) => R) => Promise<R>;
+};
+
+export type WithRollback<S> = S & {
+    rollback: <R>(fn: (service: S) => R) => Promise<R>;
 };
 
 /**
@@ -77,6 +82,25 @@ export function withTransactional<S>(
             const transactionalService = serviceFactory(trx);
             return fn(transactionalService);
         });
+
+    return service;
+}
+
+export function withRollback<S>(
+    serviceFactory: (db: Knex) => S,
+    db: Knex,
+): WithRollback<S> {
+    const service = serviceFactory(db) as WithRollback<S>;
+
+    service.rollback = async <R>(fn: (service: S) => R) => {
+        const trx = await db.transaction({ isolationLevel: 'serializable' });
+        try {
+            const transactionService = serviceFactory(trx);
+            return fn(transactionService);
+        } finally {
+            await trx.rollback();
+        }
+    };
 
     return service;
 }

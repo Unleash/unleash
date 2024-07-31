@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         improveCreateFlagFlow: true,
                         originMiddleware: true,
                         newEventSearch: true,
+                        changeRequestPlayground: true,
                     },
                 },
                 authentication: {

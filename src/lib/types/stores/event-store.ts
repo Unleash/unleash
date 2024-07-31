@@ -2,7 +2,7 @@ import type { IBaseEvent, IEvent } from '../events';
 import type { Store } from './store';
 import type {
     DeprecatedSearchEventsSchema,
-    EventSearchQueryParametersSchema,
+    EventSearchQueryParameters,
 } from '../../openapi';
 import type EventEmitter from 'events';
 import type { IQueryOperations } from '../../features/events/event-store';
@@ -18,13 +18,11 @@ export interface IEventStore
     deprecatedFilteredCount(
         search: DeprecatedSearchEventsSchema,
     ): Promise<number>;
-    searchEventsCount(
-        search: EventSearchQueryParametersSchema,
-    ): Promise<number>;
+    searchEventsCount(search: EventSearchQueryParameters): Promise<number>;
     deprecatedSearchEvents(
         search: DeprecatedSearchEventsSchema,
     ): Promise<IEvent[]>;
-    searchEvents(search: EventSearchQueryParametersSchema): Promise<IEvent[]>;
+    searchEvents(search: EventSearchQueryParameters): Promise<IEvent[]>;
     getMaxRevisionId(currentMax?: number): Promise<number>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;

@@ -16,7 +16,7 @@ import type EventEmitter from 'events';
 import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
 import type {
     DeprecatedSearchEventsSchema,
-    EventSearchQueryParametersSchema,
+    EventSearchQueryParameters,
 } from '../../openapi';
 
 const EVENT_COLUMNS = [
@@ -153,7 +153,7 @@ class EventStore implements IEventStore {
     }
 
     async searchEventsCount(
-        eventSearch: EventSearchQueryParametersSchema,
+        eventSearch: EventSearchQueryParameters,
     ): Promise<number> {
         const query = this.buildSearchQuery(eventSearch);
         const count = await query.count().first();
@@ -341,7 +341,7 @@ class EventStore implements IEventStore {
     }
 
     async searchEvents(
-        search: EventSearchQueryParametersSchema = {},
+        search: EventSearchQueryParameters = {},
     ): Promise<IEvent[]> {
         const query = this.buildSearchQuery(search)
             .select(EVENT_COLUMNS)
@@ -356,7 +356,7 @@ class EventStore implements IEventStore {
         }
     }
 
-    private buildSearchQuery(search: EventSearchQueryParametersSchema) {
+    private buildSearchQuery(search: EventSearchQueryParameters) {
         let query = this.db.from<IEventTable>(TABLE);
 
         if (search.type) {

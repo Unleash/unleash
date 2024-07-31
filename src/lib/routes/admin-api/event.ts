@@ -22,9 +22,9 @@ import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
 import type { IFlagResolver } from '../../types/experimental';
 import {
-    type EventSearchQueryParametersSchema,
-    eventSearchQueryParametersSchema,
-} from '../../openapi/spec/event-search-query-parameters-schema';
+    type EventSearchQueryParameters,
+    eventSearchQueryParameters,
+} from '../../openapi/spec/event-search-query-parameters';
 import type { IAuthRequest } from '../unleash-types';
 import {
     type EventSearchResponseSchema,
@@ -137,7 +137,7 @@ export default class EventController extends Controller {
                     summary: 'Search for events',
                     description:
                         'Allows searching for events matching the search criteria in the request body',
-                    parameters: [...eventSearchQueryParametersSchema],
+                    parameters: [...eventSearchQueryParameters],
                     responses: {
                         200: createResponseSchema('eventSearchResponseSchema'),
                     },
@@ -228,7 +228,7 @@ export default class EventController extends Controller {
     }
 
     async searchEvents(
-        req: IAuthRequest<any, any, any, EventSearchQueryParametersSchema>,
+        req: IAuthRequest<any, any, any, EventSearchQueryParameters>,
         res: Response<EventSearchResponseSchema>,
     ): Promise<void> {
         const { events, totalEvents } = await this.eventService.searchEvents(

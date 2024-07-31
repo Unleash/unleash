@@ -8,7 +8,7 @@ import type EventEmitter from 'events';
 import type { IApiUser, ITag, IUser } from '../../types';
 import { ApiTokenType } from '../../types/models/api-token';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
-import type { EventSearchQueryParametersSchema } from '../../openapi';
+import type { EventSearchQueryParameters } from '../../openapi';
 import { validateDateString } from '../../util/validateDateString';
 
 export default class EventService {
@@ -55,7 +55,7 @@ export default class EventService {
     }
 
     async searchEvents(
-        search: EventSearchQueryParametersSchema,
+        search: EventSearchQueryParameters,
     ): Promise<IEventList> {
         const totalEvents = await this.eventStore.searchEventsCount(search);
         const events = await this.eventStore.searchEvents({

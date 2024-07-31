@@ -1,6 +1,6 @@
 import type { FromQueryParams } from '../util/from-query-params';
 
-export const eventSearchQueryParametersSchema = [
+export const eventSearchQueryParameters = [
     {
         name: 'query',
         schema: {
@@ -98,6 +98,6 @@ export const eventSearchQueryParametersSchema = [
     },
 ] as const;
 
-export type EventSearchQueryParametersSchema = Partial<
-    FromQueryParams<typeof eventSearchQueryParametersSchema>
+export type EventSearchQueryParameters = Partial<
+    FromQueryParams<typeof eventSearchQueryParameters>
 >;

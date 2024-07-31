@@ -269,8 +269,12 @@ export class InstanceStatsService {
             this.hasSAML(),
             this.hasOIDC(),
             this.appCount ? this.appCount : this.refreshAppCountSnapshot(),
-            this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
-            this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
+            this.eventStore.deprecatedFilteredCount({
+                type: FEATURES_EXPORTED,
+            }),
+            this.eventStore.deprecatedFilteredCount({
+                type: FEATURES_IMPORTED,
+            }),
             this.getProductionChanges(),
             this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
         ]);

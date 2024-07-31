@@ -7,7 +7,8 @@ export const eventSearchQueryParametersSchema = [
             type: 'string',
             example: 'admin@example.com',
         },
-        description: `Find events by a free-text search query. The query will be matched against the event type and the event data payload (if any).`,
+        description:
+            'Find events by a free-text search query. The query will be matched against the event type and the event data payload (if any).',
         in: 'query',
     },
     {

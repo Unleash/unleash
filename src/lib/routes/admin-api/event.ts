@@ -26,7 +26,10 @@ import {
     eventSearchQueryParametersSchema,
 } from '../../openapi/spec/event-search-query-parameters-schema';
 import type { IAuthRequest } from '../unleash-types';
-import { searchFeaturesSchema } from '../../openapi';
+import {
+    type EventSearchResponseSchema,
+    eventSearchResponseSchema,
+} from '../../openapi';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -135,7 +138,9 @@ export default class EventController extends Controller {
                     description:
                         'Allows searching for events matching the search criteria in the request body',
                     parameters: [...eventSearchQueryParametersSchema],
-                    responses: { 200: createResponseSchema('eventsSchema') },
+                    responses: {
+                        200: createResponseSchema('eventSearchResponseSchema'),
+                    },
                 }),
             ],
         });
@@ -224,45 +229,18 @@ export default class EventController extends Controller {
 
     async searchEvents(
         req: IAuthRequest<any, any, any, EventSearchQueryParametersSchema>,
-        res: Response<EventsSchema>,
+        res: Response<EventSearchResponseSchema>,
     ): Promise<void> {
-        const {
-            query,
-            project,
-            feature,
-            createdAtTo,
-            createdAtFrom,
-            createdBy,
-        } = req.query;
-        const userId = req.user.id;
-
-        const eventList = await this.eventService.searchEvents(req.body);
-        //
-        // const { features, total } = await this.featureSearchService.search({
-        //     searchParams: normalizedQuery,
-        //     project,
-        //     type,
-        //     userId,
-        //     tag,
-        //     segment,
-        //     state,
-        //     createdAt,
-        //     createdBy,
-        //     status: normalizedStatus,
-        //     offset: normalizedOffset,
-        //     limit: normalizedLimit,
-        //     sortBy: normalizedSortBy,
-        //     sortOrder: normalizedSortOrder,
-        //     favoritesFirst: normalizedFavoritesFirst,
-        // });
-
+        const { events, totalEvents } = await this.eventService.searchEvents(
+            req.body,
+        );
         this.openApiService.respondWithValidation(
             200,
             res,
-            searchFeaturesSchema.$id,
+            eventSearchResponseSchema.$id,
             serializeDates({
-                features: this.maybeAnonymise(features),
-                total,
+                events: serializeDates(this.maybeAnonymiseEvents(events)),
+                total: totalEvents,
             }),
         );
     }

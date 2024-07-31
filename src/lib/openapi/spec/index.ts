@@ -71,6 +71,7 @@ export * from './environments-project-schema';
 export * from './environments-schema';
 export * from './event-schema';
 export * from './event-search-query-parameters-schema';
+export * from './event-search-response-schema';
 export * from './events-schema';
 export * from './export-query-schema';
 export * from './export-result-schema';

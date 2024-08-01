@@ -48,6 +48,7 @@ import {
     projectFlagCreatorsSchema,
     type ProjectFlagCreatorsSchema,
 } from '../../openapi/spec/project-flag-creators-schema';
+import { anonymiseKeys } from '../../util';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -360,12 +361,15 @@ export default class ProjectController extends Controller {
 
         const flagCreators =
             await this.projectService.getProjectFlagCreators(projectId);
+        const anonimizedFlagCreators = flagCreators.map((creator) =>
+            anonymiseKeys(creator, ['name']),
+        );
 
         this.openApiService.respondWithValidation(
             200,
             res,
             projectFlagCreatorsSchema.$id,
-            serializeDates(flagCreators),
+            serializeDates(anonimizedFlagCreators),
         );
     }
 

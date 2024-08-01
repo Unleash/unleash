@@ -84,7 +84,7 @@ const deleteOldStrategies = async (featureId: string) => {
         ),
     ).then((res) => res.json());
 
-    const strategyLimit = 30;
+    const strategyLimit = 25;
     if (results.length >= strategyLimit) {
         await Promise.all(
             results

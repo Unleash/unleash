@@ -145,6 +145,9 @@ const uiConfig = () => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
+        flags: {
+            changeRequestPlayground: true,
+        },
     });
 };
 
@@ -223,6 +226,8 @@ test('should allow scheduling of approved change request and show the schedule d
     fireEvent.click(scheduleChangesButton);
 
     await screen.findByRole('dialog', { name: 'Schedule changes' });
+
+    await screen.findByText('Preview changes');
 });
 
 test('should show a reschedule dialog when change request is scheduled and update schedule is selected', async () => {
@@ -249,6 +254,7 @@ test('should show a reschedule dialog when change request is scheduled and updat
     const scheduleChangesButton = await screen.findByRole('menuitem', {
         name: 'Update schedule',
     });
+    await screen.findByText('Preview changes');
 
     fireEvent.click(scheduleChangesButton);
 

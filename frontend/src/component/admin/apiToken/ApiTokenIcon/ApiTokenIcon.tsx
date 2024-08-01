@@ -21,15 +21,12 @@ export const ApiTokenIcon: FC<IApiTokenIconProps> = ({ secret }) => {
                 icon={
                     <HtmlTooltip
                         title={
-                            <div>
-                                <p>
-                                    This is an orphaned token. All of its
-                                    original projects have been deleted and it
-                                    now has access to all current and future
-                                    projects. You should stop using this token
-                                    and delete it.
-                                </p>
-                            </div>
+                            <p>
+                                This is an orphaned token. All of its original
+                                projects have been deleted and it now has access
+                                to all current and future projects. You should
+                                stop using this token and delete it.
+                            </p>
                         }
                         placement='bottom-start'
                         arrow

@@ -353,6 +353,12 @@ export default class MetricsMonitor {
             labelNames: ['type', 'method'],
         });
 
+        const resourceLimit = createGauge({
+            name: 'resource_limit',
+            help: 'The maximum number of resources allowed.',
+            labelNames: ['resource'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -507,6 +513,12 @@ export default class MetricsMonitor {
                             environment: featureEnvironment.environment,
                         })
                         .set(featureEnvironment.size);
+                }
+
+                for (const [resource, limit] of Object.entries(
+                    config.resourceLimits,
+                )) {
+                    resourceLimit.labels({ resource }).set(limit);
                 }
 
                 enabledMetricsBucketsPreviousDay.reset();

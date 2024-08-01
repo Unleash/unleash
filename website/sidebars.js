@@ -587,7 +587,19 @@ module.exports = {
                         'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
                     ],
                 },
-                'generated/unleash-edge',
+                {
+                    type: 'category',
+                    label: 'Unleash Edge',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'generated/unleash-edge',
+                    },
+                    items: [
+                        'generated/unleash-edge/concepts',
+                        'generated/unleash-edge/deploying',
+                    ],
+                },
                 'generated/unleash-proxy',
             ],
         },

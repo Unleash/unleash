@@ -12,6 +12,9 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useOnVisible } from 'hooks/useOnVisible';
 import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/system';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { EventLogFilters } from './EventLogFilters';
 
 interface IEventLogProps {
     title: string;
@@ -37,6 +40,8 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const { isEnterprise } = useUiConfig();
+    const showFilters = useUiFlag('newEventSearch');
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
@@ -62,6 +67,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
+    const logType = project ? 'project' : feature ? 'flag' : 'global';
     const count = events?.length || 0;
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
@@ -82,6 +88,10 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
+            <ConditionallyRender
+                condition={isEnterprise() && showFilters}
+                show={<EventLogFilters logType={logType} />}
+            />
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}

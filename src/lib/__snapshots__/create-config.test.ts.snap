@@ -76,14 +76,12 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "adminTokenKillSwitch": false,
-      "allowOrphanedWildcardTokens": true,
       "anonymiseEventLog": false,
       "anonymizeProjectOwners": false,
       "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
       "changeRequestPlayground": false,
-      "cleanApiTokenWhenOrphaned": false,
       "collectTrafficDataUsage": false,
       "commandBarUI": false,
       "demo": false,

@@ -79,14 +79,7 @@ beforeAll(async () => {
         email: 'test@example.com',
     });
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
-    const config = createTestConfig({
-        getLogger,
-        experimental: {
-            flags: {
-                cleanApiTokenWhenOrphaned: true,
-            },
-        },
-    });
+    const config = createTestConfig({ getLogger });
     eventService = new EventService(stores, config);
     accessService = createAccessService(db.rawDatabase, config);
 

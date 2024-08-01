@@ -104,19 +104,26 @@ export default class FeatureSearchController extends Controller {
             state,
             status,
             favoritesFirst,
+            sortBy,
         } = req.query;
         const userId = req.user.id;
         const {
             normalizedQuery,
-            normalizedSortBy,
             normalizedSortOrder,
             normalizedOffset,
             normalizedLimit,
-        } = normalizeQueryParams(req.query, {
-            limitDefault: 50,
-            maxLimit: 100,
-            sortByDefault: 'createdAt',
-        });
+        } = normalizeQueryParams(
+            {
+                query,
+                offset: req.query.offset,
+                limit: req.query.limit,
+                sortOrder: req.query.sortOrder,
+            },
+            {
+                limitDefault: 50,
+                maxLimit: 100,
+            },
+        );
 
         const normalizedStatus = status
             ?.map((tag) => tag.split(':'))
@@ -136,10 +143,10 @@ export default class FeatureSearchController extends Controller {
             state,
             createdAt,
             createdBy,
+            sortBy,
             status: normalizedStatus,
             offset: normalizedOffset,
             limit: normalizedLimit,
-            sortBy: normalizedSortBy,
             sortOrder: normalizedSortOrder,
             favoritesFirst: normalizedFavoritesFirst,
         });

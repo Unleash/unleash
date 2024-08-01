@@ -177,8 +177,9 @@ export default class ClientInstanceService {
         query: IClientApplicationsSearchParams,
         userId: number,
     ): Promise<IClientApplications> {
-        const applications =
-            await this.clientApplicationsStore.getApplications(query);
+        const applications = await this.clientApplicationsStore.getApplications(
+            { ...query, sortBy: query.sortBy || 'appName' },
+        );
         const accessibleProjects =
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
         if (accessibleProjects.mode === 'all') {

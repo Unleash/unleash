@@ -28,6 +28,7 @@ export class FeatureSearchService {
                 {
                     ...params,
                     limit: params.limit,
+                    sortBy: params.sortBy || 'createdAt',
                 },
                 queryParams,
             );

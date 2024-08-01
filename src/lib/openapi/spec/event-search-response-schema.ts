@@ -7,7 +7,7 @@ export const eventSearchResponseSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['events', 'total'],
-    description: 'A list of events that has happened in the system',
+    description: 'A list of events that have been registered by the system',
     properties: {
         events: {
             description: 'The list of events',

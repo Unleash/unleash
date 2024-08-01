@@ -246,14 +246,12 @@ class MetricsController extends Controller {
         const { user } = req;
         const {
             normalizedQuery,
-            normalizedSortBy,
             normalizedSortOrder,
             normalizedOffset,
             normalizedLimit,
         } = normalizeQueryParams(req.query, {
             limitDefault: 1000,
             maxLimit: 1000,
-            sortByDefault: 'appName',
         });
 
         const applications = await this.clientInstanceService.getApplications(
@@ -261,7 +259,7 @@ class MetricsController extends Controller {
                 searchParams: normalizedQuery,
                 offset: normalizedOffset,
                 limit: normalizedLimit,
-                sortBy: normalizedSortBy,
+                sortBy: req.query.sortBy,
                 sortOrder: normalizedSortOrder,
             },
             extractUserIdFromUser(user),

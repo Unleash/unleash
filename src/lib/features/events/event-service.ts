@@ -58,7 +58,7 @@ export default class EventService {
     async searchEvents(
         search: EventSearchQueryParameters,
     ): Promise<IEventList> {
-        const queryParams = this.convertToQueryParams(search);
+        const queryParams = this.convertToDbParams(search);
         const totalEvents = await this.eventStore.searchEventsCount(
             {
                 limit: search.limit,
@@ -143,9 +143,7 @@ export default class EventService {
         }
     }
 
-    convertToQueryParams = (
-        params: EventSearchQueryParameters,
-    ): IQueryParam[] => {
+    convertToDbParams = (params: EventSearchQueryParameters): IQueryParam[] => {
         const queryParams: IQueryParam[] = [];
 
         if (params.createdAtFrom) {

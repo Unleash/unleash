@@ -96,6 +96,7 @@ export type UiFlags = {
     integrationEvents?: boolean;
     improveCreateFlagFlow?: boolean;
     newEventSearch?: boolean;
+    changeRequestPlayground?: boolean;
 };
 
 export interface IVersionInfo {

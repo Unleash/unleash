@@ -33,6 +33,7 @@ export const specificUser = async () => {
 };
 
 export const gradualRollout = async () => {
+    await deleteOldStrategies('demoApp.step3');
     const featureId = 'demoApp.step3';
 
     const { environments }: IFeatureToggle = await fetch(

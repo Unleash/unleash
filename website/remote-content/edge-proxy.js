@@ -15,6 +15,16 @@ const DOCS = mapObject(enrich)({
         sidebarName: 'Unleash Edge',
         slugName: 'unleash-edge',
     },
+    'unleash-edge-concepts': {
+        sidebarName: 'Concepts',
+        slugName: 'unleash-edge/concepts',
+        remotePath: 'docs/concepts.md',
+    },
+    'unleash-edge-deploying': {
+        sidebarName: 'Deploying',
+        slugName: 'unleash-edge/deploying',
+        remotePath: 'docs/deploying.md',
+    },
 });
 
 const getAdmonitions = (data) => {

@@ -149,5 +149,6 @@ This content was generated on <time dateTime="${generationTime.toISOString()}">$
 
 module.exports.getUrls = (documents) =>
     Object.entries(documents).map(
-        ([repo, { branch }]) => `${repo}/${branch}/README.md`,
+        ([repo, { branch, remotePath }]) =>
+            `${repo}/${branch}/${remotePath ?? 'README.md'}`,
     );

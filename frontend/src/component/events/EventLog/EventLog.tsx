@@ -30,13 +30,12 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledFilters = styled(EventLogFilters)(({ theme }) => ({
+const StyledFilters = styled(EventLogFilters)({
     padding: 0,
-}));
+});
 
 const EventResultWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 4, 4, 4),
-    // '& > * + *': { paddingBlockStart: theme.spacing(1) },
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(1),
@@ -53,7 +52,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch');
+    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
@@ -83,9 +82,33 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
+    const EventResults = (
+        <>
+            <ConditionallyRender
+                condition={Boolean(cache && cache.length === 0)}
+                show={<p>No events found.</p>}
+            />
+            <ConditionallyRender
+                condition={Boolean(cache && cache.length > 0)}
+                show={
+                    <StyledEventsList>
+                        {cache?.map((entry) => (
+                            <ConditionallyRender
+                                key={entry.id}
+                                condition={eventSettings.showData}
+                                show={() => <EventJson entry={entry} />}
+                                elseShow={() => <EventCard entry={entry} />}
+                            />
+                        ))}
+                    </StyledEventsList>
+                }
+            />
+        </>
+    );
+
     return (
         <PageContent
-            bodyClass='no-padding'
+            bodyClass={showFilters ? 'no-padding' : ''}
             header={
                 <PageHeader
                     title={`${title} (${countText})`}
@@ -100,10 +123,10 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
-            <EventResultWrapper>
-                <ConditionallyRender
-                    condition={isEnterprise() && showFilters}
-                    show={
+            <ConditionallyRender
+                condition={showFilters}
+                show={
+                    <EventResultWrapper>
                         <StyledFilters
                             logType={
                                 project
@@ -113,28 +136,11 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                                       : 'global'
                             }
                         />
-                    }
-                />
-                <ConditionallyRender
-                    condition={Boolean(cache && cache.length === 0)}
-                    show={<p>No events found.</p>}
-                />
-                <ConditionallyRender
-                    condition={Boolean(cache && cache.length > 0)}
-                    show={
-                        <StyledEventsList>
-                            {cache?.map((entry) => (
-                                <ConditionallyRender
-                                    key={entry.id}
-                                    condition={eventSettings.showData}
-                                    show={() => <EventJson entry={entry} />}
-                                    elseShow={() => <EventCard entry={entry} />}
-                                />
-                            ))}
-                        </StyledEventsList>
-                    }
-                />
-            </EventResultWrapper>
+                        {EventResults}
+                    </EventResultWrapper>
+                }
+                elseShow={EventResults}
+            />
 
             <div ref={fetchNextPageRef} />
         </PageContent>

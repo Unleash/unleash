@@ -14,6 +14,16 @@ const DOCS = mapObject(enrich)({
     'unleash-edge': {
         sidebarName: 'Unleash Edge',
         slugName: 'unleash-edge',
+        subPages: {
+            'docs/concepts.md': {
+                sidebarName: 'Concepts',
+                slugName: 'concepts',
+            },
+            'docs/deploying.md': {
+                sidebarName: 'Deploying',
+                slugName: 'deploying',
+            },
+        },
     },
 });
 

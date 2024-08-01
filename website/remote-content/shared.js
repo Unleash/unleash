@@ -89,6 +89,8 @@ module.exports.modifyContent =
     }) =>
     (filename, content) => {
         const data = getRepoDataFn(filename);
+        const subpageKey = filename.replace(`${data.name}/${data.branch}/`, '');
+        const subpage = data.subPages?.[subpageKey];
 
         const generationTime = new Date();
 
@@ -96,6 +98,7 @@ module.exports.modifyContent =
             const constructed = `${path.join(
                 filePath(data) ?? '',
                 data.slugName,
+                subpage?.slugName ?? '',
             )}.md`;
 
             // ensure the file path does *not* start with a leading /
@@ -105,7 +108,11 @@ module.exports.modifyContent =
         })();
 
         const processedSlug = (() => {
-            const constructed = path.join(urlPath ?? '', data.slugName);
+            const constructed = path.join(
+                urlPath ?? '',
+                data.slugName,
+                subpage?.slugName ?? '',
+            );
             // ensure the slug *does* start with a leading /
             const prefix = constructed.charAt(0) === '/' ? '' : '/';
 
@@ -119,15 +126,13 @@ module.exports.modifyContent =
         return {
             filename: processedFilename,
             content: `---
-title: ${data.sidebarName}
+title: ${subpage?.sidebarName ?? data.sidebarName}
 slug: ${processedSlug}
-custom_edit_url: ${data.repoUrl}/edit/${data.branch}/README.md
+custom_edit_url: ${data.repoUrl}/edit/${data.branch}/${subpage ? subpageKey : 'README.md'}
 ---
 
 :::info Generated content
-This document was generated from the README in the [${
-                data.sidebarName
-            } GitHub repository](${data.repoUrl}).
+This document was generated from ${subpage ? subpageKey : 'README.md'} in the [${data.sidebarName} GitHub repository](${data.repoUrl}).
 :::
 
 ${additionalAdmonitions}
@@ -148,6 +153,9 @@ This content was generated on <time dateTime="${generationTime.toISOString()}">$
     };
 
 module.exports.getUrls = (documents) =>
-    Object.entries(documents).map(
-        ([repo, { branch }]) => `${repo}/${branch}/README.md`,
-    );
+    Object.entries(documents).flatMap(([repo, { branch, subPages }]) => [
+        `${repo}/${branch}/README.md`,
+        ...(Object.keys(subPages ?? {}).map(
+            (remotePath) => `${repo}/${branch}/${remotePath}`,
+        ) ?? []),
+    ]);

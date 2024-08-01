@@ -30,8 +30,16 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledFilters = styled(EventLogFilters)(({ theme }) => ({
+    padding: 0,
+}));
+
 const EventResultWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 4, 4, 4),
+    padding: theme.spacing(2, 4, 4, 4),
+    // '& > * + *': { paddingBlockStart: theme.spacing(1) },
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
 }));
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
@@ -92,17 +100,21 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
-            <ConditionallyRender
-                condition={isEnterprise() && showFilters}
-                show={
-                    <EventLogFilters
-                        logType={
-                            project ? 'project' : feature ? 'flag' : 'global'
-                        }
-                    />
-                }
-            />
             <EventResultWrapper>
+                <ConditionallyRender
+                    condition={isEnterprise() && showFilters}
+                    show={
+                        <StyledFilters
+                            logType={
+                                project
+                                    ? 'project'
+                                    : feature
+                                      ? 'flag'
+                                      : 'global'
+                            }
+                        />
+                    }
+                />
                 <ConditionallyRender
                     condition={Boolean(cache && cache.length === 0)}
                     show={<p>No events found.</p>}

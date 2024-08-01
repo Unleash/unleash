@@ -23,7 +23,7 @@ interface IFlexibleStrategyProps {
     updateParameter: (field: string, value: string) => void;
     context: any;
     editable: boolean;
-    errors: IFormErrors;
+    errors?: IFormErrors;
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -125,8 +125,8 @@ const FlexibleStrategy = ({
                         disabled={!editable}
                         onChange={(e) => onUpdate('groupId')(e.target.value)}
                         data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
-                        error={Boolean(errors.getFormError('groupId'))}
-                        helperText={errors.getFormError('groupId')}
+                        error={Boolean(errors?.getFormError('groupId'))}
+                        helperText={errors?.getFormError('groupId')}
                     />
                 </StyledInnerBox2>
             </StyledOuterBox>

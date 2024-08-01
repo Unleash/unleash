@@ -353,6 +353,71 @@ export default class MetricsMonitor {
             labelNames: ['type', 'method'],
         });
 
+        const resourceLimitSegmentValues = createGauge({
+            name: 'resource_limit_segment_values',
+            help: 'The maximum number of segment values allowed.',
+        });
+        const resourceLimitStrategySegments = createGauge({
+            name: 'resource_limit_strategy_segments',
+            help: 'The maximum number of segments allowed.',
+        });
+        const resourceLimitSignalEndpoins = createGauge({
+            name: 'resource_limit_signal_endpoints',
+            help: 'The maximum number of signal endpoints allowed.',
+        });
+        const resourceLimitActionSetActions = createGauge({
+            name: 'resource_limit_action_set_actions',
+            help: 'The maximum number of actions allowed for a single action set.',
+        });
+        const resourceLimitActionSetsPerProject = createGauge({
+            name: 'resource_limit_action_sets_per_project',
+            help: 'The maximum number of action sets allowed for a single project.',
+        });
+        const resourceLimitActionSetFilters = createGauge({
+            name: 'resource_limit_action_set_filters',
+            help: 'The maximum number of filters allowed for a single action set.',
+        });
+        const resourceLimitActionSetFilterValues = createGauge({
+            name: 'resource_limit_action_set_filter_values',
+            help: 'The maximum number of filter values allowed for a single action set filter.',
+        });
+        const resourceLimitSignalTokensPerEndpoint = createGauge({
+            name: 'resource_limit_signal_tokens_per_endpoint',
+            help: 'The maximum number of tokens allowed for a single signal endpoint.',
+        });
+        const resourceLimitFeatureEnvironmentStrategies = createGauge({
+            name: 'resource_limit_feature_environment_strategies',
+            help: 'The maximum number of strategies allowed on a feature flag in a single environment.',
+        });
+        const resourceLimitConstraintValues = createGauge({
+            name: 'resource_limit_constraint_values',
+            help: 'The maximum number of values allowed on a single constraint.',
+        });
+        const resourceLimitConstraints = createGauge({
+            name: 'resource_limit_constraints',
+            help: 'The maximum number of constraints allowed on a single strategy.',
+        });
+        const resourceLimitEnvironments = createGauge({
+            name: 'resource_limit_environments',
+            help: 'The maximum number of environments allowed.',
+        });
+        const resourceLimitProjects = createGauge({
+            name: 'resource_limit_projects',
+            help: 'The maximum number of projects allowed.',
+        });
+        const resourceLimitApiTokens = createGauge({
+            name: 'resource_limit_api_tokens',
+            help: 'The maximum number of API tokens allowed.',
+        });
+        const resourceLimitSegments = createGauge({
+            name: 'resource_limit_segments',
+            help: 'The maximum number of segments allowed.',
+        });
+        const resourceLimitFeatureFlags = createGauge({
+            name: 'resource_limit_feature_flags',
+            help: 'The maximum number of feature flags allowed.',
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -508,6 +573,47 @@ export default class MetricsMonitor {
                         })
                         .set(featureEnvironment.size);
                 }
+
+                resourceLimitActionSetActions.set(
+                    config.resourceLimits.actionSetActions,
+                );
+                resourceLimitActionSetFilterValues.set(
+                    config.resourceLimits.actionSetFilterValues,
+                );
+                resourceLimitActionSetFilters.set(
+                    config.resourceLimits.actionSetFilters,
+                );
+                resourceLimitActionSetsPerProject.set(
+                    config.resourceLimits.actionSetsPerProject,
+                );
+                resourceLimitApiTokens.set(config.resourceLimits.apiTokens);
+                resourceLimitConstraintValues.set(
+                    config.resourceLimits.constraintValues,
+                );
+                resourceLimitConstraints.set(config.resourceLimits.constraints);
+                resourceLimitEnvironments.set(
+                    config.resourceLimits.environments,
+                );
+                resourceLimitFeatureEnvironmentStrategies.set(
+                    config.resourceLimits.featureEnvironmentStrategies,
+                );
+                resourceLimitFeatureFlags.set(
+                    config.resourceLimits.featureFlags,
+                );
+                resourceLimitProjects.set(config.resourceLimits.projects);
+                resourceLimitSegmentValues.set(
+                    config.resourceLimits.segmentValues,
+                );
+                resourceLimitSegments.set(config.resourceLimits.segments);
+                resourceLimitSignalEndpoins.set(
+                    config.resourceLimits.signalEndpoints,
+                );
+                resourceLimitSignalTokensPerEndpoint.set(
+                    config.resourceLimits.signalTokensPerEndpoint,
+                );
+                resourceLimitStrategySegments.set(
+                    config.resourceLimits.strategySegments,
+                );
 
                 enabledMetricsBucketsPreviousDay.reset();
                 enabledMetricsBucketsPreviousDay.set(

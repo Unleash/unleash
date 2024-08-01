@@ -41,8 +41,8 @@ export type WithTransactional<S> = S & {
     transactional: <R>(fn: (service: S) => R) => Promise<R>;
 };
 
-export type WithRollback<S> = S & {
-    rollback: <R>(fn: (service: S) => R) => Promise<R>;
+export type WithRollbackTransaction<S> = S & {
+    rollbackTransaction: <R>(fn: (service: S) => R) => Promise<R>;
 };
 
 /**
@@ -86,13 +86,13 @@ export function withTransactional<S>(
     return service;
 }
 
-export function withRollback<S>(
+export function withRollbackTransaction<S>(
     serviceFactory: (db: Knex) => S,
     db: Knex,
-): WithRollback<S> {
-    const service = serviceFactory(db) as WithRollback<S>;
+): WithRollbackTransaction<S> {
+    const service = serviceFactory(db) as WithRollbackTransaction<S>;
 
-    service.rollback = async <R>(fn: (service: S) => R) => {
+    service.rollbackTransaction = async <R>(fn: (service: S) => R) => {
         const trx = await db.transaction();
         try {
             const transactionService = serviceFactory(trx);

@@ -33,7 +33,7 @@ import {
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
-import { useUiFlag } from '../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',

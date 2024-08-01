@@ -73,7 +73,7 @@ export const AvatarCell =
                         </ScreenReaderOnly>
 
                         <StyledAvatar
-                            hideTitle
+                            disableTooltip
                             user={{
                                 id: original.createdBy.id,
                                 name: original.createdBy.name,

@@ -236,7 +236,7 @@ const FeatureOverviewMetaData = () => {
                                         <span>{feature.createdBy?.name}</span>
                                     </StyledDetail>
                                     <StyledUserAvatar
-                                        src={feature.createdBy?.imageUrl}
+                                        user={feature.createdBy}
                                     />
                                 </StyledDetailsContainer>
                             </BodyItemWithIcon>

@@ -71,7 +71,7 @@ export interface IFeatureToggle {
     lifecycle?: Lifecycle;
     children: Array<string>;
     createdBy?: {
-        id: string;
+        id: number;
         name: string;
         imageUrl: string;
     };

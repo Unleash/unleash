@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
-import { GroupCardAvatars } from 'component/admin/groups/GroupsList/GroupCard/GroupCardAvatars/NewGroupCardAvatars';
 import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 
 interface IProjectOwnersProps {
     owners?: ProjectSchema['owners'];
@@ -29,7 +29,7 @@ const useOwnersMap = () => {
         }
         if (owner.ownerType === 'group') {
             return {
-                name: owner.name || '',
+                name: owner.name,
                 description: 'group',
             };
         }
@@ -50,17 +50,30 @@ const StyledUserName = styled('p')(({ theme }) => ({
     alignSelf: 'end',
 }));
 
+const StyledContainer = styled('div')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledHeader = styled('h3')(({ theme }) => ({
+    margin: theme.spacing(0, 0, 1),
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
+}));
+
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     const ownersMap = useOwnersMap();
     const users = owners.map(ownersMap);
 
     return (
         <>
-            <GroupCardAvatars
-                header={owners.length === 1 ? 'Owner' : 'Owners'}
-                users={users}
-                avatarLimit={8}
-            />
+            <StyledContainer>
+                <StyledHeader>
+                    {owners.length === 1 ? 'Owner' : 'Owners'}
+                </StyledHeader>
+                <AvatarGroup users={users} avatarLimit={8} />
+            </StyledContainer>
             <ConditionallyRender
                 condition={owners.length === 1}
                 show={

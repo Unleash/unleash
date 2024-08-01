@@ -1,18 +1,11 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { REMOVE_USER_ERROR } from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import { Alert, styled } from '@mui/material';
+import { Alert } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { Typography } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
-
-const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
-    width: theme.spacing(5),
-    height: theme.spacing(5),
-    margin: 0,
-}));
 
 interface IDeleteUserProps {
     showDialog: boolean;

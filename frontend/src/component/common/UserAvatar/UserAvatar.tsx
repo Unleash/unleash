@@ -8,7 +8,7 @@ import {
 import type { IUser } from 'interfaces/user';
 import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
+import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3.5),
     height: theme.spacing(3.5),
@@ -24,36 +24,51 @@ export interface IUserAvatarProps extends AvatarProps {
         Pick<IUser, 'id' | 'name' | 'email' | 'username' | 'imageUrl'>
     >;
     src?: string;
-    title?: string;
-    onMouseEnter?: (event: any) => void;
-    onMouseLeave?: () => void;
     className?: string;
     sx?: SxProps<Theme>;
-    hideTitle?: boolean;
+    disableTooltip?: boolean;
 }
+
+const tooltipContent = (
+    user: IUserAvatarProps['user'],
+): { main: string; secondary?: string } | undefined => {
+    if (!user) {
+        return undefined;
+    }
+
+    const [mainIdentifier, secondaryInfo] = [
+        user.email || user.username,
+        user.name,
+    ];
+
+    if (mainIdentifier) {
+        return { main: mainIdentifier, secondary: secondaryInfo };
+    } else if (secondaryInfo) {
+        return { main: secondaryInfo };
+    } else if (user.id) {
+        return { main: `User ID: ${user.id}` };
+    }
+
+    return undefined;
+};
+
+const TooltipSecondaryContent = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+}));
+const TooltipMainContent = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+}));
 
 export const UserAvatar: FC<IUserAvatarProps> = ({
     user,
     src,
-    title,
-    onMouseEnter,
-    onMouseLeave,
     className,
     sx,
     children,
-    hideTitle,
+    disableTooltip,
     ...props
 }) => {
-    if (!hideTitle && !title && !onMouseEnter && user) {
-        title = `${user?.name || user?.email || user?.username} (id: ${
-            user?.id
-        })`;
-    }
-
-    if (!src && user) {
-        src = user?.imageUrl;
-    }
-
     let fallback: string | undefined;
     if (!children && user) {
         fallback = user?.name || user?.email || user?.username;
@@ -66,17 +81,14 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
         }
     }
 
-    return (
+    const Avatar = (
         <StyledAvatar
             className={className}
             sx={sx}
             {...props}
             data-loading
             alt={user?.name || user?.email || user?.username || 'Gravatar'}
-            src={src}
-            title={title}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
+            src={src || user?.imageUrl}
         >
             <ConditionallyRender
                 condition={Boolean(fallback)}
@@ -85,4 +97,26 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
             />
         </StyledAvatar>
     );
+
+    const tooltip = disableTooltip ? undefined : tooltipContent(user);
+    if (tooltip) {
+        return (
+            <HtmlTooltip
+                arrow
+                describeChild
+                title={
+                    <>
+                        <TooltipSecondaryContent>
+                            {tooltip.secondary}
+                        </TooltipSecondaryContent>
+                        <TooltipMainContent>{tooltip.main}</TooltipMainContent>
+                    </>
+                }
+            >
+                {Avatar}
+            </HtmlTooltip>
+        );
+    }
+
+    return Avatar;
 };

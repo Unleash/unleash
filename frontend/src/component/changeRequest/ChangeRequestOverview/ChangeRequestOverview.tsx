@@ -32,6 +32,8 @@ import {
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
+import { useNavigate } from 'react-router-dom';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -101,6 +103,8 @@ export const ChangeRequestOverview: FC = () => {
     const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
     const [disabled, setDisabled] = useState(false);
+    const navigate = useNavigate();
+    const changeRequestPlaygroundEnabled = useUiFlag('changeRequestPlayground');
 
     if (!changeRequest) {
         return null;
@@ -376,6 +380,7 @@ export const ChangeRequestOverview: FC = () => {
                                     </ReviewButton>
                                 }
                             />
+
                             <ConditionallyRender
                                 condition={changeRequest.state === 'Approved'}
                                 show={
@@ -411,6 +416,27 @@ export const ChangeRequestOverview: FC = () => {
                                     >
                                         Apply or schedule changes
                                     </ApplyButton>
+                                }
+                            />
+
+                            <ConditionallyRender
+                                condition={
+                                    changeRequestPlaygroundEnabled &&
+                                    (changeRequest.state === 'In review' ||
+                                        changeRequest.state === 'Approved' ||
+                                        changeRequest.state === 'Scheduled')
+                                }
+                                show={
+                                    <StyledButton
+                                        variant='outlined'
+                                        onClick={() => {
+                                            navigate(
+                                                `/playground?changeRequest=${changeRequest.id}`,
+                                            );
+                                        }}
+                                    >
+                                        Preview changes
+                                    </StyledButton>
                                 }
                             />
 

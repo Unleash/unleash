@@ -201,17 +201,23 @@ export const PlaygroundConnectionFieldset: FC<
             </Box>
             <StyledGrid>
                 <Box>
-                    <EnvironmentsField
-                        environments={environments}
-                        setEnvironments={setEnvironments}
-                        availableEnvironments={availableEnvironments}
-                        disabled={Boolean(token)}
-                        tooltip={
+                    <Tooltip
+                        arrow
+                        title={
                             token
                                 ? 'Environment is automatically selected because you are using a token'
                                 : 'Select environments to use in the playground'
                         }
-                    />
+                    >
+                        <Box>
+                            <EnvironmentsField
+                                environments={environments}
+                                setEnvironments={setEnvironments}
+                                availableEnvironments={availableEnvironments}
+                                disabled={Boolean(token)}
+                            />
+                        </Box>
+                    </Tooltip>
                 </Box>
                 <Box>
                     <Tooltip

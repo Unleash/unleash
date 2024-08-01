@@ -1,5 +1,5 @@
 import type { ComponentProps, Dispatch, FC, SetStateAction } from 'react';
-import { Autocomplete, TextField, Tooltip } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 import { renderOption } from '../../renderOption';
 
 interface IEnvironmentsFieldProps {
@@ -7,7 +7,6 @@ interface IEnvironmentsFieldProps {
     setEnvironments: Dispatch<SetStateAction<string[]>>;
     availableEnvironments: string[];
     disabled?: boolean;
-    tooltip?: string;
 }
 
 interface IOption {
@@ -19,7 +18,6 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
     environments,
     setEnvironments,
     availableEnvironments,
-    tooltip = 'Select environments to use in the playground',
     disabled,
 }) => {
     const environmentOptions = [
@@ -50,26 +48,24 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
     };
 
     return (
-        <Tooltip arrow title={tooltip}>
-            <Autocomplete
-                disablePortal
-                limitTags={3}
-                id='environment'
-                multiple={true}
-                options={environmentOptions}
-                sx={{ flex: 1 }}
-                renderInput={(params) => (
-                    <TextField {...params} label='Environments' />
-                )}
-                renderOption={renderOption}
-                getOptionLabel={({ label }) => label}
-                disableCloseOnSelect={false}
-                size='small'
-                value={envValue}
-                onChange={onEnvironmentsChange}
-                disabled={disabled}
-                data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
-            />
-        </Tooltip>
+        <Autocomplete
+            disablePortal
+            limitTags={3}
+            id='environment'
+            multiple={true}
+            options={environmentOptions}
+            sx={{ flex: 1 }}
+            renderInput={(params) => (
+                <TextField {...params} label='Environments' />
+            )}
+            renderOption={renderOption}
+            getOptionLabel={({ label }) => label}
+            disableCloseOnSelect={false}
+            size='small'
+            value={envValue}
+            onChange={onEnvironmentsChange}
+            disabled={disabled}
+            data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
+        />
     );
 };

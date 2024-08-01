@@ -30,6 +30,7 @@ import {
     type EventSearchResponseSchema,
     eventSearchResponseSchema,
 } from '../../openapi';
+import { normalizeQueryParams } from '../../features/feature-search/search-utils';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -231,9 +232,20 @@ export default class EventController extends Controller {
         req: IAuthRequest<any, any, any, EventSearchQueryParameters>,
         res: Response<EventSearchResponseSchema>,
     ): Promise<void> {
-        const { events, totalEvents } = await this.eventService.searchEvents(
-            req.body,
+        const { normalizedLimit, normalizedOffset } = normalizeQueryParams(
+            req.query,
+            {
+                limitDefault: 50,
+                maxLimit: 1000,
+            },
         );
+
+        const { events, totalEvents } = await this.eventService.searchEvents({
+            ...req.body,
+            offset: normalizedOffset,
+            limit: normalizedLimit,
+        });
+
         this.openApiService.respondWithValidation(
             200,
             res,

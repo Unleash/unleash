@@ -6,9 +6,9 @@ import type {
 } from '../../types';
 import type {
     IFeatureSearchParams,
-    IQueryOperator,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import { parseSearchOperatorValue } from './search-utils';
 
 export class FeatureSearchService {
     private featureSearchStore: IFeatureSearchStore;
@@ -38,27 +38,11 @@ export class FeatureSearchService {
         };
     }
 
-    parseOperatorValue = (field: string, value: string): IQueryParam | null => {
-        const pattern =
-            /^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF|INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL|IS_BEFORE|IS_ON_OR_AFTER):(.+)$/;
-        const match = value.match(pattern);
-
-        if (match) {
-            return {
-                field,
-                operator: match[1] as IQueryOperator,
-                values: match[2].split(','),
-            };
-        }
-
-        return null;
-    };
-
     convertToQueryParams = (params: IFeatureSearchParams): IQueryParam[] => {
         const queryParams: IQueryParam[] = [];
 
         if (params.state) {
-            const parsedState = this.parseOperatorValue('stale', params.state);
+            const parsedState = parseSearchOperatorValue('stale', params.state);
             if (parsedState) {
                 parsedState.values = parsedState.values.map((value) =>
                     value === 'active' ? 'false' : 'true',
@@ -68,7 +52,7 @@ export class FeatureSearchService {
         }
 
         if (params.createdAt) {
-            const parsed = this.parseOperatorValue(
+            const parsed = parseSearchOperatorValue(
                 'features.created_at',
                 params.createdAt,
             );
@@ -76,7 +60,7 @@ export class FeatureSearchService {
         }
 
         if (params.createdBy) {
-            const parsed = this.parseOperatorValue(
+            const parsed = parseSearchOperatorValue(
                 'users.id',
                 params.createdBy,
             );
@@ -84,7 +68,7 @@ export class FeatureSearchService {
         }
 
         if (params.type) {
-            const parsed = this.parseOperatorValue(
+            const parsed = parseSearchOperatorValue(
                 'features.type',
                 params.type,
             );
@@ -93,7 +77,7 @@ export class FeatureSearchService {
 
         ['tag', 'segment', 'project'].forEach((field) => {
             if (params[field]) {
-                const parsed = this.parseOperatorValue(field, params[field]);
+                const parsed = parseSearchOperatorValue(field, params[field]);
                 if (parsed) queryParams.push(parsed);
             }
         });

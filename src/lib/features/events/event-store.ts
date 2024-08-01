@@ -14,10 +14,9 @@ import type { Db } from '../../db/db';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
-import type {
-    DeprecatedSearchEventsSchema,
-    EventSearchQueryParameters,
-} from '../../openapi';
+import type { DeprecatedSearchEventsSchema } from '../../openapi';
+import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import { applyGenericQueryParams } from '../feature-search/search-utils';
 
 const EVENT_COLUMNS = [
     'id',
@@ -88,6 +87,12 @@ export interface IEventTable {
     tags: ITag[];
 }
 
+export interface IEventSearchParams {
+    query: string | undefined;
+    offset: string | undefined;
+    limit: string | undefined;
+}
+
 const TABLE = 'events';
 
 class EventStore implements IEventStore {
@@ -153,9 +158,10 @@ class EventStore implements IEventStore {
     }
 
     async searchEventsCount(
-        eventSearch: EventSearchQueryParameters,
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
     ): Promise<number> {
-        const query = this.buildSearchQuery(eventSearch);
+        const query = this.buildSearchQuery(params, queryParams);
         const count = await query.count().first();
         if (!count) {
             return 0;
@@ -341,13 +347,14 @@ class EventStore implements IEventStore {
     }
 
     async searchEvents(
-        search: EventSearchQueryParameters = {},
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
     ): Promise<IEvent[]> {
-        const query = this.buildSearchQuery(search)
+        const query = this.buildSearchQuery(params, queryParams)
             .select(EVENT_COLUMNS)
             .orderBy('created_at', 'desc')
-            .limit(Number(search.limit) ?? 100)
-            .offset(Number(search.offset) ?? 0);
+            .limit(Number(params.limit) ?? 100)
+            .offset(Number(params.offset) ?? 0);
 
         try {
             return (await query).map(this.rowToEvent);
@@ -356,46 +363,21 @@ class EventStore implements IEventStore {
         }
     }
 
-    private buildSearchQuery(search: EventSearchQueryParameters) {
+    private buildSearchQuery(
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
+    ) {
         let query = this.db.from<IEventTable>(TABLE);
 
-        if (search.type) {
-            query = query.andWhere({
-                type: search.type,
-            });
-        }
+        applyGenericQueryParams(query, queryParams);
 
-        if (search.project) {
-            query = query.andWhere({
-                project: search.project,
-            });
-        }
-
-        if (search.feature) {
-            query = query.andWhere({
-                feature_name: search.feature,
-            });
-        }
-
-        if (search.query) {
+        if (params.query) {
             query = query.where((where) =>
                 where
-                    .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
-                    .orWhereRaw('tags::text ILIKE ?', `%${search.query}%`)
-                    .orWhereRaw('pre_data::text ILIKE ?', `%${search.query}%`),
+                    .orWhereRaw('data::text ILIKE ?', `%${params.query}%`)
+                    .orWhereRaw('tags::text ILIKE ?', `%${params.query}%`)
+                    .orWhereRaw('pre_data::text ILIKE ?', `%${params.query}%`),
             );
-        }
-
-        if (search.createdAtFrom) {
-            query = query.andWhere('created_at', '>=', search.createdAtFrom);
-        }
-
-        if (search.createdAtTo) {
-            query = query.andWhere('created_at', '<=', search.createdAtTo);
-        }
-
-        if (search.createdBy) {
-            query = query.andWhere('created_by', search.createdBy);
         }
 
         return query;

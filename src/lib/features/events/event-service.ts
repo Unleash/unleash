@@ -8,8 +8,9 @@ import type EventEmitter from 'events';
 import type { IApiUser, ITag, IUser } from '../../types';
 import { ApiTokenType } from '../../types/models/api-token';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
-import type { EventSearchQueryParameters } from '../../openapi';
-import { validateDateString } from '../../util/validateDateString';
+import type { EventSearchQueryParameters } from '../../openapi/spec/event-search-query-parameters';
+import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import { parseSearchOperatorValue } from '../feature-search/search-utils';
 
 export default class EventService {
     private logger: Logger;
@@ -57,12 +58,23 @@ export default class EventService {
     async searchEvents(
         search: EventSearchQueryParameters,
     ): Promise<IEventList> {
-        const totalEvents = await this.eventStore.searchEventsCount(search);
-        const events = await this.eventStore.searchEvents({
-            ...search,
-            createdAtFrom: validateDateString(search.createdAtFrom),
-            createdAtTo: validateDateString(search.createdAtTo),
-        });
+        const queryParams = this.convertToQueryParams(search);
+        const totalEvents = await this.eventStore.searchEventsCount(
+            {
+                limit: search.limit,
+                offset: search.offset,
+                query: search.query,
+            },
+            queryParams,
+        );
+        const events = await this.eventStore.searchEvents(
+            {
+                limit: search.limit,
+                offset: search.offset,
+                query: search.query,
+            },
+            queryParams,
+        );
         return {
             events,
             totalEvents,
@@ -130,4 +142,48 @@ export default class EventService {
             });
         }
     }
+
+    convertToQueryParams = (
+        params: EventSearchQueryParameters,
+    ): IQueryParam[] => {
+        const queryParams: IQueryParam[] = [];
+
+        if (params.createdAtFrom) {
+            queryParams.push({
+                field: 'created_at',
+                operator: 'IS_ON_OR_AFTER',
+                values: [params.createdAtFrom],
+            });
+        }
+
+        if (params.createdAtTo) {
+            queryParams.push({
+                field: 'created_at',
+                operator: 'IS_BEFORE',
+                values: [params.createdAtTo],
+            });
+        }
+
+        if (params.createdBy) {
+            const parsed = parseSearchOperatorValue(
+                'created_by',
+                params.createdBy,
+            );
+            if (parsed) queryParams.push(parsed);
+        }
+
+        if (params.type) {
+            const parsed = parseSearchOperatorValue('type', params.type);
+            if (parsed) queryParams.push(parsed);
+        }
+
+        ['feature', 'project'].forEach((field) => {
+            if (params[field]) {
+                const parsed = parseSearchOperatorValue(field, params[field]);
+                if (parsed) queryParams.push(parsed);
+            }
+        });
+
+        return queryParams;
+    };
 }

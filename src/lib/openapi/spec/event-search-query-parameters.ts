@@ -61,6 +61,7 @@ export const eventSearchQueryParameters = [
         schema: {
             type: 'string',
             example: 'IS:2024-01-01',
+            pattern: '^(IS):\\d{4}-\\d{2}-\\d{2}$',
         },
         description:
             'The starting date of the creation date range in IS:yyyy-MM-dd format',
@@ -71,6 +72,7 @@ export const eventSearchQueryParameters = [
         schema: {
             type: 'string',
             example: 'IS:2024-01-31',
+            pattern: '^(IS):\\d{4}-\\d{2}-\\d{2}$',
         },
         description:
             'The ending date of the creation date range in IS:yyyy-MM-dd format',

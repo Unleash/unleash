@@ -1,10 +1,13 @@
 import type { Knex } from 'knex';
-import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type {
+    IQueryOperator,
+    IQueryParam,
+} from '../feature-toggle/types/feature-toggle-strategies-store-type';
 
 export interface NormalizeParamsDefaults {
     limitDefault: number;
     maxLimit?: number; // Optional because you might not always want to enforce a max limit
-    sortByDefault: string;
+    sortByDefault?: string;
     typeDefault?: string; // Optional field for type, not required for every call
 }
 
@@ -89,4 +92,23 @@ export const normalizeQueryParams = (
         normalizedSortBy,
         normalizedSortOrder,
     };
+};
+
+export const parseSearchOperatorValue = (
+    field: string,
+    value: string,
+): IQueryParam | null => {
+    const pattern =
+        /^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF|INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL|IS_BEFORE|IS_ON_OR_AFTER):(.+)$/;
+    const match = value.match(pattern);
+
+    if (match) {
+        return {
+            field,
+            operator: match[1] as IQueryOperator,
+            values: match[2].split(','),
+        };
+    }
+
+    return null;
 };

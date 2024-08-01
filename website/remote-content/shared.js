@@ -132,7 +132,7 @@ custom_edit_url: ${data.repoUrl}/edit/${data.branch}/${subpage ? subpageKey : 'R
 ---
 
 :::info Generated content
-This document was generated from the ${subpage ? subpageKey : 'README'} in the [${data.sidebarName} GitHub repository](${data.repoUrl}).
+This document was generated from ${subpage ? subpageKey : 'README.md'} in the [${data.sidebarName} GitHub repository](${data.repoUrl}).
 :::
 
 ${additionalAdmonitions}

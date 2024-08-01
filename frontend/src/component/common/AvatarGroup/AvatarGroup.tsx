@@ -9,12 +9,15 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     flexWrap: 'wrap',
+    rowGap: theme.spacing(1),
     marginLeft: theme.spacing(1),
+    justifyContent: 'start',
 }));
 
 const StyledAvatar = (component: typeof UserAvatar) =>
     styled(component)(({ theme }) => ({
         outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+        margin: 0,
         marginLeft: theme.spacing(-1),
         '&:hover': {
             outlineColor: theme.palette.primary.main,

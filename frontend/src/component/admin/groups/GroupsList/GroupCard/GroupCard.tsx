@@ -7,7 +7,7 @@ import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
-import { GroupCardAvatars } from './GroupCardAvatars/NewGroupCardAvatars';
+import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -132,7 +132,7 @@ export const GroupCard = ({
                     <StyledBottomRow>
                         <ConditionallyRender
                             condition={group.users?.length > 0}
-                            show={<GroupCardAvatars users={group.users} />}
+                            show={<AvatarGroup users={group.users} />}
                             elseShow={
                                 <StyledCounterDescription>
                                     This group has no users.

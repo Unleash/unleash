@@ -8401,13 +8401,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:5.17.0":
-  version: 5.17.0
-  resolution: "enhanced-resolve@npm:5.17.0"
+"enhanced-resolve@npm:5.17.1":
+  version: 5.17.1
+  resolution: "enhanced-resolve@npm:5.17.1"
   dependencies:
     graceful-fs: "npm:^4.2.4"
     tapable: "npm:^2.2.0"
-  checksum: 10c0/90065e58e4fd08e77ba47f827eaa17d60c335e01e4859f6e644bb3b8d0e32b203d33894aee92adfa5121fa262f912b48bdf0d0475e98b4a0a1132eea1169ad37
+  checksum: 10c0/81a0515675eca17efdba2cf5bad87abc91a528fc1191aad50e275e74f045b41506167d420099022da7181c8d787170ea41e4a11a0b10b7a16f6237daecb15370
   languageName: node
   linkType: hard
 
@@ -16406,7 +16406,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
     docusaurus-plugin-openapi-docs: "npm:2.0.0-beta.3"
     docusaurus-plugin-remote-content: "npm:^3.1.0"
     docusaurus-theme-openapi-docs: "npm:2.0.0-beta.2"
-    enhanced-resolve: "npm:5.17.0"
+    enhanced-resolve: "npm:5.17.1"
     git-url-parse: "npm:^14.0.0"
     plugin-image-zoom: flexanalytics/plugin-image-zoom
     prism-svelte: "npm:^0.5.0"

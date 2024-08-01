@@ -475,7 +475,7 @@ test('should sort features', async () => {
 
     const { body: defaultCreatedAt } = await sortFeatures({
         sortBy: '',
-        sortOrder: '',
+        sortOrder: 'asc',
     });
 
     expect(defaultCreatedAt).toMatchObject({

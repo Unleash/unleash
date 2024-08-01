@@ -30,6 +30,10 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const EventResultWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 4, 4, 4),
+}));
+
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useEventSearch(
@@ -67,13 +71,13 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
-    const logType = project ? 'project' : feature ? 'flag' : 'global';
     const count = events?.length || 0;
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
     return (
         <PageContent
+            bodyClass='no-padding'
             header={
                 <PageHeader
                     title={`${title} (${countText})`}
@@ -90,27 +94,36 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         >
             <ConditionallyRender
                 condition={isEnterprise() && showFilters}
-                show={<EventLogFilters logType={logType} />}
-            />
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length === 0)}
-                show={<p>No events found.</p>}
-            />
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length > 0)}
                 show={
-                    <StyledEventsList>
-                        {cache?.map((entry) => (
-                            <ConditionallyRender
-                                key={entry.id}
-                                condition={eventSettings.showData}
-                                show={() => <EventJson entry={entry} />}
-                                elseShow={() => <EventCard entry={entry} />}
-                            />
-                        ))}
-                    </StyledEventsList>
+                    <EventLogFilters
+                        logType={
+                            project ? 'project' : feature ? 'flag' : 'global'
+                        }
+                    />
                 }
             />
+            <EventResultWrapper>
+                <ConditionallyRender
+                    condition={Boolean(cache && cache.length === 0)}
+                    show={<p>No events found.</p>}
+                />
+                <ConditionallyRender
+                    condition={Boolean(cache && cache.length > 0)}
+                    show={
+                        <StyledEventsList>
+                            {cache?.map((entry) => (
+                                <ConditionallyRender
+                                    key={entry.id}
+                                    condition={eventSettings.showData}
+                                    show={() => <EventJson entry={entry} />}
+                                    elseShow={() => <EventCard entry={entry} />}
+                                />
+                            ))}
+                        </StyledEventsList>
+                    }
+                />
+            </EventResultWrapper>
+
             <div ref={fetchNextPageRef} />
         </PageContent>
     );

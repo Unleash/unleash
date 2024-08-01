@@ -3,22 +3,20 @@ import {
     type Dispatch,
     type SetStateAction,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
 import {
-    Autocomplete,
     Box,
     Button,
     IconButton,
     InputAdornment,
     styled,
-    TextField,
+    type TextField,
     Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { renderOption } from '../renderOption';
 import {
     type IApiToken,
     useApiTokens,
@@ -32,6 +30,7 @@ import Clear from '@mui/icons-material/Clear';
 import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { EnvironmentsField } from './EnvironmentsField/EnvironmentsField';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -69,7 +68,7 @@ const StyledGrid = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const PlaygroundConnectionFieldset: VFC<
+export const PlaygroundConnectionFieldset: FC<
     IPlaygroundConnectionFieldsetProps
 > = ({
     environments,
@@ -86,9 +85,7 @@ export const PlaygroundConnectionFieldset: VFC<
 
     const { projects: availableProjects } = useProjects();
 
-    const isChangeRequestPlaygroundEnabled = useUiFlag(
-        'changeRequestPlayground',
-    );
+    const changeRequestPlaygroundEnabled = useUiFlag('changeRequestPlayground');
 
     const projectsOptions = [
         allOption,
@@ -97,35 +94,6 @@ export const PlaygroundConnectionFieldset: VFC<
             id,
         })),
     ];
-
-    const environmentOptions = [
-        ...availableEnvironments.map((name) => ({
-            label: name,
-            id: name,
-        })),
-    ];
-
-    const onEnvironmentsChange: ComponentProps<
-        typeof Autocomplete
-    >['onChange'] = (event, value, reason) => {
-        const newEnvironments = value as IOption | IOption[];
-        if (reason === 'clear' || newEnvironments === null) {
-            return setEnvironments([]);
-        }
-        if (Array.isArray(newEnvironments)) {
-            if (newEnvironments.length === 0) {
-                return setEnvironments([]);
-            }
-            return setEnvironments(newEnvironments.map(({ id }) => id));
-        }
-
-        return setEnvironments([newEnvironments.id]);
-    };
-
-    const envValue = environmentOptions.filter(({ id }) =>
-        environments.includes(id),
-    );
-
     const onSetToken: ComponentProps<typeof TextField>['onChange'] = async (
         event,
     ) => {
@@ -233,34 +201,17 @@ export const PlaygroundConnectionFieldset: VFC<
             </Box>
             <StyledGrid>
                 <Box>
-                    <Tooltip
-                        arrow
-                        title={
+                    <EnvironmentsField
+                        environments={environments}
+                        setEnvironments={setEnvironments}
+                        availableEnvironments={availableEnvironments}
+                        disabled={Boolean(token)}
+                        tooltip={
                             token
                                 ? 'Environment is automatically selected because you are using a token'
                                 : 'Select environments to use in the playground'
                         }
-                    >
-                        <Autocomplete
-                            disablePortal
-                            limitTags={3}
-                            id='environment'
-                            multiple={true}
-                            options={environmentOptions}
-                            sx={{ flex: 1 }}
-                            renderInput={(params) => (
-                                <TextField {...params} label='Environments' />
-                            )}
-                            renderOption={renderOption}
-                            getOptionLabel={({ label }) => label}
-                            disableCloseOnSelect={false}
-                            size='small'
-                            value={envValue}
-                            onChange={onEnvironmentsChange}
-                            disabled={Boolean(token)}
-                            data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
-                        />
-                    </Tooltip>
+                    />
                 </Box>
                 <Box>
                     <Tooltip
@@ -296,7 +247,7 @@ export const PlaygroundConnectionFieldset: VFC<
                     />
                 </Box>
                 <ConditionallyRender
-                    condition={Boolean(isChangeRequestPlaygroundEnabled)}
+                    condition={Boolean(changeRequestPlaygroundEnabled)}
                     show={
                         <Box sx={{ display: 'flex', gap: 2 }}>
                             <Box sx={{ flex: 1 }}>
@@ -314,7 +265,7 @@ export const PlaygroundConnectionFieldset: VFC<
                                     // disabled
                                     InputProps={{
                                         endAdornment: renderClearButton(),
-                                        sx: {
+                                        style: {
                                             cursor: 'default',
                                         },
                                     }}

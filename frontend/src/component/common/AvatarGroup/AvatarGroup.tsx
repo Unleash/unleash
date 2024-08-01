@@ -9,7 +9,6 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    rowGap: theme.spacing(1),
     marginLeft: theme.spacing(1),
     justifyContent: 'start',
 }));

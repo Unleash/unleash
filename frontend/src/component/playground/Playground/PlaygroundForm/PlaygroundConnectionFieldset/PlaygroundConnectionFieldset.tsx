@@ -8,6 +8,7 @@ import {
 import {
     Autocomplete,
     Box,
+    Button,
     IconButton,
     InputAdornment,
     styled,
@@ -29,6 +30,8 @@ import {
 } from '../../playground.utils';
 import Clear from '@mui/icons-material/Clear';
 import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -51,6 +54,21 @@ const SmallClear = styled(Clear)({
     fontSize: '1.25rem',
 });
 
+const StyledInput = styled(Input)(() => ({
+    width: '100%',
+}));
+
+const StyledGrid = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    columnGap: theme.spacing(2),
+    rowGap: theme.spacing(4),
+    gridTemplateColumns: '1fr',
+
+    [theme.breakpoints.up('md')]: {
+        gridTemplateColumns: '1fr 1fr',
+    },
+}));
+
 export const PlaygroundConnectionFieldset: VFC<
     IPlaygroundConnectionFieldsetProps
 > = ({
@@ -67,6 +85,10 @@ export const PlaygroundConnectionFieldset: VFC<
     const [tokenError, setTokenError] = useState<string | undefined>();
 
     const { projects: availableProjects } = useProjects();
+
+    const isChangeRequestPlaygroundEnabled = useUiFlag(
+        'changeRequestPlayground',
+    );
 
     const projectsOptions = [
         allOption,
@@ -209,8 +231,8 @@ export const PlaygroundConnectionFieldset: VFC<
                     Access configuration
                 </Typography>
             </Box>
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                <Box flex={1}>
+            <StyledGrid>
+                <Box>
                     <Tooltip
                         arrow
                         title={
@@ -240,7 +262,7 @@ export const PlaygroundConnectionFieldset: VFC<
                         />
                     </Tooltip>
                 </Box>
-                <Box flex={1}>
+                <Box>
                     <Tooltip
                         arrow
                         title={
@@ -258,21 +280,53 @@ export const PlaygroundConnectionFieldset: VFC<
                         />
                     </Tooltip>
                 </Box>
-            </Box>
-            <Input
-                sx={{ mt: 2, width: '50%', pr: 1 }}
-                label='API token'
-                value={token || ''}
-                onChange={onSetToken}
-                type={'text'}
-                error={Boolean(tokenError)}
-                errorText={tokenError}
-                placeholder={'Enter your API token'}
-                data-testid={'PLAYGROUND_TOKEN_INPUT'}
-                InputProps={{
-                    endAdornment: token ? renderClearButton() : null,
-                }}
-            />
+                <Box>
+                    <StyledInput
+                        label='API token'
+                        value={token || ''}
+                        onChange={onSetToken}
+                        type={'text'}
+                        error={Boolean(tokenError)}
+                        errorText={tokenError}
+                        placeholder={'Enter your API token'}
+                        data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                        InputProps={{
+                            endAdornment: token ? renderClearButton() : null,
+                        }}
+                    />
+                </Box>
+                <ConditionallyRender
+                    condition={Boolean(isChangeRequestPlaygroundEnabled)}
+                    show={
+                        <Box sx={{ display: 'flex', gap: 2 }}>
+                            <Box sx={{ flex: 1 }}>
+                                <StyledInput
+                                    label='Change request'
+                                    value={
+                                        '// TODO: Change request #5 (feature1, feature2)'
+                                    }
+                                    onChange={() => {}}
+                                    type={'text'}
+                                    // error={Boolean(tokenError)}
+                                    // errorText={tokenError}
+                                    placeholder={'Enter your API token'}
+                                    data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                                    // disabled
+                                    InputProps={{
+                                        endAdornment: renderClearButton(),
+                                        sx: {
+                                            cursor: 'default',
+                                        },
+                                    }}
+                                />
+                            </Box>
+                            <Button variant='outlined' size='small'>
+                                View change request
+                            </Button>
+                        </Box>
+                    }
+                />
+            </StyledGrid>
         </Box>
     );
 };

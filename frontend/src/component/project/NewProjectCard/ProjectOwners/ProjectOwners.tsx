@@ -34,8 +34,7 @@ const useOwnersMap = () => {
             };
         }
         return {
-            name: '',
-            description: 'System',
+            name: 'System',
             imageUrl: `${uiConfig.unleashUrl}/logo-unleash.png`,
         };
     };

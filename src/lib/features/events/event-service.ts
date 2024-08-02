@@ -1,7 +1,10 @@
 import type { IUnleashConfig } from '../../types/option';
 import type { IFeatureTagStore, IUnleashStores } from '../../types/stores';
 import type { Logger } from '../../logger';
-import type { IEventStore } from '../../types/stores/event-store';
+import type {
+    IEventSearchParams,
+    IEventStore,
+} from '../../types/stores/event-store';
 import type { IBaseEvent, IEventList } from '../../types/events';
 import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
 import type EventEmitter from 'events';
@@ -10,17 +13,6 @@ import { ApiTokenType } from '../../types/models/api-token';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { parseSearchOperatorValue } from '../feature-search/search-utils';
-
-export interface IEventSearchParams {
-    project?: string;
-    query?: string;
-    createdAtFrom?: string;
-    createdAtTo?: string;
-    createdBy?: string;
-    type?: string;
-    offset: number;
-    limit: number;
-}
 
 export default class EventService {
     private logger: Logger;

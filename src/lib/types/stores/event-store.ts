@@ -2,11 +2,19 @@ import type { IBaseEvent, IEvent } from '../events';
 import type { Store } from './store';
 import type { DeprecatedSearchEventsSchema } from '../../openapi';
 import type EventEmitter from 'events';
-import type {
-    IEventSearchParams,
-    IQueryOperations,
-} from '../../features/events/event-store';
+import type { IQueryOperations } from '../../features/events/event-store';
 import type { IQueryParam } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
+
+export interface IEventSearchParams {
+    project?: string;
+    query?: string;
+    createdAtFrom?: string;
+    createdAtTo?: string;
+    createdBy?: string;
+    type?: string;
+    offset: number;
+    limit: number;
+}
 
 export interface IEventStore
     extends Store<IEvent, number>,

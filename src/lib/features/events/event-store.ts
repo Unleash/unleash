@@ -7,7 +7,10 @@ import {
     SEGMENT_UPDATED,
 } from '../../types/events';
 import type { Logger, LogProvider } from '../../logger';
-import type { IEventStore } from '../../types/stores/event-store';
+import type {
+    IEventSearchParams,
+    IEventStore,
+} from '../../types/stores/event-store';
 import type { ITag } from '../../types/model';
 import { sharedEventEmitter } from '../../util/anyEventEmitter';
 import type { Db } from '../../db/db';
@@ -17,7 +20,6 @@ import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
 import type { DeprecatedSearchEventsSchema } from '../../openapi';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams } from '../feature-search/search-utils';
-import type { IEventSearchParams } from './event-service';
 
 const EVENT_COLUMNS = [
     'id',

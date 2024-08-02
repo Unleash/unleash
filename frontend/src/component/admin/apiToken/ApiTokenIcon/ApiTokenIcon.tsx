@@ -3,6 +3,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import WarningIcon from '@mui/icons-material/WarningAmber';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { Link } from '@mui/material';
 
 interface IApiTokenIconProps {
     project?: string;
@@ -25,7 +26,16 @@ export const ApiTokenIcon: FC<IApiTokenIconProps> = ({ secret }) => {
                                 This is an orphaned token. All of its original
                                 projects have been deleted and it now has access
                                 to all current and future projects. You should
-                                stop using this token and delete it.
+                                stop using this token and delete it. Read more
+                                in{' '}
+                                <Link
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    href='https://github.com/Unleash/unleash/releases/tag/v6.1.0'
+                                >
+                                    release notes
+                                </Link>
+                                .
                             </p>
                         }
                         placement='bottom-start'

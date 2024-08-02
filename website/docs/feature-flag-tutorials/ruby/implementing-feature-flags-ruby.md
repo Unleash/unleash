@@ -8,12 +8,14 @@ Hello! In this tutorial we’ll show you how to add feature flags to your Ruby a
 
 In a classic tutorial fashion, we’ll get a list of planets from the [Star Wars API](https://swapi.dev/), with just Ruby (i.e., not Ruby on Rails). We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
-1. [Best practices for backend apps with Unleash](#1-best-practices-for-backend-apps-with-unleash)
-2. [Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
-3. [Grab a list of planets from the Star Wars API](#3-grab-a-list-of-planets-from-the-star-wars-api)
-4. [Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
-5. [Add Unleash to your Ruby app](#5-add-unleash-to-your-ruby-app)
-6. [Verify the feature flag experience](#6-verify-the-toggle-experience)
+-   [Prerequisites](#prerequisites)
+-   [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
+-   [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
+-   [3. Grab a list of planets from the Star Wars API](#3-grab-a-list-of-planets-from-the-star-wars-api)
+-   [4. Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
+-   [5. Add Unleash to your Ruby app](#5-add-unleash-to-your-ruby-app)
+-   [6. Verify the toggle experience](#6-verify-the-toggle-experience)
+-   [Conclusion](#conclusion)
 
 ## Prerequisites
 
@@ -28,9 +30,9 @@ For this tutorial, you’ll need the following:
 
 The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
 
-## 1. Best practices for backend apps with Unleash
+## 1. Best practices for back-end apps with Unleash
 
-Ruby is a backend language, so there are special considerations to plan around when implementing feature flags.
+Ruby is a back-end language, so there are special considerations to plan around when implementing feature flags.
 
 Most importantly, you must:
 
@@ -174,7 +176,7 @@ Now, let’s connect our project to Unleash so that you can toggle that feature 
 
 You’ll need 2 things:
 
--   The URL of your Unleash instance’s API. So far it’s `[http://localhost:4242/api/](http://localhost:4242/api/)` for your local version. You’ll want to replace it with your remote instance.
+-   The URL of your Unleash instance’s API. It’s `http://localhost:4242/api/` for your local version. You’ll want to replace it with your remote instance.
 -   The API token we created on our Unleash instance, feel free to create another one if you can’t find it.
 
 With these 2, you can initialize your Unleash client as follows:

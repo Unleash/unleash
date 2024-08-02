@@ -7,4 +7,6 @@
 /**
  * The necessary data to perform this change.
  */
-export type ChangeRequestDefaultChangeSchemaPayload = { [key: string]: any };
+export type ChangeRequestDefaultChangeSchemaPayload = {
+    [key: string]: unknown;
+};

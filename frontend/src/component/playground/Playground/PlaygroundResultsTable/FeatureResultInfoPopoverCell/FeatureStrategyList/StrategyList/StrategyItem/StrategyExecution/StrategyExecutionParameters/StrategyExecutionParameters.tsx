@@ -112,7 +112,9 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 text='user'
                                 input={
                                     input?.context?.[getMappedParam(key)]
-                                        ? input?.context?.[getMappedParam(key)]
+                                        ? (input?.context?.[
+                                              getMappedParam(key)
+                                          ] as string)
                                         : 'no value'
                                 }
                                 showReason={
@@ -120,7 +122,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                         ? !users.includes(
                                               input?.context?.[
                                                   getMappedParam(key)
-                                              ],
+                                              ] as string,
                                           )
                                         : undefined
                                 }
@@ -151,7 +153,9 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 disabled={disabled}
                                 input={
                                     input?.context?.[getMappedParam(key)]
-                                        ? input?.context?.[getMappedParam(key)]
+                                        ? (input?.context?.[
+                                              getMappedParam(key)
+                                          ] as string)
                                         : 'no value'
                                 }
                                 showReason={
@@ -159,7 +163,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                         ? !IPs.includes(
                                               input?.context?.[
                                                   getMappedParam(key)
-                                              ],
+                                              ] as string,
                                           )
                                         : undefined
                                 }

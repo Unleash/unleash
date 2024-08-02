@@ -2,6 +2,7 @@ import useAPI from '../useApi/useApi';
 import type {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundResponseSchema,
+    ChangeRequestPlaygroundRequestSchema,
 } from 'openapi';
 
 export const usePlaygroundApi = () => {
@@ -26,7 +27,7 @@ export const usePlaygroundApi = () => {
 
     const evaluateChangeRequestPlayground = async (
         changeRequestId: string,
-        payload: AdvancedPlaygroundRequestSchema, // FIXME: type
+        payload: ChangeRequestPlaygroundRequestSchema,
     ): Promise<AdvancedPlaygroundResponseSchema> => {
         const path = `${URI}/change-request/${changeRequestId}`;
         const req = createRequest(path, {

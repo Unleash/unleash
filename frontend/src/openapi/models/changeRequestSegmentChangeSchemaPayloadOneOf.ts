@@ -5,5 +5,5 @@
  */
 
 export type ChangeRequestSegmentChangeSchemaPayloadOneOf = {
-    [key: string]: any;
+    [key: string]: unknown;
 };

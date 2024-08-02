@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { TagSchema } from './tagSchema';
 
 /**
  * Data used to create a new feature flag.
@@ -17,6 +18,8 @@ export interface CreateFeatureSchema {
     impressionData?: boolean;
     /** Unique feature name */
     name: string;
+    /** Tags to add to the feature. */
+    tags?: TagSchema[];
     /** The feature flag's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission */
     type?: string;
 }

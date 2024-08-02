@@ -7,11 +7,11 @@
 /**
  * [Default role](https://docs.getunleash.io/reference/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true`
  */
-export type OidcSettingsSchemaDefaultRootRole =
-    (typeof OidcSettingsSchemaDefaultRootRole)[keyof typeof OidcSettingsSchemaDefaultRootRole];
+export type OidcSettingsSchemaOneOfDefaultRootRole =
+    (typeof OidcSettingsSchemaOneOfDefaultRootRole)[keyof typeof OidcSettingsSchemaOneOfDefaultRootRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const OidcSettingsSchemaDefaultRootRole = {
+export const OidcSettingsSchemaOneOfDefaultRootRole = {
     Viewer: 'Viewer',
     Editor: 'Editor',
     Admin: 'Admin',

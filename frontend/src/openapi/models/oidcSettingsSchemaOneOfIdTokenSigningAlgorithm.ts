@@ -7,11 +7,11 @@
 /**
  * The signing algorithm used to sign our token. Refer to the [JWT signatures](https://jwt.io/introduction) documentation for more information.
  */
-export type OidcSettingsSchemaIdTokenSigningAlgorithm =
-    (typeof OidcSettingsSchemaIdTokenSigningAlgorithm)[keyof typeof OidcSettingsSchemaIdTokenSigningAlgorithm];
+export type OidcSettingsSchemaOneOfIdTokenSigningAlgorithm =
+    (typeof OidcSettingsSchemaOneOfIdTokenSigningAlgorithm)[keyof typeof OidcSettingsSchemaOneOfIdTokenSigningAlgorithm];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const OidcSettingsSchemaIdTokenSigningAlgorithm = {
+export const OidcSettingsSchemaOneOfIdTokenSigningAlgorithm = {
     RS256: 'RS256',
     RS384: 'RS384',
     RS512: 'RS512',

@@ -7,4 +7,4 @@
 /**
  * The payload of the signal.
  */
-export type SignalSchemaPayload = { [key: string]: any };
+export type SignalSchemaPayload = { [key: string]: unknown };

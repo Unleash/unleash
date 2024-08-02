@@ -23,10 +23,18 @@ export interface ClientApplicationSchema {
      * @minimum 0
      */
     interval: number;
+    /** The platform the application is running on. For languages that compile to binaries, this can be omitted */
+    platformName?: string;
+    /** The version of the platform the application is running on. Languages that compile to binaries, this is expected to be the compiler version used to assemble the binary. */
+    platformVersion?: string;
     /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
     sdkVersion?: string;
+    /** The version of the Unleash client specification the client supports */
+    specVersion?: string;
     /** Either an RFC-3339 timestamp or a unix timestamp in seconds */
     started: ClientApplicationSchemaStarted;
     /** Which strategies the SDKs runtime knows about */
     strategies: string[];
+    /** The semantic version of the Yggdrasil engine used by the client. If the client is using a native engine this can be omitted. */
+    yggdrasilVersion?: string;
 }

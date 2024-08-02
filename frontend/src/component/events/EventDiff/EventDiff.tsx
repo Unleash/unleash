@@ -16,7 +16,7 @@ interface IEventDiffResult {
 }
 
 interface IEventDiffProps {
-    entry: { data: unknown; preData: unknown };
+    entry: { data?: unknown; preData?: unknown };
     sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
 }
 

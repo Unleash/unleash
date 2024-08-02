@@ -34,7 +34,7 @@ The Unleash Server is a **Feature Flag Control Service**, which manages your fea
 
 ## 1. Best practices for back-end apps with Unleash
 
-Rails is back-end framework, so there are special considerations to plan around when implementing feature flags.
+Rails is a back-end framework, so there are special considerations to plan around when implementing feature flags.
 
 Most importantly, you must:
 

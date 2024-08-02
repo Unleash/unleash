@@ -182,7 +182,8 @@ See additional use cases in our [Server-Side SDK with Ruby](https://docs.getunle
 
 All done! Now you know how to add feature flags with Unleash in Rails. You’ve learned how to:
 
--   Install Unleash and create/enable a feature flag
+-   Install Unleash
+-   Create and enable a feature flag
 -   Grab the value of a feature flag with the Ruby SDK, and use it in a Rails app
 
 Thank you

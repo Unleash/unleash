@@ -118,7 +118,7 @@ Navigate to [http://localhost:3000](http://localhost:3000) and you should see th
 
 ## 4. Restrict the number of posts
 
-Right now all the blog posts are displayed on the index page. We want to use a feature flag to change that, and restrict it to the 3 most recent posts.
+Right now all the blog posts are displayed on the index page. We want to use a feature flag to change that and restrict it to the three most recent posts.
 
 Let’s create a static boolean flag, for now.
 

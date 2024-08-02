@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, styled } from '@mui/material';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
@@ -13,7 +14,6 @@ import {
 import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from '../../../common/Loader/Loader';
-import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLocation } from 'react-router';
 import type { IFormErrors } from 'hooks/useFormErrors';
@@ -63,9 +63,6 @@ const FlexibleStrategy = ({
     const { pathname } = useLocation();
 
     const isDefaultStrategyEdit = pathname.includes('default-strategy');
-    const onUpdate = (field: string) => (newValue: string) => {
-        updateParameter(field, newValue);
-    };
 
     const updateRollout = (e: Event, value: number | number[]) => {
         updateParameter('rollout', value.toString());
@@ -77,22 +74,20 @@ const FlexibleStrategy = ({
             : 100;
 
     const stickiness = useMemo(() => {
-        if (parameters.stickiness === '' && !loading) {
-            return defaultStickiness;
+        if (!parameters.stickiness && !loading) {
+            updateParameter('stickiness', defaultStickiness);
         }
 
-        return parseParameterString(parameters.stickiness || defaultStickiness);
-    }, [loading, parameters.stickiness]);
+        return parseParameterString(parameters.stickiness);
+    }, [loading, defaultStickiness, parameters.stickiness]);
 
-    if (parameters.stickiness === '') {
-        onUpdate('stickiness')(stickiness);
-    }
-
-    useEffect(() => {
-        if (!parameters.groupId) {
-            onUpdate('groupId')(isDefaultStrategyEdit ? '' : featureId);
+    const groupId = useMemo(() => {
+        if (!parameters.groupId && !loading) {
+            updateParameter('groupId', isDefaultStrategyEdit ? '' : featureId);
         }
-    }, [isDefaultStrategyEdit, featureId]);
+
+        return parseParameterString(parameters.groupId);
+    }, [parameters.groupId, isDefaultStrategyEdit, featureId, loading]);
 
     if (loading) {
         return <Loader />;
@@ -113,7 +108,9 @@ const FlexibleStrategy = ({
                         value={stickiness}
                         editable={editable}
                         dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
-                        onChange={(e) => onUpdate('stickiness')(e.target.value)}
+                        onChange={(e) =>
+                            updateParameter('stickiness', e.target.value)
+                        }
                     />
                 </StyledInnerBox1>
                 <StyledInnerBox2>
@@ -121,9 +118,11 @@ const FlexibleStrategy = ({
                         label='groupId'
                         sx={{ width: '100%' }}
                         id='groupId-input'
-                        value={parseParameterString(parameters.groupId)}
+                        value={groupId}
                         disabled={!editable}
-                        onChange={(e) => onUpdate('groupId')(e.target.value)}
+                        onChange={(e) =>
+                            updateParameter('groupId', e.target.value)
+                        }
                         data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
                         error={Boolean(errors?.getFormError('groupId'))}
                         helperText={errors?.getFormError('groupId')}

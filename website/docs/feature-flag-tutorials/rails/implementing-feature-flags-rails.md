@@ -142,7 +142,7 @@ Now, let’s connect our project to Unleash so that you can toggle that feature 
 You’ll need 2 things:
 
 -   The URL of your Unleash instance’s API. It’s `http://localhost:4242/api/` for your local version. You’ll want to replace it with your remote instance.
--   The API token we created on our Unleash instance, feel free to create another one if you can’t find it.
+-   The API token we created on our Unleash instance.
 
 Now you can initialize your Unleash client as follows:
 

@@ -73,7 +73,7 @@ Call it `top-3` and enable it in the `development` environment.
 
 ![A feature flag called `top-3` is now visible.](./enable-ff.png)
 
-Everything’s now setup on the Unleash side. Let’s setup the Rails application.
+Everything’s now set up on the Unleash side. Let’s set up the Rails application.
 
 ## 3. Setup the rails app
 

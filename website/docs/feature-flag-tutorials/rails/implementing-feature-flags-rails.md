@@ -112,7 +112,7 @@ rails db:seed
 rails server
 ```
 
-Navigate to [http://localhost:3000](http://localhost:3000) and you should see this:
+Go to [http://localhost:3000](http://localhost:3000) and check that you see the following:
 
 ![A blog app with a list of posts](./blog-app.png)
 

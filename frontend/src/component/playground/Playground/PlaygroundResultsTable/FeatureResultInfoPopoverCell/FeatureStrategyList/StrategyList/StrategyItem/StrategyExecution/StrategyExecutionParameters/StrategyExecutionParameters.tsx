@@ -114,7 +114,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                     input?.context?.[getMappedParam(key)]
                                         ? (input?.context?.[
                                               getMappedParam(key)
-                                          ] as string | undefined)
+                                          ] as string)
                                         : 'no value'
                                 }
                                 showReason={

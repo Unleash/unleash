@@ -92,7 +92,7 @@ bundle install
 
 #### Setup DB
 
-(SQLite, no additional dependencies required.)
+This repository uses SQLite, so no additional dependencies are required.
 
 Run the migration
 

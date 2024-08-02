@@ -31,6 +31,7 @@ import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { EnvironmentsField } from './EnvironmentsField/EnvironmentsField';
+import { Link } from 'react-router-dom';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -304,7 +305,12 @@ export const PlaygroundConnectionFieldset: FC<
                                     }}
                                 />
                             </Box>
-                            <Button variant='outlined' size='small'>
+                            <Button
+                                variant='outlined'
+                                size='small'
+                                to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
+                                component={Link}
+                            >
                                 View change request
                             </Button>
                         </Box>

@@ -1,4 +1,4 @@
-import { type FormEventHandler, useEffect, useState, type VFC } from 'react';
+import { type FormEventHandler, useEffect, useState, type FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Box, Paper, useTheme, styled, Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -81,7 +81,7 @@ const GenerateWarningMessages: React.FC<{
     }
 };
 
-export const AdvancedPlayground: VFC<{
+export const AdvancedPlayground: FC<{
     FormComponent?: typeof PlaygroundForm;
 }> = ({ FormComponent = PlaygroundForm }) => {
     const defaultSettings: {
@@ -247,11 +247,13 @@ export const AdvancedPlayground: VFC<{
 
         await evaluatePlaygroundContext(environments, projects, context, () => {
             setURLParameters();
-            setValue({
-                environments,
-                projects,
-                context,
-            });
+            if (!changeRequest) {
+                setValue({
+                    environments,
+                    projects,
+                    context,
+                });
+            }
         });
     };
 

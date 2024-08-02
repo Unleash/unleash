@@ -3,6 +3,7 @@ import { render } from 'utils/testRenderer';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { PlaygroundConnectionFieldset } from './PlaygroundConnectionFieldset';
 import { useState } from 'react';
+import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();
 
@@ -10,6 +11,9 @@ beforeEach(() => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
+        },
+        flags: {
+            changeRequestPlayground: true,
         },
     });
     testServerRoute(
@@ -202,4 +206,44 @@ test('should have a working clear button when token is filled', async () => {
     fireEvent.click(clearButton);
 
     expect(tokenInput).toHaveValue('');
+});
+
+test('should show change request and disable other fields until removed', async () => {
+    const Component = () => {
+        const [environments, setEnvironments] = useState<string[]>([]);
+        const [projects, setProjects] = useState<string[]>(['test-project']);
+        const [token, setToken] = useState<string>();
+        const [changeRequest, setChangeRequest] = useState('CR #1');
+
+        const availableEnvironments = ['development', 'production'];
+
+        return (
+            <PlaygroundConnectionFieldset
+                environments={environments}
+                projects={projects}
+                token={token}
+                setToken={setToken}
+                setEnvironments={setEnvironments}
+                setProjects={setProjects}
+                availableEnvironments={availableEnvironments}
+                changeRequest={changeRequest}
+                onClearChangeRequest={() => setChangeRequest('')}
+            />
+        );
+    };
+    render(<Component />);
+
+    const changeRequestInput = await screen.findByDisplayValue('CR #1');
+    // expect(changeRequestInput).toHaveValue('CR #1');
+    const viewButton = await screen.findByText(/View change request/);
+    expect(viewButton).toHaveProperty(
+        'href',
+        'http://localhost:3000/projects/test-project/change-requests/CR%20#1',
+    );
+    // TODO: check if other fields are disabled
+
+    const clearButton = await screen.findByLabelText(/clear change request/i);
+
+    await userEvent.click(clearButton);
+    expect(changeRequestInput).not.toBeInTheDocument();
 });

@@ -172,7 +172,7 @@ class PostsController < ApplicationController
 
 ## 6. Verify the toggle experience
 
-Reload your browser and you should see 3 blog posts displayed. Turn off the flag in your Unleash instance and reload the page. You should see all the blog posts again.
+Reload your browser and check that you see three blog posts displayed. Turn off the flag in your Unleash instance and reload the page. You should see all the blog posts again.
 
 See additional use cases in our [Server-Side SDK with Ruby](https://docs.getunleash.io/reference/sdks/ruby) documentation.
 

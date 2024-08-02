@@ -112,7 +112,7 @@ export const AdvancedPlayground: VFC<{
     >();
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [changeRequest, setChangeRequest] = useState();
+    const [changeRequest, setChangeRequest] = useState<string>();
     const { evaluateAdvancedPlayground, loading, errors } = usePlaygroundApi();
     const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 

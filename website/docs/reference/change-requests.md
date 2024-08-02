@@ -171,5 +171,5 @@ A change request can only be previewed when the change request is In Review, App
 It cannot be previewed when the change request is in Draft, Applied, Cancelled, or Rejected status.
 
 
-Change request preview does not require special permissions like approve/reject change requests or apply change requests. It allows more users to provide feedback on 
-the correctness of the changes.
+Change request preview does not require special permissions like approve/reject change requests or apply change requests. 
+It allows more users to provide feedback on the correctness of the changes.

@@ -4,7 +4,7 @@ description: "How to use Unleash feature flags with Rails."
 slug: /feature-flag-tutorials/rails
 ---
 
-Hello! In this tutorial we’ll show you how to add feature flags to your Ruby on Rails app , using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
+Hello! In this tutorial, we’ll show you how to add feature flags to your Ruby on Rails app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
 
 In a classic tutorial fashion, we’ll add feature flags to a blog app made with Ruby on Rails. We’ll use feature flags to decide how many blog posts to show on the index page.
 

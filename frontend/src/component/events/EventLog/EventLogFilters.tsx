@@ -4,6 +4,10 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { EventSchemaType } from 'openapi';
 
+type FilterProps = {
+    className?: string;
+};
+
 const flagLogFilters: IFilterItem[] = [
     {
         label: 'Date From',
@@ -42,9 +46,10 @@ const flagLogFilters: IFilterItem[] = [
     },
 ];
 
-export const FlagLogFilters = () => {
+export const FlagLogFilters: FC<FilterProps> = ({ className }) => {
     return (
         <Filters
+            className={className}
             availableFilters={flagLogFilters}
             state={{}}
             onChange={(v) => console.log(v)}
@@ -81,11 +86,12 @@ const useProjectLogFilters = () => {
     return availableFilters;
 };
 
-export const ProjectLogFilters = () => {
+export const ProjectLogFilters: FC<FilterProps> = ({ className }) => {
     const availableFilters = useProjectLogFilters();
 
     return (
         <Filters
+            className={className}
             availableFilters={availableFilters}
             state={{}}
             onChange={(v) => console.log(v)}
@@ -93,7 +99,7 @@ export const ProjectLogFilters = () => {
     );
 };
 
-export const GlobalLogFilters = () => {
+export const GlobalLogFilters: FC<FilterProps> = ({ className }) => {
     const projectFilters = useProjectLogFilters();
     const { projects } = useProjects();
 
@@ -127,6 +133,7 @@ export const GlobalLogFilters = () => {
 
     return (
         <Filters
+            className={className}
             availableFilters={availableFilters}
             state={{}}
             onChange={(v) => console.log(v)}
@@ -136,17 +143,17 @@ export const GlobalLogFilters = () => {
 
 type EventLogFiltersProps = {
     logType: 'flag' | 'project' | 'global';
-};
+} & FilterProps;
 export const EventLogFilters: FC<EventLogFiltersProps> = (
-    { logType },
+    { logType, ...props },
     // {state, onChange,} // these are to fill in later to make the filters work
 ) => {
     switch (logType) {
         case 'flag':
-            return <FlagLogFilters />;
+            return <FlagLogFilters {...props} />;
         case 'project':
-            return <ProjectLogFilters />;
+            return <ProjectLogFilters {...props} />;
         case 'global':
-            return <GlobalLogFilters />;
+            return <GlobalLogFilters {...props} />;
     }
 };

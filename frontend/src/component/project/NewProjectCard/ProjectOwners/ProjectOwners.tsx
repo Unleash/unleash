@@ -18,7 +18,6 @@ const useOwnersMap = () => {
         name: string;
         imageUrl?: string;
         email?: string;
-        description?: string;
     } => {
         if (owner.ownerType === 'user') {
             return {
@@ -30,7 +29,6 @@ const useOwnersMap = () => {
         if (owner.ownerType === 'group') {
             return {
                 name: owner.name,
-                description: 'group',
             };
         }
         return {

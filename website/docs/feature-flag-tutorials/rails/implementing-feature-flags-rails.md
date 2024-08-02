@@ -144,7 +144,7 @@ You’ll need 2 things:
 -   The URL of your Unleash instance’s API. It’s `http://localhost:4242/api/` for your local version. You’ll want to replace it with your remote instance.
 -   The API token we created on our Unleash instance, feel free to create another one if you can’t find it.
 
-With these 2, you can initialize your Unleash client as follows:
+Now you can initialize your Unleash client as follows:
 
 ```ruby
 @unleash = Unleash::Client.new(app_name: 'rails-blog', url: 'http://localhost:4242/api/', custom_http_headers: {

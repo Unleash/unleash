@@ -75,7 +75,7 @@ Call it `top-3` and enable it in the `development` environment.
 
 Everything’s now set up on the Unleash side. Let’s set up the Rails application.
 
-## 3. Setup the rails app
+## 3. Setup the Rails app
 
 Let's clone a basic blog repository and get it up and running. We don't want to waste time setting up a rails codebase from scratch.
 

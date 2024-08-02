@@ -277,20 +277,17 @@ export const PlaygroundConnectionFieldset: FC<
                             <Box sx={{ flex: 1 }}>
                                 <StyledChangeRequestInput
                                     label='Change request'
-                                    value={changeRequest || ''}
+                                    value={
+                                        changeRequest
+                                            ? `Change request #${changeRequest}`
+                                            : ''
+                                    }
                                     onChange={() => {}}
                                     type={'text'}
-                                    // error={Boolean(changeRequestError)}
-                                    // errorText={changeRequestError)}}
-                                    placeholder={'Enter your API token'}
-                                    data-testid={'PLAYGROUND_TOKEN_INPUT'}
                                     disabled
                                     InputProps={{
                                         endAdornment: (
-                                            <InputAdornment
-                                                position='end'
-                                                data-testid='CR_INPUT_CLEAR_BTN'
-                                            >
+                                            <InputAdornment position='end'>
                                                 <IconButton
                                                     aria-label='clear Change request results'
                                                     onClick={

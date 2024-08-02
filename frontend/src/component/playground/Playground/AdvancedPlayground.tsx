@@ -113,7 +113,12 @@ export const AdvancedPlayground: FC<{
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
     const [changeRequest, setChangeRequest] = useState<string>();
-    const { evaluateAdvancedPlayground, loading, errors } = usePlaygroundApi();
+    const {
+        evaluateAdvancedPlayground,
+        evaluateChangeRequestPlayground,
+        loading,
+        errors,
+    } = usePlaygroundApi();
     const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 
     useEffect(() => {
@@ -203,15 +208,22 @@ export const AdvancedPlayground: FC<{
     ) => {
         try {
             setConfigurationError(undefined);
-            const parsedContext = JSON.parse(context || '{}');
-            const response = await evaluateAdvancedPlayground({
-                environments: resolveEnvironments(environments),
-                projects: resolveProjects(projects),
-                context: {
-                    appName: 'playground',
-                    ...parsedContext,
-                },
-            });
+            const parsedContext = {
+                appName: 'playground',
+                ...JSON.parse(context || '{}'),
+            };
+
+            const response = changeRequest
+                ? await evaluateChangeRequestPlayground(changeRequest, {
+                      context: parsedContext,
+                      projects: [],
+                      environments: [],
+                  })
+                : await evaluateAdvancedPlayground({
+                      environments: resolveEnvironments(environments),
+                      projects: resolveProjects(projects),
+                      context: parsedContext,
+                  });
 
             if (action && typeof action === 'function') {
                 action();

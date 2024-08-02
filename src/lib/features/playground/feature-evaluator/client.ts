@@ -225,7 +225,7 @@ export default class UnleashClient {
 
         const [result, variants, variant] = overallStrategyResult();
         const evalResults: FeatureStrategiesEvaluationResult = {
-            result,
+            result: feature.enabled ? result : false,
             variant,
             variants,
             strategies,

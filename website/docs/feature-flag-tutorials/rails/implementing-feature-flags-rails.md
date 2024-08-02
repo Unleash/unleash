@@ -137,7 +137,7 @@ Reload your browser and you should see only the 3 most recent posts.
 
 ## 5. Add Unleash to your Rails app
 
-Now, let’s connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a gradual rollout, use it for A/B testing or more advanced functionality.
+Now, let’s connect our project to Unleash so that you can toggle the feature flag at runtime. If you wanted to, you could also do a gradual rollout, and use it for A/B testing or more advanced functionality.
 
 You’ll need 2 things:
 

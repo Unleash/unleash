@@ -88,11 +88,7 @@ export const Collaborators: FC<Props> = ({ collaborators }) => {
         <Container>
             <LastModifiedBy {...lastModifiedBy} />
             <Separator />
-            <CollaboratorList
-                collaborators={Array.from({ length: 10 }).map(
-                    () => collaborators[0],
-                )}
-            />
+            <CollaboratorList collaborators={collaborators} />
         </Container>
     );
 };

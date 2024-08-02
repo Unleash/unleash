@@ -152,7 +152,7 @@ Now you can initialize your Unleash client as follows:
 })
 ```
 
-You can check our [API token and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more information.
+You can check our [API tokens and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more information.
 
 Now, let’s add the Unleash client to our Rails controller, grab the feature flag from our local instance, and update our conditional statement. Don't forget to also update the config with your API key.
 

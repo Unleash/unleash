@@ -213,7 +213,7 @@ test('should show change request and disable other fields until removed', async 
         const [environments, setEnvironments] = useState<string[]>([]);
         const [projects, setProjects] = useState<string[]>(['test-project']);
         const [token, setToken] = useState<string>();
-        const [changeRequest, setChangeRequest] = useState('CR #1');
+        const [changeRequest, setChangeRequest] = useState('1');
 
         const availableEnvironments = ['development', 'production'];
 
@@ -233,14 +233,15 @@ test('should show change request and disable other fields until removed', async 
     };
     render(<Component />);
 
-    const changeRequestInput = await screen.findByDisplayValue('CR #1');
-    // expect(changeRequestInput).toHaveValue('CR #1');
+    const changeRequestInput =
+        await screen.findByDisplayValue('Change request #1');
     const viewButton = await screen.findByText(/View change request/);
     expect(viewButton).toHaveProperty(
         'href',
-        'http://localhost:3000/projects/test-project/change-requests/CR%20#1',
+        'http://localhost:3000/projects/test-project/change-requests/1',
     );
-    // TODO: check if other fields are disabled
+    const tokenInput = await screen.findByLabelText('API token');
+    expect(tokenInput).toBeDisabled();
 
     const clearButton = await screen.findByLabelText(/clear change request/i);
 

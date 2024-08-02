@@ -164,6 +164,15 @@ module.exports = {
                         },
                         {
                             type: 'category',
+                            label: 'Ruby on Rails',
+                            link: {
+                                type: 'doc',
+                                id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
+                            },
+                            items: [],
+                        },
+                        {
+                            type: 'category',
                             label: '.NET',
                             link: {
                                 type: 'doc',

@@ -106,7 +106,7 @@ const FlexibleStrategy = ({
                     <StickinessSelect
                         label='Stickiness'
                         value={stickiness}
-                        editable={editable && !loading}
+                        editable={editable}
                         dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
                         onChange={(e) =>
                             updateParameter('stickiness', e.target.value)
@@ -119,7 +119,7 @@ const FlexibleStrategy = ({
                         sx={{ width: '100%' }}
                         id='groupId-input'
                         value={groupId}
-                        disabled={!editable || loading}
+                        disabled={!editable}
                         onChange={(e) =>
                             updateParameter('groupId', e.target.value)
                         }

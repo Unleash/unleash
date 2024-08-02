@@ -64,7 +64,7 @@ test('manipulates the rollout slider', async () => {
     expect(groupIdInput).toHaveValue('newGroupId');
 });
 
-test('if stickienss or groupId not present, fill it with defaults', async () => {
+test('if stickiness or groupId not present, fill it with defaults', async () => {
     const updateParameter = vi.fn();
     const Wrapper = () => (
         <Routes>

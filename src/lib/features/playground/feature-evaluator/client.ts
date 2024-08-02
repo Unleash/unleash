@@ -75,6 +75,9 @@ export default class UnleashClient {
             if (parentToggle.dependencies?.length) {
                 return false;
             }
+            if (parentToggle.enabled === false) {
+                return false;
+            }
 
             if (parent.enabled !== false) {
                 if (parent.variants?.length) {
@@ -225,7 +228,7 @@ export default class UnleashClient {
 
         const [result, variants, variant] = overallStrategyResult();
         const evalResults: FeatureStrategiesEvaluationResult = {
-            result: feature.enabled ? result : false,
+            result,
             variant,
             variants,
             strategies,

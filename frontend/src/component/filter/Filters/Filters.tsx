@@ -21,6 +21,7 @@ interface IFilterProps {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     availableFilters: IFilterItem[];
+    className?: string;
 }
 
 type IBaseFilterItem = {
@@ -61,6 +62,7 @@ export const Filters: FC<IFilterProps> = ({
     state,
     onChange,
     availableFilters,
+    className,
 }) => {
     const [unselectedFilters, setUnselectedFilters] = useState<string[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -115,7 +117,7 @@ export const Filters: FC<IFilterProps> = ({
 
     const hasAvailableFilters = unselectedFilters.length > 0;
     return (
-        <StyledBox>
+        <StyledBox className={className}>
             {selectedFilters.map((selectedFilter) => {
                 const filter = availableFilters.find(
                     (filter) => filter.label === selectedFilter,

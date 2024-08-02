@@ -18,7 +18,6 @@ const useOwnersMap = () => {
         name: string;
         imageUrl?: string;
         email?: string;
-        description?: string;
     } => {
         if (owner.ownerType === 'user') {
             return {
@@ -30,12 +29,10 @@ const useOwnersMap = () => {
         if (owner.ownerType === 'group') {
             return {
                 name: owner.name,
-                description: 'group',
             };
         }
         return {
-            name: '',
-            description: 'System',
+            name: 'System',
             imageUrl: `${uiConfig.unleashUrl}/logo-unleash.png`,
         };
     };
@@ -76,11 +73,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
             </StyledContainer>
             <ConditionallyRender
                 condition={owners.length === 1}
-                show={
-                    <StyledUserName>
-                        {users[0]?.name || users[0]?.description}
-                    </StyledUserName>
-                }
+                show={<StyledUserName>{users[0]?.name}</StyledUserName>}
                 elseShow={<div />}
             />
         </>

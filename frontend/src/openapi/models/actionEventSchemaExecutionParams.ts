@@ -7,4 +7,4 @@
 /**
  * A map of parameters to pass to the action
  */
-export type ActionEventSchemaExecutionParams = { [key: string]: any };
+export type ActionEventSchemaExecutionParams = { [key: string]: unknown };

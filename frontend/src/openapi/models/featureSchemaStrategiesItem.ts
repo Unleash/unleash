@@ -4,4 +4,4 @@
  * See `gen:api` script in package.json
  */
 
-export type FeatureSchemaStrategiesItem = { [key: string]: any };
+export type FeatureSchemaStrategiesItem = { [key: string]: unknown };

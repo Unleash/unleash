@@ -10,11 +10,11 @@ import theme from 'themes/theme';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useOnVisible } from 'hooks/useOnVisible';
-import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
+import type { EventSchema } from 'openapi';
 
 interface IEventLogProps {
     title: string;
@@ -30,6 +30,17 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledFilters = styled(EventLogFilters)({
+    padding: 0,
+});
+
+const EventResultWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2, 4, 4, 4),
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
+}));
+
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useEventSearch(
@@ -41,11 +52,11 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch');
+    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
-    const [cache, setCache] = useState<IEvent[]>();
+    const [cache, setCache] = useState<EventSchema[]>();
     useEffect(() => events && setCache(events), [events]);
 
     const onShowData = () => {
@@ -67,31 +78,12 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
-    const logType = project ? 'project' : feature ? 'flag' : 'global';
     const count = events?.length || 0;
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
-    return (
-        <PageContent
-            header={
-                <PageHeader
-                    title={`${title} (${countText})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <ConditionallyRender
-                condition={isEnterprise() && showFilters}
-                show={<EventLogFilters logType={logType} />}
-            />
+    const EventResults = (
+        <>
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}
@@ -111,6 +103,45 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                     </StyledEventsList>
                 }
             />
+        </>
+    );
+
+    return (
+        <PageContent
+            bodyClass={showFilters ? 'no-padding' : ''}
+            header={
+                <PageHeader
+                    title={`${title} (${countText})`}
+                    actions={
+                        <>
+                            {showDataSwitch}
+                            {!isSmallScreen && searchInputField}
+                        </>
+                    }
+                >
+                    {isSmallScreen && searchInputField}
+                </PageHeader>
+            }
+        >
+            <ConditionallyRender
+                condition={showFilters}
+                show={
+                    <EventResultWrapper>
+                        <StyledFilters
+                            logType={
+                                project
+                                    ? 'project'
+                                    : feature
+                                      ? 'flag'
+                                      : 'global'
+                            }
+                        />
+                        {EventResults}
+                    </EventResultWrapper>
+                }
+                elseShow={EventResults}
+            />
+
             <div ref={fetchNextPageRef} />
         </PageContent>
     );

@@ -1,4 +1,4 @@
-import { type FormEventHandler, useEffect, useState, type VFC } from 'react';
+import { type FormEventHandler, useEffect, useState, type FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Box, Paper, useTheme, styled, Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -81,7 +81,7 @@ const GenerateWarningMessages: React.FC<{
     }
 };
 
-export const AdvancedPlayground: VFC<{
+export const AdvancedPlayground: FC<{
     FormComponent?: typeof PlaygroundForm;
 }> = ({ FormComponent = PlaygroundForm }) => {
     const defaultSettings: {
@@ -112,8 +112,13 @@ export const AdvancedPlayground: VFC<{
     >();
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
-    const searchParamsLength = Array.from(searchParams.entries()).length;
-    const { evaluateAdvancedPlayground, loading, errors } = usePlaygroundApi();
+    const [changeRequest, setChangeRequest] = useState<string>();
+    const {
+        evaluateAdvancedPlayground,
+        evaluateChangeRequestPlayground,
+        loading,
+        errors,
+    } = usePlaygroundApi();
     const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 
     useEffect(() => {
@@ -123,28 +128,25 @@ export const AdvancedPlayground: VFC<{
     }, [JSON.stringify(environments), JSON.stringify(availableEnvironments)]);
 
     useEffect(() => {
-        if (searchParamsLength > 0) {
-            loadInitialValuesFromUrl();
-        }
+        loadInitialValuesFromUrl();
     }, []);
 
-    const loadInitialValuesFromUrl = () => {
+    const loadInitialValuesFromUrl = async () => {
         try {
             const environments = resolveEnvironmentsFromUrl();
             const projects = resolveProjectsFromUrl();
             const context = resolveContextFromUrl();
-            const token = resolveTokenFromUrl();
-            const makePlaygroundRequest = async () => {
-                if (environments && context) {
-                    await evaluatePlaygroundContext(
-                        environments || [],
-                        projects || '*',
-                        context,
-                    );
-                }
-            };
+            resolveTokenFromUrl();
+            resolveChangeRequestFromUrl();
+            // TODO: Add support for changeRequest
 
-            makePlaygroundRequest();
+            if (environments && context) {
+                await evaluatePlaygroundContext(
+                    environments || [],
+                    projects || '*',
+                    context,
+                );
+            }
         } catch (error) {
             setToastData({
                 type: 'error',
@@ -191,6 +193,13 @@ export const AdvancedPlayground: VFC<{
         return tokenFromUrl;
     };
 
+    const resolveChangeRequestFromUrl = () => {
+        const changeRequestFromUrl = searchParams.get('changeRequest');
+        if (changeRequestFromUrl) {
+            setChangeRequest(changeRequestFromUrl);
+        }
+    };
+
     const evaluatePlaygroundContext = async (
         environments: string[] | string,
         projects: string[] | string,
@@ -199,15 +208,20 @@ export const AdvancedPlayground: VFC<{
     ) => {
         try {
             setConfigurationError(undefined);
-            const parsedContext = JSON.parse(context || '{}');
-            const response = await evaluateAdvancedPlayground({
-                environments: resolveEnvironments(environments),
-                projects: resolveProjects(projects),
-                context: {
-                    appName: 'playground',
-                    ...parsedContext,
-                },
-            });
+            const parsedContext = {
+                appName: 'playground',
+                ...JSON.parse(context || '{}'),
+            };
+
+            const response = changeRequest
+                ? await evaluateChangeRequestPlayground(changeRequest, {
+                      context: parsedContext,
+                  })
+                : await evaluateAdvancedPlayground({
+                      environments: resolveEnvironments(environments),
+                      projects: resolveProjects(projects),
+                      context: parsedContext,
+                  });
 
             if (action && typeof action === 'function') {
                 action();
@@ -243,12 +257,18 @@ export const AdvancedPlayground: VFC<{
 
         await evaluatePlaygroundContext(environments, projects, context, () => {
             setURLParameters();
-            setValue({
-                environments,
-                projects,
-                context,
-            });
+            if (!changeRequest) {
+                setValue({
+                    environments,
+                    projects,
+                    context,
+                });
+            }
         });
+    };
+
+    const onClearChangeRequest = () => {
+        setChangeRequest(undefined);
     };
 
     const setURLParameters = () => {
@@ -270,6 +290,11 @@ export const AdvancedPlayground: VFC<{
             searchParams.set('projects', projects.join(','));
         } else {
             searchParams.delete('projects');
+        }
+        if (changeRequest) {
+            searchParams.set('changeRequest', changeRequest);
+        } else {
+            searchParams.delete('changeRequest');
         }
         setSearchParams(searchParams);
     };
@@ -326,6 +351,8 @@ export const AdvancedPlayground: VFC<{
                             setToken={setToken}
                             setProjects={setProjects}
                             setEnvironments={setEnvironments}
+                            changeRequest={changeRequest || undefined}
+                            onClearChangeRequest={onClearChangeRequest}
                         />
                     </Paper>
                 </Box>

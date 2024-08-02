@@ -7,4 +7,4 @@
 /**
  * Match the payload of the signal
  */
-export type ActionsSchemaMatchPayload = { [key: string]: any };
+export type ActionsSchemaMatchPayload = { [key: string]: unknown };

@@ -1,8 +1,8 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { IEventTypes } from '../../types';
 
-export const searchEventsSchema = {
-    $id: '#/components/schemas/searchEventsSchema',
+export const deprecatedSearchEventsSchema = {
+    $id: '#/components/schemas/deprecatedSearchEventsSchema',
     type: 'object',
     description: `
         Search for events by type, project, feature, free-text query,
@@ -50,4 +50,6 @@ export const searchEventsSchema = {
     components: {},
 } as const;
 
-export type SearchEventsSchema = FromSchema<typeof searchEventsSchema>;
+export type DeprecatedSearchEventsSchema = FromSchema<
+    typeof deprecatedSearchEventsSchema
+>;

@@ -16,12 +16,14 @@ import Loader from '../../../common/Loader/Loader';
 import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLocation } from 'react-router';
+import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
     updateParameter: (field: string, value: string) => void;
     context: any;
     editable: boolean;
+    errors?: IFormErrors;
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -53,8 +55,10 @@ const FlexibleStrategy = ({
     updateParameter,
     parameters,
     editable = true,
+    errors,
 }: IFlexibleStrategyProps) => {
     const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
     const { pathname } = useLocation();
 
@@ -77,7 +81,7 @@ const FlexibleStrategy = ({
             return defaultStickiness;
         }
 
-        return parseParameterString(parameters.stickiness);
+        return parseParameterString(parameters.stickiness || defaultStickiness);
     }, [loading, parameters.stickiness]);
 
     if (parameters.stickiness === '') {
@@ -85,10 +89,10 @@ const FlexibleStrategy = ({
     }
 
     useEffect(() => {
-        if (isDefaultStrategyEdit && !parameters.groupId) {
-            onUpdate('groupId')('');
+        if (!parameters.groupId) {
+            onUpdate('groupId')(isDefaultStrategyEdit ? '' : featureId);
         }
-    }, [isDefaultStrategyEdit]);
+    }, [isDefaultStrategyEdit, featureId]);
 
     if (loading) {
         return <Loader />;
@@ -121,6 +125,8 @@ const FlexibleStrategy = ({
                         disabled={!editable}
                         onChange={(e) => onUpdate('groupId')(e.target.value)}
                         data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
+                        error={Boolean(errors?.getFormError('groupId'))}
+                        helperText={errors?.getFormError('groupId')}
                     />
                 </StyledInnerBox2>
             </StyledOuterBox>

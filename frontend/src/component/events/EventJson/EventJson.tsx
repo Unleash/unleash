@@ -1,8 +1,8 @@
-import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/material';
+import type { EventSchema } from 'openapi';
 
 interface IEventJsonProps {
-    entry: IEvent;
+    entry: EventSchema;
 }
 
 export const StyledJsonListItem = styled('li')(({ theme }) => ({

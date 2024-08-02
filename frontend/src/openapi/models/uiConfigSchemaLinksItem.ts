@@ -4,4 +4,4 @@
  * See `gen:api` script in package.json
  */
 
-export type UiConfigSchemaLinksItem = { [key: string]: any };
+export type UiConfigSchemaLinksItem = { [key: string]: unknown };

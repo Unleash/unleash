@@ -15,6 +15,8 @@ interface IPlaygroundFormProps {
     setEnvironments: React.Dispatch<React.SetStateAction<string[]>>;
     context: string | undefined;
     setContext: React.Dispatch<React.SetStateAction<string | undefined>>;
+    changeRequest?: string;
+    onClearChangeRequest?: () => void;
 }
 
 export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
@@ -28,6 +30,8 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
     setEnvironments,
     context,
     setContext,
+    changeRequest,
+    onClearChangeRequest,
 }) => {
     return (
         <Box
@@ -50,6 +54,8 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
                 availableEnvironments={availableEnvironments.map(
                     ({ name }) => name,
                 )}
+                changeRequest={changeRequest}
+                onClearChangeRequest={onClearChangeRequest}
             />
 
             <PlaygroundCodeFieldset context={context} setContext={setContext} />

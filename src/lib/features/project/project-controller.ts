@@ -325,14 +325,12 @@ export default class ProjectController extends Controller {
 
         const {
             normalizedQuery,
-            normalizedSortBy,
             normalizedSortOrder,
             normalizedOffset,
             normalizedLimit,
         } = normalizeQueryParams(req.query, {
             limitDefault: 50,
             maxLimit: 100,
-            sortByDefault: 'appName',
         });
 
         const applications = await this.projectService.getApplications({
@@ -340,7 +338,7 @@ export default class ProjectController extends Controller {
             project: projectId,
             offset: normalizedOffset,
             limit: normalizedLimit,
-            sortBy: normalizedSortBy,
+            sortBy: req.query.sortBy,
             sortOrder: normalizedSortOrder,
         });
 

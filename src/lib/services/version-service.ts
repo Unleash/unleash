@@ -280,8 +280,12 @@ export default class VersionService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
-            this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
+            this.eventStore.deprecatedFilteredCount({
+                type: FEATURES_EXPORTED,
+            }),
+            this.eventStore.deprecatedFilteredCount({
+                type: FEATURES_IMPORTED,
+            }),
             this.userStats(),
             this.productionChanges(),
             this.postgresVersion(),

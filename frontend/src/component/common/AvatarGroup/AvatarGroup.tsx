@@ -74,10 +74,7 @@ const GroupCardAvatarsInner = ({
     return (
         <StyledAvatars>
             {shownUsers.map((user) => (
-                <AvatarComponent
-                    key={objectId(user)}
-                    user={{ ...user, id: objectId(user) }}
-                />
+                <AvatarComponent key={objectId(user)} user={user} />
             ))}
             <ConditionallyRender
                 condition={users.length > avatarLimit}

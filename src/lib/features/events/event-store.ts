@@ -7,14 +7,19 @@ import {
     SEGMENT_UPDATED,
 } from '../../types/events';
 import type { Logger, LogProvider } from '../../logger';
-import type { IEventStore } from '../../types/stores/event-store';
+import type {
+    IEventSearchParams,
+    IEventStore,
+} from '../../types/stores/event-store';
 import type { ITag } from '../../types/model';
-import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import { sharedEventEmitter } from '../../util/anyEventEmitter';
 import type { Db } from '../../db/db';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
+import type { DeprecatedSearchEventsSchema } from '../../openapi';
+import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import { applyGenericQueryParams } from '../feature-search/search-utils';
 
 const EVENT_COLUMNS = [
     'id',
@@ -125,7 +130,9 @@ class EventStore implements IEventStore {
         }
     }
 
-    async filteredCount(eventSearch: SearchEventsSchema): Promise<number> {
+    async deprecatedFilteredCount(
+        eventSearch: DeprecatedSearchEventsSchema,
+    ): Promise<number> {
         let query = this.db(TABLE);
         if (eventSearch.type) {
             query = query.andWhere({ type: eventSearch.type });
@@ -136,6 +143,22 @@ class EventStore implements IEventStore {
         if (eventSearch.feature) {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
+        const count = await query.count().first();
+        if (!count) {
+            return 0;
+        }
+        if (typeof count.count === 'string') {
+            return Number.parseInt(count.count, 10);
+        } else {
+            return count.count;
+        }
+    }
+
+    async searchEventsCount(
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
+    ): Promise<number> {
+        const query = this.buildSearchQuery(params, queryParams);
         const count = await query.count().first();
         if (!count) {
             return 0;
@@ -320,7 +343,46 @@ class EventStore implements IEventStore {
         }
     }
 
-    async searchEvents(search: SearchEventsSchema = {}): Promise<IEvent[]> {
+    async searchEvents(
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
+    ): Promise<IEvent[]> {
+        const query = this.buildSearchQuery(params, queryParams)
+            .select(EVENT_COLUMNS)
+            .orderBy('created_at', 'desc')
+            .limit(Number(params.limit) ?? 100)
+            .offset(Number(params.offset) ?? 0);
+
+        try {
+            return (await query).map(this.rowToEvent);
+        } catch (err) {
+            return [];
+        }
+    }
+
+    private buildSearchQuery(
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
+    ) {
+        let query = this.db.from<IEventTable>(TABLE);
+
+        applyGenericQueryParams(query, queryParams);
+
+        if (params.query) {
+            query = query.where((where) =>
+                where
+                    .orWhereRaw('data::text ILIKE ?', `%${params.query}%`)
+                    .orWhereRaw('tags::text ILIKE ?', `%${params.query}%`)
+                    .orWhereRaw('pre_data::text ILIKE ?', `%${params.query}%`),
+            );
+        }
+
+        return query;
+    }
+
+    async deprecatedSearchEvents(
+        search: DeprecatedSearchEventsSchema = {},
+    ): Promise<IEvent[]> {
         let query = this.db
             .select(EVENT_COLUMNS)
             .from<IEventTable>(TABLE)

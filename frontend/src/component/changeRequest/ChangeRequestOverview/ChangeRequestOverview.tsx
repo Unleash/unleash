@@ -431,7 +431,7 @@ export const ChangeRequestOverview: FC = () => {
                                         variant='outlined'
                                         onClick={() => {
                                             navigate(
-                                                `/playground?changeRequest=${changeRequest.id}`,
+                                                `/playground?changeRequest=${changeRequest.id}&projects=${projectId}&environments=${changeRequest.environment}`,
                                             );
                                         }}
                                     >

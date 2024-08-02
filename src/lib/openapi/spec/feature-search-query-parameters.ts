@@ -129,6 +129,7 @@ export const featureSearchQueryParameters = [
         name: 'sortOrder',
         schema: {
             type: 'string',
+            enum: ['asc', 'desc'] as any,
             example: 'desc',
         },
         description:

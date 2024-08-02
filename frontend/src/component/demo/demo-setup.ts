@@ -33,6 +33,7 @@ export const specificUser = async () => {
 };
 
 export const gradualRollout = async () => {
+    await deleteOldStrategies('demoApp.step3');
     const featureId = 'demoApp.step3';
 
     const { environments }: IFeatureToggle = await fetch(
@@ -97,8 +98,8 @@ const deleteOldStrategies = async (featureId: string) => {
         ),
     );
 
-    const strategyLimit = 30;
-    if (constrainedStrategies.length > strategyLimit) {
+    const strategyLimit = 25;
+    if (constrainedStrategies.length >= strategyLimit) {
         await Promise.all(
             constrainedStrategies
                 .slice(0, strategyLimit - 1)

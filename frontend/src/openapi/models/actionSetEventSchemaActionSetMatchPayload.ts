@@ -7,4 +7,6 @@
 /**
  * Match the payload of the signal
  */
-export type ActionSetEventSchemaActionSetMatchPayload = { [key: string]: any };
+export type ActionSetEventSchemaActionSetMatchPayload = {
+    [key: string]: unknown;
+};

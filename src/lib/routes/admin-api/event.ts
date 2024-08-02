@@ -19,7 +19,7 @@ import {
 } from '../../../lib/openapi/spec/feature-events-schema';
 import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
 import type { IFlagResolver } from '../../types/experimental';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
@@ -98,16 +98,19 @@ export default class EventController extends Controller {
         this.route({
             method: 'post',
             path: '/search',
-            handler: this.searchEvents,
+            handler: this.deprecatedSearchEvents,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'searchEvents',
+                    operationId: 'deprecatedSearchEvents',
                     tags: ['Events'],
-                    summary: 'Search for events',
+                    deprecated: true,
+                    summary: 'Search for events (deprecated)',
                     description:
                         'Allows searching for events matching the search criteria in the request body',
-                    requestBody: createRequestSchema('searchEventsSchema'),
+                    requestBody: createRequestSchema(
+                        'deprecatedSearchEventsSchema',
+                    ),
                     responses: { 200: createResponseSchema('eventsSchema') },
                 }),
             ],
@@ -128,7 +131,9 @@ export default class EventController extends Controller {
         const { project } = req.query;
         let eventList: IEventList;
         if (project) {
-            eventList = await this.eventService.searchEvents({ project });
+            eventList = await this.eventService.deprecatedSearchEvents({
+                project,
+            });
         } else {
             eventList = await this.eventService.getEvents();
         }
@@ -152,7 +157,9 @@ export default class EventController extends Controller {
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
         const feature = req.params.featureName;
-        const eventList = await this.eventService.searchEvents({ feature });
+        const eventList = await this.eventService.deprecatedSearchEvents({
+            feature,
+        });
 
         const response = {
             version,
@@ -169,11 +176,13 @@ export default class EventController extends Controller {
         );
     }
 
-    async searchEvents(
-        req: Request<unknown, unknown, SearchEventsSchema>,
+    async deprecatedSearchEvents(
+        req: Request<unknown, unknown, DeprecatedSearchEventsSchema>,
         res: Response<EventsSchema>,
     ): Promise<void> {
-        const eventList = await this.eventService.searchEvents(req.body);
+        const eventList = await this.eventService.deprecatedSearchEvents(
+            req.body,
+        );
 
         const response = {
             version,

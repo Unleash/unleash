@@ -1,8 +1,20 @@
 import type { IBaseEvent, IEvent } from '../events';
 import type { Store } from './store';
-import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type { DeprecatedSearchEventsSchema } from '../../openapi';
 import type EventEmitter from 'events';
 import type { IQueryOperations } from '../../features/events/event-store';
+import type { IQueryParam } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
+
+export interface IEventSearchParams {
+    project?: string;
+    query?: string;
+    createdAtFrom?: string;
+    createdAtTo?: string;
+    createdBy?: string;
+    type?: string;
+    offset: number;
+    limit: number;
+}
 
 export interface IEventStore
     extends Store<IEvent, number>,
@@ -12,8 +24,20 @@ export interface IEventStore
     batchStore(events: IBaseEvent[]): Promise<void>;
     getEvents(): Promise<IEvent[]>;
     count(): Promise<number>;
-    filteredCount(search: SearchEventsSchema): Promise<number>;
-    searchEvents(search: SearchEventsSchema): Promise<IEvent[]>;
+    deprecatedFilteredCount(
+        search: DeprecatedSearchEventsSchema,
+    ): Promise<number>;
+    searchEventsCount(
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
+    ): Promise<number>;
+    deprecatedSearchEvents(
+        search: DeprecatedSearchEventsSchema,
+    ): Promise<IEvent[]>;
+    searchEvents(
+        params: IEventSearchParams,
+        queryParams: IQueryParam[],
+    ): Promise<IEvent[]>;
     getMaxRevisionId(currentMax?: number): Promise<number>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;

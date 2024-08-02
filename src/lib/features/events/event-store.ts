@@ -17,6 +17,7 @@ import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
 import type { DeprecatedSearchEventsSchema } from '../../openapi';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams } from '../feature-search/search-utils';
+import type { IEventSearchParams } from './event-service';
 
 const EVENT_COLUMNS = [
     'id',
@@ -85,12 +86,6 @@ export interface IEventTable {
     project?: string;
     environment?: string;
     tags: ITag[];
-}
-
-export interface IEventSearchParams {
-    query: string | undefined;
-    offset: number | undefined;
-    limit: number | undefined;
 }
 
 const TABLE = 'events';

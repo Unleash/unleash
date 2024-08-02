@@ -2,12 +2,12 @@ import useSWR from 'swr';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { IEvent } from 'interfaces/event';
+import type { EventSchema } from 'openapi';
 
 const PATH = formatApiPath('api/admin/events/search');
 
 export interface IUseEventSearchOutput {
-    events?: IEvent[];
+    events?: EventSchema[];
     fetchNextPage: () => void;
     loading: boolean;
     totalEvents?: number;
@@ -28,7 +28,7 @@ export const useEventSearch = (
     feature?: string,
     query?: string,
 ): IUseEventSearchOutput => {
-    const [events, setEvents] = useState<IEvent[]>();
+    const [events, setEvents] = useState<EventSchema[]>();
     const [totalEvents, setTotalEvents] = useState<number>(0);
     const [offset, setOffset] = useState(0);
 
@@ -38,7 +38,7 @@ export const useEventSearch = (
     );
 
     const { data, error, isValidating } = useSWR<{
-        events: IEvent[];
+        events: EventSchema[];
         totalEvents?: number;
     }>([PATH, search, offset], () => searchEvents(PATH, { ...search, offset }));
 

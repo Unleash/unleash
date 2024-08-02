@@ -16,6 +16,7 @@ const SectionContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.5),
     alignItems: 'flex-start',
     height: 'min-content',
+    whiteSpace: 'nowrap',
 }));
 
 const LastModifiedByAvatarAndLink = styled('div')(({ theme }) => ({
@@ -36,15 +37,19 @@ const LastModifiedBy: FC<Collaborator> = ({ id, name, imageUrl }) => {
     );
 };
 
+const StyledAvatarGroup = styled(AvatarGroup)({
+    flexWrap: 'nowrap',
+});
+
 const CollaboratorList: FC<{ collaborators: Collaborator[] }> = ({
     collaborators,
 }) => {
     return (
         <SectionContainer>
             <span className='description'>Collaborators</span>
-            <AvatarGroup
+            <StyledAvatarGroup
                 users={collaborators}
-                avatarLimit={8}
+                avatarLimit={6}
                 AvatarComponent={StyledAvatar}
             />
         </SectionContainer>
@@ -54,17 +59,23 @@ const CollaboratorList: FC<{ collaborators: Collaborator[] }> = ({
 const Container = styled('article')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    gap: theme.spacing(10),
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'right',
     [theme.breakpoints.down('xl')]: {
         display: 'none',
     },
+    flex: 1,
 }));
 
 type Props = {
     collaborators: Collaborator[] | undefined;
 };
+
+const Separator = styled('div')(({ theme }) => ({
+    maxWidth: theme.spacing(10),
+    minWidth: theme.spacing(2),
+    flexGrow: 1,
+}));
 
 export const Collaborators: FC<Props> = ({ collaborators }) => {
     if (!collaborators || collaborators.length === 0) {
@@ -76,7 +87,12 @@ export const Collaborators: FC<Props> = ({ collaborators }) => {
     return (
         <Container>
             <LastModifiedBy {...lastModifiedBy} />
-            <CollaboratorList collaborators={collaborators} />
+            <Separator />
+            <CollaboratorList
+                collaborators={Array.from({ length: 10 }).map(
+                    () => collaborators[0],
+                )}
+            />
         </Container>
     );
 };

@@ -7,7 +7,10 @@ import {
     SEGMENT_UPDATED,
 } from '../../types/events';
 import type { Logger, LogProvider } from '../../logger';
-import type { IEventStore } from '../../types/stores/event-store';
+import type {
+    IEventSearchParams,
+    IEventStore,
+} from '../../types/stores/event-store';
 import type { ITag } from '../../types/model';
 import { sharedEventEmitter } from '../../util/anyEventEmitter';
 import type { Db } from '../../db/db';
@@ -85,12 +88,6 @@ export interface IEventTable {
     project?: string;
     environment?: string;
     tags: ITag[];
-}
-
-export interface IEventSearchParams {
-    query: string | undefined;
-    offset: string | undefined;
-    limit: string | undefined;
 }
 
 const TABLE = 'events';

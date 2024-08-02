@@ -8,7 +8,7 @@ export const eventSearchQueryParameters = [
             example: 'admin@example.com',
         },
         description:
-            'Find events by a free-text search query. The query will be matched against the event type and the event data payload (if any).',
+            'Find events by a free-text search query. The query will be matched against the event data payload (if any).',
         in: 'query',
     },
     {
@@ -53,7 +53,7 @@ export const eventSearchQueryParameters = [
             pattern: '^(IS|IS_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
         description:
-            'The ID of event creator to filter by. The creators can be specified with an operator. The supported operators are IS, IS_ANY_OF.',
+            'Filter by the ID of the event creator, using supported operators: IS, IS_ANY_OF.',
         in: 'query',
     },
     {
@@ -83,6 +83,7 @@ export const eventSearchQueryParameters = [
         schema: {
             type: 'string',
             example: '50',
+            default: '0',
         },
         description:
             'The number of features to skip when returning a page. By default it is set to 0.',
@@ -93,9 +94,10 @@ export const eventSearchQueryParameters = [
         schema: {
             type: 'string',
             example: '50',
+            default: '50',
         },
         description:
-            'The number of feature environments to return in a page. By default it is set to 50.',
+            'The number of feature environments to return in a page. By default it is set to 50. The maximum is 1000.',
         in: 'query',
     },
 ] as const;

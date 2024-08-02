@@ -24,8 +24,6 @@ import {
 import { normalizeQueryParams } from './search-utils';
 import { anonymise } from '../../util';
 
-const PATH = '/features';
-
 type FeatureSearchServices = Pick<
     IUnleashServices,
     'openApiService' | 'featureSearchService'
@@ -54,7 +52,7 @@ export default class FeatureSearchController extends Controller {
 
         this.route({
             method: 'get',
-            path: PATH,
+            path: '',
             handler: this.searchFeatures,
             permission: NONE,
             middleware: [

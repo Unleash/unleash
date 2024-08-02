@@ -20,7 +20,6 @@ export interface IEventSearchParams {
     type?: string;
     offset: number;
     limit: number;
-    // sortBy?: string;
 }
 
 export default class EventService {

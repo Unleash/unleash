@@ -21,16 +21,6 @@ import { getStandardResponses } from '../../../lib/openapi/util/standard-respons
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
 import type { IFlagResolver } from '../../types/experimental';
-import {
-    type EventSearchQueryParameters,
-    eventSearchQueryParameters,
-} from '../../openapi/spec/event-search-query-parameters';
-import type { IAuthRequest } from '../unleash-types';
-import {
-    type EventSearchResponseSchema,
-    eventSearchResponseSchema,
-} from '../../openapi';
-import { normalizeQueryParams } from '../../features/feature-search/search-utils';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -125,26 +115,6 @@ export default class EventController extends Controller {
                 }),
             ],
         });
-
-        this.route({
-            method: 'get',
-            path: '/search',
-            handler: this.searchEvents,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    operationId: 'searchEvents',
-                    tags: ['Events'],
-                    summary: 'Search for events',
-                    description:
-                        'Allows searching for events matching the search criteria in the request body. This operation is deprecated. You should perform a GET request to the same endpoint with your query encoded as query parameters instead.',
-                    parameters: [...eventSearchQueryParameters],
-                    responses: {
-                        200: createResponseSchema('eventSearchResponseSchema'),
-                    },
-                }),
-            ],
-        });
     }
 
     maybeAnonymiseEvents(events: IEvent[]): IEvent[] {
@@ -225,35 +195,6 @@ export default class EventController extends Controller {
             res,
             featureEventsSchema.$id,
             response,
-        );
-    }
-
-    async searchEvents(
-        req: IAuthRequest<any, any, any, EventSearchQueryParameters>,
-        res: Response<EventSearchResponseSchema>,
-    ): Promise<void> {
-        const { normalizedLimit, normalizedOffset } = normalizeQueryParams(
-            req.query,
-            {
-                limitDefault: 50,
-                maxLimit: 1000,
-            },
-        );
-
-        const { events, totalEvents } = await this.eventService.searchEvents({
-            ...req.body,
-            offset: normalizedOffset,
-            limit: normalizedLimit,
-        });
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            eventSearchResponseSchema.$id,
-            serializeDates({
-                events: serializeDates(this.maybeAnonymiseEvents(events)),
-                total: totalEvents,
-            }),
         );
     }
 }

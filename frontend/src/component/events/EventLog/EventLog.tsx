@@ -4,7 +4,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import EventCard from 'component/events/EventCard/EventCard';
 import { useEventSettings } from 'hooks/useEventSettings';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
@@ -30,6 +30,17 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledFilters = styled(EventLogFilters)({
+    padding: 0,
+});
+
+const EventResultWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2, 4, 4, 4),
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
+}));
+
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useEventSearch(
@@ -41,7 +52,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch');
+    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
@@ -67,59 +78,12 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
-    const logType = project ? 'project' : feature ? 'flag' : 'global';
     const count = events?.length || 0;
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
-    const eventUsers = useMemo(() => {
-        // todo: this isn't reliable. Only gives you users that are currently shown. Use users.
-        const hasUserId = (
-            event: EventSchema,
-        ): event is EventSchema & { createdByUserId: number } =>
-            Number.isInteger(event.createdByUserId);
-
-        const userDictionary =
-            cache?.reduce(
-                (dictionary, entry) => {
-                    if (
-                        hasUserId(entry) &&
-                        !(entry.createdByUserId in dictionary)
-                    ) {
-                        dictionary[entry.createdByUserId] = entry.createdBy;
-                    }
-
-                    return dictionary;
-                },
-                {} as Record<number, string>,
-            ) ?? {};
-
-        return Object.entries(userDictionary).map(([id, name]) => ({
-            id: Number(id),
-            name,
-        }));
-    }, [cache]);
-
-    return (
-        <PageContent
-            header={
-                <PageHeader
-                    title={`${title} (${countText})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <ConditionallyRender
-                condition={isEnterprise() && showFilters}
-                show={<EventLogFilters logType={logType} users={eventUsers} />}
-            />
+    const EventResults = (
+        <>
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}
@@ -139,6 +103,45 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                     </StyledEventsList>
                 }
             />
+        </>
+    );
+
+    return (
+        <PageContent
+            bodyClass={showFilters ? 'no-padding' : ''}
+            header={
+                <PageHeader
+                    title={`${title} (${countText})`}
+                    actions={
+                        <>
+                            {showDataSwitch}
+                            {!isSmallScreen && searchInputField}
+                        </>
+                    }
+                >
+                    {isSmallScreen && searchInputField}
+                </PageHeader>
+            }
+        >
+            <ConditionallyRender
+                condition={showFilters}
+                show={
+                    <EventResultWrapper>
+                        <StyledFilters
+                            logType={
+                                project
+                                    ? 'project'
+                                    : feature
+                                      ? 'flag'
+                                      : 'global'
+                            }
+                        />
+                        {EventResults}
+                    </EventResultWrapper>
+                }
+                elseShow={EventResults}
+            />
+
             <div ref={fetchNextPageRef} />
         </PageContent>
     );

@@ -52,6 +52,7 @@ const sharedFilters = (users: EventUser[]): IFilterItem[] => [
 
 type EventLogFiltersProps = {
     logType: 'flag' | 'project' | 'global';
+    className?: string;
     users: EventUser[];
 };
 export const EventLogFilters: FC<EventLogFiltersProps> = (
@@ -110,6 +111,7 @@ export const EventLogFilters: FC<EventLogFiltersProps> = (
 
     return (
         <Filters
+            className={className}
             availableFilters={availableFilters}
             state={{}}
             onChange={(v) => console.log(v)}

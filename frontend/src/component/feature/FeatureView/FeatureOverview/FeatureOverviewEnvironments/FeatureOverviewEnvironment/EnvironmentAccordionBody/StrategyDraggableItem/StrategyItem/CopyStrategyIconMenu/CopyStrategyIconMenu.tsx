@@ -179,10 +179,9 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                                         }
                                     />
                                     <ListItemText>
-                                        Copy to{' '}
                                         {environment === environmentId
-                                            ? 'current'
-                                            : environment}
+                                            ? 'Duplicate in current'
+                                            : `Copy to ${environment}`}
                                     </ListItemText>
                                 </MenuItem>
                             </div>

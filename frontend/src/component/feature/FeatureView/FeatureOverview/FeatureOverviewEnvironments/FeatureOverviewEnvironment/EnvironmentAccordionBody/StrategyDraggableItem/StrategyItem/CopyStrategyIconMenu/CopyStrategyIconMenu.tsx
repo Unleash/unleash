@@ -120,7 +120,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 }
             />
             <Tooltip
-                title={`Copy to another environment${
+                title={`Copy to environment${
                     enabled ? '' : ' (Access denied)'
                 }`}
             >
@@ -150,7 +150,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                     'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
                 }}
             >
-                {environments.map((environment) => {
+                {[...environments, environmentId].map((environment) => {
                     const access = checkAccess(
                         CREATE_FEATURE_STRATEGY,
                         environment,
@@ -179,7 +179,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                                         }
                                     />
                                     <ListItemText>
-                                        Copy to {environment}
+                                        Copy to{' '}
+                                        {environment === environmentId
+                                            ? 'current'
+                                            : environment}
                                     </ListItemText>
                                 </MenuItem>
                             </div>

@@ -4,7 +4,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import EventCard from 'component/events/EventCard/EventCard';
 import { useEventSettings } from 'hooks/useEventSettings';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
@@ -72,6 +72,13 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
+    const eventUsers = useMemo(() => {
+        console.log(cache);
+        return cache?.map((entry) => entry.createdBy) ?? [];
+    }, [cache]);
+
+    console.log(eventUsers);
+
     return (
         <PageContent
             header={
@@ -90,7 +97,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         >
             <ConditionallyRender
                 condition={isEnterprise() && showFilters}
-                show={<EventLogFilters logType={logType} />}
+                show={<EventLogFilters logType={logType} users={eventUsers} />}
             />
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}

@@ -4,7 +4,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { EventSchemaType } from 'openapi';
 
-const flagLogFilters: IFilterItem[] = [
+const sharedFilters = (users: string[]): IFilterItem[] => [
     {
         label: 'Date From',
         icon: 'today',
@@ -42,60 +42,17 @@ const flagLogFilters: IFilterItem[] = [
     },
 ];
 
-export const FlagLogFilters = () => {
-    return (
-        <Filters
-            availableFilters={flagLogFilters}
-            state={{}}
-            onChange={(v) => console.log(v)}
-        />
-    );
+type EventLogFiltersProps = {
+    logType: 'flag' | 'project' | 'global';
+    users: string[];
 };
-
-const useProjectLogFilters = () => {
-    const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-
-    const { features } = useFeatureSearch({ project: 'default' });
-
-    useEffect(() => {
-        const flagOptions = (features || []).map((flag) => ({
-            label: flag.name,
-            value: flag.name,
-        }));
-
-        const availableFilters: IFilterItem[] = [
-            ...flagLogFilters,
-            {
-                label: 'Feature Flag',
-                icon: 'flag',
-                options: flagOptions,
-                filterKey: 'flag',
-                singularOperators: ['IS'],
-                pluralOperators: ['IS_ANY_OF'],
-            },
-        ];
-
-        setAvailableFilters(availableFilters);
-    }, [JSON.stringify(features)]);
-
-    return availableFilters;
-};
-
-export const ProjectLogFilters = () => {
-    const availableFilters = useProjectLogFilters();
-
-    return (
-        <Filters
-            availableFilters={availableFilters}
-            state={{}}
-            onChange={(v) => console.log(v)}
-        />
-    );
-};
-
-export const GlobalLogFilters = () => {
-    const projectFilters = useProjectLogFilters();
+export const EventLogFilters: FC<EventLogFiltersProps> = (
+    { logType, users },
+    // {state, onChange,} // these are to fill in later to make the filters work
+) => {
+    const baseFilters = sharedFilters(users);
     const { projects } = useProjects();
+    const { features } = useFeatureSearch({ project: 'default' });
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
@@ -106,9 +63,14 @@ export const GlobalLogFilters = () => {
 
         const hasMultipleProjects = projectOptions.length > 1;
 
+        const flagOptions = (features || []).map((flag) => ({
+            label: flag.name,
+            value: flag.name,
+        }));
+
         const availableFilters: IFilterItem[] = [
-            ...projectFilters,
-            ...(hasMultipleProjects
+            ...baseFilters,
+            ...(hasMultipleProjects && logType === 'global'
                 ? ([
                       {
                           label: 'Project',
@@ -120,10 +82,22 @@ export const GlobalLogFilters = () => {
                       },
                   ] as IFilterItem[])
                 : []),
+            ...(logType !== 'flag'
+                ? ([
+                      {
+                          label: 'Feature Flag',
+                          icon: 'flag',
+                          options: flagOptions,
+                          filterKey: 'flag',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
         ];
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(projectFilters), JSON.stringify(projects)]);
+    }, [JSON.stringify(features), JSON.stringify(projects)]);
 
     return (
         <Filters
@@ -132,21 +106,4 @@ export const GlobalLogFilters = () => {
             onChange={(v) => console.log(v)}
         />
     );
-};
-
-type EventLogFiltersProps = {
-    logType: 'flag' | 'project' | 'global';
-};
-export const EventLogFilters: FC<EventLogFiltersProps> = (
-    { logType },
-    // {state, onChange,} // these are to fill in later to make the filters work
-) => {
-    switch (logType) {
-        case 'flag':
-            return <FlagLogFilters />;
-        case 'project':
-            return <ProjectLogFilters />;
-        case 'global':
-            return <GlobalLogFilters />;
-    }
 };

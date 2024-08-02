@@ -1,7 +1,7 @@
 import { diff } from 'deep-diff';
-import type { IEvent } from 'interfaces/event';
 import { useTheme } from '@mui/system';
 import type { JSX, CSSProperties } from 'react';
+import type { EventSchema } from 'openapi';
 
 const DIFF_PREFIXES: Record<string, string> = {
     A: ' ',
@@ -17,7 +17,7 @@ interface IEventDiffResult {
 }
 
 interface IEventDiffProps {
-    entry: Partial<IEvent>;
+    entry: Partial<EventSchema>;
     sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
 }
 

@@ -77,7 +77,7 @@ Everything’s now set up on the Unleash side. Let’s set up the Rails applicat
 
 ## 3. Setup the Rails app
 
-Let's clone a basic blog repository and get it up and running. We don't want to waste time setting up a rails codebase from scratch.
+Let's clone a basic blog repository and get it up and running. We don't want to waste time setting up a Rails codebase from scratch.
 
 ```sh
 git clone https://github.com/alvinometric/rails-basic-blog

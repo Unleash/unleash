@@ -122,7 +122,7 @@ Right now all the blog posts are displayed on the index page. We want to use a f
 
 Let’s create a static boolean flag, for now.
 
-Modify our `index` method in our controller in `app/controllers/posts_controller.rb` to look like this:
+Modify the `index` method in `app/controllers/posts_controller.rb` to look like this:
 
 ```ruby
   # GET /posts or /posts.json

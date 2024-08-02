@@ -2,7 +2,7 @@ import type { IEventStore } from '../../lib/types/stores/event-store';
 import type { IBaseEvent, IEvent } from '../../lib/types/events';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter';
 import type { IQueryOperations } from '../../lib/features/events/event-store';
-import type { SearchEventsSchema } from '../../lib/openapi';
+import type { DeprecatedSearchEventsSchema } from '../../lib/openapi';
 import type EventEmitter from 'events';
 
 class FakeEventStore implements IEventStore {
@@ -61,7 +61,13 @@ class FakeEventStore implements IEventStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    filteredCount(search: SearchEventsSchema): Promise<number> {
+    searchEventsCount(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
+    deprecatedFilteredCount(
+        search: DeprecatedSearchEventsSchema,
+    ): Promise<number> {
         return Promise.resolve(0);
     }
 
@@ -79,23 +85,11 @@ class FakeEventStore implements IEventStore {
         return this.events;
     }
 
-    async searchEvents(): Promise<IEvent[]> {
+    async deprecatedSearchEvents(): Promise<IEvent[]> {
         throw new Error('Method not implemented.');
     }
-
-    async getForFeatures(
-        features: string[],
-        environments: string[],
-        query: { type: string; projectId: string },
-    ): Promise<IEvent[]> {
-        return this.events.filter((event) => {
-            return (
-                event.type === query.type &&
-                event.project === query.projectId &&
-                features.includes(event.data.featureName) &&
-                environments.includes(event.data.environment)
-            );
-        });
+    async searchEvents(): Promise<IEvent[]> {
+        throw new Error('Method not implemented.');
     }
 
     async query(operations: IQueryOperations[]): Promise<IEvent[]> {

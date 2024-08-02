@@ -234,11 +234,11 @@ test('Should get all events of type', async () => {
             return eventStore.store(event);
         }),
     );
-    const featureCreatedEvents = await eventStore.searchEvents({
+    const featureCreatedEvents = await eventStore.deprecatedSearchEvents({
         type: FEATURE_CREATED,
     });
     expect(featureCreatedEvents).toHaveLength(3);
-    const featureDeletedEvents = await eventStore.searchEvents({
+    const featureDeletedEvents = await eventStore.deprecatedSearchEvents({
         type: FEATURE_DELETED,
     });
     expect(featureDeletedEvents).toHaveLength(3);

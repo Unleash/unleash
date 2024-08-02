@@ -19,8 +19,18 @@ import {
 } from '../../../lib/openapi/spec/feature-events-schema';
 import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import type { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
 import type { IFlagResolver } from '../../types/experimental';
+import {
+    type EventSearchQueryParameters,
+    eventSearchQueryParameters,
+} from '../../openapi/spec/event-search-query-parameters';
+import type { IAuthRequest } from '../unleash-types';
+import {
+    type EventSearchResponseSchema,
+    eventSearchResponseSchema,
+} from '../../openapi';
+import { normalizeQueryParams } from '../../features/feature-search/search-utils';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -98,6 +108,27 @@ export default class EventController extends Controller {
         this.route({
             method: 'post',
             path: '/search',
+            handler: this.deprecatedSearchEvents,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'deprecatedSearchEvents',
+                    tags: ['Events'],
+                    deprecated: true,
+                    summary: 'Search for events (deprecated)',
+                    description:
+                        'Allows searching for events matching the search criteria in the request body',
+                    requestBody: createRequestSchema(
+                        'deprecatedSearchEventsSchema',
+                    ),
+                    responses: { 200: createResponseSchema('eventsSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/search',
             handler: this.searchEvents,
             permission: NONE,
             middleware: [
@@ -106,9 +137,11 @@ export default class EventController extends Controller {
                     tags: ['Events'],
                     summary: 'Search for events',
                     description:
-                        'Allows searching for events matching the search criteria in the request body',
-                    requestBody: createRequestSchema('searchEventsSchema'),
-                    responses: { 200: createResponseSchema('eventsSchema') },
+                        'Allows searching for events matching the search criteria in the request body. This operation is deprecated. You should perform a GET request to the same endpoint with your query encoded as query parameters instead.',
+                    parameters: [...eventSearchQueryParameters],
+                    responses: {
+                        200: createResponseSchema('eventSearchResponseSchema'),
+                    },
                 }),
             ],
         });
@@ -128,7 +161,9 @@ export default class EventController extends Controller {
         const { project } = req.query;
         let eventList: IEventList;
         if (project) {
-            eventList = await this.eventService.searchEvents({ project });
+            eventList = await this.eventService.deprecatedSearchEvents({
+                project,
+            });
         } else {
             eventList = await this.eventService.getEvents();
         }
@@ -152,7 +187,9 @@ export default class EventController extends Controller {
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
         const feature = req.params.featureName;
-        const eventList = await this.eventService.searchEvents({ feature });
+        const eventList = await this.eventService.deprecatedSearchEvents({
+            feature,
+        });
 
         const response = {
             version,
@@ -169,11 +206,13 @@ export default class EventController extends Controller {
         );
     }
 
-    async searchEvents(
-        req: Request<unknown, unknown, SearchEventsSchema>,
+    async deprecatedSearchEvents(
+        req: Request<unknown, unknown, DeprecatedSearchEventsSchema>,
         res: Response<EventsSchema>,
     ): Promise<void> {
-        const eventList = await this.eventService.searchEvents(req.body);
+        const eventList = await this.eventService.deprecatedSearchEvents(
+            req.body,
+        );
 
         const response = {
             version,
@@ -186,6 +225,35 @@ export default class EventController extends Controller {
             res,
             featureEventsSchema.$id,
             response,
+        );
+    }
+
+    async searchEvents(
+        req: IAuthRequest<any, any, any, EventSearchQueryParameters>,
+        res: Response<EventSearchResponseSchema>,
+    ): Promise<void> {
+        const { normalizedLimit, normalizedOffset } = normalizeQueryParams(
+            req.query,
+            {
+                limitDefault: 50,
+                maxLimit: 1000,
+            },
+        );
+
+        const { events, totalEvents } = await this.eventService.searchEvents({
+            ...req.body,
+            offset: normalizedOffset,
+            limit: normalizedLimit,
+        });
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            eventSearchResponseSchema.$id,
+            serializeDates({
+                events: serializeDates(this.maybeAnonymiseEvents(events)),
+                total: totalEvents,
+            }),
         );
     }
 }

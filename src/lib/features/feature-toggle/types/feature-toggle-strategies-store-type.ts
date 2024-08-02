@@ -34,7 +34,7 @@ export interface IFeatureSearchParams {
     offset: number;
     favoritesFirst?: boolean;
     limit: number;
-    sortBy: string;
+    sortBy?: string;
     sortOrder: 'asc' | 'desc';
 }
 

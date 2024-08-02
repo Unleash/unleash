@@ -1,3 +1,4 @@
+import expressListEndpoints from 'express-list-endpoints';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     insertLastSeenAt,
@@ -178,6 +179,8 @@ test('should search matching features by name', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
     await app.createFeature('my_feat_c');
+
+    const endpoints = expressListEndpoints(app);
 
     const { body } = await searchFeatures({ query: 'feature' });
 

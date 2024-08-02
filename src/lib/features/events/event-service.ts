@@ -8,9 +8,20 @@ import type EventEmitter from 'events';
 import type { IApiUser, ITag, IUser } from '../../types';
 import { ApiTokenType } from '../../types/models/api-token';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
-import type { EventSearchQueryParameters } from '../../openapi/spec/event-search-query-parameters';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { parseSearchOperatorValue } from '../feature-search/search-utils';
+
+export interface IEventSearchParams {
+    project?: string;
+    query?: string;
+    createdAtFrom?: string;
+    createdAtTo?: string;
+    createdBy?: string;
+    type?: string;
+    offset: number;
+    limit: number;
+    // sortBy?: string;
+}
 
 export default class EventService {
     private logger: Logger;
@@ -55,9 +66,7 @@ export default class EventService {
         };
     }
 
-    async searchEvents(
-        search: EventSearchQueryParameters,
-    ): Promise<IEventList> {
+    async searchEvents(search: IEventSearchParams): Promise<IEventList> {
         const queryParams = this.convertToDbParams(search);
         const totalEvents = await this.eventStore.searchEventsCount(
             {
@@ -143,7 +152,7 @@ export default class EventService {
         }
     }
 
-    convertToDbParams = (params: EventSearchQueryParameters): IQueryParam[] => {
+    convertToDbParams = (params: IEventSearchParams): IQueryParam[] => {
         const queryParams: IQueryParam[] = [];
 
         if (params.createdAtFrom) {

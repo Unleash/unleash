@@ -89,8 +89,8 @@ export interface IEventTable {
 
 export interface IEventSearchParams {
     query: string | undefined;
-    offset: string | undefined;
-    limit: string | undefined;
+    offset: number | undefined;
+    limit: number | undefined;
 }
 
 const TABLE = 'events';

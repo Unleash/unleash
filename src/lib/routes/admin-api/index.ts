@@ -32,9 +32,9 @@ import { createKnexTransactionStarter } from '../../db/transaction';
 import type { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
 import { SegmentsController } from '../../features/segment/segment-controller';
-import FeatureSearchController from '../../features/feature-search/feature-search-controller';
 import { InactiveUsersController } from '../../users/inactive/inactive-users-controller';
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
+import { SearchApi } from './search';
 
 export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -158,10 +158,7 @@ export class AdminApi extends Controller {
             new TelemetryController(config, services).router,
         );
 
-        this.app.use(
-            '/search',
-            new FeatureSearchController(config, services).router,
-        );
+        this.app.use('/search', new SearchApi(config, services, db).router);
 
         this.app.use(
             '/record-ui-error',

@@ -1,5 +1,4 @@
 import { diff } from 'deep-diff';
-import type { IEvent } from 'interfaces/event';
 import { useTheme } from '@mui/system';
 import type { JSX, CSSProperties } from 'react';
 
@@ -17,7 +16,7 @@ interface IEventDiffResult {
 }
 
 interface IEventDiffProps {
-    entry: Partial<IEvent>;
+    entry: { data?: unknown; preData?: unknown };
     sort?: (a: IEventDiffResult, b: IEventDiffResult) => number;
 }
 

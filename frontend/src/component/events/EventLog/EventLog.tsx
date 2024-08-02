@@ -10,11 +10,11 @@ import theme from 'themes/theme';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useOnVisible } from 'hooks/useOnVisible';
-import type { IEvent } from 'interfaces/event';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
+import type { EventSchema } from 'openapi';
 
 interface IEventLogProps {
     title: string;
@@ -45,7 +45,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
-    const [cache, setCache] = useState<IEvent[]>();
+    const [cache, setCache] = useState<EventSchema[]>();
     useEffect(() => events && setCache(events), [events]);
 
     const onShowData = () => {
@@ -73,11 +73,32 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const countText = `${count} of ${totalCount}`;
 
     const eventUsers = useMemo(() => {
-        console.log(cache);
-        return cache?.map((entry) => entry.createdBy) ?? [];
-    }, [cache]);
+        // todo: this isn't reliable. Only gives you users that are currently shown. Use users.
+        const hasUserId = (
+            event: EventSchema,
+        ): event is EventSchema & { createdByUserId: number } =>
+            Number.isInteger(event.createdByUserId);
 
-    console.log(eventUsers);
+        const userDictionary =
+            cache?.reduce(
+                (dictionary, entry) => {
+                    if (
+                        hasUserId(entry) &&
+                        !(entry.createdByUserId in dictionary)
+                    ) {
+                        dictionary[entry.createdByUserId] = entry.createdBy;
+                    }
+
+                    return dictionary;
+                },
+                {} as Record<number, string>,
+            ) ?? {};
+
+        return Object.entries(userDictionary).map(([id, name]) => ({
+            id: Number(id),
+            name,
+        }));
+    }, [cache]);
 
     return (
         <PageContent

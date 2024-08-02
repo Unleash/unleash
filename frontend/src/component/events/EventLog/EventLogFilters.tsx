@@ -4,7 +4,12 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { EventSchemaType } from 'openapi';
 
-const sharedFilters = (users: string[]): IFilterItem[] => [
+export type EventUser = {
+    id: number;
+    name: string;
+};
+
+const sharedFilters = (users: EventUser[]): IFilterItem[] => [
     {
         label: 'Date From',
         icon: 'today',
@@ -23,7 +28,10 @@ const sharedFilters = (users: string[]): IFilterItem[] => [
         // todo fill this in with actual values
         label: 'Created by',
         icon: 'person',
-        options: [],
+        options: users.map((user) => ({
+            label: user.name,
+            value: user.id.toString(),
+        })),
         filterKey: 'createdBy',
         singularOperators: ['IS'],
         pluralOperators: ['IS_ANY_OF'],
@@ -44,12 +52,13 @@ const sharedFilters = (users: string[]): IFilterItem[] => [
 
 type EventLogFiltersProps = {
     logType: 'flag' | 'project' | 'global';
-    users: string[];
+    users: EventUser[];
 };
 export const EventLogFilters: FC<EventLogFiltersProps> = (
     { logType, users },
     // {state, onChange,} // these are to fill in later to make the filters work
 ) => {
+    console.log('got users', users);
     const baseFilters = sharedFilters(users);
     const { projects } = useProjects();
     const { features } = useFeatureSearch({ project: 'default' });

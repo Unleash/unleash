@@ -159,7 +159,7 @@ To verify that a change request is correct, you can preview the result of change
 
 Starting from the change request overview page, go to the corresponding [playground](playground.mdx) and evaluate all your flags in the project and environment that your change request applies too.
 
-
+![Change request playground evaluation](/img/change-request-playground-evaluation.png)
 
 [Unleash context](playground.mdx#the-unleash-context) can be adjusted in the same way as in a regular playground, but the project and environment cannot be changed as they are derived from the change request itself.
 Once the evaluation results confirm the changes in your change request are correct, go back to the change request overview and proceed with the approval or rejection.

@@ -26,7 +26,7 @@ export const usePlaygroundApi = () => {
 
     const evaluateChangeRequestPlayground = async (
         changeRequestId: string,
-        payload: AdvancedPlaygroundRequestSchema,
+        payload: AdvancedPlaygroundRequestSchema, // FIXME: type
     ): Promise<AdvancedPlaygroundResponseSchema> => {
         const path = `${URI}/change-request/${changeRequestId}`;
         const req = createRequest(path, {

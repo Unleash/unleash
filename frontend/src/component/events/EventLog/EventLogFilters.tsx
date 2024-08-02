@@ -2,6 +2,7 @@ import { useState, useEffect, type FC } from 'react';
 import { Filters, type IFilterItem } from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { EventSchemaType } from 'openapi';
 
 const flagLogFilters: IFilterItem[] = [
     {
@@ -31,7 +32,10 @@ const flagLogFilters: IFilterItem[] = [
         // todo fill this in with actual values
         label: 'Event type',
         icon: 'announcement',
-        options: [],
+        options: Object.entries(EventSchemaType).map(([key, value]) => ({
+            label: key,
+            value: value,
+        })),
         filterKey: 'eventType',
         singularOperators: ['IS'],
         pluralOperators: ['IS_ANY_OF'],

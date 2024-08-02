@@ -216,8 +216,6 @@ export const AdvancedPlayground: FC<{
             const response = changeRequest
                 ? await evaluateChangeRequestPlayground(changeRequest, {
                       context: parsedContext,
-                      projects: [],
-                      environments: [],
                   })
                 : await evaluateAdvancedPlayground({
                       environments: resolveEnvironments(environments),

@@ -73,11 +73,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
             </StyledContainer>
             <ConditionallyRender
                 condition={owners.length === 1}
-                show={
-                    <StyledUserName>
-                        {users[0]?.name || users[0]?.description}
-                    </StyledUserName>
-                }
+                show={<StyledUserName>{users[0]?.name}</StyledUserName>}
                 elseShow={<div />}
             />
         </>

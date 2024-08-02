@@ -11,7 +11,7 @@ In a classic tutorial fashion, we’ll add feature flags to a blog app made with
 -   [Prerequisites](#prerequisites)
 -   [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
 -   [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
--   [3. Setup the rails app](#3-setup-the-rails-app)
+-   [3. Setup the Rails app](#3-setup-the-rails-app)
     -   [Install dependencies](#install-dependencies)
     -   [Setup DB](#setup-db)
     -   [Run the server](#run-the-server)

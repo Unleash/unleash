@@ -12,5 +12,5 @@ export interface UpdateServiceAccountSchema {
     name?: string;
     /** The id of the root role for the service account */
     rootRole?: number;
-    [key: string]: any;
+    [key: string]: unknown;
 }

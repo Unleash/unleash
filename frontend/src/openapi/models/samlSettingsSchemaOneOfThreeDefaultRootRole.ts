@@ -7,11 +7,11 @@
 /**
  * Assign this root role to auto created users
  */
-export type SamlSettingsSchemaDefaultRootRole =
-    (typeof SamlSettingsSchemaDefaultRootRole)[keyof typeof SamlSettingsSchemaDefaultRootRole];
+export type SamlSettingsSchemaOneOfThreeDefaultRootRole =
+    (typeof SamlSettingsSchemaOneOfThreeDefaultRootRole)[keyof typeof SamlSettingsSchemaOneOfThreeDefaultRootRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const SamlSettingsSchemaDefaultRootRole = {
+export const SamlSettingsSchemaOneOfThreeDefaultRootRole = {
     Viewer: 'Viewer',
     Editor: 'Editor',
     Admin: 'Admin',

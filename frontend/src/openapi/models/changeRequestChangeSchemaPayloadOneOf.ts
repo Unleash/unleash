@@ -4,4 +4,4 @@
  * See `gen:api` script in package.json
  */
 
-export type ChangeRequestChangeSchemaPayloadOneOf = { [key: string]: any };
+export type ChangeRequestChangeSchemaPayloadOneOf = { [key: string]: unknown };

@@ -8,4 +8,4 @@
  * Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable.
  * @nullable
  */
-export type EventSchemaData = { [key: string]: any } | null;
+export type EventSchemaData = { [key: string]: unknown } | null;

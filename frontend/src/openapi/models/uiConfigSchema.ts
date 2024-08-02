@@ -37,8 +37,12 @@ export interface UiConfigSchema {
     name?: string;
     /** Whether to enable the Unleash network view or not. */
     networkViewEnabled?: boolean;
+    /** Whether the OIDC configuration is set through environment variables or not. */
+    oidcConfiguredThroughEnv?: boolean;
     /** A map of resource names and their limits. */
     resourceLimits?: ResourceLimitsSchema;
+    /** Whether the SAML configuration is set through environment variables or not. */
+    samlConfiguredThroughEnv?: boolean;
     /**
      * The maximum number of values that can be used in a single segment.
      * @deprecated

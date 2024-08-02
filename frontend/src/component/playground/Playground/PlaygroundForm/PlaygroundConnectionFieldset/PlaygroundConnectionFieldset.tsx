@@ -3,22 +3,20 @@ import {
     type Dispatch,
     type SetStateAction,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
 import {
-    Autocomplete,
     Box,
     Button,
     IconButton,
     InputAdornment,
     styled,
-    TextField,
+    type TextField,
     Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { renderOption } from '../renderOption';
 import {
     type IApiToken,
     useApiTokens,
@@ -32,6 +30,8 @@ import Clear from '@mui/icons-material/Clear';
 import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { EnvironmentsField } from './EnvironmentsField/EnvironmentsField';
+import { Link } from 'react-router-dom';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -41,6 +41,8 @@ interface IPlaygroundConnectionFieldsetProps {
     setEnvironments: Dispatch<SetStateAction<string[]>>;
     setToken?: Dispatch<SetStateAction<string | undefined>>;
     availableEnvironments: string[];
+    changeRequest?: string;
+    onClearChangeRequest?: () => void;
 }
 
 interface IOption {
@@ -61,7 +63,7 @@ const StyledInput = styled(Input)(() => ({
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     columnGap: theme.spacing(2),
-    rowGap: theme.spacing(4),
+    rowGap: theme.spacing(2),
     gridTemplateColumns: '1fr',
 
     [theme.breakpoints.up('md')]: {
@@ -69,7 +71,16 @@ const StyledGrid = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const PlaygroundConnectionFieldset: VFC<
+const StyledChangeRequestInput = styled(StyledInput)(({ theme }) => ({
+    '& label': {
+        WebkitTextFillColor: theme.palette.text.secondary,
+    },
+    '& input.Mui-disabled': {
+        WebkitTextFillColor: theme.palette.text.secondary,
+    },
+}));
+
+export const PlaygroundConnectionFieldset: FC<
     IPlaygroundConnectionFieldsetProps
 > = ({
     environments,
@@ -79,6 +90,8 @@ export const PlaygroundConnectionFieldset: VFC<
     setEnvironments,
     setToken,
     availableEnvironments,
+    changeRequest,
+    onClearChangeRequest,
 }) => {
     const theme = useTheme();
     const { tokens } = useApiTokens();
@@ -86,9 +99,7 @@ export const PlaygroundConnectionFieldset: VFC<
 
     const { projects: availableProjects } = useProjects();
 
-    const isChangeRequestPlaygroundEnabled = useUiFlag(
-        'changeRequestPlayground',
-    );
+    const changeRequestPlaygroundEnabled = useUiFlag('changeRequestPlayground');
 
     const projectsOptions = [
         allOption,
@@ -97,35 +108,6 @@ export const PlaygroundConnectionFieldset: VFC<
             id,
         })),
     ];
-
-    const environmentOptions = [
-        ...availableEnvironments.map((name) => ({
-            label: name,
-            id: name,
-        })),
-    ];
-
-    const onEnvironmentsChange: ComponentProps<
-        typeof Autocomplete
-    >['onChange'] = (event, value, reason) => {
-        const newEnvironments = value as IOption | IOption[];
-        if (reason === 'clear' || newEnvironments === null) {
-            return setEnvironments([]);
-        }
-        if (Array.isArray(newEnvironments)) {
-            if (newEnvironments.length === 0) {
-                return setEnvironments([]);
-            }
-            return setEnvironments(newEnvironments.map(({ id }) => id));
-        }
-
-        return setEnvironments([newEnvironments.id]);
-    };
-
-    const envValue = environmentOptions.filter(({ id }) =>
-        environments.includes(id),
-    );
-
     const onSetToken: ComponentProps<typeof TextField>['onChange'] = async (
         event,
     ) => {
@@ -208,18 +190,6 @@ export const PlaygroundConnectionFieldset: VFC<
         resetTokenState();
     };
 
-    const renderClearButton = () => (
-        <InputAdornment position='end' data-testid='TOKEN_INPUT_CLEAR_BTN'>
-            <IconButton
-                aria-label='toggle password visibility'
-                onClick={clearToken}
-                edge='end'
-            >
-                <SmallClear />
-            </IconButton>
-        </InputAdornment>
-    );
-
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -241,25 +211,14 @@ export const PlaygroundConnectionFieldset: VFC<
                                 : 'Select environments to use in the playground'
                         }
                     >
-                        <Autocomplete
-                            disablePortal
-                            limitTags={3}
-                            id='environment'
-                            multiple={true}
-                            options={environmentOptions}
-                            sx={{ flex: 1 }}
-                            renderInput={(params) => (
-                                <TextField {...params} label='Environments' />
-                            )}
-                            renderOption={renderOption}
-                            getOptionLabel={({ label }) => label}
-                            disableCloseOnSelect={false}
-                            size='small'
-                            value={envValue}
-                            onChange={onEnvironmentsChange}
-                            disabled={Boolean(token)}
-                            data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
-                        />
+                        <Box>
+                            <EnvironmentsField
+                                environments={environments}
+                                setEnvironments={setEnvironments}
+                                availableEnvironments={availableEnvironments}
+                                disabled={Boolean(token || changeRequest)}
+                            />
+                        </Box>
                     </Tooltip>
                 </Box>
                 <Box>
@@ -275,7 +234,7 @@ export const PlaygroundConnectionFieldset: VFC<
                             selectedProjects={projects}
                             onChange={setProjects}
                             dataTestId={'PLAYGROUND_PROJECT_SELECT'}
-                            disabled={Boolean(token)}
+                            disabled={Boolean(token || changeRequest)}
                             limitTags={3}
                         />
                     </Tooltip>
@@ -283,7 +242,7 @@ export const PlaygroundConnectionFieldset: VFC<
                 <Box>
                     <StyledInput
                         label='API token'
-                        value={token || ''}
+                        value={token || changeRequest ? ' ' : ''}
                         onChange={onSetToken}
                         type={'text'}
                         error={Boolean(tokenError)}
@@ -291,36 +250,67 @@ export const PlaygroundConnectionFieldset: VFC<
                         placeholder={'Enter your API token'}
                         data-testid={'PLAYGROUND_TOKEN_INPUT'}
                         InputProps={{
-                            endAdornment: token ? renderClearButton() : null,
+                            endAdornment: token ? (
+                                <InputAdornment
+                                    position='end'
+                                    data-testid='TOKEN_INPUT_CLEAR_BTN'
+                                >
+                                    <IconButton
+                                        aria-label='clear API token'
+                                        onClick={clearToken}
+                                        edge='end'
+                                    >
+                                        <SmallClear />
+                                    </IconButton>
+                                </InputAdornment>
+                            ) : null,
                         }}
+                        disabled={Boolean(changeRequest)}
                     />
                 </Box>
                 <ConditionallyRender
-                    condition={Boolean(isChangeRequestPlaygroundEnabled)}
+                    condition={Boolean(
+                        changeRequestPlaygroundEnabled && changeRequest,
+                    )}
                     show={
                         <Box sx={{ display: 'flex', gap: 2 }}>
                             <Box sx={{ flex: 1 }}>
-                                <StyledInput
+                                <StyledChangeRequestInput
                                     label='Change request'
-                                    value={
-                                        '// TODO: Change request #5 (feature1, feature2)'
-                                    }
+                                    value={changeRequest || ''}
                                     onChange={() => {}}
                                     type={'text'}
-                                    // error={Boolean(tokenError)}
-                                    // errorText={tokenError}
+                                    // error={Boolean(changeRequestError)}
+                                    // errorText={changeRequestError)}}
                                     placeholder={'Enter your API token'}
                                     data-testid={'PLAYGROUND_TOKEN_INPUT'}
-                                    // disabled
+                                    disabled
                                     InputProps={{
-                                        endAdornment: renderClearButton(),
-                                        sx: {
-                                            cursor: 'default',
-                                        },
+                                        endAdornment: (
+                                            <InputAdornment
+                                                position='end'
+                                                data-testid='CR_INPUT_CLEAR_BTN'
+                                            >
+                                                <IconButton
+                                                    aria-label='clear Change request results'
+                                                    onClick={
+                                                        onClearChangeRequest
+                                                    }
+                                                    edge='end'
+                                                >
+                                                    <SmallClear />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
                                     }}
                                 />
                             </Box>
-                            <Button variant='outlined' size='small'>
+                            <Button
+                                variant='outlined'
+                                size='small'
+                                to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
+                                component={Link}
+                            >
                                 View change request
                             </Button>
                         </Box>

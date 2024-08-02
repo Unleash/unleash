@@ -134,7 +134,7 @@ const EventCard = ({ entry }: IEventCardProps) => {
                 />
             </dl>
             <ConditionallyRender
-                condition={entry.data || entry.preData}
+                condition={Boolean(entry.data || entry.preData)}
                 show={
                     <StyledCodeSection>
                         <StyledChangesTitle>Changes:</StyledChangesTitle>

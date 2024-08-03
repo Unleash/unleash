@@ -15,6 +15,7 @@ import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from '../../../common/Loader/Loader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { useLocation } from 'react-router';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
@@ -58,7 +59,7 @@ const FlexibleStrategy = ({
     errors,
 }: IFlexibleStrategyProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
+    const featureId = useOptionalPathParam('featureId');
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
     const { pathname } = useLocation();
 
@@ -83,7 +84,11 @@ const FlexibleStrategy = ({
 
     const groupId = useMemo(() => {
         if (!parameters.groupId && !loading) {
-            updateParameter('groupId', isDefaultStrategyEdit ? '' : featureId);
+            if (isDefaultStrategyEdit || !featureId) {
+                updateParameter('groupId', '');
+            } else {
+                updateParameter('groupId', featureId);
+            }
         }
 
         return parseParameterString(parameters.groupId);

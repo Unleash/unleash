@@ -7,11 +7,11 @@
 /**
  * Find events by event type (case-sensitive).
  */
-export type SearchEventsSchemaType =
-    (typeof SearchEventsSchemaType)[keyof typeof SearchEventsSchemaType];
+export type DeprecatedSearchEventsSchemaType =
+    (typeof DeprecatedSearchEventsSchemaType)[keyof typeof DeprecatedSearchEventsSchemaType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const SearchEventsSchemaType = {
+export const DeprecatedSearchEventsSchemaType = {
     'application-created': 'application-created',
     'feature-created': 'feature-created',
     'feature-deleted': 'feature-deleted',

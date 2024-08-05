@@ -242,7 +242,7 @@ export const PlaygroundConnectionFieldset: FC<
                 <Box>
                     <StyledInput
                         label='API token'
-                        value={token || changeRequest ? ' ' : ''}
+                        value={token || (changeRequest ? ' ' : '')}
                         onChange={onSetToken}
                         type={'text'}
                         error={Boolean(tokenError)}

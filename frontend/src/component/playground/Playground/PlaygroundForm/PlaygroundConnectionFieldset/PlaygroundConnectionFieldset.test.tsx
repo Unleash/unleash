@@ -119,6 +119,9 @@ test(
             'combobox',
         );
 
+        expect(tokenInput).toHaveValue(
+            'default:development.964a287e1b728cb5f4f3e0120df92cb5',
+        );
         expect(projectInput).toBeDisabled();
         expect(environmentInput).toBeDisabled();
         await within(projectAutocomplete).findByText('Default');

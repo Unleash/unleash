@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { SearchFeaturesSortOrder } from './searchFeaturesSortOrder';
 
 export type SearchFeaturesParams = {
     /**
@@ -52,7 +53,7 @@ export type SearchFeaturesParams = {
     /**
      * The sort order for the sortBy. By default it is det to "asc".
      */
-    sortOrder?: string;
+    sortOrder?: SearchFeaturesSortOrder;
     /**
      * The flag to indicate if the favorite features should be returned first. By default it is set to false.
      */

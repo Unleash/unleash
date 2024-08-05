@@ -147,19 +147,31 @@ export default class EventService {
         const queryParams: IQueryParam[] = [];
 
         if (params.createdAtFrom) {
-            queryParams.push({
-                field: 'created_at',
-                operator: 'IS_ON_OR_AFTER',
-                values: [params.createdAtFrom],
-            });
+            const parsed = parseSearchOperatorValue(
+                'created_at',
+                params.createdAtFrom,
+            );
+            if (parsed) {
+                queryParams.push({
+                    field: parsed.field,
+                    operator: 'IS_ON_OR_AFTER',
+                    values: parsed.values,
+                });
+            }
         }
 
         if (params.createdAtTo) {
-            queryParams.push({
-                field: 'created_at',
-                operator: 'IS_BEFORE',
-                values: [params.createdAtTo],
-            });
+            const parsed = parseSearchOperatorValue(
+                'created_at',
+                params.createdAtTo,
+            );
+            if (parsed) {
+                queryParams.push({
+                    field: parsed.field,
+                    operator: 'IS_BEFORE',
+                    values: parsed.values,
+                });
+            }
         }
 
         if (params.createdBy) {
@@ -170,12 +182,15 @@ export default class EventService {
             if (parsed) queryParams.push(parsed);
         }
 
-        if (params.type) {
-            const parsed = parseSearchOperatorValue('type', params.type);
+        if (params.feature) {
+            const parsed = parseSearchOperatorValue(
+                'feature_name',
+                params.feature,
+            );
             if (parsed) queryParams.push(parsed);
         }
 
-        ['feature', 'project'].forEach((field) => {
+        ['project', 'type'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);
                 if (parsed) queryParams.push(parsed);

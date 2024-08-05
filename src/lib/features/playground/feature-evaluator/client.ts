@@ -75,6 +75,9 @@ export default class UnleashClient {
             if (parentToggle.dependencies?.length) {
                 return false;
             }
+            if (Boolean(parent.enabled) !== Boolean(parentToggle.enabled)) {
+                return false;
+            }
 
             if (parent.enabled !== false) {
                 if (parent.variants?.length) {

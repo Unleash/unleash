@@ -59,6 +59,13 @@ const enableToggle = (featureName: string) =>
         )
         .send({})
         .expect(200);
+const disableToggle = (featureName: string) =>
+    app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/default/off`,
+        )
+        .send({})
+        .expect(200);
 
 afterAll(async () => {
     await app.destroy();
@@ -99,6 +106,8 @@ test('advanced playground evaluation with unsatisfied parent dependency', async 
     await createFeatureToggle('test-parent');
     await createFeatureToggle('test-child');
     await enableToggle('test-child');
+    await enableToggle('test-parent');
+    await disableToggle('test-parent');
     await app.addDependency('test-child', 'test-parent');
 
     const { body: result } = await app.request
@@ -116,6 +125,7 @@ test('advanced playground evaluation with unsatisfied parent dependency', async 
     // child is disabled because of the parent
     expect(child.hasUnsatisfiedDependency).toBe(true);
     expect(child.isEnabled).toBe(false);
+    expect(child.strategies.data.length).toBe(1);
     expect(child.isEnabledInCurrentEnvironment).toBe(true);
     expect(child.variant).toEqual({
         name: 'disabled',
@@ -124,6 +134,7 @@ test('advanced playground evaluation with unsatisfied parent dependency', async 
     });
     expect(parent.hasUnsatisfiedDependency).toBe(false);
     expect(parent.isEnabled).toBe(false);
+    expect(parent.strategies.data.length).toBe(1);
 });
 
 test('advanced playground evaluation with satisfied disabled parent dependency', async () => {

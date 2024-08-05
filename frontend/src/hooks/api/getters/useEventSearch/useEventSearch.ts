@@ -1,89 +1,124 @@
-import useSWR from 'swr';
-import { useCallback, useState, useEffect, useMemo } from 'react';
+import useSWR, { type SWRConfiguration } from 'swr';
+import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { EventSchema } from 'openapi';
+import type { EventSearchResponseSchema, SearchEventsParams } from 'openapi';
+import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
-const PATH = formatApiPath('api/admin/events/search');
-
-export interface IUseEventSearchOutput {
-    events?: EventSchema[];
-    fetchNextPage: () => void;
+type UseEventSearchOutput = {
     loading: boolean;
-    totalEvents?: number;
-    error?: Error;
-}
+    initialLoad: boolean;
+    error: string;
+    refetch: () => void;
+} & EventSearchResponseSchema;
 
-interface IEventSearch {
-    type?: string;
-    project?: string;
-    feature?: string;
-    query?: string;
-    limit?: number;
-    offset?: number;
-}
+type CacheValue = {
+    total: number;
+    initialLoad: boolean;
+    [key: string]: number | boolean;
+};
 
-export const useEventSearch = (
-    project?: string,
-    feature?: string,
-    query?: string,
-): IUseEventSearchOutput => {
-    const [events, setEvents] = useState<EventSchema[]>();
-    const [totalEvents, setTotalEvents] = useState<number>(0);
-    const [offset, setOffset] = useState(0);
+type InternalCache = Record<string, CacheValue>;
 
-    const search: IEventSearch = useMemo(
-        () => ({ project, feature, query, limit: 50 }),
-        [project, feature, query],
-    );
+const fallbackData: EventSearchResponseSchema = {
+    events: [],
+    total: 0,
+};
 
-    const { data, error, isValidating } = useSWR<{
-        events: EventSchema[];
-        totalEvents?: number;
-    }>([PATH, search, offset], () => searchEvents(PATH, { ...search, offset }));
+const SWR_CACHE_SIZE = 10;
+const PATH = 'api/admin/search/events?';
 
-    // Reset the page when there are new search conditions.
-    useEffect(() => {
-        setOffset(0);
-        setTotalEvents(0);
-        setEvents(undefined);
-    }, [search]);
+const createEventSearch = () => {
+    const internalCache: InternalCache = {};
 
-    // Append results to the page when more data has been fetched.
-    useEffect(() => {
-        if (data) {
-            setEvents((prev) => [
-                ...(prev?.slice(0, offset) || []),
-                ...data.events,
-            ]);
-            if (data.totalEvents) {
-                setTotalEvents(data.totalEvents);
-            }
+    const initCache = (id: string) => {
+        internalCache[id] = {
+            total: 0,
+            initialLoad: true,
+        };
+    };
+
+    const set = (id: string, key: string, value: number | boolean) => {
+        if (!internalCache[id]) {
+            initCache(id);
         }
-    }, [data]);
+        internalCache[id][key] = value;
+    };
 
-    // Update the offset to fetch more results at the end of the page.
-    const fetchNextPage = useCallback(() => {
-        if (events && !isValidating) {
-            setOffset(events.length);
+    const get = (id: string) => {
+        if (!internalCache[id]) {
+            initCache(id);
         }
-    }, [events, isValidating]);
+        return internalCache[id];
+    };
 
-    return {
-        events,
-        loading: !error && !data,
-        fetchNextPage,
-        totalEvents,
-        error,
+    return (
+        params: SearchEventsParams,
+        options: SWRConfiguration = {},
+        cachePrefix: string = '',
+    ): UseEventSearchOutput => {
+        const { KEY, fetcher } = getEventSearchFetcher(params);
+        const swrKey = `${cachePrefix}${KEY}`;
+        const cacheId = params.project || '';
+        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
+
+        useEffect(() => {
+            initCache(params.project || '');
+        }, []);
+
+        const { data, error, mutate, isLoading } =
+            useSWR<EventSearchResponseSchema>(swrKey, fetcher, options);
+
+        const refetch = useCallback(() => {
+            mutate();
+        }, [mutate]);
+
+        const cacheValues = get(cacheId);
+
+        if (data?.total !== undefined) {
+            set(cacheId, 'total', data.total);
+        }
+
+        if (!isLoading && cacheValues.initialLoad) {
+            set(cacheId, 'initialLoad', false);
+        }
+
+        const returnData = data || fallbackData;
+        return {
+            ...returnData,
+            loading: isLoading,
+            error,
+            refetch,
+            total: cacheValues.total,
+            initialLoad: isLoading && cacheValues.initialLoad,
+        };
     };
 };
 
-const searchEvents = (path: string, search: IEventSearch) => {
-    return fetch(path, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(search),
-    })
-        .then(handleErrorResponses('Event history'))
-        .then((res) => res.json());
+export const DEFAULT_PAGE_LIMIT = 25;
+
+const getEventSearchFetcher = (params: SearchEventsParams) => {
+    const urlSearchParams = new URLSearchParams(
+        Array.from(
+            Object.entries(params)
+                .filter(([_, value]) => !!value)
+                .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
+        ),
+    ).toString();
+    const KEY = `${PATH}${urlSearchParams}`;
+    const fetcher = () => {
+        const path = formatApiPath(KEY);
+        return fetch(path, {
+            method: 'GET',
+        })
+            .then(handleErrorResponses('Event search'))
+            .then((res) => res.json());
+    };
+
+    return {
+        fetcher,
+        KEY,
+    };
 };
+
+export const useEventSearch = createEventSearch();

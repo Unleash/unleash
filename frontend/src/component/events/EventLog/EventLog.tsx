@@ -7,7 +7,7 @@ import { useEventSettings } from 'hooks/useEventSettings';
 import { useState, useEffect } from 'react';
 import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
-import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
+import { useLegacyEventSearch } from 'hooks/api/getters/useEventSearch/useLegacyEventSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useOnVisible } from 'hooks/useOnVisible';
 import { styled } from '@mui/system';
@@ -43,7 +43,7 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
-    const { events, totalEvents, fetchNextPage } = useEventSearch(
+    const { events, totalEvents, fetchNextPage } = useLegacyEventSearch(
         project,
         feature,
         query,

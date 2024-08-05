@@ -205,43 +205,6 @@ test('should filter events by created by', async () => {
         total: 1,
     });
 });
-//
-// test('should filter events by created date range', async () => {
-//     await eventService.storeEvent({
-//         type: FEATURE_CREATED,
-//         createdBy: 'test-user',
-//         createdByUserId: TEST_USER_ID,
-//         ip: '127.0.0.1',
-//     });
-//
-//     await eventService.storeEvent({
-//         type: FEATURE_ARCHIVED,
-//         createdBy: 'test-user',
-//         createdByUserId: TEST_USER_ID,
-//         ip: '127.0.0.1',
-//     });
-//
-//     const { body } = await searchEvents({
-//
-//     });
-//
-//
-//     // const { body } = await searchEvents({
-//     //     createdAtFrom: 'IS:2024-01-10',
-//     //     createdAtTo: 'IS:2024-01-18',
-//     // });
-//     //
-//     // expect(body).toMatchObject({
-//     //     events: [
-//     //         {
-//     //             type: FEATURE_CREATED,
-//     //             data: { featureName: 'my_feature_a' },
-//     //             createdAt: '2024-01-15T00:00:00Z',
-//     //         },
-//     //     ],
-//     //     total: 1,
-//     // });
-// });
 
 test('should filter events by created date range', async () => {
     await eventService.storeEvent({

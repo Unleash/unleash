@@ -52,7 +52,7 @@ export const EventLogFilters: FC<EventLogFiltersProps> = (
     // {state, onChange,} // these are to fill in later to make the filters work
 ) => {
     const { projects } = useProjects();
-    const { features } = useFeatureSearch({ project: 'default' });
+    const { features } = useFeatureSearch({});
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {

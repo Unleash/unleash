@@ -3,13 +3,9 @@ import { Filters, type IFilterItem } from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { EventSchemaType } from 'openapi';
+import type { IProjectCard } from 'interfaces/project';
 
-export type EventUser = {
-    id: number;
-    name: string;
-};
-
-const sharedFilters = (users: EventUser[]): IFilterItem[] => [
+const sharedFilters: IFilterItem[] = [
     {
         label: 'Date From',
         icon: 'today',
@@ -28,10 +24,7 @@ const sharedFilters = (users: EventUser[]): IFilterItem[] => [
         // todo fill this in with actual values
         label: 'Created by',
         icon: 'person',
-        options: users.map((user) => ({
-            label: user.name,
-            value: user.id.toString(),
-        })),
+        options: [],
         filterKey: 'createdBy',
         singularOperators: ['IS'],
         pluralOperators: ['IS_ANY_OF'],
@@ -53,23 +46,22 @@ const sharedFilters = (users: EventUser[]): IFilterItem[] => [
 type EventLogFiltersProps = {
     logType: 'flag' | 'project' | 'global';
     className?: string;
-    users: EventUser[];
 };
 export const EventLogFilters: FC<EventLogFiltersProps> = (
-    { logType, users },
+    { logType, className },
     // {state, onChange,} // these are to fill in later to make the filters work
 ) => {
-    console.log('got users', users);
-    const baseFilters = sharedFilters(users);
     const { projects } = useProjects();
     const { features } = useFeatureSearch({ project: 'default' });
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
-        const projectOptions = (projects || []).map((project) => ({
-            label: project.name,
-            value: project.id,
-        }));
+        const projectOptions = (projects || []).map(
+            (project: IProjectCard) => ({
+                label: project.name,
+                value: project.id,
+            }),
+        );
 
         const hasMultipleProjects = projectOptions.length > 1;
 
@@ -79,7 +71,7 @@ export const EventLogFilters: FC<EventLogFiltersProps> = (
         }));
 
         const availableFilters: IFilterItem[] = [
-            ...baseFilters,
+            ...sharedFilters,
             ...(hasMultipleProjects && logType === 'global'
                 ? ([
                       {

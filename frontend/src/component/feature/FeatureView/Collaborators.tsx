@@ -64,6 +64,7 @@ const Container = styled('article')(({ theme }) => ({
     [theme.breakpoints.down('xl')]: {
         display: 'none',
     },
+    fontSize: theme.typography.body2.fontSize,
     flex: 1,
 }));
 

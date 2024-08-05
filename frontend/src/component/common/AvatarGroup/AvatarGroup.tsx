@@ -32,6 +32,7 @@ type AvatarGroupProps = {
     users: User[];
     avatarLimit?: number;
     AvatarComponent?: typeof UserAvatar;
+    className?: string;
 };
 
 export const AvatarGroup = ({
@@ -40,18 +41,19 @@ export const AvatarGroup = ({
 }: AvatarGroupProps) => {
     const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar);
 
-    return <GroupCardAvatarsInner AvatarComponent={Avatar} {...props} />;
+    return <AvatarGroupInner AvatarComponent={Avatar} {...props} />;
 };
 
-type GroupCardAvatarsInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
+type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
     AvatarComponent: typeof UserAvatar;
 };
 
-const GroupCardAvatarsInner = ({
+const AvatarGroupInner = ({
     users = [],
     avatarLimit = 9,
     AvatarComponent,
-}: GroupCardAvatarsInnerProps) => {
+    className,
+}: AvatarGroupInnerProps) => {
     const shownUsers = useMemo(
         () =>
             users
@@ -72,7 +74,7 @@ const GroupCardAvatarsInner = ({
     );
 
     return (
-        <StyledAvatars>
+        <StyledAvatars className={className}>
             {shownUsers.map((user) => (
                 <AvatarComponent key={objectId(user)} user={user} />
             ))}

@@ -16,6 +16,7 @@ import {
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useUiFlag } from 'hooks/useUiFlag';
+import type { SearchFeaturesParams } from 'openapi';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
@@ -55,7 +56,7 @@ export const useProjectFeatureSearch = (
                 project: `IS:${projectId}`,
             },
             (value) => (value ? `${value}` : undefined),
-        ),
+        ) as SearchFeaturesParams,
         {
             refreshInterval,
         },

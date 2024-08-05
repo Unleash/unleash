@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SearchEventsSchemaType } from './searchEventsSchemaType';
+import type { DeprecatedSearchEventsSchemaType } from './deprecatedSearchEventsSchemaType';
 
 /**
  * 
@@ -11,7 +11,7 @@ import type { SearchEventsSchemaType } from './searchEventsSchemaType';
         or a combination thereof. Pass an empty object to fetch all events.
     
  */
-export interface SearchEventsSchema {
+export interface DeprecatedSearchEventsSchema {
     /** Find events by feature flag name (case-sensitive). */
     feature?: string;
     /**
@@ -30,5 +30,5 @@ export interface SearchEventsSchema {
     /** Find events by a free-text search query. The query will be matched against the event type, the username or email that created the event (if any), and the event data payload (if any). */
     query?: string;
     /** Find events by event type (case-sensitive). */
-    type?: SearchEventsSchemaType;
+    type?: DeprecatedSearchEventsSchemaType;
 }

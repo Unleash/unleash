@@ -272,3 +272,94 @@ test('should paginate with offset and limit', async () => {
         },
     ]);
 });
+
+test('should filter events by feature using IS_ANY_OF', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        featureName: 'my_feature_a',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        featureName: 'my_feature_b',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        featureName: 'my_feature_c',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({
+        feature: 'IS_ANY_OF:my_feature_a,my_feature_b',
+    });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: 'feature-created',
+                featureName: 'my_feature_b',
+            },
+            {
+                type: 'feature-created',
+                featureName: 'my_feature_a',
+            },
+        ],
+        total: 2,
+    });
+});
+
+test('should filter events by project using IS_ANY_OF', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'project_a',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'project_b',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'project_c',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({
+        project: 'IS_ANY_OF:project_a,project_b',
+    });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: 'feature-created',
+                project: 'project_b',
+            },
+            {
+                type: 'feature-created',
+                project: 'project_a',
+            },
+        ],
+        total: 2,
+    });
+});

@@ -2,7 +2,7 @@ import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
+import type { EventSearchResponseSchema, SearchEventsParams } from 'openapi';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
 type UseEventSearchOutput = {
@@ -10,7 +10,7 @@ type UseEventSearchOutput = {
     initialLoad: boolean;
     error: string;
     refetch: () => void;
-} & SearchFeaturesSchema;
+} & EventSearchResponseSchema;
 
 type CacheValue = {
     total: number;
@@ -20,15 +20,15 @@ type CacheValue = {
 
 type InternalCache = Record<string, CacheValue>;
 
-const fallbackData: SearchFeaturesSchema = {
-    features: [],
+const fallbackData: EventSearchResponseSchema = {
+    events: [],
     total: 0,
 };
 
 const SWR_CACHE_SIZE = 10;
 const PATH = 'api/admin/search/events?';
 
-const createFeatureSearch = () => {
+const createEventSearch = () => {
     const internalCache: InternalCache = {};
 
     const initCache = (id: string) => {
@@ -53,11 +53,11 @@ const createFeatureSearch = () => {
     };
 
     return (
-        params: SearchFeaturesParams,
+        params: SearchEventsParams,
         options: SWRConfiguration = {},
         cachePrefix: string = '',
     ): UseEventSearchOutput => {
-        const { KEY, fetcher } = getFeatureSearchFetcher(params);
+        const { KEY, fetcher } = getEventSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
         const cacheId = params.project || '';
         useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
@@ -66,11 +66,8 @@ const createFeatureSearch = () => {
             initCache(params.project || '');
         }, []);
 
-        const { data, error, mutate, isLoading } = useSWR<SearchFeaturesSchema>(
-            swrKey,
-            fetcher,
-            options,
-        );
+        const { data, error, mutate, isLoading } =
+            useSWR<EventSearchResponseSchema>(swrKey, fetcher, options);
 
         const refetch = useCallback(() => {
             mutate();
@@ -100,7 +97,7 @@ const createFeatureSearch = () => {
 
 export const DEFAULT_PAGE_LIMIT = 25;
 
-const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
+const getEventSearchFetcher = (params: SearchEventsParams) => {
     const urlSearchParams = new URLSearchParams(
         Array.from(
             Object.entries(params)
@@ -114,7 +111,7 @@ const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
         return fetch(path, {
             method: 'GET',
         })
-            .then(handleErrorResponses('Feature search'))
+            .then(handleErrorResponses('Event search'))
             .then((res) => res.json());
     };
 
@@ -124,4 +121,4 @@ const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
     };
 };
 
-export const useFeatureSearch = createFeatureSearch();
+export const useEventSearch = createEventSearch();

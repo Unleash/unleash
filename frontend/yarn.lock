@@ -9966,8 +9966,8 @@ __metadata:
   linkType: hard
 
 "vanilla-jsoneditor@npm:^0.23.0":
-  version: 0.23.7
-  resolution: "vanilla-jsoneditor@npm:0.23.7"
+  version: 0.23.8
+  resolution: "vanilla-jsoneditor@npm:0.23.8"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.16.2"
     "@codemirror/commands": "npm:^6.6.0"
@@ -9994,7 +9994,7 @@ __metadata:
     sass: "npm:^1.77.4"
     svelte: "npm:^4.2.17"
     vanilla-picker: "npm:^2.12.3"
-  checksum: 10c0/462b4cd017d6cb2d5147101e6d0b74343bc28d4e4947176eb6283bd1571dd4bca9dbfba37a033d61d8c8415f1f59ae8f18370e9bcc0cc9b1daca46fe8b8c4ec7
+  checksum: 10c0/114259b34b918fac962f1ed566303d4fda5505d4ab05436849a25f4aebc815216163bb51e18ade931bc252190650524a976e3138aaf2c6e23e74e21a2bca46a1
   languageName: node
   linkType: hard
 

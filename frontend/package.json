@@ -28,12 +28,12 @@
     "fmt": "biome format src --write",
     "fmt:check": "biome check src",
     "ts:check": "tsc",
-    "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:oss": "yarn --cwd frontend run cypress run --spec \"cypress/oss/**/*.spec.ts\" --config baseUrl=\"http://localhost:${EXPOSED_PORT:-4242}\" --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "e2e:heroku": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" orval --config orval.config.js",
-    "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
-    "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
+    "e2e:heroku": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" orval --config orval.config.js",
+    "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
+    "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
     "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
   },
   "devDependencies": {

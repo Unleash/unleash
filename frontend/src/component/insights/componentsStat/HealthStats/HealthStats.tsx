@@ -10,6 +10,13 @@ interface IHealthStatsProps {
     title?: ReactNode;
 }
 
+const StyledContainer = styled(Box)(({ theme }) => ({
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+}));
+
 const StyledStatsRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -19,6 +26,7 @@ const StyledStatsRow = styled(Box)(({ theme }) => ({
 const ExplanationRow = styled(StyledStatsRow)(({ theme }) => ({
     flex: 1,
     justifyContent: 'flex-end',
+    alignItems: 'flex-end',
 }));
 
 const StyledIcon = styled(InstanceHealthIcon)(({ theme }) => ({
@@ -40,7 +48,7 @@ const StyledSection = styled('div')(({ theme }) => ({
 }));
 
 const FlagsSection = styled(StyledSection)(({ theme }) => ({
-    height: '100%',
+    flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
 }));
@@ -62,7 +70,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
     potentiallyStale,
     title,
 }) => (
-    <div>
+    <StyledContainer>
         <StyledHeader>
             <StyledSection>{title}</StyledSection>
             <StyledSection>{/* TODO: trend */}</StyledSection>
@@ -99,5 +107,5 @@ export const HealthStats: FC<IHealthStatsProps> = ({
                 </Link>
             </ExplanationRow>
         </FlagsSection>
-    </div>
+    </StyledContainer>
 );

@@ -253,7 +253,6 @@ export const AdvancedPlayground: FC<{
         } else if (changeRequest) {
             mode = 'change_request';
         }
-        console.log('mode', mode);
         trackEvent('playground', {
             props: {
                 eventType: 'try-configuration',

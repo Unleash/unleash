@@ -23,7 +23,10 @@ interface IEventSearch {
     offset?: number;
 }
 
-export const useEventSearch = (
+/**
+ * @deprecated Use useEventSearch instead. Remove with flag: newEventSearch
+ */
+export const useLegacyEventSearch = (
     project?: string,
     feature?: string,
     query?: string,

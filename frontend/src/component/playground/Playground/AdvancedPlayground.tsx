@@ -1,6 +1,6 @@
-import { type FormEventHandler, useEffect, useState, type FC } from 'react';
+import { type FC, type FormEventHandler, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Box, Paper, useTheme, styled, Alert } from '@mui/material';
+import { Alert, Box, Paper, styled, useTheme } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import useToast from 'hooks/useToast';
@@ -246,14 +246,28 @@ export const AdvancedPlayground: FC<{
         }
     };
 
+    const trackTryConfiguration = () => {
+        let mode: 'default' | 'api_token' | 'change_request' = 'default';
+        if (token && token !== '') {
+            mode = 'api_token';
+        } else if (changeRequest) {
+            mode = 'change_request';
+        }
+        console.log('mode', mode);
+        trackEvent('playground', {
+            props: {
+                eventType: 'try-configuration',
+                mode,
+            },
+        });
+    };
+
     const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
 
         setHasFormBeenSubmitted(true);
 
-        if (token && token !== '') {
-            trackEvent('playground_token_input_used');
-        }
+        trackTryConfiguration();
 
         await evaluatePlaygroundContext(environments, projects, context, () => {
             setURLParameters();

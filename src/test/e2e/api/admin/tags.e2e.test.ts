@@ -125,7 +125,7 @@ test('Can tag features', async () => {
     };
     await app.request.post('/api/admin/projects/default/features').send({
         name: featureName,
-        type: 'killswitch',
+        type: 'kill-switch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
@@ -141,7 +141,7 @@ test('Can tag features', async () => {
 
     await app.request.post('/api/admin/projects/default/features').send({
         name: featureName2,
-        type: 'killswitch',
+        type: 'kill-switch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });

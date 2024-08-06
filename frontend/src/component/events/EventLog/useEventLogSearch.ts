@@ -10,6 +10,7 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
+import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 
 type Log =
     | { type: 'global' }
@@ -65,7 +66,23 @@ export const useEventLogSearch = (
         stateConfig,
     );
 
-    const { offset, limit, query, ...filterState } = tableState;
+    const filterState = (() => {
+        switch (logType.type) {
+            case 'global': {
+                const { offset, limit, query, ...fs } = tableState;
+                return fs as FilterItemParamHolder;
+            }
+            case 'project': {
+                const { offset, limit, query, project, ...fs } = tableState;
+                return fs as FilterItemParamHolder;
+            }
+            case 'flag': {
+                const { offset, limit, query, feature, ...fs } = tableState;
+                return fs as FilterItemParamHolder;
+            }
+        }
+    })();
+    // const { offset, limit, query, ...filterState } = tableState;
 
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
         mapValues(encodeQueryParams(stateConfig, tableState), (value) =>

@@ -9,85 +9,79 @@ import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
+import type { SearchEventsParams } from 'openapi';
+import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 
 type Log =
     | { type: 'global' }
     | { type: 'project'; projectId: string }
     | { type: 'flag'; flagName: string };
 
-const getTypeSpecificData = (logType: Log, storageKey: string) => {
-    const sharedFilters = {
-        from: FilterItemParam,
-        to: FilterItemParam,
-        createdBy: FilterItemParam,
-        type: FilterItemParam,
-    };
-
-    const sharedOtherState = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-    };
-
+const extraParameters = (logType: Log) => {
     switch (logType.type) {
         case 'global':
-            return {
-                fullStorageKey: `${storageKey}-global`,
-                filterState: {
-                    ...sharedFilters,
-                    project: FilterItemParam,
-                    feature: FilterItemParam,
-                },
-                otherState: sharedOtherState,
-            };
-
+            return { project: FilterItemParam, feature: FilterItemParam };
         case 'project':
             return {
-                fullStorageKey: `${storageKey}-project:${logType.projectId}`,
-                filterState: { ...sharedFilters, feature: FilterItemParam },
-                otherState: {
-                    ...sharedOtherState,
-                    project: withDefault(
-                        StringParam,
-                        `IS:${logType.projectId}`,
-                    ),
-                },
+                feature: FilterItemParam,
+                project: withDefault(StringParam, `IS:${logType.projectId}`),
             };
         case 'flag':
             return {
-                fullStorageKey: `${storageKey}-flag:${logType.flagName}`,
-                filterState: { ...sharedFilters, feature: FilterItemParam },
-                otherState: {
-                    ...sharedOtherState,
-                    feature: withDefault(StringParam, `IS:${logType.flagName}`),
-                },
+                project: FilterItemParam,
+                feature: withDefault(StringParam, `IS:${logType.flagName}`),
             };
     }
 };
+
 export const useEventLogSearch = (
     logType: Log,
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
 ) => {
-    const { fullStorageKey, filterState, otherState } = getTypeSpecificData(
-        logType,
-        storageKey,
-    );
-
     const stateConfig = {
-        ...filterState,
-        ...otherState,
+        offset: withDefault(NumberParam, 0),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        query: StringParam,
+        from: FilterItemParam,
+        to: FilterItemParam,
+        createdBy: FilterItemParam,
+        type: FilterItemParam,
+        ...extraParameters(logType),
     };
+
+    const fullStorageKey = (() => {
+        switch (logType.type) {
+            case 'global':
+                return `${storageKey}-global`;
+            case 'project':
+                return `${storageKey}-project:${logType.projectId}`;
+            case 'flag':
+                return `${storageKey}-flag:${logType.flagName}`;
+        }
+    })();
 
     const [tableState, setTableState] = usePersistentTableState(
         fullStorageKey,
         stateConfig,
     );
 
+    const filterState = (() => {
+        const { offset, limit, query, ...fs } = tableState;
+        switch (logType.type) {
+            case 'global':
+                return fs as FilterItemParamHolder;
+            case 'project':
+                return { ...fs, project: undefined } as FilterItemParamHolder;
+            case 'flag':
+                return { ...fs, feature: undefined } as FilterItemParamHolder;
+        }
+    })();
+
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
         mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
-        ),
+        ) as SearchEventsParams,
         {
             refreshInterval,
         },

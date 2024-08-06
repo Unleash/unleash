@@ -15,7 +15,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
 import type { EventSchema } from 'openapi';
-import { useEventLogSearch } from './useEventLogSearch';
 
 interface IEventLogProps {
     title: string;
@@ -42,98 +41,7 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
-    const { events, total, loading, tableState, setTableState, filterState } =
-        useEventLogSearch(
-            project
-                ? { type: 'project', projectId: project }
-                : feature
-                  ? { type: 'flag', flagName: feature }
-                  : { type: 'global' },
-        );
-
-    const setSearchValue = (query = '') => {
-        setTableState({ query });
-    };
-    const { eventSettings, setEventSettings } = useEventSettings();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-    const onShowData = () => {
-        setEventSettings((prev) => ({ showData: !prev.showData }));
-    };
-
-    const searchInputField = (
-        <Search
-            onChange={setSearchValue}
-            initialValue={tableState.query || ''}
-            debounceTime={500}
-        />
-    );
-
-    const showDataSwitch = (
-        <FormControlLabel
-            label='Full events'
-            control={
-                <Switch
-                    checked={eventSettings.showData}
-                    onChange={onShowData}
-                    color='primary'
-                />
-            }
-        />
-    );
-
-    const resultComponent = () => {
-        if (loading) {
-            return <p>Loading...</p>;
-        } else if (events.length === 0) {
-            return <p>No events found.</p>;
-        } else {
-            return (
-                <StyledEventsList>
-                    {events.map((entry) => (
-                        <ConditionallyRender
-                            key={entry.id}
-                            condition={eventSettings.showData}
-                            show={() => <EventJson entry={entry} />}
-                            elseShow={() => <EventCard entry={entry} />}
-                        />
-                    ))}
-                </StyledEventsList>
-            );
-        }
-    };
-
-    return (
-        <PageContent
-            bodyClass={'no-padding'}
-            header={
-                <PageHeader
-                    title={`${title} (${total})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <EventResultWrapper>
-                <StyledFilters
-                    logType={project ? 'project' : feature ? 'flag' : 'global'}
-                    state={filterState}
-                    onChange={setTableState}
-                />
-                {resultComponent()}
-            </EventResultWrapper>
-        </PageContent>
-    );
-};
-
-export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
+export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useLegacyEventSearch(
         project,
@@ -143,6 +51,8 @@ export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
     const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const { isEnterprise } = useUiConfig();
+    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
@@ -172,22 +82,8 @@ export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
-    return (
-        <PageContent
-            header={
-                <PageHeader
-                    title={`${title} (${countText})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
+    const EventResults = (
+        <>
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}
@@ -207,17 +103,46 @@ export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
                     </StyledEventsList>
                 }
             />
+        </>
+    );
+
+    return (
+        <PageContent
+            bodyClass={showFilters ? 'no-padding' : ''}
+            header={
+                <PageHeader
+                    title={`${title} (${countText})`}
+                    actions={
+                        <>
+                            {showDataSwitch}
+                            {!isSmallScreen && searchInputField}
+                        </>
+                    }
+                >
+                    {isSmallScreen && searchInputField}
+                </PageHeader>
+            }
+        >
+            <ConditionallyRender
+                condition={showFilters}
+                show={
+                    <EventResultWrapper>
+                        <StyledFilters
+                            logType={
+                                project
+                                    ? 'project'
+                                    : feature
+                                      ? 'flag'
+                                      : 'global'
+                            }
+                        />
+                        {EventResults}
+                    </EventResultWrapper>
+                }
+                elseShow={EventResults}
+            />
+
             <div ref={fetchNextPageRef} />
         </PageContent>
     );
-};
-
-export const EventLog = (props: IEventLogProps) => {
-    const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
-    if (showFilters) {
-        return <NewEventLog {...props} />;
-    } else {
-        return <LegacyEventLog {...props} />;
-    }
 };

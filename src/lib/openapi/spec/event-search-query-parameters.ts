@@ -57,7 +57,7 @@ export const eventSearchQueryParameters = [
         in: 'query',
     },
     {
-        name: 'from',
+        name: 'createdAtFrom',
         schema: {
             type: 'string',
             example: 'IS:2024-01-01',
@@ -68,7 +68,7 @@ export const eventSearchQueryParameters = [
         in: 'query',
     },
     {
-        name: 'to',
+        name: 'createdAtTo',
         schema: {
             type: 'string',
             example: 'IS:2024-01-31',

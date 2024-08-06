@@ -19,4 +19,5 @@ jobs:
           node-version: 20.x
           cache: 'yarn'
       - run: yarn install --immutable
+      - run: yarn build:backend
       - run: yarn preversion

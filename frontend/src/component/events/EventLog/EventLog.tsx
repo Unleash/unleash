@@ -43,22 +43,14 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
 }));
 
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
-    const {
-        events,
-        total,
-        refetch: refetchEvents,
-        loading,
-        initialLoad,
-        tableState,
-        setTableState,
-        filterState,
-    } = useEventLogSearch(
-        project
-            ? { type: 'project', projectId: project }
-            : feature
-              ? { type: 'flag', flagName: feature }
-              : { type: 'global' },
-    );
+    const { events, total, loading, tableState, setTableState, filterState } =
+        useEventLogSearch(
+            project
+                ? { type: 'project', projectId: project }
+                : feature
+                  ? { type: 'flag', flagName: feature }
+                  : { type: 'global' },
+        );
 
     const setSearchValue = (query = '') => {
         setTableState({ query });

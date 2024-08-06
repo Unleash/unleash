@@ -74,7 +74,11 @@ export const useEventLogSearch = (
             case 'project':
                 return { ...fs, project: undefined } as FilterItemParamHolder;
             case 'flag':
-                return { ...fs, feature: undefined } as FilterItemParamHolder;
+                return {
+                    ...fs,
+                    feature: undefined,
+                    project: undefined,
+                } as FilterItemParamHolder;
         }
     })();
 

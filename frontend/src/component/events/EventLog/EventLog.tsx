@@ -133,7 +133,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
     );
 };
 
-export const EventLog = ({ title, project, feature }: IEventLogProps) => {
+export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useLegacyEventSearch(
         project,
@@ -143,8 +143,6 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
 
     // Cache the previous search results so that we can show those while
     // fetching new results for a new search query in the background.
@@ -173,12 +171,6 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const count = events?.length || 0;
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
-
-    if (showFilters) {
-        return (
-            <NewEventLog title={title} project={project} feature={feature} />
-        );
-    }
 
     return (
         <PageContent
@@ -218,4 +210,14 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
             <div ref={fetchNextPageRef} />
         </PageContent>
     );
+};
+
+export const EventLog = (props: IEventLogProps) => {
+    const { isEnterprise } = useUiConfig();
+    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
+    if (showFilters) {
+        return <NewEventLog {...props} />;
+    } else {
+        return <LegacyEventLog {...props} />;
+    }
 };

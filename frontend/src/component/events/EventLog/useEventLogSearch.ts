@@ -10,79 +10,77 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
-import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 
 type Log =
     | { type: 'global' }
     | { type: 'project'; projectId: string }
     | { type: 'flag'; flagName: string };
-
-const extraParameters = (logType: Log) => {
-    switch (logType.type) {
-        case 'global':
-            return { project: FilterItemParam, feature: FilterItemParam };
-        case 'project':
-            return {
-                feature: FilterItemParam,
-                project: withDefault(StringParam, `IS:${logType.projectId}`),
-            };
-        case 'flag':
-            return {
-                project: FilterItemParam,
-                feature: withDefault(StringParam, `IS:${logType.flagName}`),
-            };
-    }
-};
-
 export const useEventLogSearch = (
     logType: Log,
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
 ) => {
-    const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        from: FilterItemParam,
-        to: FilterItemParam,
-        createdBy: FilterItemParam,
-        type: FilterItemParam,
-        ...extraParameters(logType),
-    };
+    const { fullStorageKey, filterState, otherState } = (() => {
+        const sharedFilters = {
+            from: FilterItemParam,
+            to: FilterItemParam,
+            createdBy: FilterItemParam,
+            type: FilterItemParam,
+        };
 
-    const fullStorageKey = (() => {
+        const sharedOtherState = {
+            offset: withDefault(NumberParam, 0),
+            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+            query: StringParam,
+        };
+
         switch (logType.type) {
             case 'global':
-                return `${storageKey}-global`;
+                return {
+                    fullStorageKey: `${storageKey}-global`,
+                    filterState: {
+                        ...sharedFilters,
+                        project: FilterItemParam,
+                        feature: FilterItemParam,
+                    },
+                    otherState: sharedOtherState,
+                };
+
             case 'project':
-                return `${storageKey}-project:${logType.projectId}`;
+                return {
+                    fullStorageKey: `${storageKey}-project:${logType.projectId}`,
+                    filterState: { ...sharedFilters, feature: FilterItemParam },
+                    otherState: {
+                        ...sharedOtherState,
+                        project: withDefault(
+                            StringParam,
+                            `IS:${logType.projectId}`,
+                        ),
+                    },
+                };
             case 'flag':
-                return `${storageKey}-flag:${logType.flagName}`;
+                return {
+                    fullStorageKey: `${storageKey}-flag:${logType.flagName}`,
+                    filterState: { ...sharedFilters, feature: FilterItemParam },
+                    otherState: {
+                        ...sharedOtherState,
+                        feature: withDefault(
+                            StringParam,
+                            `IS:${logType.flagName}`,
+                        ),
+                    },
+                };
         }
     })();
+    const stateConfig = {
+        ...filterState,
+        ...otherState,
+    };
 
     const [tableState, setTableState] = usePersistentTableState(
         fullStorageKey,
         stateConfig,
     );
-
-    const filterState = (() => {
-        switch (logType.type) {
-            case 'global': {
-                const { offset, limit, query, ...fs } = tableState;
-                return fs as FilterItemParamHolder;
-            }
-            case 'project': {
-                const { offset, limit, query, project, ...fs } = tableState;
-                return fs as FilterItemParamHolder;
-            }
-            case 'flag': {
-                const { offset, limit, query, feature, ...fs } = tableState;
-                return fs as FilterItemParamHolder;
-            }
-        }
-    })();
-    // const { offset, limit, query, ...filterState } = tableState;
 
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
         mapValues(encodeQueryParams(stateConfig, tableState), (value) =>

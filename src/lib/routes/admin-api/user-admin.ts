@@ -728,7 +728,6 @@ export default class UserAdminController extends Controller {
         scimId,
     }: Pick<IUser, 'id' | 'scimId'>): Promise<void> {
         if (!this.isEnterprise) return;
-        if (!this.flagResolver.isEnabled('scimApi')) return;
 
         const isScimUser = await this.isScimUser({ id, scimId });
         if (!isScimUser) return;

@@ -1,7 +1,6 @@
 import {
     encodeQueryParams,
     NumberParam,
-    type QueryParamConfig,
     StringParam,
     withDefault,
 } from 'use-query-params';
@@ -10,20 +9,14 @@ import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
-import omit from 'lodash.omit';
+import type { SearchEventsParams } from 'openapi';
 
 type Log =
     | { type: 'global' }
     | { type: 'project'; projectId: string }
     | { type: 'flag'; flagName: string };
 
-const extraParameters = (
-    logType: Log,
-): {
-    [key in 'project' | 'feature']:
-        | typeof FilterItemParam
-        | QueryParamConfig<string | null | undefined, string>;
-} => {
+const extraParameters = (logType: Log) => {
     switch (logType.type) {
         case 'global':
             return { project: FilterItemParam, feature: FilterItemParam };
@@ -72,17 +65,12 @@ export const useEventLogSearch = (
         stateConfig,
     );
 
-    const apiTableState = omit(tableState, 'columns');
-
     const { offset, limit, query, ...filterState } = tableState;
 
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
-        mapValues(
-            {
-                ...encodeQueryParams(stateConfig, apiTableState),
-            },
-            (value) => (value ? `${value}` : undefined),
-        ),
+        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+            value ? `${value}` : undefined,
+        ) as SearchEventsParams,
         {
             refreshInterval,
         },

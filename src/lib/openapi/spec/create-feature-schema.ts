@@ -13,7 +13,13 @@ export const createFeatureSchema = {
             description: 'Unique feature name',
         },
         type: {
-            type: 'string',
+            enum: [
+                'experiment',
+                'kill-switch',
+                'release',
+                'operational',
+                'permission',
+            ],
             example: 'release',
             description:
                 "The feature flag's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission",

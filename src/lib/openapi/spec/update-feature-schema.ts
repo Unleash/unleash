@@ -13,7 +13,13 @@ export const updateFeatureSchema = {
             description: 'Detailed description of the feature',
         },
         type: {
-            type: 'string',
+            enum: [
+                'experiment',
+                'kill-switch',
+                'release',
+                'operational',
+                'permission',
+            ],
             example: 'kill-switch',
             description:
                 'Type of the flag e.g. experiment, kill-switch, release, operational, permission',

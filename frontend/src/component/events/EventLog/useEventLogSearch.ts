@@ -16,58 +16,53 @@ type Log =
     | { type: 'flag'; flagName: string };
 
 const getTypeSpecificData = (logType: Log, storageKey: string) => {
-    return () => {
-        const sharedFilters = {
-            from: FilterItemParam,
-            to: FilterItemParam,
-            createdBy: FilterItemParam,
-            type: FilterItemParam,
-        };
-
-        const sharedOtherState = {
-            offset: withDefault(NumberParam, 0),
-            limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-            query: StringParam,
-        };
-
-        switch (logType.type) {
-            case 'global':
-                return {
-                    fullStorageKey: `${storageKey}-global`,
-                    filterState: {
-                        ...sharedFilters,
-                        project: FilterItemParam,
-                        feature: FilterItemParam,
-                    },
-                    otherState: sharedOtherState,
-                };
-
-            case 'project':
-                return {
-                    fullStorageKey: `${storageKey}-project:${logType.projectId}`,
-                    filterState: { ...sharedFilters, feature: FilterItemParam },
-                    otherState: {
-                        ...sharedOtherState,
-                        project: withDefault(
-                            StringParam,
-                            `IS:${logType.projectId}`,
-                        ),
-                    },
-                };
-            case 'flag':
-                return {
-                    fullStorageKey: `${storageKey}-flag:${logType.flagName}`,
-                    filterState: { ...sharedFilters, feature: FilterItemParam },
-                    otherState: {
-                        ...sharedOtherState,
-                        feature: withDefault(
-                            StringParam,
-                            `IS:${logType.flagName}`,
-                        ),
-                    },
-                };
-        }
+    const sharedFilters = {
+        from: FilterItemParam,
+        to: FilterItemParam,
+        createdBy: FilterItemParam,
+        type: FilterItemParam,
     };
+
+    const sharedOtherState = {
+        offset: withDefault(NumberParam, 0),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        query: StringParam,
+    };
+
+    switch (logType.type) {
+        case 'global':
+            return {
+                fullStorageKey: `${storageKey}-global`,
+                filterState: {
+                    ...sharedFilters,
+                    project: FilterItemParam,
+                    feature: FilterItemParam,
+                },
+                otherState: sharedOtherState,
+            };
+
+        case 'project':
+            return {
+                fullStorageKey: `${storageKey}-project:${logType.projectId}`,
+                filterState: { ...sharedFilters, feature: FilterItemParam },
+                otherState: {
+                    ...sharedOtherState,
+                    project: withDefault(
+                        StringParam,
+                        `IS:${logType.projectId}`,
+                    ),
+                },
+            };
+        case 'flag':
+            return {
+                fullStorageKey: `${storageKey}-flag:${logType.flagName}`,
+                filterState: { ...sharedFilters, feature: FilterItemParam },
+                otherState: {
+                    ...sharedOtherState,
+                    feature: withDefault(StringParam, `IS:${logType.flagName}`),
+                },
+            };
+    }
 };
 export const useEventLogSearch = (
     logType: Log,
@@ -77,7 +72,7 @@ export const useEventLogSearch = (
     const { fullStorageKey, filterState, otherState } = getTypeSpecificData(
         logType,
         storageKey,
-    )();
+    );
 
     const stateConfig = {
         ...filterState,

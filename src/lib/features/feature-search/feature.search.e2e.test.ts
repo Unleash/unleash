@@ -244,7 +244,7 @@ test('should filter features by type', async () => {
     });
     await app.createFeature({
         name: 'my_feature_b',
-        type: 'experimental',
+        type: 'experiment',
     });
 
     const { body } = await filterFeaturesByType(
@@ -263,7 +263,7 @@ test('should filter features by created by', async () => {
     });
     await app.createFeature({
         name: 'my_feature_b',
-        type: 'experimental',
+        type: 'experiment',
     });
 
     const { body } = await filterFeaturesByCreatedBy('IS:1');

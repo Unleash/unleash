@@ -146,11 +146,8 @@ export default class EventService {
     convertToDbParams = (params: IEventSearchParams): IQueryParam[] => {
         const queryParams: IQueryParam[] = [];
 
-        if (params.createdAtFrom) {
-            const parsed = parseSearchOperatorValue(
-                'created_at',
-                params.createdAtFrom,
-            );
+        if (params.from) {
+            const parsed = parseSearchOperatorValue('created_at', params.from);
             if (parsed) {
                 queryParams.push({
                     field: parsed.field,
@@ -160,11 +157,8 @@ export default class EventService {
             }
         }
 
-        if (params.createdAtTo) {
-            const parsed = parseSearchOperatorValue(
-                'created_at',
-                params.createdAtTo,
-            );
+        if (params.to) {
+            const parsed = parseSearchOperatorValue('created_at', params.to);
             if (parsed) {
                 queryParams.push({
                     field: parsed.field,

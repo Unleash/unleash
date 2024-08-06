@@ -28,11 +28,11 @@ export type SearchEventsParams = {
     /**
      * The starting date of the creation date range in IS:yyyy-MM-dd format
      */
-    createdAtFrom?: string;
+    from?: string;
     /**
      * The ending date of the creation date range in IS:yyyy-MM-dd format
      */
-    createdAtTo?: string;
+    to?: string;
     /**
      * The number of features to skip when returning a page. By default it is set to 0.
      */

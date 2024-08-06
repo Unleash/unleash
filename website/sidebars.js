@@ -125,6 +125,11 @@ module.exports = {
                                     label: 'Examples',
                                     id: 'feature-flag-tutorials/python/examples',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Django',
+                                    id: 'feature-flag-tutorials/python/django-examples',
+                                },
                             ],
                         },
                         {
@@ -169,7 +174,13 @@ module.exports = {
                                 type: 'doc',
                                 id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
                             },
-                            items: [],
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'feature-flag-tutorials/rails/rails-examples',
+                                },
+                            ],
                         },
                         {
                             type: 'category',

@@ -2030,7 +2030,7 @@ test('should clone feature flag without strategies', async () => {
     const envName = 'some-env-3';
     const featureName = 'feature.flag.base';
     const cloneName = 'feature.flag.clone';
-    const type = 'eExperiment';
+    const type = 'experiment';
     const description = 'Lorem ipsum...';
 
     // Create environment
@@ -2069,7 +2069,7 @@ test('should clone feature flag WITH strategies', async () => {
     const envName = 'some-env-4';
     const featureName = 'feature.flag.base.2';
     const cloneName = 'feature.flag.clone.2';
-    const type = 'eExperiment';
+    const type = 'experiment';
     const description = 'Lorem ipsum...';
 
     // Create environment
@@ -2124,7 +2124,7 @@ test('should clone feature flag WITH variants', async () => {
     const envName = 'some-env-5';
     const featureName = 'feature.flag.base.3';
     const cloneName = 'feature.flag.clone.3';
-    const type = 'eExperiment';
+    const type = 'experiment';
     const description = 'Lorem ipsum...';
     const variants = [
         { name: 'variant1', weight: 50 },
@@ -2211,7 +2211,7 @@ test('should clone feature flag without replacing groupId', async () => {
 test('should clone feature flag WITHOUT createdAt field', async () => {
     const featureName = 'feature.flag.base.5';
     const cloneName = 'feature.flag.clone.5';
-    const type = 'eExperiment';
+    const type = 'experiment';
     const description = 'Lorem ipsum...';
     const originalCreatedAt = new Date(2011, 11, 11);
 
@@ -3706,4 +3706,14 @@ test('can get evaluation metrics', async () => {
             },
         ],
     });
+});
+
+test("Should not be able to create flag with a type that doesn't exist", async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            type: 'random',
+            name: 'random.type.flag',
+        })
+        .expect(400);
 });

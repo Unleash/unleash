@@ -150,7 +150,7 @@ test('response for project overview should include feature type counts', async (
     });
     await app.createFeature({
         name: 'my-new-development-toggle',
-        type: 'development',
+        type: 'experiment',
     });
     const { body } = await app.request
         .get('/api/admin/projects/default/overview')
@@ -159,7 +159,7 @@ test('response for project overview should include feature type counts', async (
     expect(body).toMatchObject({
         featureTypeCounts: [
             {
-                type: 'development',
+                type: 'experiment',
                 count: 1,
             },
             {

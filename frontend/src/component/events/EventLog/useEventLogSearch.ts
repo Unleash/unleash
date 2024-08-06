@@ -30,12 +30,12 @@ const extraParameters = (
         case 'project':
             return {
                 feature: FilterItemParam,
-                project: withDefault(StringParam, logType.projectId),
+                project: withDefault(StringParam, `IS:${logType.projectId}`),
             };
         case 'flag':
             return {
                 project: FilterItemParam,
-                feature: withDefault(StringParam, logType.flagName),
+                feature: withDefault(StringParam, `IS:${logType.flagName}`),
             };
     }
 };

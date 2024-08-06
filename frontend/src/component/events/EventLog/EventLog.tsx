@@ -65,8 +65,6 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
     };
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
 
     const onShowData = () => {
         setEventSettings((prev) => ({ showData: !prev.showData }));
@@ -113,6 +111,8 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
             <EventResultWrapper>
                 <StyledFilters
                     logType={project ? 'project' : feature ? 'flag' : 'global'}
+                    state={filterState}
+                    onChange={setTableState}
                 />
                 <ConditionallyRender
                     condition={events.length === 0}
@@ -179,7 +179,11 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
-    // return <NewEventLog title={title} project={project} feature={feature} />;
+    if (showFilters) {
+        return (
+            <NewEventLog title={title} project={project} feature={feature} />
+        );
+    }
 
     return (
         <PageContent

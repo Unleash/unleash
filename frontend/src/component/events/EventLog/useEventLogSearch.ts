@@ -49,11 +49,10 @@ export const useEventLogSearch = (
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
-        tag: FilterItemParam,
-        state: FilterItemParam,
-        createdAfter: FilterItemParam,
-        createdBefore: FilterItemParam,
+        from: FilterItemParam,
+        to: FilterItemParam,
         createdBy: FilterItemParam,
+        type: FilterItemParam,
         ...extraParameters(logType),
     };
 

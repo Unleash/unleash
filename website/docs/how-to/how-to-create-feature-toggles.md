@@ -2,13 +2,7 @@
 title: How to create a feature flag
 ---
 
-:::info Feature flags or feature flags?
-
-This document uses **feature flags** and **feature flags** interchangeably. Some people prefer flag; others prefer flag. We use both - they are synonyms for us.
-
-:::
-
-Feature Flags (or [Feature flags](../reference/feature-toggles.mdx) in the UI) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature flags in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.
+[Feature flags](../reference/feature-toggles.mdx) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature flags in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.
 
 You can perform every action both via the UI and the admin API. This guide includes screenshots to highlight the relevant UI controls and links to the relevant API methods for each step.
 

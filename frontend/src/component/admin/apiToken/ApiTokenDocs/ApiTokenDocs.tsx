@@ -27,7 +27,7 @@ export const ApiTokenDocs = () => {
     };
 
     const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
-    const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend`;
+    const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
 
     return (
         <Alert severity='info'>

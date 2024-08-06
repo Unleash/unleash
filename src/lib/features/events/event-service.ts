@@ -13,6 +13,7 @@ import { ApiTokenType } from '../../types/models/api-token';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { parseSearchOperatorValue } from '../feature-search/search-utils';
+import { endOfDay, formatISO } from 'date-fns';
 
 export default class EventService {
     private logger: Logger;
@@ -163,7 +164,9 @@ export default class EventService {
         if (params.createdAtTo) {
             const parsed = parseSearchOperatorValue(
                 'created_at',
-                params.createdAtTo,
+                formatISO(endOfDay(new Date(params.createdAtTo)), {
+                    representation: 'date',
+                }),
             );
             if (parsed) {
                 queryParams.push({

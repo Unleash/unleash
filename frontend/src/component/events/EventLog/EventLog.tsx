@@ -83,6 +83,27 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
+    const resultComponent = () => {
+        if (loading) {
+            return <p>Loading...</p>;
+        } else if (events.length === 0) {
+            return <p>No events found.</p>;
+        } else {
+            return (
+                <StyledEventsList>
+                    {events.map((entry) => (
+                        <ConditionallyRender
+                            key={entry.id}
+                            condition={eventSettings.showData}
+                            show={() => <EventJson entry={entry} />}
+                            elseShow={() => <EventCard entry={entry} />}
+                        />
+                    ))}
+                </StyledEventsList>
+            );
+        }
+    };
+
     return (
         <PageContent
             bodyClass={'no-padding'}
@@ -106,39 +127,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                     state={filterState}
                     onChange={setTableState}
                 />
-                <ConditionallyRender
-                    condition={loading}
-                    show={<p>Loading...</p>}
-                    elseShow={
-                        <>
-                            <ConditionallyRender
-                                condition={events.length === 0}
-                                show={<p>No events found.</p>}
-                            />
-                            <ConditionallyRender
-                                condition={events.length > 0}
-                                show={
-                                    <StyledEventsList>
-                                        {events.map((entry) => (
-                                            <ConditionallyRender
-                                                key={entry.id}
-                                                condition={
-                                                    eventSettings.showData
-                                                }
-                                                show={() => (
-                                                    <EventJson entry={entry} />
-                                                )}
-                                                elseShow={() => (
-                                                    <EventCard entry={entry} />
-                                                )}
-                                            />
-                                        ))}
-                                    </StyledEventsList>
-                                }
-                            />
-                        </>
-                    }
-                />
+                {resultComponent()}
             </EventResultWrapper>
         </PageContent>
     );

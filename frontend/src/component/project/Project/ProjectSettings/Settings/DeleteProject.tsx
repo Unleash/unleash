@@ -44,7 +44,7 @@ export const DeleteProject = ({
                 Before you can delete a project, you must first archive all the
                 feature flags associated with it
                 {isEnterprise() && automatedActionsEnabled
-                    ? 'and disable all actions that are in it'
+                    ? ' and disable all actions that are in it'
                     : ''}
                 .
             </p>

@@ -224,7 +224,7 @@ test('Can get strategies for specific environment', async () => {
     // Create feature flag
     await app.request.post('/api/admin/projects/default/features').send({
         name: featureName,
-        type: 'killswitch',
+        type: 'kill-switch',
     });
 
     // Add global strategy
@@ -277,13 +277,13 @@ test('Can use multiple filters', async () => {
 
     await app.request.post('/api/admin/projects/default/features').send({
         name: 'test.feature',
-        type: 'killswitch',
+        type: 'kill-switch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
     await app.request.post('/api/admin/projects/default/features').send({
         name: 'test.feature2',
-        type: 'killswitch',
+        type: 'kill-switch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
@@ -367,7 +367,7 @@ test('Can add tags while creating feature flag', async () => {
 
     await app.request.post('/api/admin/projects/default/features').send({
         name: featureName,
-        type: 'killswitch',
+        type: 'kill-switch',
         tags,
     });
 

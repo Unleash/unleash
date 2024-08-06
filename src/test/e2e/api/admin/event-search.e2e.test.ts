@@ -259,7 +259,7 @@ test('should include dates created on the `to` date', async () => {
     const today = new Date();
 
     const { body } = await searchEvents({
-        createdAtTo: `IS:${today.toISOString().split('T')[0]}`,
+        to: `IS:${today.toISOString().split('T')[0]}`,
     });
 
     expect(body).toMatchObject({

@@ -115,22 +115,36 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                     onChange={setTableState}
                 />
                 <ConditionallyRender
-                    condition={events.length === 0}
-                    show={<p>No events found.</p>}
-                />
-                <ConditionallyRender
-                    condition={events.length > 0}
-                    show={
-                        <StyledEventsList>
-                            {events.map((entry) => (
-                                <ConditionallyRender
-                                    key={entry.id}
-                                    condition={eventSettings.showData}
-                                    show={() => <EventJson entry={entry} />}
-                                    elseShow={() => <EventCard entry={entry} />}
-                                />
-                            ))}
-                        </StyledEventsList>
+                    condition={loading}
+                    show={<p>Loading...</p>}
+                    elseShow={
+                        <>
+                            <ConditionallyRender
+                                condition={events.length === 0}
+                                show={<p>No events found.</p>}
+                            />
+                            <ConditionallyRender
+                                condition={events.length > 0}
+                                show={
+                                    <StyledEventsList>
+                                        {events.map((entry) => (
+                                            <ConditionallyRender
+                                                key={entry.id}
+                                                condition={
+                                                    eventSettings.showData
+                                                }
+                                                show={() => (
+                                                    <EventJson entry={entry} />
+                                                )}
+                                                elseShow={() => (
+                                                    <EventCard entry={entry} />
+                                                )}
+                                            />
+                                        ))}
+                                    </StyledEventsList>
+                                }
+                            />
+                        </>
                     }
                 />
             </EventResultWrapper>

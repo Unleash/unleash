@@ -34,7 +34,6 @@ const sharedFilters: IFilterItem[] = [
         pluralOperators: ['IS_ANY_OF'],
     },
     {
-        // todo fill this in with actual values
         label: 'Event type',
         icon: 'announcement',
         options: Object.entries(EventSchemaType).map(([key, value]) => ({

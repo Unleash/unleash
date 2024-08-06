@@ -248,7 +248,7 @@ test('should filter features by type', async () => {
     });
 
     const { body } = await filterFeaturesByType(
-        'IS_ANY_OF:experimental,kill-switch',
+        'IS_ANY_OF:experiment,kill-switch',
     );
 
     expect(body).toMatchObject({

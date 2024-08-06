@@ -60,29 +60,25 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
               : { type: 'global' },
     );
 
-    console.log(events, total);
-    // const [query, setQuery] = useState('');
-    // const { events, totalEvents, fetchNextPage } = useLegacyEventSearch(
-    //     project,
-    //     feature,
-    //     query,
-    // );
-    // const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
+    const setSearchValue = (query = '') => {
+        setTableState({ query });
+    };
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { isEnterprise } = useUiConfig();
     const showFilters = useUiFlag('newEventSearch') && isEnterprise();
 
-    // Cache the previous search results so that we can show those while
-    // fetching new results for a new search query in the background.
-    const [cache, setCache] = useState<EventSchema[]>();
-    useEffect(() => events && setCache(events), [events]);
-
     const onShowData = () => {
         setEventSettings((prev) => ({ showData: !prev.showData }));
     };
 
-    const searchInputField = <Search onChange={() => {}} debounceTime={500} />;
+    const searchInputField = (
+        <Search
+            onChange={setSearchValue}
+            initialValue={tableState.query || ''}
+            debounceTime={500}
+        />
+    );
 
     const showDataSwitch = (
         <FormControlLabel
@@ -97,33 +93,9 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
-    const EventResults = (
-        <>
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length === 0)}
-                show={<p>No events found.</p>}
-            />
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length > 0)}
-                show={
-                    <StyledEventsList>
-                        {cache?.map((entry) => (
-                            <ConditionallyRender
-                                key={entry.id}
-                                condition={eventSettings.showData}
-                                show={() => <EventJson entry={entry} />}
-                                elseShow={() => <EventCard entry={entry} />}
-                            />
-                        ))}
-                    </StyledEventsList>
-                }
-            />
-        </>
-    );
-
     return (
         <PageContent
-            bodyClass={showFilters ? 'no-padding' : ''}
+            bodyClass={'no-padding'}
             header={
                 <PageHeader
                     title={`${title} (${total})`}
@@ -138,24 +110,30 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
-            <ConditionallyRender
-                condition={showFilters}
-                show={
-                    <EventResultWrapper>
-                        <StyledFilters
-                            logType={
-                                project
-                                    ? 'project'
-                                    : feature
-                                      ? 'flag'
-                                      : 'global'
-                            }
-                        />
-                        {EventResults}
-                    </EventResultWrapper>
-                }
-                elseShow={EventResults}
-            />
+            <EventResultWrapper>
+                <StyledFilters
+                    logType={project ? 'project' : feature ? 'flag' : 'global'}
+                />
+                <ConditionallyRender
+                    condition={events.length === 0}
+                    show={<p>No events found.</p>}
+                />
+                <ConditionallyRender
+                    condition={events.length > 0}
+                    show={
+                        <StyledEventsList>
+                            {events.map((entry) => (
+                                <ConditionallyRender
+                                    key={entry.id}
+                                    condition={eventSettings.showData}
+                                    show={() => <EventJson entry={entry} />}
+                                    elseShow={() => <EventCard entry={entry} />}
+                                />
+                            ))}
+                        </StyledEventsList>
+                    }
+                />
+            </EventResultWrapper>
         </PageContent>
     );
 };
@@ -203,7 +181,6 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
 
     const EventResults = (
         <>
-            <NewEventLog />
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}

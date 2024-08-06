@@ -246,6 +246,33 @@ test('should filter events by created date range', async () => {
     });
 });
 
+test('should include dates created on the `to` date', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { featureName: 'my_feature_b' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const today = new Date();
+
+    const { body } = await searchEvents({
+        to: `IS:${today.toISOString().split('T')[0]}`,
+    });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: FEATURE_CREATED,
+                data: { featureName: 'my_feature_b' },
+            },
+        ],
+        total: 1,
+    });
+});
+
 test('should paginate with offset and limit', async () => {
     for (let i = 0; i < 5; i++) {
         await eventService.storeEvent({

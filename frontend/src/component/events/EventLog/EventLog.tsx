@@ -179,8 +179,24 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const totalCount = totalEvents || 0;
     const countText = `${count} of ${totalCount}`;
 
-    const EventResults = (
-        <>
+    // return <NewEventLog title={title} project={project} feature={feature} />;
+
+    return (
+        <PageContent
+            header={
+                <PageHeader
+                    title={`${title} (${countText})`}
+                    actions={
+                        <>
+                            {showDataSwitch}
+                            {!isSmallScreen && searchInputField}
+                        </>
+                    }
+                >
+                    {isSmallScreen && searchInputField}
+                </PageHeader>
+            }
+        >
             <ConditionallyRender
                 condition={Boolean(cache && cache.length === 0)}
                 show={<p>No events found.</p>}
@@ -200,45 +216,6 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                     </StyledEventsList>
                 }
             />
-        </>
-    );
-
-    return (
-        <PageContent
-            bodyClass={showFilters ? 'no-padding' : ''}
-            header={
-                <PageHeader
-                    title={`${title} (${countText})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <ConditionallyRender
-                condition={showFilters}
-                show={
-                    <EventResultWrapper>
-                        <StyledFilters
-                            logType={
-                                project
-                                    ? 'project'
-                                    : feature
-                                      ? 'flag'
-                                      : 'global'
-                            }
-                        />
-                        {EventResults}
-                    </EventResultWrapper>
-                }
-                elseShow={EventResults}
-            />
-
             <div ref={fetchNextPageRef} />
         </PageContent>
     );

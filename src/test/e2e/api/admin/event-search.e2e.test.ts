@@ -228,7 +228,7 @@ test('should filter events by created date range', async () => {
     const today = new Date();
 
     const { body } = await searchEvents({
-        createdAtFrom: `IS:${today.toISOString().split('T')[0]}`,
+        from: `IS:${today.toISOString().split('T')[0]}`,
     });
 
     expect(body).toMatchObject({

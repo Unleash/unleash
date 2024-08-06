@@ -9,8 +9,8 @@ export interface IEventSearchParams {
     project?: string;
     query?: string;
     feature?: string;
-    createdAtFrom?: string;
-    createdAtTo?: string;
+    from?: string;
+    to?: string;
     createdBy?: string;
     type?: string;
     offset: number;

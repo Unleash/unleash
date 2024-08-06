@@ -71,7 +71,8 @@ export type IFlagKey =
     | 'improveCreateFlagFlow'
     | 'originMiddleware'
     | 'newEventSearch'
-    | 'changeRequestPlayground';
+    | 'changeRequestPlayground'
+    | 'archiveProjects';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -342,6 +343,10 @@ const flags: IFlags = {
     ),
     changeRequestPlayground: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_PLAYGROUND,
+        false,
+    ),
+    archiveProjects: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
         false,
     ),
 };

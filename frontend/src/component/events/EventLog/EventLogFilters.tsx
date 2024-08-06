@@ -108,7 +108,6 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
         setAvailableFilters(availableFilters);
     }, [JSON.stringify(features), JSON.stringify(projects)]);
 
-    console.log('state', state);
     return (
         <Filters
             className={className}

@@ -9,18 +9,14 @@ import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
-import type { SearchEventsParams } from 'openapi';
 
 type Log =
     | { type: 'global' }
     | { type: 'project'; projectId: string }
     | { type: 'flag'; flagName: string };
-export const useEventLogSearch = (
-    logType: Log,
-    storageKey = 'event-log',
-    refreshInterval = 15 * 1000,
-) => {
-    const { fullStorageKey, filterState, otherState } = (() => {
+
+const getTypeSpecificData = (logType: Log, storageKey: string) => {
+    return () => {
         const sharedFilters = {
             from: FilterItemParam,
             to: FilterItemParam,
@@ -71,7 +67,18 @@ export const useEventLogSearch = (
                     },
                 };
         }
-    })();
+    };
+};
+export const useEventLogSearch = (
+    logType: Log,
+    storageKey = 'event-log',
+    refreshInterval = 15 * 1000,
+) => {
+    const { fullStorageKey, filterState, otherState } = getTypeSpecificData(
+        logType,
+        storageKey,
+    )();
+
     const stateConfig = {
         ...filterState,
         ...otherState,
@@ -85,7 +92,7 @@ export const useEventLogSearch = (
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
         mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
-        ) as SearchEventsParams,
+        ),
         {
             refreshInterval,
         },

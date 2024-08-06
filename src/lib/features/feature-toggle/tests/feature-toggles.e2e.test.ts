@@ -3708,7 +3708,7 @@ test('can get evaluation metrics', async () => {
     });
 });
 
-test('Should not be able to create flag with random type', async () => {
+test("Should not be able to create flag with a type that doesn't exist", async () => {
     await app.request
         .post('/api/admin/projects/default/features')
         .send({

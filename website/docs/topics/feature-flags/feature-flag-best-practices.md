@@ -1,6 +1,8 @@
 ---
-title: "Feature flags: Best practices for building and scaling feature flag systems"
+title: "Feature flags: Best practices for building and scaling"
 ---
+
+# Feature flags: Best practices for building and scaling feature flag systems
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
 

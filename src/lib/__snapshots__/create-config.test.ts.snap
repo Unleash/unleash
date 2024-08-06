@@ -78,6 +78,7 @@ exports[`should create default config 1`] = `
       "adminTokenKillSwitch": false,
       "anonymiseEventLog": false,
       "anonymizeProjectOwners": false,
+      "archiveProjects": false,
       "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,

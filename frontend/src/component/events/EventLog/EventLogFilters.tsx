@@ -1,5 +1,9 @@
 import { useState, useEffect, type FC } from 'react';
-import { Filters, type IFilterItem } from 'component/filter/Filters/Filters';
+import {
+    type FilterItemParamHolder,
+    Filters,
+    type IFilterItem,
+} from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { EventSchemaType } from 'openapi';
@@ -30,14 +34,13 @@ const sharedFilters: IFilterItem[] = [
         pluralOperators: ['IS_ANY_OF'],
     },
     {
-        // todo fill this in with actual values
         label: 'Event type',
         icon: 'announcement',
         options: Object.entries(EventSchemaType).map(([key, value]) => ({
             label: key,
             value: value,
         })),
-        filterKey: 'eventType',
+        filterKey: 'type',
         singularOperators: ['IS'],
         pluralOperators: ['IS_ANY_OF'],
     },
@@ -46,11 +49,15 @@ const sharedFilters: IFilterItem[] = [
 type EventLogFiltersProps = {
     logType: 'flag' | 'project' | 'global';
     className?: string;
+    state: FilterItemParamHolder;
+    onChange: (value: FilterItemParamHolder) => void;
 };
-export const EventLogFilters: FC<EventLogFiltersProps> = (
-    { logType, className },
-    // {state, onChange,} // these are to fill in later to make the filters work
-) => {
+export const EventLogFilters: FC<EventLogFiltersProps> = ({
+    logType,
+    className,
+    state,
+    onChange,
+}) => {
     const { projects } = useProjects();
     const { features } = useFeatureSearch({});
 
@@ -90,7 +97,7 @@ export const EventLogFilters: FC<EventLogFiltersProps> = (
                           label: 'Feature Flag',
                           icon: 'flag',
                           options: flagOptions,
-                          filterKey: 'flag',
+                          filterKey: 'feature',
                           singularOperators: ['IS'],
                           pluralOperators: ['IS_ANY_OF'],
                       },
@@ -105,8 +112,8 @@ export const EventLogFilters: FC<EventLogFiltersProps> = (
         <Filters
             className={className}
             availableFilters={availableFilters}
-            state={{}}
-            onChange={(v) => console.log(v)}
+            state={state}
+            onChange={onChange}
         />
     );
 };

@@ -138,7 +138,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 {resultComponent()}
             </EventResultWrapper>
             <ConditionallyRender
-                condition={total > pagination.pageSize}
+                condition={total > 25}
                 show={
                     <StickyPaginationBar
                         totalItems={total}

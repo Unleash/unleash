@@ -55,17 +55,15 @@ type UseEventLogSearchProps = {
     logType: Log;
     storageKey?: string;
     refreshInterval?: number;
-    pageSize?: number;
 };
 export const useEventLogSearch = ({
     logType,
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
-    pageSize = DEFAULT_PAGE_SIZE,
 }: UseEventLogSearchProps) => {
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, pageSize),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_SIZE),
         query: StringParam,
         from: FilterItemParam,
         to: FilterItemParam,

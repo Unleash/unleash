@@ -43,10 +43,6 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const LoadingWrapper = styled('div')({
-    minHeight: '100vh',
-});
-
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
     const {
         events,
@@ -97,11 +93,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
 
     const resultComponent = () => {
         if (loading) {
-            return (
-                <LoadingWrapper>
-                    <p>Loading...</p>
-                </LoadingWrapper>
-            );
+            return <p>Loading...</p>;
         } else if (events.length === 0) {
             return <p>No events found.</p>;
         } else {

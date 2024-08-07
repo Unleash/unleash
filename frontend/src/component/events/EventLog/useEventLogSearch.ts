@@ -10,7 +10,6 @@ import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
-import { useState } from 'react';
 
 type Log =
     | { type: 'global' }
@@ -41,12 +40,7 @@ export const useEventLogSearch = (
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
     pageSize = DEFAULT_PAGE_SIZE,
-    initialPage = 0,
 ) => {
-    const [currentPage, setCurrentPage] = useState(Math.max(initialPage, 0));
-
-    console.log('current page', currentPage, pageSize * (currentPage - 1));
-
     const stateConfig = {
         offset: NumberParam,
         limit: NumberParam,
@@ -108,6 +102,10 @@ export const useEventLogSearch = (
         },
     );
 
+    const currentPage = Math.floor(
+        (tableState.offset ?? 0) / (tableState.limit ?? 1),
+    );
+
     return {
         events,
         total,
@@ -121,20 +119,19 @@ export const useEventLogSearch = (
         pagination: {
             currentPage,
             nextPage: () => {
-                setCurrentPage((prev) => prev + 1);
+                const nextPage = currentPage + 1;
                 setTableState({
-                    offset: pageSize * currentPage,
+                    offset: (tableState.limit ?? 0) * nextPage,
                 });
             },
 
             prevPage: () => {
-                setCurrentPage((prev) => prev - 1);
+                const prevPage = currentPage - 1;
                 setTableState({
-                    offset: pageSize * Math.max(currentPage - 1, 0),
+                    offset: (tableState.limit ?? 0) * prevPage,
                 });
             },
             setPageLimit: (limit: number) => {
-                setCurrentPage(0);
                 setTableState({
                     limit,
                     offset: 0,

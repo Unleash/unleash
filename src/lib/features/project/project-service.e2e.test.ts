@@ -281,6 +281,26 @@ test('should update project', async () => {
     expect(updatedProject.defaultStickiness).toBe('userId');
 });
 
+test('should archive project', async () => {
+    const project = {
+        id: 'test-archive',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
+    await projectService.archiveProject(project.id, TEST_AUDIT_USER);
+
+    const events = await stores.eventStore.getEvents();
+
+    expect(events[0]).toMatchObject({
+        type: 'project-archived',
+        createdBy: TEST_AUDIT_USER.username,
+    });
+});
+
 test('should update project without existing settings', async () => {
     const project = {
         id: 'test-update-legacy',

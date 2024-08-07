@@ -12,6 +12,7 @@ import { nameType } from '../../routes/util';
 import { projectSchema } from '../../services/project-schema';
 import NotFoundError from '../../error/notfound-error';
 import {
+    ADMIN,
     ADMIN_TOKEN_USER,
     type CreateProject,
     DEFAULT_PROJECT,
@@ -27,6 +28,7 @@ import {
     type IProjectApplications,
     type IProjectHealth,
     type IProjectOverview,
+    type IProjectOwnersReadModel,
     type IProjectRoleUsage,
     type IProjectStore,
     type IProjectUpdate,
@@ -38,6 +40,8 @@ import {
     ProjectAccessGroupRolesUpdated,
     ProjectAccessUserRolesDeleted,
     ProjectAccessUserRolesUpdated,
+    ProjectArchivedEvent,
+    type ProjectCreated,
     ProjectCreatedEvent,
     ProjectDeletedEvent,
     ProjectGroupAddedEvent,
@@ -49,9 +53,6 @@ import {
     ProjectUserUpdateRoleEvent,
     RoleName,
     SYSTEM_USER_ID,
-    type ProjectCreated,
-    type IProjectOwnersReadModel,
-    ADMIN,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -589,6 +590,30 @@ export default class ProjectService {
         );
 
         await this.accessService.removeDefaultProjectRoles(user, id);
+    }
+
+    async archiveProject(id: string, auditUser: IAuditUser): Promise<void> {
+        const flags = await this.featureToggleStore.getAll({
+            project: id,
+            archived: false,
+        });
+
+        // TODO: allow archiving project with unused flags
+
+        if (flags.length > 0) {
+            throw new InvalidOperationError(
+                'You can not archive a project with active feature flags',
+            );
+        }
+
+        await this.projectStore.archive(id);
+
+        await this.eventService.storeEvent(
+            new ProjectArchivedEvent({
+                project: id,
+                auditUser,
+            }),
+        );
     }
 
     async validateId(id: string): Promise<boolean> {

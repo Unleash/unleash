@@ -134,4 +134,6 @@ export interface IProjectStore extends Store<IProject, string> {
     getApplicationsByProject(
         searchParams: IProjectApplicationsSearchParams,
     ): Promise<IProjectApplications>;
+
+    archive(projectId: string): Promise<void>;
 }

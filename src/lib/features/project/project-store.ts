@@ -396,6 +396,11 @@ class ProjectStore implements IProjectStore {
         }
     }
 
+    async archive(id: string): Promise<void> {
+        const now = new Date();
+        await this.db(TABLE).where({ id }).update({ archived_at: now });
+    }
+
     async getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {

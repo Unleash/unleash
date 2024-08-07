@@ -44,13 +44,10 @@ export const calculatePaginationInfo = ({
 }) => {
     const currentPage = Math.floor(offset / Math.max(pageSize, 1));
 
-    const nextPageOffset = pageSize * (currentPage + 1);
-    const previousPageOffset = pageSize * Math.max(currentPage - 1, 0);
-
     return {
         currentPage,
-        nextPageOffset,
-        previousPageOffset,
+        nextPageOffset: pageSize * (currentPage + 1),
+        previousPageOffset: pageSize * Math.max(currentPage - 1, 0),
     };
 };
 

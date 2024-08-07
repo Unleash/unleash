@@ -20,10 +20,8 @@ exports[`should create default config 1`] = `
     "demoAllowAdminLogin": false,
     "enableApiToken": true,
     "initApiTokens": [],
-    "initialAdminUser": {
-      "password": "unleash4all",
-      "username": "admin",
-    },
+    "initialAdminEmailUser": undefined,
+    "initialAdminUser": undefined,
     "type": "open-source",
   },
   "clientFeatureCaching": {

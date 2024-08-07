@@ -214,4 +214,6 @@ export default class FakeProjectStore implements IProjectStore {
     ): Promise<IProjectApplications> {
         throw new Error('Method not implemented.');
     }
+
+    async archive(id: string): Promise<void> {}
 }

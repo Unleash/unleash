@@ -281,6 +281,49 @@ test('should update project', async () => {
     expect(updatedProject.defaultStickiness).toBe('userId');
 });
 
+test('should archive project', async () => {
+    const project = {
+        id: 'test-archive',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
+    await projectService.archiveProject(project.id, TEST_AUDIT_USER);
+
+    const events = await stores.eventStore.getEvents();
+
+    expect(events[0]).toMatchObject({
+        type: 'project-archived',
+        createdBy: TEST_AUDIT_USER.username,
+    });
+});
+
+test('should not be able to archive project with flags', async () => {
+    const project = {
+        id: 'test-archive-with-flags',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+    await projectService.createProject(project, user, auditUser);
+    await stores.featureToggleStore.create(project.id, {
+        name: 'test-project-archive',
+        createdByUserId: 9999,
+    });
+
+    try {
+        await projectService.archiveProject(project.id, auditUser);
+    } catch (err) {
+        expect(err.message).toBe(
+            'You can not archive a project with active feature flags',
+        );
+    }
+});
+
 test('should update project without existing settings', async () => {
     const project = {
         id: 'test-update-legacy',

@@ -57,7 +57,6 @@ const createEventSearch = () => {
         options: SWRConfiguration = {},
         cachePrefix: string = '',
     ): UseEventSearchOutput => {
-        console.log('useEventSearch. params', params);
         const { KEY, fetcher } = getEventSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
         const cacheId = params.project || '';

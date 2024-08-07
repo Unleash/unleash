@@ -92,7 +92,6 @@ jobs:
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
   update-main-version:
     needs: build

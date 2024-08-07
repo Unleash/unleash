@@ -1,12 +1,31 @@
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import Add from '@mui/icons-material/Add';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
+import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const CreateEnvironmentButton = () => {
-    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
+    const disabled = useUiFlag('EEA');
+
+    const endIcon = disabled ? (
+        <ThemeMode
+            darkmode={<ProPlanIconLight />}
+            lightmode={<ProPlanIcon />}
+        />
+    ) : undefined;
+
+    const tooltipProps = disabled
+        ? {
+              titleComponent: <PremiumFeature feature='environments' tooltip />,
+              sx: { maxWidth: '320px' },
+              variant: 'custom' as const,
+          }
+        : undefined;
 
     return (
         <ResponsiveButton
@@ -14,7 +33,9 @@ export const CreateEnvironmentButton = () => {
             maxWidth='700px'
             Icon={Add}
             permission={ADMIN}
-            disabled={!uiConfig.flags.EEA}
+            disabled={disabled}
+            endIcon={endIcon}
+            tooltipProps={tooltipProps}
         >
             New environment
         </ResponsiveButton>

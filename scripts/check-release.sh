@@ -4,6 +4,7 @@ set -e
 
 yarn
 yarn run lint
+yarn run build:backend
 yarn run test:report
 
 cd frontend

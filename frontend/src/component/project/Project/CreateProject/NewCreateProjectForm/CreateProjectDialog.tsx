@@ -180,7 +180,7 @@ export const CreateProjectDialog = ({
             try {
                 const createdProject = await createProject(projectPayload);
                 refetchUser();
-                navigate(`/projects/${createdProject.id}`, { replace: true });
+                navigate(`/projects/${createdProject.id}`);
                 setToastData({
                     title: 'Project created',
                     text: 'Now you can add flags to this project',

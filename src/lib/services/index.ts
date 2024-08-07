@@ -300,6 +300,9 @@ export const createServices = (
     const projectService = db
         ? createProjectService(db, config)
         : createFakeProjectService(config);
+    const transactionalProjectService = db
+        ? withTransactional((db: Db) => createProjectService(db, config), db)
+        : withFakeTransactional(createFakeProjectService(config));
     const projectInsightsService = db
         ? createProjectInsightsService(db, config)
         : createFakeProjectInsightsService().projectInsightsService;
@@ -398,6 +401,7 @@ export const createServices = (
         featureTypeService,
         healthService,
         projectService,
+        transactionalProjectService,
         strategyService,
         tagTypeService,
         transactionalTagTypeService,

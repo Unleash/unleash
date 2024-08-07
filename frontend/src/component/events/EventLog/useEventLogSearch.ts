@@ -36,12 +36,6 @@ const extraParameters = (logType: Log) => {
 
 export const DEFAULT_PAGE_SIZE = 25;
 
-type Pagination = {
-    currentPage: number;
-    nextPage: () => void;
-    prevPage: () => void;
-};
-
 export const useEventLogSearch = (
     logType: Log,
     storageKey = 'event-log',
@@ -137,6 +131,13 @@ export const useEventLogSearch = (
                 setCurrentPage((prev) => prev - 1);
                 setTableState({
                     offset: pageSize * Math.max(currentPage - 1, 0),
+                });
+            },
+            setPageLimit: (limit: number) => {
+                setCurrentPage(0);
+                setTableState({
+                    limit,
+                    offset: 0,
                 });
             },
         },

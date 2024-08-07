@@ -44,7 +44,7 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
 }));
 
 const LoadingWrapper = styled('div')({
-    minHeight: '70vh',
+    minHeight: '100vh',
 });
 
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
@@ -147,15 +147,18 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 />
                 {resultComponent()}
             </EventResultWrapper>
-            <StickyPaginationBar
-                totalItems={total}
-                pageSize={25}
-                pageIndex={pagination.currentPage}
-                fetchPrevPage={pagination.prevPage}
-                fetchNextPage={pagination.nextPage}
-                setPageLimit={(limit: number): void => {
-                    throw new Error('Function not implemented.');
-                }}
+            <ConditionallyRender
+                condition={total > (limit ?? 0)}
+                show={
+                    <StickyPaginationBar
+                        totalItems={total}
+                        pageSize={limit ?? 0}
+                        pageIndex={pagination.currentPage}
+                        fetchPrevPage={pagination.prevPage}
+                        fetchNextPage={pagination.nextPage}
+                        setPageLimit={pagination.setPageLimit}
+                    />
+                }
             />
         </PageContent>
     );

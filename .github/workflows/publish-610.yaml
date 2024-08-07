@@ -20,6 +20,7 @@ jobs:
           cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
+      - run: yarn install --immutable
       - run: yarn preversion
 
 #    steps:

@@ -4,13 +4,13 @@ import {
     StringParam,
     withDefault,
 } from 'use-query-params';
-import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
+import { useState } from 'react';
 
 type Log =
     | { type: 'global' }
@@ -34,14 +34,28 @@ const extraParameters = (logType: Log) => {
     }
 };
 
+export const DEFAULT_PAGE_SIZE = 25;
+
+type Pagination = {
+    currentPage: number;
+    nextPage: () => void;
+    prevPage: () => void;
+};
+
 export const useEventLogSearch = (
     logType: Log,
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
+    pageSize = DEFAULT_PAGE_SIZE,
+    initialPage = 0,
 ) => {
+    const [currentPage, setCurrentPage] = useState(Math.max(initialPage, 0));
+
+    console.log('current page', currentPage, pageSize * (currentPage - 1));
+
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        offset: NumberParam,
+        limit: NumberParam,
         query: StringParam,
         from: FilterItemParam,
         to: FilterItemParam,
@@ -49,6 +63,8 @@ export const useEventLogSearch = (
         type: FilterItemParam,
         ...extraParameters(logType),
     };
+
+    console.log('stateConfig', stateConfig.offset);
 
     const fullStorageKey = (() => {
         switch (logType.type) {
@@ -82,6 +98,13 @@ export const useEventLogSearch = (
         }
     })();
 
+    console.log(
+        tableState,
+        stateConfig,
+        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+            value ? `${value}` : undefined,
+        ),
+    );
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
         mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
@@ -100,5 +123,22 @@ export const useEventLogSearch = (
         tableState,
         setTableState,
         filterState,
+        limit: tableState.limit,
+        pagination: {
+            currentPage,
+            nextPage: () => {
+                setCurrentPage((prev) => prev + 1);
+                setTableState({
+                    offset: pageSize * currentPage,
+                });
+            },
+
+            prevPage: () => {
+                setCurrentPage((prev) => prev - 1);
+                setTableState({
+                    offset: pageSize * Math.max(currentPage - 1, 0),
+                });
+            },
+        },
     };
 };

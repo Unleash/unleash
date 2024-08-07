@@ -16,6 +16,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
 import type { EventSchema } from 'openapi';
 import { useEventLogSearch } from './useEventLogSearch';
+import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 
 interface IEventLogProps {
     title: string;
@@ -43,15 +44,24 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
 }));
 
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
-    const { events, total, loading, tableState, setTableState, filterState } =
-        useEventLogSearch(
-            project
-                ? { type: 'project', projectId: project }
-                : feature
-                  ? { type: 'flag', flagName: feature }
-                  : { type: 'global' },
-        );
+    const {
+        events,
+        total,
+        loading,
+        tableState,
+        setTableState,
+        filterState,
+        limit,
+        pagination,
+    } = useEventLogSearch(
+        project
+            ? { type: 'project', projectId: project }
+            : feature
+              ? { type: 'flag', flagName: feature }
+              : { type: 'global' },
+    );
 
+    console.log(tableState);
     const setSearchValue = (query = '') => {
         setTableState({ query });
     };
@@ -129,6 +139,16 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 />
                 {resultComponent()}
             </EventResultWrapper>
+            <StickyPaginationBar
+                totalItems={total}
+                pageSize={25}
+                pageIndex={pagination.currentPage}
+                fetchPrevPage={pagination.prevPage}
+                fetchNextPage={pagination.nextPage}
+                setPageLimit={(limit: number): void => {
+                    throw new Error('Function not implemented.');
+                }}
+            />
         </PageContent>
     );
 };

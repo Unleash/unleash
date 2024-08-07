@@ -31,11 +31,16 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn'
+      - name: Enable corepack
+        run: corepack enable
       - run: yarn install --immutable
+        env:
+          YARN_ENABLE_SCRIPTS: false
       - run: yarn preversion
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
 #    steps:
 #      - uses: actions/checkout@v4

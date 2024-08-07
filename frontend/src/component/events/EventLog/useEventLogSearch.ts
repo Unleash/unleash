@@ -58,8 +58,6 @@ export const useEventLogSearch = ({
         ...extraParameters(logType),
     };
 
-    console.log('stateConfig', stateConfig.offset);
-
     const fullStorageKey = (() => {
         switch (logType.type) {
             case 'global':
@@ -92,13 +90,6 @@ export const useEventLogSearch = ({
         }
     })();
 
-    console.log(
-        tableState,
-        stateConfig,
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
-            value ? `${value}` : undefined,
-        ),
-    );
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
         mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,

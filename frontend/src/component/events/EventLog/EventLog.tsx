@@ -64,7 +64,6 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
               : { type: 'global' },
     });
 
-    console.log(tableState);
     const setSearchValue = (query = '') => {
         setTableState({ query });
     };

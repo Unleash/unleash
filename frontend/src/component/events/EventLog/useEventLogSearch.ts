@@ -51,16 +51,11 @@ export const calculatePaginationInfo = ({
     };
 };
 
-type UseEventLogSearchProps = {
-    logType: Log;
-    storageKey?: string;
-    refreshInterval?: number;
-};
-export const useEventLogSearch = ({
-    logType,
+export const useEventLogSearch = (
+    logType: Log,
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
-}: UseEventLogSearchProps) => {
+) => {
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_SIZE),

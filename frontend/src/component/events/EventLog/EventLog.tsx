@@ -55,7 +55,6 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
         tableState,
         setTableState,
         filterState,
-        limit,
         pagination,
     } = useEventLogSearch(
         project
@@ -148,11 +147,11 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 {resultComponent()}
             </EventResultWrapper>
             <ConditionallyRender
-                condition={total > (limit ?? 0)}
+                condition={total > pagination.pageSize}
                 show={
                     <StickyPaginationBar
                         totalItems={total}
-                        pageSize={limit ?? 0}
+                        pageSize={pagination.pageSize}
                         pageIndex={pagination.currentPage}
                         fetchPrevPage={pagination.prevPage}
                         fetchNextPage={pagination.nextPage}

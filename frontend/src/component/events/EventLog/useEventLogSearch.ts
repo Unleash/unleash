@@ -115,8 +115,8 @@ export const useEventLogSearch = (
         tableState,
         setTableState,
         filterState,
-        limit: tableState.limit,
         pagination: {
+            pageSize: tableState.limit ?? 0,
             currentPage,
             nextPage: () => {
                 const nextPage = currentPage + 1;

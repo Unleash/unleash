@@ -78,6 +78,7 @@ export interface IUnleashServices {
     healthService: HealthService;
     projectHealthService: ProjectHealthService;
     projectService: ProjectService;
+    transactionalProjectService: WithTransactional<ProjectService>;
     playgroundService: PlaygroundService;
     frontendApiService: FrontendApiService;
     publicSignupTokenService: PublicSignupTokenService;

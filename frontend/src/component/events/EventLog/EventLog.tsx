@@ -16,6 +16,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
 import type { EventSchema } from 'openapi';
 import { useEventLogSearch } from './useEventLogSearch';
+import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 
 interface IEventLogProps {
     title: string;
@@ -43,14 +44,21 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
 }));
 
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
-    const { events, total, loading, tableState, setTableState, filterState } =
-        useEventLogSearch(
-            project
-                ? { type: 'project', projectId: project }
-                : feature
-                  ? { type: 'flag', flagName: feature }
-                  : { type: 'global' },
-        );
+    const {
+        events,
+        total,
+        loading,
+        tableState,
+        setTableState,
+        filterState,
+        pagination,
+    } = useEventLogSearch(
+        project
+            ? { type: 'project', projectId: project }
+            : feature
+              ? { type: 'flag', flagName: feature }
+              : { type: 'global' },
+    );
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
@@ -129,6 +137,19 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 />
                 {resultComponent()}
             </EventResultWrapper>
+            <ConditionallyRender
+                condition={total > 25}
+                show={
+                    <StickyPaginationBar
+                        totalItems={total}
+                        pageSize={pagination.pageSize}
+                        pageIndex={pagination.currentPage}
+                        fetchPrevPage={pagination.prevPage}
+                        fetchNextPage={pagination.nextPage}
+                        setPageLimit={pagination.setPageLimit}
+                    />
+                }
+            />
         </PageContent>
     );
 };

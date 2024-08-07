@@ -3,7 +3,7 @@
 set -e
 
 yarn run lint
-yarn run test:report
+yarn run test
 
 cd frontend
 yarn

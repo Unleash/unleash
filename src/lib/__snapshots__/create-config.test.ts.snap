@@ -154,7 +154,6 @@ exports[`should create default config 1`] = `
       "resourceLimits": false,
       "responseTimeMetricsFix": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "scimApi": false,
       "showInactiveUsers": false,
       "signals": false,
       "strictSchemaValidation": false,

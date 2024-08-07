@@ -54,6 +54,7 @@ jobs:
       - run: yarn install --immutable
         env:
           YARN_ENABLE_SCRIPTS: false
+      - run: yarn
       - run: yarn lint
       - run: yarn build:backend
       - run: yarn run test:report # This adds test results as github check to the workflow

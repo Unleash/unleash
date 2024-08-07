@@ -181,9 +181,10 @@ export const updateFlexibleRolloutStrategy_UI = (
         .click();
 
     cy.wait(500);
+    cy.get('[data-testid=FLEXIBLE_STRATEGY_GROUP_ID]').first().clear();
+
     cy.get('[data-testid=FLEXIBLE_STRATEGY_GROUP_ID]')
         .first()
-        .clear()
         .type('new-group-id');
 
     cy.intercept(

@@ -301,6 +301,29 @@ test('should archive project', async () => {
     });
 });
 
+test('should not be able to archive project with flags', async () => {
+    const project = {
+        id: 'test-archive-with-flags',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+    await projectService.createProject(project, user, auditUser);
+    await stores.featureToggleStore.create(project.id, {
+        name: 'test-project-delete',
+        createdByUserId: 9999,
+    });
+
+    try {
+        await projectService.archiveProject(project.id, auditUser);
+    } catch (err) {
+        expect(err.message).toBe(
+            'You can not archive a project with active feature flags',
+        );
+    }
+});
+
 test('should update project without existing settings', async () => {
     const project = {
         id: 'test-update-legacy',

@@ -2,6 +2,7 @@
 
 set -e
 
+yarn
 yarn run lint
 yarn run test
 

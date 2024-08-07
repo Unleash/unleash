@@ -31,8 +31,6 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn'
-      - name: Enable corepack
-        run: corepack enable
       - run: yarn install --immutable
       - run: yarn preversion
         env:

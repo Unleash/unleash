@@ -2,7 +2,7 @@
 
 set -e
 
-yarn
+yarn install --immutable
 yarn run lint
 yarn run test
 

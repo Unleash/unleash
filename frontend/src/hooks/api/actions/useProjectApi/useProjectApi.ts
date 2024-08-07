@@ -82,7 +82,7 @@ const useProjectApi = () => {
 
     const archiveProject = async (projectId: string) => {
         const path = `api/admin/projects/${projectId}/archive`;
-        const req = createRequest(path, { method: 'DELETE' });
+        const req = createRequest(path, { method: 'POST' });
 
         const res = await makeRequest(req.caller, req.id);
 

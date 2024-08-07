@@ -311,7 +311,7 @@ test('should not be able to archive project with flags', async () => {
     };
     await projectService.createProject(project, user, auditUser);
     await stores.featureToggleStore.create(project.id, {
-        name: 'test-project-delete',
+        name: 'test-project-archive',
         createdByUserId: 9999,
     });
 

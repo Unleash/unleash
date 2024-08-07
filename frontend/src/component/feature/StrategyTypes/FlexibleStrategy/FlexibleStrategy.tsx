@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Box, styled } from '@mui/material';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
@@ -82,7 +82,7 @@ const FlexibleStrategy = ({
         return parseParameterString(parameters.stickiness);
     }, [loading, defaultStickiness, parameters.stickiness]);
 
-    const groupId = useMemo(() => {
+    useEffect(() => {
         if (!parameters.groupId && !loading) {
             if (isDefaultStrategyEdit || !featureId) {
                 updateParameter('groupId', '');
@@ -90,9 +90,9 @@ const FlexibleStrategy = ({
                 updateParameter('groupId', featureId);
             }
         }
+    }, [isDefaultStrategyEdit, featureId, loading]);
 
-        return parseParameterString(parameters.groupId);
-    }, [parameters.groupId, isDefaultStrategyEdit, featureId, loading]);
+    const groupId = parseParameterString(parameters.groupId);
 
     if (loading) {
         return <Loader />;

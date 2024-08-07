@@ -56,13 +56,13 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
         setTableState,
         filterState,
         pagination,
-    } = useEventLogSearch(
-        project
+    } = useEventLogSearch({
+        logType: project
             ? { type: 'project', projectId: project }
             : feature
               ? { type: 'flag', flagName: feature }
               : { type: 'global' },
-    );
+    });
 
     console.log(tableState);
     const setSearchValue = (query = '') => {

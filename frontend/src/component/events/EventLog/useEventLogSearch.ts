@@ -35,12 +35,18 @@ const extraParameters = (logType: Log) => {
 
 export const DEFAULT_PAGE_SIZE = 25;
 
-export const useEventLogSearch = (
-    logType: Log,
+type UseEventLogSearchProps = {
+    logType: Log;
+    storageKey?: string;
+    refreshInterval?: number;
+    pageSize?: number;
+};
+export const useEventLogSearch = ({
+    logType,
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
     pageSize = DEFAULT_PAGE_SIZE,
-) => {
+}: UseEventLogSearchProps) => {
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, pageSize),

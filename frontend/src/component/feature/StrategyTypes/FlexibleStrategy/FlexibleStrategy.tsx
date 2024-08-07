@@ -126,7 +126,10 @@ const FlexibleStrategy = ({
                         value={groupId}
                         disabled={!editable}
                         onChange={(e) =>
-                            updateParameter('groupId', e.target.value)
+                            updateParameter(
+                                'groupId',
+                                parseParameterString(e.target.value),
+                            )
                         }
                         data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
                         error={Boolean(errors?.getFormError('groupId'))}

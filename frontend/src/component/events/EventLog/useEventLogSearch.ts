@@ -42,8 +42,8 @@ export const useEventLogSearch = (
     pageSize = DEFAULT_PAGE_SIZE,
 ) => {
     const stateConfig = {
-        offset: NumberParam,
-        limit: NumberParam,
+        offset: withDefault(NumberParam, 0),
+        limit: withDefault(NumberParam, pageSize),
         query: StringParam,
         from: FilterItemParam,
         to: FilterItemParam,

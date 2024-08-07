@@ -35,6 +35,25 @@ const extraParameters = (logType: Log) => {
 
 export const DEFAULT_PAGE_SIZE = 25;
 
+export const calculatePaginationInfo = ({
+    offset,
+    pageSize,
+}: {
+    offset: number;
+    pageSize: number;
+}) => {
+    const currentPage = Math.floor(offset / Math.max(pageSize, 1));
+
+    const nextPageOffset = pageSize * (currentPage + 1);
+    const previousPageOffset = Math.max(pageSize * (currentPage - 1), 0);
+
+    return {
+        currentPage,
+        nextPageOffset,
+        previousPageOffset,
+    };
+};
+
 type UseEventLogSearchProps = {
     logType: Log;
     storageKey?: string;
@@ -99,9 +118,11 @@ export const useEventLogSearch = ({
         },
     );
 
-    const currentPage = Math.floor(
-        (tableState.offset ?? 0) / (tableState.limit ?? 1),
-    );
+    const { currentPage, nextPageOffset, previousPageOffset } =
+        calculatePaginationInfo({
+            offset: tableState.offset ?? 0,
+            pageSize: tableState.limit ?? 1,
+        });
 
     return {
         events,
@@ -116,23 +137,13 @@ export const useEventLogSearch = ({
             pageSize: tableState.limit ?? 0,
             currentPage,
             nextPage: () => {
-                const nextPage = currentPage + 1;
-                setTableState({
-                    offset: (tableState.limit ?? 0) * nextPage,
-                });
+                setTableState({ offset: nextPageOffset });
             },
-
             prevPage: () => {
-                const prevPage = currentPage - 1;
-                setTableState({
-                    offset: (tableState.limit ?? 0) * prevPage,
-                });
+                setTableState({ offset: previousPageOffset });
             },
             setPageLimit: (limit: number) => {
-                setTableState({
-                    limit,
-                    offset: 0,
-                });
+                setTableState({ limit, offset: 0 });
             },
         },
     };

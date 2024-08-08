@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.2] - 2024-08-08
+
+### Bug Fixes
+
+- Allow for empty groupId in form ([#7798](https://github.com/Unleash/unleash/issues/7798)) ([#7802](https://github.com/Unleash/unleash/issues/7802))
+
+
 ## [6.1.0] - 2024-08-07
 
 ### Bug Fixes

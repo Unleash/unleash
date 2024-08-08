@@ -77,19 +77,10 @@ export class FeatureLifecycleService {
         );
     }
 
-    private async checkEnabled(fn: () => Promise<void>) {
-        const enabled = this.flagResolver.isEnabled('featureLifecycle');
-        if (enabled) {
-            return fn();
-        }
-    }
-
     listen() {
-        void this.checkEnabled(() => this.featureLifecycleStore.backfill());
+        this.featureLifecycleStore.backfill();
         this.eventStore.on(FEATURE_CREATED, async (event) => {
-            await this.checkEnabled(() =>
-                this.featureInitialized(event.featureName),
-            );
+            await this.featureInitialized(event.featureName);
         });
         this.eventBus.on(
             CLIENT_METRICS_ADDED,
@@ -103,22 +94,19 @@ export class FeatureLifecycleService {
                         const features = metrics.map(
                             (metric) => metric.featureName,
                         );
-                        await this.checkEnabled(() =>
-                            this.featuresReceivedMetrics(features, environment),
+                        await this.featuresReceivedMetrics(
+                            features,
+                            environment,
                         );
                     }
                 }
             },
         );
         this.eventStore.on(FEATURE_ARCHIVED, async (event) => {
-            await this.checkEnabled(() =>
-                this.featureArchived(event.featureName),
-            );
+            await this.featureArchived(event.featureName);
         });
         this.eventStore.on(FEATURE_REVIVED, async (event) => {
-            await this.checkEnabled(() =>
-                this.featureRevived(event.featureName),
-            );
+            await this.featureRevived(event.featureName);
         });
     }
 

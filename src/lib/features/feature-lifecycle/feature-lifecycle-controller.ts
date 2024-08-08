@@ -19,7 +19,6 @@ import {
 } from '../../openapi';
 import Controller from '../../routes/controller';
 import type { Request, Response } from 'express';
-import { NotFoundError } from '../../error';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import type { WithTransactional } from '../../db/transaction';
 
@@ -120,9 +119,6 @@ export default class FeatureLifecycleController extends Controller {
         req: Request<FeatureLifecycleParams, any, any, any>,
         res: Response<FeatureLifecycleSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('featureLifecycle')) {
-            throw new NotFoundError('Feature lifecycle is disabled.');
-        }
         const { featureName } = req.params;
 
         const result =
@@ -144,9 +140,6 @@ export default class FeatureLifecycleController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('featureLifecycle')) {
-            throw new NotFoundError('Feature lifecycle is disabled.');
-        }
         const { featureName, projectId } = req.params;
 
         const status = req.body;
@@ -162,9 +155,6 @@ export default class FeatureLifecycleController extends Controller {
         req: IAuthRequest<FeatureLifecycleParams>,
         res: Response,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('featureLifecycle')) {
-            throw new NotFoundError('Feature lifecycle is disabled.');
-        }
         const { featureName, projectId } = req.params;
 
         await this.featureLifecycleService.transactional((service) =>

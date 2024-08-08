@@ -52,8 +52,6 @@ export type IFlagKey =
     | 'displayEdgeBanner'
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
-    | 'featureLifecycle'
-    | 'featureLifecycleMetrics'
     | 'parseProjectFromSession'
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
@@ -266,10 +264,6 @@ const flags: IFlags = {
     ),
     projectOverviewRefactorFeedback: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
-        false,
-    ),
-    featureLifecycle: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_LIFECYCLE,
         false,
     ),
     parseProjectFromSession: parseEnvVarBoolean(

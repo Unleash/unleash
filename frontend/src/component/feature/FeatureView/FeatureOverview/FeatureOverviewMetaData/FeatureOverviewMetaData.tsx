@@ -7,7 +7,6 @@ import Edit from '@mui/icons-material/Edit';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
@@ -102,7 +101,6 @@ const FeatureOverviewMetaData = () => {
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
         useState(false);
-    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const { locationSettings } = useLocationSettings();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
@@ -221,9 +219,7 @@ const FeatureOverviewMetaData = () => {
                         </StyledDetailsContainer>
                     </BodyItemWithIcon>
                     <ConditionallyRender
-                        condition={
-                            Boolean(feature.createdBy) && flagCreatorEnabled
-                        }
+                        condition={Boolean(feature.createdBy)}
                         show={() => (
                             <BodyItemWithIcon>
                                 <StyledDetailsContainer>

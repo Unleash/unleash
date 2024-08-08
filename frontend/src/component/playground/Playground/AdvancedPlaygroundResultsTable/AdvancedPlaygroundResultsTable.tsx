@@ -99,7 +99,7 @@ export const AdvancedPlaygroundResultsTable = ({
             ...(input?.environments?.map((name: string) => {
                 return {
                     Header: loading ? () => '' : capitalizeFirst(name),
-                    maxWidth: 140,
+                    maxWidth: 150,
                     id: `environments.${name}`,
                     align: 'flex-start',
                     Cell: ({ row }: any) => (

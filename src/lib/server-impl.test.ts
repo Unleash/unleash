@@ -1,7 +1,6 @@
 import express from 'express';
 import { createTestConfig } from '../test/config/test-config';
 import { create, start } from './server-impl';
-import FakeEventStore from '../test/fixtures/fake-event-store';
 
 jest.mock(
     './routes',
@@ -15,7 +14,6 @@ jest.mock(
 
 const noop = () => {};
 
-const eventStore = new FakeEventStore();
 const settingStore = {
     get: () => {
         Promise.resolve('secret');
@@ -47,18 +45,7 @@ jest.mock('./services', () => ({
 jest.mock('./db', () => ({
     createStores() {
         return {
-            db: {
-                destroy: () => undefined,
-            },
-            clientInstanceStore: {
-                destroy: noop,
-                removeInstancesOlderThanTwoDays: noop,
-            },
-            clientMetricsStore: { destroy: noop, on: noop },
-            eventStore,
-            publicSignupTokenStore: { destroy: noop, on: noop },
             settingStore,
-            projectStore: { getAll: () => Promise.resolve([]) },
         };
     },
 }));

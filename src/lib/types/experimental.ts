@@ -291,10 +291,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
         false,
     ),
-    flagCreator: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_CREATOR,
-        false,
-    ),
     anonymizeProjectOwners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,
         false,

@@ -134,7 +134,7 @@ export default class EventController extends Controller {
                     description:
                         'Returns a list of all users that have created events in the system.',
                     responses: {
-                        200: createResponseSchema('eventFlagCreatorsSchema'),
+                        200: createResponseSchema('eventCreatorsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),

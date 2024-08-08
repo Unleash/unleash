@@ -157,7 +157,7 @@ To verify that a change request is correct, you can preview the result of change
 
 ![Change request preview](/img/change-request-preview.png)
 
-Starting from the change request overview page, go to the corresponding [playground](playground.mdx) and evaluate all your flags in the project and environment that your change request applies too.
+From the change request overview page, go to the corresponding [playground](playground.mdx) and evaluate all your flags in the project and environment that your change request applies too.
 
 ![Change request playground evaluation](/img/change-request-playground-evaluation.png)
 

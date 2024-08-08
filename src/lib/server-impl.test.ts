@@ -34,6 +34,16 @@ jest.mock('./metrics', () => ({
     },
 }));
 
+jest.mock('./services', () => ({
+    createServices() {
+        return {
+            featureLifecycleService: { listen() {} },
+            schedulerService: { stop() {}, start() {} },
+            addonService: { destroy() {} },
+        };
+    },
+}));
+
 jest.mock('./db', () => ({
     createStores() {
         return {

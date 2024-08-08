@@ -9494,9 +9494,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tss-react@npm:4.9.11":
-  version: 4.9.11
-  resolution: "tss-react@npm:4.9.11"
+"tss-react@npm:4.9.12":
+  version: 4.9.12
+  resolution: "tss-react@npm:4.9.12"
   dependencies:
     "@emotion/cache": "npm:*"
     "@emotion/serialize": "npm:*"
@@ -9511,7 +9511,7 @@ __metadata:
       optional: true
     "@mui/material":
       optional: true
-  checksum: 10c0/006f37446b719b5e06324dc8aba60af31686623ac9561f826425f4dc887d69156901ac16bddb64ae5700e7581c2c462b9fa8e61f61c25e01977c1fc3bc52a837
+  checksum: 10c0/d283ce06959805e4bbbf87566c6996e8a45a998c32db2c3ce3764590764c949b321445293232d8721d1c49422384da923369e4cfcc2d4cbe6005bed64dd10e86
   languageName: node
   linkType: hard
 
@@ -9849,7 +9849,7 @@ __metadata:
     sass: "npm:1.77.8"
     semver: "npm:7.6.3"
     swr: "npm:2.2.5"
-    tss-react: "npm:4.9.11"
+    tss-react: "npm:4.9.12"
     typescript: "npm:5.4.5"
     use-query-params: "npm:^2.2.1"
     vanilla-jsoneditor: "npm:^0.23.0"

@@ -79,7 +79,10 @@ beforeAll(async () => {
         email: 'test@example.com',
     });
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
-    const config = createTestConfig({ getLogger });
+    const config = createTestConfig({
+        getLogger,
+        experimental: { flags: { archiveProjects: true } },
+    });
     eventService = new EventService(stores, config);
     accessService = createAccessService(db.rawDatabase, config);
 
@@ -299,6 +302,10 @@ test('should archive project', async () => {
         type: 'project-archived',
         createdBy: TEST_AUDIT_USER.username,
     });
+
+    const projects = await projectService.getProjects();
+    expect(projects.find((p) => p.id === project.id)).toBeUndefined();
+    expect(projects.length).not.toBe(0);
 });
 
 test('should not be able to archive project with flags', async () => {

@@ -140,6 +140,9 @@ class ProjectStore implements IProjectStore {
             )
             .leftJoin('project_stats', 'project_stats.project', 'projects.id')
             .orderBy('projects.name', 'asc');
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            projects = projects.where('projects.archived_at', null);
+        }
 
         if (query) {
             projects = projects.where(query);

@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'enableLegacyVariants'
     | 'navigationSidebar'
     | 'commandBarUI'
-    | 'flagCreator'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
     | 'extendedMetrics'

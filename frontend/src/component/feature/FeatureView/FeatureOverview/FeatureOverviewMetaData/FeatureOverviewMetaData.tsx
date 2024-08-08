@@ -103,7 +103,6 @@ const FeatureOverviewMetaData = () => {
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
         useState(false);
-    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const { locationSettings } = useLocationSettings();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
@@ -225,9 +224,7 @@ const FeatureOverviewMetaData = () => {
                         </StyledDetailsContainer>
                     </BodyItemWithIcon>
                     <ConditionallyRender
-                        condition={
-                            Boolean(feature.createdBy) && flagCreatorEnabled
-                        }
+                        condition={Boolean(feature.createdBy)}
                         show={() => (
                             <BodyItemWithIcon>
                                 <StyledDetailsContainer>

@@ -1,10 +1,14 @@
-# Feature flags: Best practices for building and scaling feature flag systems
+---
+title: "eature flags: Best practices for building and scaling"
+---
+
+import Figure from '@site/src/components/Figure/Figure.tsx'
 
 Feature flags, sometimes called feature toggles or feature switches, are a software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
 
 With feature flags, developers can turn specific features or code segments on or off at runtime without needing a code deployment or rollback. Organizations that adopt feature flags see improvements in all key operational metrics for DevOps: Lead time to changes, mean-time-to-recovery, deployment frequency, and change failure rate.
 
-There are 10 principles for building a large-scale feature flag system. These principles have their roots in distributed systems architecture and pay particular attention to security, privacy, and scale, which are required by most enterprise systems. If you follow these principles, your feature flag system is less likely to break under load and will be easier to evolve and maintain.
+There are 11 principles for building a large-scale feature flag system. These principles have their roots in distributed systems architecture and pay particular attention to security, privacy, and scale, which are required by most enterprise systems. If you follow these principles, your feature flag system is less likely to break under load and will be easier to evolve and maintain.
 
 These principles are:
 
@@ -28,7 +32,7 @@ These principles are:
 
 * [10\. Do no harm. Prioritize consistent user experience.](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#10-do-no-harm-prioritize-consistent-user-experience)
 
-* 11\. Enable traceability. Make it easy to understand flag evaluation.
+* [11\. Enable traceability. Make it easy to understand flag evaluation.](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#11-enable-traceability-make-it-easy-to-understand-flag-evaluation)
 
 ### H3 \- 1\. Enable run-time control. Control flags dynamically, not using config files.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#1-enable-run-time-control-control-flags-dynamically-not-using-config-files)
 

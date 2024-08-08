@@ -67,6 +67,8 @@ export interface IProjectApplicationsSearchParams {
 export interface IProjectStore extends Store<IProject, string> {
     hasProject(id: string): Promise<boolean>;
 
+    hasActiveProject(id: string): Promise<boolean>;
+
     updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void>;
 
     create(project: IProjectInsert): Promise<IProject>;

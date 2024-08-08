@@ -102,15 +102,6 @@ class ProjectStore implements IProjectStore {
 
     destroy(): void {}
 
-    async exists(id: string): Promise<boolean> {
-        const result = await this.db.raw(
-            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
-            [id],
-        );
-        const { present } = result.rows[0];
-        return present;
-    }
-
     async isFeatureLimitReached(id: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1
@@ -252,9 +243,27 @@ class ProjectStore implements IProjectStore {
             .then(this.mapRow);
     }
 
+    async exists(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
     async hasProject(id: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async hasActiveProject(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ? and archived_at IS NULL) AS present`,
             [id],
         );
         const { present } = result.rows[0];

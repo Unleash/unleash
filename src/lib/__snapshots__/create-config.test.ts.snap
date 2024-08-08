@@ -105,7 +105,6 @@ exports[`should create default config 1`] = `
       "extendedMetrics": false,
       "extendedUsageMetrics": false,
       "featureCollaborators": false,
-      "featureLifecycle": false,
       "featureSearchFeedback": {
         "enabled": false,
         "name": "withText",

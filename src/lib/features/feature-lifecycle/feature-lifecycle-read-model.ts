@@ -36,10 +36,6 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     }
 
     async getStageCount(): Promise<StageCount[]> {
-        if (!this.flagResolver.isEnabled('featureLifecycleMetrics')) {
-            return [];
-        }
-
         const { rows } = await this.db.raw(`
             SELECT
                 stage,
@@ -65,10 +61,6 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     }
 
     async getStageCountByProject(): Promise<StageCountByProject[]> {
-        if (!this.flagResolver.isEnabled('featureLifecycleMetrics')) {
-            return [];
-        }
-
         const { rows } = await this.db.raw(`
             SELECT
                 f.project,
@@ -133,10 +125,6 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     public async getAllWithStageDuration(): Promise<
         IProjectLifecycleStageDuration[]
     > {
-        if (!this.flagResolver.isEnabled('featureLifecycleMetrics')) {
-            return [];
-        }
-
         const featureLifeCycles = await this.getAll();
         return calculateStageDurations(featureLifeCycles);
     }

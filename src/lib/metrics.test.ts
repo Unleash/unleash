@@ -52,11 +52,6 @@ beforeAll(async () => {
         server: {
             serverMetrics: true,
         },
-        experimental: {
-            flags: {
-                featureLifecycleMetrics: true,
-            },
-        },
     });
     stores = createStores();
     eventStore = stores.eventStore;

@@ -53,7 +53,6 @@ process.nextTick(async () => {
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         commandBarUI: true,
-                        flagCreator: true,
                         resourceLimits: true,
                         extendedMetrics: true,
                         insightsV2: true,

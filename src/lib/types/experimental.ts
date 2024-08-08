@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'enableLegacyVariants'
     | 'navigationSidebar'
     | 'commandBarUI'
-    | 'flagCreator'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
     | 'extendedMetrics'
@@ -290,10 +289,6 @@ const flags: IFlags = {
     ),
     commandBarUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
-        false,
-    ),
-    flagCreator: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_CREATOR,
         false,
     ),
     anonymizeProjectOwners: parseEnvVarBoolean(

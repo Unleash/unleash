@@ -380,6 +380,15 @@ class EventStore implements IEventStore {
         return query;
     }
 
+    async getEventCreators(): Promise<Array<{ id: number; name: string }>> {
+        const query = this.db('events').distinct('created_by');
+
+        const result = await query;
+        return result
+            .filter((row) => row.created_by)
+            .map((row) => row.created_by);
+    }
+
     async deprecatedSearchEvents(
         search: DeprecatedSearchEventsSchema = {},
     ): Promise<IEvent[]> {

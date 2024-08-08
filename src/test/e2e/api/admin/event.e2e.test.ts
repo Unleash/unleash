@@ -150,3 +150,77 @@ test('can search for events', async () => {
             expect(res.body.events[0].data.id).toEqual(events[1].data.id);
         });
 });
+
+test('Can filter by project', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'something-else',
+        data: { id: 'some-other-feature' },
+        tags: [],
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { id: 'feature' },
+        tags: [],
+        createdBy: 'test-user',
+        environment: 'test',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+    await app.request
+        .get('/api/admin/events?project=default')
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.events).toHaveLength(1);
+            expect(res.body.events[0].data.id).toEqual('feature');
+        });
+});
+
+test('can get event creators', async () => {
+    const events: IBaseEvent[] = [
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            data: { id: randomId() },
+            tags: [],
+            createdBy: 'test-user1',
+            createdByUserId: 1,
+            ip: '127.0.0.1',
+        },
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            data: { id: randomId() },
+            preData: { id: randomId() },
+            tags: [{ type: 'simple', value: randomId() }],
+            createdBy: 'test-user2',
+            createdByUserId: 2,
+            ip: '127.0.0.1',
+        },
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            data: { id: randomId() },
+            preData: { id: randomId() },
+            tags: [{ type: 'simple', value: randomId() }],
+            createdBy: 'test-user2',
+            createdByUserId: 2,
+            ip: '127.0.0.1',
+        },
+    ];
+
+    await Promise.all(
+        events.map((event) => {
+            return eventService.storeEvent(event);
+        }),
+    );
+
+    const { body } = await app.request
+        .get('/api/admin/event-creators')
+        .expect(200);
+    expect(body).toMatchObject(['test-user2', 'test-user1']);
+});

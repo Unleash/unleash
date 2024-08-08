@@ -43,4 +43,5 @@ export interface IEventStore
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;
     setCreatedByUserId(batchSize: number): Promise<number | undefined>;
+    getEventCreators(): Promise<Array<{ id: number; name: string }>>;
 }

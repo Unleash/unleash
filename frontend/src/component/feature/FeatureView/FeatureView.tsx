@@ -120,7 +120,7 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     },
 }));
 
-export const StyledLink = styled(Link)(({ theme }) => ({
+export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
     textDecoration: 'none',
     '&:hover, &:focus': {
@@ -148,7 +148,6 @@ export const FeatureView = () => {
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
-    const showCollaborators = useUiFlag('featureCollaborators');
 
     const { feature, loading, error, status } = useFeature(
         projectId,
@@ -365,13 +364,8 @@ export const FeatureView = () => {
                             />
                         ))}
                     </Tabs>
-                    <ConditionallyRender
-                        condition={showCollaborators}
-                        show={
-                            <Collaborators
-                                collaborators={feature.collaborators?.users}
-                            />
-                        }
+                    <Collaborators
+                        collaborators={feature.collaborators?.users}
                     />
                 </StyledTabRow>
             </StyledHeader>

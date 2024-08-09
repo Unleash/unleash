@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         extendedMetrics: true,
                         insightsV2: true,
                         integrationEvents: true,
-                        featureCollaborators: true,
                         improveCreateFlagFlow: true,
                         originMiddleware: true,
                         newEventSearch: true,

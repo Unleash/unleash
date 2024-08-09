@@ -1095,18 +1095,13 @@ class FeatureToggleService {
         let children: string[] = [];
         let lifecycle: IFeatureLifecycleStage | undefined = undefined;
         let collaborators: Collaborator[] = [];
-        const featureCollaboratorsEnabled = this.flagResolver.isEnabled(
-            'featureCollaborators',
-        );
         [dependencies, children, lifecycle, collaborators] = await Promise.all([
             this.dependentFeaturesReadModel.getParents(featureName),
             this.dependentFeaturesReadModel.getChildren([featureName]),
             this.featureLifecycleReadModel.findCurrentStage(featureName),
-            featureCollaboratorsEnabled
-                ? this.featureCollaboratorsReadModel.getFeatureCollaborators(
-                      featureName,
-                  )
-                : Promise.resolve([]),
+            this.featureCollaboratorsReadModel.getFeatureCollaborators(
+                featureName,
+            ),
         ]);
 
         if (environmentVariants) {
@@ -1121,9 +1116,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
-                ...(featureCollaboratorsEnabled
-                    ? { collaborators: { users: collaborators } }
-                    : {}),
+                collaborators: { users: collaborators },
             };
         } else {
             const result =
@@ -1137,9 +1130,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
-                ...(featureCollaboratorsEnabled
-                    ? { collaborators: { users: collaborators } }
-                    : {}),
+                collaborators: { users: collaborators },
             };
         }
     }

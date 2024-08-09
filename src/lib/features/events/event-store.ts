@@ -382,7 +382,7 @@ class EventStore implements IEventStore {
 
     async getEventCreators(): Promise<Array<{ id: number; name: string }>> {
         const query = this.db('events')
-            .distinct('events.created_by_user_id')
+            .distinctOn('events.created_by_user_id')
             .leftJoin('users', 'users.id', '=', 'events.created_by_user_id')
             .select([
                 'events.created_by_user_id as id',

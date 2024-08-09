@@ -12,7 +12,6 @@ import {
     Switch,
     Tooltip,
 } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IPayload } from 'interfaces/featureToggle';
 import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -379,49 +378,42 @@ export const VariantForm = ({
                         required
                     />
                 </StyledNameContainer>
-                <ConditionallyRender
-                    condition={customPercentageVisible}
-                    show={
-                        <StyledPercentageContainer>
-                            <StyledFormControlLabel
-                                label='Custom percentage'
-                                control={
-                                    <Switch
-                                        data-testid='VARIANT_WEIGHT_CHECK'
-                                        checked={customPercentage}
-                                        onChange={(e) =>
-                                            setCustomPercentage(
-                                                e.target.checked,
-                                            )
-                                        }
-                                    />
-                                }
-                            />
-                            <StyledWeightInput
-                                data-testid='VARIANT_WEIGHT_INPUT'
-                                type='number'
-                                label='Variant weight'
-                                error={Boolean(percentageError)}
-                                errorText={percentageError}
-                                value={percentage}
-                                onChange={(e) =>
-                                    onSetPercentage(e.target.value)
-                                }
-                                required={customPercentage}
-                                disabled={!customPercentage}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            %
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </StyledPercentageContainer>
-                    }
-                />
+                {customPercentageVisible ? (
+                    <StyledPercentageContainer>
+                        <StyledFormControlLabel
+                            label='Custom percentage'
+                            control={
+                                <Switch
+                                    data-testid='VARIANT_WEIGHT_CHECK'
+                                    checked={customPercentage}
+                                    onChange={(e) =>
+                                        setCustomPercentage(e.target.checked)
+                                    }
+                                />
+                            }
+                        />
+                        <StyledWeightInput
+                            data-testid='VARIANT_WEIGHT_INPUT'
+                            type='number'
+                            label='Variant weight'
+                            error={Boolean(percentageError)}
+                            errorText={percentageError}
+                            value={percentage}
+                            onChange={(e) => onSetPercentage(e.target.value)}
+                            required={customPercentage}
+                            disabled={!customPercentage}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        %
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </StyledPercentageContainer>
+                ) : null}
             </StyledTopRow>
             <StyledMarginLabel>
                 Payload
@@ -443,54 +435,50 @@ export const VariantForm = ({
                     }}
                 />
                 <StyledFieldColumn>
-                    <ConditionallyRender
-                        condition={payload.type === 'json'}
-                        show={
-                            <Suspense fallback={null}>
-                                <LazyReactJSONEditor
-                                    content={{ text: payload.value }}
-                                    onChange={(content) =>
-                                        setPayload((payload) => {
-                                            return {
-                                                ...payload,
-                                                value:
-                                                    'json' in content
-                                                        ? content.json?.toString() ||
-                                                          ''
-                                                        : content.text,
-                                            };
-                                        })
-                                    }
-                                />
-                            </Suspense>
-                        }
-                        elseShow={
-                            <StyledInput
-                                id='variant-payload-value'
-                                name='variant-payload-value'
-                                label='Value'
-                                multiline={payload.type !== 'string'}
-                                rows={
-                                    payload.type === 'string' ||
-                                    payload.type === 'number'
-                                        ? 1
-                                        : 4
+                    {payload.type === 'json' ? (
+                        <Suspense fallback={null}>
+                            <LazyReactJSONEditor
+                                content={{ text: payload.value }}
+                                onChange={(content) =>
+                                    setPayload((payload) => {
+                                        return {
+                                            ...payload,
+                                            value:
+                                                'json' in content
+                                                    ? content.json?.toString() ||
+                                                      ''
+                                                    : content.text,
+                                        };
+                                    })
                                 }
-                                value={payload.value}
-                                onChange={(e) => {
-                                    clearError(ErrorField.PAYLOAD);
-                                    setPayload((payload) => ({
-                                        ...payload,
-                                        value: e.target.value,
-                                    }));
-                                }}
-                                placeholder={''}
-                                onBlur={() => validatePayload(payload)}
-                                error={Boolean(errors.payload)}
-                                errorText={errors.payload}
                             />
-                        }
-                    />
+                        </Suspense>
+                    ) : (
+                        <StyledInput
+                            id='variant-payload-value'
+                            name='variant-payload-value'
+                            label='Value'
+                            multiline={payload.type !== 'string'}
+                            rows={
+                                payload.type === 'string' ||
+                                payload.type === 'number'
+                                    ? 1
+                                    : 4
+                            }
+                            value={payload.value}
+                            onChange={(e) => {
+                                clearError(ErrorField.PAYLOAD);
+                                setPayload((payload) => ({
+                                    ...payload,
+                                    value: e.target.value,
+                                }));
+                            }}
+                            placeholder={''}
+                            onBlur={() => validatePayload(payload)}
+                            error={Boolean(errors.payload)}
+                            errorText={errors.payload}
+                        />
+                    )}
                 </StyledFieldColumn>
             </StyledRow>
             {!disableOverrides ? (

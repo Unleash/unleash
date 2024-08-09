@@ -1,7 +1,6 @@
 import * as jsonpatch from 'fast-json-patch';
 
 import { styled, useMediaQuery, useTheme } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -238,28 +237,22 @@ export const FeatureEnvironmentVariants = () => {
                 <PageHeader
                     title='Variants'
                     actions={
-                        <ConditionallyRender
-                            condition={!isSmallScreen}
-                            show={
-                                <>
-                                    <Search
-                                        initialValue={searchValue}
-                                        onChange={setSearchValue}
-                                    />
-                                </>
-                            }
-                        />
+                        !isSmallScreen ? (
+                            <>
+                                <Search
+                                    initialValue={searchValue}
+                                    onChange={setSearchValue}
+                                />
+                            </>
+                        ) : null
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
@@ -297,45 +290,35 @@ export const FeatureEnvironmentVariants = () => {
                                 onCopyVariantsFrom={onCopyVariantsFrom}
                                 otherEnvsWithVariants={otherEnvsWithVariants}
                             />
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    environment.variants?.length,
-                                )}
-                                show={
-                                    <PermissionIconButton
-                                        data-testid='EDIT_VARIANTS_BUTTON'
-                                        onClick={() =>
-                                            editVariants(environment)
-                                        }
-                                        permission={
-                                            UPDATE_FEATURE_ENVIRONMENT_VARIANTS
-                                        }
-                                        projectId={projectId}
-                                        environmentId={environment.name}
-                                        tooltipProps={{
-                                            title: 'Edit variants',
-                                        }}
-                                    >
-                                        <Edit />
-                                    </PermissionIconButton>
-                                }
-                                elseShow={
-                                    <PermissionButton
-                                        data-testid='ADD_VARIANT_BUTTON'
-                                        onClick={() =>
-                                            editVariants(environment)
-                                        }
-                                        variant='outlined'
-                                        permission={
-                                            UPDATE_FEATURE_ENVIRONMENT_VARIANTS
-                                        }
-                                        projectId={projectId}
-                                        environmentId={environment.name}
-                                    >
-                                        Add variant
-                                    </PermissionButton>
-                                }
-                            />
+                            {environment.variants?.length ? (
+                                <PermissionIconButton
+                                    data-testid='EDIT_VARIANTS_BUTTON'
+                                    onClick={() => editVariants(environment)}
+                                    permission={
+                                        UPDATE_FEATURE_ENVIRONMENT_VARIANTS
+                                    }
+                                    projectId={projectId}
+                                    environmentId={environment.name}
+                                    tooltipProps={{
+                                        title: 'Edit variants',
+                                    }}
+                                >
+                                    <Edit />
+                                </PermissionIconButton>
+                            ) : (
+                                <PermissionButton
+                                    data-testid='ADD_VARIANT_BUTTON'
+                                    onClick={() => editVariants(environment)}
+                                    variant='outlined'
+                                    permission={
+                                        UPDATE_FEATURE_ENVIRONMENT_VARIANTS
+                                    }
+                                    projectId={projectId}
+                                    environmentId={environment.name}
+                                >
+                                    Add variant
+                                </PermissionButton>
+                            )}
                         </StyledButtonContainer>
                     </EnvironmentVariantsCard>
                 );

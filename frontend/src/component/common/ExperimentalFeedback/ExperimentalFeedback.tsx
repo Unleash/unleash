@@ -7,7 +7,6 @@ import {
     usePlausibleTracker,
 } from 'hooks/usePlausibleTracker';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledOuterContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -116,45 +115,36 @@ export const ExperimentalFeedback: React.FC<IExperimentalFeedbackProps> = ({
                 We are trying something experimental!
             </StyledHeader>
             <Typography>{description}</Typography>
-
             <br />
-
-            <ConditionallyRender
-                condition={!metrics.sent}
-                show={
+            {!metrics.sent ? (
+                <StyledBtnContainer>
+                    {' '}
+                    <Typography>Is this useful to you?</Typography>
                     <StyledBtnContainer>
-                        {' '}
-                        <Typography>Is this useful to you?</Typography>
-                        <StyledBtnContainer>
-                            <StyledBtn
-                                variant='contained'
-                                color='primary'
-                                onClick={() => onBtnClick('useful')}
-                            >
-                                Yes, I like the direction
-                            </StyledBtn>
-                            <Button
-                                variant='outlined'
-                                color='primary'
-                                onClick={() => onBtnClick('not useful')}
-                            >
-                                No, I don't see value in this
-                            </Button>
-                        </StyledBtnContainer>
+                        <StyledBtn
+                            variant='contained'
+                            color='primary'
+                            onClick={() => onBtnClick('useful')}
+                        >
+                            Yes, I like the direction
+                        </StyledBtn>
+                        <Button
+                            variant='outlined'
+                            color='primary'
+                            onClick={() => onBtnClick('not useful')}
+                        >
+                            No, I don't see value in this
+                        </Button>
                     </StyledBtnContainer>
-                }
-                elseShow={
-                    <Typography
-                        sx={(theme) => ({ marginTop: theme.spacing(3) })}
-                    >
-                        Thank you for the feedback. Feel free to check out the
-                        sketches and leave comments, or get in touch with our UX
-                        team if you'd like to be involved in usertests and the
-                        development of this feature.
-                    </Typography>
-                }
-            />
-
+                </StyledBtnContainer>
+            ) : (
+                <Typography sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+                    Thank you for the feedback. Feel free to check out the
+                    sketches and leave comments, or get in touch with our UX
+                    team if you'd like to be involved in usertests and the
+                    development of this feature.
+                </Typography>
+            )}
             <StyledDivider />
             <StyledFlexBox>
                 <StyledFlexBox>

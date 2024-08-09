@@ -1,5 +1,4 @@
 import { Box, Typography, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 
@@ -188,22 +187,19 @@ const SplitPreviewTooltip = ({ variant, index }: ISplitPreviewTooltip) => {
                     {variant.weight / 10}% - {variant.name}
                 </Typography>
             </StyledVariantContainer>
-
             {variant.payload ? (
                 <StyledPayloadContainer>
                     <StyledPayloadLabel variant='body2'>
                         Payload
                     </StyledPayloadLabel>
 
-                    <ConditionallyRender
-                        condition={variant.payload.type === 'json'}
-                        show={<code>{variant.payload.value}</code>}
-                        elseShow={
-                            <Typography variant='body2'>
-                                {variant.payload.value}
-                            </Typography>
-                        }
-                    />
+                    {variant.payload.type === 'json' ? (
+                        <code>{variant.payload.value}</code>
+                    ) : (
+                        <Typography variant='body2'>
+                            {variant.payload.value}
+                        </Typography>
+                    )}
                 </StyledPayloadContainer>
             ) : null}
         </StyledTooltipContainer>

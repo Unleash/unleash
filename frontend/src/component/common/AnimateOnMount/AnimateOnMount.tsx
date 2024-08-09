@@ -6,7 +6,6 @@ import {
     useRef,
     type FC,
 } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAnimateOnMountProps {
     mounted: boolean;
@@ -55,19 +54,11 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
         }
     };
 
-    return (
-        <ConditionallyRender
-            condition={show}
-            show={
-                <div
-                    onTransitionEnd={onTransitionEnd}
-                    style={{ ...start, ...styles }}
-                >
-                    {children}
-                </div>
-            }
-        />
-    );
+    return show ? (
+        <div onTransitionEnd={onTransitionEnd} style={{ ...start, ...styles }}>
+            {children}
+        </div>
+    ) : null;
 };
 
 export default AnimateOnMount;

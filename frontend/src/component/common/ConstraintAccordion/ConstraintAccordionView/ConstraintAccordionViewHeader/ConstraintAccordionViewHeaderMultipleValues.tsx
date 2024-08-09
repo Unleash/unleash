@@ -1,4 +1,3 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
@@ -83,18 +82,13 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
                 >
                     {text}
                 </StyledValuesSpan>
-                <ConditionallyRender
-                    condition={expandable}
-                    show={
-                        <StyledHeaderValuesExpand
-                            className={'valuesExpandLabel'}
-                        >
-                            {!expanded
-                                ? `View all (${constraint?.values?.length})`
-                                : 'View less'}
-                        </StyledHeaderValuesExpand>
-                    }
-                />
+                {expandable ? (
+                    <StyledHeaderValuesExpand className={'valuesExpandLabel'}>
+                        {!expanded
+                            ? `View all (${constraint?.values?.length})`
+                            : 'View less'}
+                    </StyledHeaderValuesExpand>
+                ) : null}
             </StyledHeaderValuesContainer>
         </StyledHeaderValuesContainerWrapper>
     );

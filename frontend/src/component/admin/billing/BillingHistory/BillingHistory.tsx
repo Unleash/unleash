@@ -11,7 +11,6 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { useMemo, type VFC } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box, IconButton, styled, Typography } from '@mui/material';
 import FileDownload from '@mui/icons-material/FileDownload';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -116,10 +115,9 @@ export const BillingHistory: VFC<IBillingHistoryProps> = ({
                     })}
                 </TableBody>
             </Table>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={<TablePlaceholder>No invoices to show.</TablePlaceholder>}
-            />
+            {rows.length === 0 ? (
+                <TablePlaceholder>No invoices to show.</TablePlaceholder>
+            ) : null}
         </PageContent>
     );
 };

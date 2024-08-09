@@ -1,5 +1,4 @@
 import { Chip, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IConstraintItemProps {
@@ -30,31 +29,28 @@ const StyledChip = styled(Chip)(({ theme }) => ({
 export const ConstraintItem = ({ value, text }: IConstraintItemProps) => {
     return (
         <StyledContainer>
-            <ConditionallyRender
-                condition={value.length === 0}
-                show={<p>No {text}s added yet.</p>}
-                elseShow={
-                    <div>
-                        <StyledParagraph>
-                            {value.length}{' '}
-                            {value.length > 1 ? `${text}s` : text} will get
-                            access.
-                        </StyledParagraph>
-                        {value.map((v: string) => (
-                            <StyledChip
-                                key={v}
-                                label={
-                                    <StringTruncator
-                                        maxWidth='300'
-                                        text={v}
-                                        maxLength={50}
-                                    />
-                                }
-                            />
-                        ))}
-                    </div>
-                }
-            />
+            {value.length === 0 ? (
+                <p>No {text}s added yet.</p>
+            ) : (
+                <div>
+                    <StyledParagraph>
+                        {value.length} {value.length > 1 ? `${text}s` : text}{' '}
+                        will get access.
+                    </StyledParagraph>
+                    {value.map((v: string) => (
+                        <StyledChip
+                            key={v}
+                            label={
+                                <StringTruncator
+                                    maxWidth='300'
+                                    text={v}
+                                    maxLength={50}
+                                />
+                            }
+                        />
+                    ))}
+                </div>
+            )}
         </StyledContainer>
     );
 };

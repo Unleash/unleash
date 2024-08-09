@@ -4,7 +4,6 @@ import type {
     PlaygroundRequestSchema,
 } from 'openapi';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
 import { ConstraintAccordionView } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
@@ -32,24 +31,19 @@ export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
         <ConstraintExecutionWrapper>
             {constraints?.map((constraint, index) => (
                 <Fragment key={objectId(constraint)}>
-                    <ConditionallyRender
-                        condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
-                    />
+                    {index > 0 ? <StrategySeparator text='AND' /> : null}
                     <ConstraintAccordionView
                         constraint={constraint}
                         compact
                         renderAfter={
-                            <ConditionallyRender
-                                condition={constraint.result}
-                                show={<ConstraintOk />}
-                                elseShow={
-                                    <ConstraintError
-                                        input={input}
-                                        constraint={constraint}
-                                    />
-                                }
-                            />
+                            constraint.result ? (
+                                <ConstraintOk />
+                            ) : (
+                                <ConstraintError
+                                    input={input}
+                                    constraint={constraint}
+                                />
+                            )
                         }
                     />
                 </Fragment>

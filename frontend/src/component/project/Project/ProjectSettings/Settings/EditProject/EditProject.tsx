@@ -7,7 +7,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UpdateEnterpriseSettings } from './UpdateEnterpriseSettings';
 import { UpdateProject } from './UpdateProject';
 import { DeleteProjectForm } from './DeleteProjectForm';
@@ -48,23 +47,14 @@ const EditProject = () => {
             {accessDeniedAlert}
             <StyledFormContainer>
                 <UpdateProject project={project} />
-                <ConditionallyRender
-                    condition={isEnterprise()}
-                    show={<UpdateEnterpriseSettings project={project} />}
-                />
-                <ConditionallyRender
-                    condition={archiveProjectsEnabled}
-                    show={
-                        <ArchiveProjectForm
-                            featureCount={featuresCount(project)}
-                        />
-                    }
-                    elseShow={
-                        <DeleteProjectForm
-                            featureCount={featuresCount(project)}
-                        />
-                    }
-                />
+                {isEnterprise() ? (
+                    <UpdateEnterpriseSettings project={project} />
+                ) : null}
+                {archiveProjectsEnabled ? (
+                    <ArchiveProjectForm featureCount={featuresCount(project)} />
+                ) : (
+                    <DeleteProjectForm featureCount={featuresCount(project)} />
+                )}
             </StyledFormContainer>
         </>
     );

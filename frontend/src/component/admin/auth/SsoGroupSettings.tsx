@@ -1,6 +1,5 @@
 import type React from 'react';
 import { FormControlLabel, Grid, Switch, TextField } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface SsoGroupSettingsProps {
     ssoType: 'OIDC' | 'SAML';
@@ -84,38 +83,33 @@ export const SsoGroupSettings = ({
                     />
                 </Grid>
             </Grid>
-            <ConditionallyRender
-                condition={ssoType === 'OIDC'}
-                show={
-                    <Grid container spacing={3} mb={2}>
-                        <Grid item md={5}>
-                            <strong>Request 'groups' Scope</strong>
-                            <p>
-                                When enabled Unleash will also request the
-                                'groups' scope as part of the login request.
-                            </p>
-                        </Grid>
-                        <Grid item md={6} style={{ padding: '20px' }}>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        onChange={updateAddGroupScope}
-                                        value={data.addGroupsScope}
-                                        disabled={
-                                            !data.enableGroupSyncing || disabled
-                                        }
-                                        name='addGroupsScope'
-                                        checked={data.addGroupsScope}
-                                    />
-                                }
-                                label={
-                                    data.addGroupsScope ? 'Enabled' : 'Disabled'
-                                }
-                            />
-                        </Grid>
+            {ssoType === 'OIDC' ? (
+                <Grid container spacing={3} mb={2}>
+                    <Grid item md={5}>
+                        <strong>Request 'groups' Scope</strong>
+                        <p>
+                            When enabled Unleash will also request the 'groups'
+                            scope as part of the login request.
+                        </p>
                     </Grid>
-                }
-            />
+                    <Grid item md={6} style={{ padding: '20px' }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    onChange={updateAddGroupScope}
+                                    value={data.addGroupsScope}
+                                    disabled={
+                                        !data.enableGroupSyncing || disabled
+                                    }
+                                    name='addGroupsScope'
+                                    checked={data.addGroupsScope}
+                                />
+                            }
+                            label={data.addGroupsScope ? 'Enabled' : 'Disabled'}
+                        />
+                    </Grid>
+                </Grid>
+            ) : null}
         </>
     );
 };

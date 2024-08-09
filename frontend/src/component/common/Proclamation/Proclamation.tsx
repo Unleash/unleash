@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Alert, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Typography } from '@mui/material';
 import type { IProclamationToast } from 'interfaces/uiConfig';
 
@@ -49,25 +48,18 @@ const Proclamation = ({ toast }: IProclamationProps) => {
 
     if (!toast) return null;
 
-    return (
-        <ConditionallyRender
-            condition={show}
-            show={
-                <StyledProclamation severity={toast.severity} onClose={onClose}>
-                    <StyledContent variant='body2'>
-                        {toast.message}
-                    </StyledContent>
-                    <StyledLink
-                        href={toast.link}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                    >
-                        View more
-                    </StyledLink>
-                </StyledProclamation>
-            }
-        />
-    );
+    return show ? (
+        <StyledProclamation severity={toast.severity} onClose={onClose}>
+            <StyledContent variant='body2'>{toast.message}</StyledContent>
+            <StyledLink
+                href={toast.link}
+                target='_blank'
+                rel='noopener noreferrer'
+            >
+                View more
+            </StyledLink>
+        </StyledProclamation>
+    ) : null;
 };
 
 export default Proclamation;

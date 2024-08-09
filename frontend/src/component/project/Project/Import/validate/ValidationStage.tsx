@@ -5,7 +5,6 @@ import {
     type IValidationSchema,
     useValidateImportApi,
 } from 'hooks/api/actions/useValidateImportApi/useValidateImportApi';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ActionsContainer } from '../ActionsContainer';
@@ -146,78 +145,61 @@ export const ValidationStage: FC<{
                     </span>
                 </Box>
             </ImportInfoContainer>
-            <ConditionallyRender
-                condition={validationResult.permissions.length > 0}
-                show={
-                    <ErrorContainer>
-                        <ErrorHeader>
-                            <strong>Missing permissions!</strong> There are some
-                            permissions that you need to be granted before
-                            importing this configuration
-                        </ErrorHeader>
-                        {validationResult.permissions.map((error) => (
-                            <Box key={error.message} sx={{ p: 2 }}>
-                                <ErrorMessage>{error.message}</ErrorMessage>
-                                <StyledItems>
-                                    {error.affectedItems.map((item) => (
-                                        <StyledItem key={item}>
-                                            {item}
-                                        </StyledItem>
-                                    ))}
-                                </StyledItems>
-                            </Box>
-                        ))}
-                    </ErrorContainer>
-                }
-            />
-            <ConditionallyRender
-                condition={validationResult.errors.length > 0}
-                show={
-                    <ErrorContainer>
-                        <ErrorHeader>
-                            <strong>Conflict!</strong> There are some errors
-                            that need to be fixed before the import.
-                        </ErrorHeader>
-                        {validationResult.errors.map((error) => (
-                            <Box key={error.message} sx={{ p: 2 }}>
-                                <ErrorMessage>{error.message}</ErrorMessage>
-                                <StyledItems>
-                                    {error.affectedItems.map((item) => (
-                                        <StyledItem key={item}>
-                                            {item}
-                                        </StyledItem>
-                                    ))}
-                                </StyledItems>
-                            </Box>
-                        ))}
-                    </ErrorContainer>
-                }
-            />
-            <ConditionallyRender
-                condition={validationResult.warnings.length > 0}
-                show={
-                    <WarningContainer>
-                        <WarningHeader>
-                            <strong>Warning!</strong> It is recommended to
-                            verify the following information before importing.
-                        </WarningHeader>
-                        {validationResult.warnings.map((warning) => (
-                            <Box key={warning.message} sx={{ p: 2 }}>
-                                <WarningMessage>
-                                    {warning.message}
-                                </WarningMessage>
-                                <StyledItems>
-                                    {warning.affectedItems.map((item) => (
-                                        <StyledItem key={item}>
-                                            {item}
-                                        </StyledItem>
-                                    ))}
-                                </StyledItems>
-                            </Box>
-                        ))}
-                    </WarningContainer>
-                }
-            />
+            {validationResult.permissions.length > 0 ? (
+                <ErrorContainer>
+                    <ErrorHeader>
+                        <strong>Missing permissions!</strong> There are some
+                        permissions that you need to be granted before importing
+                        this configuration
+                    </ErrorHeader>
+                    {validationResult.permissions.map((error) => (
+                        <Box key={error.message} sx={{ p: 2 }}>
+                            <ErrorMessage>{error.message}</ErrorMessage>
+                            <StyledItems>
+                                {error.affectedItems.map((item) => (
+                                    <StyledItem key={item}>{item}</StyledItem>
+                                ))}
+                            </StyledItems>
+                        </Box>
+                    ))}
+                </ErrorContainer>
+            ) : null}
+            {validationResult.errors.length > 0 ? (
+                <ErrorContainer>
+                    <ErrorHeader>
+                        <strong>Conflict!</strong> There are some errors that
+                        need to be fixed before the import.
+                    </ErrorHeader>
+                    {validationResult.errors.map((error) => (
+                        <Box key={error.message} sx={{ p: 2 }}>
+                            <ErrorMessage>{error.message}</ErrorMessage>
+                            <StyledItems>
+                                {error.affectedItems.map((item) => (
+                                    <StyledItem key={item}>{item}</StyledItem>
+                                ))}
+                            </StyledItems>
+                        </Box>
+                    ))}
+                </ErrorContainer>
+            ) : null}
+            {validationResult.warnings.length > 0 ? (
+                <WarningContainer>
+                    <WarningHeader>
+                        <strong>Warning!</strong> It is recommended to verify
+                        the following information before importing.
+                    </WarningHeader>
+                    {validationResult.warnings.map((warning) => (
+                        <Box key={warning.message} sx={{ p: 2 }}>
+                            <WarningMessage>{warning.message}</WarningMessage>
+                            <StyledItems>
+                                {warning.affectedItems.map((item) => (
+                                    <StyledItem key={item}>{item}</StyledItem>
+                                ))}
+                            </StyledItems>
+                        </Box>
+                    ))}
+                </WarningContainer>
+            ) : null}
             <ActionsContainer>
                 <Button
                     sx={{

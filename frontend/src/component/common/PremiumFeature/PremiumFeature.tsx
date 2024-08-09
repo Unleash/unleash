@@ -2,7 +2,6 @@ import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-featu
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import { ThemeMode } from '../ThemeMode/ThemeMode';
 import { PageContent } from '../PageContent/PageContent';
 import { PageHeader } from '../PageHeader/PageHeader';
@@ -193,61 +192,54 @@ export const PremiumFeature = ({
                 />
                 {`${plan} feature`}
             </StyledTitle>
-            <ConditionallyRender
-                condition={Boolean(tooltip)}
-                show={
-                    <>
-                        <StyledBody tooltip>
-                            <StyledTypography>
-                                {featureMessage}. You need to upgrade your plan
-                                if you want to use it.
-                            </StyledTypography>
-                        </StyledBody>
-                        <StyledButtonContainer>
-                            <StyledLink
-                                href={upgradeUrl}
-                                target='_blank'
-                                rel='noreferrer'
-                                onClick={trackUpgradePlan}
-                            >
-                                Compare plans
-                            </StyledLink>
-                        </StyledButtonContainer>
-                    </>
-                }
-                elseShow={
-                    <>
-                        <StyledBody>
-                            <StyledTypography>
-                                {featureMessage}
-                            </StyledTypography>
-                            <StyledTypography>
-                                You need to upgrade your plan if you want to use
-                                it.
-                            </StyledTypography>
-                        </StyledBody>
-                        <StyledButtonContainer>
-                            <Button
-                                variant='contained'
-                                href={upgradeUrl}
-                                target='_blank'
-                                rel='noreferrer'
-                                onClick={trackUpgradePlan}
-                            >
-                                Compare plans
-                            </Button>
-                            <Button
-                                href={url}
-                                target='_blank'
-                                rel='noreferrer'
-                                onClick={trackReadAbout}
-                            >
-                                Read about {label}
-                            </Button>
-                        </StyledButtonContainer>
-                    </>
-                }
-            />
+            {tooltip ? (
+                <>
+                    <StyledBody tooltip>
+                        <StyledTypography>
+                            {featureMessage}. You need to upgrade your plan if
+                            you want to use it.
+                        </StyledTypography>
+                    </StyledBody>
+                    <StyledButtonContainer>
+                        <StyledLink
+                            href={upgradeUrl}
+                            target='_blank'
+                            rel='noreferrer'
+                            onClick={trackUpgradePlan}
+                        >
+                            Compare plans
+                        </StyledLink>
+                    </StyledButtonContainer>
+                </>
+            ) : (
+                <>
+                    <StyledBody>
+                        <StyledTypography>{featureMessage}</StyledTypography>
+                        <StyledTypography>
+                            You need to upgrade your plan if you want to use it.
+                        </StyledTypography>
+                    </StyledBody>
+                    <StyledButtonContainer>
+                        <Button
+                            variant='contained'
+                            href={upgradeUrl}
+                            target='_blank'
+                            rel='noreferrer'
+                            onClick={trackUpgradePlan}
+                        >
+                            Compare plans
+                        </Button>
+                        <Button
+                            href={url}
+                            target='_blank'
+                            rel='noreferrer'
+                            onClick={trackReadAbout}
+                        >
+                            Read about {label}
+                        </Button>
+                    </StyledButtonContainer>
+                </>
+            )}
         </PremiumFeatureWrapper>
     );
 

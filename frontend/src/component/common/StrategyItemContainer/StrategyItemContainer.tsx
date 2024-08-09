@@ -8,7 +8,6 @@ import {
     getFeatureStrategyIcon,
 } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
@@ -114,10 +113,9 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <ConditionallyRender
-                condition={orderNumber !== undefined}
-                show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
-            />
+            {orderNumber !== undefined ? (
+                <StyledIndexLabel>{orderNumber}</StyledIndexLabel>
+            ) : null}
             <StyledContainer
                 disabled={strategy?.disabled || false}
                 style={style}
@@ -126,25 +124,22 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     draggable={Boolean(onDragStart)}
                     disabled={Boolean(strategy?.disabled)}
                 >
-                    <ConditionallyRender
-                        condition={Boolean(onDragStart)}
-                        show={() => (
-                            <DragIcon
-                                draggable
-                                disableRipple
-                                size='small'
-                                onDragStart={onDragStart}
-                                onDragEnd={onDragEnd}
-                                sx={{ cursor: 'move' }}
-                            >
-                                <DragIndicator
-                                    titleAccess='Drag to reorder'
-                                    cursor='grab'
-                                    sx={{ color: 'action.active' }}
-                                />
-                            </DragIcon>
-                        )}
-                    />
+                    {onDragStart ? (
+                        <DragIcon
+                            draggable
+                            disableRipple
+                            size='small'
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
+                            sx={{ cursor: 'move' }}
+                        >
+                            <DragIndicator
+                                titleAccess='Drag to reorder'
+                                cursor='grab'
+                                sx={{ color: 'action.active' }}
+                            />
+                        </DragIcon>
+                    ) : null}
                     <Icon
                         sx={{
                             fill: (theme) => theme.palette.action.disabled,
@@ -157,35 +152,22 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                                 maxLength={15}
                                 text={formatStrategyName(String(strategy.name))}
                             />
-                            <ConditionallyRender
-                                condition={Boolean(strategy.title)}
-                                show={
-                                    <StyledCustomTitle>
-                                        {formatStrategyName(
-                                            String(strategy.title),
-                                        )}
-                                    </StyledCustomTitle>
-                                }
-                            />
+                            {strategy.title ? (
+                                <StyledCustomTitle>
+                                    {formatStrategyName(String(strategy.title))}
+                                </StyledCustomTitle>
+                            ) : null}
                         </StrategyHeaderLink>
-                        <ConditionallyRender
-                            condition={Boolean(description)}
-                            show={
-                                <StyledDescription>
-                                    {description}
-                                </StyledDescription>
-                            }
-                        />
+                        {description ? (
+                            <StyledDescription>{description}</StyledDescription>
+                        ) : null}
                     </StyledHeaderContainer>
 
-                    <ConditionallyRender
-                        condition={Boolean(strategy?.disabled)}
-                        show={() => (
-                            <>
-                                <Badge color='disabled'>Disabled</Badge>
-                            </>
-                        )}
-                    />
+                    {strategy?.disabled ? (
+                        <>
+                            <Badge color='disabled'>Disabled</Badge>
+                        </>
+                    ) : null}
                     <Box
                         sx={{
                             marginLeft: 'auto',

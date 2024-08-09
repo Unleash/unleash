@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ReactComponent as GoogleSvg } from 'assets/icons/google.svg';
 import LockRounded from '@mui/icons-material/LockRounded';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 
@@ -34,25 +33,21 @@ const AuthOptions = ({ options }: IAuthOptionProps) => {
                             height: '40px',
                         }}
                         startIcon={
-                            <ConditionallyRender
-                                condition={o.type === 'google'}
-                                show={
-                                    <GoogleSvg
-                                        style={{
-                                            height: '35px',
-                                            width: '35px',
-                                        }}
-                                    />
-                                }
-                                elseShow={
-                                    <LockRounded
-                                        style={{
-                                            height: '25px',
-                                            width: '25px',
-                                        }}
-                                    />
-                                }
-                            />
+                            o.type === 'google' ? (
+                                <GoogleSvg
+                                    style={{
+                                        height: '35px',
+                                        width: '35px',
+                                    }}
+                                />
+                            ) : (
+                                <LockRounded
+                                    style={{
+                                        height: '25px',
+                                        width: '25px',
+                                    }}
+                                />
+                            )
                         }
                     >
                         {o.message}

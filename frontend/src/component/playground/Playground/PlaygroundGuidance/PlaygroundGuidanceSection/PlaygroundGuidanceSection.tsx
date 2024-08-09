@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import type { VFC } from 'react';
 
@@ -29,14 +28,11 @@ export const PlaygroundGuidanceSection: VFC<
                     <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
                         {headerText}
                     </Typography>
-                    <ConditionallyRender
-                        condition={Boolean(bodyText)}
-                        show={
-                            <Typography variant='body1' sx={{ mt: 1 }}>
-                                {bodyText}
-                            </Typography>
-                        }
-                    />
+                    {bodyText ? (
+                        <Typography variant='body1' sx={{ mt: 1 }}>
+                            {bodyText}
+                        </Typography>
+                    ) : null}
                 </Box>
             </Box>
         </Box>

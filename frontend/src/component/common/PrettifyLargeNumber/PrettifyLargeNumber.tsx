@@ -2,7 +2,6 @@ import type { FC } from 'react';
 import millify from 'millify';
 import { Tooltip } from '@mui/material';
 import { LARGE_NUMBER_PRETTIFIED } from 'utils/testIds';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 interface IPrettifyLargeNumberProps {
     /**
@@ -40,15 +39,11 @@ export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
         <span data-testid={LARGE_NUMBER_PRETTIFIED}>{prettyValue}</span>
     );
 
-    return (
-        <ConditionallyRender
-            condition={showTooltip}
-            show={
-                <Tooltip title={value.toLocaleString()} arrow>
-                    {valueSpan}
-                </Tooltip>
-            }
-            elseShow={valueSpan}
-        />
+    return showTooltip ? (
+        <Tooltip title={value.toLocaleString()} arrow>
+            {valueSpan}
+        </Tooltip>
+    ) : (
+        valueSpan
     );
 };

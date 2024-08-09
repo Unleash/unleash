@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Checkbox } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
@@ -105,35 +104,24 @@ export const RestrictiveLegalValues = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={Boolean(illegalValues && illegalValues.length > 0)}
-                show={
-                    <Alert severity='warning'>
-                        This constraint is using legal values that have been
-                        deleted as valid options. If you save changes on this
-                        constraint and then save the strategy the following
-                        values will be removed:
-                        <ul>
-                            {illegalValues?.map((value) => (
-                                <li key={value}>{value}</li>
-                            ))}
-                        </ul>
-                    </Alert>
-                }
-            />
-
+            {illegalValues && illegalValues.length > 0 ? (
+                <Alert severity='warning'>
+                    This constraint is using legal values that have been deleted
+                    as valid options. If you save changes on this constraint and
+                    then save the strategy the following values will be removed:
+                    <ul>
+                        {illegalValues?.map((value) => (
+                            <li key={value}>{value}</li>
+                        ))}
+                    </ul>
+                </Alert>
+            ) : null}
             <ConstraintFormHeader>
                 Select values from a predefined set
             </ConstraintFormHeader>
-            <ConditionallyRender
-                condition={legalValues.length > 100}
-                show={
-                    <ConstraintValueSearch
-                        filter={filter}
-                        setFilter={setFilter}
-                    />
-                }
-            />
+            {legalValues.length > 100 ? (
+                <ConstraintValueSearch filter={filter} setFilter={setFilter} />
+            ) : null}
             {filteredValues.map((match) => (
                 <LegalValueLabel
                     key={match.value}
@@ -151,11 +139,7 @@ export const RestrictiveLegalValues = ({
                     }
                 />
             ))}
-
-            <ConditionallyRender
-                condition={Boolean(error)}
-                show={<p className={styles.error}>{error}</p>}
-            />
+            {error ? <p className={styles.error}>{error}</p> : null}
         </>
     );
 };

@@ -4,7 +4,6 @@ import {
 } from './RecentlyVisited/CommandResultGroup';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { useEffect } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ICommandBar {
     searchString: string;
@@ -43,17 +42,12 @@ export const CommandSearchFeatures = ({
         setSearchLoading(loading);
     }, [loading]);
 
-    return (
-        <ConditionallyRender
-            condition={!loading}
-            show={
-                <CommandResultGroup
-                    groupName={'Flags'}
-                    icon={'flag'}
-                    items={flags}
-                    onClick={onClick}
-                />
-            }
+    return !loading ? (
+        <CommandResultGroup
+            groupName={'Flags'}
+            icon={'flag'}
+            items={flags}
+            onClick={onClick}
         />
-    );
+    ) : null;
 };

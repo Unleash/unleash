@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
@@ -327,89 +326,75 @@ export const CommandBar = () => {
                 />
 
                 <Box sx={{ width: (theme) => theme.spacing(4) }}>
-                    <ConditionallyRender
-                        condition={Boolean(value)}
-                        show={
-                            <Tooltip title='Clear search query' arrow>
-                                <IconButton
-                                    size='small'
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onSearchChange('');
-                                        searchInputRef.current?.focus();
-                                    }}
-                                    sx={{
-                                        padding: (theme) => theme.spacing(1),
-                                    }}
-                                >
-                                    <StyledClose />
-                                </IconButton>
-                            </Tooltip>
-                        }
-                    />
+                    {value ? (
+                        <Tooltip title='Clear search query' arrow>
+                            <IconButton
+                                size='small'
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSearchChange('');
+                                    searchInputRef.current?.focus();
+                                }}
+                                sx={{
+                                    padding: (theme) => theme.spacing(1),
+                                }}
+                            >
+                                <StyledClose />
+                            </IconButton>
+                        </Tooltip>
+                    ) : null}
                 </Box>
             </StyledSearch>
-
-            <ConditionallyRender
-                condition={Boolean(value) && showSuggestions}
-                show={
+            {Boolean(value) && showSuggestions ? (
+                <CommandResultsPaper
+                    onKeyDownCapture={onKeyDown}
+                    onBlur={onBlur}
+                >
+                    {searchString !== undefined && (
+                        <CommandSearchFeatures
+                            searchString={searchString}
+                            setSearchedFlagCount={setSearchedFlagCount}
+                            onClick={clearSearchValue}
+                            setSearchLoading={setSearchLoading}
+                        />
+                    )}
+                    {!searchLoading ? (
+                        <>
+                            <CommandResultGroup
+                                groupName={'Projects'}
+                                icon={'flag'}
+                                onClick={clearSearchValue}
+                                items={searchedProjects}
+                            />
+                            <CommandSearchPages
+                                items={searchedPages}
+                                onClick={clearSearchValue}
+                            />
+                            {hasNoResults ? (
+                                <CommandBarFeedback
+                                    onSubmit={hideSuggestions}
+                                />
+                            ) : null}
+                        </>
+                    ) : null}
+                </CommandResultsPaper>
+            ) : (
+                showSuggestions && (
                     <CommandResultsPaper
                         onKeyDownCapture={onKeyDown}
                         onBlur={onBlur}
                     >
-                        {searchString !== undefined && (
-                            <CommandSearchFeatures
-                                searchString={searchString}
-                                setSearchedFlagCount={setSearchedFlagCount}
-                                onClick={clearSearchValue}
-                                setSearchLoading={setSearchLoading}
-                            />
-                        )}
-                        <ConditionallyRender
-                            condition={!searchLoading}
-                            show={
-                                <>
-                                    <CommandResultGroup
-                                        groupName={'Projects'}
-                                        icon={'flag'}
-                                        onClick={clearSearchValue}
-                                        items={searchedProjects}
-                                    />
-                                    <CommandSearchPages
-                                        items={searchedPages}
-                                        onClick={clearSearchValue}
-                                    />
-                                    <ConditionallyRender
-                                        condition={hasNoResults}
-                                        show={
-                                            <CommandBarFeedback
-                                                onSubmit={hideSuggestions}
-                                            />
-                                        }
-                                    />
-                                </>
-                            }
+                        <CommandQuickSuggestions
+                            routes={allRoutes}
+                            onClick={clearSearchValue}
+                        />
+                        <CommandPageSuggestions
+                            routes={allRoutes}
+                            onClick={clearSearchValue}
                         />
                     </CommandResultsPaper>
-                }
-                elseShow={
-                    showSuggestions && (
-                        <CommandResultsPaper
-                            onKeyDownCapture={onKeyDown}
-                            onBlur={onBlur}
-                        >
-                            <CommandQuickSuggestions
-                                routes={allRoutes}
-                                onClick={clearSearchValue}
-                            />
-                            <CommandPageSuggestions
-                                routes={allRoutes}
-                                onClick={clearSearchValue}
-                            />
-                        </CommandResultsPaper>
-                    )
-                }
-            />
+                )
+            )}
         </StyledContainer>
     );
 };

@@ -3,7 +3,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { LegalValueLabel } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/LegalValueLabel/LegalValueLabel';
 import { useState } from 'react';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SingleVariantOptions } from './SingleVariantOptions';
 import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -111,36 +110,28 @@ export const MarkCompletedDialogue = ({
                         }}
                         control={<Radio />}
                     />
-                    <ConditionallyRender
-                        condition={variantOptions.length > 0}
-                        show={
-                            <LegalValueLabel
-                                key={'kept-with-variant'}
-                                value={'kept-with-variant'}
-                                legal={{
-                                    value: 'We decided to keep the feature variant',
-                                    description:
-                                        'Choose to specify which feature variant will be kept',
-                                }}
-                                control={<Radio />}
-                            />
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={
-                            variantOptions.length > 0 &&
-                            status === 'kept-with-variant'
-                        }
-                        show={
-                            <SingleVariantOptions
-                                parent={featureId}
-                                project={projectId}
-                                onSelect={(variant) => {
-                                    setVariant(variant);
-                                }}
-                            />
-                        }
-                    />
+                    {variantOptions.length > 0 ? (
+                        <LegalValueLabel
+                            key={'kept-with-variant'}
+                            value={'kept-with-variant'}
+                            legal={{
+                                value: 'We decided to keep the feature variant',
+                                description:
+                                    'Choose to specify which feature variant will be kept',
+                            }}
+                            control={<Radio />}
+                        />
+                    ) : null}
+                    {variantOptions.length > 0 &&
+                    status === 'kept-with-variant' ? (
+                        <SingleVariantOptions
+                            parent={featureId}
+                            project={projectId}
+                            onSelect={(variant) => {
+                                setVariant(variant);
+                            }}
+                        />
+                    ) : null}
                 </RadioGroup>
             </Box>
         </Dialogue>

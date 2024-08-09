@@ -6,7 +6,6 @@ import { PermissionsTable } from './PermissionsTable';
 import { styled, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import theme from 'themes/theme';
 import { StringParam, useQueryParams } from 'use-query-params';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -90,17 +89,9 @@ export const AccessMatrix = () => {
             header={
                 <PageHeader
                     title={`Access for ${user.name ?? user.username}`}
-                    actions={
-                        <ConditionallyRender
-                            condition={!isSmallScreen}
-                            show={AccessActions}
-                        />
-                    }
+                    actions={!isSmallScreen ? AccessActions : null}
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={AccessActions}
-                    />
+                    {isSmallScreen ? AccessActions : null}
                 </PageHeader>
             }
         >

@@ -1,7 +1,6 @@
 import { List, ListItem, styled, Typography } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -64,26 +63,23 @@ export const FeatureStrategyMenuCards = ({
                     />
                 </ListItem>
             ))}
-            <ConditionallyRender
-                condition={customStrategies.length > 0}
-                show={
-                    <>
-                        <StyledTypography color='textSecondary'>
-                            Custom strategies
-                        </StyledTypography>
-                        {customStrategies.map((strategy) => (
-                            <ListItem key={strategy.name}>
-                                <FeatureStrategyMenuCard
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    strategy={strategy}
-                                />
-                            </ListItem>
-                        ))}
-                    </>
-                }
-            />
+            {customStrategies.length > 0 ? (
+                <>
+                    <StyledTypography color='textSecondary'>
+                        Custom strategies
+                    </StyledTypography>
+                    {customStrategies.map((strategy) => (
+                        <ListItem key={strategy.name}>
+                            <FeatureStrategyMenuCard
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategy={strategy}
+                            />
+                        </ListItem>
+                    ))}
+                </>
+            ) : null}
         </List>
     );
 };

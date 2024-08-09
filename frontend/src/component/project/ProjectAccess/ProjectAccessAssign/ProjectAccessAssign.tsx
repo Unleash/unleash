@@ -25,7 +25,6 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IUser } from 'interfaces/user';
 import type { IGroup } from 'interfaces/group';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router-dom';
 import { GO_BACK } from 'constants/navigate';
 import {
@@ -292,33 +291,25 @@ export const ProjectAccessAssign = ({
                             style={{ marginRight: 8 }}
                             checked={selected}
                         />
-                        <ConditionallyRender
-                            condition={option.type === ENTITY_TYPE.GROUP}
-                            show={
+                        {option.type === ENTITY_TYPE.GROUP ? (
+                            <span>
+                                <StyledGroupOption>
+                                    <span>{optionGroup?.name}</span>
+                                    <span>{optionGroup?.userCount} users</span>
+                                </StyledGroupOption>
+                            </span>
+                        ) : (
+                            <StyledUserOption>
                                 <span>
-                                    <StyledGroupOption>
-                                        <span>{optionGroup?.name}</span>
-                                        <span>
-                                            {optionGroup?.userCount} users
-                                        </span>
-                                    </StyledGroupOption>
+                                    {optionUser?.name || optionUser?.username}
                                 </span>
-                            }
-                            elseShow={
-                                <StyledUserOption>
-                                    <span>
-                                        {optionUser?.name ||
-                                            optionUser?.username}
-                                    </span>
-                                    <span>
-                                        {optionUser?.name &&
-                                        optionUser?.username
-                                            ? optionUser?.username
-                                            : optionUser?.email}
-                                    </span>
-                                </StyledUserOption>
-                            }
-                        />
+                                <span>
+                                    {optionUser?.name && optionUser?.username
+                                        ? optionUser?.username
+                                        : optionUser?.email}
+                                </span>
+                            </StyledUserOption>
+                        )}
                     </li>
                 </span>
             </Tooltip>

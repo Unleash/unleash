@@ -3,7 +3,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useEnableDisable } from './hooks/useEnableDisable';
 import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 import type { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
 
@@ -63,20 +62,16 @@ export const DisableEnableStrategyDialog = ({
             onClick={onClick}
             onClose={() => onClose()}
         >
-            <ConditionallyRender
-                condition={isChangeRequest}
-                show={
-                    <FeatureStrategyChangeRequestAlert
-                        environment={environmentId}
-                    />
-                }
-                elseShow={
-                    <Alert severity='error'>
-                        {disabled ? 'Enabling' : 'Disabling'} the strategy will
-                        change which users receive access to the feature.
-                    </Alert>
-                }
-            />
+            {isChangeRequest ? (
+                <FeatureStrategyChangeRequestAlert
+                    environment={environmentId}
+                />
+            ) : (
+                <Alert severity='error'>
+                    {disabled ? 'Enabling' : 'Disabling'} the strategy will
+                    change which users receive access to the feature.
+                </Alert>
+            )}
         </Dialogue>
     );
 };

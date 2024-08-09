@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { type IInstanceStatus, InstanceState } from 'interfaces/instance';
 
 const StyledInfoBox = styled('aside')(({ theme }) => ({
@@ -41,15 +40,12 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
         <Grid item xs={12} md={5}>
             <StyledInfoBox>
                 <StyledTitle variant='body1'>Billing information</StyledTitle>
-                <ConditionallyRender
-                    condition={inactive}
-                    show={
-                        <StyledAlert severity='warning'>
-                            In order to <strong>Upgrade trial</strong> you need
-                            to provide us your billing information.
-                        </StyledAlert>
-                    }
-                />
+                {inactive ? (
+                    <StyledAlert severity='warning'>
+                        In order to <strong>Upgrade trial</strong> you need to
+                        provide us your billing information.
+                    </StyledAlert>
+                ) : null}
                 <BillingInformationButton update={!inactive} />
                 <StyledInfoLabel>
                     {inactive

@@ -2,7 +2,6 @@ import type { VFC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link, styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Badge } from 'component/common/Badge/Badge';
 import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu';
@@ -143,41 +142,29 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                 <StyledTitle variant='h3' data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
                 </StyledTitle>
-                <ConditionallyRender
-                    condition={deprecated !== undefined}
-                    show={
-                        <Tooltip title={deprecated} arrow>
-                            <Badge data-loading>Deprecated</Badge>
-                        </Tooltip>
-                    }
-                />
-                <ConditionallyRender
-                    condition={isEnabled === true}
-                    show={
-                        <Badge color='success' data-loading>
-                            Enabled
-                        </Badge>
-                    }
-                />
-                <ConditionallyRender
-                    condition={isEnabled === false}
-                    show={<Badge data-loading>Disabled</Badge>}
-                />
-                <ConditionallyRender
-                    condition={isConfigured}
-                    show={<IntegrationCardMenu addon={addon as AddonSchema} />}
-                />
+                {deprecated !== undefined ? (
+                    <Tooltip title={deprecated} arrow>
+                        <Badge data-loading>Deprecated</Badge>
+                    </Tooltip>
+                ) : null}
+                {isEnabled === true ? (
+                    <Badge color='success' data-loading>
+                        Enabled
+                    </Badge>
+                ) : null}
+                {isEnabled === false ? (
+                    <Badge data-loading>Disabled</Badge>
+                ) : null}
+                {isConfigured ? (
+                    <IntegrationCardMenu addon={addon as AddonSchema} />
+                ) : null}
             </StyledHeader>
             <Typography variant='body2' color='text.secondary' data-loading>
                 {description}
             </Typography>
             <StyledAction data-loading>
                 {configureActionText}
-                <ConditionallyRender
-                    condition={isExternal}
-                    show={<StyledOpenInNewIcon />}
-                    elseShow={<ChevronRightIcon />}
-                />
+                {isExternal ? <StyledOpenInNewIcon /> : <ChevronRightIcon />}
                 <IntegrationEventsLastEvent
                     integration={addon}
                     sx={{ ml: 'auto' }}

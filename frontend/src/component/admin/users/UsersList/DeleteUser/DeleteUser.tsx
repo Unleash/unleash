@@ -1,5 +1,4 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { REMOVE_USER_ERROR } from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { Alert, styled } from '@mui/material';
 import useLoading from 'hooks/useLoading';
@@ -44,18 +43,15 @@ const DeleteUser = ({
             secondaryButtonText='Cancel'
         >
             <div ref={ref}>
-                <ConditionallyRender
-                    condition={Boolean(userApiErrors[REMOVE_USER_ERROR])}
-                    show={
-                        <Alert
-                            data-loading
-                            severity='error'
-                            style={{ margin: '1rem 0' }}
-                        >
-                            {userApiErrors[REMOVE_USER_ERROR]}
-                        </Alert>
-                    }
-                />
+                {userApiErrors[REMOVE_USER_ERROR] ? (
+                    <Alert
+                        data-loading
+                        severity='error'
+                        style={{ margin: '1rem 0' }}
+                    >
+                        {userApiErrors[REMOVE_USER_ERROR]}
+                    </Alert>
+                ) : null}
                 <div data-loading className={themeStyles.flexRow}>
                     <StyledUserAvatar user={user} variant='rounded' />
                     <Typography

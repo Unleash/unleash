@@ -7,7 +7,6 @@ import {
     Popover,
     Box,
 } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { ReactComponent as ChangeRequestProcessWithScheduleImage } from 'assets/img/changeRequestProcessWithSchedule.svg';
 
@@ -25,14 +24,11 @@ export const ChangeRequestProcessHelp: VFC<
 
     return (
         <>
-            <ConditionallyRender
-                condition={!isSmallScreen}
-                show={
-                    <Typography variant='body2'>
-                        Show change request process{' '}
-                    </Typography>
-                }
-            />
+            {!isSmallScreen ? (
+                <Typography variant='body2'>
+                    Show change request process{' '}
+                </Typography>
+            ) : null}
             <IconButton
                 title='Change request process'
                 ref={ref}

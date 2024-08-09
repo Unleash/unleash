@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import type { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -61,12 +60,9 @@ export const RoleSelect = ({
                 )}
                 {...rest}
             />
-            <ConditionallyRender
-                condition={Boolean(value) && !hideDescription}
-                show={() => (
-                    <RoleDescription sx={{ marginTop: 1 }} roleId={value!.id} />
-                )}
-            />
+            {Boolean(value) && !hideDescription ? (
+                <RoleDescription sx={{ marginTop: 1 }} roleId={value!.id} />
+            ) : null}
         </>
     );
 };

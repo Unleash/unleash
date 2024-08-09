@@ -1,4 +1,3 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Paper, styled } from '@mui/material';
 import { InviteLinkBarContent } from 'component/admin/users/InviteLinkBar/InviteLinkBarContent';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -44,16 +43,9 @@ export const InviteLinkContent = ({
             },
         });
     };
-    return (
-        <ConditionallyRender
-            condition={showInviteLinkContent}
-            show={
-                <StyledPaper className='dropdown-outline' id={id}>
-                    <InviteLinkBarContent
-                        onActionClick={onInviteLinkActionClick}
-                    />
-                </StyledPaper>
-            }
-        />
-    );
+    return showInviteLinkContent ? (
+        <StyledPaper className='dropdown-outline' id={id}>
+            <InviteLinkBarContent onActionClick={onInviteLinkActionClick} />
+        </StyledPaper>
+    ) : null;
 };

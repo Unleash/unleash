@@ -2,7 +2,6 @@ import type React from 'react';
 import { IconButton, styled, Tooltip } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 
 interface ConstraintAccordionHeaderActionsProps {
     onDelete?: () => void;
@@ -41,34 +40,28 @@ export const ConstraintAccordionHeaderActions = ({
 
     return (
         <StyledHeaderActions>
-            <ConditionallyRender
-                condition={Boolean(onEditClick) && !disableEdit}
-                show={
-                    <Tooltip title='Edit constraint' arrow>
-                        <IconButton
-                            type='button'
-                            onClick={onEditClick}
-                            disabled={disableEdit}
-                        >
-                            <Edit />
-                        </IconButton>
-                    </Tooltip>
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(onDeleteClick) && !disableDelete}
-                show={
-                    <Tooltip title='Delete constraint' arrow>
-                        <IconButton
-                            type='button'
-                            onClick={onDeleteClick}
-                            disabled={disableDelete}
-                        >
-                            <Delete />
-                        </IconButton>
-                    </Tooltip>
-                }
-            />
+            {Boolean(onEditClick) && !disableEdit ? (
+                <Tooltip title='Edit constraint' arrow>
+                    <IconButton
+                        type='button'
+                        onClick={onEditClick}
+                        disabled={disableEdit}
+                    >
+                        <Edit />
+                    </IconButton>
+                </Tooltip>
+            ) : null}
+            {Boolean(onDeleteClick) && !disableDelete ? (
+                <Tooltip title='Delete constraint' arrow>
+                    <IconButton
+                        type='button'
+                        onClick={onDeleteClick}
+                        disabled={disableDelete}
+                    >
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            ) : null}
         </StyledHeaderActions>
     );
 };

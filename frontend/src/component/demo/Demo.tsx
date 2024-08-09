@@ -11,7 +11,6 @@ import { DemoBanner } from './DemoBanner/DemoBanner';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -99,87 +98,84 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 open={plansOpen}
                 onClose={() => setPlansOpen(false)}
             />
-            <ConditionallyRender
-                condition={!isSmallScreen}
-                show={
-                    <>
-                        <DemoDialogWelcome
-                            open={welcomeOpen}
-                            onClose={() => {
-                                setWelcomeOpen(false);
+            {!isSmallScreen ? (
+                <>
+                    <DemoDialogWelcome
+                        open={welcomeOpen}
+                        onClose={() => {
+                            setWelcomeOpen(false);
 
-                                setExpanded(false);
+                            setExpanded(false);
 
-                                trackEvent('demo-close', {
-                                    props: {
-                                        topic: 'welcome',
-                                        step: 'welcome',
-                                    },
-                                });
-                            }}
-                            onStart={() => {
-                                setWelcomeOpen(false);
+                            trackEvent('demo-close', {
+                                props: {
+                                    topic: 'welcome',
+                                    step: 'welcome',
+                                },
+                            });
+                        }}
+                        onStart={() => {
+                            setWelcomeOpen(false);
 
-                                onStart();
+                            onStart();
 
-                                trackEvent('demo-start');
-                            }}
-                        />
-                        <DemoDialogFinish
-                            open={finishOpen}
-                            onClose={() => {
-                                setFinishOpen(false);
-                                setPlansOpen(true);
-                            }}
-                            onRestart={() => {
-                                setFinishOpen(false);
-                                onStart();
+                            trackEvent('demo-start');
+                        }}
+                    />
+                    <DemoDialogFinish
+                        open={finishOpen}
+                        onClose={() => {
+                            setFinishOpen(false);
+                            setPlansOpen(true);
+                        }}
+                        onRestart={() => {
+                            setFinishOpen(false);
+                            onStart();
 
-                                trackEvent('demo-restart');
-                            }}
-                        />
-                        <DemoTopics
-                            expanded={expanded}
-                            setExpanded={setExpanded}
-                            stepsCompletion={stepsCompletion}
-                            currentTopic={topic}
-                            setCurrentTopic={(topic: number) => {
-                                setTopic(topic);
-                                setStep(0);
+                            trackEvent('demo-restart');
+                        }}
+                    />
+                    <DemoTopics
+                        expanded={expanded}
+                        setExpanded={setExpanded}
+                        stepsCompletion={stepsCompletion}
+                        currentTopic={topic}
+                        setCurrentTopic={(topic: number) => {
+                            setTopic(topic);
+                            setStep(0);
 
-                                setWelcomeOpen(false);
-                                setPlansOpen(false);
+                            setWelcomeOpen(false);
+                            setPlansOpen(false);
 
-                                trackEvent('demo-start-topic', {
-                                    props: {
-                                        topic: TOPICS[topic].title,
-                                    },
-                                });
-                            }}
-                            topics={TOPICS}
-                            onWelcome={() => {
-                                closeGuide();
-                                setPlansOpen(false);
+                            trackEvent('demo-start-topic', {
+                                props: {
+                                    topic: TOPICS[topic].title,
+                                },
+                            });
+                        }}
+                        topics={TOPICS}
+                        onWelcome={() => {
+                            closeGuide();
+                            setPlansOpen(false);
 
-                                setWelcomeOpen(true);
+                            setWelcomeOpen(true);
 
-                                trackEvent('demo-view-demo-link');
-                            }}
-                        />
-                        <DemoSteps
-                            setExpanded={setExpanded}
-                            step={step}
-                            setStep={setStep}
-                            stepsCompletion={stepsCompletion}
-                            setStepsCompletion={setStepsCompletion}
-                            topic={topic}
-                            setTopic={setTopic}
-                            topics={TOPICS}
-                            onFinish={onFinish}
-                        />
-                    </>
-                }
-            />
+                            trackEvent('demo-view-demo-link');
+                        }}
+                    />
+                    <DemoSteps
+                        setExpanded={setExpanded}
+                        step={step}
+                        setStep={setStep}
+                        stepsCompletion={stepsCompletion}
+                        setStepsCompletion={setStepsCompletion}
+                        topic={topic}
+                        setTopic={setTopic}
+                        topics={TOPICS}
+                        onFinish={onFinish}
+                    />
+                </>
+            ) : null}
         </>
     );
 };

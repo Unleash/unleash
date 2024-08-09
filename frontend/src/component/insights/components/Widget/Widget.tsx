@@ -2,7 +2,6 @@ import type React from 'react';
 import type { FC, ReactNode } from 'react';
 import { Paper, Typography, styled, type SxProps } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { Theme } from '@mui/material/styles/createTheme';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
@@ -33,14 +32,11 @@ export const Widget: FC<{
             })}
         >
             {title}
-            <ConditionallyRender
-                condition={Boolean(tooltip)}
-                show={
-                    <HelpIcon htmlTooltip tooltip={tooltip}>
-                        <InfoOutlined />
-                    </HelpIcon>
-                }
-            />
+            {tooltip ? (
+                <HelpIcon htmlTooltip tooltip={tooltip}>
+                    <InfoOutlined />
+                </HelpIcon>
+            ) : null}
         </Typography>
         {children}
     </StyledPaper>

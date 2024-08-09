@@ -1,6 +1,5 @@
 import { styled, Tooltip } from '@mui/material';
 import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue';
 import { ConstraintAccordionViewHeaderMultipleValues } from './ConstraintAccordionViewHeaderMultipleValues';
 import type { IConstraint } from 'interfaces/strategy';
@@ -79,25 +78,21 @@ export const ConstraintAccordionViewHeaderInfo = ({
                     constraint={constraint}
                     disabled={disabled}
                 />
-                <ConditionallyRender
-                    condition={singleValue}
-                    show={
-                        <ConstraintAccordionViewHeaderSingleValue
-                            constraint={constraint}
-                            allowExpand={allowExpand}
-                            disabled={disabled}
-                        />
-                    }
-                    elseShow={
-                        <ConstraintAccordionViewHeaderMultipleValues
-                            constraint={constraint}
-                            expanded={expanded}
-                            allowExpand={allowExpand}
-                            maxLength={maxLength}
-                            disabled={disabled}
-                        />
-                    }
-                />
+                {singleValue ? (
+                    <ConstraintAccordionViewHeaderSingleValue
+                        constraint={constraint}
+                        allowExpand={allowExpand}
+                        disabled={disabled}
+                    />
+                ) : (
+                    <ConstraintAccordionViewHeaderMultipleValues
+                        constraint={constraint}
+                        expanded={expanded}
+                        allowExpand={allowExpand}
+                        maxLength={maxLength}
+                        disabled={disabled}
+                    />
+                )}
             </StyledHeaderMetaInfo>
         </StyledHeaderWrapper>
     );

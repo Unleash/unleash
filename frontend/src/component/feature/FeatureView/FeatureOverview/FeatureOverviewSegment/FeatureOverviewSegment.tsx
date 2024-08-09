@@ -1,5 +1,4 @@
 import { Fragment } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { SegmentItem } from '../../../../common/SegmentItem/SegmentItem';
 import type { ISegment } from 'interfaces/segment';
@@ -21,10 +20,7 @@ export const FeatureOverviewSegment = ({
         <>
             {segments.map((segment, index) => (
                 <Fragment key={segment.id}>
-                    <ConditionallyRender
-                        condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
-                    />
+                    {index > 0 ? <StrategySeparator text='AND' /> : null}
                     <SegmentItem segment={segment} disabled={disabled} />
                 </Fragment>
             ))}

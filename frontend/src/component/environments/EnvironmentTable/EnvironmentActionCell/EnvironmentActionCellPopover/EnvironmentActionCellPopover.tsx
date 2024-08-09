@@ -23,7 +23,6 @@ import Edit from '@mui/icons-material/Edit';
 import CopyIcon from '@mui/icons-material/AddToPhotos';
 import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledMenuList = styled(MenuList)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -143,11 +142,11 @@ export const EnvironmentActionCellPopover = ({
                                 disabled={!hasAccess || environment.protected}
                             >
                                 <ListItemIcon>
-                                    <ConditionallyRender
-                                        condition={environment.enabled}
-                                        show={<VisibilityOffOutlined />}
-                                        elseShow={<VisibilityOutlined />}
-                                    />
+                                    {environment.enabled ? (
+                                        <VisibilityOffOutlined />
+                                    ) : (
+                                        <VisibilityOutlined />
+                                    )}
                                 </ListItemIcon>
                                 <ListItemText>
                                     <Typography variant='body2'>

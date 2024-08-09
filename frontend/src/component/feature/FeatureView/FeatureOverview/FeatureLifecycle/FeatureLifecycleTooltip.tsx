@@ -20,7 +20,6 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { isSafeToArchive } from './isSafeToArchive';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
@@ -406,22 +405,16 @@ const CompletedStageDescription: FC<{
     }>;
     children?: React.ReactNode;
 }> = ({ children, environments, onArchive, onUncomplete, loading }) => {
-    return (
-        <ConditionallyRender
-            condition={isSafeToArchive(environments)}
-            show={
-                <SafeToArchive
-                    onArchive={onArchive}
-                    onUncomplete={onUncomplete}
-                    loading={loading}
-                />
-            }
-            elseShow={
-                <ActivelyUsed onUncomplete={onUncomplete} loading={loading}>
-                    {children}
-                </ActivelyUsed>
-            }
+    return isSafeToArchive(environments) ? (
+        <SafeToArchive
+            onArchive={onArchive}
+            onUncomplete={onUncomplete}
+            loading={loading}
         />
+    ) : (
+        <ActivelyUsed onUncomplete={onUncomplete} loading={loading}>
+            {children}
+        </ActivelyUsed>
     );
 };
 

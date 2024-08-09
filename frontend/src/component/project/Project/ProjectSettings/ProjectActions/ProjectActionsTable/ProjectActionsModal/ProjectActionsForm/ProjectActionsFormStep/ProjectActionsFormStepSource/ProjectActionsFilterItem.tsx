@@ -19,7 +19,6 @@ import {
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
 import { oneOf } from 'utils/oneOf';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 import { InvertedOperatorButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
 import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
@@ -257,24 +256,20 @@ export const ProjectActionsFilterItem = ({
                                 onChange={onOperatorChange}
                             />
                         </StyledOperatorSelectWrapper>
-                        <ConditionallyRender
-                            condition={showCaseSensitiveButton}
-                            show={
-                                <StyledOperatorButtonWrapper>
-                                    <CaseSensitiveButton
-                                        localConstraint={{ caseInsensitive }}
-                                        setCaseInsensitive={() =>
-                                            stateChanged({
-                                                ...filter,
-                                                caseInsensitive:
-                                                    !caseInsensitive ||
-                                                    undefined,
-                                            })
-                                        }
-                                    />
-                                </StyledOperatorButtonWrapper>
-                            }
-                        />
+                        {showCaseSensitiveButton ? (
+                            <StyledOperatorButtonWrapper>
+                                <CaseSensitiveButton
+                                    localConstraint={{ caseInsensitive }}
+                                    setCaseInsensitive={() =>
+                                        stateChanged({
+                                            ...filter,
+                                            caseInsensitive:
+                                                !caseInsensitive || undefined,
+                                        })
+                                    }
+                                />
+                            </StyledOperatorButtonWrapper>
+                        ) : null}
                     </StyledOperatorOptions>
                 </StyledFilterHeader>
                 <StyledResolveInputWrapper>

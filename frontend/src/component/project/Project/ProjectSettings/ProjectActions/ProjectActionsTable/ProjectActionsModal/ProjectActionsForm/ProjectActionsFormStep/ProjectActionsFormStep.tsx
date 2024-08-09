@@ -1,6 +1,5 @@
 import { Box, Divider, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { ReactNode } from 'react';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -51,10 +50,9 @@ export const ProjectActionsFormStep = ({
     children,
 }: IProjectActionsFormStepProps) => (
     <>
-        <ConditionallyRender
-            condition={Boolean(verticalConnector)}
-            show={<StyledVerticalConnector orientation='vertical' />}
-        />
+        {verticalConnector ? (
+            <StyledVerticalConnector orientation='vertical' />
+        ) : null}
         <StyledBox verticalConnector={verticalConnector}>
             <StyledHeader>
                 <Badge color='secondary'>{name}</Badge>

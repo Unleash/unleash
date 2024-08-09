@@ -10,7 +10,6 @@ import { Grid } from '@mui/material';
 import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import {
@@ -101,59 +100,53 @@ export const FeatureMetrics = () => {
         <PageContent>
             <Grid container component='header' spacing={2}>
                 <Grid item xs={12} md={5}>
-                    <ConditionallyRender
-                        condition={environments.size > 0}
-                        show={
-                            <FeatureMetricsChips
-                                title='Environments'
-                                values={environments}
-                                selectedValues={[selectedEnvironment]}
-                                toggleValue={(value) => {
-                                    setQuery({ environment: value });
-                                }}
-                            />
-                        }
-                    />
+                    {environments.size > 0 ? (
+                        <FeatureMetricsChips
+                            title='Environments'
+                            values={environments}
+                            selectedValues={[selectedEnvironment]}
+                            toggleValue={(value) => {
+                                setQuery({ environment: value });
+                            }}
+                        />
+                    ) : null}
                 </Grid>
                 <Grid item xs={12} md={5}>
-                    <ConditionallyRender
-                        condition={applications.size > 0}
-                        show={
-                            <FeatureMetricsChips
-                                title='Applications'
-                                values={applications}
-                                selectedValues={selectedApplications}
-                                toggleValues={() => {
-                                    if (allSelected) {
-                                        setQuery({
-                                            applications: [defaultApplication],
-                                        });
-                                    } else {
-                                        setQuery({
-                                            applications: [...applications],
-                                        });
-                                    }
-                                }}
-                                toggleValue={(value) => {
-                                    if (selectedApplications.includes(value)) {
-                                        setQuery({
-                                            applications:
-                                                selectedApplications.filter(
-                                                    (app) => app !== value,
-                                                ),
-                                        });
-                                    } else {
-                                        setQuery({
-                                            applications: [
-                                                ...selectedApplications,
-                                                value,
-                                            ],
-                                        });
-                                    }
-                                }}
-                            />
-                        }
-                    />
+                    {applications.size > 0 ? (
+                        <FeatureMetricsChips
+                            title='Applications'
+                            values={applications}
+                            selectedValues={selectedApplications}
+                            toggleValues={() => {
+                                if (allSelected) {
+                                    setQuery({
+                                        applications: [defaultApplication],
+                                    });
+                                } else {
+                                    setQuery({
+                                        applications: [...applications],
+                                    });
+                                }
+                            }}
+                            toggleValue={(value) => {
+                                if (selectedApplications.includes(value)) {
+                                    setQuery({
+                                        applications:
+                                            selectedApplications.filter(
+                                                (app) => app !== value,
+                                            ),
+                                    });
+                                } else {
+                                    setQuery({
+                                        applications: [
+                                            ...selectedApplications,
+                                            value,
+                                        ],
+                                    });
+                                }
+                            }}
+                        />
+                    ) : null}
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <FeatureMetricsHours

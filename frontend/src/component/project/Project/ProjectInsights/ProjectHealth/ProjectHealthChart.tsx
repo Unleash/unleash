@@ -1,6 +1,5 @@
 import type React from 'react';
 import { useTheme } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ProgressComponentProps {
     active: number;
@@ -72,50 +71,40 @@ export const ProjectHealthChart: React.FC<ProgressComponentProps> = ({
                 strokeDasharray={`${activeLength} ${circumference}`}
                 transform={`rotate(${activeRotation} 50 50)`}
             />
-
-            <ConditionallyRender
-                condition={potentiallyStale > 0}
-                show={
-                    <circle
-                        data-testid='potentially-stale-circle'
-                        cx='50'
-                        cy='50'
-                        r={radius}
-                        fill='none'
-                        stroke={theme.palette.warning.border}
-                        strokeWidth={strokeWidth}
-                        strokeLinecap='round'
-                        strokeDasharray={`${potentiallyStaleLength} ${circumference}`}
-                        transform={`rotate(${potentiallyStaleRotation} 50 50)`}
-                    />
-                }
-            />
-
-            <ConditionallyRender
-                condition={stale > 0}
-                show={
-                    <circle
-                        data-testid='stale-circle'
-                        cx='50'
-                        cy='50'
-                        r={radius}
-                        fill='none'
-                        stroke={theme.palette.error.border}
-                        strokeWidth={strokeWidth}
-                        strokeLinecap='round'
-                        strokeDasharray={`${staleLength} ${circumference}`}
-                        transform={`rotate(${staleRotation} 50 50)`}
-                    />
-                }
-            />
-
+            {potentiallyStale > 0 ? (
+                <circle
+                    data-testid='potentially-stale-circle'
+                    cx='50'
+                    cy='50'
+                    r={radius}
+                    fill='none'
+                    stroke={theme.palette.warning.border}
+                    strokeWidth={strokeWidth}
+                    strokeLinecap='round'
+                    strokeDasharray={`${potentiallyStaleLength} ${circumference}`}
+                    transform={`rotate(${potentiallyStaleRotation} 50 50)`}
+                />
+            ) : null}
+            {stale > 0 ? (
+                <circle
+                    data-testid='stale-circle'
+                    cx='50'
+                    cy='50'
+                    r={radius}
+                    fill='none'
+                    stroke={theme.palette.error.border}
+                    strokeWidth={strokeWidth}
+                    strokeLinecap='round'
+                    strokeDasharray={`${staleLength} ${circumference}`}
+                    transform={`rotate(${staleRotation} 50 50)`}
+                />
+            ) : null}
             <circle
                 cx='50'
                 cy='50'
                 r={innerRadius}
                 fill={theme.palette.warning.light}
             />
-
             <text
                 x='50%'
                 y='50%'

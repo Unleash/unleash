@@ -14,7 +14,6 @@ import useToast from 'hooks/useToast';
 import { type FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IUser } from 'interfaces/user';
 import {
     type IServiceAccountPayload,
@@ -311,94 +310,76 @@ export const ServiceAccountModal = ({
                             setValue={setRootRole}
                             required
                         />
-                        <ConditionallyRender
-                            condition={!editing}
-                            show={
-                                <StyledSecondaryContainer>
-                                    <StyledInputDescription>
-                                        Token
-                                    </StyledInputDescription>
-                                    <StyledInputSecondaryDescription>
-                                        In order to connect your newly created
-                                        service account, you will also need a
-                                        token.{' '}
-                                        <Link
-                                            href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
-                                            target='_blank'
-                                            rel='noreferrer'
-                                        >
-                                            Read more about API tokens
-                                        </Link>
-                                        .
-                                    </StyledInputSecondaryDescription>
-                                    <FormControl>
-                                        <RadioGroup
-                                            value={tokenGeneration}
-                                            onChange={(e) =>
-                                                setTokenGeneration(
-                                                    e.target
-                                                        .value as TokenGeneration,
-                                                )
-                                            }
-                                            name='token-generation'
-                                        >
-                                            <FormControlLabel
-                                                value={TokenGeneration.LATER}
-                                                control={<Radio />}
-                                                label='I want to generate a token later'
-                                            />
-                                            <FormControlLabel
-                                                value={TokenGeneration.NOW}
-                                                control={<Radio />}
-                                                label='Generate a token now'
-                                            />
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <StyledInlineContainer>
-                                        <StyledInputSecondaryDescription>
-                                            A new personal access token (PAT)
-                                            will be generated for the service
-                                            account, so you can get started
-                                            right away.
-                                        </StyledInputSecondaryDescription>
-                                        <ConditionallyRender
-                                            condition={
-                                                tokenGeneration ===
-                                                TokenGeneration.NOW
-                                            }
-                                            show={
-                                                <PersonalAPITokenForm
-                                                    description={patDescription}
-                                                    setDescription={
-                                                        setPatDescription
-                                                    }
-                                                    expiration={patExpiration}
-                                                    setExpiration={
-                                                        setPatExpiration
-                                                    }
-                                                    expiresAt={patExpiresAt}
-                                                    setExpiresAt={
-                                                        setPatExpiresAt
-                                                    }
-                                                    errors={patErrors}
-                                                    setErrors={setPatErrors}
-                                                />
-                                            }
+                        {!editing ? (
+                            <StyledSecondaryContainer>
+                                <StyledInputDescription>
+                                    Token
+                                </StyledInputDescription>
+                                <StyledInputSecondaryDescription>
+                                    In order to connect your newly created
+                                    service account, you will also need a token.{' '}
+                                    <Link
+                                        href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        Read more about API tokens
+                                    </Link>
+                                    .
+                                </StyledInputSecondaryDescription>
+                                <FormControl>
+                                    <RadioGroup
+                                        value={tokenGeneration}
+                                        onChange={(e) =>
+                                            setTokenGeneration(
+                                                e.target
+                                                    .value as TokenGeneration,
+                                            )
+                                        }
+                                        name='token-generation'
+                                    >
+                                        <FormControlLabel
+                                            value={TokenGeneration.LATER}
+                                            control={<Radio />}
+                                            label='I want to generate a token later'
                                         />
-                                    </StyledInlineContainer>
-                                </StyledSecondaryContainer>
-                            }
-                            elseShow={
-                                <>
-                                    <StyledInputDescription>
-                                        Service account tokens
-                                    </StyledInputDescription>
-                                    <ServiceAccountTokens
-                                        serviceAccount={serviceAccount!}
-                                    />
-                                </>
-                            }
-                        />
+                                        <FormControlLabel
+                                            value={TokenGeneration.NOW}
+                                            control={<Radio />}
+                                            label='Generate a token now'
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
+                                <StyledInlineContainer>
+                                    <StyledInputSecondaryDescription>
+                                        A new personal access token (PAT) will
+                                        be generated for the service account, so
+                                        you can get started right away.
+                                    </StyledInputSecondaryDescription>
+                                    {tokenGeneration === TokenGeneration.NOW ? (
+                                        <PersonalAPITokenForm
+                                            description={patDescription}
+                                            setDescription={setPatDescription}
+                                            expiration={patExpiration}
+                                            setExpiration={setPatExpiration}
+                                            expiresAt={patExpiresAt}
+                                            setExpiresAt={setPatExpiresAt}
+                                            errors={patErrors}
+                                            setErrors={setPatErrors}
+                                        />
+                                    ) : null}
+                                </StyledInlineContainer>
+                            </StyledSecondaryContainer>
+                        ) : (
+                            <>
+                                <StyledInputDescription>
+                                    Service account tokens
+                                </StyledInputDescription>
+                                <ServiceAccountTokens
+                                    serviceAccount={serviceAccount!}
+                                />
+                            </>
+                        )}
                     </div>
 
                     <StyledButtonContainer>

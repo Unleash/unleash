@@ -4,7 +4,6 @@ import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
@@ -50,17 +49,11 @@ export const SegmentEmpty = () => {
                 your feature. The segment is often a collection of constraints
                 and can be reused.
             </StyledParagraph>
-            <ConditionallyRender
-                condition={hasAccess(
-                    [CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT],
-                    projectId,
-                )}
-                show={
-                    <StyledLink to='/segments/create'>
-                        Create your first segment
-                    </StyledLink>
-                }
-            />
+            {hasAccess([CREATE_SEGMENT, UPDATE_PROJECT_SEGMENT], projectId) ? (
+                <StyledLink to='/segments/create'>
+                    Create your first segment
+                </StyledLink>
+            ) : null}
         </StyledDiv>
     );
 };

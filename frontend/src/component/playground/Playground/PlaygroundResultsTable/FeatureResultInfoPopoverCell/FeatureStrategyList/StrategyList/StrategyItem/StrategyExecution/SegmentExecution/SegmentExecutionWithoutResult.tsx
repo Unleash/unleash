@@ -1,7 +1,6 @@
 import { Fragment, type VFC } from 'react';
 import type { PlaygroundSegmentSchema } from 'openapi';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 import { ConstraintExecutionWithoutResults } from '../ConstraintExecution/ConstraintExecutionWithoutResults';
 
@@ -28,16 +27,15 @@ export const SegmentExecutionWithoutResult: VFC<
                         isExpanded
                         disabled
                     />
-                    <ConditionallyRender
-                        condition={
-                            // Add IF there is a next segment
-                            index >= 0 &&
-                            segments.length > 1 &&
-                            // Don't add if it's the last segment item
-                            index !== segments.length - 1
-                        }
-                        show={<StrategySeparator text='AND' />}
-                    />
+                    {
+                        // Add IF there is a next segment
+                        index >= 0 &&
+                        segments.length > 1 &&
+                        // Don't add if it's the last segment item
+                        index !== segments.length - 1 ? (
+                            <StrategySeparator text='AND' />
+                        ) : null
+                    }
                 </Fragment>
             ))}
         </>

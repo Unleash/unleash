@@ -1,6 +1,5 @@
 import { Alert, Tab, Tabs } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { OidcAuth } from './OidcAuth/OidcAuth';
@@ -54,85 +53,68 @@ export const AuthSettings = () => {
                 <PageContent
                     withTabs
                     header={
-                        <ConditionallyRender
-                            condition={authenticationType === 'enterprise'}
-                            show={
-                                <Tabs
-                                    value={activeTab}
-                                    onChange={(_, tabId) => {
-                                        setActiveTab(tabId);
-                                    }}
-                                    indicatorColor='primary'
-                                    textColor='primary'
-                                >
-                                    {tabs.map((tab, index) => (
-                                        <Tab
-                                            key={`${tab.label}_${index}`}
-                                            label={tab.label}
-                                            id={`tab-${index}`}
-                                            aria-controls={`tabpanel-${index}`}
-                                            sx={{
-                                                minWidth: {
-                                                    lg: 160,
-                                                },
-                                            }}
-                                        />
-                                    ))}
-                                </Tabs>
-                            }
-                        />
+                        authenticationType === 'enterprise' ? (
+                            <Tabs
+                                value={activeTab}
+                                onChange={(_, tabId) => {
+                                    setActiveTab(tabId);
+                                }}
+                                indicatorColor='primary'
+                                textColor='primary'
+                            >
+                                {tabs.map((tab, index) => (
+                                    <Tab
+                                        key={`${tab.label}_${index}`}
+                                        label={tab.label}
+                                        id={`tab-${index}`}
+                                        aria-controls={`tabpanel-${index}`}
+                                        sx={{
+                                            minWidth: {
+                                                lg: 160,
+                                            },
+                                        }}
+                                    />
+                                ))}
+                            </Tabs>
+                        ) : null
                     }
                 >
-                    <ConditionallyRender
-                        condition={authenticationType === 'open-source'}
-                        show={<PremiumFeature feature='sso' />}
-                    />
-                    <ConditionallyRender
-                        condition={authenticationType === 'demo'}
-                        show={
-                            <Alert severity='warning'>
-                                You are running Unleash in demo mode. You have
-                                to use the Enterprise edition in order configure
-                                Single Sign-on.
-                            </Alert>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={authenticationType === 'custom'}
-                        show={
-                            <Alert severity='warning'>
-                                You have decided to use custom authentication
-                                type. You have to use the Enterprise edition in
-                                order configure Single Sign-on from the user
-                                interface.
-                            </Alert>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={authenticationType === 'hosted'}
-                        show={
-                            <Alert severity='info'>
-                                Your Unleash instance is managed by the Unleash
-                                team.
-                            </Alert>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={authenticationType === 'enterprise'}
-                        show={
-                            <div>
-                                {tabs.map((tab, index) => (
-                                    <TabPanel
-                                        key={index}
-                                        value={activeTab}
-                                        index={index}
-                                    >
-                                        {tab.component}
-                                    </TabPanel>
-                                ))}
-                            </div>
-                        }
-                    />
+                    {authenticationType === 'open-source' ? (
+                        <PremiumFeature feature='sso' />
+                    ) : null}
+                    {authenticationType === 'demo' ? (
+                        <Alert severity='warning'>
+                            You are running Unleash in demo mode. You have to
+                            use the Enterprise edition in order configure Single
+                            Sign-on.
+                        </Alert>
+                    ) : null}
+                    {authenticationType === 'custom' ? (
+                        <Alert severity='warning'>
+                            You have decided to use custom authentication type.
+                            You have to use the Enterprise edition in order
+                            configure Single Sign-on from the user interface.
+                        </Alert>
+                    ) : null}
+                    {authenticationType === 'hosted' ? (
+                        <Alert severity='info'>
+                            Your Unleash instance is managed by the Unleash
+                            team.
+                        </Alert>
+                    ) : null}
+                    {authenticationType === 'enterprise' ? (
+                        <div>
+                            {tabs.map((tab, index) => (
+                                <TabPanel
+                                    key={index}
+                                    value={activeTab}
+                                    index={index}
+                                >
+                                    {tab.component}
+                                </TabPanel>
+                            ))}
+                        </div>
+                    ) : null}
                 </PageContent>
             </PermissionGuard>
         </div>

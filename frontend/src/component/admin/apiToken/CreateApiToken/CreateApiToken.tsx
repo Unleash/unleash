@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
@@ -176,17 +175,14 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                     environment={environment}
                     setEnvironment={setEnvironment}
                 />
-                <ConditionallyRender
-                    condition={resourceLimitsEnabled}
-                    show={
-                        <StyledLimit
-                            name='API tokens'
-                            shortName='tokens'
-                            currentValue={currentValue}
-                            limit={limit}
-                        />
-                    }
-                />
+                {resourceLimitsEnabled ? (
+                    <StyledLimit
+                        name='API tokens'
+                        shortName='tokens'
+                        currentValue={currentValue}
+                        limit={limit}
+                    />
+                ) : null}
             </ApiTokenForm>
             <ConfirmToken
                 open={showConfirm}

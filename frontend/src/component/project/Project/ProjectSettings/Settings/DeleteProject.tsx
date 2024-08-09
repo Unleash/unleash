@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -48,44 +47,33 @@ export const DeleteProject = ({
                     : ''}
                 .
             </p>
-            <ConditionallyRender
-                condition={featureCount > 0}
-                show={
-                    <p>
-                        Currently there {featureCount <= 1 ? 'is' : 'are'}{' '}
-                        <strong>
-                            {featureCount} active feature{' '}
-                            {featureCount === 1 ? 'flag' : 'flags'}.
-                        </strong>
-                    </p>
-                }
-            />
-            <ConditionallyRender
-                condition={
-                    isEnterprise() &&
-                    automatedActionsEnabled &&
-                    actionsCount > 0
-                }
-                show={
-                    <p>
-                        Currently there {actionsCount <= 1 ? 'is' : 'are'}{' '}
-                        <strong>
-                            {actionsCount} enabled{' '}
-                            {actionsCount === 1 ? 'action' : 'actions'}.
-                        </strong>
-                    </p>
-                }
-            />
+            {featureCount > 0 ? (
+                <p>
+                    Currently there {featureCount <= 1 ? 'is' : 'are'}{' '}
+                    <strong>
+                        {featureCount} active feature{' '}
+                        {featureCount === 1 ? 'flag' : 'flags'}.
+                    </strong>
+                </p>
+            ) : null}
+            {isEnterprise() && automatedActionsEnabled && actionsCount > 0 ? (
+                <p>
+                    Currently there {actionsCount <= 1 ? 'is' : 'are'}{' '}
+                    <strong>
+                        {actionsCount} enabled{' '}
+                        {actionsCount === 1 ? 'action' : 'actions'}.
+                    </strong>
+                </p>
+            ) : null}
             <p>
                 Keep in mind that deleting a project{' '}
                 <strong>will permanently remove</strong>
                 <ul>
                     <li>all archived feature flags in this project</li>
                     <li>API keys configured to access only this project</li>
-                    <ConditionallyRender
-                        condition={isEnterprise() && automatedActionsEnabled}
-                        show={<li>all actions configured for this project</li>}
-                    />
+                    {isEnterprise() && automatedActionsEnabled ? (
+                        <li>all actions configured for this project</li>
+                    ) : null}
                 </ul>
                 and they <strong>cannot be recovered</strong> once deleted.
             </p>

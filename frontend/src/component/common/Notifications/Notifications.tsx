@@ -11,7 +11,6 @@ import {
     Tooltip,
 } from '@mui/material';
 import { useNotifications } from 'hooks/api/getters/useNotifications/useNotifications';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { NotificationsHeader } from './NotificationsHeader';
 import { NotificationsList } from './NotificationsList';
@@ -177,83 +176,65 @@ export const Notifications = () => {
                     data-testid='NOTIFICATIONS_BUTTON'
                     size='large'
                 >
-                    <ConditionallyRender
-                        condition={hasUnreadNotifications}
-                        show={<StyledDotBox />}
-                    />
+                    {hasUnreadNotifications ? <StyledDotBox /> : null}
                     <NotificationsIcon />
                 </StyledIconButton>
             </Tooltip>
-
-            <ConditionallyRender
-                condition={showNotifications}
-                show={
-                    <ClickAwayListener
-                        onClickAway={() => setShowNotifications(false)}
+            {showNotifications ? (
+                <ClickAwayListener
+                    onClickAway={() => setShowNotifications(false)}
+                >
+                    <StyledPaper
+                        className='dropdown-outline'
+                        onKeyDown={onKeyDown}
+                        data-testid='NOTIFICATIONS_MODAL'
                     >
-                        <StyledPaper
-                            className='dropdown-outline'
-                            onKeyDown={onKeyDown}
-                            data-testid='NOTIFICATIONS_MODAL'
-                        >
-                            <NotificationsHeader>
-                                <StyledHeaderBox>
-                                    <StyledHeaderTypography>
-                                        Show only unread
-                                    </StyledHeaderTypography>
-                                    <Switch
-                                        onClick={() =>
-                                            setShowUnread(!showUnread)
-                                        }
-                                        checked={showUnread}
-                                    />
-                                </StyledHeaderBox>
-                            </NotificationsHeader>
-                            <ConditionallyRender
-                                condition={hasUnreadNotifications}
-                                show={
-                                    <StyledInnerContainerBox data-testid='UNREAD_NOTIFICATIONS'>
-                                        <Button onClick={onMarkAllAsRead}>
-                                            <StyledTypography>
-                                                Mark all as read (
-                                                {unreadNotifications?.length})
-                                            </StyledTypography>
-                                        </Button>
-                                    </StyledInnerContainerBox>
-                                }
-                            />{' '}
-                            <ConditionallyRender
-                                condition={notificationComponents?.length === 0}
-                                show={
-                                    <EmptyNotifications
-                                        text={
-                                            showUnread
-                                                ? 'No unread notifications'
-                                                : 'No new notifications'
-                                        }
-                                    />
+                        <NotificationsHeader>
+                            <StyledHeaderBox>
+                                <StyledHeaderTypography>
+                                    Show only unread
+                                </StyledHeaderTypography>
+                                <Switch
+                                    onClick={() => setShowUnread(!showUnread)}
+                                    checked={showUnread}
+                                />
+                            </StyledHeaderBox>
+                        </NotificationsHeader>
+                        {hasUnreadNotifications ? (
+                            <StyledInnerContainerBox data-testid='UNREAD_NOTIFICATIONS'>
+                                <Button onClick={onMarkAllAsRead}>
+                                    <StyledTypography>
+                                        Mark all as read (
+                                        {unreadNotifications?.length})
+                                    </StyledTypography>
+                                </Button>
+                            </StyledInnerContainerBox>
+                        ) : null}{' '}
+                        {notificationComponents?.length === 0 ? (
+                            <EmptyNotifications
+                                text={
+                                    showUnread
+                                        ? 'No unread notifications'
+                                        : 'No new notifications'
                                 }
                             />
-                            <NotificationsList>
-                                {notificationComponents}
-                            </NotificationsList>
-                            <ConditionallyRender
-                                condition={shouldShowFeedback}
-                                show={
-                                    <>
-                                        <Feedback
-                                            eventName='notifications'
-                                            id='useful'
-                                            localStorageKey='NotificationsUsefulPrompt'
-                                        />
-                                        <br />
-                                    </>
-                                }
-                            />
-                        </StyledPaper>
-                    </ClickAwayListener>
-                }
-            />
+                        ) : null}
+                        <NotificationsList>
+                            {notificationComponents}
+                        </NotificationsList>
+                        {shouldShowFeedback ? (
+                            <>
+                                <Feedback
+                                    eventName='notifications'
+                                    id='useful'
+                                    localStorageKey='NotificationsUsefulPrompt'
+                                />
+                                <br />
+                            </>
+                        ) : null}
+                    </StyledPaper>
+                </ClickAwayListener>
+            ) : null}
         </StyledPrimaryContainerBox>
     );
 };

@@ -2,7 +2,6 @@ import type React from 'react';
 import type { FC, VFC } from 'react';
 import TimeAgo from 'react-timeago';
 import { styled, Tooltip, useTheme } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 function shortenUnitName(unit?: string): string {
     switch (unit) {
@@ -93,38 +92,28 @@ const Wrapper: FC<{
 export const FeatureSeenCell: VFC<IFeatureSeenCellProps> = ({
     value: lastSeenAt,
 }) => {
-    return (
-        <ConditionallyRender
-            condition={Boolean(lastSeenAt)}
-            show={
-                <TimeAgo
-                    date={lastSeenAt!}
-                    title=''
-                    live={false}
-                    formatter={(
-                        value: number,
-                        unit: string,
-                        suffix: string,
-                    ) => {
-                        return (
-                            <Wrapper
-                                tooltip={`Last usage reported ${value} ${unit}${
-                                    value !== 1 ? 's' : ''
-                                } ${suffix}`}
-                                unit={unit}
-                            >
-                                {value}
-                                {shortenUnitName(unit)}
-                            </Wrapper>
-                        );
-                    }}
-                />
-            }
-            elseShow={
-                <Wrapper tooltip='No usage reported from connected applications'>
-                    &ndash;
-                </Wrapper>
-            }
+    return lastSeenAt ? (
+        <TimeAgo
+            date={lastSeenAt!}
+            title=''
+            live={false}
+            formatter={(value: number, unit: string, suffix: string) => {
+                return (
+                    <Wrapper
+                        tooltip={`Last usage reported ${value} ${unit}${
+                            value !== 1 ? 's' : ''
+                        } ${suffix}`}
+                        unit={unit}
+                    >
+                        {value}
+                        {shortenUnitName(unit)}
+                    </Wrapper>
+                );
+            }}
         />
+    ) : (
+        <Wrapper tooltip='No usage reported from connected applications'>
+            &ndash;
+        </Wrapper>
     );
 };

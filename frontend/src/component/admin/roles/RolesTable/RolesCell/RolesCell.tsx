@@ -1,4 +1,3 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { styled } from '@mui/material';
 import type { IRole } from 'interfaces/role';
@@ -18,10 +17,9 @@ export const RolesCell = ({ role }: IRolesCellProps) => (
         value={role.name}
         subtitle={role.description}
         afterTitle={
-            <ConditionallyRender
-                condition={PREDEFINED_ROLE_TYPES.includes(role.type)}
-                show={<StyledBadge color='success'>Predefined</StyledBadge>}
-            />
+            PREDEFINED_ROLE_TYPES.includes(role.type) ? (
+                <StyledBadge color='success'>Predefined</StyledBadge>
+            ) : null
         }
     />
 );

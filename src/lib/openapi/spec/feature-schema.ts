@@ -12,7 +12,7 @@ export const featureSchema = {
     $id: '#/components/schemas/featureSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name'],
+    required: ['name', 'collaborators'],
     description: 'A feature flag definition',
     properties: {
         name: {

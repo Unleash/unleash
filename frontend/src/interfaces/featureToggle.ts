@@ -75,7 +75,7 @@ export interface IFeatureToggle {
         name: string;
         imageUrl: string;
     };
-    collaborators?: CollaboratorData;
+    collaborators: CollaboratorData;
 }
 
 export interface IDependency {

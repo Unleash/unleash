@@ -8,8 +8,10 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { EventSchemaType } from 'openapi';
 import type { IProjectCard } from 'interfaces/project';
+import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
+import type { EventCreatorsSchema } from 'openapi/models/eventCreatorsSchema';
 
-const sharedFilters: IFilterItem[] = [
+const sharedFilters = (eventCreators: EventCreatorsSchema): IFilterItem[] => [
     {
         label: 'Date From',
         icon: 'today',
@@ -28,7 +30,10 @@ const sharedFilters: IFilterItem[] = [
         // todo fill this in with actual values
         label: 'Created by',
         icon: 'person',
-        options: [],
+        options: eventCreators.map((creator) => ({
+            label: creator.name,
+            value: creator.id.toString(),
+        })),
         filterKey: 'createdBy',
         singularOperators: ['IS'],
         pluralOperators: ['IS_ANY_OF'],
@@ -60,6 +65,7 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
 }) => {
     const { projects } = useProjects();
     const { features } = useFeatureSearch({});
+    const { eventCreators } = useEventCreators();
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
@@ -78,7 +84,7 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
         }));
 
         const availableFilters: IFilterItem[] = [
-            ...sharedFilters,
+            ...sharedFilters(eventCreators),
             ...(hasMultipleProjects && logType === 'global'
                 ? ([
                       {

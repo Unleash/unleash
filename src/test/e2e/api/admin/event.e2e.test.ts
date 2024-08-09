@@ -8,6 +8,7 @@ import { FEATURE_CREATED, type IBaseEvent } from '../../../../lib/types/events';
 import { randomId } from '../../../../lib/util/random-id';
 import { EventService } from '../../../../lib/services';
 import EventEmitter from 'events';
+import { SYSTEM_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -180,25 +181,25 @@ test('Can filter by project', async () => {
         });
 });
 
-test('can get event creators', async () => {
+test('event creators - if system user, return system name, else should return name from database if user exists, else from events table', async () => {
+    const user = await db.stores.userStore.insert({ name: 'database-user' });
     const events: IBaseEvent[] = [
         {
             type: FEATURE_CREATED,
             project: randomId(),
             data: { id: randomId() },
             tags: [],
-            createdBy: 'test-user1',
-            createdByUserId: 1,
+            createdBy: 'should-not-use-this-name',
+            createdByUserId: SYSTEM_USER.id,
             ip: '127.0.0.1',
         },
         {
             type: FEATURE_CREATED,
             project: randomId(),
             data: { id: randomId() },
-            preData: { id: randomId() },
-            tags: [{ type: 'simple', value: randomId() }],
-            createdBy: 'test-user2',
-            createdByUserId: 2,
+            tags: [],
+            createdBy: 'test-user1',
+            createdByUserId: user.id,
             ip: '127.0.0.1',
         },
         {
@@ -222,5 +223,18 @@ test('can get event creators', async () => {
     const { body } = await app.request
         .get('/api/admin/event-creators')
         .expect(200);
-    expect(body).toMatchObject(['test-user2', 'test-user1']);
+    expect(body).toMatchObject([
+        {
+            id: SYSTEM_USER.id,
+            name: SYSTEM_USER.name,
+        },
+        {
+            id: 1,
+            name: 'database-user',
+        },
+        {
+            id: 2,
+            name: 'test-user2',
+        },
+    ]);
 });

@@ -200,4 +200,8 @@ export default class EventService {
 
         return queryParams;
     };
+
+    async getEventCreators() {
+        return this.eventStore.getEventCreators();
+    }
 }

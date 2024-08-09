@@ -8,6 +8,7 @@ import { FEATURE_CREATED, type IBaseEvent } from '../../../../lib/types/events';
 import { randomId } from '../../../../lib/util/random-id';
 import { EventService } from '../../../../lib/services';
 import EventEmitter from 'events';
+import { SYSTEM_USER } from '../../../../lib/types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -149,4 +150,62 @@ test('can search for events', async () => {
             expect(res.body.events).toHaveLength(1);
             expect(res.body.events[0].data.id).toEqual(events[1].data.id);
         });
+});
+
+test('event creators - if system user, return system name, else should return name from database if user exists, else from events table', async () => {
+    const user = await db.stores.userStore.insert({ name: 'database-user' });
+    const events: IBaseEvent[] = [
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            data: { id: randomId() },
+            tags: [],
+            createdBy: 'should-not-use-this-name',
+            createdByUserId: SYSTEM_USER.id,
+            ip: '127.0.0.1',
+        },
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            data: { id: randomId() },
+            tags: [],
+            createdBy: 'test-user1',
+            createdByUserId: user.id,
+            ip: '127.0.0.1',
+        },
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            data: { id: randomId() },
+            preData: { id: randomId() },
+            tags: [{ type: 'simple', value: randomId() }],
+            createdBy: 'test-user2',
+            createdByUserId: 2,
+            ip: '127.0.0.1',
+        },
+    ];
+
+    await Promise.all(
+        events.map((event) => {
+            return eventService.storeEvent(event);
+        }),
+    );
+
+    const { body } = await app.request
+        .get('/api/admin/event-creators')
+        .expect(200);
+    expect(body).toMatchObject([
+        {
+            id: SYSTEM_USER.id,
+            name: SYSTEM_USER.name,
+        },
+        {
+            id: 1,
+            name: 'database-user',
+        },
+        {
+            id: 2,
+            name: 'test-user2',
+        },
+    ]);
 });

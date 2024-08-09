@@ -16,7 +16,7 @@ import { sharedEventEmitter } from '../../util/anyEventEmitter';
 import type { Db } from '../../db/db';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
-import { ADMIN_TOKEN_USER, SYSTEM_USER_ID } from '../../types';
+import { ADMIN_TOKEN_USER, SYSTEM_USER, SYSTEM_USER_ID } from '../../types';
 import type { DeprecatedSearchEventsSchema } from '../../openapi';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams } from '../feature-search/search-utils';
@@ -378,6 +378,32 @@ class EventStore implements IEventStore {
         }
 
         return query;
+    }
+
+    async getEventCreators(): Promise<Array<{ id: number; name: string }>> {
+        const query = this.db('events')
+            .distinct('events.created_by_user_id')
+            .leftJoin('users', 'users.id', '=', 'events.created_by_user_id')
+            .select([
+                'events.created_by_user_id as id',
+                this.db.raw(`
+            CASE
+                WHEN events.created_by_user_id = -1337 THEN '${SYSTEM_USER.name}'
+                WHEN events.created_by_user_id = -42 THEN '${ADMIN_TOKEN_USER.name}'
+                ELSE COALESCE(users.name, events.created_by)
+            END as name
+        `),
+                'users.username',
+                'users.email',
+            ]);
+
+        const result = await query;
+        return result
+            .filter((row) => row.name || row.username || row.email)
+            .map((row) => ({
+                id: Number(row.id),
+                name: String(row.name || row.username || row.email),
+            }));
     }
 
     async deprecatedSearchEvents(

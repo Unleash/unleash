@@ -36,7 +36,6 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { Badge } from '../../common/Badge/Badge';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -117,23 +116,6 @@ const styledIconProps = (theme: Theme) => ({
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
-const StyledText = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
-const StyledLinkWithBetaBadge = ({
-    title,
-    to,
-}: { title: string; to: string }) => (
-    <StyledLink to={to} sx={{ margin: 0 }}>
-        <StyledText>
-            <span>{title}</span> <Badge color='success'>Beta</Badge>
-        </StyledText>
-    </StyledLink>
-);
-
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
     href?: string;
@@ -164,7 +146,6 @@ const OldHeader: VFC = () => {
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const killInsightsDashboard = useUiFlag('killInsightsUI');
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -242,7 +223,7 @@ const OldHeader: VFC = () => {
                         <StyledLink to={'/search'}>Search</StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
                         <ConditionallyRender
-                            condition={!killInsightsDashboard && !isOss()}
+                            condition={false}
                             show={
                                 <StyledLink to='/insights'>Insights</StyledLink>
                             }

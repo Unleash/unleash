@@ -97,10 +97,6 @@ afterEach(async () => {
 test('should create initial admin user', async () => {
     await userService.initAdminUser({
         createAdminUser: true,
-        initialAdminUser: {
-            username: 'admin',
-            password: 'unleash4all',
-        },
     });
     await expect(async () =>
         userService.loginUser('admin', 'wrong-password'),
@@ -121,10 +117,6 @@ test('should not init default user if we already have users', async () => {
     );
     await userService.initAdminUser({
         createAdminUser: true,
-        initialAdminUser: {
-            username: 'admin',
-            password: 'unleash4all',
-        },
     });
     const users = await userService.getAll();
     expect(users).toHaveLength(1);

@@ -66,16 +66,24 @@ export type CustomAuthHandler = (
     services?: IUnleashServices,
 ) => void;
 
+export type UsernameAdminUser = {
+    username: string;
+    password: string;
+};
+
+export type EmailAdminUser = {
+    name: string;
+    email: string;
+};
+
 export interface IAuthOption {
     demoAllowAdminLogin?: boolean;
     enableApiToken: boolean;
     type: IAuthType;
     customAuthHandler?: CustomAuthHandler;
     createAdminUser?: boolean;
-    initialAdminUser?: {
-        username: string;
-        password: string;
-    };
+    initialAdminUser?: UsernameAdminUser;
+    initialAdminEmailUser?: EmailAdminUser;
     initApiTokens: ILegacyApiTokenCreate[];
 }
 

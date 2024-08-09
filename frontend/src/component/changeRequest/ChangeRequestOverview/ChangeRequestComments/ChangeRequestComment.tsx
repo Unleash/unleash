@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import Paper from '@mui/material/Paper';
-import { Box, styled, Typography, Tooltip } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { StyledAvatar } from './StyledAvatar';
 import type { IChangeRequestComment } from '../../changeRequest.types';
@@ -29,9 +29,7 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
     comment,
 }) => (
     <ChangeRequestCommentWrapper>
-        <Tooltip title={comment.createdBy.username}>
-            <StyledAvatar src={comment.createdBy.imageUrl} />
-        </Tooltip>
+        <StyledAvatar user={comment.createdBy} />
         <CommentPaper variant='outlined'>
             <CommentHeader>
                 <Box>

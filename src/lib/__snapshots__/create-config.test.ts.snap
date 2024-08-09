@@ -128,7 +128,6 @@ exports[`should create default config 1`] = `
       "improveCreateFlagFlow": false,
       "insightsV2": false,
       "integrationEvents": false,
-      "killInsightsUI": false,
       "killScheduledChangeRequestCache": false,
       "maintenanceMode": false,
       "manyStrategiesPagination": false,

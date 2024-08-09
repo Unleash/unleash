@@ -1,5 +1,4 @@
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { VFC } from 'react';
 import { onEnter } from '../onEnter';
 
@@ -57,41 +56,33 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
             {filters.map((filter) => (
                 <StyledFilterHint key={filter.name}>
                     {filter.header}:{' '}
-                    <ConditionallyRender
-                        condition={filter.options.length > 0}
-                        show={
+                    {filter.options.length > 0 ? (
+                        <StyledCode
+                            tabIndex={0}
+                            onKeyDown={onEnter(() =>
+                                onClick(firstFilterOption(filter)),
+                            )}
+                            onClick={() => onClick(firstFilterOption(filter))}
+                        >
+                            {firstFilterOption(filter)}
+                        </StyledCode>
+                    ) : null}
+                    {filter.options.length > 1 ? (
+                        <>
+                            {' or '}
                             <StyledCode
                                 tabIndex={0}
                                 onKeyDown={onEnter(() =>
-                                    onClick(firstFilterOption(filter)),
+                                    onClick(secondFilterOption(filter)),
                                 )}
-                                onClick={() =>
-                                    onClick(firstFilterOption(filter))
-                                }
+                                onClick={() => {
+                                    onClick(secondFilterOption(filter));
+                                }}
                             >
-                                {firstFilterOption(filter)}
+                                {secondFilterOption(filter)}
                             </StyledCode>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={filter.options.length > 1}
-                        show={
-                            <>
-                                {' or '}
-                                <StyledCode
-                                    tabIndex={0}
-                                    onKeyDown={onEnter(() =>
-                                        onClick(secondFilterOption(filter)),
-                                    )}
-                                    onClick={() => {
-                                        onClick(secondFilterOption(filter));
-                                    }}
-                                >
-                                    {secondFilterOption(filter)}
-                                </StyledCode>
-                            </>
-                        }
-                    />
+                        </>
+                    ) : null}
                 </StyledFilterHint>
             ))}
         </>

@@ -1,7 +1,6 @@
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { Alert, CircularProgress, Divider, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IActionEvent } from 'interfaces/action';
 import type { ReactNode } from 'react';
 
@@ -90,10 +89,9 @@ export const ProjectActionsEventsDetailsAction = ({
                     <div>{children}</div>
                     <StyledHeaderState>{actionState}</StyledHeaderState>
                 </StyledHeaderRow>
-                <ConditionallyRender
-                    condition={Boolean(details)}
-                    show={<StyledAlert severity='error'>{details}</StyledAlert>}
-                />
+                {details ? (
+                    <StyledAlert severity='error'>{details}</StyledAlert>
+                ) : null}
             </StyledHeader>
             <StyledDivider />
             <StyledActionBody>

@@ -4,7 +4,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IArchivedFeatureReviveConfirmProps {
     revivedFeatures: string[];
@@ -72,28 +71,22 @@ export const ArchivedFeatureReviveConfirm = ({
                 Revived feature flags will be automatically disabled in all
                 environments
             </Alert>
-
-            <ConditionallyRender
-                condition={revivedFeatures.length > 1}
-                show={
-                    <>
-                        <StyledParagraph>
-                            You are about to revive feature flags:
-                        </StyledParagraph>
-                        <ul>
-                            {revivedFeatures.map((name) => (
-                                <li key={`revive-${name}`}>{name}</li>
-                            ))}
-                        </ul>
-                    </>
-                }
-                elseShow={
+            {revivedFeatures.length > 1 ? (
+                <>
                     <StyledParagraph>
-                        You are about to revive feature flag:{' '}
-                        {revivedFeatures[0]}
+                        You are about to revive feature flags:
                     </StyledParagraph>
-                }
-            />
+                    <ul>
+                        {revivedFeatures.map((name) => (
+                            <li key={`revive-${name}`}>{name}</li>
+                        ))}
+                    </ul>
+                </>
+            ) : (
+                <StyledParagraph>
+                    You are about to revive feature flag: {revivedFeatures[0]}
+                </StyledParagraph>
+            )}
         </Dialogue>
     );
 };

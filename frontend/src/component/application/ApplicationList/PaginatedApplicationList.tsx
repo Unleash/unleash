@@ -4,7 +4,6 @@ import { styles as themeStyles } from 'component/common';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import useApplications from 'hooks/api/getters/useApplications/useApplications';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { PaginatedTable } from 'component/common/Table';
@@ -161,20 +160,18 @@ export const PaginatedApplicationList = () => {
                 }
             >
                 <div className={themeStyles.fullwidth}>
-                    <ConditionallyRender
-                        condition={data.length > 0 || loading}
-                        show={
-                            <SearchHighlightProvider value={query || ''}>
-                                <div ref={bodyLoadingRef}>
-                                    <PaginatedTable
-                                        tableInstance={table}
-                                        totalItems={total}
-                                    />
-                                </div>
-                            </SearchHighlightProvider>
-                        }
-                        elseShow={renderNoResults(query)}
-                    />
+                    {data.length > 0 || loading ? (
+                        <SearchHighlightProvider value={query || ''}>
+                            <div ref={bodyLoadingRef}>
+                                <PaginatedTable
+                                    tableInstance={table}
+                                    totalItems={total}
+                                />
+                            </div>
+                        </SearchHighlightProvider>
+                    ) : (
+                        renderNoResults(query)
+                    )}
                 </div>
             </PageContent>
         </>

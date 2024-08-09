@@ -1,6 +1,5 @@
 import type { VFC } from 'react';
 import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Widget } from './components/Widget/Widget';
 import { UserStats } from './componentsStat/UserStats/UserStats';
 import { UsersChart } from './componentsChart/UsersChart/UsersChart';
@@ -104,50 +103,42 @@ export const LegacyInsightsCharts: VFC<IChartsProps> = ({
     return (
         <>
             <StyledGrid>
-                <ConditionallyRender
-                    condition={showAllProjects}
-                    show={
-                        <Widget {...chartInfo.totalUsers}>
-                            <UserStats
-                                count={users.total}
-                                active={users.active}
-                                inactive={users.inactive}
-                                isLoading={loading}
-                            />
-                        </Widget>
-                    }
-                    elseShow={
-                        <Widget
-                            {...(isOneProjectSelected
-                                ? chartInfo.usersInProject
-                                : chartInfo.avgUsersPerProject)}
-                        >
-                            <UserStats
-                                count={summary.averageUsers}
-                                isLoading={loading}
-                            />
-                        </Widget>
-                    }
-                />
-                <ConditionallyRender
-                    condition={showAllProjects}
-                    show={
-                        <ChartWidget {...chartInfo.users}>
-                            <UsersChart
-                                userTrends={userTrends}
-                                isLoading={loading}
-                            />
-                        </ChartWidget>
-                    }
-                    elseShow={
-                        <ChartWidget {...chartInfo.usersPerProject}>
-                            <UsersPerProjectChart
-                                projectFlagTrends={groupedProjectsData}
-                                isLoading={loading}
-                            />
-                        </ChartWidget>
-                    }
-                />
+                {showAllProjects ? (
+                    <Widget {...chartInfo.totalUsers}>
+                        <UserStats
+                            count={users.total}
+                            active={users.active}
+                            inactive={users.inactive}
+                            isLoading={loading}
+                        />
+                    </Widget>
+                ) : (
+                    <Widget
+                        {...(isOneProjectSelected
+                            ? chartInfo.usersInProject
+                            : chartInfo.avgUsersPerProject)}
+                    >
+                        <UserStats
+                            count={summary.averageUsers}
+                            isLoading={loading}
+                        />
+                    </Widget>
+                )}
+                {showAllProjects ? (
+                    <ChartWidget {...chartInfo.users}>
+                        <UsersChart
+                            userTrends={userTrends}
+                            isLoading={loading}
+                        />
+                    </ChartWidget>
+                ) : (
+                    <ChartWidget {...chartInfo.usersPerProject}>
+                        <UsersPerProjectChart
+                            projectFlagTrends={groupedProjectsData}
+                            isLoading={loading}
+                        />
+                    </ChartWidget>
+                )}
                 <Widget {...chartInfo.totalFlags}>
                     <FlagStats
                         count={showAllProjects ? flags.total : summary.total}
@@ -157,98 +148,88 @@ export const LegacyInsightsCharts: VFC<IChartsProps> = ({
                         isLoading={loading}
                     />
                 </Widget>
-                <ConditionallyRender
-                    condition={showAllProjects}
-                    show={
-                        <ChartWidget {...chartInfo.flags}>
-                            <FlagsChart
-                                flagTrends={flagTrends}
-                                isLoading={loading}
-                            />
-                        </ChartWidget>
-                    }
-                    elseShow={
-                        <ChartWidget {...chartInfo.flagsPerProject}>
-                            <FlagsProjectChart
-                                projectFlagTrends={groupedProjectsData}
-                                isLoading={loading}
-                            />
-                        </ChartWidget>
-                    }
-                />
-                <ConditionallyRender
-                    condition={isEnterprise()}
-                    show={
-                        <>
-                            <Widget {...chartInfo.averageHealth}>
-                                <LegacyHealthStats
-                                    value={summary.averageHealth}
-                                    healthy={summary.active}
-                                    stale={summary.stale}
-                                    potentiallyStale={summary.potentiallyStale}
-                                />
-                            </Widget>
-                            <ChartWidget
-                                {...(showAllProjects
-                                    ? chartInfo.overallHealth
-                                    : chartInfo.healthPerProject)}
-                            >
-                                <ProjectHealthChart
-                                    projectFlagTrends={groupedProjectsData}
-                                    isAggregate={showAllProjects}
-                                    isLoading={loading}
-                                />
-                            </ChartWidget>
-                            <Widget {...chartInfo.medianTimeToProduction}>
-                                <TimeToProduction
-                                    daysToProduction={
-                                        summary.medianTimeToProduction
-                                    }
-                                />
-                            </Widget>
-                            <ChartWidget
-                                {...(showAllProjects
-                                    ? chartInfo.timeToProduction
-                                    : chartInfo.timeToProductionPerProject)}
-                            >
-                                <TimeToProductionChart
-                                    projectFlagTrends={groupedProjectsData}
-                                    isAggregate={showAllProjects}
-                                    isLoading={loading}
-                                />
-                            </ChartWidget>
-                        </>
-                    }
-                />
-            </StyledGrid>
-            <ConditionallyRender
-                condition={isEnterprise()}
-                show={
+                {showAllProjects ? (
+                    <ChartWidget {...chartInfo.flags}>
+                        <FlagsChart
+                            flagTrends={flagTrends}
+                            isLoading={loading}
+                        />
+                    </ChartWidget>
+                ) : (
+                    <ChartWidget {...chartInfo.flagsPerProject}>
+                        <FlagsProjectChart
+                            projectFlagTrends={groupedProjectsData}
+                            isLoading={loading}
+                        />
+                    </ChartWidget>
+                )}
+                {isEnterprise() ? (
                     <>
-                        <Widget
+                        <Widget {...chartInfo.averageHealth}>
+                            <LegacyHealthStats
+                                value={summary.averageHealth}
+                                healthy={summary.active}
+                                stale={summary.stale}
+                                potentiallyStale={summary.potentiallyStale}
+                            />
+                        </Widget>
+                        <ChartWidget
                             {...(showAllProjects
-                                ? chartInfo.metrics
-                                : chartInfo.metricsPerProject)}
+                                ? chartInfo.overallHealth
+                                : chartInfo.healthPerProject)}
                         >
-                            <MetricsSummaryChart
-                                metricsSummaryTrends={groupedMetricsData}
-                                allDatapointsSorted={allMetricsDatapoints}
+                            <ProjectHealthChart
+                                projectFlagTrends={groupedProjectsData}
                                 isAggregate={showAllProjects}
                                 isLoading={loading}
                             />
-                        </Widget>
-                        <Widget
-                            {...chartInfo.updates}
-                            sx={{ mt: (theme) => theme.spacing(2) }}
-                        >
-                            <UpdatesPerEnvironmentTypeChart
-                                environmentTypeTrends={environmentTypeTrends}
-                                isLoading={loading}
+                        </ChartWidget>
+                        <Widget {...chartInfo.medianTimeToProduction}>
+                            <TimeToProduction
+                                daysToProduction={
+                                    summary.medianTimeToProduction
+                                }
                             />
                         </Widget>
+                        <ChartWidget
+                            {...(showAllProjects
+                                ? chartInfo.timeToProduction
+                                : chartInfo.timeToProductionPerProject)}
+                        >
+                            <TimeToProductionChart
+                                projectFlagTrends={groupedProjectsData}
+                                isAggregate={showAllProjects}
+                                isLoading={loading}
+                            />
+                        </ChartWidget>
                     </>
-                }
-            />
+                ) : null}
+            </StyledGrid>
+            {isEnterprise() ? (
+                <>
+                    <Widget
+                        {...(showAllProjects
+                            ? chartInfo.metrics
+                            : chartInfo.metricsPerProject)}
+                    >
+                        <MetricsSummaryChart
+                            metricsSummaryTrends={groupedMetricsData}
+                            allDatapointsSorted={allMetricsDatapoints}
+                            isAggregate={showAllProjects}
+                            isLoading={loading}
+                        />
+                    </Widget>
+                    <Widget
+                        {...chartInfo.updates}
+                        sx={{ mt: (theme) => theme.spacing(2) }}
+                    >
+                        <UpdatesPerEnvironmentTypeChart
+                            environmentTypeTrends={environmentTypeTrends}
+                            isLoading={loading}
+                        />
+                    </Widget>
+                </>
+            ) : null}
         </>
     );
 };

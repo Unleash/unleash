@@ -12,7 +12,6 @@ import {
     TablePlaceholder,
 } from 'component/common/Table';
 import { Box, Table, TableBody, TableRow } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 type ConnectedInstancesTableProps = {
     loading: boolean;
@@ -55,17 +54,14 @@ export const ConnectedInstancesTable = ({
                     </TableBody>
                 </Table>
             </Box>
-            <ConditionallyRender
-                condition={rows.length === 0 && !loading}
-                show={
-                    <TablePlaceholder>
-                        <p>
-                            There's no data for any connected instances to
-                            display. Have you configured your clients correctly?
-                        </p>
-                    </TablePlaceholder>
-                }
-            />
+            {rows.length === 0 && !loading ? (
+                <TablePlaceholder>
+                    <p>
+                        There's no data for any connected instances to display.
+                        Have you configured your clients correctly?
+                    </p>
+                </TablePlaceholder>
+            ) : null}
         </>
     );
 };

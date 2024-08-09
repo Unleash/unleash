@@ -9,7 +9,6 @@ import type {
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { changesCount } from 'component/changeRequest/changesCount';
@@ -107,98 +106,85 @@ export const ChangeActions: FC<{
         }
     };
 
-    return (
-        <ConditionallyRender
-            condition={showEdit || showDiscard}
-            show={
-                <>
-                    <Tooltip title='Change request actions' arrow describeChild>
-                        <IconButton
-                            id={id}
-                            aria-controls={open ? menuId : undefined}
-                            aria-haspopup='true'
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleClick}
-                            type='button'
-                        >
-                            <MoreVert />
-                        </IconButton>
-                    </Tooltip>
-                    <StyledPopover
-                        id={menuId}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        transformOrigin={{
-                            horizontal: 'right',
-                            vertical: 'top',
-                        }}
-                        anchorOrigin={{
-                            horizontal: 'right',
-                            vertical: 'bottom',
-                        }}
-                        disableScrollLock={true}
-                    >
-                        <MenuList aria-labelledby={id}>
-                            <ConditionallyRender
-                                condition={showEdit}
-                                show={
-                                    <MenuItem onClick={onEdit}>
-                                        <ListItemIcon>
-                                            <Edit />
-                                        </ListItemIcon>
-                                        <ListItemText>
-                                            <Typography variant='body2'>
-                                                Edit change
-                                            </Typography>
-                                        </ListItemText>
-                                        <EditChange
-                                            changeRequestId={changeRequest.id}
-                                            featureId={feature}
-                                            change={
-                                                change as
-                                                    | IChangeRequestAddStrategy
-                                                    | IChangeRequestUpdateStrategy
-                                            }
-                                            environment={
-                                                changeRequest.environment
-                                            }
-                                            open={editOpen}
-                                            onSubmit={() => {
-                                                setEditOpen(false);
-                                                onRefetch?.();
-                                            }}
-                                            onClose={() => {
-                                                setEditOpen(false);
-                                            }}
-                                        />
-                                    </MenuItem>
+    return showEdit || showDiscard ? (
+        <>
+            <Tooltip title='Change request actions' arrow describeChild>
+                <IconButton
+                    id={id}
+                    aria-controls={open ? menuId : undefined}
+                    aria-haspopup='true'
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                    type='button'
+                >
+                    <MoreVert />
+                </IconButton>
+            </Tooltip>
+            <StyledPopover
+                id={menuId}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                transformOrigin={{
+                    horizontal: 'right',
+                    vertical: 'top',
+                }}
+                anchorOrigin={{
+                    horizontal: 'right',
+                    vertical: 'bottom',
+                }}
+                disableScrollLock={true}
+            >
+                <MenuList aria-labelledby={id}>
+                    {showEdit ? (
+                        <MenuItem onClick={onEdit}>
+                            <ListItemIcon>
+                                <Edit />
+                            </ListItemIcon>
+                            <ListItemText>
+                                <Typography variant='body2'>
+                                    Edit change
+                                </Typography>
+                            </ListItemText>
+                            <EditChange
+                                changeRequestId={changeRequest.id}
+                                featureId={feature}
+                                change={
+                                    change as
+                                        | IChangeRequestAddStrategy
+                                        | IChangeRequestUpdateStrategy
                                 }
+                                environment={changeRequest.environment}
+                                open={editOpen}
+                                onSubmit={() => {
+                                    setEditOpen(false);
+                                    onRefetch?.();
+                                }}
+                                onClose={() => {
+                                    setEditOpen(false);
+                                }}
                             />
+                        </MenuItem>
+                    ) : null}
 
-                            <ConditionallyRender
-                                condition={showDiscard}
-                                show={
-                                    <MenuItem
-                                        onClick={() => {
-                                            onDiscard();
-                                        }}
-                                    >
-                                        <ListItemIcon>
-                                            <Delete />
-                                        </ListItemIcon>
-                                        <ListItemText>
-                                            <Typography variant='body2'>
-                                                Discard change
-                                            </Typography>
-                                        </ListItemText>
-                                    </MenuItem>
-                                }
-                            />
-                        </MenuList>
-                    </StyledPopover>
-                </>
-            }
-        />
-    );
+                    {showDiscard ? (
+                        <MenuItem
+                            onClick={() => {
+                                onDiscard();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Delete />
+                            </ListItemIcon>
+                            <ListItemText>
+                                <Typography variant='body2'>
+                                    Discard change
+                                </Typography>
+                            </ListItemText>
+                        </MenuItem>
+                    ) : null}
+                </MenuList>
+            </StyledPopover>
+        </>
+    ) : null;
 };

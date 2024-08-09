@@ -1,5 +1,4 @@
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IGroupUser } from 'interfaces/group';
 import { useMemo } from 'react';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
@@ -78,14 +77,11 @@ const AvatarGroupInner = ({
             {shownUsers.map((user) => (
                 <AvatarComponent key={objectId(user)} user={user} />
             ))}
-            <ConditionallyRender
-                condition={users.length > avatarLimit}
-                show={
-                    <AvatarComponent>
-                        +{users.length - shownUsers.length}
-                    </AvatarComponent>
-                }
-            />
+            {users.length > avatarLimit ? (
+                <AvatarComponent>
+                    +{users.length - shownUsers.length}
+                </AvatarComponent>
+            ) : null}
         </StyledAvatars>
     );
 };

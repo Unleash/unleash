@@ -28,7 +28,6 @@ import {
 } from '../../playground.utils';
 import Clear from '@mui/icons-material/Clear';
 import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { EnvironmentsField } from './EnvironmentsField/EnvironmentsField';
 import { Link } from 'react-router-dom';
@@ -268,51 +267,44 @@ export const PlaygroundConnectionFieldset: FC<
                         disabled={Boolean(changeRequest)}
                     />
                 </Box>
-                <ConditionallyRender
-                    condition={Boolean(
-                        changeRequestPlaygroundEnabled && changeRequest,
-                    )}
-                    show={
-                        <Box sx={{ display: 'flex', gap: 2 }}>
-                            <Box sx={{ flex: 1 }}>
-                                <StyledChangeRequestInput
-                                    label='Change request'
-                                    value={
-                                        changeRequest
-                                            ? `Change request #${changeRequest}`
-                                            : ''
-                                    }
-                                    onChange={() => {}}
-                                    type={'text'}
-                                    disabled
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position='end'>
-                                                <IconButton
-                                                    aria-label='clear Change request results'
-                                                    onClick={
-                                                        onClearChangeRequest
-                                                    }
-                                                    edge='end'
-                                                >
-                                                    <SmallClear />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                            </Box>
-                            <Button
-                                variant='outlined'
-                                size='small'
-                                to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
-                                component={Link}
-                            >
-                                View change request
-                            </Button>
+                {changeRequestPlaygroundEnabled && changeRequest ? (
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Box sx={{ flex: 1 }}>
+                            <StyledChangeRequestInput
+                                label='Change request'
+                                value={
+                                    changeRequest
+                                        ? `Change request #${changeRequest}`
+                                        : ''
+                                }
+                                onChange={() => {}}
+                                type={'text'}
+                                disabled
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            <IconButton
+                                                aria-label='clear Change request results'
+                                                onClick={onClearChangeRequest}
+                                                edge='end'
+                                            >
+                                                <SmallClear />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
                         </Box>
-                    }
-                />
+                        <Button
+                            variant='outlined'
+                            size='small'
+                            to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
+                            component={Link}
+                        >
+                            View change request
+                        </Button>
+                    </Box>
+                ) : null}
             </StyledGrid>
         </Box>
     );

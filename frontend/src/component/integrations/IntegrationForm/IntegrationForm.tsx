@@ -47,7 +47,6 @@ import {
     StyledRaisedSection,
 } from './IntegrationForm.styles';
 import { GO_BACK } from 'constants/navigate';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
@@ -317,29 +316,23 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                     {displayName || (name ? capitalizeFirst(name) : '')}{' '}
                     integration
                 </StyledHeaderTitle>
-                <ConditionallyRender
-                    condition={editMode && isAdmin && integrationEventsEnabled}
-                    show={
-                        <Link onClick={() => setEventsModalOpen(true)}>
-                            View events
-                        </Link>
-                    }
-                />
+                {editMode && isAdmin && integrationEventsEnabled ? (
+                    <Link onClick={() => setEventsModalOpen(true)}>
+                        View events
+                    </Link>
+                ) : null}
             </StyledHeader>
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
-                    <ConditionallyRender
-                        condition={Boolean(alerts)}
-                        show={() => (
-                            <StyledAlerts>
-                                {alerts?.map(({ type, text }) => (
-                                    <Alert severity={type} key={text}>
-                                        {text}
-                                    </Alert>
-                                ))}
-                            </StyledAlerts>
-                        )}
-                    />
+                    {alerts ? (
+                        <StyledAlerts>
+                            {alerts?.map(({ type, text }) => (
+                                <Alert severity={type} key={text}>
+                                    {text}
+                                </Alert>
+                            ))}
+                        </StyledAlerts>
+                    ) : null}
                     <StyledTextField
                         size='small'
                         label='Provider'
@@ -357,16 +350,13 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         />
                     </StyledRaisedSection>
                     <StyledRaisedSection>
-                        <ConditionallyRender
-                            condition={Boolean(installation)}
-                            show={() => (
-                                <IntegrationInstall
-                                    url={installation!.url}
-                                    title={installation!.title}
-                                    helpText={installation!.helpText}
-                                />
-                            )}
-                        />
+                        {installation ? (
+                            <IntegrationInstall
+                                url={installation!.url}
+                                title={installation!.title}
+                                helpText={installation!.helpText}
+                            />
+                        ) : null}
                         <IntegrationParameters
                             provider={provider}
                             config={formValues as AddonSchema}

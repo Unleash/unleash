@@ -1,7 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
 export const WidgetTitle: FC<{
@@ -17,13 +16,10 @@ export const WidgetTitle: FC<{
         })}
     >
         {title}
-        <ConditionallyRender
-            condition={Boolean(tooltip)}
-            show={
-                <HelpIcon htmlTooltip tooltip={tooltip}>
-                    <InfoOutlined />
-                </HelpIcon>
-            }
-        />
+        {tooltip ? (
+            <HelpIcon htmlTooltip tooltip={tooltip}>
+                <InfoOutlined />
+            </HelpIcon>
+        ) : null}
     </Typography>
 );

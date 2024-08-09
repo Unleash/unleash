@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useMediaQuery } from '@mui/material';
@@ -250,14 +249,11 @@ export const ProjectActionsTable = ({
                 headerGroups={headerGroups}
                 prepareRow={prepareRow}
             />
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <TablePlaceholder>
-                        No actions available. Get started by adding one.
-                    </TablePlaceholder>
-                }
-            />
+            {rows.length === 0 ? (
+                <TablePlaceholder>
+                    No actions available. Get started by adding one.
+                </TablePlaceholder>
+            ) : null}
             <ProjectActionsModal
                 action={selectedAction}
                 open={modalOpen}

@@ -1,5 +1,4 @@
 import { Alert, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
@@ -56,72 +55,51 @@ export const RoleDeleteDialogRootRole = ({
                 setOpen(false);
             }}
         >
-            <ConditionallyRender
-                condition={entitiesWithRole}
-                show={
-                    <>
-                        <Alert severity='error'>
-                            You are not allowed to delete a role that is
-                            currently in use. Please change the role of the
-                            following entities first:
-                        </Alert>
-                        <ConditionallyRender
-                            condition={Boolean(roleUsers.length)}
-                            show={
-                                <>
-                                    <StyledLabel>
-                                        Users ({roleUsers.length}):
-                                    </StyledLabel>
-                                    <StyledTableContainer>
-                                        <RoleDeleteDialogUsers
-                                            users={roleUsers}
-                                        />
-                                    </StyledTableContainer>
-                                </>
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={Boolean(roleServiceAccounts.length)}
-                            show={
-                                <>
-                                    <StyledLabel>
-                                        Service accounts (
-                                        {roleServiceAccounts.length}):
-                                    </StyledLabel>
-                                    <StyledTableContainer>
-                                        <RoleDeleteDialogServiceAccounts
-                                            serviceAccounts={
-                                                roleServiceAccounts
-                                            }
-                                        />
-                                    </StyledTableContainer>
-                                </>
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={Boolean(roleGroups?.length)}
-                            show={
-                                <>
-                                    <StyledLabel>
-                                        Groups ({roleGroups?.length}):
-                                    </StyledLabel>
-                                    <StyledTableContainer>
-                                        <RoleDeleteDialogGroups
-                                            groups={roleGroups!}
-                                        />
-                                    </StyledTableContainer>
-                                </>
-                            }
-                        />
-                    </>
-                }
-                elseShow={
-                    <p>
-                        You are about to delete role:{' '}
-                        <strong>{role?.name}</strong>
-                    </p>
-                }
-            />
+            {entitiesWithRole ? (
+                <>
+                    <Alert severity='error'>
+                        You are not allowed to delete a role that is currently
+                        in use. Please change the role of the following entities
+                        first:
+                    </Alert>
+                    {roleUsers.length ? (
+                        <>
+                            <StyledLabel>
+                                Users ({roleUsers.length}):
+                            </StyledLabel>
+                            <StyledTableContainer>
+                                <RoleDeleteDialogUsers users={roleUsers} />
+                            </StyledTableContainer>
+                        </>
+                    ) : null}
+                    {roleServiceAccounts.length ? (
+                        <>
+                            <StyledLabel>
+                                Service accounts ({roleServiceAccounts.length}):
+                            </StyledLabel>
+                            <StyledTableContainer>
+                                <RoleDeleteDialogServiceAccounts
+                                    serviceAccounts={roleServiceAccounts}
+                                />
+                            </StyledTableContainer>
+                        </>
+                    ) : null}
+                    {roleGroups?.length ? (
+                        <>
+                            <StyledLabel>
+                                Groups ({roleGroups?.length}):
+                            </StyledLabel>
+                            <StyledTableContainer>
+                                <RoleDeleteDialogGroups groups={roleGroups!} />
+                            </StyledTableContainer>
+                        </>
+                    ) : null}
+                </>
+            ) : (
+                <p>
+                    You are about to delete role: <strong>{role?.name}</strong>
+                </p>
+            )}
         </Dialogue>
     );
 };

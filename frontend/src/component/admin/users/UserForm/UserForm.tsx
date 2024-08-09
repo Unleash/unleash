@@ -1,7 +1,6 @@
 import Input from 'component/common/Input/Input';
 import { Button, FormControl, Typography, Switch, styled } from '@mui/material';
 import type React from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EDIT } from 'constants/misc';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
@@ -115,29 +114,21 @@ const UserForm: React.FC<IUserForm> = ({
                     setValue={setRootRole}
                     required
                 />
-                <ConditionallyRender
-                    condition={mode !== EDIT && Boolean(uiConfig?.emailEnabled)}
-                    show={
-                        <FormControl>
-                            <StyledRoleSubtitle
-                                variant='subtitle1'
-                                data-loading
-                            >
-                                Should we send an email to your new team member
-                            </StyledRoleSubtitle>
-                            <StyledFlexRow>
-                                <Switch
-                                    name='sendEmail'
-                                    onChange={() => setSendEmail(!sendEmail)}
-                                    checked={sendEmail}
-                                />
-                                <Typography>
-                                    {sendEmail ? 'Yes' : 'No'}
-                                </Typography>
-                            </StyledFlexRow>
-                        </FormControl>
-                    }
-                />
+                {mode !== EDIT && Boolean(uiConfig?.emailEnabled) ? (
+                    <FormControl>
+                        <StyledRoleSubtitle variant='subtitle1' data-loading>
+                            Should we send an email to your new team member
+                        </StyledRoleSubtitle>
+                        <StyledFlexRow>
+                            <Switch
+                                name='sendEmail'
+                                onChange={() => setSendEmail(!sendEmail)}
+                                checked={sendEmail}
+                            />
+                            <Typography>{sendEmail ? 'Yes' : 'No'}</Typography>
+                        </StyledFlexRow>
+                    </FormControl>
+                ) : null}
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

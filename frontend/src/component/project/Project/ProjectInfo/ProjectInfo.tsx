@@ -1,6 +1,5 @@
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import type { ProjectStatsSchema } from 'openapi/models/projectStatsSchema';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import { HealthWidget } from './HealthWidget';
 import { FlagTypesWidget } from './FlagTypesWidget';
@@ -69,34 +68,28 @@ const ProjectInfo = ({
                         : { gridTemplateColumns: 'repeat(2, 1fr)' }
                 }
             >
-                <ConditionallyRender
-                    condition={showChangeRequestsWidget}
-                    show={
-                        <Box
-                            sx={{
-                                gridColumnStart: showProjectMembersWidget
-                                    ? 'span 2'
-                                    : 'span 1',
-                                flex: 1,
-                                display: 'flex',
-                            }}
-                        >
-                            <ChangeRequestsWidget projectId={id} />
-                        </Box>
-                    }
-                />
+                {showChangeRequestsWidget ? (
+                    <Box
+                        sx={{
+                            gridColumnStart: showProjectMembersWidget
+                                ? 'span 2'
+                                : 'span 1',
+                            flex: 1,
+                            display: 'flex',
+                        }}
+                    >
+                        <ChangeRequestsWidget projectId={id} />
+                    </Box>
+                ) : null}
                 <MetaWidget id={id} description={description} />
                 <HealthWidget projectId={id} health={health} />
-                <ConditionallyRender
-                    condition={showProjectMembersWidget}
-                    show={
-                        <ProjectMembersWidget
-                            projectId={id}
-                            memberCount={memberCount}
-                            change={stats?.projectMembersAddedCurrentWindow}
-                        />
-                    }
-                />
+                {showProjectMembersWidget ? (
+                    <ProjectMembersWidget
+                        projectId={id}
+                        memberCount={memberCount}
+                        change={stats?.projectMembersAddedCurrentWindow}
+                    />
+                ) : null}
                 <FlagTypesWidget featureTypeCounts={featureTypeCounts} />
             </StyledProjectInfoSidebarContainer>
         </aside>

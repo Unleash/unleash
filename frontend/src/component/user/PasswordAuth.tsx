@@ -1,6 +1,5 @@
 import { type FormEventHandler, useState, type VFC } from 'react';
 import { Button, styled, TextField } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions';
@@ -97,87 +96,68 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
     const renderLoginForm = () => {
         const { usernameError, passwordError, apiError } = errors;
 
-        return (
-            <ConditionallyRender
-                condition={!authDetails.defaultHidden}
-                show={
-                    <form onSubmit={handleSubmit}>
-                        <ConditionallyRender
-                            condition={Boolean(apiError)}
-                            show={
-                                <StyledAlert severity='error'>
-                                    {apiError}
-                                </StyledAlert>
-                            }
-                        />
+        return !authDetails.defaultHidden ? (
+            <form onSubmit={handleSubmit}>
+                {apiError ? (
+                    <StyledAlert severity='error'>{apiError}</StyledAlert>
+                ) : null}
 
-                        <StyledDiv>
-                            <TextField
-                                label='Username or email'
-                                name='username'
-                                id='username'
-                                type='text'
-                                onChange={(evt) =>
-                                    setUsername(evt.target.value)
-                                }
-                                value={username}
-                                error={Boolean(usernameError)}
-                                helperText={usernameError}
-                                autoComplete='username'
-                                data-testid={LOGIN_EMAIL_ID}
-                                variant='outlined'
-                                size='small'
-                                autoFocus
-                            />
-                            <PasswordField
-                                label='Password'
-                                onChange={(evt) =>
-                                    setPassword(evt.target.value)
-                                }
-                                name='password'
-                                id='password'
-                                value={password}
-                                error={Boolean(passwordError)}
-                                helperText={passwordError}
-                                autoComplete='off'
-                                data-testid={LOGIN_PASSWORD_ID}
-                            />
-                            <Button
-                                variant='contained'
-                                color='primary'
-                                type='submit'
-                                style={{ width: '150px', margin: '1rem auto' }}
-                                data-testid={LOGIN_BUTTON}
-                            >
-                                Sign in
-                            </Button>
-                        </StyledDiv>
-                    </form>
-                }
-            />
-        );
+                <StyledDiv>
+                    <TextField
+                        label='Username or email'
+                        name='username'
+                        id='username'
+                        type='text'
+                        onChange={(evt) => setUsername(evt.target.value)}
+                        value={username}
+                        error={Boolean(usernameError)}
+                        helperText={usernameError}
+                        autoComplete='username'
+                        data-testid={LOGIN_EMAIL_ID}
+                        variant='outlined'
+                        size='small'
+                        autoFocus
+                    />
+                    <PasswordField
+                        label='Password'
+                        onChange={(evt) => setPassword(evt.target.value)}
+                        name='password'
+                        id='password'
+                        value={password}
+                        error={Boolean(passwordError)}
+                        helperText={passwordError}
+                        autoComplete='off'
+                        data-testid={LOGIN_PASSWORD_ID}
+                    />
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        type='submit'
+                        style={{ width: '150px', margin: '1rem auto' }}
+                        data-testid={LOGIN_BUTTON}
+                    >
+                        Sign in
+                    </Button>
+                </StyledDiv>
+            </form>
+        ) : null;
     };
 
     const { options = [] } = authDetails;
 
     return (
         <>
-            <ConditionallyRender
-                condition={options.length > 0}
-                show={
-                    <>
-                        <AuthOptions options={options} />
-                        <ConditionallyRender
-                            condition={!authDetails.defaultHidden}
-                            show={
-                                <DividerText text='Or sign in with username' />
-                            }
-                        />
-                        {renderLoginForm()}
-                    </>
-                }
-                elseShow={renderLoginForm()}
-            />
+            {options.length > 0 ? (
+                <>
+                    <AuthOptions options={options} />
+                    {!authDetails.defaultHidden ? (
+                        <DividerText text='Or sign in with username' />
+                    ) : null}
+                    {renderLoginForm()}
+                </>
+            ) : (
+                renderLoginForm()
+            )}
         </>
     );
 };

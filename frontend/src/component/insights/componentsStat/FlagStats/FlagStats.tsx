@@ -1,6 +1,5 @@
 import Icon from '@mui/material/Icon';
 import { Box, Typography, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledRingContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -85,32 +84,26 @@ export const FlagStats: React.FC<IFlagStatsProps> = ({
                     </StyledRingContent>
                 </StyledRing>
             </StyledRingContainer>
-
-            <ConditionallyRender
-                condition={flagsPerUser !== undefined && flagsPerUser !== ''}
-                show={
-                    <StyledInsightsContainer>
-                        <StyledTextContainer>
-                            <StyledHeaderContainer>
-                                <StyledIcon>award_star</StyledIcon>
-                                <Typography
-                                    fontWeight='bold'
-                                    variant='body2'
-                                    color='primary'
-                                >
-                                    Insights
-                                </Typography>
-                            </StyledHeaderContainer>
-                            <Typography variant='body2'>
-                                Flags per user
+            {flagsPerUser !== undefined && flagsPerUser !== '' ? (
+                <StyledInsightsContainer>
+                    <StyledTextContainer>
+                        <StyledHeaderContainer>
+                            <StyledIcon>award_star</StyledIcon>
+                            <Typography
+                                fontWeight='bold'
+                                variant='body2'
+                                color='primary'
+                            >
+                                Insights
                             </Typography>
-                        </StyledTextContainer>
-                        <StyledFlagCountPerUser>
-                            {flagsPerUser}
-                        </StyledFlagCountPerUser>
-                    </StyledInsightsContainer>
-                }
-            />
+                        </StyledHeaderContainer>
+                        <Typography variant='body2'>Flags per user</Typography>
+                    </StyledTextContainer>
+                    <StyledFlagCountPerUser>
+                        {flagsPerUser}
+                    </StyledFlagCountPerUser>
+                </StyledInsightsContainer>
+            ) : null}
         </>
     );
 };

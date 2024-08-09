@@ -1,7 +1,6 @@
 import FilterList from '@mui/icons-material/FilterList';
 import History from '@mui/icons-material/History';
 import { Box, Divider, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     getColumnValues,
     getFilterableColumns,
@@ -118,50 +117,36 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
 
     return (
         <SearchPaper className='dropdown-outline'>
-            <ConditionallyRender
-                condition={Boolean(savedQuery)}
-                show={
-                    <>
-                        <SearchHistory
-                            onSuggestion={onSuggestion}
-                            savedQuery={savedQuery}
-                        />
-                        <StyledDivider />
-                    </>
-                }
-            />
+            {savedQuery ? (
+                <>
+                    <SearchHistory
+                        onSuggestion={onSuggestion}
+                        savedQuery={savedQuery}
+                    />
+                    <StyledDivider />
+                </>
+            ) : null}
             <StyledBox>
                 <StyledFilterList />
                 <Box>
-                    <ConditionallyRender
-                        condition={Boolean(searchContext.searchValue)}
-                        show={
-                            <SearchDescription
-                                filters={filters}
-                                getSearchContext={getSearchContext}
-                                searchableColumnsString={
-                                    searchableColumnsString
-                                }
-                            />
-                        }
-                        elseShow={
-                            <SearchInstructions
-                                filters={filters}
-                                searchableColumnsString={
-                                    searchableColumnsString
-                                }
-                                onClick={onFilter}
-                            />
-                        }
-                    />
+                    {searchContext.searchValue ? (
+                        <SearchDescription
+                            filters={filters}
+                            getSearchContext={getSearchContext}
+                            searchableColumnsString={searchableColumnsString}
+                        />
+                    ) : (
+                        <SearchInstructions
+                            filters={filters}
+                            searchableColumnsString={searchableColumnsString}
+                            onClick={onFilter}
+                        />
+                    )}
                 </Box>
             </StyledBox>
             <StyledDivider />
             <Box sx={{ lineHeight: 1.75 }}>
-                <ConditionallyRender
-                    condition={filters.length > 0}
-                    show='Combine filters and search: '
-                />
+                {filters.length > 0 ? 'Combine filters and search: ' : null}
                 <StyledCode
                     tabIndex={0}
                     onClick={onSearchAndFilter}

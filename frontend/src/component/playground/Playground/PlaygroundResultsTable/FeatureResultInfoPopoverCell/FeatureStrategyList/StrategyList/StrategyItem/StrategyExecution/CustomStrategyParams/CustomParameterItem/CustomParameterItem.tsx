@@ -1,6 +1,5 @@
 import { Box, styled, Typography, useTheme } from '@mui/material';
 import CancelOutlined from '@mui/icons-material/CancelOutlined';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface ICustomParameterItem {
@@ -46,52 +45,41 @@ export const CustomParameterItem = ({
                 }}
             >
                 <Box sx={{ flexGrow: 1 }}>
-                    <ConditionallyRender
-                        condition={Boolean(requiredError)}
-                        show={
-                            <>
-                                <Typography
-                                    component='span'
-                                    color={theme.palette.error.main}
-                                >
-                                    {' required parameter '}
-                                </Typography>
-                                <StringTruncator
-                                    maxWidth='300'
-                                    text={text}
-                                    maxLength={50}
-                                />
-                                <Typography
-                                    component='span'
-                                    color={theme.palette.error.main}
-                                >
-                                    {' is not set '}
-                                </Typography>
-                            </>
-                        }
-                        elseShow={
-                            <>
-                                <Typography
-                                    component='span'
-                                    color='text.disabled'
-                                >
-                                    {' set on parameter '}
-                                </Typography>
-                                <StringTruncator
-                                    maxWidth='300'
-                                    text={text}
-                                    maxLength={50}
-                                />
-                            </>
-                        }
-                    />
+                    {requiredError ? (
+                        <>
+                            <Typography
+                                component='span'
+                                color={theme.palette.error.main}
+                            >
+                                {' required parameter '}
+                            </Typography>
+                            <StringTruncator
+                                maxWidth='300'
+                                text={text}
+                                maxLength={50}
+                            />
+                            <Typography
+                                component='span'
+                                color={theme.palette.error.main}
+                            >
+                                {' is not set '}
+                            </Typography>
+                        </>
+                    ) : (
+                        <>
+                            <Typography component='span' color='text.disabled'>
+                                {' set on parameter '}
+                            </Typography>
+                            <StringTruncator
+                                maxWidth='300'
+                                text={text}
+                                maxLength={50}
+                            />
+                        </>
+                    )}
                 </Box>
             </Box>
-            <ConditionallyRender
-                condition={Boolean(requiredError)}
-                show={<CancelOutlined color={'error'} />}
-                elseShow={<div />}
-            />
+            {requiredError ? <CancelOutlined color={'error'} /> : <div />}
         </StyledWrapper>
     );
 };

@@ -2,7 +2,6 @@ import { Alert, Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type {
     ActionsFilterState,
     ActionsActionState,
@@ -94,22 +93,16 @@ export const ProjectActionsForm = ({
 
     return (
         <div>
-            <ConditionallyRender
-                condition={serviceAccounts.length === 0}
-                show={
-                    <StyledServiceAccountAlert color='warning'>
-                        <strong>Heads up!</strong> In order to create an action
-                        you need to create a service account first. Please{' '}
-                        <Link
-                            to='/admin/service-accounts'
-                            component={RouterLink}
-                        >
-                            go ahead and create one
-                        </Link>
-                        .
-                    </StyledServiceAccountAlert>
-                }
-            />
+            {serviceAccounts.length === 0 ? (
+                <StyledServiceAccountAlert color='warning'>
+                    <strong>Heads up!</strong> In order to create an action you
+                    need to create a service account first. Please{' '}
+                    <Link to='/admin/service-accounts' component={RouterLink}>
+                        go ahead and create one
+                    </Link>
+                    .
+                </StyledServiceAccountAlert>
+            ) : null}
             <StyledRaisedSection>
                 <FormSwitch checked={enabled} setChecked={setEnabled}>
                     Action status
@@ -140,7 +133,6 @@ export const ProjectActionsForm = ({
                 onChange={(e) => setDescription(e.target.value)}
                 autoComplete='off'
             />
-
             <ProjectActionsFormStepSource
                 sourceId={sourceId}
                 setSourceId={setSourceId}
@@ -148,7 +140,6 @@ export const ProjectActionsForm = ({
                 setFilters={setFilters}
                 validateSourceId={validateSourceId}
             />
-
             <ProjectActionsFormStepActions
                 serviceAccounts={serviceAccounts}
                 serviceAccountsLoading={serviceAccountsLoading}
@@ -159,21 +150,17 @@ export const ProjectActionsForm = ({
                 validateActorId={validateActorId}
                 validated={validated}
             />
-
-            <ConditionallyRender
-                condition={showErrors}
-                show={() => (
-                    <StyledAlert severity='error' icon={false}>
-                        <ul>
-                            {Object.values(errors)
-                                .filter(Boolean)
-                                .map((error) => (
-                                    <li key={error}>{error}</li>
-                                ))}
-                        </ul>
-                    </StyledAlert>
-                )}
-            />
+            {showErrors ? (
+                <StyledAlert severity='error' icon={false}>
+                    <ul>
+                        {Object.values(errors)
+                            .filter(Boolean)
+                            .map((error) => (
+                                <li key={error}>{error}</li>
+                            ))}
+                    </ul>
+                </StyledAlert>
+            ) : null}
         </div>
     );
 };

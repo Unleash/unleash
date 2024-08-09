@@ -1,6 +1,5 @@
 import { Alert, styled, Typography } from '@mui/material';
 import { UserToken } from 'component/admin/apiToken/ConfirmToken/UserToken/UserToken';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ISignalEndpoint } from 'interfaces/signal';
@@ -49,30 +48,27 @@ export const SignalEndpointsTokensDialog = ({
             </StyledAlert>
             <Typography variant='body1'>Your token:</Typography>
             <UserToken token={token || ''} />
-            <ConditionallyRender
-                condition={Boolean(signalEndpoint)}
-                show={() => (
-                    <>
-                        <Typography
-                            variant='body1'
-                            sx={{ marginTop: 3, marginBottom: 2 }}
-                        >
-                            You can call your signal endpoint with the newly
-                            created token like this:
-                        </Typography>
-                        <StyledCodeBlock>
-                            {`curl --request POST '${
-                                uiConfig.unleashUrl
-                            }/api/signal-endpoint/${signalEndpoint!.name}' \\
-    --header 'Authorization: Bearer ${token || 'YOUR_TOKEN'}' \\
-    --header 'Content-Type: application/json' \\
-    --data-raw '{
-        "Jason": "json"
-    }'`}
-                        </StyledCodeBlock>
-                    </>
-                )}
-            />
+            {signalEndpoint ? (
+                <>
+                    <Typography
+                        variant='body1'
+                        sx={{ marginTop: 3, marginBottom: 2 }}
+                    >
+                        You can call your signal endpoint with the newly created
+                        token like this:
+                    </Typography>
+                    <StyledCodeBlock>
+                        {`curl --request POST '${
+                            uiConfig.unleashUrl
+                        }/api/signal-endpoint/${signalEndpoint!.name}' \\
+--header 'Authorization: Bearer ${token || 'YOUR_TOKEN'}' \\
+--header 'Content-Type: application/json' \\
+--data-raw '{
+"Jason": "json"
+}'`}
+                    </StyledCodeBlock>
+                </>
+            ) : null}
         </Dialogue>
     );
 };

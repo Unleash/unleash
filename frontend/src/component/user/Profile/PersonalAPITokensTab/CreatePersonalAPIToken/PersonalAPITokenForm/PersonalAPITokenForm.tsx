@@ -2,7 +2,6 @@ import Input from 'component/common/Input/Input';
 import SelectMenu from 'component/common/select';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
 import { Alert, styled, Typography } from '@mui/material';
 import { useEffect } from 'react';
@@ -194,61 +193,44 @@ export const PersonalAPITokenForm = ({
                     }
                     options={expirationOptions}
                 />
-                <ConditionallyRender
-                    condition={customExpiration}
-                    show={() => (
-                        <StyledDateTimePicker
-                            label='Date'
-                            value={expiresAt}
-                            onChange={(date) => {
-                                clearError(ErrorField.EXPIRES_AT);
-                                if (date < new Date()) {
-                                    setError(
-                                        ErrorField.EXPIRES_AT,
-                                        'Invalid date, must be in the future',
-                                    );
-                                }
-                                setExpiresAt(date);
-                            }}
-                            min={new Date()}
-                            error={Boolean(errors.expiresAt)}
-                            errorText={errors.expiresAt}
-                            required
-                        />
-                    )}
-                    elseShow={
-                        <ConditionallyRender
-                            condition={neverExpires}
-                            show={
-                                <Typography variant='body2'>
-                                    The token will <strong>never</strong>{' '}
-                                    expire!
-                                </Typography>
+                {customExpiration ? (
+                    <StyledDateTimePicker
+                        label='Date'
+                        value={expiresAt}
+                        onChange={(date) => {
+                            clearError(ErrorField.EXPIRES_AT);
+                            if (date < new Date()) {
+                                setError(
+                                    ErrorField.EXPIRES_AT,
+                                    'Invalid date, must be in the future',
+                                );
                             }
-                            elseShow={() => (
-                                <Typography variant='body2'>
-                                    Token will expire on{' '}
-                                    <strong>
-                                        {formatDateYMD(
-                                            expiresAt!,
-                                            locationSettings.locale,
-                                        )}
-                                    </strong>
-                                </Typography>
-                            )}
-                        />
-                    }
-                />
+                            setExpiresAt(date);
+                        }}
+                        min={new Date()}
+                        error={Boolean(errors.expiresAt)}
+                        errorText={errors.expiresAt}
+                        required
+                    />
+                ) : neverExpires ? (
+                    <Typography variant='body2'>
+                        The token will <strong>never</strong> expire!
+                    </Typography>
+                ) : (
+                    <Typography variant='body2'>
+                        Token will expire on{' '}
+                        <strong>
+                            {formatDateYMD(expiresAt!, locationSettings.locale)}
+                        </strong>
+                    </Typography>
+                )}
             </StyledExpirationPicker>
-            <ConditionallyRender
-                condition={neverExpires}
-                show={
-                    <StyledAlert severity='warning'>
-                        We strongly recommend that you set an expiration date
-                        for your token to help keep your information secure.
-                    </StyledAlert>
-                }
-            />
+            {neverExpires ? (
+                <StyledAlert severity='warning'>
+                    We strongly recommend that you set an expiration date for
+                    your token to help keep your information secure.
+                </StyledAlert>
+            ) : null}
         </>
     );
 };

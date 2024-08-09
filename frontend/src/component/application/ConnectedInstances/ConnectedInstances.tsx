@@ -6,7 +6,6 @@ import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
 import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
 import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
@@ -93,30 +92,27 @@ export const ConnectedInstances: FC = () => {
                     environments that have received traffic for this application
                     will be shown here.
                 </Box>
-                <ConditionallyRender
-                    condition={Boolean(currentEnvironment)}
-                    show={
-                        <ToggleButtonGroup
-                            color='primary'
-                            value={currentEnvironment}
-                            exclusive
-                            onChange={(event, value) => {
-                                if (value !== null) {
-                                    trackEnvironmentChange();
-                                    setCurrentEnvironment(value);
-                                }
-                            }}
-                        >
-                            {environments.map((env) => {
-                                return (
-                                    <ToggleButton key={env} value={env}>
-                                        {env}
-                                    </ToggleButton>
-                                );
-                            })}
-                        </ToggleButtonGroup>
-                    }
-                />
+                {currentEnvironment ? (
+                    <ToggleButtonGroup
+                        color='primary'
+                        value={currentEnvironment}
+                        exclusive
+                        onChange={(event, value) => {
+                            if (value !== null) {
+                                trackEnvironmentChange();
+                                setCurrentEnvironment(value);
+                            }
+                        }}
+                    >
+                        {environments.map((env) => {
+                            return (
+                                <ToggleButton key={env} value={env}>
+                                    {env}
+                                </ToggleButton>
+                            );
+                        })}
+                    </ToggleButtonGroup>
+                ) : null}
             </Box>
             <ConnectedInstancesTable
                 loading={loading}

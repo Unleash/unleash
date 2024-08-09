@@ -14,7 +14,6 @@ import {
 import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm';
 import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -187,10 +186,9 @@ export const ProjectActionsModal = ({
             >
                 <StyledHeader>
                     <StyledTitle>{title}</StyledTitle>
-                    <ConditionallyRender
-                        condition={editing}
-                        show={<Link onClick={onOpenEvents}>View events</Link>}
-                    />
+                    {editing ? (
+                        <Link onClick={onOpenEvents}>View events</Link>
+                    ) : null}
                 </StyledHeader>
                 <StyledForm onSubmit={onSubmit}>
                     <ProjectActionsForm

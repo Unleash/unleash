@@ -3,7 +3,6 @@ import type { IConstraint } from 'interfaces/strategy';
 
 import type React from 'react';
 import { newOperators } from 'constants/operators';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { oneOf } from 'utils/oneOf';
 import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/OperatorUpgradeAlert';
 
@@ -50,10 +49,9 @@ export const ConstraintAccordionEditBody: React.FC<
     return (
         <>
             <StyledInputContainer>
-                <ConditionallyRender
-                    condition={oneOf(newOperators, localConstraint.operator)}
-                    show={<OperatorUpgradeAlert />}
-                />
+                {oneOf(newOperators, localConstraint.operator) ? (
+                    <OperatorUpgradeAlert />
+                ) : null}
                 {children}
             </StyledInputContainer>
             <StyledButtonContainer>

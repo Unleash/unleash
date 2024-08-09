@@ -1,7 +1,6 @@
 import { styled, Tooltip } from '@mui/material';
 import type { IGroup } from 'interfaces/group';
 import { Link, useNavigate } from 'react-router-dom';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
@@ -118,31 +117,25 @@ export const GroupCard = ({
                             />
                         </StyledHeaderActions>
                     </StyledTitleRow>
-                    <ConditionallyRender
-                        condition={Boolean(group.rootRole)}
-                        show={
-                            <InfoBadgeDescription>
-                                <p>Root role:</p>
-                                <RoleBadge roleId={group.rootRole!} />
-                            </InfoBadgeDescription>
-                        }
-                    />
+                    {group.rootRole ? (
+                        <InfoBadgeDescription>
+                            <p>Root role:</p>
+                            <RoleBadge roleId={group.rootRole!} />
+                        </InfoBadgeDescription>
+                    ) : null}
 
                     <StyledDescription>{group.description}</StyledDescription>
                     <StyledBottomRow>
-                        <ConditionallyRender
-                            condition={group.users?.length > 0}
-                            show={<AvatarGroup users={group.users} />}
-                            elseShow={
-                                <StyledCounterDescription>
-                                    This group has no users.
-                                </StyledCounterDescription>
-                            }
-                        />
+                        {group.users?.length > 0 ? (
+                            <AvatarGroup users={group.users} />
+                        ) : (
+                            <StyledCounterDescription>
+                                This group has no users.
+                            </StyledCounterDescription>
+                        )}
                         <ProjectBadgeContainer>
-                            <ConditionallyRender
-                                condition={group.projects.length > 0}
-                                show={group.projects.map((project) => (
+                            {group.projects.length > 0 ? (
+                                group.projects.map((project) => (
                                     <Tooltip
                                         key={project}
                                         title='View project'
@@ -163,20 +156,18 @@ export const GroupCard = ({
                                             {project}
                                         </Badge>
                                     </Tooltip>
-                                ))}
-                                elseShow={
-                                    <Tooltip
-                                        title='This group is not used in any project'
-                                        arrow
-                                        describeChild
-                                    >
-                                        <ConditionallyRender
-                                            condition={!group.rootRole}
-                                            show={<Badge>Not used</Badge>}
-                                        />
-                                    </Tooltip>
-                                }
-                            />
+                                ))
+                            ) : (
+                                <Tooltip
+                                    title='This group is not used in any project'
+                                    arrow
+                                    describeChild
+                                >
+                                    {!group.rootRole ? (
+                                        <Badge>Not used</Badge>
+                                    ) : null}
+                                </Tooltip>
+                            )}
                         </ProjectBadgeContainer>
                     </StyledBottomRow>
                 </StyledGroupCard>

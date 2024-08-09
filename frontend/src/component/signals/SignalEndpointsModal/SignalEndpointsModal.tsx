@@ -17,7 +17,6 @@ import {
     TokenGeneration,
     useSignalEndpointsForm,
 } from './SignalEndpointsForm/useSignalEndpointsForm';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -162,10 +161,9 @@ export const SignalEndpointsModal = ({
             >
                 <StyledHeader>
                     <StyledTitle>{title}</StyledTitle>
-                    <ConditionallyRender
-                        condition={editing}
-                        show={<Link onClick={onOpenSignals}>View signals</Link>}
-                    />
+                    {editing ? (
+                        <Link onClick={onOpenSignals}>View signals</Link>
+                    ) : null}
                 </StyledHeader>
                 <StyledForm onSubmit={onSubmit}>
                     <SignalEndpointsForm

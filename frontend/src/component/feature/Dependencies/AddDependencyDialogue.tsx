@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DependenciesUpgradeAlert } from './DependenciesUpgradeAlert';
 import type { IDependency } from '../../../interfaces/featureToggle';
@@ -118,56 +117,45 @@ export const AddDependencyDialogue = ({
                 <Typography>
                     What <b>feature</b> do you want to depend on?
                 </Typography>
-                <ConditionallyRender
-                    condition={showDependencyDialogue}
-                    show={
-                        <LazyParentOptions
-                            project={project}
-                            featureId={featureId}
-                            parent={parent}
-                            onSelect={(status) => {
-                                setParentValue({ status: 'enabled' });
-                                setParent(status);
-                            }}
+                {showDependencyDialogue ? (
+                    <LazyParentOptions
+                        project={project}
+                        featureId={featureId}
+                        parent={parent}
+                        onSelect={(status) => {
+                            setParentValue({ status: 'enabled' });
+                            setParent(status);
+                        }}
+                    />
+                ) : null}
+
+                {showStatus ? (
+                    <Box sx={{ mt: 2 }}>
+                        <Typography>
+                            What <b>feature status</b> do you want to depend on?
+                        </Typography>
+                        <FeatureStatusOptions
+                            parentValue={parentValue}
+                            onSelect={selectStatus}
                         />
-                    }
-                />
+                    </Box>
+                ) : null}
 
-                <ConditionallyRender
-                    condition={showStatus}
-                    show={
-                        <Box sx={{ mt: 2 }}>
-                            <Typography>
-                                What <b>feature status</b> do you want to depend
-                                on?
-                            </Typography>
-                            <FeatureStatusOptions
-                                parentValue={parentValue}
-                                onSelect={selectStatus}
-                            />
-                        </Box>
-                    }
-                />
-
-                <ConditionallyRender
-                    condition={showVariants}
-                    show={
-                        parentValue.status === 'enabled_with_variants' && (
-                            <Box sx={{ mt: 2 }}>
-                                <Typography>
-                                    What <b>variant</b> do you want to depend
-                                    on?
-                                </Typography>
-                                <ParentVariantOptions
-                                    parent={parent}
-                                    project={project}
-                                    selectedValues={parentValue.variants}
-                                    onSelect={selectVariants}
-                                />
-                            </Box>
-                        )
-                    }
-                />
+                {showVariants
+                    ? parentValue.status === 'enabled_with_variants' && (
+                          <Box sx={{ mt: 2 }}>
+                              <Typography>
+                                  What <b>variant</b> do you want to depend on?
+                              </Typography>
+                              <ParentVariantOptions
+                                  parent={parent}
+                                  project={project}
+                                  selectedValues={parentValue.variants}
+                                  onSelect={selectVariants}
+                              />
+                          </Box>
+                      )
+                    : null}
             </Box>
         </Dialogue>
     );

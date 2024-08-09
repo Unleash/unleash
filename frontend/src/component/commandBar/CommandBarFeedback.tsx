@@ -1,7 +1,6 @@
 import { Button, styled, TextField } from '@mui/material';
 import type React from 'react';
 import { useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import useToast from 'hooks/useToast';
 import useUserType from '../feedbackNew/useUserType';
@@ -50,47 +49,43 @@ export const CommandBarFeedback = ({ onSubmit }: ICommandBarFeedbackProps) => {
     };
     return (
         <StyledContainer>
-            <ConditionallyRender
-                condition={suggesting}
-                show={
-                    <>
-                        <StyledText>Describe the capability</StyledText>
-                        <TextField
-                            multiline={true}
-                            minRows={2}
-                            onChange={changeFeedback}
-                        />
-                        <StyledButton
-                            type='submit'
-                            variant='contained'
-                            color='primary'
-                            onClick={sendFeedback}
-                        >
-                            Send to Unleash
-                        </StyledButton>
-                    </>
-                }
-                elseShow={
-                    <>
-                        <StyledText>
-                            We couldn’t find anything matching your search
-                            criteria. If you think this is a missing capability,
-                            feel free to make a suggestion.
-                        </StyledText>
-                        <StyledButton
-                            type='submit'
-                            variant='contained'
-                            color='primary'
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSuggesting(true);
-                            }}
-                        >
-                            Suggest capability
-                        </StyledButton>
-                    </>
-                }
-            />
+            {suggesting ? (
+                <>
+                    <StyledText>Describe the capability</StyledText>
+                    <TextField
+                        multiline={true}
+                        minRows={2}
+                        onChange={changeFeedback}
+                    />
+                    <StyledButton
+                        type='submit'
+                        variant='contained'
+                        color='primary'
+                        onClick={sendFeedback}
+                    >
+                        Send to Unleash
+                    </StyledButton>
+                </>
+            ) : (
+                <>
+                    <StyledText>
+                        We couldn’t find anything matching your search criteria.
+                        If you think this is a missing capability, feel free to
+                        make a suggestion.
+                    </StyledText>
+                    <StyledButton
+                        type='submit'
+                        variant='contained'
+                        color='primary'
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSuggesting(true);
+                        }}
+                    >
+                        Suggest capability
+                    </StyledButton>
+                </>
+            )}
         </StyledContainer>
     );
 };

@@ -6,7 +6,6 @@ import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,
 } from '../StyledToggleButton';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
 
 interface InvertedOperatorButtonProps {
     localConstraint: Pick<IConstraint, 'inverted'>;
@@ -22,26 +21,22 @@ export const InvertedOperatorButton = ({
         arrow
     >
         <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
-            <ConditionallyRender
-                condition={Boolean(localConstraint.inverted)}
-                show={
-                    <StyledToggleButtonOn
-                        className='operator-is-active'
-                        onClick={setInvertedOperator}
-                        disableRipple
-                    >
-                        <NegatedOnIcon />
-                    </StyledToggleButtonOn>
-                }
-                elseShow={
-                    <StyledToggleButtonOff
-                        onClick={setInvertedOperator}
-                        disableRipple
-                    >
-                        <NegatedOffIcon />
-                    </StyledToggleButtonOff>
-                }
-            />
+            {localConstraint.inverted ? (
+                <StyledToggleButtonOn
+                    className='operator-is-active'
+                    onClick={setInvertedOperator}
+                    disableRipple
+                >
+                    <NegatedOnIcon />
+                </StyledToggleButtonOn>
+            ) : (
+                <StyledToggleButtonOff
+                    onClick={setInvertedOperator}
+                    disableRipple
+                >
+                    <NegatedOffIcon />
+                </StyledToggleButtonOff>
+            )}
         </Box>
     </Tooltip>
 );

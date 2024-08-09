@@ -6,7 +6,6 @@ import Select from 'component/common/select';
 import Box from '@mui/system/Box';
 import { Link as RouterLink } from 'react-router-dom';
 import { Alert, Link } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
     Chart as ChartJS,
@@ -277,74 +276,67 @@ export const NetworkTrafficUsage: VFC = () => {
         }
     }, [data]);
 
-    return (
-        <ConditionallyRender
-            condition={isOss() || !flagEnabled}
-            show={<Alert severity='warning'>Not enabled.</Alert>}
-            elseShow={
-                <>
-                    <ConditionallyRender
-                        condition={includedTraffic > 0 && overageCost > 0}
-                        show={
-                            <Alert severity='warning' sx={{ mb: 4 }}>
-                                <b>Heads up!</b> You are currently consuming
-                                more requests than your plan includes and will
-                                be billed according to our terms. Please see{' '}
-                                <Link
-                                    component={RouterLink}
-                                    to='https://www.getunleash.io/pricing'
-                                >
-                                    this page
-                                </Link>{' '}
-                                for more information. In order to reduce your
-                                traffic consumption, you may configure an{' '}
-                                <Link
-                                    component={RouterLink}
-                                    to='https://docs.getunleash.io/reference/unleash-edge'
-                                >
-                                    Unleash Edge instance
-                                </Link>{' '}
-                                in your own datacenter.
-                            </Alert>
-                        }
+    return isOss() || !flagEnabled ? (
+        <Alert severity='warning'>Not enabled.</Alert>
+    ) : (
+        <>
+            {includedTraffic > 0 && overageCost > 0 ? (
+                <Alert severity='warning' sx={{ mb: 4 }}>
+                    <b>Heads up!</b> You are currently consuming more requests
+                    than your plan includes and will be billed according to our
+                    terms. Please see{' '}
+                    <Link
+                        component={RouterLink}
+                        to='https://www.getunleash.io/pricing'
+                    >
+                        this page
+                    </Link>{' '}
+                    for more information. In order to reduce your traffic
+                    consumption, you may configure an{' '}
+                    <Link
+                        component={RouterLink}
+                        to='https://docs.getunleash.io/reference/unleash-edge'
+                    >
+                        Unleash Edge instance
+                    </Link>{' '}
+                    in your own datacenter.
+                </Alert>
+            ) : null}
+            <StyledBox>
+                <Grid container component='header' spacing={2}>
+                    <Grid item xs={12} md={10}>
+                        <NetworkTrafficUsagePlanSummary
+                            usageTotal={usageTotal}
+                            includedTraffic={includedTraffic}
+                            overageCost={overageCost}
+                            estimatedMonthlyCost={estimatedMonthlyCost}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <Select
+                            id='dataperiod-select'
+                            name='dataperiod'
+                            options={selectablePeriods}
+                            value={period}
+                            onChange={(e) => setPeriod(e.target.value)}
+                            style={{
+                                minWidth: '100%',
+                                marginBottom: theme.spacing(2),
+                            }}
+                            formControlStyles={{ width: '100%' }}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid item xs={12} md={2}>
+                    <Bar
+                        data={data}
+                        plugins={[customHighlightPlugin]}
+                        options={options}
+                        aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
                     />
-                    <StyledBox>
-                        <Grid container component='header' spacing={2}>
-                            <Grid item xs={12} md={10}>
-                                <NetworkTrafficUsagePlanSummary
-                                    usageTotal={usageTotal}
-                                    includedTraffic={includedTraffic}
-                                    overageCost={overageCost}
-                                    estimatedMonthlyCost={estimatedMonthlyCost}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={2}>
-                                <Select
-                                    id='dataperiod-select'
-                                    name='dataperiod'
-                                    options={selectablePeriods}
-                                    value={period}
-                                    onChange={(e) => setPeriod(e.target.value)}
-                                    style={{
-                                        minWidth: '100%',
-                                        marginBottom: theme.spacing(2),
-                                    }}
-                                    formControlStyles={{ width: '100%' }}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12} md={2}>
-                            <Bar
-                                data={data}
-                                plugins={[customHighlightPlugin]}
-                                options={options}
-                                aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
-                            />
-                        </Grid>
-                    </StyledBox>
-                </>
-            }
-        />
+                </Grid>
+            </StyledBox>
+        </>
     );
 };
 

@@ -1,7 +1,6 @@
 import { type FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IProjectCard } from 'interfaces/project';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
@@ -189,44 +188,35 @@ export const ProjectListNew = () => {
                     title={`Projects (${projectCount})`}
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <>
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
+                                    />
+                                    <PageHeader.Divider />
+                                </>
+                            ) : null}
                             <ProjectCreationButton />
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
             <StyledContainer>
-                <ConditionallyRender
-                    condition={error}
-                    show={() => (
-                        <StyledApiError
-                            onClick={refetch}
-                            text='Error fetching projects'
-                        />
-                    )}
-                />
+                {error ? (
+                    <StyledApiError
+                        onClick={refetch}
+                        text='Error fetching projects'
+                    />
+                ) : null}
                 <ProjectGroupComponent
                     sectionTitle='My projects'
                     projects={groupedProjects.myProjects}

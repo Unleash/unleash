@@ -21,7 +21,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 
@@ -185,19 +184,16 @@ export const PrimaryNavigationList: FC<{
             >
                 <PlaygroundIcon />
             </DynamicListItem>
-            <ConditionallyRender
-                condition={!killInsightsDashboard && !isOss()}
-                show={
-                    <DynamicListItem
-                        href='/insights'
-                        text='Insights'
-                        onClick={() => onClick('/insights')}
-                        selected={activeItem === '/insights'}
-                    >
-                        <InsightsIcon />
-                    </DynamicListItem>
-                }
-            />
+            {!killInsightsDashboard && !isOss() ? (
+                <DynamicListItem
+                    href='/insights'
+                    text='Insights'
+                    onClick={() => onClick('/insights')}
+                    selected={activeItem === '/insights'}
+                >
+                    <InsightsIcon />
+                </DynamicListItem>
+            ) : null}
         </List>
     );
 };

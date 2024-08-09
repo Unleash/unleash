@@ -1,7 +1,6 @@
 import type { ComponentProps, FC, ReactNode } from 'react';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import Close from '@mui/icons-material/Close';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
 import { FILTER_ITEM } from 'utils/testIds';
@@ -112,42 +111,37 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
             label={
                 <StyledLabel>
                     {label}
-                    <ConditionallyRender
-                        condition={!hasSelectedOptions}
-                        show={() => <Arrow />}
-                        elseShow={() => (
-                            <>
-                                <FilterItemOperator
-                                    options={operatorOptions}
-                                    value={operator}
-                                    onChange={onChange}
-                                />
-                                <StyledOptions>
-                                    {explicitOptions.join(', ')}
-                                    {remainingOptions > 0
-                                        ? ` +${remainingOptions}`
-                                        : ''}
-                                </StyledOptions>
-                            </>
-                        )}
-                    />
-                    <ConditionallyRender
-                        condition={Boolean(onDelete)}
-                        show={() => (
-                            <StyledIconButton
-                                aria-label='delete'
-                                color='primary'
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    onDelete?.();
-                                }}
-                                size='small'
-                            >
-                                <Close fontSize='inherit' color='action' />
-                            </StyledIconButton>
-                        )}
-                    />
+                    {!hasSelectedOptions ? (
+                        <Arrow />
+                    ) : (
+                        <>
+                            <FilterItemOperator
+                                options={operatorOptions}
+                                value={operator}
+                                onChange={onChange}
+                            />
+                            <StyledOptions>
+                                {explicitOptions.join(', ')}
+                                {remainingOptions > 0
+                                    ? ` +${remainingOptions}`
+                                    : ''}
+                            </StyledOptions>
+                        </>
+                    )}
+                    {onDelete ? (
+                        <StyledIconButton
+                            aria-label='delete'
+                            color='primary'
+                            onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                onDelete?.();
+                            }}
+                            size='small'
+                        >
+                            <Close fontSize='inherit' color='action' />
+                        </StyledIconButton>
+                    ) : null}
                 </StyledLabel>
             }
             color='primary'

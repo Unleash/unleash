@@ -5,7 +5,6 @@ import WarningIcon from '@mui/icons-material/ErrorOutlined';
 import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import type { FC } from 'react';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -98,36 +97,29 @@ export const Limit: FC<{
     return (
         <StyledBox className={className}>
             <Header>
-                <ConditionallyRender
-                    condition={belowLimit}
-                    show={<StyledWarningIcon fontSize='large' />}
-                    elseShow={<StyledErrorIcon fontSize='large' />}
-                />
+                {belowLimit ? (
+                    <StyledWarningIcon fontSize='large' />
+                ) : (
+                    <StyledErrorIcon fontSize='large' />
+                )}
 
-                <ConditionallyRender
-                    condition={belowLimit}
-                    show={
-                        <ExpandableBox>
-                            You are nearing the limit for {name}
-                        </ExpandableBox>
-                    }
-                    elseShow={
-                        <ExpandableBox>
-                            You have reached the limit for {name}
-                        </ExpandableBox>
-                    }
-                />
+                {belowLimit ? (
+                    <ExpandableBox>
+                        You are nearing the limit for {name}
+                    </ExpandableBox>
+                ) : (
+                    <ExpandableBox>
+                        You have reached the limit for {name}
+                    </ExpandableBox>
+                )}
 
-                <ConditionallyRender
-                    condition={typeof onClose === 'function'}
-                    show={
-                        <Tooltip title='Close' arrow describeChild>
-                            <IconButton onClick={onClose}>
-                                <CloseIcon />
-                            </IconButton>
-                        </Tooltip>
-                    }
-                />
+                {typeof onClose === 'function' ? (
+                    <Tooltip title='Close' arrow describeChild>
+                        <IconButton onClick={onClose}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Tooltip>
+                ) : null}
             </Header>
             <Main>
                 <LimitStats>

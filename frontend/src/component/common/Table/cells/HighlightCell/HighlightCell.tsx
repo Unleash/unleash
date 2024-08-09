@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 interface IHighlightCellProps {
@@ -49,27 +48,18 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    const renderSubtitle = (
-        <ConditionallyRender
-            condition={Boolean(
-                subtitle && (subtitle.length > 40 || subtitleTooltip),
-            )}
-            show={
-                <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
-                    <StyledSubtitle data-loading>
-                        <Highlighter search={searchQuery}>
-                            {subtitle}
-                        </Highlighter>
-                    </StyledSubtitle>
-                </HtmlTooltip>
-            }
-            elseShow={
+    const renderSubtitle =
+        subtitle && (subtitle.length > 40 || subtitleTooltip) ? (
+            <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
                 <StyledSubtitle data-loading>
                     <Highlighter search={searchQuery}>{subtitle}</Highlighter>
                 </StyledSubtitle>
-            }
-        />
-    );
+            </HtmlTooltip>
+        ) : (
+            <StyledSubtitle data-loading>
+                <Highlighter search={searchQuery}>{subtitle}</Highlighter>
+            </StyledSubtitle>
+        );
 
     return (
         <StyledContainer>
@@ -83,10 +73,7 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
                 <Highlighter search={searchQuery}>{value}</Highlighter>
                 {afterTitle}
             </StyledTitle>
-            <ConditionallyRender
-                condition={Boolean(subtitle)}
-                show={renderSubtitle}
-            />
+            {subtitle ? renderSubtitle : null}
         </StyledContainer>
     );
 };

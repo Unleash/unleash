@@ -1,5 +1,4 @@
 import { Box, styled, useTheme } from '@mui/material';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 interface IStrategySeparatorProps {
     text: 'AND' | 'OR';
@@ -39,13 +38,11 @@ export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
                 width: '100%',
             }}
         >
-            <ConditionallyRender
-                condition={text === 'AND'}
-                show={() => <StyledContent>{text}</StyledContent>}
-                elseShow={() => (
-                    <StyledCenteredContent>{text}</StyledCenteredContent>
-                )}
-            />
+            {text === 'AND' ? (
+                <StyledContent>{text}</StyledContent>
+            ) : (
+                <StyledCenteredContent>{text}</StyledCenteredContent>
+            )}
         </Box>
     );
 };

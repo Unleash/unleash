@@ -7,7 +7,6 @@ import {
 } from '@mui/material';
 import type { IUser } from 'interfaces/user';
 import type { FC } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3.5),
@@ -90,11 +89,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
             alt={user?.name || user?.email || user?.username || 'Gravatar'}
             src={src || user?.imageUrl}
         >
-            <ConditionallyRender
-                condition={Boolean(fallback)}
-                show={fallback}
-                elseShow={children}
-            />
+            {fallback ? fallback : children}
         </StyledAvatar>
     );
 

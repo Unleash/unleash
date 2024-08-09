@@ -1,7 +1,6 @@
 import type React from 'react';
 import { Fragment, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 import { styled } from '@mui/material';
@@ -47,14 +46,11 @@ export const FeatureStrategySegmentList = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={segments && segments.length > 0}
-                show={
-                    <StyledSelectedSegmentsLabel>
-                        Selected Segments
-                    </StyledSelectedSegmentsLabel>
-                }
-            />
+            {segments && segments.length > 0 ? (
+                <StyledSelectedSegmentsLabel>
+                    Selected Segments
+                </StyledSelectedSegmentsLabel>
+            ) : null}
             <StyledList>
                 {segments.map((segment, i) => (
                     <Fragment key={segment.id}>
@@ -64,17 +60,13 @@ export const FeatureStrategySegmentList = ({
                             preview={preview}
                             setPreview={setPreview}
                         />
-                        <ConditionallyRender
-                            condition={i < lastSegmentIndex}
-                            show={<StyledAnd>AND</StyledAnd>}
-                        />
+                        {i < lastSegmentIndex ? (
+                            <StyledAnd>AND</StyledAnd>
+                        ) : null}
                     </Fragment>
                 ))}
             </StyledList>
-            <ConditionallyRender
-                condition={Boolean(preview)}
-                show={() => <SegmentItem segment={preview!} isExpanded />}
-            />
+            {preview ? <SegmentItem segment={preview!} isExpanded /> : null}
         </>
     );
 };

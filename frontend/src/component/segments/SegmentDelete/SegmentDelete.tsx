@@ -1,4 +1,3 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStrategiesBySegment } from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
 import type { ISegment } from 'interfaces/segment';
 import { SegmentDeleteConfirm } from './SegmentDeleteConfirm/SegmentDeleteConfirm';
@@ -25,26 +24,20 @@ export const SegmentDelete = ({
         return null;
     }
 
-    return (
-        <ConditionallyRender
-            condition={canDeleteSegment}
-            show={
-                <SegmentDeleteConfirm
-                    segment={segment}
-                    open={open}
-                    onClose={onClose}
-                    onRemove={onRemove}
-                />
-            }
-            elseShow={
-                <SegmentDeleteUsedSegment
-                    segment={segment}
-                    open={open}
-                    onClose={onClose}
-                    strategies={strategies}
-                    changeRequestStrategies={changeRequestStrategies}
-                />
-            }
+    return canDeleteSegment ? (
+        <SegmentDeleteConfirm
+            segment={segment}
+            open={open}
+            onClose={onClose}
+            onRemove={onRemove}
+        />
+    ) : (
+        <SegmentDeleteUsedSegment
+            segment={segment}
+            open={open}
+            onClose={onClose}
+            strategies={strategies}
+            changeRequestStrategies={changeRequestStrategies}
         />
     );
 };

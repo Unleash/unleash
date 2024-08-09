@@ -1,5 +1,4 @@
 import { usePageTitle } from 'hooks/usePageTitle';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     Alert,
     Box,
@@ -87,46 +86,42 @@ const ApplicationOverview = () => {
         );
     }
 
-    return (
-        <ConditionallyRender
-            condition={!loading && data.environments.length === 0}
-            show={<Alert severity='warning'>No data available.</Alert>}
-            elseShow={
-                <ApplicationContainer>
-                    <ApplicationHeader>
-                        <ProjectContainer>
-                            Application is connected to these projects:
-                            {data.projects.map((project) => (
-                                <Badge
-                                    sx={{ cursor: 'pointer' }}
-                                    key={project}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        navigate(`/projects/${project}`);
-                                    }}
-                                    color='secondary'
-                                    icon={<TopicOutlinedIcon />}
-                                >
-                                    {project}
-                                </Badge>
-                            ))}
-                        </ProjectContainer>
-                        <Button
-                            startIcon={<ReviewsOutlined />}
-                            variant='outlined'
-                            onClick={createFeedbackContext}
-                            size='small'
+    return !loading && data.environments.length === 0 ? (
+        <Alert severity='warning'>No data available.</Alert>
+    ) : (
+        <ApplicationContainer>
+            <ApplicationHeader>
+                <ProjectContainer>
+                    Application is connected to these projects:
+                    {data.projects.map((project) => (
+                        <Badge
+                            sx={{ cursor: 'pointer' }}
+                            key={project}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/projects/${project}`);
+                            }}
+                            color='secondary'
+                            icon={<TopicOutlinedIcon />}
                         >
-                            Provide feedback
-                        </Button>
-                    </ApplicationHeader>
+                            {project}
+                        </Badge>
+                    ))}
+                </ProjectContainer>
+                <Button
+                    startIcon={<ReviewsOutlined />}
+                    variant='outlined'
+                    onClick={createFeedbackContext}
+                    size='small'
+                >
+                    Provide feedback
+                </Button>
+            </ApplicationHeader>
 
-                    <StyledDivider />
-                    <ApplicationIssues application={data} />
-                    <ApplicationChart data={data} />
-                </ApplicationContainer>
-            }
-        />
+            <StyledDivider />
+            <ApplicationIssues application={data} />
+            <ApplicationChart data={data} />
+        </ApplicationContainer>
     );
 };
 

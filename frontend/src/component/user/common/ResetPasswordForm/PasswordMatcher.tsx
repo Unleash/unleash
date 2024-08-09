@@ -1,5 +1,4 @@
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -43,11 +42,7 @@ const PasswordMatcher = ({
 
     return (
         <StyledMatcher data-loading error={error}>
-            <ConditionallyRender
-                condition={error}
-                show={<StyledMatcherErrorIcon />}
-                elseShow={<StyledMatcherCheckIcon />}
-            />{' '}
+            {error ? <StyledMatcherErrorIcon /> : <StyledMatcherCheckIcon />}{' '}
             <span>{label}</span>
         </StyledMatcher>
     );

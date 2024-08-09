@@ -1,6 +1,5 @@
 import type React from 'react';
 import { Box, Typography, Button, styled } from '@mui/material';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrowRight.svg';
 import { ReactComponent as ArrowLeft } from 'assets/icons/arrowLeft.svg';
 
@@ -82,33 +81,27 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
                     : ' '}
             </StyledTypography>
             <StyledCenterBox>
-                <ConditionallyRender
-                    condition={hasPreviousPage}
-                    show={
-                        <StyledPaginationButton
-                            variant='outlined'
-                            color='primary'
-                            onClick={fetchPrevPage}
-                        >
-                            <ArrowLeft />
-                        </StyledPaginationButton>
-                    }
-                />
+                {hasPreviousPage ? (
+                    <StyledPaginationButton
+                        variant='outlined'
+                        color='primary'
+                        onClick={fetchPrevPage}
+                    >
+                        <ArrowLeft />
+                    </StyledPaginationButton>
+                ) : null}
                 <StyledTypographyPageText>
                     Page {pageIndex + 1} of {pageCount}
                 </StyledTypographyPageText>
-                <ConditionallyRender
-                    condition={hasNextPage}
-                    show={
-                        <StyledPaginationButton
-                            onClick={fetchNextPage}
-                            variant='outlined'
-                            color='primary'
-                        >
-                            <ArrowRight />
-                        </StyledPaginationButton>
-                    }
-                />
+                {hasNextPage ? (
+                    <StyledPaginationButton
+                        onClick={fetchNextPage}
+                        variant='outlined'
+                        color='primary'
+                    >
+                        <ArrowRight />
+                    </StyledPaginationButton>
+                ) : null}
             </StyledCenterBox>
             <StyledCenterBox>
                 <StyledTypography>Show rows</StyledTypography>

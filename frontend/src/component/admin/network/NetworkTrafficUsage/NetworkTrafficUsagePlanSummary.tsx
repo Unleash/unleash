@@ -2,7 +2,6 @@ import styled from '@mui/material/styles/styled';
 import Box from '@mui/system/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -94,74 +93,62 @@ export const NetworkTrafficUsagePlanSummary = ({
                                 </StyledNumbersDiv>
                             </RowContainer>
                         </StyledCardDescription>
-                        <ConditionallyRender
-                            condition={includedTraffic > 0}
-                            show={
-                                <StyledCardDescription>
-                                    <RowContainer>
-                                        Included in your plan monthly
-                                        <StyledNumbersDiv>
-                                            {includedTraffic.toLocaleString()}{' '}
-                                            requests
-                                        </StyledNumbersDiv>
-                                    </RowContainer>
-                                </StyledCardDescription>
-                            }
-                        />
+                        {includedTraffic > 0 ? (
+                            <StyledCardDescription>
+                                <RowContainer>
+                                    Included in your plan monthly
+                                    <StyledNumbersDiv>
+                                        {includedTraffic.toLocaleString()}{' '}
+                                        requests
+                                    </StyledNumbersDiv>
+                                </RowContainer>
+                            </StyledCardDescription>
+                        ) : null}
                     </StyledColumnGrid>
                 </StyledContainer>
             </StyledGrid>
-            <ConditionallyRender
-                condition={
-                    estimateFlagEnabled && includedTraffic > 0 && overages > 0
-                }
-                show={
-                    <StyledGrid item xs={5.5} md={5.5}>
-                        <StyledContainer>
-                            <StyledColumnGrid item>
-                                <Box>
-                                    <b>Accrued traffic charges</b>
-                                </Box>
-                                <StyledCardDescription>
+            {estimateFlagEnabled && includedTraffic > 0 && overages > 0 ? (
+                <StyledGrid item xs={5.5} md={5.5}>
+                    <StyledContainer>
+                        <StyledColumnGrid item>
+                            <Box>
+                                <b>Accrued traffic charges</b>
+                            </Box>
+                            <StyledCardDescription>
+                                <RowContainer>
+                                    Requests overages this month (
+                                    <Link href='https://www.getunleash.io/pricing'>
+                                        pricing
+                                    </Link>
+                                    )
+                                    <StyledNumbersDiv>
+                                        {overages.toLocaleString()} requests
+                                    </StyledNumbersDiv>
+                                </RowContainer>
+                                <RowContainer>
+                                    Accrued traffic charges
+                                    <StyledNumbersDiv>
+                                        <Badge color='secondary'>
+                                            {overageCost} USD
+                                        </Badge>
+                                    </StyledNumbersDiv>
+                                </RowContainer>
+                                {estimatedMonthlyCost > 0 ? (
                                     <RowContainer>
-                                        Requests overages this month (
-                                        <Link href='https://www.getunleash.io/pricing'>
-                                            pricing
-                                        </Link>
-                                        )
-                                        <StyledNumbersDiv>
-                                            {overages.toLocaleString()} requests
-                                        </StyledNumbersDiv>
-                                    </RowContainer>
-                                    <RowContainer>
-                                        Accrued traffic charges
+                                        Estimated traffic charges based on
+                                        current usage
                                         <StyledNumbersDiv>
                                             <Badge color='secondary'>
-                                                {overageCost} USD
+                                                {estimatedMonthlyCost} USD
                                             </Badge>
                                         </StyledNumbersDiv>
                                     </RowContainer>
-                                    <ConditionallyRender
-                                        condition={estimatedMonthlyCost > 0}
-                                        show={
-                                            <RowContainer>
-                                                Estimated traffic charges based
-                                                on current usage
-                                                <StyledNumbersDiv>
-                                                    <Badge color='secondary'>
-                                                        {estimatedMonthlyCost}{' '}
-                                                        USD
-                                                    </Badge>
-                                                </StyledNumbersDiv>
-                                            </RowContainer>
-                                        }
-                                    />
-                                </StyledCardDescription>
-                            </StyledColumnGrid>
-                        </StyledContainer>
-                    </StyledGrid>
-                }
-            />
+                                ) : null}
+                            </StyledCardDescription>
+                        </StyledColumnGrid>
+                    </StyledContainer>
+                </StyledGrid>
+            ) : null}
         </StyledContainerGrid>
     );
 };

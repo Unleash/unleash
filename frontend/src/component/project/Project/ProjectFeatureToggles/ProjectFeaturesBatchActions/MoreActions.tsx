@@ -14,7 +14,6 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import MoreVert from '@mui/icons-material/MoreVert';
 import WatchLater from '@mui/icons-material/WatchLater';
 import type { FeatureSchema } from 'openapi';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -129,50 +128,44 @@ export const MoreActions: VFC<IMoreActionsProps> = ({
                     >
                         {({ hasAccess }) => (
                             <>
-                                <ConditionallyRender
-                                    condition={hasUnstale}
-                                    show={() => (
-                                        <MenuItem
-                                            onClick={onMarkAsStale}
-                                            disabled={!hasAccess}
-                                            sx={{
-                                                borderRadius: (theme) =>
-                                                    `${theme.shape.borderRadius}px`,
-                                            }}
-                                        >
-                                            <ListItemIcon>
-                                                <WatchLater />
-                                            </ListItemIcon>
-                                            <ListItemText>
-                                                <Typography variant='body2'>
-                                                    Mark as stale
-                                                </Typography>
-                                            </ListItemText>
-                                        </MenuItem>
-                                    )}
-                                />
-                                <ConditionallyRender
-                                    condition={hasStale}
-                                    show={() => (
-                                        <MenuItem
-                                            onClick={onUnmarkAsStale}
-                                            disabled={!hasAccess}
-                                            sx={{
-                                                borderRadius: (theme) =>
-                                                    `${theme.shape.borderRadius}px`,
-                                            }}
-                                        >
-                                            <ListItemIcon>
-                                                <WatchLater />
-                                            </ListItemIcon>
-                                            <ListItemText>
-                                                <Typography variant='body2'>
-                                                    Un-mark as stale
-                                                </Typography>
-                                            </ListItemText>
-                                        </MenuItem>
-                                    )}
-                                />
+                                {hasUnstale ? (
+                                    <MenuItem
+                                        onClick={onMarkAsStale}
+                                        disabled={!hasAccess}
+                                        sx={{
+                                            borderRadius: (theme) =>
+                                                `${theme.shape.borderRadius}px`,
+                                        }}
+                                    >
+                                        <ListItemIcon>
+                                            <WatchLater />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            <Typography variant='body2'>
+                                                Mark as stale
+                                            </Typography>
+                                        </ListItemText>
+                                    </MenuItem>
+                                ) : null}
+                                {hasStale ? (
+                                    <MenuItem
+                                        onClick={onUnmarkAsStale}
+                                        disabled={!hasAccess}
+                                        sx={{
+                                            borderRadius: (theme) =>
+                                                `${theme.shape.borderRadius}px`,
+                                        }}
+                                    >
+                                        <ListItemIcon>
+                                            <WatchLater />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            <Typography variant='body2'>
+                                                Un-mark as stale
+                                            </Typography>
+                                        </ListItemText>
+                                    </MenuItem>
+                                ) : null}
                             </>
                         )}
                     </PermissionHOC>

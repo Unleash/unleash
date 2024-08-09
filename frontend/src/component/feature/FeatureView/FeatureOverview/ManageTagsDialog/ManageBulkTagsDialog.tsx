@@ -12,7 +12,6 @@ import { type TagOption, TagsInput } from './TagsInput';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import type { ITag, ITagType } from 'interfaces/tags';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 
 type Payload = {
@@ -253,29 +252,25 @@ export const ManageBulkTagsDialog: VFC<IManageBulkTagsDialogProps> = ({
                         value={tagType}
                         onChange={handleTagTypeChange}
                     />
-                    <ConditionallyRender
-                        condition={!tagTypesLoading && tagTypes.length === 0}
-                        show={
-                            <Typography variant='body1'>
-                                No{' '}
-                                <Link component={RouterLink} to='/tag-types'>
-                                    tag types
-                                </Link>{' '}
-                                available.
-                            </Typography>
-                        }
-                        elseShow={
-                            <TagsInput
-                                disabled={tagTypesLoading}
-                                options={tagsOptions}
-                                existingTags={initialValues}
-                                indeterminateOptions={indeterminateTags}
-                                tagType={tagType}
-                                selectedOptions={selectedTags}
-                                onChange={handleInputChange}
-                            />
-                        }
-                    />
+                    {!tagTypesLoading && tagTypes.length === 0 ? (
+                        <Typography variant='body1'>
+                            No{' '}
+                            <Link component={RouterLink} to='/tag-types'>
+                                tag types
+                            </Link>{' '}
+                            available.
+                        </Typography>
+                    ) : (
+                        <TagsInput
+                            disabled={tagTypesLoading}
+                            options={tagsOptions}
+                            existingTags={initialValues}
+                            indeterminateOptions={indeterminateTags}
+                            tagType={tagType}
+                            selectedOptions={selectedTags}
+                            onChange={handleInputChange}
+                        />
+                    )}
                 </StyledDialogFormContent>
             </form>
         </Dialogue>

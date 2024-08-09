@@ -1,6 +1,5 @@
 import { Navigate } from 'react-router-dom';
 import { Alert, AlertTitle, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useQueryParams from 'hooks/useQueryParams';
 import StandaloneLayout from '../common/StandaloneLayout';
 import { DEMO_TYPE } from 'constants/authTypes';
@@ -38,32 +37,23 @@ const Login = () => {
     return (
         <StandaloneLayout>
             <StyledDiv>
-                <ConditionallyRender
-                    condition={resetPassword}
-                    show={
-                        <Alert severity='success' sx={{ mb: 4 }}>
-                            <AlertTitle>Success</AlertTitle>
-                            You successfully reset your password.
-                        </Alert>
-                    }
-                />
-                <ConditionallyRender
-                    condition={invited}
-                    show={
-                        <Alert severity='success' sx={{ mb: 4 }}>
-                            <AlertTitle>Success</AlertTitle>
-                            Your account has been created.
-                        </Alert>
-                    }
-                />
-                <ConditionallyRender
-                    condition={authDetails?.type !== DEMO_TYPE}
-                    show={
-                        <StyledHeader>
-                            Log in to continue the great work
-                        </StyledHeader>
-                    }
-                />
+                {resetPassword ? (
+                    <Alert severity='success' sx={{ mb: 4 }}>
+                        <AlertTitle>Success</AlertTitle>
+                        You successfully reset your password.
+                    </Alert>
+                ) : null}
+                {invited ? (
+                    <Alert severity='success' sx={{ mb: 4 }}>
+                        <AlertTitle>Success</AlertTitle>
+                        Your account has been created.
+                    </Alert>
+                ) : null}
+                {authDetails?.type !== DEMO_TYPE ? (
+                    <StyledHeader>
+                        Log in to continue the great work
+                    </StyledHeader>
+                ) : null}
                 <Authentication redirect={redirect} invited={invited} />
             </StyledDiv>
         </StandaloneLayout>

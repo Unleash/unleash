@@ -1,5 +1,4 @@
 import type { VFC } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Delete from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
@@ -18,27 +17,21 @@ export const StrategyDeleteButton: VFC<IStrategyDeleteButtonProps> = ({
 }) => {
     const id = useId();
 
-    return (
-        <ConditionallyRender
-            condition={strategy?.editable}
-            show={
-                <PermissionIconButton
-                    onClick={onClick}
-                    permission={DELETE_STRATEGY}
-                    tooltipProps={{ title: 'Delete strategy' }}
-                >
-                    <Delete />
-                </PermissionIconButton>
-            }
-            elseShow={
-                <Tooltip title='You cannot delete a built-in strategy' arrow>
-                    <div id={id}>
-                        <IconButton disabled size='large'>
-                            <Delete aria-labelledby={id} />
-                        </IconButton>
-                    </div>
-                </Tooltip>
-            }
-        />
+    return strategy?.editable ? (
+        <PermissionIconButton
+            onClick={onClick}
+            permission={DELETE_STRATEGY}
+            tooltipProps={{ title: 'Delete strategy' }}
+        >
+            <Delete />
+        </PermissionIconButton>
+    ) : (
+        <Tooltip title='You cannot delete a built-in strategy' arrow>
+            <div id={id}>
+                <IconButton disabled size='large'>
+                    <Delete aria-labelledby={id} />
+                </IconButton>
+            </div>
+        </Tooltip>
     );
 };

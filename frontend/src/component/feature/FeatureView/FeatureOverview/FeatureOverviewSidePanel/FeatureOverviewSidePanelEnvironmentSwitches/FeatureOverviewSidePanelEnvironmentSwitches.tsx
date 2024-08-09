@@ -2,7 +2,6 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureOverviewSidePanelEnvironmentSwitch } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/FeatureOverviewSidePanelEnvironmentSwitch';
 import { Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -98,15 +97,12 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                             <StyledSubLabel>
                                 {strategiesLabel}
                                 {variantsLink}
-                                <ConditionallyRender
-                                    condition={hasWarning}
-                                    show={
-                                        <>
-                                            <StyledSeparator />
-                                            <VariantsWarningTooltip />
-                                        </>
-                                    }
-                                />
+                                {hasWarning ? (
+                                    <>
+                                        <StyledSeparator />
+                                        <VariantsWarningTooltip />
+                                    </>
+                                ) : null}
                             </StyledSubLabel>
                         </StyledSwitchLabel>
                     </FeatureOverviewSidePanelEnvironmentSwitch>

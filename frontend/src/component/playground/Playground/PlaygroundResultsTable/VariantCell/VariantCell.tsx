@@ -1,6 +1,5 @@
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { IconButton, Popover, styled, useTheme } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type React from 'react';
 import { useState, type VFC } from 'react';
 import { VariantInformation } from './VariantInformation/VariantInformation';
@@ -39,39 +38,34 @@ export const VariantCell: VFC<IVariantCellProps> = ({
     return (
         <StyledDiv>
             {variant}
-            <ConditionallyRender
-                condition={
-                    Boolean(variants) && variants.length > 0 && isEnabled
-                }
-                show={
-                    <>
-                        <IconButton onClick={onOpen}>
-                            <InfoOutlined />
-                        </IconButton>
+            {Boolean(variants) && variants.length > 0 && isEnabled ? (
+                <>
+                    <IconButton onClick={onOpen}>
+                        <InfoOutlined />
+                    </IconButton>
 
-                        <Popover
-                            open={open}
-                            id={`${feature}-result-variants`}
-                            PaperProps={{
-                                sx: {
-                                    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-                                },
-                            }}
-                            onClose={onClose}
-                            anchorEl={anchor}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: -320,
-                            }}
-                        >
-                            <VariantInformation
-                                variants={variants}
-                                selectedVariant={variant}
-                            />
-                        </Popover>
-                    </>
-                }
-            />
+                    <Popover
+                        open={open}
+                        id={`${feature}-result-variants`}
+                        PaperProps={{
+                            sx: {
+                                borderRadius: `${theme.shape.borderRadiusLarge}px`,
+                            },
+                        }}
+                        onClose={onClose}
+                        anchorEl={anchor}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: -320,
+                        }}
+                    >
+                        <VariantInformation
+                            variants={variants}
+                            selectedVariant={variant}
+                        />
+                    </Popover>
+                </>
+            ) : null}
         </StyledDiv>
     );
 };

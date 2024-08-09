@@ -2,7 +2,6 @@ import { Dialogue } from '../../../../common/Dialogue/Dialogue';
 import useLoading from '../../../../../hooks/useLoading';
 import { Alert, Typography } from '@mui/material';
 import { DEL_INACTIVE_USERS_ERROR } from '../../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
 import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
 import { flexRow } from '../../../../../themes/themeStyles';
 
@@ -33,20 +32,15 @@ export const DeleteInactiveUsers = ({
             secondaryButtonText={'Cancel'}
         >
             <div ref={ref}>
-                <ConditionallyRender
-                    condition={Boolean(
-                        inactiveUserApiErrors[DEL_INACTIVE_USERS_ERROR],
-                    )}
-                    show={
-                        <Alert
-                            data-loading
-                            severity='error'
-                            style={{ margin: '1rem 0' }}
-                        >
-                            {inactiveUserApiErrors[DEL_INACTIVE_USERS_ERROR]}
-                        </Alert>
-                    }
-                />
+                {inactiveUserApiErrors[DEL_INACTIVE_USERS_ERROR] ? (
+                    <Alert
+                        data-loading
+                        severity='error'
+                        style={{ margin: '1rem 0' }}
+                    >
+                        {inactiveUserApiErrors[DEL_INACTIVE_USERS_ERROR]}
+                    </Alert>
+                ) : null}
                 <div style={flexRow}>
                     <Typography variant='subtitle1'>
                         You will be deleting{' '}

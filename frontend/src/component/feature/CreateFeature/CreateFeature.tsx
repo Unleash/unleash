@@ -13,7 +13,6 @@ import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { Alert, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -169,18 +168,14 @@ const CreateFeature = () => {
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
-            <ConditionallyRender
-                condition={projectFlagLimitReached}
-                show={
-                    <StyledAlert severity='error'>
-                        <strong>Feature flag project limit reached. </strong> To
-                        be able to create more feature flags in this project
-                        please increase the feature flag upper limit in the
-                        project settings.
-                    </StyledAlert>
-                }
-            />
-
+            {projectFlagLimitReached ? (
+                <StyledAlert severity='error'>
+                    <strong>Feature flag project limit reached. </strong> To be
+                    able to create more feature flags in this project please
+                    increase the feature flag upper limit in the project
+                    settings.
+                </StyledAlert>
+            ) : null}
             <FeatureForm
                 type={type}
                 name={name}
@@ -200,16 +195,13 @@ const CreateFeature = () => {
                 clearErrors={clearErrors}
                 featureNaming={projectInfo.featureNaming}
                 Limit={
-                    <ConditionallyRender
-                        condition={resourceLimitsEnabled}
-                        show={
-                            <Limit
-                                name='feature flags'
-                                limit={uiConfig.resourceLimits.featureFlags}
-                                currentValue={totalFlags ?? 0}
-                            />
-                        }
-                    />
+                    resourceLimitsEnabled ? (
+                        <Limit
+                            name='feature flags'
+                            limit={uiConfig.resourceLimits.featureFlags}
+                            currentValue={totalFlags ?? 0}
+                        />
+                    ) : null
                 }
             >
                 <CreateButton

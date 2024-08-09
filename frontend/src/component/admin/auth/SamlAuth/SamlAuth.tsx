@@ -17,7 +17,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
 import type { IRole } from 'interfaces/role';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const initialState = {
     enabled: false,
@@ -100,24 +99,21 @@ export const SamlAuth = () => {
         <>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
-                    <ConditionallyRender
-                        condition={Boolean(samlConfiguredThroughEnv)}
-                        show={
-                            <Alert sx={{ mb: 2 }} severity='warning'>
-                                SAML is currently configured via environment
-                                variables. Please refer to the{' '}
-                                <a
-                                    href='https://www.unleash-hosted.com/docs/enterprise-authentication'
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    documentation
-                                </a>{' '}
-                                for detailed instructions on how to set up SAML
-                                using these variables.
-                            </Alert>
-                        }
-                    />
+                    {samlConfiguredThroughEnv ? (
+                        <Alert sx={{ mb: 2 }} severity='warning'>
+                            SAML is currently configured via environment
+                            variables. Please refer to the{' '}
+                            <a
+                                href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                documentation
+                            </a>{' '}
+                            for detailed instructions on how to set up SAML
+                            using these variables.
+                        </Alert>
+                    ) : null}
                     <Alert severity='info'>
                         Please read the{' '}
                         <a

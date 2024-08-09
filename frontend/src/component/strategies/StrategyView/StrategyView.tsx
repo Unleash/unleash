@@ -8,7 +8,6 @@ import { StrategyDetails } from './StrategyDetails/StrategyDetails';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const StrategyView = () => {
@@ -31,19 +30,16 @@ export const StrategyView = () => {
                     title={strategy?.name}
                     subtitle={strategy?.description}
                     actions={
-                        <ConditionallyRender
-                            condition={strategy.editable}
-                            show={
-                                <PermissionIconButton
-                                    permission={UPDATE_STRATEGY}
-                                    data-loading
-                                    onClick={handleEdit}
-                                    tooltipProps={{ title: 'Edit strategy' }}
-                                >
-                                    <Edit />
-                                </PermissionIconButton>
-                            }
-                        />
+                        strategy.editable ? (
+                            <PermissionIconButton
+                                permission={UPDATE_STRATEGY}
+                                data-loading
+                                onClick={handleEdit}
+                                tooltipProps={{ title: 'Edit strategy' }}
+                            >
+                                <Edit />
+                            </PermissionIconButton>
+                        ) : null
                     }
                 />
             }

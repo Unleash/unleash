@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import DividerText from 'component/common/DividerText/DividerText';
 import StandaloneLayout from '../common/StandaloneLayout';
 import {
@@ -80,31 +79,24 @@ const ForgottenPassword = () => {
         <StandaloneLayout>
             <StyledDiv ref={ref}>
                 <StyledTitle data-loading>Forgotten password</StyledTitle>
-                <ConditionallyRender
-                    condition={state === 'attempted'}
-                    show={
-                        <Alert severity='success' data-loading>
-                            <AlertTitle>Attempted to send email</AlertTitle>
-                            We've attempted to send a reset password email to:
-                            <StyledStrong>{attemptedEmail}</StyledStrong>
-                            If you did not receive an email, please verify that
-                            you typed in the correct email, and contact your
-                            administrator to make sure that you are in the
-                            system.
-                        </Alert>
-                    }
-                />
-                <ConditionallyRender
-                    condition={state === 'too_many_attempts'}
-                    show={
-                        <Alert severity='warning' data-loading>
-                            <AlertTitle>
-                                Too many password reset attempts
-                            </AlertTitle>
-                            Please wait another minute before your next attempt
-                        </Alert>
-                    }
-                />
+                {state === 'attempted' ? (
+                    <Alert severity='success' data-loading>
+                        <AlertTitle>Attempted to send email</AlertTitle>
+                        We've attempted to send a reset password email to:
+                        <StyledStrong>{attemptedEmail}</StyledStrong>
+                        If you did not receive an email, please verify that you
+                        typed in the correct email, and contact your
+                        administrator to make sure that you are in the system.
+                    </Alert>
+                ) : null}
+                {state === 'too_many_attempts' ? (
+                    <Alert severity='warning' data-loading>
+                        <AlertTitle>
+                            Too many password reset attempts
+                        </AlertTitle>
+                        Please wait another minute before your next attempt
+                    </Alert>
+                ) : null}
                 <StyledForm onSubmit={onClick}>
                     <StyledTypography variant='body1' data-loading>
                         Please provide your email address. If it exists in the
@@ -129,11 +121,11 @@ const ForgottenPassword = () => {
                         color='primary'
                         disabled={state === 'loading'}
                     >
-                        <ConditionallyRender
-                            condition={state === 'initial'}
-                            show={<span>Submit</span>}
-                            elseShow={<span>Try again</span>}
-                        />
+                        {state === 'initial' ? (
+                            <span>Submit</span>
+                        ) : (
+                            <span>Try again</span>
+                        )}
                     </StyledButton>
                     <DividerText text='Or log in' />
                     <Button

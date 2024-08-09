@@ -15,7 +15,6 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
 import {
     type IChangeRequestConfig,
@@ -143,39 +142,32 @@ export const ChangeRequestTable: VFC = () => {
                 Cell: ({ row: { original } }: any) => {
                     const { hasAccess } = useContext(AccessContext);
 
-                    return (
-                        <ConditionallyRender
-                            condition={original.changeRequestEnabled}
-                            show={
-                                <StyledBox data-loading>
-                                    <GeneralSelect
-                                        sx={{ width: '140px', marginLeft: 1 }}
-                                        options={approvalOptions}
-                                        value={original.requiredApprovals || 1}
-                                        onChange={(approvals) => {
-                                            onRequiredApprovalsChange(
-                                                original,
-                                                approvals,
-                                            );
-                                        }}
-                                        disabled={
-                                            !hasAccess(
-                                                [
-                                                    UPDATE_PROJECT,
-                                                    PROJECT_CHANGE_REQUEST_WRITE,
-                                                ],
-                                                projectId,
-                                            )
-                                        }
-                                        IconComponent={
-                                            KeyboardArrowDownOutlined
-                                        }
-                                        fullWidth
-                                    />
-                                </StyledBox>
-                            }
-                        />
-                    );
+                    return original.changeRequestEnabled ? (
+                        <StyledBox data-loading>
+                            <GeneralSelect
+                                sx={{ width: '140px', marginLeft: 1 }}
+                                options={approvalOptions}
+                                value={original.requiredApprovals || 1}
+                                onChange={(approvals) => {
+                                    onRequiredApprovalsChange(
+                                        original,
+                                        approvals,
+                                    );
+                                }}
+                                disabled={
+                                    !hasAccess(
+                                        [
+                                            UPDATE_PROJECT,
+                                            PROJECT_CHANGE_REQUEST_WRITE,
+                                        ],
+                                        projectId,
+                                    )
+                                }
+                                IconComponent={KeyboardArrowDownOutlined}
+                                fullWidth
+                            />
+                        </StyledBox>
+                    ) : null;
                 },
                 width: 100,
                 disableGlobalFilter: true,
@@ -243,7 +235,6 @@ export const ChangeRequestTable: VFC = () => {
                 in that environment needs to be approved before it will be
                 applied
             </Alert>
-
             <Table {...getTableProps()}>
                 <SortableTableHeader
                     headerGroups={headerGroups as HeaderGroup<object>[]}
@@ -263,7 +254,6 @@ export const ChangeRequestTable: VFC = () => {
                     })}
                 </TableBody>
             </Table>
-
             <Dialogue
                 onClick={() => {
                     trackEvent('change_request', {
@@ -290,30 +280,23 @@ export const ChangeRequestTable: VFC = () => {
                     You are about to{' '}
                     {dialogState.isEnabled ? 'disable' : 'enable'} “Change
                     request”
-                    <ConditionallyRender
-                        condition={Boolean(dialogState.enableEnvironment)}
-                        show={
-                            <>
-                                {' '}
-                                for{' '}
-                                <strong>{dialogState.enableEnvironment}</strong>
-                            </>
-                        }
-                    />
+                    {dialogState.enableEnvironment ? (
+                        <>
+                            {' '}
+                            for <strong>{dialogState.enableEnvironment}</strong>
+                        </>
+                    ) : null}
                     .
                 </Typography>
-                <ConditionallyRender
-                    condition={!dialogState.isEnabled}
-                    show={
-                        <Typography variant='body2' color='text.secondary'>
-                            To enable change requests for an environment, you
-                            need to ensure that your Unleash Admin has created
-                            the necessary custom project roles in your Unleash
-                            instance. This will allow you to assign project
-                            members from the project access page.
-                        </Typography>
-                    }
-                />
+                {!dialogState.isEnabled ? (
+                    <Typography variant='body2' color='text.secondary'>
+                        To enable change requests for an environment, you need
+                        to ensure that your Unleash Admin has created the
+                        necessary custom project roles in your Unleash instance.
+                        This will allow you to assign project members from the
+                        project access page.
+                    </Typography>
+                ) : null}
             </Dialogue>
         </PageContent>
     );

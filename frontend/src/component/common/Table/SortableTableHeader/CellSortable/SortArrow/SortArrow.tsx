@@ -1,9 +1,6 @@
 import type { VFC } from 'react';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import UnfoldMoreOutlined from '@mui/icons-material/UnfoldMoreOutlined';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import classnames from 'classnames';
 import type { Theme } from '@mui/material';
 
 interface ISortArrowProps {
@@ -23,40 +20,31 @@ export const SortArrow: VFC<ISortArrowProps> = ({
     isSorted: sorted,
     isDesc: desc = false,
     className,
-}) => (
-    <ConditionallyRender
-        condition={Boolean(sorted)}
-        show={
-            <ConditionallyRender
-                condition={Boolean(desc)}
-                show={
-                    <KeyboardArrowDown
-                        sx={(theme) => ({
-                            ...iconStyle(theme),
-                        })}
-                        className={className}
-                        fontSize='inherit'
-                    />
-                }
-                elseShow={
-                    <KeyboardArrowUp
-                        sx={(theme) => ({
-                            ...iconStyle(theme),
-                        })}
-                        className={className}
-                        fontSize='inherit'
-                    />
-                }
-            />
-        }
-        elseShow={
-            <UnfoldMoreOutlined
+}) =>
+    sorted ? (
+        desc ? (
+            <KeyboardArrowDown
                 sx={(theme) => ({
                     ...iconStyle(theme),
                 })}
-                className={classnames(className, 'hover-only')}
+                className={className}
                 fontSize='inherit'
             />
-        }
-    />
-);
+        ) : (
+            <KeyboardArrowUp
+                sx={(theme) => ({
+                    ...iconStyle(theme),
+                })}
+                className={className}
+                fontSize='inherit'
+            />
+        )
+    ) : (
+        <KeyboardArrowUp
+            sx={(theme) => ({
+                ...iconStyle(theme),
+            })}
+            className={className}
+            fontSize='inherit'
+        />
+    );

@@ -1,6 +1,5 @@
 import { type FC, Fragment, useMemo, useState, type VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from 'component/changeRequest/ChangeRequestSidebar/ChangeRequestSidebar';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
@@ -82,28 +81,25 @@ const DraftBannerContent: FC<{
             <StyledDraftBannerContentWrapper>
                 <Typography variant='body2' sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
-                    <ConditionallyRender
-                        condition={Boolean(environments)}
-                        show={
-                            <>
-                                in{' '}
-                                {environments.map((env, i) =>
-                                    i === 0 ? (
-                                        <Fragment key={env}>
-                                            <strong>{env}</strong>
-                                        </Fragment>
-                                    ) : (
-                                        <Fragment key={env}>
-                                            {i === environments.length - 1
-                                                ? ' and '
-                                                : ', '}
-                                            <strong>{env}</strong>
-                                        </Fragment>
-                                    ),
-                                )}
-                            </>
-                        }
-                    />
+                    {environments ? (
+                        <>
+                            in{' '}
+                            {environments.map((env, i) =>
+                                i === 0 ? (
+                                    <Fragment key={env}>
+                                        <strong>{env}</strong>
+                                    </Fragment>
+                                ) : (
+                                    <Fragment key={env}>
+                                        {i === environments.length - 1
+                                            ? ' and '
+                                            : ', '}
+                                        <strong>{env}</strong>
+                                    </Fragment>
+                                ),
+                            )}
+                        </>
+                    ) : null}
                     {explanation}.
                 </Typography>
                 <Button
@@ -146,19 +142,16 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
 
     return (
         <StickyBanner>
-            <ConditionallyRender
-                condition={Boolean(unfinishedChangeRequests?.length)}
-                show={
-                    <DraftBannerContent
-                        changeRequests={
-                            unfinishedChangeRequests as ChangeRequestType[]
-                        }
-                        onClick={() => {
-                            setIsSidebarOpen(true);
-                        }}
-                    />
-                }
-            />
+            {unfinishedChangeRequests?.length ? (
+                <DraftBannerContent
+                    changeRequests={
+                        unfinishedChangeRequests as ChangeRequestType[]
+                    }
+                    onClick={() => {
+                        setIsSidebarOpen(true);
+                    }}
+                />
+            ) : null}
             <ChangeRequestSidebar
                 project={project}
                 open={isSidebarOpen}

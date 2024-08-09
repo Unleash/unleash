@@ -108,10 +108,6 @@ export default class FakeProjectStore implements IProjectStore {
         return this.projects.length;
     }
 
-    async exists(key: string): Promise<boolean> {
-        return this.projects.some((project) => project.id === key);
-    }
-
     async get(key: string): Promise<IProject> {
         const project = this.projects.find((p) => p.id === key);
         if (project) {
@@ -129,8 +125,18 @@ export default class FakeProjectStore implements IProjectStore {
         return Promise.resolve(0);
     }
 
+    async exists(key: string): Promise<boolean> {
+        return this.projects.some((project) => project.id === key);
+    }
+
     async hasProject(id: string): Promise<boolean> {
         return this.exists(id);
+    }
+
+    async hasActiveProject(id: string): Promise<boolean> {
+        return this.projects.some(
+            (project) => project.id === id && project.archivedAt === null,
+        );
     }
 
     async importProjects(

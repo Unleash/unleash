@@ -33,4 +33,5 @@ export const StyledCard = styled(Card)(({ theme }) => ({
 export const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     height: '24px',
     width: '24px',
+    marginInline: 0,
 }));

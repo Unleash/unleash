@@ -220,7 +220,11 @@ class UserService {
         }
 
         if (email) {
-            Joi.assert(email, Joi.string().email(), 'Email');
+            Joi.assert(
+                email,
+                Joi.string().email({ ignoreLength: true }),
+                'Email',
+            );
         }
 
         const exists = await this.store.hasUser({ username, email });
@@ -264,7 +268,11 @@ class UserService {
         const preUser = await this.getUser(id);
 
         if (email) {
-            Joi.assert(email, Joi.string().email(), 'Email');
+            Joi.assert(
+                email,
+                Joi.string().email({ ignoreLength: true }),
+                'Email',
+            );
         }
 
         if (rootRole) {

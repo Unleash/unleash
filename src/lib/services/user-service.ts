@@ -381,22 +381,14 @@ class UserService {
         } catch (e) {
             // User does not exists. Create if 'autoCreate' is enabled
             if (autoCreate) {
-                console.log('autoCreate');
-                try {
-                    user = await this.createUser(
-                        {
-                            email,
-                            name,
-                            rootRole: rootRole || RoleName.EDITOR,
-                        },
-                        SYSTEM_USER_AUDIT,
-                    );
-                } catch (e) {
-                    console.log(
-                        `Failed to create user with email: ${email}`,
-                        e,
-                    );
-                }
+                user = await this.createUser(
+                    {
+                        email,
+                        name,
+                        rootRole: rootRole || RoleName.EDITOR,
+                    },
+                    SYSTEM_USER_AUDIT,
+                );
             } else {
                 throw e;
             }
@@ -406,11 +398,8 @@ class UserService {
     }
 
     async loginDemoAuthDefaultAdmin(): Promise<IUser> {
-        console.log('loginDemoAuthDefaultAdmin');
         const user = await this.store.getByQuery({ id: 1 });
-        console.log('user', user);
         await this.store.successfullyLogin(user);
-        console.log('user success login');
         return user;
     }
 

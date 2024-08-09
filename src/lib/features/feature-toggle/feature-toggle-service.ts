@@ -1235,6 +1235,18 @@ class FeatureToggleService {
         }
     }
 
+    private async validateActiveProject(projectId: string) {
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            const hasActiveProject =
+                await this.projectStore.hasActiveProject(projectId);
+            if (!hasActiveProject) {
+                throw new NotFoundError(
+                    `Active project with id ${projectId} does not exist`,
+                );
+            }
+        }
+    }
+
     async createFeatureToggle(
         projectId: string,
         value: FeatureToggleDTO,
@@ -2058,6 +2070,7 @@ class FeatureToggleService {
         projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        await this.validateActiveProject(projectId);
         await this.validateFeaturesContext(featureNames, projectId);
 
         const features =
@@ -2091,6 +2104,11 @@ class FeatureToggleService {
         featureName: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        const feature = await this.featureToggleStore.get(featureName);
+        if (!feature) {
+            throw new NotFoundError(`Feature ${featureName} does not exist`);
+        }
+        await this.validateActiveProject(feature.project);
         const toggle = await this.featureToggleStore.revive(featureName);
         await this.featureToggleStore.disableAllEnvironmentsForFeatures([
             featureName,

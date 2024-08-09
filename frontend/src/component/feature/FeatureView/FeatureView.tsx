@@ -364,13 +364,8 @@ export const FeatureView = () => {
                             />
                         ))}
                     </Tabs>
-                    <ConditionallyRender
-                        condition={true}
-                        show={
-                            <Collaborators
-                                collaborators={feature.collaborators?.users}
-                            />
-                        }
+                    <Collaborators
+                        collaborators={feature.collaborators?.users}
                     />
                 </StyledTabRow>
             </StyledHeader>

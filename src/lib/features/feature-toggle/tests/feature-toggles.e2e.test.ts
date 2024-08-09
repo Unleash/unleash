@@ -99,6 +99,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    featureCollaborators: true,
                 },
             },
         },
@@ -315,6 +316,12 @@ test('Should allow to archive/delete feature with children if no orphans are lef
     await app.createFeature(parent, 'default');
     await app.createFeature(child, 'default');
     await app.addDependency(child, parent);
+
+    await app.request
+        .post(`/api/admin/projects/default/delete`)
+        .set('Content-Type', 'application/json')
+        .send({ features: [parent, child] })
+        .expect(200);
 });
 
 test('Should not allow to archive/delete feature when orphans are left', async () => {
@@ -2543,7 +2550,7 @@ test('Can update impression data with PUT', async () => {
     };
     await app.request
         .post('/api/admin/projects/default/features')
-        .send(true)
+        .send(flag)
         .expect(201)
         .expect((res) => {
             expect(res.body.impressionData).toBe(true);
@@ -2551,7 +2558,7 @@ test('Can update impression data with PUT', async () => {
 
     await app.request
         .put(`/api/admin/projects/default/features/${flag.name}`)
-        .send({ ...true, impressionData: false })
+        .send({ ...flag, impressionData: false })
         .expect(200)
         .expect((res) => {
             expect(res.body.impressionData).toBe(false);
@@ -2573,7 +2580,7 @@ test('Can create flag with impression data on different project', async () => {
 
     await app.request
         .post('/api/admin/projects/impression-data/features')
-        .send(true)
+        .send(flag)
         .expect(201)
         .expect((res) => {
             expect(res.body.impressionData).toBe(true);
@@ -2581,7 +2588,7 @@ test('Can create flag with impression data on different project', async () => {
 
     await app.request
         .put(`/api/admin/projects/impression-data/features/${flag.name}`)
-        .send({ ...true, impressionData: false })
+        .send({ ...flag, impressionData: false })
         .expect(200)
         .expect((res) => {
             expect(res.body.impressionData).toBe(false);

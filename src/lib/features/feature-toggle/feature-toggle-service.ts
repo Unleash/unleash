@@ -1116,7 +1116,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
-                ...{ collaborators: { users: collaborators } },
+                collaborators: { users: collaborators },
             };
         } else {
             const result =
@@ -1130,7 +1130,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
-                ...{ collaborators: { users: collaborators } },
+                collaborators: { users: collaborators },
             };
         }
     }

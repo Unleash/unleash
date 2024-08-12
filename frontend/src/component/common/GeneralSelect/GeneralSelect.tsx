@@ -21,7 +21,7 @@ export interface ISelectOption {
     sx?: SxProps<Theme>;
 }
 
-export interface IGeneralSelectProps<T extends string>
+export interface IGeneralSelectProps<T extends string = string>
     extends Omit<SelectProps, 'onChange'> {
     name?: string;
     value: T;

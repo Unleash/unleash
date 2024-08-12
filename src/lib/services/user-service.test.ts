@@ -156,69 +156,6 @@ describe('Default admin initialization', () => {
         expect(user.username).toBe(CUSTOM_ADMIN_USERNAME);
     });
 
-    test('Should create custom default admin user if `createAdminUser` is true and `initialAdminEmailUser` is set', async () => {
-        await userService.initAdminUser({
-            createAdminUser: true,
-            initialAdminEmailUser: {
-                name: CUSTOM_ADMIN_NAME,
-                email: CUSTOM_ADMIN_EMAIL,
-            },
-        });
-
-        await expect(
-            userService.loginUser(
-                DEFAULT_ADMIN_USERNAME,
-                DEFAULT_ADMIN_PASSWORD,
-            ),
-        ).rejects.toThrow(
-            'The combination of password and username you provided is invalid',
-        );
-
-        const user = await userService.getByEmail(CUSTOM_ADMIN_EMAIL);
-        expect(user.name).toBe(CUSTOM_ADMIN_NAME);
-
-        expect(sendGettingStartedMailMock).toHaveBeenCalledTimes(1);
-        expect(sendGettingStartedMailMock).toHaveBeenCalledWith(
-            CUSTOM_ADMIN_NAME,
-            CUSTOM_ADMIN_EMAIL,
-            expect.any(String),
-            expect.any(String),
-        );
-    });
-
-    test('Should not create any default admin user if `createAdminUser` is not true', async () => {
-        await userService.initAdminUser({
-            createAdminUser: false,
-            initialAdminUser: {
-                username: CUSTOM_ADMIN_USERNAME,
-                password: CUSTOM_ADMIN_PASSWORD,
-            },
-            initialAdminEmailUser: {
-                name: CUSTOM_ADMIN_NAME,
-                email: CUSTOM_ADMIN_EMAIL,
-            },
-        });
-
-        await expect(
-            userService.loginUser(
-                DEFAULT_ADMIN_USERNAME,
-                DEFAULT_ADMIN_PASSWORD,
-            ),
-        ).rejects.toThrow(
-            'The combination of password and username you provided is invalid',
-        );
-
-        await expect(
-            userService.loginUser(CUSTOM_ADMIN_USERNAME, CUSTOM_ADMIN_PASSWORD),
-        ).rejects.toThrow(
-            'The combination of password and username you provided is invalid',
-        );
-
-        await expect(
-            userService.getByEmail(CUSTOM_ADMIN_EMAIL),
-        ).rejects.toThrow('Could not find user');
-    });
-
     test('Should not create any default admin user if `createAdminUser` is not true and `initialAdminUser` is not set', async () => {
         const userStore = new UserStoreMock();
         const eventStore = new EventStoreMock();

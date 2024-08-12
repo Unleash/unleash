@@ -22,7 +22,6 @@ import {
     type IVersionOption,
     type ISSLOption,
     type UsernameAdminUser,
-    type EmailAdminUser,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -323,12 +322,6 @@ const parseEnvVarInitialAdminUser = (): UsernameAdminUser | undefined => {
     return username && password ? { username, password } : undefined;
 };
 
-const parseEnvVarInitialAdminEmailUser = (): EmailAdminUser | undefined => {
-    const name = process.env.INITIAL_ADMIN_EMAIL_USER_NAME;
-    const email = process.env.INITIAL_ADMIN_EMAIL_USER_EMAIL;
-    return name && email ? { name, email } : undefined;
-};
-
 const defaultAuthentication: IAuthOption = {
     demoAllowAdminLogin: parseEnvVarBoolean(
         process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN,
@@ -339,7 +332,6 @@ const defaultAuthentication: IAuthOption = {
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
     initialAdminUser: parseEnvVarInitialAdminUser(),
-    initialAdminEmailUser: parseEnvVarInitialAdminEmailUser(),
     initApiTokens: [],
 };
 

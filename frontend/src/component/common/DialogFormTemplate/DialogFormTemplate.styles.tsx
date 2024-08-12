@@ -37,7 +37,7 @@ export const NameContainer = styled('div')(({ theme }) => ({
     gridArea: 'project-name',
     display: 'flex',
     flexFlow: 'column nowrap',
-    gap: theme.spacing(4),
+    gap: theme.spacing(2),
 }));
 
 export const DescriptionContainer = styled('div')({

@@ -486,6 +486,18 @@ export default class ProjectService {
         await this.projectStore.addEnvironmentToProject(project, environment);
     }
 
+    private async validateActiveProject(projectId: string) {
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            const hasActiveProject =
+                await this.projectStore.hasActiveProject(projectId);
+            if (!hasActiveProject) {
+                throw new NotFoundError(
+                    `Active project with id ${projectId} does not exist`,
+                );
+            }
+        }
+    }
+
     async changeProject(
         newProjectId: string,
         featureName: string,
@@ -498,11 +510,8 @@ export default class ProjectService {
         if (feature.project !== currentProjectId) {
             throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
-        const project = await this.getProject(newProjectId);
 
-        if (!project) {
-            throw new NotFoundError(`Project ${newProjectId} not found`);
-        }
+        await this.validateActiveProject(newProjectId);
 
         const authorized = await this.accessService.hasPermission(
             user,

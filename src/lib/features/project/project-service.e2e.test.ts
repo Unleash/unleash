@@ -962,7 +962,7 @@ test('should not change project if feature flag project does not match current p
     }
 });
 
-test('should return 404 if no project is found with the project id', async () => {
+test('should return 404 if no active project is found with the project id', async () => {
     const project = {
         id: 'test-change-project-2',
         name: 'New project',
@@ -985,7 +985,32 @@ test('should return 404 if no project is found with the project id', async () =>
             auditUser,
         );
     } catch (err) {
-        expect(err.message).toBe(`No project found`);
+        expect(err.message).toBe(
+            `Active project with id newProject does not exist`,
+        );
+    }
+
+    const newProject = {
+        id: 'newProject',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+    await projectService.createProject(newProject, user, auditUser);
+    await projectService.archiveProject(newProject.id, TEST_AUDIT_USER);
+    try {
+        await projectService.changeProject(
+            'newProject',
+            flag.name,
+            user,
+            project.id,
+            auditUser,
+        );
+    } catch (err) {
+        expect(err.message).toBe(
+            `Active project with id newProject does not exist`,
+        );
     }
 });
 

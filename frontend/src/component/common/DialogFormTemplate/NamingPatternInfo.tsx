@@ -39,10 +39,15 @@ type Props = {
 };
 
 export const NamingPatternInfo: React.FC<Props> = ({ naming }) => {
+    const controlId = 'naming-pattern-info-summary';
     return (
         <StyledFlagNamingInfo>
             <StyledAccordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary
+                    id={controlId}
+                    aria-controls={controlId}
+                    expandIcon={<ExpandMoreIcon />}
+                >
                     Name must match:&nbsp;<code>^{naming.pattern}$</code>
                 </AccordionSummary>
                 <AccordionDetails>

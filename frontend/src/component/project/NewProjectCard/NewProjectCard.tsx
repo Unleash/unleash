@@ -20,7 +20,7 @@ interface IProjectCardProps {
     name: string;
     featureCount: number;
     health: number;
-    memberCount: number;
+    memberCount?: number;
     id: string;
     onHover: () => void;
     isFavorite?: boolean;
@@ -32,7 +32,7 @@ export const ProjectCard = ({
     name,
     featureCount,
     health,
-    memberCount,
+    memberCount = 0,
     onHover,
     id,
     mode,

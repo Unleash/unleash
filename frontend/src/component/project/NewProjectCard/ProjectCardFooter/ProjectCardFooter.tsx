@@ -5,11 +5,13 @@ import { FavoriteIconButton } from 'component/common/FavoriteIconButton/Favorite
 import useToast from 'hooks/useToast';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectCardFooterProps {
     id: string;
     isFavorite?: boolean;
     children?: React.ReactNode;
+    showFavorite?: boolean;
 }
 
 const StyledFooter = styled(Box)(({ theme }) => ({
@@ -30,6 +32,7 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
     children,
     id,
     isFavorite = false,
+    showFavorite = true,
 }) => {
     const { setToastApiError } = useToast();
     const { favorite, unfavorite } = useFavoriteProjectsApi();
@@ -48,13 +51,19 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
             setToastApiError('Something went wrong, could not update favorite');
         }
     };
+
     return (
         <StyledFooter>
             {children}
-            <StyledFavoriteIconButton
-                onClick={onFavorite}
-                isFavorite={isFavorite}
-                size='medium'
+            <ConditionallyRender
+                condition={showFavorite}
+                show={
+                    <StyledFavoriteIconButton
+                        onClick={onFavorite}
+                        isFavorite={isFavorite}
+                        size='medium'
+                    />
+                }
             />
         </StyledFooter>
     );

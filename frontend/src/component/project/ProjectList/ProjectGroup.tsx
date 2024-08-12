@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard } from '../NewProjectCard/NewProjectCard';
@@ -23,12 +24,23 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     pointer: 'cursor',
 }));
 
-export const ProjectGroup: React.FC<{
+type ProjectGroupProps<T extends { id: string } = IProjectCard> = {
     sectionTitle?: string;
-    projects: IProjectCard[];
+    projects: T[];
     loading: boolean;
     searchValue: string;
-}> = ({ sectionTitle, projects, loading, searchValue }) => {
+    placeholder?: string;
+    ProjectCardComponent?: ComponentType<T & any>;
+};
+
+export const ProjectGroup = <T extends { id: string }>({
+    sectionTitle,
+    projects,
+    loading,
+    searchValue,
+    placeholder = 'No projects available.',
+    ProjectCardComponent = ProjectCard,
+}: ProjectGroupProps<T>) => {
     return (
         <article>
             <ConditionallyRender
@@ -56,9 +68,7 @@ export const ProjectGroup: React.FC<{
                             </TablePlaceholder>
                         }
                         elseShow={
-                            <TablePlaceholder>
-                                No projects available.
-                            </TablePlaceholder>
+                            <TablePlaceholder>{placeholder}</TablePlaceholder>
                         }
                     />
                 }
@@ -70,7 +80,7 @@ export const ProjectGroup: React.FC<{
                                 <>
                                     {loadingData.map(
                                         (project: IProjectCard) => (
-                                            <ProjectCard
+                                            <ProjectCardComponent
                                                 data-loading
                                                 onHover={() => {}}
                                                 key={project.id}
@@ -87,25 +97,15 @@ export const ProjectGroup: React.FC<{
                             )}
                             elseShow={() => (
                                 <>
-                                    {projects.map((project: IProjectCard) => (
+                                    {projects.map((project: T) => (
                                         <StyledCardLink
                                             key={project.id}
                                             to={`/projects/${project.id}`}
+                                            // TODO: archive link
                                         >
-                                            <ProjectCard
+                                            <ProjectCardComponent
                                                 onHover={() => {}}
-                                                name={project.name}
-                                                mode={project.mode}
-                                                memberCount={
-                                                    project.memberCount ?? 0
-                                                }
-                                                health={project.health}
-                                                id={project.id}
-                                                featureCount={
-                                                    project.featureCount
-                                                }
-                                                isFavorite={project.favorite}
-                                                owners={project.owners}
+                                                {...project}
                                             />
                                         </StyledCardLink>
                                     ))}

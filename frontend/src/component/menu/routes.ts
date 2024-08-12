@@ -9,6 +9,7 @@ import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
 import { ProjectListNew } from 'component/project/ProjectList/ProjectList';
+import { ArchiveProjectList } from 'component/project/ProjectList/ArchiveProjectList';
 import RedirectArchive from 'component/archive/RedirectArchive';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironment';
@@ -128,10 +129,9 @@ export const routes: IRoute[] = [
     {
         path: '/projects-archive',
         title: 'Projects archive',
-        component: ProjectListNew,
+        component: ArchiveProjectList,
         type: 'protected',
         menu: {},
-        flag: 'archiveProjects',
     },
 
     // Features

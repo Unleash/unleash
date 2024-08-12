@@ -4,22 +4,29 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import { flexRow } from 'themes/themeStyles';
 
-export const StyledProjectCard = styled(Card)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    height: '100%',
-    boxShadow: 'none',
-    border: `1px solid ${theme.palette.divider}`,
-    [theme.breakpoints.down('sm')]: {
-        justifyContent: 'center',
-    },
-    '&:hover': {
+export const StyledProjectCard = styled(Card)<{ disabled?: boolean }>(
+    ({ theme, disabled = false }) => ({
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100%',
+        boxShadow: 'none',
+        border: `1px solid ${theme.palette.divider}`,
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: 'center',
+        },
         transition: 'background-color 0.2s ease-in-out',
-        backgroundColor: theme.palette.neutral.light,
-    },
-    borderRadius: theme.shape.borderRadiusMedium,
-}));
+        backgroundColor: disabled
+            ? theme.palette.neutral.light
+            : theme.palette.background.default,
+        '&:hover': {
+            backgroundColor: disabled
+                ? theme.palette.background.default
+                : theme.palette.neutral.light,
+        },
+        borderRadius: theme.shape.borderRadiusMedium,
+    }),
+);
 
 export const StyledProjectCardBody = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1, 2, 2, 2),
@@ -72,11 +79,15 @@ export const StyledDivInfo = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 1),
 }));
 
-export const StyledParagraphInfo = styled('p')(({ theme }) => ({
-    color: theme.palette.primary.dark,
-    fontWeight: 'bold',
-    fontSize: theme.typography.body1.fontSize,
-}));
+export const StyledParagraphInfo = styled('p')<{ disabled?: boolean }>(
+    ({ theme, disabled = false }) => ({
+        color: disabled
+            ? theme.palette.text.secondary
+            : theme.palette.primary.dark,
+        fontWeight: 'bold',
+        fontSize: theme.typography.body1.fontSize,
+    }),
+);
 
 export const StyledIconBox = styled(Box)(({ theme }) => ({
     display: 'grid',

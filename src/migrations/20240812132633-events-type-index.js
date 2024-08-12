@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-        CREATE INDEX idx_events_type ON events (type DESC);
+        CREATE INDEX idx_events_type ON events (type);
         `,
         callback,
     );

@@ -773,3 +773,40 @@ test('Should not allow to add flags to archived projects', async () => {
         ),
     );
 });
+
+test('Should not allow to revive flags to archived projects', async () => {
+    const project = await stores.projectStore.create({
+        id: 'archivedProjectWithFlag',
+        name: 'archivedProjectWithFlag',
+    });
+    const flag = await service.createFeatureToggle(
+        project.id,
+        {
+            name: 'archiveFlag',
+        },
+        TEST_AUDIT_USER,
+    );
+
+    await service.archiveToggle(
+        flag.name,
+        { email: 'test@example.com' } as User,
+        TEST_AUDIT_USER,
+    );
+    await stores.projectStore.archive(project.id);
+
+    await expect(
+        service.reviveFeature(flag.name, TEST_AUDIT_USER),
+    ).rejects.toEqual(
+        new NotFoundError(
+            `Active project with id archivedProjectWithFlag does not exist`,
+        ),
+    );
+
+    await expect(
+        service.reviveFeatures([flag.name], project.id, TEST_AUDIT_USER),
+    ).rejects.toEqual(
+        new NotFoundError(
+            `Active project with id archivedProjectWithFlag does not exist`,
+        ),
+    );
+});

@@ -158,8 +158,10 @@ class EventStore implements IEventStore {
         params: IEventSearchParams,
         queryParams: IQueryParam[],
     ): Promise<number> {
-        const query = this.buildSearchQuery(params, queryParams);
-        const count = await query.count().first();
+        const query = this.buildSearchQuery(params, queryParams)
+            .count()
+            .first();
+        const count = await query;
         if (!count) {
             return 0;
         }
@@ -353,6 +355,7 @@ class EventStore implements IEventStore {
             .limit(Number(params.limit) ?? 100)
             .offset(Number(params.offset) ?? 0);
 
+        console.log(query.toQuery());
         try {
             return (await query).map(this.rowToEvent);
         } catch (err) {

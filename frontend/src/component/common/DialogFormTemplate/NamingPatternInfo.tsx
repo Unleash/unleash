@@ -24,33 +24,33 @@ const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
 }));
 
 type Props = {
-    featureNaming: FeatureNamingType;
+    naming: FeatureNamingType;
 };
 
-export const NamingPatternInfo: React.FC<Props> = ({ featureNaming }) => {
+export const NamingPatternInfo: React.FC<Props> = ({ naming }) => {
     return (
         <StyledFlagNamingInfo>
             <p>The name must match this pattern:</p>
             <dl id='naming-pattern-info'>
                 <dt>Pattern</dt>
                 <dd>
-                    <code>^{featureNaming.pattern}$</code>
+                    <code>^{naming.pattern}$</code>
                 </dd>
                 <ConditionallyRender
-                    condition={Boolean(featureNaming?.example)}
+                    condition={Boolean(naming?.example)}
                     show={
                         <>
                             <dt>Example</dt>
-                            <dd>{featureNaming?.example}</dd>
+                            <dd>{naming?.example}</dd>
                         </>
                     }
                 />
                 <ConditionallyRender
-                    condition={Boolean(featureNaming?.description)}
+                    condition={Boolean(naming?.description)}
                     show={
                         <>
                             <dt>Description</dt>
-                            <dd>{featureNaming?.description}</dd>
+                            <dd>{naming?.description}</dd>
                         </>
                     }
                 />

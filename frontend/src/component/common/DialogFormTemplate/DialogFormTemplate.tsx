@@ -91,9 +91,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
 
                     <ConditionallyRender
                         condition={displayNamingPattern}
-                        show={
-                            <NamingPatternInfo featureNaming={namingPattern!} />
-                        }
+                        show={<NamingPatternInfo naming={namingPattern!} />}
                     />
                 </ProjectNameContainer>
                 <ProjectDescriptionContainer>

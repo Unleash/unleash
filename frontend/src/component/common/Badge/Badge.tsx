@@ -75,11 +75,9 @@ const BadgeIcon = (color: Color, icon: ReactElement) => (
         <ConditionallyRender
             condition={Boolean(icon?.props.sx)}
             show={icon}
-            elseShow={() =>
-                cloneElement(icon!, {
-                    sx: { fontSize: '16px' },
-                })
-            }
+            elseShow={cloneElement(icon!, {
+                sx: { fontSize: '16px' },
+            })}
         />
     </StyledBadgeIcon>
 );

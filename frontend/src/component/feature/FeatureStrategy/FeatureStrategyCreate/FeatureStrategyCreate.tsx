@@ -257,6 +257,7 @@ export const FeatureStrategyCreate = () => {
                                 limit={limit}
                             />
                         }
+                        elseShow={undefined}
                     />
                 }
                 disabled={limitReached}

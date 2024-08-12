@@ -30,6 +30,22 @@ describe('calculate average time to production', () => {
                 created: new Date('2024-11-11T09:11:11.111Z'),
                 enabled: new Date('2024-11-11T09:11:11.112Z'),
             },
+            {
+                created: new Date('2024-12-12T09:12:11.121Z'),
+                enabled: new Date('2024-12-12T09:12:12.122Z'),
+            },
+        ]);
+
+        expect(timeToProduction).toBe(0.1);
+    });
+
+    test('should return more then 0 if feature was enabled instantly', () => {
+        const created = new Date('2024-11-11T09:11:11.111Z');
+        const timeToProduction = calculateAverageTimeToProd([
+            {
+                created,
+                enabled: created,
+            },
         ]);
 
         expect(timeToProduction).toBe(0.1);

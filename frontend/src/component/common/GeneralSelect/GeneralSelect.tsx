@@ -24,7 +24,7 @@ export interface ISelectOption {
 export interface IGeneralSelectProps<T extends string = string>
     extends Omit<SelectProps, 'onChange'> {
     name?: string;
-    value: T;
+    value?: T;
     label?: string;
     options: ISelectOption[];
     onChange: (key: T) => void;
@@ -78,7 +78,7 @@ function GeneralSelect<T extends string = string>({
                 className={className}
                 label={visuallyHideLabel ? '' : label}
                 id={id}
-                value={value}
+                value={value ?? ''}
                 MenuProps={{
                     sx: {
                         '.MuiPopover-paper.MuiMenu-paper': {

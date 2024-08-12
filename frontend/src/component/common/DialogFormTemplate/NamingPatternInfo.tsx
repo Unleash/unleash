@@ -43,7 +43,7 @@ export const NamingPatternInfo: React.FC<Props> = ({ naming }) => {
         <StyledFlagNamingInfo>
             <StyledAccordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Name must match: <code>^{naming.pattern}$</code>
+                    Name must match:&nbsp;<code>^{naming.pattern}$</code>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>The name must match this pattern:</p>

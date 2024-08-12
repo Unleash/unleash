@@ -68,8 +68,9 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
             <Tooltip title={'Export'} arrow describeChild>
                 <div>
                     <IconButton
+                        aria-label={'Export'}
                         aria-haspopup='true'
-                        aria-expanded={open ? 'true' : undefined}
+                        aria-expanded={open}
                         onClick={handleClick}
                         type='button'
                     >
@@ -86,22 +87,14 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
                 disableScrollLock={true}
             >
                 <MenuList>
-                    <MenuItem
-                        onClick={() => {
-                            exportCsv();
-                        }}
-                    >
+                    <MenuItem onClick={exportCsv}>
                         <ListItemText>
                             <Typography variant='body2'>
                                 Export as CSV
                             </Typography>
                         </ListItemText>
                     </MenuItem>
-                    <MenuItem
-                        onClick={() => {
-                            exportJson();
-                        }}
-                    >
+                    <MenuItem onClick={exportJson}>
                         <ListItemText>
                             <Typography variant='body2'>
                                 Export as JSON

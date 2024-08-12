@@ -12,7 +12,6 @@ import type { ITag } from 'interfaces/tags';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -102,25 +101,19 @@ export const FeatureOverviewSidePanelTags = ({
                     );
                 })}
             </StyledTagContainer>
-            <ConditionallyRender
-                condition={canUpdateTags}
-                show={
-                    <>
-                        <ConditionallyRender
-                            condition={tags.length > 0}
-                            show={<StyledDivider />}
-                        />
-                        <StyledButton
-                            data-loading
-                            variant='outlined'
-                            startIcon={<Add />}
-                            onClick={() => setOpenTagDialog(true)}
-                        >
-                            Add new tag
-                        </StyledButton>
-                    </>
-                }
-            />
+            {canUpdateTags ? (
+                <>
+                    {tags.length > 0 ? <StyledDivider /> : null}
+                    <StyledButton
+                        data-loading
+                        variant='outlined'
+                        startIcon={<Add />}
+                        onClick={() => setOpenTagDialog(true)}
+                    >
+                        Add new tag
+                    </StyledButton>
+                </>
+            ) : null}
             <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
             <Dialogue
                 open={showDelDialog}

@@ -1,5 +1,4 @@
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { ReactNode } from 'react';
 
 const StyledItem = styled('div')(({ theme }) => ({
@@ -54,10 +53,9 @@ export const ProjectActionsFormItem = ({
 }: IProjectActionsFormItemProps) => {
     return (
         <StyledItem>
-            <ConditionallyRender
-                condition={index > 0}
-                show={<StyledItemSeparator>{separator}</StyledItemSeparator>}
-            />
+            {index > 0 ? (
+                <StyledItemSeparator>{separator}</StyledItemSeparator>
+            ) : null}
             <StyledInnerBox>
                 <StyledHeaderRow>{header}</StyledHeaderRow>
                 <StyledRow>{children}</StyledRow>

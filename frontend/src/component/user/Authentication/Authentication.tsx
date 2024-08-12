@@ -11,7 +11,6 @@ import {
 } from 'constants/authTypes';
 import SecondaryLoginActions from '../common/SecondaryLoginActions';
 import useQueryParams from 'hooks/useQueryParams';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
@@ -58,10 +57,7 @@ const Authentication = ({
         content = (
             <>
                 <PasswordAuth authDetails={authDetails} redirect={redirect} />
-                <ConditionallyRender
-                    condition={!authDetails.defaultHidden}
-                    show={<SecondaryLoginActions />}
-                />
+                {!authDetails.defaultHidden ? <SecondaryLoginActions /> : null}
             </>
         );
     } else if (authDetails.type === SIMPLE_TYPE) {
@@ -72,10 +68,7 @@ const Authentication = ({
         content = (
             <>
                 <HostedAuth authDetails={authDetails} redirect={redirect} />
-                <ConditionallyRender
-                    condition={!authDetails.defaultHidden}
-                    show={<SecondaryLoginActions />}
-                />
+                {!authDetails.defaultHidden ? <SecondaryLoginActions /> : null}
             </>
         );
     } else {
@@ -85,10 +78,7 @@ const Authentication = ({
     return (
         <>
             <div style={{ maxWidth: '350px' }} data-testid={AUTH_PAGE_ID}>
-                <ConditionallyRender
-                    condition={Boolean(error)}
-                    show={<Alert severity='error'>{error}</Alert>}
-                />
+                {error ? <Alert severity='error'>{error}</Alert> : null}
             </div>
             {content}
         </>

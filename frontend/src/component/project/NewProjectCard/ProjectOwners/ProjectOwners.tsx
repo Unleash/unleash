@@ -2,7 +2,6 @@ import type { FC } from 'react';
 import { styled } from '@mui/material';
 import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 
 interface IProjectOwnersProps {
@@ -71,11 +70,11 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
                 </StyledHeader>
                 <AvatarGroup users={users} avatarLimit={8} />
             </StyledContainer>
-            <ConditionallyRender
-                condition={owners.length === 1}
-                show={<StyledUserName>{users[0]?.name}</StyledUserName>}
-                elseShow={<div />}
-            />
+            {owners.length === 1 ? (
+                <StyledUserName>{users[0]?.name}</StyledUserName>
+            ) : (
+                <div />
+            )}
         </>
     );
 };

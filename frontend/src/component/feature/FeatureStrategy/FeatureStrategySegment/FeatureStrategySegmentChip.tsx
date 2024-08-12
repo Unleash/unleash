@@ -4,7 +4,6 @@ import type { ISegment } from 'interfaces/segment';
 import Clear from '@mui/icons-material/Clear';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { constraintAccordionListId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { styled, type Theme, Tooltip } from '@mui/material';
 
@@ -63,13 +62,12 @@ export const FeatureStrategySegmentChip = ({
         });
     };
 
-    const togglePreviewIcon = (
-        <ConditionallyRender
-            condition={segment === preview}
-            show={<VisibilityOff titleAccess='Hide' sx={styledIcon} />}
-            elseShow={<Visibility titleAccess='Show' sx={styledIcon} />}
-        />
-    );
+    const togglePreviewIcon =
+        segment === preview ? (
+            <VisibilityOff titleAccess='Hide' sx={styledIcon} />
+        ) : (
+            <Visibility titleAccess='Show' sx={styledIcon} />
+        );
 
     const previewIconTooltip =
         segment === preview

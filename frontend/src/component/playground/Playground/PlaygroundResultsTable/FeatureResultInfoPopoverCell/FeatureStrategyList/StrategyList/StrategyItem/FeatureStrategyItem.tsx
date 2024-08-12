@@ -7,7 +7,6 @@ import type {
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
 
 interface IFeatureStrategyItemProps {
@@ -49,22 +48,18 @@ export const FeatureStrategyItem = ({
                 />
             }
         >
-            <ConditionallyRender
-                condition={Boolean(strategy.disabled)}
-                show={
-                    <DisabledStrategyExecution
-                        strategyResult={strategy}
-                        input={input}
-                    />
-                }
-                elseShow={
-                    <StrategyExecution
-                        strategyResult={strategy}
-                        input={input}
-                        percentageFill={theme.palette.background.elevation2}
-                    />
-                }
-            />
+            {strategy.disabled ? (
+                <DisabledStrategyExecution
+                    strategyResult={strategy}
+                    input={input}
+                />
+            ) : (
+                <StrategyExecution
+                    strategyResult={strategy}
+                    input={input}
+                    percentageFill={theme.palette.background.elevation2}
+                />
+            )}
         </StrategyItemContainer>
     );
 };

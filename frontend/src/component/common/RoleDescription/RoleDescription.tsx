@@ -1,6 +1,5 @@
 import { type SxProps, type Theme, styled } from '@mui/material';
 import SupervisedUserCircle from '@mui/icons-material/SupervisedUserCircle';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
 import {
     PREDEFINED_ROLE_TYPES,
@@ -99,32 +98,29 @@ export const RoleDescription = ({
             <StyledDescriptionSubHeader>
                 {description}
             </StyledDescriptionSubHeader>
-            <ConditionallyRender
-                condition={!PREDEFINED_ROLE_TYPES.includes(role.type)}
-                show={() => (
-                    <>
-                        <StyledPermissionsLabel>
-                            Role permissions:
-                        </StyledPermissionsLabel>
-                        <StyledPermissions>
-                            {categories.map(({ label, permissions }) => (
-                                <div key={label}>
-                                    <StyledDescriptionHeader>
-                                        {label}
-                                    </StyledDescriptionHeader>
-                                    <StyledPermissionsList>
-                                        {permissions.map((permission) => (
-                                            <li key={permission.name}>
-                                                {permission.displayName}
-                                            </li>
-                                        ))}
-                                    </StyledPermissionsList>
-                                </div>
-                            ))}
-                        </StyledPermissions>
-                    </>
-                )}
-            />
+            {!PREDEFINED_ROLE_TYPES.includes(role.type) ? (
+                <>
+                    <StyledPermissionsLabel>
+                        Role permissions:
+                    </StyledPermissionsLabel>
+                    <StyledPermissions>
+                        {categories.map(({ label, permissions }) => (
+                            <div key={label}>
+                                <StyledDescriptionHeader>
+                                    {label}
+                                </StyledDescriptionHeader>
+                                <StyledPermissionsList>
+                                    {permissions.map((permission) => (
+                                        <li key={permission.name}>
+                                            {permission.displayName}
+                                        </li>
+                                    ))}
+                                </StyledPermissionsList>
+                            </div>
+                        ))}
+                    </StyledPermissions>
+                </>
+            ) : null}
         </StyledDescription>
     );
 };

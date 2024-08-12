@@ -4,7 +4,6 @@ import type {
     IChangeRequestPatchVariant,
 } from 'component/changeRequest/changeRequest.types';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -85,20 +84,17 @@ export const VariantPatch = ({
                 {actions}
             </StyledChangeHeader>
             <EnvironmentVariantsTable variants={change.payload.variants} />
-            <ConditionallyRender
-                condition={change.payload.variants.length > 1}
-                show={
-                    <>
-                        <StyledStickinessContainer>
-                            <p>Stickiness:</p>
-                            <Badge>
-                                {change.payload.variants[0]?.stickiness ||
-                                    'default'}
-                            </Badge>
-                        </StyledStickinessContainer>
-                    </>
-                }
-            />
+            {change.payload.variants.length > 1 ? (
+                <>
+                    <StyledStickinessContainer>
+                        <p>Stickiness:</p>
+                        <Badge>
+                            {change.payload.variants[0]?.stickiness ||
+                                'default'}
+                        </Badge>
+                    </StyledStickinessContainer>
+                </>
+            ) : null}
         </ChangeItemInfo>
     );
 };

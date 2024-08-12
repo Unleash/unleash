@@ -4,7 +4,6 @@ import { BAD_REQUEST, OK } from 'constants/statusCodes';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import { Alert } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IPasswordCheckerProps {
@@ -242,14 +241,11 @@ const PasswordChecker = ({
                         <StyledStatusBar error={symbolError} data-loading />
                     </StyledCheckContainer>
                 </StyledStatusBarContainer>
-                <ConditionallyRender
-                    condition={repeatingCharError}
-                    show={
-                        <StyledError severity='error'>
-                            You may not repeat three characters in a row.
-                        </StyledError>
-                    }
-                />
+                {repeatingCharError ? (
+                    <StyledError severity='error'>
+                        You may not repeat three characters in a row.
+                    </StyledError>
+                ) : null}
             </StyledContainer>
         </>
     );

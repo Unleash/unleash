@@ -4,7 +4,6 @@ import { Box, Button, IconButton, styled, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import type { ChangeRequestType } from '../../changeRequest.types';
 import Edit from '@mui/icons-material/Edit';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -57,50 +56,42 @@ export const ChangeRequestTitle: FC<{
     };
     return (
         <StyledBox>
-            <ConditionallyRender
-                condition={isDisabled}
-                show={children}
-                elseShow={
-                    <Input
-                        label='Change request title'
-                        id='group-name'
-                        value={title}
-                        fullWidth
-                        onChange={(e) => setTitle(e.target.value)}
-                        disabled={isDisabled}
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={isDisabled}
-                show={
-                    <IconButton onClick={toggleEditState}>
-                        <Edit />
-                    </IconButton>
-                }
-            />
-            <ConditionallyRender
-                condition={!isDisabled}
-                show={
-                    <>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            sx={(theme) => ({ marginLeft: theme.spacing(2) })}
-                            onClick={() => saveTitle()}
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            sx={(theme) => ({ marginLeft: theme.spacing(1) })}
-                            variant='outlined'
-                            onClick={toggleEditState}
-                        >
-                            Cancel
-                        </Button>{' '}
-                    </>
-                }
-            />
+            {isDisabled ? (
+                children
+            ) : (
+                <Input
+                    label='Change request title'
+                    id='group-name'
+                    value={title}
+                    fullWidth
+                    onChange={(e) => setTitle(e.target.value)}
+                    disabled={isDisabled}
+                />
+            )}
+            {isDisabled ? (
+                <IconButton onClick={toggleEditState}>
+                    <Edit />
+                </IconButton>
+            ) : null}
+            {!isDisabled ? (
+                <>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        sx={(theme) => ({ marginLeft: theme.spacing(2) })}
+                        onClick={() => saveTitle()}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        sx={(theme) => ({ marginLeft: theme.spacing(1) })}
+                        variant='outlined'
+                        onClick={toggleEditState}
+                    >
+                        Cancel
+                    </Button>{' '}
+                </>
+            ) : null}
         </StyledBox>
     );
 };

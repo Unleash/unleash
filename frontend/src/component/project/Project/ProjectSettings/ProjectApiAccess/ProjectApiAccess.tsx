@@ -22,7 +22,6 @@ import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTo
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const ProjectApiAccess = () => {
@@ -102,29 +101,24 @@ export const ProjectApiAccess = () => {
                     />
                 }
             >
-                <ConditionallyRender
-                    condition={!hasAccess(READ_PROJECT_API_TOKEN, projectId)}
-                    show={
-                        <Alert severity='warning'>
-                            You need to have the correct permissions to read API
-                            tokens
-                        </Alert>
-                    }
-                    elseShow={
-                        <ApiTokenTable
-                            compact
-                            loading={loading}
-                            headerGroups={headerGroups}
-                            setHiddenColumns={setHiddenColumns}
-                            prepareRow={prepareRow}
-                            rows={rows}
-                            columns={columns}
-                            globalFilter={globalFilter}
-                        />
-                    }
-                />
+                {!hasAccess(READ_PROJECT_API_TOKEN, projectId) ? (
+                    <Alert severity='warning'>
+                        You need to have the correct permissions to read API
+                        tokens
+                    </Alert>
+                ) : (
+                    <ApiTokenTable
+                        compact
+                        loading={loading}
+                        headerGroups={headerGroups}
+                        setHiddenColumns={setHiddenColumns}
+                        prepareRow={prepareRow}
+                        rows={rows}
+                        columns={columns}
+                        globalFilter={globalFilter}
+                    />
+                )}
             </PageContent>
-
             <Routes>
                 <Route path='create' element={<CreateProjectApiToken />} />
             </Routes>

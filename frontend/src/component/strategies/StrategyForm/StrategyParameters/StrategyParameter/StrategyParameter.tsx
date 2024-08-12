@@ -10,7 +10,6 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type React from 'react';
 import type { IStrategyParameter } from 'interfaces/strategy';
 
@@ -104,23 +103,20 @@ export const StrategyParameter = ({
     return (
         <StyledParamsContainer>
             <StyledDivider />
-            <ConditionallyRender
-                condition={index === 0}
-                show={
-                    <StyledParagraph>
-                        Parameters let you provide arguments to your strategy
-                        that it can access for evaluation. Read more in the{' '}
-                        <Link
-                            href='https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types'
-                            target='_blank'
-                            rel='noreferrer'
-                        >
-                            parameter types documentation
-                        </Link>
-                        .
-                    </StyledParagraph>
-                }
-            />
+            {index === 0 ? (
+                <StyledParagraph>
+                    Parameters let you provide arguments to your strategy that
+                    it can access for evaluation. Read more in the{' '}
+                    <Link
+                        href='https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        parameter types documentation
+                    </Link>
+                    .
+                </StyledParagraph>
+            ) : null}
             <StyledNameContainer>
                 <StyledNameInput
                     autoFocus

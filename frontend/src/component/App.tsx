@@ -1,6 +1,5 @@
 import { Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
 import Loader from 'component/common/Loader/Loader';
@@ -51,61 +50,53 @@ export const App = () => {
     return (
         <SWRProvider>
             <Suspense fallback={<Loader type='fullscreen' />}>
-                <ConditionallyRender
-                    condition={!hasFetchedAuth}
-                    show={<Loader type='fullscreen' />}
-                    elseShow={
-                        <Demo>
-                            <>
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        uiConfig?.maintenanceMode,
-                                    )}
-                                    show={<MaintenanceBanner />}
-                                />
-                                <LicenseBanner />
-                                <ExternalBanners />
-                                <InternalBanners />
-                                <EdgeUpgradeBanner />
-                                <StyledContainer>
-                                    <ToastRenderer />
-                                    <Routes>
-                                        {availableRoutes.map((route) => (
-                                            <Route
-                                                key={route.path}
-                                                path={route.path}
-                                                element={
-                                                    <LayoutPicker
-                                                        isStandalone={
-                                                            route.isStandalone ===
-                                                            true
-                                                        }
-                                                    >
-                                                        <ProtectedRoute
-                                                            route={route}
-                                                        />
-                                                    </LayoutPicker>
-                                                }
-                                            />
-                                        ))}
+                {!hasFetchedAuth ? (
+                    <Loader type='fullscreen' />
+                ) : (
+                    <Demo>
+                        <>
+                            {uiConfig?.maintenanceMode ? (
+                                <MaintenanceBanner />
+                            ) : null}
+                            <LicenseBanner />
+                            <ExternalBanners />
+                            <InternalBanners />
+                            <EdgeUpgradeBanner />
+                            <StyledContainer>
+                                <ToastRenderer />
+                                <Routes>
+                                    {availableRoutes.map((route) => (
                                         <Route
-                                            path='/'
-                                            element={<InitialRedirect />}
+                                            key={route.path}
+                                            path={route.path}
+                                            element={
+                                                <LayoutPicker
+                                                    isStandalone={
+                                                        route.isStandalone ===
+                                                        true
+                                                    }
+                                                >
+                                                    <ProtectedRoute
+                                                        route={route}
+                                                    />
+                                                </LayoutPicker>
+                                            }
                                         />
-                                        <Route
-                                            path='*'
-                                            element={<NotFound />}
-                                        />
-                                    </Routes>
+                                    ))}
+                                    <Route
+                                        path='/'
+                                        element={<InitialRedirect />}
+                                    />
+                                    <Route path='*' element={<NotFound />} />
+                                </Routes>
 
-                                    <FeedbackNPS openUrl='http://feedback.unleash.run' />
+                                <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
-                                    <SplashPageRedirect />
-                                </StyledContainer>
-                            </>
-                        </Demo>
-                    }
-                />
+                                <SplashPageRedirect />
+                            </StyledContainer>
+                        </>
+                    </Demo>
+                )}
             </Suspense>
         </SWRProvider>
     );

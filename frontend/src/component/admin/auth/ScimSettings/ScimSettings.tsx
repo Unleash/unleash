@@ -3,7 +3,6 @@ import { Alert } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog';
 import { ScimTokenDialog } from './ScimTokenDialog';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -123,19 +122,16 @@ export const ScimSettings = () => {
 
                 <Grid container spacing={3}>
                     <Grid item md={5} mb={2}>
-                        <ConditionallyRender
-                            condition={Boolean(settings.hasToken)}
-                            show={
-                                <Button
-                                    variant='outlined'
-                                    color='error'
-                                    disabled={loading}
-                                    onClick={onGenerateNewToken}
-                                >
-                                    Generate new token
-                                </Button>
-                            }
-                        />
+                        {settings.hasToken ? (
+                            <Button
+                                variant='outlined'
+                                color='error'
+                                disabled={loading}
+                                onClick={onGenerateNewToken}
+                            >
+                                Generate new token
+                            </Button>
+                        ) : null}
                     </Grid>
                 </Grid>
                 <ScimTokenGenerationDialog

@@ -1,5 +1,4 @@
 import { Alert, Button, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import PasswordChecker, {
@@ -84,74 +83,70 @@ export const PasswordTab = () => {
 
     return (
         <PageContent isLoading={loading} header='Change password'>
-            <ConditionallyRender
-                condition={simpleAuthConfig.disabled}
-                show={
-                    <Alert severity='error'>
-                        Password based login is currently disabled for your
-                        Unleash instance.
-                    </Alert>
-                }
-                elseShow={
-                    <StyledForm>
-                        <PasswordChecker
-                            password={password}
-                            callback={setValidPassword}
-                            data-loading
-                        />
-                        <PasswordField
-                            data-loading
-                            label='Old password'
-                            name='oldPassword'
-                            value={oldPassword}
-                            error={Boolean(authenticationError)}
-                            helperText={authenticationError}
-                            autoComplete='current-password'
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => setOldPassword(e.target.value)}
-                        />
-                        <PasswordField
-                            data-loading
-                            label='Password'
-                            name='password'
-                            value={password}
-                            error={Boolean(error)}
-                            helperText={error}
-                            autoComplete='new-password'
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => setPassword(e.target.value)}
-                        />
-                        <PasswordField
-                            data-loading
-                            label='Confirm password'
-                            name='confirmPassword'
-                            value={confirmPassword}
-                            autoComplete='new-password'
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => setConfirmPassword(e.target.value)}
-                        />
-                        <PasswordMatcher
-                            data-loading
-                            started={allPasswordsFilled}
-                            passwordsDoNotMatch={passwordsDoNotMatch}
-                            sameAsOldPassword={sameAsOldPassword}
-                        />
-                        <Button
-                            data-loading
-                            variant='contained'
-                            color='primary'
-                            type='submit'
-                            onClick={submit}
-                            disabled={hasError}
-                        >
-                            Save
-                        </Button>
-                    </StyledForm>
-                }
-            />
+            {simpleAuthConfig.disabled ? (
+                <Alert severity='error'>
+                    Password based login is currently disabled for your Unleash
+                    instance.
+                </Alert>
+            ) : (
+                <StyledForm>
+                    <PasswordChecker
+                        password={password}
+                        callback={setValidPassword}
+                        data-loading
+                    />
+                    <PasswordField
+                        data-loading
+                        label='Old password'
+                        name='oldPassword'
+                        value={oldPassword}
+                        error={Boolean(authenticationError)}
+                        helperText={authenticationError}
+                        autoComplete='current-password'
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setOldPassword(e.target.value)
+                        }
+                    />
+                    <PasswordField
+                        data-loading
+                        label='Password'
+                        name='password'
+                        value={password}
+                        error={Boolean(error)}
+                        helperText={error}
+                        autoComplete='new-password'
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setPassword(e.target.value)
+                        }
+                    />
+                    <PasswordField
+                        data-loading
+                        label='Confirm password'
+                        name='confirmPassword'
+                        value={confirmPassword}
+                        autoComplete='new-password'
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setConfirmPassword(e.target.value)
+                        }
+                    />
+                    <PasswordMatcher
+                        data-loading
+                        started={allPasswordsFilled}
+                        passwordsDoNotMatch={passwordsDoNotMatch}
+                        sameAsOldPassword={sameAsOldPassword}
+                    />
+                    <Button
+                        data-loading
+                        variant='contained'
+                        color='primary'
+                        type='submit'
+                        onClick={submit}
+                        disabled={hasError}
+                    >
+                        Save
+                    </Button>
+                </StyledForm>
+            )}
         </PageContent>
     );
 };

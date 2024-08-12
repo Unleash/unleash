@@ -3,7 +3,6 @@ import { Paper, styled, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CenteredNavLink } from './CenteredNavLink';
 import type { VFC } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { useAdminRoutes } from '../useAdminRoutes';
 
@@ -58,18 +57,13 @@ export const AdminTabsMenu: VFC = () => {
                         label={
                             <CenteredNavLink to={tab.path}>
                                 {tab.title}
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        tab.menu.mode?.includes('enterprise') &&
-                                            !tab.menu.mode?.includes('pro') &&
-                                            isPro(),
-                                    )}
-                                    show={
-                                        <StyledBadgeContainer>
-                                            <EnterpriseBadge size={16} />
-                                        </StyledBadgeContainer>
-                                    }
-                                />
+                                {tab.menu.mode?.includes('enterprise') &&
+                                !tab.menu.mode?.includes('pro') &&
+                                isPro() ? (
+                                    <StyledBadgeContainer>
+                                        <EnterpriseBadge size={16} />
+                                    </StyledBadgeContainer>
+                                ) : null}
                             </CenteredNavLink>
                         }
                     />

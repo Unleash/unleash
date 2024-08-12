@@ -13,7 +13,6 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import CircleOutlined from '@mui/icons-material/CircleOutlined';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import type { ITutorialTopic } from '../demo-topics';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -209,11 +208,11 @@ export const DemoTopics = ({
                             selected={selected}
                             completed={completed}
                         >
-                            <ConditionallyRender
-                                condition={completed}
-                                show={<StyledCheckCircle />}
-                                elseShow={<StyledCircleOutlined />}
-                            />
+                            {completed ? (
+                                <StyledCheckCircle />
+                            ) : (
+                                <StyledCircleOutlined />
+                            )}
                             <Typography variant='body2' sx={{ flex: 1 }}>
                                 {topic.title}
                             </Typography>

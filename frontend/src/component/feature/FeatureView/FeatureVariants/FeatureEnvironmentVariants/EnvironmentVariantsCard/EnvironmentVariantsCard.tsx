@@ -2,7 +2,6 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import { styled, Link } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useVariantsFromScheduledRequests } from './useVariantsFromScheduledRequests';
@@ -92,58 +91,46 @@ export const EnvironmentVariantsCard = ({
                     <StyledName deprecated={!environment.enabled}>
                         {environment.name}
                     </StyledName>
-                    <ConditionallyRender
-                        condition={scheduledRequestIds.length > 0}
-                        show={
-                            <Box sx={{ ml: 2 }}>
-                                <ChangesScheduledBadge
-                                    scheduledChangeRequestIds={
-                                        scheduledRequestIds
-                                    }
-                                />
-                            </Box>
-                        }
-                    />
+                    {scheduledRequestIds.length > 0 ? (
+                        <Box sx={{ ml: 2 }}>
+                            <ChangesScheduledBadge
+                                scheduledChangeRequestIds={scheduledRequestIds}
+                            />
+                        </Box>
+                    ) : null}
                 </div>
                 {children}
             </StyledHeader>
-            <ConditionallyRender
-                condition={variants.length > 0}
-                show={
-                    <>
-                        <StyledTableContainer>
-                            <EnvironmentVariantsTable
-                                variants={variants}
-                                searchValue={searchValue}
-                            />
-                        </StyledTableContainer>
-                        <ConditionallyRender
-                            condition={variants.length > 1}
-                            show={
-                                <>
-                                    <StyledStickinessContainer>
-                                        <p>Stickiness:</p>
-                                        <Badge>{stickiness}</Badge>
-                                    </StyledStickinessContainer>
-                                    <StyledDescription>
-                                        By overriding the stickiness you can
-                                        control which parameter is used to
-                                        ensure consistent traffic allocation
-                                        across variants.{' '}
-                                        <Link
-                                            href='https://docs.getunleash.io/reference/feature-toggle-variants'
-                                            target='_blank'
-                                            rel='noreferrer'
-                                        >
-                                            Read more
-                                        </Link>
-                                    </StyledDescription>
-                                </>
-                            }
+            {variants.length > 0 ? (
+                <>
+                    <StyledTableContainer>
+                        <EnvironmentVariantsTable
+                            variants={variants}
+                            searchValue={searchValue}
                         />
-                    </>
-                }
-            />
+                    </StyledTableContainer>
+                    {variants.length > 1 ? (
+                        <>
+                            <StyledStickinessContainer>
+                                <p>Stickiness:</p>
+                                <Badge>{stickiness}</Badge>
+                            </StyledStickinessContainer>
+                            <StyledDescription>
+                                By overriding the stickiness you can control
+                                which parameter is used to ensure consistent
+                                traffic allocation across variants.{' '}
+                                <Link
+                                    href='https://docs.getunleash.io/reference/feature-toggle-variants'
+                                    target='_blank'
+                                    rel='noreferrer'
+                                >
+                                    Read more
+                                </Link>
+                            </StyledDescription>
+                        </>
+                    ) : null}
+                </>
+            ) : null}
         </StyledCard>
     );
 };

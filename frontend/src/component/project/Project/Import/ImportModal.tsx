@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useEffect, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline';
 import type { StageName } from './StageName';
 import {
@@ -79,65 +78,56 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                     <TimelineHeader>Process</TimelineHeader>
                     <ImportTimeline stage={importStage} />
                 </TimelineContainer>
-                <ConditionallyRender
-                    condition={importStage === 'configure'}
-                    show={
-                        <ConfigurationStage
-                            tabs={
-                                <ConfigurationTabs
-                                    activeTab={activeTab}
-                                    setActiveTab={setActiveTab}
-                                />
-                            }
-                            importOptions={
-                                <ImportOptions
-                                    project={project}
-                                    environment={environment}
-                                    onChange={setEnvironment}
-                                />
-                            }
-                            importArea={
-                                <ImportArea
-                                    activeTab={activeTab}
-                                    setActiveTab={setActiveTab}
-                                    importPayload={importPayload}
-                                    setImportPayload={setImportPayload}
-                                />
-                            }
-                            actions={
-                                <Actions
-                                    disabled={!isValidJSON(importPayload)}
-                                    onSubmit={() => setImportStage('validate')}
-                                    onClose={close}
-                                />
-                            }
-                        />
-                    }
-                />
-                <ConditionallyRender
-                    condition={importStage === 'validate'}
-                    show={
-                        <ValidationStage
-                            project={project}
-                            environment={environment}
-                            payload={importPayload}
-                            onBack={() => setImportStage('configure')}
-                            onSubmit={() => setImportStage('import')}
-                            onClose={close}
-                        />
-                    }
-                />
-                <ConditionallyRender
-                    condition={importStage === 'import'}
-                    show={
-                        <ImportStage
-                            project={project}
-                            environment={environment}
-                            payload={importPayload}
-                            onClose={close}
-                        />
-                    }
-                />
+                {importStage === 'configure' ? (
+                    <ConfigurationStage
+                        tabs={
+                            <ConfigurationTabs
+                                activeTab={activeTab}
+                                setActiveTab={setActiveTab}
+                            />
+                        }
+                        importOptions={
+                            <ImportOptions
+                                project={project}
+                                environment={environment}
+                                onChange={setEnvironment}
+                            />
+                        }
+                        importArea={
+                            <ImportArea
+                                activeTab={activeTab}
+                                setActiveTab={setActiveTab}
+                                importPayload={importPayload}
+                                setImportPayload={setImportPayload}
+                            />
+                        }
+                        actions={
+                            <Actions
+                                disabled={!isValidJSON(importPayload)}
+                                onSubmit={() => setImportStage('validate')}
+                                onClose={close}
+                            />
+                        }
+                    />
+                ) : null}
+                {importStage === 'validate' ? (
+                    <ValidationStage
+                        project={project}
+                        environment={environment}
+                        payload={importPayload}
+                        onBack={() => setImportStage('configure')}
+                        onSubmit={() => setImportStage('import')}
+                        onClose={close}
+                    />
+                ) : null}
+                {importStage === 'import' ? (
+                    <ImportStage
+                        project={project}
+                        environment={environment}
+                        payload={importPayload}
+                        onClose={close}
+                    />
+                ) : null}
             </ModalContentContainer>
         </SidebarModal>
     );

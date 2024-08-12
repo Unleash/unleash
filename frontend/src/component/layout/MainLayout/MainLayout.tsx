@@ -11,7 +11,6 @@ import { SkipNavLink } from 'component/common/SkipNavLink/SkipNavLink';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { formatAssetPath } from 'utils/formatPath';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
@@ -124,22 +123,13 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <>
                 <SkipNavLink />
-                <ConditionallyRender
-                    condition={sidebarNavigationEnabled}
-                    show={<Header />}
-                    elseShow={<OldHeader />}
-                />
-
+                {sidebarNavigationEnabled ? <Header /> : <OldHeader />}
                 <SkipNavTarget />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                projectId &&
-                                    isChangeRequestConfiguredInAnyEnv(),
-                            )}
-                            show={<DraftBanner project={projectId || ''} />}
-                        />
+                        {projectId && isChangeRequestConfiguredInAnyEnv() ? (
+                            <DraftBanner project={projectId || ''} />
+                        ) : null}
 
                         <Box
                             sx={(theme) => ({
@@ -147,12 +137,9 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 mt: theme.spacing(0.25),
                             })}
                         >
-                            <ConditionallyRender
-                                condition={
-                                    sidebarNavigationEnabled && !isSmallScreen
-                                }
-                                show={<NavigationSidebar />}
-                            />
+                            {sidebarNavigationEnabled && !isSmallScreen ? (
+                                <NavigationSidebar />
+                            ) : null}
 
                             <StyledMainLayoutContent
                                 item

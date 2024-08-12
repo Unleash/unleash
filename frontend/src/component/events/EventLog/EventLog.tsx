@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
 import { useLegacyEventSearch } from 'hooks/api/getters/useEventSearch/useLegacyEventSearch';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useOnVisible } from 'hooks/useOnVisible';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -99,14 +98,13 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
         } else {
             return (
                 <StyledEventsList>
-                    {events.map((entry) => (
-                        <ConditionallyRender
-                            key={entry.id}
-                            condition={eventSettings.showData}
-                            show={() => <EventJson entry={entry} />}
-                            elseShow={() => <EventCard entry={entry} />}
-                        />
-                    ))}
+                    {events.map((entry) =>
+                        eventSettings.showData ? (
+                            <EventJson entry={entry} />
+                        ) : (
+                            <EventCard entry={entry} />
+                        ),
+                    )}
                 </StyledEventsList>
             );
         }
@@ -137,19 +135,16 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 />
                 {resultComponent()}
             </EventResultWrapper>
-            <ConditionallyRender
-                condition={total > 25}
-                show={
-                    <StickyPaginationBar
-                        totalItems={total}
-                        pageSize={pagination.pageSize}
-                        pageIndex={pagination.currentPage}
-                        fetchPrevPage={pagination.prevPage}
-                        fetchNextPage={pagination.nextPage}
-                        setPageLimit={pagination.setPageLimit}
-                    />
-                }
-            />
+            {total > 25 ? (
+                <StickyPaginationBar
+                    totalItems={total}
+                    pageSize={pagination.pageSize}
+                    pageIndex={pagination.currentPage}
+                    fetchPrevPage={pagination.prevPage}
+                    fetchNextPage={pagination.nextPage}
+                    setPageLimit={pagination.setPageLimit}
+                />
+            ) : null}
         </PageContent>
     );
 };
@@ -209,25 +204,18 @@ export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length === 0)}
-                show={<p>No events found.</p>}
-            />
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length > 0)}
-                show={
-                    <StyledEventsList>
-                        {cache?.map((entry) => (
-                            <ConditionallyRender
-                                key={entry.id}
-                                condition={eventSettings.showData}
-                                show={() => <EventJson entry={entry} />}
-                                elseShow={() => <EventCard entry={entry} />}
-                            />
-                        ))}
-                    </StyledEventsList>
-                }
-            />
+            {cache && cache.length === 0 ? <p>No events found.</p> : null}
+            {cache && cache.length > 0 ? (
+                <StyledEventsList>
+                    {cache?.map((entry) =>
+                        eventSettings.showData ? (
+                            <EventJson entry={entry} />
+                        ) : (
+                            <EventCard entry={entry} />
+                        ),
+                    )}
+                </StyledEventsList>
+            ) : null}
             <div ref={fetchNextPageRef} />
         </PageContent>
     );

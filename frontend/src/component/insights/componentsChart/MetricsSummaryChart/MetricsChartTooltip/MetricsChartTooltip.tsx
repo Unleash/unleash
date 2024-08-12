@@ -2,7 +2,6 @@ import type { VFC } from 'react';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -125,39 +124,33 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                         title={`Not exposed: ${(point.value.totalNo ?? 0).toLocaleString()}`}
                         color={'error'}
                     />
-                    <ConditionallyRender
-                        condition={
-                            Boolean(point.value.totalApps) &&
-                            Boolean(point.value.totalEnvironments) &&
-                            Boolean(point.value.totalFlags)
-                        }
-                        show={
-                            <>
-                                <Divider
-                                    sx={(theme) => ({
-                                        margin: theme.spacing(1.5, 0),
-                                    })}
-                                />
-                                <InfoSummary
-                                    data={[
-                                        {
-                                            key: 'Flags',
-                                            value: point.value.totalFlags,
-                                        },
-                                        {
-                                            key: 'Environments',
-                                            value: point.value
-                                                .totalEnvironments,
-                                        },
-                                        {
-                                            key: 'Apps',
-                                            value: point.value.totalApps,
-                                        },
-                                    ]}
-                                />
-                            </>
-                        }
-                    />
+                    {Boolean(point.value.totalApps) &&
+                    Boolean(point.value.totalEnvironments) &&
+                    Boolean(point.value.totalFlags) ? (
+                        <>
+                            <Divider
+                                sx={(theme) => ({
+                                    margin: theme.spacing(1.5, 0),
+                                })}
+                            />
+                            <InfoSummary
+                                data={[
+                                    {
+                                        key: 'Flags',
+                                        value: point.value.totalFlags,
+                                    },
+                                    {
+                                        key: 'Environments',
+                                        value: point.value.totalEnvironments,
+                                    },
+                                    {
+                                        key: 'Apps',
+                                        value: point.value.totalApps,
+                                    },
+                                ]}
+                            />
+                        </>
+                    ) : null}
                 </StyledTooltipItemContainer>
             )) || null}
         </Box>

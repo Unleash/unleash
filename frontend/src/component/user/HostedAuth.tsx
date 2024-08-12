@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
@@ -96,66 +95,55 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
 
     return (
         <>
-            <ConditionallyRender
-                condition={options.length > 0}
-                show={
-                    <>
-                        <AuthOptions options={options} />
-                        <DividerText text='or signin with username' />
-                    </>
-                }
-            />
-
-            <ConditionallyRender
-                condition={!authDetails.defaultHidden}
-                show={
-                    <form onSubmit={handleSubmit}>
-                        <StyledTypography variant='subtitle2'>
-                            {apiError}
-                        </StyledTypography>
-                        <StyledDiv>
-                            <TextField
-                                label='Username or email'
-                                name='username'
-                                id='username'
-                                type='text'
-                                onChange={(evt) =>
-                                    setUsername(evt.target.value)
-                                }
-                                value={username}
-                                error={Boolean(usernameError)}
-                                helperText={usernameError}
-                                variant='outlined'
-                                size='small'
-                                data-testid={LOGIN_EMAIL_ID}
-                            />
-                            <PasswordField
-                                label='Password'
-                                onChange={(evt) =>
-                                    setPassword(evt.target.value)
-                                }
-                                name='password'
-                                id='password'
-                                value={password}
-                                error={Boolean(passwordError)}
-                                helperText={passwordError}
-                                autoComplete='current-password'
-                                data-testid={LOGIN_PASSWORD_ID}
-                            />
-                            <Grid container>
-                                <StyledButton
-                                    variant='contained'
-                                    color='primary'
-                                    type='submit'
-                                    data-testid={LOGIN_BUTTON}
-                                >
-                                    Sign in
-                                </StyledButton>
-                            </Grid>
-                        </StyledDiv>
-                    </form>
-                }
-            />
+            {options.length > 0 ? (
+                <>
+                    <AuthOptions options={options} />
+                    <DividerText text='or signin with username' />
+                </>
+            ) : null}
+            {!authDetails.defaultHidden ? (
+                <form onSubmit={handleSubmit}>
+                    <StyledTypography variant='subtitle2'>
+                        {apiError}
+                    </StyledTypography>
+                    <StyledDiv>
+                        <TextField
+                            label='Username or email'
+                            name='username'
+                            id='username'
+                            type='text'
+                            onChange={(evt) => setUsername(evt.target.value)}
+                            value={username}
+                            error={Boolean(usernameError)}
+                            helperText={usernameError}
+                            variant='outlined'
+                            size='small'
+                            data-testid={LOGIN_EMAIL_ID}
+                        />
+                        <PasswordField
+                            label='Password'
+                            onChange={(evt) => setPassword(evt.target.value)}
+                            name='password'
+                            id='password'
+                            value={password}
+                            error={Boolean(passwordError)}
+                            helperText={passwordError}
+                            autoComplete='current-password'
+                            data-testid={LOGIN_PASSWORD_ID}
+                        />
+                        <Grid container>
+                            <StyledButton
+                                variant='contained'
+                                color='primary'
+                                type='submit'
+                                data-testid={LOGIN_BUTTON}
+                            >
+                                Sign in
+                            </StyledButton>
+                        </Grid>
+                    </StyledDiv>
+                </form>
+            ) : null}
         </>
     );
 };

@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import type { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
@@ -214,54 +213,44 @@ export const Search = ({
                     disabled={disabled}
                 />
                 <Box sx={{ width: (theme) => theme.spacing(4) }}>
-                    <ConditionallyRender
-                        condition={Boolean(value)}
-                        show={
-                            <Tooltip title='Clear search query' arrow>
-                                <IconButton
-                                    size='small'
-                                    onClick={(e) => {
-                                        e.stopPropagation(); // prevent outside click from the lazily added element
-                                        onSearchChange('');
-                                        searchInputRef.current?.focus();
-                                    }}
-                                    sx={{
-                                        padding: (theme) => theme.spacing(1),
-                                    }}
-                                >
-                                    <StyledClose />
-                                </IconButton>
-                            </Tooltip>
-                        }
-                    />
+                    {value ? (
+                        <Tooltip title='Clear search query' arrow>
+                            <IconButton
+                                size='small'
+                                onClick={(e) => {
+                                    e.stopPropagation(); // prevent outside click from the lazily added element
+                                    onSearchChange('');
+                                    searchInputRef.current?.focus();
+                                }}
+                                sx={{
+                                    padding: (theme) => theme.spacing(1),
+                                }}
+                            >
+                                <StyledClose />
+                            </IconButton>
+                        </Tooltip>
+                    ) : null}
                 </Box>
             </StyledSearch>
-
-            <ConditionallyRender
-                condition={
-                    Boolean(hasFilters && getSearchContext) && showSuggestions
-                }
-                show={
-                    <SearchSuggestions
-                        onSuggestion={(suggestion) => {
-                            onSearchChange(suggestion);
-                            searchInputRef.current?.focus();
-                        }}
-                        savedQuery={savedQuery}
-                        getSearchContext={getSearchContext!}
-                    />
-                }
-                elseShow={
-                    historyEnabled && (
-                        <SearchPaper className='dropdown-outline'>
-                            <SearchHistory
-                                onSuggestion={onSearchChange}
-                                savedQuery={savedQuery}
-                            />
-                        </SearchPaper>
-                    )
-                }
-            />
+            {Boolean(hasFilters && getSearchContext) && showSuggestions ? (
+                <SearchSuggestions
+                    onSuggestion={(suggestion) => {
+                        onSearchChange(suggestion);
+                        searchInputRef.current?.focus();
+                    }}
+                    savedQuery={savedQuery}
+                    getSearchContext={getSearchContext!}
+                />
+            ) : (
+                historyEnabled && (
+                    <SearchPaper className='dropdown-outline'>
+                        <SearchHistory
+                            onSuggestion={onSearchChange}
+                            savedQuery={savedQuery}
+                        />
+                    </SearchPaper>
+                )
+            )}
         </StyledContainer>
     );
 };

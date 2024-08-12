@@ -4,7 +4,6 @@ import { ConstraintExecution } from '../ConstraintExecution/ConstraintExecution'
 import CancelOutlined from '@mui/icons-material/CancelOutlined';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled, Typography } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
 interface ISegmentExecutionProps {
@@ -39,35 +38,31 @@ export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
                             />
                         }
                         headerContent={
-                            <ConditionallyRender
-                                condition={!segment.result}
-                                show={
-                                    <SegmentResultTextWrapper>
-                                        <Typography
-                                            variant={'subtitle2'}
-                                            sx={{ pt: 0.25 }}
-                                        >
-                                            segment is false
-                                        </Typography>
-                                        <span>
-                                            <CancelOutlined />
-                                        </span>
-                                    </SegmentResultTextWrapper>
-                                }
-                            />
+                            !segment.result ? (
+                                <SegmentResultTextWrapper>
+                                    <Typography
+                                        variant={'subtitle2'}
+                                        sx={{ pt: 0.25 }}
+                                    >
+                                        segment is false
+                                    </Typography>
+                                    <span>
+                                        <CancelOutlined />
+                                    </span>
+                                </SegmentResultTextWrapper>
+                            ) : null
                         }
                         isExpanded
                     />
-                    <ConditionallyRender
-                        condition={
-                            // Add IF there is a next segment
-                            index >= 0 &&
-                            segments.length > 1 &&
-                            // Don't add if it's the last segment item
-                            index !== segments.length - 1
-                        }
-                        show={<StrategySeparator text='AND' />}
-                    />
+                    {
+                        // Add IF there is a next segment
+                        index >= 0 &&
+                        segments.length > 1 &&
+                        // Don't add if it's the last segment item
+                        index !== segments.length - 1 ? (
+                            <StrategySeparator text='AND' />
+                        ) : null
+                    }
                 </Fragment>
             ))}
         </>

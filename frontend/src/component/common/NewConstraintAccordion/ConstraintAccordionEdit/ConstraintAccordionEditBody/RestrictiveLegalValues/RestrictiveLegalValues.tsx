@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Button, Checkbox, Chip, Stack, styled } from '@mui/material';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
@@ -144,22 +143,18 @@ export const RestrictiveLegalValues = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={Boolean(illegalValues && illegalValues.length > 0)}
-                show={
-                    <Alert severity='warning'>
-                        This constraint is using legal values that have been
-                        deleted as valid options. If you save changes on this
-                        constraint and then save the strategy the following
-                        values will be removed:
-                        <ul>
-                            {illegalValues?.map((value) => (
-                                <li key={value}>{value}</li>
-                            ))}
-                        </ul>
-                    </Alert>
-                }
-            />
+            {illegalValues && illegalValues.length > 0 ? (
+                <Alert severity='warning'>
+                    This constraint is using legal values that have been deleted
+                    as valid options. If you save changes on this constraint and
+                    then save the strategy the following values will be removed:
+                    <ul>
+                        {illegalValues?.map((value) => (
+                            <li key={value}>{value}</li>
+                        ))}
+                    </ul>
+                </Alert>
+            ) : null}
             <StyledStack direction={'row'}>
                 <ConstraintFormHeader>
                     Select values from a predefined set
@@ -168,36 +163,28 @@ export const RestrictiveLegalValues = ({
                     {isAllSelected ? 'Unselect all' : 'Select all'}
                 </Button>
             </StyledStack>
-            <ConditionallyRender
-                condition={legalValues.length > 100}
-                show={
-                    <>
-                        <ConditionallyRender
-                            condition={
-                                !disableShowContextFieldSelectionValues &&
-                                Boolean(values)
-                            }
-                            show={
-                                <StyledValuesContainer sx={{ border: 0 }}>
-                                    {values.map((value) => {
-                                        return (
-                                            <Chip
-                                                key={value}
-                                                label={value}
-                                                onDelete={() => onChange(value)}
-                                            />
-                                        );
-                                    })}
-                                </StyledValuesContainer>
-                            }
-                        />
-                        <ConstraintValueSearch
-                            filter={filter}
-                            setFilter={setFilter}
-                        />
-                    </>
-                }
-            />
+            {legalValues.length > 100 ? (
+                <>
+                    {!disableShowContextFieldSelectionValues &&
+                    Boolean(values) ? (
+                        <StyledValuesContainer sx={{ border: 0 }}>
+                            {values.map((value) => {
+                                return (
+                                    <Chip
+                                        key={value}
+                                        label={value}
+                                        onDelete={() => onChange(value)}
+                                    />
+                                );
+                            })}
+                        </StyledValuesContainer>
+                    ) : null}
+                    <ConstraintValueSearch
+                        filter={filter}
+                        setFilter={setFilter}
+                    />
+                </>
+            ) : null}
             <StyledValuesContainer>
                 {filteredValues.map((match) => (
                     <LegalValueLabel
@@ -218,10 +205,7 @@ export const RestrictiveLegalValues = ({
                     />
                 ))}
             </StyledValuesContainer>
-            <ConditionallyRender
-                condition={Boolean(error)}
-                show={<ErrorText>{error}</ErrorText>}
-            />
+            {error ? <ErrorText>{error}</ErrorText> : null}
         </>
     );
 };

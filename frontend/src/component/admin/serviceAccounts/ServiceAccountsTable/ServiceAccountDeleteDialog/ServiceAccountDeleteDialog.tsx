@@ -1,5 +1,4 @@
 import { Alert, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IServiceAccount } from 'interfaces/service-account';
 import { ServiceAccountTokens } from '../ServiceAccountModal/ServiceAccountTokens/ServiceAccountTokens';
@@ -43,26 +42,24 @@ export const ServiceAccountDeleteDialog = ({
                 setOpen(false);
             }}
         >
-            <ConditionallyRender
-                condition={Boolean(serviceAccount?.tokens.length)}
-                show={
-                    <>
-                        <Alert severity='error'>
-                            Deleting this service account may break any existing
-                            implementations currently using it.
-                        </Alert>
-                        <StyledLabel>{deleteMessage}</StyledLabel>
-                        <StyledLabel>Service account tokens:</StyledLabel>
-                        <StyledTableContainer>
-                            <ServiceAccountTokens
-                                serviceAccount={serviceAccount!}
-                                readOnly
-                            />
-                        </StyledTableContainer>
-                    </>
-                }
-                elseShow={<p>{deleteMessage}</p>}
-            />
+            {serviceAccount?.tokens.length ? (
+                <>
+                    <Alert severity='error'>
+                        Deleting this service account may break any existing
+                        implementations currently using it.
+                    </Alert>
+                    <StyledLabel>{deleteMessage}</StyledLabel>
+                    <StyledLabel>Service account tokens:</StyledLabel>
+                    <StyledTableContainer>
+                        <ServiceAccountTokens
+                            serviceAccount={serviceAccount!}
+                            readOnly
+                        />
+                    </StyledTableContainer>
+                </>
+            ) : (
+                <p>{deleteMessage}</p>
+            )}
         </Dialogue>
     );
 };

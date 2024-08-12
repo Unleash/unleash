@@ -1,5 +1,4 @@
 import type { ReactElement } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     formatCurrentVersion,
     formatUpdateNotification,
@@ -21,27 +20,18 @@ export const ApiDetails = (props: IApiDetailsProps): ReactElement => {
         <section title='API details'>
             <FooterTitle>
                 {currentVersion}{' '}
-                <ConditionallyRender
-                    condition={Boolean(environment)}
-                    show={<small>({environment})</small>}
-                />
+                {environment ? <small>({environment})</small> : null}
             </FooterTitle>
-            <ConditionallyRender
-                condition={Boolean(updateNotification)}
-                show={
-                    <small>
-                        {updateNotification}
-                        <br />
-                    </small>
-                }
-            />
+            {updateNotification ? (
+                <small>
+                    {updateNotification}
+                    <br />
+                </small>
+            ) : null}
             <br />
             <small>{props.uiConfig.slogan}</small>
             <br />
-            <ConditionallyRender
-                condition={Boolean(instanceId)}
-                show={<small>{`${instanceId}`}</small>}
-            />
+            {instanceId ? <small>{`${instanceId}`}</small> : null}
         </section>
     );
 };

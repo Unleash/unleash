@@ -11,7 +11,6 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import type { ITag, ITagType } from 'interfaces/tags';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Add from '@mui/icons-material/Add';
 
 export type TagOption = {
@@ -65,22 +64,20 @@ export const TagsInput = ({
             ) ?? false;
         return (
             <li {...props}>
-                <ConditionallyRender
-                    condition={Boolean(option.inputValue)}
-                    show={<Add sx={{ mr: (theme) => theme.spacing(0.5) }} />}
-                    elseShow={
-                        <Checkbox
-                            icon={icon}
-                            checkedIcon={<CheckBoxIcon fontSize='small' />}
-                            indeterminateIcon={
-                                <IndeterminateCheckBoxIcon fontSize='small' />
-                            }
-                            sx={{ mr: (theme) => theme.spacing(0.5) }}
-                            checked={selected && !isIndeterminate}
-                            indeterminate={isIndeterminate}
-                        />
-                    }
-                />
+                {option.inputValue ? (
+                    <Add sx={{ mr: (theme) => theme.spacing(0.5) }} />
+                ) : (
+                    <Checkbox
+                        icon={icon}
+                        checkedIcon={<CheckBoxIcon fontSize='small' />}
+                        indeterminateIcon={
+                            <IndeterminateCheckBoxIcon fontSize='small' />
+                        }
+                        sx={{ mr: (theme) => theme.spacing(0.5) }}
+                        checked={selected && !isIndeterminate}
+                        indeterminate={isIndeterminate}
+                    />
+                )}
                 {option.title}
             </li>
         );

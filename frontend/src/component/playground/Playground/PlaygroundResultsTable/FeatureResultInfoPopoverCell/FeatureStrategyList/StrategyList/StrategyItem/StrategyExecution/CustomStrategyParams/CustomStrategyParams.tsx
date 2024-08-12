@@ -4,7 +4,6 @@ import {
     parseParameterString,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { CustomParameterItem } from './CustomParameterItem/CustomParameterItem';
@@ -103,10 +102,7 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
         <>
             {items.map((item, index) => (
                 <Fragment key={index}>
-                    <ConditionallyRender
-                        condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
-                    />
+                    {index > 0 ? <StrategySeparator text='AND' /> : null}
                     {item}
                 </Fragment>
             ))}

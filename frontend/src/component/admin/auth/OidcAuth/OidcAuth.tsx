@@ -21,7 +21,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings';
 import type { IRole } from 'interfaces/role';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const initialState = {
     enabled: false,
@@ -109,24 +108,21 @@ export const OidcAuth = () => {
         <>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
-                    <ConditionallyRender
-                        condition={Boolean(oidcConfiguredThroughEnv)}
-                        show={
-                            <Alert sx={{ mb: 2 }} severity='warning'>
-                                OIDC is currently configured via environment
-                                variables. Please refer to the{' '}
-                                <a
-                                    href='https://www.unleash-hosted.com/docs/enterprise-authentication'
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    documentation
-                                </a>{' '}
-                                for detailed instructions on how to set up OIDC
-                                using these variables.
-                            </Alert>
-                        }
-                    />
+                    {oidcConfiguredThroughEnv ? (
+                        <Alert sx={{ mb: 2 }} severity='warning'>
+                            OIDC is currently configured via environment
+                            variables. Please refer to the{' '}
+                            <a
+                                href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                documentation
+                            </a>{' '}
+                            for detailed instructions on how to set up OIDC
+                            using these variables.
+                        </Alert>
+                    ) : null}
                     <Alert severity='info'>
                         Please read the{' '}
                         <a

@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
@@ -466,12 +465,9 @@ export const ProjectFeatureToggles = ({
                             totalItems={total}
                         />
                     </SearchHighlightProvider>
-                    <ConditionallyRender
-                        condition={!data.length && !isPlaceholder}
-                        show={
-                            <TableEmptyState query={tableState.query || ''} />
-                        }
-                    />
+                    {!data.length && !isPlaceholder ? (
+                        <TableEmptyState query={tableState.query || ''} />
+                    ) : null}
                     {rowActionsDialogs}
 
                     {featureToggleModals}

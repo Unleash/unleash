@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ArchiveProjectDialogue } from '../../ArchiveProject/ArchiveProjectDialogue';
 
@@ -49,34 +48,24 @@ export const ArchiveProject = ({
                     : ''}
                 .
             </p>
-            <ConditionallyRender
-                condition={featureCount > 0}
-                show={
-                    <p>
-                        Currently there {featureCount <= 1 ? 'is' : 'are'}{' '}
-                        <strong>
-                            {featureCount} active feature{' '}
-                            {featureCount === 1 ? 'flag' : 'flags'}.
-                        </strong>
-                    </p>
-                }
-            />
-            <ConditionallyRender
-                condition={
-                    isEnterprise() &&
-                    automatedActionsEnabled &&
-                    actionsCount > 0
-                }
-                show={
-                    <p>
-                        Currently there {actionsCount <= 1 ? 'is' : 'are'}{' '}
-                        <strong>
-                            {actionsCount} enabled{' '}
-                            {actionsCount === 1 ? 'action' : 'actions'}.
-                        </strong>
-                    </p>
-                }
-            />
+            {featureCount > 0 ? (
+                <p>
+                    Currently there {featureCount <= 1 ? 'is' : 'are'}{' '}
+                    <strong>
+                        {featureCount} active feature{' '}
+                        {featureCount === 1 ? 'flag' : 'flags'}.
+                    </strong>
+                </p>
+            ) : null}
+            {isEnterprise() && automatedActionsEnabled && actionsCount > 0 ? (
+                <p>
+                    Currently there {actionsCount <= 1 ? 'is' : 'are'}{' '}
+                    <strong>
+                        {actionsCount} enabled{' '}
+                        {actionsCount === 1 ? 'action' : 'actions'}.
+                    </strong>
+                </p>
+            ) : null}
             <StyledButtonContainer>
                 <PermissionButton
                     permission={DELETE_PROJECT}

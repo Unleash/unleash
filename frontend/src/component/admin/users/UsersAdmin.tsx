@@ -8,7 +8,6 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { InactiveUsersList } from './InactiveUsersList/InactiveUsersList';
 import { AccessMatrix } from './AccessMatrix/AccessMatrix';
 import { PremiumFeature } from '../../common/PremiumFeature/PremiumFeature';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const UsersAdmin = () => {
@@ -31,16 +30,11 @@ export const UsersAdmin = () => {
                     <Route
                         path='inactive'
                         element={
-                            <ConditionallyRender
-                                condition={isEnterprise()}
-                                show={<InactiveUsersList />}
-                                elseShow={
-                                    <PremiumFeature
-                                        feature='inactive-users'
-                                        page
-                                    />
-                                }
-                            />
+                            isEnterprise() ? (
+                                <InactiveUsersList />
+                            ) : (
+                                <PremiumFeature feature='inactive-users' page />
+                            )
                         }
                     />
                     <Route path='*' element={<NotFound />} />

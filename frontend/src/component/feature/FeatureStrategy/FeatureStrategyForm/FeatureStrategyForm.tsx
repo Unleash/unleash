@@ -22,7 +22,6 @@ import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategy
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -354,14 +353,11 @@ export const FeatureStrategyForm = ({
             <StyledHeaderBox>
                 <StyledTitle>
                     {formatStrategyName(strategy.name || '')}
-                    <ConditionallyRender
-                        condition={strategy.name === 'flexibleRollout'}
-                        show={
-                            <Badge color='success' sx={{ marginLeft: '1rem' }}>
-                                {strategy.parameters?.rollout}%
-                            </Badge>
-                        }
-                    />
+                    {strategy.name === 'flexibleRollout' ? (
+                        <Badge color='success' sx={{ marginLeft: '1rem' }}>
+                            {strategy.parameters?.rollout}%
+                        </Badge>
+                    ) : null}
                 </StyledTitle>
                 {foundEnvironment ? (
                     <StyledEnvironmentBox>
@@ -381,57 +377,40 @@ export const FeatureStrategyForm = ({
                     </StyledEnvironmentBox>
                 ) : null}
             </StyledHeaderBox>
-
             <StyledAlertBox>
-                <ConditionallyRender
-                    condition={hasChangeRequestInReviewForEnvironment}
-                    show={alert}
-                    elseShow={
-                        <ConditionallyRender
-                            condition={isChangeRequest}
-                            show={
-                                <FeatureStrategyChangeRequestAlert
-                                    environment={environmentId}
-                                />
+                {hasChangeRequestInReviewForEnvironment ? (
+                    alert
+                ) : isChangeRequest ? (
+                    <FeatureStrategyChangeRequestAlert
+                        environment={environmentId}
+                    />
+                ) : null}
+
+                {!BuiltInStrategies.includes(strategy.name || 'default') ? (
+                    <Alert severity='warning'>
+                        Custom strategies are deprecated. We recommend not
+                        adding them to any flags going forward and using the
+                        predefined strategies like Gradual rollout with{' '}
+                        <Link
+                            href={
+                                'https://docs.getunleash.io/reference/strategy-constraints'
                             }
-                        />
-                    }
-                />
-
-                <ConditionallyRender
-                    condition={
-                        !BuiltInStrategies.includes(strategy.name || 'default')
-                    }
-                    show={
-                        <Alert severity='warning'>
-                            Custom strategies are deprecated. We recommend not
-                            adding them to any flags going forward and using the
-                            predefined strategies like Gradual rollout with{' '}
-                            <Link
-                                href={
-                                    'https://docs.getunleash.io/reference/strategy-constraints'
-                                }
-                                target='_blank'
-                                variant='body2'
-                            >
-                                constraints
-                            </Link>{' '}
-                            instead.
-                        </Alert>
-                    }
-                />
-                <ConditionallyRender
-                    condition={!isChangeRequest}
-                    show={
-                        <FeatureStrategyEnabled
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                        />
-                    }
-                />
+                            target='_blank'
+                            variant='body2'
+                        >
+                            constraints
+                        </Link>{' '}
+                        instead.
+                    </Alert>
+                ) : null}
+                {!isChangeRequest ? (
+                    <FeatureStrategyEnabled
+                        projectId={feature.project}
+                        featureId={feature.name}
+                        environmentId={environmentId}
+                    />
+                ) : null}
             </StyledAlertBox>
-
             <StyledTabs value={tab} onChange={handleChange}>
                 <StyledTab label='General' />
                 <Tab
@@ -458,81 +437,67 @@ export const FeatureStrategyForm = ({
                 )}
             </StyledTabs>
             <StyledForm onSubmit={onSubmitWithValidation}>
-                <ConditionallyRender
-                    condition={tab === 0}
-                    show={
-                        <>
-                            <FeatureStrategyTitle
-                                title={strategy.title || ''}
-                                setTitle={(title) => {
-                                    setStrategy((prev) => ({
-                                        ...prev,
-                                        title,
-                                    }));
-                                }}
-                            />
-
-                            <FeatureStrategyEnabledDisabled
-                                enabled={!strategy?.disabled}
-                                onToggleEnabled={() =>
-                                    setStrategy((strategyState) => ({
-                                        ...strategyState,
-                                        disabled: !strategyState.disabled,
-                                    }))
-                                }
-                            />
-
-                            <FeatureStrategyType
-                                strategy={strategy}
-                                strategyDefinition={strategyDefinition}
-                                setStrategy={setStrategy}
-                                validateParameter={validateParameter}
-                                errors={errors}
-                                hasAccess={access}
-                            />
-                        </>
-                    }
-                />
-
-                <ConditionallyRender
-                    condition={tab === 1}
-                    show={
-                        <>
-                            <StyledTargetingHeader>
-                                Segmentation and constraints allow you to set
-                                filters on your strategies, so that they will
-                                only be evaluated for users and applications
-                                that match the specified preconditions.
-                            </StyledTargetingHeader>
-                            <FeatureStrategySegment
-                                segments={segments}
-                                setSegments={setSegments}
-                                projectId={projectId}
-                            />
-
-                            <StyledBox>
-                                <StyledDivider />
-                                <StyledDividerContent>AND</StyledDividerContent>
-                            </StyledBox>
-                            <FeatureStrategyConstraints
-                                projectId={feature.project}
-                                environmentId={environmentId}
-                                strategy={strategy}
-                                setStrategy={setStrategy}
-                            />
-                        </>
-                    }
-                />
-
-                <ConditionallyRender
-                    condition={tab === 2}
-                    show={
-                        <ConditionallyRender
-                            condition={showVariants}
-                            show={StrategyVariants}
+                {tab === 0 ? (
+                    <>
+                        <FeatureStrategyTitle
+                            title={strategy.title || ''}
+                            setTitle={(title) => {
+                                setStrategy((prev) => ({
+                                    ...prev,
+                                    title,
+                                }));
+                            }}
                         />
-                    }
-                />
+
+                        <FeatureStrategyEnabledDisabled
+                            enabled={!strategy?.disabled}
+                            onToggleEnabled={() =>
+                                setStrategy((strategyState) => ({
+                                    ...strategyState,
+                                    disabled: !strategyState.disabled,
+                                }))
+                            }
+                        />
+
+                        <FeatureStrategyType
+                            strategy={strategy}
+                            strategyDefinition={strategyDefinition}
+                            setStrategy={setStrategy}
+                            validateParameter={validateParameter}
+                            errors={errors}
+                            hasAccess={access}
+                        />
+                    </>
+                ) : null}
+
+                {tab === 1 ? (
+                    <>
+                        <StyledTargetingHeader>
+                            Segmentation and constraints allow you to set
+                            filters on your strategies, so that they will only
+                            be evaluated for users and applications that match
+                            the specified preconditions.
+                        </StyledTargetingHeader>
+                        <FeatureStrategySegment
+                            segments={segments}
+                            setSegments={setSegments}
+                            projectId={projectId}
+                        />
+
+                        <StyledBox>
+                            <StyledDivider />
+                            <StyledDividerContent>AND</StyledDividerContent>
+                        </StyledBox>
+                        <FeatureStrategyConstraints
+                            projectId={feature.project}
+                            environmentId={environmentId}
+                            strategy={strategy}
+                            setStrategy={setStrategy}
+                        />
+                    </>
+                ) : null}
+
+                {tab === 2 ? (showVariants ? StrategyVariants : null) : null}
 
                 <Box sx={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
                     {Limit}

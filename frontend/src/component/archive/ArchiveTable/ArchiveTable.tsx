@@ -14,7 +14,6 @@ import { sortTypes } from 'utils/sortTypes';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
@@ -301,25 +300,18 @@ export const ArchiveTable = ({
                         prepareRow={prepareRow}
                     />
                 </SearchHighlightProvider>
-                <ConditionallyRender
-                    condition={rows.length === 0}
-                    show={() => (
-                        <ConditionallyRender
-                            condition={searchValue?.length > 0}
-                            show={
-                                <TablePlaceholder>
-                                    No feature flags found matching &ldquo;
-                                    {searchValue}&rdquo;
-                                </TablePlaceholder>
-                            }
-                            elseShow={
-                                <TablePlaceholder>
-                                    None of the feature flags were archived yet.
-                                </TablePlaceholder>
-                            }
-                        />
-                    )}
-                />
+                {rows.length === 0 ? (
+                    searchValue?.length > 0 ? (
+                        <TablePlaceholder>
+                            No feature flags found matching &ldquo;
+                            {searchValue}&rdquo;
+                        </TablePlaceholder>
+                    ) : (
+                        <TablePlaceholder>
+                            None of the feature flags were archived yet.
+                        </TablePlaceholder>
+                    )
+                ) : null}
                 <ArchivedFeatureDeleteConfirm
                     deletedFeatures={[deletedFeature?.name!]}
                     projectId={projectId ?? deletedFeature?.project!}
@@ -335,20 +327,17 @@ export const ArchiveTable = ({
                     refetch={refetch}
                 />
             </PageContent>
-            <ConditionallyRender
-                condition={Boolean(projectId)}
-                show={
-                    <BatchSelectionActionsBar
-                        count={Object.keys(selectedRowIds).length}
-                    >
-                        <ArchiveBatchActions
-                            selectedIds={Object.keys(selectedRowIds)}
-                            projectId={projectId!}
-                            onConfirm={() => toggleAllRowsSelected(false)}
-                        />
-                    </BatchSelectionActionsBar>
-                }
-            />
+            {projectId ? (
+                <BatchSelectionActionsBar
+                    count={Object.keys(selectedRowIds).length}
+                >
+                    <ArchiveBatchActions
+                        selectedIds={Object.keys(selectedRowIds)}
+                        projectId={projectId!}
+                        onConfirm={() => toggleAllRowsSelected(false)}
+                    />
+                </BatchSelectionActionsBar>
+            ) : null}
         </>
     );
 };

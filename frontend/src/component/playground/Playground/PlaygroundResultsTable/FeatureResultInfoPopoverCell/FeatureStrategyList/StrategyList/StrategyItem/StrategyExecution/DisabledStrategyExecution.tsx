@@ -1,5 +1,4 @@
 import { Fragment, type VFC } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
 import type {
@@ -75,15 +74,12 @@ export const DisabledStrategyExecution: VFC<
         <StyledStrategyExecutionWrapper>
             {items.map((item, index) => (
                 <Fragment key={index}>
-                    <ConditionallyRender
-                        condition={
-                            index > 0 &&
-                            (strategyResult.name === 'flexibleRollout'
-                                ? index < items.length
-                                : index < items.length - 1)
-                        }
-                        show={<StrategySeparator text='AND' />}
-                    />
+                    {index > 0 &&
+                    (strategyResult.name === 'flexibleRollout'
+                        ? index < items.length
+                        : index < items.length - 1) ? (
+                        <StrategySeparator text='AND' />
+                    ) : null}
                     {item}
                 </Fragment>
             ))}

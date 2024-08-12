@@ -1,5 +1,4 @@
 import { Button, Divider, Menu, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
 import { useState } from 'react';
 import { PermissionCheckboxMenuItem } from './PermissionCheckboxMenuItem';
@@ -85,68 +84,59 @@ export const PushVariantsButton = ({
         environments.find((environment) => environment.name === current)
             ?.variants ?? [];
 
-    return (
-        <ConditionallyRender
-            condition={variants.length > 0 && environments.length > 1}
-            show={
-                <>
-                    <Button
-                        onClick={(e) => {
-                            setPushToAnchorEl(e.currentTarget);
-                        }}
-                        id={`push-to-menu-${current}`}
-                        aria-controls={pushToOpen ? 'basic-menu' : undefined}
-                        aria-haspopup='true'
-                        aria-expanded={pushToOpen ? 'true' : undefined}
-                        variant='outlined'
-                    >
-                        Copy to environment
-                    </Button>
+    return variants.length > 0 && environments.length > 1 ? (
+        <>
+            <Button
+                onClick={(e) => {
+                    setPushToAnchorEl(e.currentTarget);
+                }}
+                id={`push-to-menu-${current}`}
+                aria-controls={pushToOpen ? 'basic-menu' : undefined}
+                aria-haspopup='true'
+                aria-expanded={pushToOpen ? 'true' : undefined}
+                variant='outlined'
+            >
+                Copy to environment
+            </Button>
 
-                    <StyledMenu
-                        anchorEl={pushToAnchorEl}
-                        open={pushToOpen}
-                        onClose={() => setPushToAnchorEl(null)}
-                        MenuListProps={{
-                            'aria-labelledby': `push-to-menu-${current}`,
+            <StyledMenu
+                anchorEl={pushToAnchorEl}
+                open={pushToOpen}
+                onClose={() => setPushToAnchorEl(null)}
+                MenuListProps={{
+                    'aria-labelledby': `push-to-menu-${current}`,
+                }}
+            >
+                {environments
+                    .filter((environment) => environment.name !== current)
+                    .map((otherEnvironment) => (
+                        <PermissionCheckboxMenuItem
+                            projectId={projectId}
+                            permission={permission}
+                            environment={otherEnvironment.name}
+                            key={otherEnvironment.name}
+                            checked={selectedEnvironments.includes(
+                                otherEnvironment,
+                            )}
+                            onClick={() =>
+                                toggleSelectedEnvironment(otherEnvironment)
+                            }
+                        />
+                    ))}
+                <StyledActions>
+                    <Divider />
+                    <StyledButton
+                        variant='outlined'
+                        onClick={() => {
+                            onSubmit(selectedEnvironments);
+                            cleanupState();
                         }}
+                        disabled={selectedEnvironments.length === 0}
                     >
-                        {environments
-                            .filter(
-                                (environment) => environment.name !== current,
-                            )
-                            .map((otherEnvironment) => (
-                                <PermissionCheckboxMenuItem
-                                    projectId={projectId}
-                                    permission={permission}
-                                    environment={otherEnvironment.name}
-                                    key={otherEnvironment.name}
-                                    checked={selectedEnvironments.includes(
-                                        otherEnvironment,
-                                    )}
-                                    onClick={() =>
-                                        toggleSelectedEnvironment(
-                                            otherEnvironment,
-                                        )
-                                    }
-                                />
-                            ))}
-                        <StyledActions>
-                            <Divider />
-                            <StyledButton
-                                variant='outlined'
-                                onClick={() => {
-                                    onSubmit(selectedEnvironments);
-                                    cleanupState();
-                                }}
-                                disabled={selectedEnvironments.length === 0}
-                            >
-                                Push to selected ({selectedEnvironments.length})
-                            </StyledButton>
-                        </StyledActions>
-                    </StyledMenu>
-                </>
-            }
-        />
-    );
+                        Push to selected ({selectedEnvironments.length})
+                    </StyledButton>
+                </StyledActions>
+            </StyledMenu>
+        </>
+    ) : null;
 };

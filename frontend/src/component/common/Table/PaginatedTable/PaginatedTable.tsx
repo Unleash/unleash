@@ -8,7 +8,6 @@ import {
 import { TableCell } from '../TableCell/TableCell';
 import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 
 const HeaderCell = <T extends object>(header: Header<T, unknown>) => {
@@ -100,37 +99,32 @@ export const PaginatedTable = <T extends object>({
                     </TableBody>
                 </Table>
             </TableContainer>
-            <ConditionallyRender
-                condition={
-                    tableInstance.getRowModel().rows.length > 0 &&
-                    (totalItems || 0) > 25
-                }
-                show={
-                    <StickyPaginationBar
-                        totalItems={totalItems}
-                        pageIndex={pagination.pageIndex}
-                        pageSize={pagination.pageSize}
-                        fetchNextPage={() =>
-                            tableInstance.setPagination({
-                                pageIndex: pagination.pageIndex + 1,
-                                pageSize: pagination.pageSize,
-                            })
-                        }
-                        fetchPrevPage={() =>
-                            tableInstance.setPagination({
-                                pageIndex: pagination.pageIndex - 1,
-                                pageSize: pagination.pageSize,
-                            })
-                        }
-                        setPageLimit={(pageSize) =>
-                            tableInstance.setPagination({
-                                pageIndex: 0,
-                                pageSize,
-                            })
-                        }
-                    />
-                }
-            />
+            {tableInstance.getRowModel().rows.length > 0 &&
+            (totalItems || 0) > 25 ? (
+                <StickyPaginationBar
+                    totalItems={totalItems}
+                    pageIndex={pagination.pageIndex}
+                    pageSize={pagination.pageSize}
+                    fetchNextPage={() =>
+                        tableInstance.setPagination({
+                            pageIndex: pagination.pageIndex + 1,
+                            pageSize: pagination.pageSize,
+                        })
+                    }
+                    fetchPrevPage={() =>
+                        tableInstance.setPagination({
+                            pageIndex: pagination.pageIndex - 1,
+                            pageSize: pagination.pageSize,
+                        })
+                    }
+                    setPageLimit={(pageSize) =>
+                        tableInstance.setPagination({
+                            pageIndex: 0,
+                            pageSize,
+                        })
+                    }
+                />
+            ) : null}
         </>
     );
 };

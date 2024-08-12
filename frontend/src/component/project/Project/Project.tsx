@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     StyledDiv,
     StyledFavoriteIconButton,
@@ -200,33 +199,27 @@ export const Project = () => {
                                 isFavorite={project?.favorite}
                             />
                             <StyledProjectTitle>
-                                <ConditionallyRender
-                                    condition={project?.mode === 'private'}
-                                    show={<HiddenProjectIconWithTooltip />}
-                                />
+                                {project?.mode === 'private' ? (
+                                    <HiddenProjectIconWithTooltip />
+                                ) : null}
                                 <StyledName data-loading-project>
                                     {projectName}
                                 </StyledName>
                             </StyledProjectTitle>
                         </StyledDiv>
                         <StyledDiv>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport,
-                                )}
-                                show={
-                                    <PermissionIconButton
-                                        permission={UPDATE_FEATURE}
-                                        projectId={projectId}
-                                        onClick={() => setModalOpen(true)}
-                                        tooltipProps={{ title: 'Import' }}
-                                        data-testid={IMPORT_BUTTON}
-                                        data-loading-project
-                                    >
-                                        <FileUpload />
-                                    </PermissionIconButton>
-                                }
-                            />
+                            {uiConfig?.flags?.featuresExportImport ? (
+                                <PermissionIconButton
+                                    permission={UPDATE_FEATURE}
+                                    projectId={projectId}
+                                    onClick={() => setModalOpen(true)}
+                                    tooltipProps={{ title: 'Import' }}
+                                    data-testid={IMPORT_BUTTON}
+                                    data-loading-project
+                                >
+                                    <FileUpload />
+                                </PermissionIconButton>
+                            ) : null}
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>
@@ -254,17 +247,14 @@ export const Project = () => {
                                     }
                                     icon={
                                         <>
-                                            <ConditionallyRender
-                                                condition={Boolean(tab.new)}
-                                                show={
-                                                    // extra span to avoid badge getting color override from the overly specific parent component
-                                                    <span>
-                                                        <StyledBadge color='success'>
-                                                            Beta
-                                                        </StyledBadge>
-                                                    </span>
-                                                }
-                                            />
+                                            {tab.new ? (
+                                                // extra span to avoid badge getting color override from the overly specific parent component
+                                                <span>
+                                                    <StyledBadge color='success'>
+                                                        Beta
+                                                    </StyledBadge>
+                                                </span>
+                                            ) : null}
                                             {(tab.isEnterprise &&
                                                 isPro() &&
                                                 enterpriseIcon) ||

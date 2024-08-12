@@ -14,7 +14,6 @@ import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledDrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -104,50 +103,46 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                     </Link>
                 </StyledDrawerHeader>
                 <Divider />
-                <ConditionallyRender
-                    condition={Boolean(sidebarNavigationEnabled)}
-                    show={<MobileNavigationSidebar onClick={toggleDrawer} />}
-                    elseShow={
-                        <>
-                            <List className={styles.drawerList}>
-                                {routes.mobileRoutes.map((item) => (
-                                    <NavigationLink
-                                        handleClose={() => toggleDrawer()}
-                                        path={item.path}
-                                        text={item.title}
-                                        key={item.path}
-                                    />
-                                ))}
-                            </List>
-                            <Divider />
+                {sidebarNavigationEnabled ? (
+                    <MobileNavigationSidebar onClick={toggleDrawer} />
+                ) : (
+                    <>
+                        <List className={styles.drawerList}>
+                            {routes.mobileRoutes.map((item) => (
+                                <NavigationLink
+                                    handleClose={() => toggleDrawer()}
+                                    path={item.path}
+                                    text={item.title}
+                                    key={item.path}
+                                />
+                            ))}
+                        </List>
+                        <Divider />
 
-                            <List className={styles.drawerList}>
-                                {routes.adminRoutes.map((item) => (
-                                    <NavigationLink
-                                        handleClose={() => toggleDrawer()}
-                                        path={item.path}
-                                        text={item.title}
-                                        key={item.path}
-                                        mode={item.menu?.mode}
-                                    />
-                                ))}
-                            </List>
-                            <Divider />
-                            <div className={styles.iconLinkList}>
-                                {renderLinks()}
-                                <a
-                                    className={styles.iconLink}
-                                    href={`${basePath}/logout`}
-                                >
-                                    <ExitToApp
-                                        className={styles.navigationIcon}
-                                    />
-                                    Sign out
-                                </a>
-                            </div>
-                        </>
-                    }
-                />
+                        <List className={styles.drawerList}>
+                            {routes.adminRoutes.map((item) => (
+                                <NavigationLink
+                                    handleClose={() => toggleDrawer()}
+                                    path={item.path}
+                                    text={item.title}
+                                    key={item.path}
+                                    mode={item.menu?.mode}
+                                />
+                            ))}
+                        </List>
+                        <Divider />
+                        <div className={styles.iconLinkList}>
+                            {renderLinks()}
+                            <a
+                                className={styles.iconLink}
+                                href={`${basePath}/logout`}
+                            >
+                                <ExitToApp className={styles.navigationIcon} />
+                                Sign out
+                            </a>
+                        </div>
+                    </>
+                )}
             </nav>
         </Drawer>
     );

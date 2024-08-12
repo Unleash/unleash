@@ -8,7 +8,6 @@ import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHead
 import { parseParameterStrings } from 'utils/parseParameter';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Limit } from 'component/common/Limit/Limit';
 
 interface IFreeTextInputProps {
@@ -148,17 +147,14 @@ export const FreeTextInput = ({
                 />
             </div>
             <LimitContainer>
-                <ConditionallyRender
-                    condition={resourceLimitsEnabled}
-                    show={
-                        <Limit
-                            name='single constraint values'
-                            shortName='values'
-                            currentValue={values.length}
-                            limit={constraintValuesLimit}
-                        />
-                    }
-                />
+                {resourceLimitsEnabled ? (
+                    <Limit
+                        name='single constraint values'
+                        shortName='values'
+                        currentValue={values.length}
+                        limit={constraintValuesLimit}
+                    />
+                ) : null}
             </LimitContainer>
         </>
     );

@@ -1,5 +1,4 @@
 import { TableBody, TableRow, useMediaQuery, useTheme } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     SortableTableHeader,
     Table,
@@ -164,21 +163,15 @@ export const EnvironmentVariantsTable = ({
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No variants found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No variants found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : null
+            ) : null}
         </>
     );
 };

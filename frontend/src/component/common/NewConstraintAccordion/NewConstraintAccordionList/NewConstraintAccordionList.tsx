@@ -10,7 +10,6 @@ import {
     constraintId,
     createEmptyConstraint,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
 
@@ -171,11 +170,7 @@ export const NewConstraintAccordionList = forwardRef<
 
                 return (
                     <Fragment key={id}>
-                        <ConditionallyRender
-                            condition={index > 0}
-                            show={<StrategySeparator text='AND' />}
-                        />
-
+                        {index > 0 ? <StrategySeparator text='AND' /> : null}
                         <NewConstraintAccordion
                             constraint={constraint}
                             onEdit={onEdit?.bind(null, constraint)}

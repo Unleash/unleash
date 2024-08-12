@@ -19,7 +19,6 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { ReportExpiredCell } from './ReportExpiredCell/ReportExpiredCell';
 import { ReportStatusCell } from './ReportStatusCell/ReportStatusCell';
@@ -211,27 +210,20 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                     rows={rows}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={globalFilter?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No feature flags found matching &ldquo;
-                                {globalFilter}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No feature flags available. Get started by
-                                adding a new feature flag.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                globalFilter?.length > 0 ? (
+                    <TablePlaceholder>
+                        No feature flags found matching &ldquo;
+                        {globalFilter}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No feature flags available. Get started by adding a new
+                        feature flag.
+                    </TablePlaceholder>
+                )
+            ) : null}
         </PageContent>
     );
 };

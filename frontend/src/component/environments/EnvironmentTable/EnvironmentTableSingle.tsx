@@ -4,7 +4,6 @@ import { useTable } from 'react-table';
 import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useMemo } from 'react';
 
 const StyledTable = styled(Table)(({ theme }) => ({
@@ -62,21 +61,18 @@ export const EnvironmentTableSingle = ({
                 }) => (
                     <TextCell>
                         {value}
-                        <ConditionallyRender
-                            condition={Boolean(warnEnabledToggles)}
-                            show={
-                                <StyledToggleWarning
-                                    warning={Boolean(
-                                        original.enabledToggleCount &&
-                                            original.enabledToggleCount > 0,
-                                    )}
-                                >
-                                    {original.enabledToggleCount === 1
-                                        ? '1 toggle enabled'
-                                        : `${original.enabledToggleCount} toggles enabled`}
-                                </StyledToggleWarning>
-                            }
-                        />
+                        {warnEnabledToggles ? (
+                            <StyledToggleWarning
+                                warning={Boolean(
+                                    original.enabledToggleCount &&
+                                        original.enabledToggleCount > 0,
+                                )}
+                            >
+                                {original.enabledToggleCount === 1
+                                    ? '1 toggle enabled'
+                                    : `${original.enabledToggleCount} toggles enabled`}
+                            </StyledToggleWarning>
+                        ) : null}
                     </TextCell>
                 ),
             },

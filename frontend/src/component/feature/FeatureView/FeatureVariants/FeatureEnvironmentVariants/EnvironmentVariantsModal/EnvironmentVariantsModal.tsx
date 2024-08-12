@@ -3,7 +3,6 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { type FormEvent, useEffect, useMemo, useState, memo } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type {
     IFeatureEnvironment,
     IFeatureVariant,
@@ -354,28 +353,17 @@ export const EnvironmentVariantsModal = ({
                     </PermissionButton>
                 </StyledFormSubtitle>
                 <StyledForm onSubmit={handleSubmit}>
-                    <ConditionallyRender
-                        condition={hasChangeRequestInReviewForEnvironment}
-                        show={alert}
-                        elseShow={
-                            <ConditionallyRender
-                                condition={Boolean(isChangeRequest)}
-                                show={
-                                    <StyledCRAlert severity='info'>
-                                        <strong>Change requests</strong> are
-                                        enabled
-                                        {environment
-                                            ? ` for ${environment.name}`
-                                            : ''}
-                                        . Your changes need to be approved
-                                        before they will be live. All the
-                                        changes you do now will be added into a
-                                        draft that you can submit for review.
-                                    </StyledCRAlert>
-                                }
-                            />
-                        }
-                    />
+                    {hasChangeRequestInReviewForEnvironment ? (
+                        alert
+                    ) : isChangeRequest ? (
+                        <StyledCRAlert severity='info'>
+                            <strong>Change requests</strong> are enabled
+                            {environment ? ` for ${environment.name}` : ''}.
+                            Your changes need to be approved before they will be
+                            live. All the changes you do now will be added into
+                            a draft that you can submit for review.
+                        </StyledCRAlert>
+                    ) : null}
                     <StyledVariantForms>
                         {variantsEdit.map((variant) => (
                             <MemoizedVariantForm
@@ -409,44 +397,40 @@ export const EnvironmentVariantsModal = ({
                         Add variant
                     </PermissionButton>
                     <StyledDivider />
-                    <ConditionallyRender
-                        condition={variantsEdit.length > 0}
-                        show={
-                            <>
-                                <StyledStickinessContainer>
-                                    <p>Stickiness</p>
-                                </StyledStickinessContainer>
-                                <StyledDescription>
-                                    By overriding the stickiness you can control
-                                    which parameter is used to ensure consistent
-                                    traffic allocation across variants.{' '}
-                                    <Link
-                                        href='https://docs.getunleash.io/reference/feature-toggle-variants'
-                                        target='_blank'
-                                        rel='noreferrer'
-                                    >
-                                        Read more
-                                    </Link>
-                                </StyledDescription>
-                                <div>
-                                    <StyledStickinessSelect
-                                        value={stickiness}
-                                        label={''}
-                                        editable
-                                        onChange={(e) =>
-                                            onStickinessChange(e.target.value)
-                                        }
-                                    />
-                                </div>
-                            </>
-                        }
-                        elseShow={
+                    {variantsEdit.length > 0 ? (
+                        <>
+                            <StyledStickinessContainer>
+                                <p>Stickiness</p>
+                            </StyledStickinessContainer>
                             <StyledDescription>
-                                This environment has no variants. Get started by
-                                adding a variant.
+                                By overriding the stickiness you can control
+                                which parameter is used to ensure consistent
+                                traffic allocation across variants.{' '}
+                                <Link
+                                    href='https://docs.getunleash.io/reference/feature-toggle-variants'
+                                    target='_blank'
+                                    rel='noreferrer'
+                                >
+                                    Read more
+                                </Link>
                             </StyledDescription>
-                        }
-                    />
+                            <div>
+                                <StyledStickinessSelect
+                                    value={stickiness}
+                                    label={''}
+                                    editable
+                                    onChange={(e) =>
+                                        onStickinessChange(e.target.value)
+                                    }
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <StyledDescription>
+                            This environment has no variants. Get started by
+                            adding a variant.
+                        </StyledDescription>
+                    )}
 
                     <StyledAlert severity='error' hidden={!error}>
                         <strong>Error: </strong>

@@ -1,6 +1,5 @@
 import { Divider, Tooltip } from '@mui/material';
 import { Menu, MenuItem, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { INavigationMenuItem } from 'interfaces/route';
 import { Link } from 'react-router-dom';
@@ -104,14 +103,11 @@ export const NavigationMenu = ({
                             >
                                 <StyledSpan />
                                 {option.title}
-                                <ConditionallyRender
-                                    condition={showBadge(option?.menu?.mode)}
-                                    show={
-                                        <StyledBadgeContainer>
-                                            <EnterpriseBadge />
-                                        </StyledBadgeContainer>
-                                    }
-                                />
+                                {showBadge(option?.menu?.mode) ? (
+                                    <StyledBadgeContainer>
+                                        <EnterpriseBadge />
+                                    </StyledBadgeContainer>
+                                ) : null}
                             </MenuItem>
                         </Tooltip>,
                     ];

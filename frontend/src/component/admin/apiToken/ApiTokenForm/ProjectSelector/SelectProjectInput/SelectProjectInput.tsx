@@ -19,7 +19,6 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
 import { SelectAllButton } from './SelectAllButton/SelectAllButton';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const ALL_PROJECTS = '*';
 
@@ -96,15 +95,12 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
 
     const renderGroup = ({ key, children }: AutocompleteRenderGroupParams) => (
         <Fragment key={key}>
-            <ConditionallyRender
-                condition={options.length > 2}
-                show={
-                    <SelectAllButton
-                        isAllSelected={isAllSelected}
-                        onClick={onSelectAllClick}
-                    />
-                }
-            />
+            {options.length > 2 ? (
+                <SelectAllButton
+                    isAllSelected={isAllSelected}
+                    onClick={onSelectAllClick}
+                />
+            ) : null}
             {children}
         </Fragment>
     );

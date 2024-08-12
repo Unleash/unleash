@@ -3,7 +3,6 @@ import Delete from '@mui/icons-material/Delete';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { ActionsActionState } from '../../useProjectActionsForm';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useServiceAccountAccessMatrix } from 'hooks/api/getters/useServiceAccountAccessMatrix/useServiceAccountAccessMatrix';
 import { useEffect, useMemo } from 'react';
 import { ProjectActionsActionParameter } from './ProjectActionsActionParameter/ProjectActionsActionParameter';
@@ -136,47 +135,40 @@ export const ProjectActionsActionItem = ({
                         />
                     </StyledFieldContainer>
                 </StyledItemRow>
-                <ConditionallyRender
-                    condition={parameters.length > 0}
-                    show={
-                        <StyledItemRow>
-                            {parameters.map((parameter) => (
-                                <StyledFieldContainer key={parameter.name}>
-                                    <ProjectActionsActionParameter
-                                        parameter={parameter}
-                                        value={
-                                            executionParams[
-                                                parameter.name
-                                            ] as string
-                                        }
-                                        onChange={(value) =>
-                                            stateChanged({
-                                                ...action,
-                                                executionParams: {
-                                                    ...executionParams,
-                                                    [parameter.name]: value,
-                                                },
-                                            })
-                                        }
-                                    />
-                                </StyledFieldContainer>
-                            ))}
-                        </StyledItemRow>
-                    }
-                />
-                <ConditionallyRender
-                    condition={validated && Boolean(error)}
-                    show={<Alert severity='error'>{error}</Alert>}
-                />
-                <ConditionallyRender
-                    condition={!hasPermission}
-                    show={
-                        <Alert severity='error'>
-                            The selected service account does not have
-                            permissions to execute this action currently.
-                        </Alert>
-                    }
-                />
+                {parameters.length > 0 ? (
+                    <StyledItemRow>
+                        {parameters.map((parameter) => (
+                            <StyledFieldContainer key={parameter.name}>
+                                <ProjectActionsActionParameter
+                                    parameter={parameter}
+                                    value={
+                                        executionParams[
+                                            parameter.name
+                                        ] as string
+                                    }
+                                    onChange={(value) =>
+                                        stateChanged({
+                                            ...action,
+                                            executionParams: {
+                                                ...executionParams,
+                                                [parameter.name]: value,
+                                            },
+                                        })
+                                    }
+                                />
+                            </StyledFieldContainer>
+                        ))}
+                    </StyledItemRow>
+                ) : null}
+                {validated && Boolean(error) ? (
+                    <Alert severity='error'>{error}</Alert>
+                ) : null}
+                {!hasPermission ? (
+                    <Alert severity='error'>
+                        The selected service account does not have permissions
+                        to execute this action currently.
+                    </Alert>
+                ) : null}
             </StyledItemBody>
         </ProjectActionsFormItem>
     );

@@ -7,7 +7,6 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import { SEGMENT_DELETE_BTN_ID } from 'utils/testIds';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { SegmentDelete } from 'component/segments/SegmentDelete/SegmentDelete';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
@@ -52,17 +51,14 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
             >
                 <Delete data-loading />
             </PermissionIconButton>
-            <ConditionallyRender
-                condition={showModal}
-                show={() => (
-                    <SegmentDelete
-                        segment={segment}
-                        open={showModal}
-                        onClose={() => toggleModal(false)}
-                        onRemove={onRemove}
-                    />
-                )}
-            />
+            {showModal ? (
+                <SegmentDelete
+                    segment={segment}
+                    open={showModal}
+                    onClose={() => toggleModal(false)}
+                    onRemove={onRemove}
+                />
+            ) : null}
         </>
     );
 };

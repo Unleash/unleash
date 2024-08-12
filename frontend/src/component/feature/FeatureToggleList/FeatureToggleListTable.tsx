@@ -15,7 +15,6 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
@@ -287,23 +286,18 @@ export const FeatureToggleListTable: VFC = () => {
                     title='Search'
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            placeholder='Search'
-                                            expandable
-                                            initialValue={
-                                                tableState.query || ''
-                                            }
-                                            onChange={setSearchValue}
-                                            id='globalFeatureFlags'
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <>
+                                    <Search
+                                        placeholder='Search'
+                                        expandable
+                                        initialValue={tableState.query || ''}
+                                        onChange={setSearchValue}
+                                        id='globalFeatureFlags'
+                                    />
+                                    <PageHeader.Divider />
+                                </>
+                            ) : null}
                             <Link
                                 component={RouterLink}
                                 to='/archive'
@@ -325,74 +319,50 @@ export const FeatureToggleListTable: VFC = () => {
                             {featureSearchFeedback !== false &&
                                 featureSearchFeedback?.enabled && (
                                     <>
-                                        <ConditionallyRender
-                                            condition={
-                                                variant === 'withoutText'
-                                            }
-                                            show={
-                                                <Tooltip
-                                                    title='Provide feedback'
-                                                    arrow
-                                                >
-                                                    <IconButton
-                                                        onClick={
-                                                            createFeedbackContext
-                                                        }
-                                                        size='large'
-                                                    >
-                                                        <ReviewsOutlined />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            }
-                                        />
-                                        <ConditionallyRender
-                                            condition={variant === 'withText'}
-                                            show={
-                                                <Button
-                                                    startIcon={
-                                                        <ReviewsOutlined />
-                                                    }
+                                        {variant === 'withoutText' ? (
+                                            <Tooltip
+                                                title='Provide feedback'
+                                                arrow
+                                            >
+                                                <IconButton
                                                     onClick={
                                                         createFeedbackContext
                                                     }
+                                                    size='large'
                                                 >
-                                                    Provide feedback
-                                                </Button>
-                                            }
-                                        />{' '}
-                                        <ConditionallyRender
-                                            condition={
-                                                variant === 'withTextOutlined'
-                                            }
-                                            show={
-                                                <Button
-                                                    startIcon={
-                                                        <ReviewsOutlined />
-                                                    }
-                                                    onClick={
-                                                        createFeedbackContext
-                                                    }
-                                                    variant='outlined'
-                                                >
-                                                    Provide feedback
-                                                </Button>
-                                            }
-                                        />
+                                                    <ReviewsOutlined />
+                                                </IconButton>
+                                            </Tooltip>
+                                        ) : null}
+                                        {variant === 'withText' ? (
+                                            <Button
+                                                startIcon={<ReviewsOutlined />}
+                                                onClick={createFeedbackContext}
+                                            >
+                                                Provide feedback
+                                            </Button>
+                                        ) : null}{' '}
+                                        {variant === 'withTextOutlined' ? (
+                                            <Button
+                                                startIcon={<ReviewsOutlined />}
+                                                onClick={createFeedbackContext}
+                                                variant='outlined'
+                                            >
+                                                Provide feedback
+                                            </Button>
+                                        ) : null}
                                     </>
                                 )}
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={tableState.query || ''}
-                                onChange={setSearchValue}
-                                id='globalFeatureFlags'
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={tableState.query || ''}
+                            onChange={setSearchValue}
+                            id='globalFeatureFlags'
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
@@ -405,41 +375,30 @@ export const FeatureToggleListTable: VFC = () => {
                     <PaginatedTable tableInstance={table} totalItems={total} />
                 </div>
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
-                        <ConditionallyRender
-                            condition={(tableState.query || '')?.length > 0}
-                            show={
-                                <TablePlaceholder>
-                                    No feature flags found matching &ldquo;
-                                    {tableState.query}
-                                    &rdquo;
-                                </TablePlaceholder>
-                            }
-                            elseShow={
-                                <TablePlaceholder>
-                                    No feature flags found matching your
-                                    criteria. Get started by adding a new
-                                    feature flag.
-                                </TablePlaceholder>
-                            }
-                        />
-                    </Box>
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
-                show={
-                    <ExportDialog
-                        showExportDialog={showExportDialog}
-                        data={data}
-                        onClose={() => setShowExportDialog(false)}
-                        environments={enabledEnvironments}
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
+                    {(tableState.query || '')?.length > 0 ? (
+                        <TablePlaceholder>
+                            No feature flags found matching &ldquo;
+                            {tableState.query}
+                            &rdquo;
+                        </TablePlaceholder>
+                    ) : (
+                        <TablePlaceholder>
+                            No feature flags found matching your criteria. Get
+                            started by adding a new feature flag.
+                        </TablePlaceholder>
+                    )}
+                </Box>
+            ) : null}
+            {uiConfig?.flags?.featuresExportImport ? (
+                <ExportDialog
+                    showExportDialog={showExportDialog}
+                    data={data}
+                    onClose={() => setShowExportDialog(false)}
+                    environments={enabledEnvironments}
+                />
+            ) : null}
         </PageContent>
     );
 };

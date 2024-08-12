@@ -3,7 +3,6 @@ import { Typography, useTheme, useMediaQuery, styled } from '@mui/material';
 import Gradient from 'component/common/Gradient/Gradient';
 import { ReactComponent as Logo } from 'assets/icons/logoWhiteBg.svg';
 import { ReactComponent as LogoWithText } from 'assets/img/logoWhiteTransparentHorizontal.svg';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { Theme } from '@mui/material';
 
 interface IStandaloneBannerProps {
@@ -98,13 +97,12 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title }) => {
                     Committed to creating new ways of developing software
                 </StyledSubtitle>
             </StyledContainer>
-
             <StyledLogoContainer>
-                <ConditionallyRender
-                    condition={smallScreen}
-                    show={<StyledLogoWithText aria-label='Unleash logo' />}
-                    elseShow={<StyledLogo aria-label='Unleash logo' />}
-                />
+                {smallScreen ? (
+                    <StyledLogoWithText aria-label='Unleash logo' />
+                ) : (
+                    <StyledLogo aria-label='Unleash logo' />
+                )}
             </StyledLogoContainer>
         </StyledGradient>
     );

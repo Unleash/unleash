@@ -16,7 +16,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import { LinkField } from '../LinkField/LinkField';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type ICreateInviteLinkProps = {};
@@ -202,18 +201,15 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                             ? 'Update invite link'
                             : 'Create invite link'}
                     </PermissionButton>
-                    <ConditionallyRender
-                        condition={isUpdating}
-                        show={
-                            <Button
-                                sx={{ ml: 2 }}
-                                onClick={onDisableClick}
-                                color='error'
-                            >
-                                Delete link
-                            </Button>
-                        }
-                    />
+                    {isUpdating ? (
+                        <Button
+                            sx={{ ml: 2 }}
+                            onClick={onDisableClick}
+                            color='error'
+                        >
+                            Delete link
+                        </Button>
+                    ) : null}
                     <Button
                         sx={{ ml: 2 }}
                         onClick={() => {

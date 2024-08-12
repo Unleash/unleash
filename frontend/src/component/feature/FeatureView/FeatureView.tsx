@@ -33,7 +33,6 @@ import { FeatureEnvironmentVariants } from './FeatureVariants/FeatureEnvironment
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from 'hooks/useLoading';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
@@ -264,40 +263,29 @@ export const FeatureView = () => {
                                         )}
                                     </IconButton>
                                 </Tooltip>
-                                <ConditionallyRender
-                                    condition={!smallScreen}
-                                    show={
-                                        <FeatureStatusChip
-                                            stale={feature?.stale}
-                                        />
-                                    }
-                                />
+                                {!smallScreen ? (
+                                    <FeatureStatusChip stale={feature?.stale} />
+                                ) : null}
                             </StyledFlagInfoContainer>
-                            <ConditionallyRender
-                                condition={feature.dependencies.length > 0}
-                                show={
-                                    <StyledDependency>
-                                        <b>Has parent: </b>
-                                        <StyledLink
-                                            to={`/projects/${feature.project}/features/${feature?.dependencies[0]?.feature}`}
-                                        >
-                                            {feature?.dependencies[0]?.feature}
-                                        </StyledLink>
-                                    </StyledDependency>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={feature.children.length > 0}
-                                show={
-                                    <StyledDependency>
-                                        <b>Has children:</b>
-                                        <ChildrenTooltip
-                                            childFeatures={feature.children}
-                                            project={feature.project}
-                                        />
-                                    </StyledDependency>
-                                }
-                            />
+                            {feature.dependencies.length > 0 ? (
+                                <StyledDependency>
+                                    <b>Has parent: </b>
+                                    <StyledLink
+                                        to={`/projects/${feature.project}/features/${feature?.dependencies[0]?.feature}`}
+                                    >
+                                        {feature?.dependencies[0]?.feature}
+                                    </StyledLink>
+                                </StyledDependency>
+                            ) : null}
+                            {feature.children.length > 0 ? (
+                                <StyledDependency>
+                                    <b>Has children:</b>
+                                    <ChildrenTooltip
+                                        childFeatures={feature.children}
+                                        project={feature.project}
+                                    />
+                                </StyledDependency>
+                            ) : null}
                         </div>
                     </StyledFlagInfoContainer>
 
@@ -379,29 +367,24 @@ export const FeatureView = () => {
                 <Route path='settings' element={<FeatureSettings />} />
                 <Route path='*' element={<FeatureOverview />} />
             </Routes>
-            <ConditionallyRender
-                condition={feature.children.length > 0}
-                show={
-                    <FeatureArchiveNotAllowedDialog
-                        features={feature.children}
-                        project={projectId}
-                        isOpen={showDelDialog}
-                        onClose={() => setShowDelDialog(false)}
-                    />
-                }
-                elseShow={
-                    <FeatureArchiveDialog
-                        isOpen={showDelDialog}
-                        onConfirm={() => {
-                            navigate(`/projects/${projectId}`);
-                        }}
-                        onClose={() => setShowDelDialog(false)}
-                        projectId={projectId}
-                        featureIds={[featureId]}
-                    />
-                }
-            />
-
+            {feature.children.length > 0 ? (
+                <FeatureArchiveNotAllowedDialog
+                    features={feature.children}
+                    project={projectId}
+                    isOpen={showDelDialog}
+                    onClose={() => setShowDelDialog(false)}
+                />
+            ) : (
+                <FeatureArchiveDialog
+                    isOpen={showDelDialog}
+                    onConfirm={() => {
+                        navigate(`/projects/${projectId}`);
+                    }}
+                    onClose={() => setShowDelDialog(false)}
+                    projectId={projectId}
+                    featureIds={[featureId]}
+                />
+            )}
             <FeatureStaleDialog
                 isStale={feature.stale}
                 isOpen={openStaleDialog}

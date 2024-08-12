@@ -4,7 +4,6 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
 import ResetPassword from './ResetPassword/ResetPassword';
 import DeleteUser from './DeleteUser/DeleteUser';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
@@ -325,16 +324,11 @@ const UsersList = () => {
             }
         >
             <UserLimitWarning />
-            <ConditionallyRender
-                condition={isEnterprise()}
-                show={
-                    <StyledUsersLinkDiv>
-                        <Link to='/admin/users/inactive'>
-                            View inactive users
-                        </Link>
-                    </StyledUsersLinkDiv>
-                }
-            />
+            {isEnterprise() ? (
+                <StyledUsersLinkDiv>
+                    <Link to='/admin/users/inactive'>View inactive users</Link>
+                </StyledUsersLinkDiv>
+            ) : null}
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
@@ -342,69 +336,49 @@ const UsersList = () => {
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No users found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No users available. Get started by adding one.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
-
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No users found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No users available. Get started by adding one.
+                    </TablePlaceholder>
+                )
+            ) : null}
             <ConfirmUserAdded
                 open={showConfirm}
                 closeConfirm={closeConfirm}
                 emailSent={emailSent}
                 inviteLink={inviteLink}
             />
-
-            <ConditionallyRender
-                condition={Boolean(pwDialog.user)}
-                show={() => (
-                    <ChangePassword
-                        showDialog={pwDialog.open}
-                        closeDialog={closePwDialog}
-                        user={pwDialog.user!}
-                    />
-                )}
-            />
-
-            <ConditionallyRender
-                condition={Boolean(resetPwDialog.user)}
-                show={() => (
-                    <ResetPassword
-                        showDialog={resetPwDialog.open}
-                        closeDialog={closeResetPwDialog}
-                        user={resetPwDialog.user!}
-                    />
-                )}
-            />
-
-            <ConditionallyRender
-                condition={Boolean(delUser)}
-                show={
-                    <DeleteUser
-                        showDialog={delDialog}
-                        closeDialog={closeDelDialog}
-                        user={delUser!}
-                        removeUser={() => onDeleteUser(delUser!)}
-                        userLoading={userLoading}
-                        userApiErrors={userApiErrors}
-                    />
-                }
-            />
+            {pwDialog.user ? (
+                <ChangePassword
+                    showDialog={pwDialog.open}
+                    closeDialog={closePwDialog}
+                    user={pwDialog.user!}
+                />
+            ) : null}
+            {resetPwDialog.user ? (
+                <ResetPassword
+                    showDialog={resetPwDialog.open}
+                    closeDialog={closeResetPwDialog}
+                    user={resetPwDialog.user!}
+                />
+            ) : null}
+            {delUser ? (
+                <DeleteUser
+                    showDialog={delDialog}
+                    closeDialog={closeDelDialog}
+                    user={delUser!}
+                    removeUser={() => onDeleteUser(delUser!)}
+                    userLoading={userLoading}
+                    userApiErrors={userApiErrors}
+                />
+            ) : null}
         </PageContent>
     );
 };

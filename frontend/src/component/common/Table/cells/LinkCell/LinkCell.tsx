@@ -1,6 +1,5 @@
 import type React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -29,25 +28,18 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    const renderSubtitle = (
-        <ConditionallyRender
-            condition={Boolean(subtitle && subtitle.length > 40)}
-            show={
-                <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
-                    <StyledDescription data-loading>
-                        <Highlighter search={searchQuery}>
-                            {subtitle}
-                        </Highlighter>
-                    </StyledDescription>
-                </HtmlTooltip>
-            }
-            elseShow={
+    const renderSubtitle =
+        subtitle && subtitle.length > 40 ? (
+            <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
                 <StyledDescription data-loading>
                     <Highlighter search={searchQuery}>{subtitle}</Highlighter>
                 </StyledDescription>
-            }
-        />
-    );
+            </HtmlTooltip>
+        ) : (
+            <StyledDescription data-loading>
+                <Highlighter search={searchQuery}>{subtitle}</Highlighter>
+            </StyledDescription>
+        );
 
     const content = (
         <StyledContainer>
@@ -61,10 +53,7 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
                 <Highlighter search={searchQuery}>{title}</Highlighter>
                 {children}
             </StyledTitle>
-            <ConditionallyRender
-                condition={Boolean(subtitle)}
-                show={renderSubtitle}
-            />
+            {subtitle ? renderSubtitle : null}
         </StyledContainer>
     );
 

@@ -23,7 +23,6 @@ import { SegmentActionCell } from 'component/segments/SegmentActionCell/SegmentA
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -119,55 +118,43 @@ export const SegmentTable = () => {
             }
             isLoading={loadingSegments}
         >
-            <ConditionallyRender
-                condition={!loadingSegments && data.length === 0}
-                show={
-                    <TablePlaceholder>
-                        <SegmentEmpty />
-                    </TablePlaceholder>
-                }
-                elseShow={() => (
-                    <>
-                        <SearchHighlightProvider value={globalFilter}>
-                            <Table {...getTableProps()} rowHeight='standard'>
-                                <SortableTableHeader
-                                    headerGroups={headerGroups as any}
-                                />
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map((row) => {
-                                        prepareRow(row);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                {...row.getRowProps()}
-                                            >
-                                                {row.cells.map((cell) => (
-                                                    <TableCell
-                                                        {...cell.getCellProps()}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </SearchHighlightProvider>
-                        <ConditionallyRender
-                            condition={
-                                rows.length === 0 && globalFilter?.length > 0
-                            }
-                            show={
-                                <TablePlaceholder>
-                                    No segments found matching &ldquo;
-                                    {globalFilter}&rdquo;
-                                </TablePlaceholder>
-                            }
-                        />
-                    </>
-                )}
-            />
+            {!loadingSegments && data.length === 0 ? (
+                <TablePlaceholder>
+                    <SegmentEmpty />
+                </TablePlaceholder>
+            ) : (
+                <>
+                    <SearchHighlightProvider value={globalFilter}>
+                        <Table {...getTableProps()} rowHeight='standard'>
+                            <SortableTableHeader
+                                headerGroups={headerGroups as any}
+                            />
+                            <TableBody {...getTableBodyProps()}>
+                                {rows.map((row) => {
+                                    prepareRow(row);
+                                    return (
+                                        <TableRow hover {...row.getRowProps()}>
+                                            {row.cells.map((cell) => (
+                                                <TableCell
+                                                    {...cell.getCellProps()}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </SearchHighlightProvider>
+                    {rows.length === 0 && globalFilter?.length > 0 ? (
+                        <TablePlaceholder>
+                            No segments found matching &ldquo;
+                            {globalFilter}&rdquo;
+                        </TablePlaceholder>
+                    ) : null}
+                </>
+            )}
         </PageContent>
     );
 };
@@ -210,13 +197,12 @@ const getColumns = (projectId?: string) => [
     {
         Header: 'Project',
         accessor: 'project',
-        Cell: ({ value }: { value: string }) => (
-            <ConditionallyRender
-                condition={Boolean(value)}
-                show={<LinkCell title={value} to={`/projects/${value}`} />}
-                elseShow={<TextCell>Global</TextCell>}
-            />
-        ),
+        Cell: ({ value }: { value: string }) =>
+            value ? (
+                <LinkCell title={value} to={`/projects/${value}`} />
+            ) : (
+                <TextCell>Global</TextCell>
+            ),
         sortType: 'alphanumeric',
         maxWidth: 150,
         filterName: 'project',

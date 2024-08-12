@@ -12,7 +12,6 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { useSearch } from 'hooks/useSearch';
@@ -254,51 +253,34 @@ export const AdvancedPlaygroundResultsTable = ({
                     containerStyles={{ marginLeft: '1rem', maxWidth: '400px' }}
                 />
             </Box>
-            <ConditionallyRender
-                condition={!loading && !data}
-                show={() => (
-                    <TablePlaceholder>
-                        {data === undefined
-                            ? 'None of the feature flags were evaluated yet.'
-                            : 'No results found.'}
-                    </TablePlaceholder>
-                )}
-                elseShow={() => (
-                    <Box ref={ref} sx={{ overflow: 'auto' }}>
-                        <SearchHighlightProvider
-                            value={getSearchText(searchValue)}
-                        >
-                            <VirtualizedTable
-                                rows={rows}
-                                headerGroups={headerGroups}
-                                prepareRow={prepareRow}
-                            />
-                        </SearchHighlightProvider>
-                        <ConditionallyRender
-                            condition={
-                                data.length === 0 && searchValue?.length > 0
-                            }
-                            show={
-                                <TablePlaceholder>
-                                    No feature flags found matching &ldquo;
-                                    {searchValue}&rdquo;
-                                </TablePlaceholder>
-                            }
+            {!loading && !data ? (
+                <TablePlaceholder>
+                    {data === undefined
+                        ? 'None of the feature flags were evaluated yet.'
+                        : 'No results found.'}
+                </TablePlaceholder>
+            ) : (
+                <Box ref={ref} sx={{ overflow: 'auto' }}>
+                    <SearchHighlightProvider value={getSearchText(searchValue)}>
+                        <VirtualizedTable
+                            rows={rows}
+                            headerGroups={headerGroups}
+                            prepareRow={prepareRow}
                         />
-
-                        <ConditionallyRender
-                            condition={
-                                data && data.length === 0 && !searchValue
-                            }
-                            show={
-                                <TablePlaceholder>
-                                    No features flags to display
-                                </TablePlaceholder>
-                            }
-                        />
-                    </Box>
-                )}
-            />
+                    </SearchHighlightProvider>
+                    {data.length === 0 && searchValue?.length > 0 ? (
+                        <TablePlaceholder>
+                            No feature flags found matching &ldquo;
+                            {searchValue}&rdquo;
+                        </TablePlaceholder>
+                    ) : null}
+                    {data && data.length === 0 && !searchValue ? (
+                        <TablePlaceholder>
+                            No features flags to display
+                        </TablePlaceholder>
+                    ) : null}
+                </Box>
+            )}
         </>
     );
 };

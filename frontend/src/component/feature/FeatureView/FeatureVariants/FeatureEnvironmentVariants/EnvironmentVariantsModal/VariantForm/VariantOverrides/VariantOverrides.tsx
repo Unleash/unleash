@@ -2,7 +2,6 @@ import type { ChangeEvent, VFC } from 'react';
 import { IconButton, styled, TextField, Tooltip } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { Autocomplete } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InputListField } from 'component/common/InputListField/InputListField';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IOverride } from 'interfaces/featureToggle';
@@ -104,47 +103,38 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                             }
                         />
                         <StyledFieldColumn>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    legalValues && legalValues.length > 0,
-                                )}
-                                show={
-                                    <Autocomplete
-                                        multiple
-                                        id={`override-select-${index}`}
-                                        isOptionEqualToValue={(
-                                            option,
-                                            value,
-                                        ) => {
-                                            return option === value;
-                                        }}
-                                        options={legalValues}
-                                        onChange={updateSelectValues(index)}
-                                        getOptionLabel={(option) => option}
-                                        value={filteredValues}
-                                        style={{ width: '100%' }}
-                                        filterSelectedOptions
-                                        size='small'
-                                        renderInput={(params) => (
-                                            <StyledTextField
-                                                {...params}
-                                                variant='outlined'
-                                                label='Legal values'
-                                            />
-                                        )}
-                                    />
-                                }
-                                elseShow={
-                                    <StyledInputListField
-                                        label='Values (v1, v2, ...)'
-                                        name='values'
-                                        placeholder=''
-                                        values={override.values}
-                                        updateValues={updateValues(index)}
-                                        data-testid='OVERRIDE_VALUES'
-                                    />
-                                }
-                            />
+                            {legalValues && legalValues.length > 0 ? (
+                                <Autocomplete
+                                    multiple
+                                    id={`override-select-${index}`}
+                                    isOptionEqualToValue={(option, value) => {
+                                        return option === value;
+                                    }}
+                                    options={legalValues}
+                                    onChange={updateSelectValues(index)}
+                                    getOptionLabel={(option) => option}
+                                    value={filteredValues}
+                                    style={{ width: '100%' }}
+                                    filterSelectedOptions
+                                    size='small'
+                                    renderInput={(params) => (
+                                        <StyledTextField
+                                            {...params}
+                                            variant='outlined'
+                                            label='Legal values'
+                                        />
+                                    )}
+                                />
+                            ) : (
+                                <StyledInputListField
+                                    label='Values (v1, v2, ...)'
+                                    name='values'
+                                    placeholder=''
+                                    values={override.values}
+                                    updateValues={updateValues(index)}
+                                    data-testid='OVERRIDE_VALUES'
+                                />
+                            )}
                             <Tooltip title='Remove' arrow>
                                 <IconButton
                                     onClick={(event) => {

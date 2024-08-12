@@ -1,7 +1,6 @@
 import { Button, Typography, styled } from '@mui/material';
 import { DemoDialog } from '../DemoDialog';
 import Confetti from 'react-confetti';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -26,18 +25,15 @@ export const DemoDialogFinish = ({
     onRestart,
 }: IDemoDialogFinishProps) => (
     <>
-        <ConditionallyRender
-            condition={open}
-            show={
-                <Confetti
-                    recycle={false}
-                    numberOfPieces={1000}
-                    initialVelocityY={50}
-                    gravity={0.3}
-                    style={{ zIndex: 3000 }}
-                />
-            }
-        />
+        {open ? (
+            <Confetti
+                recycle={false}
+                numberOfPieces={1000}
+                initialVelocityY={50}
+                gravity={0.3}
+                style={{ zIndex: 3000 }}
+            />
+        ) : null}
         <DemoDialog open={open} onClose={onClose}>
             <DemoDialog.Header>You finished the demo</DemoDialog.Header>
             <Typography color='textSecondary' sx={{ mt: 4 }}>

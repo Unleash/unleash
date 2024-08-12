@@ -14,7 +14,6 @@ import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import Add from '@mui/icons-material/Add';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -155,10 +154,9 @@ export const NewStrategyVariants: FC<{
                 />
             </StyledHelpIconBox>
             <StyledVariantForms>
-                <ConditionallyRender
-                    condition={variantsEdit.length > 0}
-                    show={<StrategyVariantsUpgradeAlert />}
-                />
+                {variantsEdit.length > 0 ? (
+                    <StrategyVariantsUpgradeAlert />
+                ) : null}
 
                 {variantsEdit.map((variant, i) => (
                     <VariantForm

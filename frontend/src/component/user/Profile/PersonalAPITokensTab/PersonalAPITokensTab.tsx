@@ -9,7 +9,6 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
@@ -251,19 +250,16 @@ export const PersonalAPITokensTab = () => {
                     })`}
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                            getSearchContext={getSearchContext}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <>
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
+                                        getSearchContext={getSearchContext}
+                                    />
+                                    <PageHeader.Divider />
+                                </>
+                            ) : null}
                             <Button
                                 variant='contained'
                                 color='primary'
@@ -275,17 +271,14 @@ export const PersonalAPITokensTab = () => {
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                                hasFilters
-                                getSearchContext={getSearchContext}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                            hasFilters
+                            getSearchContext={getSearchContext}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
@@ -301,39 +294,32 @@ export const PersonalAPITokensTab = () => {
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No tokens found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <StyledTablePlaceholder>
-                                <StyledPlaceholderTitle>
-                                    You have no personal API tokens yet.
-                                </StyledPlaceholderTitle>
-                                <StyledPlaceholderSubtitle variant='body2'>
-                                    Need an API token for scripts or testing?
-                                    Create a personal API token for quick access
-                                    to the Unleash API.
-                                </StyledPlaceholderSubtitle>
-                                <Button
-                                    variant='outlined'
-                                    onClick={() => setCreateOpen(true)}
-                                >
-                                    Create your first token
-                                </Button>
-                            </StyledTablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No tokens found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <StyledTablePlaceholder>
+                        <StyledPlaceholderTitle>
+                            You have no personal API tokens yet.
+                        </StyledPlaceholderTitle>
+                        <StyledPlaceholderSubtitle variant='body2'>
+                            Need an API token for scripts or testing? Create a
+                            personal API token for quick access to the Unleash
+                            API.
+                        </StyledPlaceholderSubtitle>
+                        <Button
+                            variant='outlined'
+                            onClick={() => setCreateOpen(true)}
+                        >
+                            Create your first token
+                        </Button>
+                    </StyledTablePlaceholder>
+                )
+            ) : null}
             <CreatePersonalAPIToken
                 open={createOpen}
                 setOpen={setCreateOpen}

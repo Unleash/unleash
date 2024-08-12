@@ -12,7 +12,6 @@ import type {
 } from 'openapi';
 import { getMappedParam } from '../helpers';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import DisabledPercentageCircle from 'component/common/PercentageCircle/DisabledPercentageCircle';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {
@@ -59,21 +58,17 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                             : theme.palette.text.secondary,
                                     })}
                                 >
-                                    <ConditionallyRender
-                                        condition={disabled}
-                                        show={
-                                            <DisabledPercentageCircle
-                                                percentage={percentage}
-                                                size='2rem'
-                                            />
-                                        }
-                                        elseShow={
-                                            <PercentageCircle
-                                                percentage={percentage}
-                                                size='2rem'
-                                            />
-                                        }
-                                    />
+                                    {disabled ? (
+                                        <DisabledPercentageCircle
+                                            percentage={percentage}
+                                            size='2rem'
+                                        />
+                                    ) : (
+                                        <PercentageCircle
+                                            percentage={percentage}
+                                            size='2rem'
+                                        />
+                                    )}
                                 </Box>
                                 <StyledText disabled={disabled}>
                                     <Badge

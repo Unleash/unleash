@@ -17,7 +17,6 @@ import useEnvironmentApi, {
     createSortOrderPayload,
 } from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EnvironmentRow } from './EnvironmentRow/EnvironmentRow';
 import { EnvironmentNameCell } from './EnvironmentNameCell/EnvironmentNameCell';
 import { EnvironmentActionCell } from './EnvironmentActionCell/EnvironmentActionCell';
@@ -123,27 +122,19 @@ export const EnvironmentTable = () => {
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={globalFilter?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No environments found matching &ldquo;
-                                {globalFilter}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No environments available. Get started by adding
-                                one.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                globalFilter?.length > 0 ? (
+                    <TablePlaceholder>
+                        No environments found matching &ldquo;
+                        {globalFilter}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No environments available. Get started by adding one.
+                    </TablePlaceholder>
+                )
+            ) : null}
         </PageContent>
     );
 };

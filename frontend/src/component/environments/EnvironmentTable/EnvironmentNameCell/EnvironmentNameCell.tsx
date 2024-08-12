@@ -1,6 +1,5 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -38,34 +37,30 @@ export const EnvironmentNameCell = ({
             })}
         >
             <Highlighter search={searchQuery}>{environment.name}</Highlighter>
-            <ConditionallyRender
-                condition={environment.protected}
-                show={<StyledBadge color='success'>Predefined</StyledBadge>}
-            />
-            <ConditionallyRender
-                condition={!environment.enabled}
-                show={
-                    <HtmlTooltip
-                        maxWidth='270px'
-                        title={
-                            <>
-                                <StyledTooltipTitle>
-                                    Deprecated environment
-                                </StyledTooltipTitle>
-                                <StyledTooltipDescription>
-                                    This environment is not auto-enabled for new
-                                    projects. The project owner will need to
-                                    manually enable it in the project.
-                                </StyledTooltipDescription>
-                            </>
-                        }
-                        describeChild
-                        arrow
-                    >
-                        <StyledBadge color='neutral'>Deprecated</StyledBadge>
-                    </HtmlTooltip>
-                }
-            />
+            {environment.protected ? (
+                <StyledBadge color='success'>Predefined</StyledBadge>
+            ) : null}
+            {!environment.enabled ? (
+                <HtmlTooltip
+                    maxWidth='270px'
+                    title={
+                        <>
+                            <StyledTooltipTitle>
+                                Deprecated environment
+                            </StyledTooltipTitle>
+                            <StyledTooltipDescription>
+                                This environment is not auto-enabled for new
+                                projects. The project owner will need to
+                                manually enable it in the project.
+                            </StyledTooltipDescription>
+                        </>
+                    }
+                    describeChild
+                    arrow
+                >
+                    <StyledBadge color='neutral'>Deprecated</StyledBadge>
+                </HtmlTooltip>
+            ) : null}
         </TextCell>
     );
 };

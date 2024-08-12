@@ -4,7 +4,6 @@ import { SegmentFormStepTwo } from './SegmentFormStepTwo';
 import type React from 'react';
 import { useState } from 'react';
 import { SegmentFormStepList } from 'component/segments/SegmentFormStepList';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 
 export type SegmentFormStep = 1 | 2;
@@ -54,36 +53,30 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
         <>
             <SegmentFormStepList total={totalSteps} current={currentStep} />
             <StyledForm onSubmit={handleSubmit}>
-                <ConditionallyRender
-                    condition={currentStep === 1}
-                    show={
-                        <SegmentFormStepOne
-                            name={name}
-                            description={description}
-                            project={project}
-                            setName={setName}
-                            setDescription={setDescription}
-                            setProject={setProject}
-                            errors={errors}
-                            clearErrors={clearErrors}
-                            setCurrentStep={setCurrentStep}
-                        />
-                    }
-                />
-                <ConditionallyRender
-                    condition={currentStep === 2}
-                    show={
-                        <SegmentFormStepTwo
-                            project={project}
-                            constraints={constraints}
-                            setConstraints={setConstraints}
-                            setCurrentStep={setCurrentStep}
-                            mode={mode}
-                        >
-                            {children}
-                        </SegmentFormStepTwo>
-                    }
-                />
+                {currentStep === 1 ? (
+                    <SegmentFormStepOne
+                        name={name}
+                        description={description}
+                        project={project}
+                        setName={setName}
+                        setDescription={setDescription}
+                        setProject={setProject}
+                        errors={errors}
+                        clearErrors={clearErrors}
+                        setCurrentStep={setCurrentStep}
+                    />
+                ) : null}
+                {currentStep === 2 ? (
+                    <SegmentFormStepTwo
+                        project={project}
+                        constraints={constraints}
+                        setConstraints={setConstraints}
+                        setCurrentStep={setCurrentStep}
+                        mode={mode}
+                    >
+                        {children}
+                    </SegmentFormStepTwo>
+                ) : null}
             </StyledForm>
         </>
     );

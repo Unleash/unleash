@@ -1,7 +1,6 @@
 import { Alert } from '@mui/material';
 import type React from 'react';
 import type { IEnvironment } from 'interfaces/environments';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { EnvironmentTableSingle } from 'component/environments/EnvironmentTable/EnvironmentTableSingle';
 
@@ -32,27 +31,21 @@ export const EnvironmentDeprecateToggleDialog = ({
                 setOpen(false);
             }}
         >
-            <ConditionallyRender
-                condition={enabled}
-                show={
-                    <Alert severity='info'>
-                        Deprecating an environment will mark it as deprecated.
-                        Deprecated environments are set as not visible by
-                        default for new projects. Project owners are still able
-                        to override this setting in the project. This
-                        environment will still be visible in any current
-                        projects.
-                    </Alert>
-                }
-                elseShow={
-                    <Alert severity='info'>
-                        Undeprecating an environment will no longer mark it as
-                        deprecated. An undeprecated environment will be set as
-                        visible by default for new projects.
-                    </Alert>
-                }
-            />
-
+            {enabled ? (
+                <Alert severity='info'>
+                    Deprecating an environment will mark it as deprecated.
+                    Deprecated environments are set as not visible by default
+                    for new projects. Project owners are still able to override
+                    this setting in the project. This environment will still be
+                    visible in any current projects.
+                </Alert>
+            ) : (
+                <Alert severity='info'>
+                    Undeprecating an environment will no longer mark it as
+                    deprecated. An undeprecated environment will be set as
+                    visible by default for new projects.
+                </Alert>
+            )}
             <EnvironmentTableSingle environment={environment} />
         </Dialogue>
     );

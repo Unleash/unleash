@@ -16,7 +16,6 @@ import {
 import FileCopy from '@mui/icons-material/FileCopy';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { trim } from 'component/common/util';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { getTogglePath } from 'utils/routePathHelpers';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -132,20 +131,14 @@ export const CopyFeatureToggle = () => {
             <StyledHeader>
                 <StyledTitle>Copy&nbsp;{featureId}</StyledTitle>
             </StyledHeader>
-            <ConditionallyRender
-                condition={Boolean(apiError)}
-                show={<Alert severity='error'>{apiError}</Alert>}
-            />
-            <ConditionallyRender
-                condition={isChangeRequestConfiguredInAnyEnv()}
-                show={
-                    <StyledAlert severity='error'>
-                        Copy functionality is disabled for this project because
-                        change request is enabled for at least one environment
-                        in this project.
-                    </StyledAlert>
-                }
-            />
+            {apiError ? <Alert severity='error'>{apiError}</Alert> : null}
+            {isChangeRequestConfiguredInAnyEnv() ? (
+                <StyledAlert severity='error'>
+                    Copy functionality is disabled for this project because
+                    change request is enabled for at least one environment in
+                    this project.
+                </StyledAlert>
+            ) : null}
             <StyledSection>
                 <StyledDescription>
                     You are about to create a new feature flag by cloning the
@@ -157,14 +150,9 @@ export const CopyFeatureToggle = () => {
                     you can proceed.
                 </StyledDescription>
 
-                <ConditionallyRender
-                    condition={displayFeatureNamingInfo}
-                    show={
-                        <FeatureNamingPatternInfo
-                            featureNaming={featureNaming!}
-                        />
-                    }
-                />
+                {displayFeatureNamingInfo ? (
+                    <FeatureNamingPatternInfo featureNaming={featureNaming!} />
+                ) : null}
                 <StyledForm onSubmit={onSubmit}>
                     <TextField
                         label='Name'

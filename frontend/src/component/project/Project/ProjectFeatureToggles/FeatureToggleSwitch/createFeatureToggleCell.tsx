@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { styled } from '@mui/material';
 import { flexRow } from 'themes/themeStyles';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
 import { FeatureToggleSwitch } from './FeatureToggleSwitch';
 import type { UseFeatureToggleSwitchType } from './FeatureToggleSwitch.types';
@@ -74,10 +73,7 @@ const FeatureToggleCellComponent = ({
                 environmentName={environmentName}
                 onToggle={onToggle}
             />
-            <ConditionallyRender
-                condition={hasWarning}
-                show={<VariantsWarningTooltip />}
-            />
+            {hasWarning ? <VariantsWarningTooltip /> : null}
         </StyledSwitchContainer>
     );
 };

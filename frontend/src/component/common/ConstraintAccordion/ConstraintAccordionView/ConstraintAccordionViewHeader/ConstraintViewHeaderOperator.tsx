@@ -1,5 +1,4 @@
 import type { IConstraint } from 'interfaces/strategy';
-import { ConditionallyRender } from '../../../ConditionallyRender/ConditionallyRender';
 import { Tooltip, Box, styled } from '@mui/material';
 import { stringOperators } from 'constants/operators';
 import { ReactComponent as NegatedOnIcon } from 'assets/icons/not_operator_selected.svg';
@@ -35,18 +34,15 @@ export const ConstraintViewHeaderOperator = ({
     const theme = useTheme();
     return (
         <StyledHeaderValuesContainerWrapper>
-            <ConditionallyRender
-                condition={Boolean(constraint.inverted)}
-                show={
-                    <Tooltip title={'Operator is negated'} arrow>
-                        <Box sx={{ display: 'flex' }}>
-                            <StyledIconWrapper isPrefix>
-                                <NegatedOnIcon />
-                            </StyledIconWrapper>
-                        </Box>
-                    </Tooltip>
-                }
-            />
+            {constraint.inverted ? (
+                <Tooltip title={'Operator is negated'} arrow>
+                    <Box sx={{ display: 'flex' }}>
+                        <StyledIconWrapper isPrefix>
+                            <NegatedOnIcon />
+                        </StyledIconWrapper>
+                    </Box>
+                </Tooltip>
+            ) : null}
             <StyledHeaderConstraintContainer>
                 <ConstraintOperator
                     constraint={constraint}
@@ -54,19 +50,14 @@ export const ConstraintViewHeaderOperator = ({
                     disabled={disabled}
                 />
             </StyledHeaderConstraintContainer>
-            <ConditionallyRender
-                condition={
-                    !constraint.caseInsensitive &&
-                    oneOf(stringOperators, constraint.operator)
-                }
-                show={
-                    <Tooltip title='Case sensitive is active' arrow>
-                        <StyledIconWrapper>
-                            <CaseSensitive />
-                        </StyledIconWrapper>
-                    </Tooltip>
-                }
-            />
+            {!constraint.caseInsensitive &&
+            oneOf(stringOperators, constraint.operator) ? (
+                <Tooltip title='Case sensitive is active' arrow>
+                    <StyledIconWrapper>
+                        <CaseSensitive />
+                    </StyledIconWrapper>
+                </Tooltip>
+            ) : null}
         </StyledHeaderValuesContainerWrapper>
     );
 };

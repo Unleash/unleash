@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { Box, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -165,32 +164,26 @@ export const ProjectApplications = () => {
                     title='Project applications'
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            placeholder='Search'
-                                            expandable
-                                            initialValue={query || ''}
-                                            onChange={setSearchValue}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <>
+                                    <Search
+                                        placeholder='Search'
+                                        expandable
+                                        initialValue={query || ''}
+                                        onChange={setSearchValue}
+                                    />
+                                    <PageHeader.Divider />
+                                </>
+                            ) : null}
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={query || ''}
-                                onChange={setSearchValue}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={query || ''}
+                            onChange={setSearchValue}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
@@ -199,29 +192,21 @@ export const ProjectApplications = () => {
                     <PaginatedTable tableInstance={table} totalItems={total} />
                 </div>
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
-                        <ConditionallyRender
-                            condition={(query || '')?.length > 0}
-                            show={
-                                <TablePlaceholder>
-                                    No applications found matching &ldquo;
-                                    {query}
-                                    &rdquo;
-                                </TablePlaceholder>
-                            }
-                            elseShow={
-                                <TablePlaceholder>
-                                    No applications found matching your
-                                    criteria.
-                                </TablePlaceholder>
-                            }
-                        />
-                    </Box>
-                }
-            />
+            {rows.length === 0 ? (
+                <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
+                    {(query || '')?.length > 0 ? (
+                        <TablePlaceholder>
+                            No applications found matching &ldquo;
+                            {query}
+                            &rdquo;
+                        </TablePlaceholder>
+                    ) : (
+                        <TablePlaceholder>
+                            No applications found matching your criteria.
+                        </TablePlaceholder>
+                    )}
+                </Box>
+            ) : null}
         </PageContent>
     );
 };

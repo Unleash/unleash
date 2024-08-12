@@ -10,7 +10,6 @@ import {
     useTheme,
 } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 type DashboardHeaderProps = {
     actions?: ReactNode;
@@ -84,14 +83,11 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
                 }
                 actions={
                     <StyledActionsContainer>
-                        <ConditionallyRender
-                            condition={!isSmallScreen}
-                            show={
-                                <StyledExternalActionsContainer>
-                                    {actions}
-                                </StyledExternalActionsContainer>
-                            }
-                        />
+                        {!isSmallScreen ? (
+                            <StyledExternalActionsContainer>
+                                {actions}
+                            </StyledExternalActionsContainer>
+                        ) : null}
                         <StyledActionButtons>
                             <Button
                                 startIcon={<ReviewsOutlined />}
@@ -104,14 +100,9 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
                     </StyledActionsContainer>
                 }
             />
-            <ConditionallyRender
-                condition={isSmallScreen}
-                show={
-                    <StyledActionsSmallScreen>
-                        {actions}
-                    </StyledActionsSmallScreen>
-                }
-            />
+            {isSmallScreen ? (
+                <StyledActionsSmallScreen>{actions}</StyledActionsSmallScreen>
+            ) : null}
         </>
     );
 };

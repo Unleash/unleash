@@ -1,7 +1,6 @@
 import { styled, type SxProps, type Theme, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
 import { LastSeenProgress } from './LastSeenProgress/LastSeenProgress';
 
@@ -83,84 +82,68 @@ export const LastSeenTooltip = ({
             <StyledDescriptionHeader>
                 Last usage reported
             </StyledDescriptionHeader>
-            <ConditionallyRender
-                condition={
-                    Boolean(environments) && Boolean(environmentsHaveLastSeen)
-                }
-                show={
-                    <StyledListContainer>
-                        {environments?.map(({ name, lastSeenAt, yes, no }) => (
-                            <StyledDescriptionBlock key={name}>
-                                <StyledDescriptionBlockHeader>
-                                    {name}
-                                </StyledDescriptionBlockHeader>
-                                <StyledValueContainer>
-                                    <ConditionallyRender
-                                        condition={Boolean(lastSeenAt)}
-                                        show={
-                                            <TimeAgo
-                                                date={lastSeenAt!}
-                                                title=''
-                                                live={false}
-                                                formatter={(
-                                                    value: number,
-                                                    unit: string,
-                                                    suffix: string,
-                                                ) => {
-                                                    const [, textColor] =
-                                                        getColor(unit);
-                                                    return (
-                                                        <StyledValue
-                                                            color={textColor}
-                                                        >
-                                                            {`${value} ${unit}${
-                                                                value !== 1
-                                                                    ? 's'
-                                                                    : ''
-                                                            } ${suffix}`}
-                                                        </StyledValue>
-                                                    );
-                                                }}
-                                            />
-                                        }
-                                        elseShow={
-                                            <StyledValue
-                                                color={defaultTextColor}
-                                            >
-                                                no usage
-                                            </StyledValue>
-                                        }
+            {Boolean(environments) && Boolean(environmentsHaveLastSeen) ? (
+                <StyledListContainer>
+                    {environments?.map(({ name, lastSeenAt, yes, no }) => (
+                        <StyledDescriptionBlock key={name}>
+                            <StyledDescriptionBlockHeader>
+                                {name}
+                            </StyledDescriptionBlockHeader>
+                            <StyledValueContainer>
+                                {lastSeenAt ? (
+                                    <TimeAgo
+                                        date={lastSeenAt!}
+                                        title=''
+                                        live={false}
+                                        formatter={(
+                                            value: number,
+                                            unit: string,
+                                            suffix: string,
+                                        ) => {
+                                            const [, textColor] =
+                                                getColor(unit);
+                                            return (
+                                                <StyledValue color={textColor}>
+                                                    {`${value} ${unit}${
+                                                        value !== 1 ? 's' : ''
+                                                    } ${suffix}`}
+                                                </StyledValue>
+                                            );
+                                        }}
                                     />
-                                </StyledValueContainer>
-                                <LastSeenProgress yes={yes} no={no} />
-                            </StyledDescriptionBlock>
-                        ))}
-                    </StyledListContainer>
-                }
-                elseShow={
-                    <TimeAgo
-                        date={featureLastSeen}
-                        title=''
-                        live={false}
-                        formatter={(
-                            value: number,
-                            unit: string,
-                            suffix: string,
-                        ) => {
-                            return (
-                                <Typography
-                                    fontWeight={'bold'}
-                                    color={'text.primary'}
-                                >
-                                    {`Reported ${value} ${unit}${
-                                        value !== 1 ? 's' : ''
-                                    } ${suffix}`}
-                                </Typography>
-                            );
-                        }}
-                    />
-                }
-            />
+                                ) : (
+                                    <StyledValue color={defaultTextColor}>
+                                        no usage
+                                    </StyledValue>
+                                )}
+                            </StyledValueContainer>
+                            <LastSeenProgress yes={yes} no={no} />
+                        </StyledDescriptionBlock>
+                    ))}
+                </StyledListContainer>
+            ) : (
+                <TimeAgo
+                    date={featureLastSeen}
+                    title=''
+                    live={false}
+                    formatter={(
+                        value: number,
+                        unit: string,
+                        suffix: string,
+                    ) => {
+                        return (
+                            <Typography
+                                fontWeight={'bold'}
+                                color={'text.primary'}
+                            >
+                                {`Reported ${value} ${unit}${
+                                    value !== 1 ? 's' : ''
+                                } ${suffix}`}
+                            </Typography>
+                        );
+                    }}
+                />
+            )}
             <StyledDescriptionSubHeader>
                 Usage is reported from connected applications through metrics
             </StyledDescriptionSubHeader>

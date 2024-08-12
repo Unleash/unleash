@@ -15,7 +15,6 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { projectFilterGenerator } from 'utils/projectFilterGenerator';
 import FeatureProjectSelect from '../FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { trim } from 'component/common/util';
 import Input from 'component/common/Input/Input';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -149,12 +148,9 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             <StyledInputDescription>
                 What would you like to call your flag?
             </StyledInputDescription>
-            <ConditionallyRender
-                condition={displayFeatureNamingInfo}
-                show={
-                    <FeatureNamingPatternInfo featureNaming={featureNaming!} />
-                }
-            />
+            {displayFeatureNamingInfo ? (
+                <FeatureNamingPatternInfo featureNaming={featureNaming!} />
+            ) : null}
             <StyledInput
                 autoFocus
                 disabled={mode === 'Edit'}
@@ -189,14 +185,11 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             <StyledTypeDescription>
                 {renderToggleDescription()}
             </StyledTypeDescription>
-            <ConditionallyRender
-                condition={editable}
-                show={
-                    <StyledInputDescription>
-                        In which project do you want to save the flag?
-                    </StyledInputDescription>
-                }
-            />
+            {editable ? (
+                <StyledInputDescription>
+                    In which project do you want to save the flag?
+                </StyledInputDescription>
+            ) : null}
             {/* TODO: this can be removed after new create flag flow goes live */}
             <FeatureProjectSelect
                 value={project}

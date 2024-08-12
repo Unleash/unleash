@@ -1,6 +1,5 @@
 import { useMemo, useRef } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
@@ -70,12 +69,9 @@ export const PermissionsTable = ({
                 prepareRow={prepareRow}
                 parentRef={parentRef}
             />
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <TablePlaceholder>No permissions found.</TablePlaceholder>
-                }
-            />
+            {rows.length === 0 ? (
+                <TablePlaceholder>No permissions found.</TablePlaceholder>
+            ) : null}
         </Box>
     );
 };

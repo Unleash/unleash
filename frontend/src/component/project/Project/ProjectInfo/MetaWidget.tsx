@@ -5,7 +5,6 @@ import {
     StyledProjectInfoWidgetContainer,
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { WidgetFooterLink } from './WidgetFooterLink';
 
 interface IMetaWidgetProps {
@@ -35,30 +34,24 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 </Typography>{' '}
                 <code data-loading>{id || '__________'}</code>
             </StyledIDContainer>
-            <ConditionallyRender
-                condition={Boolean(description)}
-                show={
-                    <Typography
-                        data-loading
-                        variant='body2'
-                        sx={{
-                            marginTop: (theme) => theme.spacing(1.5),
-                            marginBottom: 0,
-                            textAlign: 'left',
-                        }}
-                    >
-                        {description}
-                    </Typography>
-                }
-            />
-            <ConditionallyRender
-                condition={!description}
-                show={
-                    <WidgetFooterLink to={`/projects/${id}/settings`}>
-                        Add description
-                    </WidgetFooterLink>
-                }
-            />
+            {description ? (
+                <Typography
+                    data-loading
+                    variant='body2'
+                    sx={{
+                        marginTop: (theme) => theme.spacing(1.5),
+                        marginBottom: 0,
+                        textAlign: 'left',
+                    }}
+                >
+                    {description}
+                </Typography>
+            ) : null}
+            {!description ? (
+                <WidgetFooterLink to={`/projects/${id}/settings`}>
+                    Add description
+                </WidgetFooterLink>
+            ) : null}
         </StyledProjectInfoWidgetContainer>
     );
 };

@@ -6,7 +6,6 @@ import { JIRA_INFO } from '../../ViewIntegration/JiraIntegration/JiraIntegration
 import { StyledCardsGrid } from '../IntegrationList.styles';
 import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard';
 import { OFFICIAL_SDKS } from './SDKs';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -97,17 +96,14 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 />
                             ),
                         )}
-                    <ConditionallyRender
-                        condition={isEnterprise() && signalsEnabled}
-                        show={
-                            <IntegrationCard
-                                icon='signals'
-                                title='Signals'
-                                description='Signal endpoints allow third-party services to send signals to Unleash.'
-                                link='/integrations/signals'
-                            />
-                        }
-                    />
+                    {isEnterprise() && signalsEnabled ? (
+                        <IntegrationCard
+                            icon='signals'
+                            title='Signals'
+                            description='Signal endpoints allow third-party services to send signals to Unleash.'
+                            link='/integrations/signals'
+                        />
+                    ) : null}
                     {/* TODO: sort providers from backend with custom providers */}
                     {customProviders?.map(
                         ({ name, displayName, description }) => (

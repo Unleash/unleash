@@ -3,7 +3,6 @@ import type { IConstraint } from 'interfaces/strategy';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     dateOperators,
     DATE_AFTER,
@@ -207,25 +206,19 @@ export const ConstraintAccordionEditHeader = ({
                             onChange={onOperatorChange}
                         />
                     </StyledHeaderSelect>
-                    <ConditionallyRender
-                        condition={showCaseSensitiveButton}
-                        show={
-                            <CaseSensitiveButton
-                                localConstraint={localConstraint}
-                                setCaseInsensitive={setCaseInsensitive}
-                            />
-                        }
-                    />
+                    {showCaseSensitiveButton ? (
+                        <CaseSensitiveButton
+                            localConstraint={localConstraint}
+                            setCaseInsensitive={setCaseInsensitive}
+                        />
+                    ) : null}
                 </StyledBottomSelect>
             </StyledSelectContainer>
-            <ConditionallyRender
-                condition={!compact}
-                show={
-                    <StyledHeaderText>
-                        {resolveText(operator, contextName)}
-                    </StyledHeaderText>
-                }
-            />
+            {!compact ? (
+                <StyledHeaderText>
+                    {resolveText(operator, contextName)}
+                </StyledHeaderText>
+            ) : null}
             <ConstraintAccordionHeaderActions
                 onDelete={onDelete}
                 onUndo={onUndo}

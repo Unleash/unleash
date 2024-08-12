@@ -10,7 +10,6 @@ import {
     Typography,
     type TypographyProps,
 } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { usePageTitle } from 'hooks/usePageTitle';
 
@@ -102,10 +101,9 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
                     </StyledHeaderTitle>
                     {subtitle && <small>{subtitle}</small>}
                 </StyledHeader>
-                <ConditionallyRender
-                    condition={Boolean(actions)}
-                    show={<StyledHeaderActions>{actions}</StyledHeaderActions>}
-                />
+                {actions ? (
+                    <StyledHeaderActions>{actions}</StyledHeaderActions>
+                ) : null}
             </StyledTopContainer>
             {children}
         </StyledHeaderContainer>

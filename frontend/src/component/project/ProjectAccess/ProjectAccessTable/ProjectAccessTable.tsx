@@ -23,7 +23,6 @@ import {
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import {
@@ -120,10 +119,9 @@ export const ProjectAccessTable: VFC = () => {
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: row } }: any) => (
                     <StyledUserAvatars>
-                        <ConditionallyRender
-                            condition={row.type === ENTITY_TYPE.GROUP}
-                            show={<StyledEmptyAvatar />}
-                        />
+                        {row.type === ENTITY_TYPE.GROUP ? (
+                            <StyledEmptyAvatar />
+                        ) : null}
                         <StyledGroupAvatar user={row.entity}>
                             {row.entity.users?.length}
                         </StyledGroupAvatar>
@@ -136,29 +134,22 @@ export const ProjectAccessTable: VFC = () => {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: IProjectAccess) => row.entity.name || '',
-                Cell: ({ value, row: { original: row } }: any) => (
-                    <ConditionallyRender
-                        condition={row.type === ENTITY_TYPE.GROUP}
-                        show={
-                            <LinkCell
-                                onClick={() => {
-                                    setSelectedRow(row);
-                                    setGroupOpen(true);
-                                }}
-                                title={value}
-                                subtitle={`${row.entity.users?.length} users`}
-                            />
-                        }
-                        elseShow={
-                            <HighlightCell
-                                value={value}
-                                subtitle={
-                                    row.entity?.email || row.entity?.username
-                                }
-                            />
-                        }
-                    />
-                ),
+                Cell: ({ value, row: { original: row } }: any) =>
+                    row.type === ENTITY_TYPE.GROUP ? (
+                        <LinkCell
+                            onClick={() => {
+                                setSelectedRow(row);
+                                setGroupOpen(true);
+                            }}
+                            title={value}
+                            subtitle={`${row.entity.users?.length} users`}
+                        />
+                    ) : (
+                        <HighlightCell
+                            value={value}
+                            subtitle={row.entity?.email || row.entity?.username}
+                        />
+                    ),
                 minWidth: 100,
                 searchable: true,
             },
@@ -409,20 +400,17 @@ export const ProjectAccessTable: VFC = () => {
                     })`}
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                            hasFilters
-                                            getSearchContext={getSearchContext}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <>
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
+                                        hasFilters
+                                        getSearchContext={getSearchContext}
+                                    />
+                                    <PageHeader.Divider />
+                                </>
+                            ) : null}
                             <ResponsiveButton
                                 onClick={() => navigate('create')}
                                 maxWidth='700px'
@@ -439,17 +427,14 @@ export const ProjectAccessTable: VFC = () => {
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                                hasFilters
-                                getSearchContext={getSearchContext}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                            hasFilters
+                            getSearchContext={getSearchContext}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
@@ -460,27 +445,20 @@ export const ProjectAccessTable: VFC = () => {
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No access found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No access available. Get started by assigning a{' '}
-                                {entityType}.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No access found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No access available. Get started by assigning a{' '}
+                        {entityType}.
+                    </TablePlaceholder>
+                )
+            ) : null}
             <Routes>
                 <Route path='create' element={<ProjectAccessCreate />} />
                 <Route

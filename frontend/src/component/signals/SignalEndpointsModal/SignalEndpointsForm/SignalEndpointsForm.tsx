@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { ISignalEndpoint } from 'interfaces/signal';
 import {
     type SignalEndpointsFormErrors,
@@ -136,113 +135,99 @@ export const SignalEndpointsForm = ({
                 autoComplete='off'
             />
             <SignalEndpointsFormURL name={name} />
-            <ConditionallyRender
-                condition={signalEndpoint === undefined}
-                show={
-                    <StyledSecondarySection>
-                        <StyledInputDescription>Token</StyledInputDescription>
-                        <StyledInputSecondaryDescription>
-                            In order to connect your newly created signal
-                            endpoint, you will also need a token.{' '}
-                            <Link
-                                href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
-                                target='_blank'
-                                rel='noreferrer'
-                            >
-                                Read more about API tokens
-                            </Link>
-                            .
-                        </StyledInputSecondaryDescription>
-                        <FormControl>
-                            <RadioGroup
-                                value={tokenGeneration}
-                                onChange={(e) => {
-                                    const tokenGeneration = e.target
-                                        .value as TokenGeneration;
+            {signalEndpoint === undefined ? (
+                <StyledSecondarySection>
+                    <StyledInputDescription>Token</StyledInputDescription>
+                    <StyledInputSecondaryDescription>
+                        In order to connect your newly created signal endpoint,
+                        you will also need a token.{' '}
+                        <Link
+                            href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                            target='_blank'
+                            rel='noreferrer'
+                        >
+                            Read more about API tokens
+                        </Link>
+                        .
+                    </StyledInputSecondaryDescription>
+                    <FormControl>
+                        <RadioGroup
+                            value={tokenGeneration}
+                            onChange={(e) => {
+                                const tokenGeneration = e.target
+                                    .value as TokenGeneration;
 
-                                    if (validated) {
+                                if (validated) {
+                                    validateTokenName(
+                                        tokenGeneration,
+                                        tokenName,
+                                    );
+                                }
+                                setTokenGeneration(tokenGeneration);
+                            }}
+                            name='token-generation'
+                        >
+                            <FormControlLabel
+                                value={TokenGeneration.LATER}
+                                control={<Radio />}
+                                label='I want to generate a token later'
+                            />
+                            <FormControlLabel
+                                value={TokenGeneration.NOW}
+                                control={<Radio />}
+                                label='Generate a token now'
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                    <StyledInlineContainer>
+                        <StyledInputSecondaryDescription>
+                            A new signal endpoint token will be generated for
+                            the signal endpoint, so you can get started right
+                            away.
+                        </StyledInputSecondaryDescription>
+                        {tokenGeneration === TokenGeneration.NOW ? (
+                            <>
+                                <StyledInputSecondaryDescription>
+                                    What is your new token name?
+                                </StyledInputSecondaryDescription>
+                                <StyledInput
+                                    autoFocus
+                                    label='Token name'
+                                    error={Boolean(errors.tokenName)}
+                                    errorText={errors.tokenName}
+                                    value={tokenName}
+                                    onChange={(e) => {
                                         validateTokenName(
                                             tokenGeneration,
-                                            tokenName,
+                                            e.target.value,
                                         );
-                                    }
-                                    setTokenGeneration(tokenGeneration);
-                                }}
-                                name='token-generation'
-                            >
-                                <FormControlLabel
-                                    value={TokenGeneration.LATER}
-                                    control={<Radio />}
-                                    label='I want to generate a token later'
+                                        setTokenName(e.target.value);
+                                    }}
+                                    autoComplete='off'
                                 />
-                                <FormControlLabel
-                                    value={TokenGeneration.NOW}
-                                    control={<Radio />}
-                                    label='Generate a token now'
-                                />
-                            </RadioGroup>
-                        </FormControl>
-                        <StyledInlineContainer>
-                            <StyledInputSecondaryDescription>
-                                A new signal endpoint token will be generated
-                                for the signal endpoint, so you can get started
-                                right away.
-                            </StyledInputSecondaryDescription>
-                            <ConditionallyRender
-                                condition={
-                                    tokenGeneration === TokenGeneration.NOW
-                                }
-                                show={
-                                    <>
-                                        <StyledInputSecondaryDescription>
-                                            What is your new token name?
-                                        </StyledInputSecondaryDescription>
-                                        <StyledInput
-                                            autoFocus
-                                            label='Token name'
-                                            error={Boolean(errors.tokenName)}
-                                            errorText={errors.tokenName}
-                                            value={tokenName}
-                                            onChange={(e) => {
-                                                validateTokenName(
-                                                    tokenGeneration,
-                                                    e.target.value,
-                                                );
-                                                setTokenName(e.target.value);
-                                            }}
-                                            autoComplete='off'
-                                        />
-                                    </>
-                                }
-                            />
-                        </StyledInlineContainer>
-                    </StyledSecondarySection>
-                }
-                elseShow={
-                    <>
-                        <StyledInputDescription>
-                            Signal endpoint tokens
-                        </StyledInputDescription>
-                        <SignalEndpointsTokens
-                            signalEndpoint={signalEndpoint!}
-                        />
-                    </>
-                }
-            />
-            <ConditionallyRender
-                condition={showErrors}
-                show={() => (
-                    <Alert severity='error' icon={false}>
-                        <ul>
-                            {Object.values(errors)
-                                .filter(Boolean)
-                                .map((error) => (
-                                    <li key={error}>{error}</li>
-                                ))}
-                        </ul>
-                    </Alert>
-                )}
-            />
+                            </>
+                        ) : null}
+                    </StyledInlineContainer>
+                </StyledSecondarySection>
+            ) : (
+                <>
+                    <StyledInputDescription>
+                        Signal endpoint tokens
+                    </StyledInputDescription>
+                    <SignalEndpointsTokens signalEndpoint={signalEndpoint!} />
+                </>
+            )}
+            {showErrors ? (
+                <Alert severity='error' icon={false}>
+                    <ul>
+                        {Object.values(errors)
+                            .filter(Boolean)
+                            .map((error) => (
+                                <li key={error}>{error}</li>
+                            ))}
+                    </ul>
+                </Alert>
+            ) : null}
         </div>
     );
 };

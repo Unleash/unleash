@@ -1,6 +1,5 @@
 import { Fragment, useMemo, type VFC } from 'react';
 import { Alert, Box, Chip, Link, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ConstraintItem } from './ConstraintItem/ConstraintItem';
@@ -252,24 +251,20 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     return typeof parameters[name] !== 'undefined' ? (
                         <StyledValueContainer>
                             {nameItem}
-                            <ConditionallyRender
-                                condition={value === ''}
-                                show={
-                                    <StyledValueSeparator>
-                                        {' is an empty string'}
-                                    </StyledValueSeparator>
-                                }
-                                elseShow={
-                                    <>
-                                        {isSetTo}
-                                        <StringTruncator
-                                            maxWidth='300'
-                                            text={value}
-                                            maxLength={50}
-                                        />
-                                    </>
-                                }
-                            />
+                            {value === '' ? (
+                                <StyledValueSeparator>
+                                    {' is an empty string'}
+                                </StyledValueSeparator>
+                            ) : (
+                                <>
+                                    {isSetTo}
+                                    <StringTruncator
+                                        maxWidth='300'
+                                        text={value}
+                                        maxLength={50}
+                                    />
+                                </>
+                            )}
                         </StyledValueContainer>
                     ) : null;
                 }
@@ -327,30 +322,23 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={
-                    !BuiltInStrategies.includes(strategy.name || 'default')
-                }
-                show={<CustomStrategyDeprecationWarning />}
-            />
-
-            <ConditionallyRender
-                condition={listItems.length > 0}
-                show={
-                    <StyledContainer disabled={Boolean(strategy.disabled)}>
-                        {listItems.map((item, index) => (
-                            <Fragment key={index}>
-                                <ConditionallyRender
-                                    condition={index > 0}
-                                    show={<StrategySeparator text='AND' />}
-                                />
-                                {item}
-                            </Fragment>
-                        ))}
-                    </StyledContainer>
-                }
-                elseShow={<NoItems />}
-            />
+            {!BuiltInStrategies.includes(strategy.name || 'default') ? (
+                <CustomStrategyDeprecationWarning />
+            ) : null}
+            {listItems.length > 0 ? (
+                <StyledContainer disabled={Boolean(strategy.disabled)}>
+                    {listItems.map((item, index) => (
+                        <Fragment key={index}>
+                            {index > 0 ? (
+                                <StrategySeparator text='AND' />
+                            ) : null}
+                            {item}
+                        </Fragment>
+                    ))}
+                </StyledContainer>
+            ) : (
+                <NoItems />
+            )}
         </>
     );
 };

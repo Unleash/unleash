@@ -2,7 +2,6 @@ import { Box, Link, Paper, styled } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { Link as RouterLink } from 'react-router-dom';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ReactTimeAgo from 'react-timeago';
 import type { IProjectHealthReport } from 'interfaces/project';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -131,49 +130,35 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
         <StyledPaper>
             <Box>
                 <StyledHeader>Health rating</StyledHeader>
-                <ConditionallyRender
-                    condition={healthReport.health > -1}
-                    show={
-                        <>
-                            <StyledHealthRating
-                                sx={{ color: healthRatingColor }}
-                            >
-                                {healthReport.health}%
-                            </StyledHealthRating>
-                            <StyledLastUpdated>
-                                Last updated:{' '}
-                                <ReactTimeAgo
-                                    date={healthReport.updatedAt}
-                                    live={false}
-                                />
-                            </StyledLastUpdated>
-                        </>
-                    }
-                />
+                {healthReport.health > -1 ? (
+                    <>
+                        <StyledHealthRating sx={{ color: healthRatingColor }}>
+                            {healthReport.health}%
+                        </StyledHealthRating>
+                        <StyledLastUpdated>
+                            Last updated:{' '}
+                            <ReactTimeAgo
+                                date={healthReport.updatedAt}
+                                live={false}
+                            />
+                        </StyledLastUpdated>
+                    </>
+                ) : null}
             </Box>
             <Box>
                 <StyledHeader>Flag report</StyledHeader>
                 <StyledList>
                     <li>
-                        <ConditionallyRender
-                            condition={Boolean(healthReport.activeCount)}
-                            show={renderActiveToggles}
-                        />
+                        {healthReport.activeCount ? renderActiveToggles : null}
                     </li>
-                    <ConditionallyRender
-                        condition={Boolean(healthReport.activeCount)}
-                        show={
-                            <StyledAlignedItem>
-                                Also includes potentially stale flags.
-                            </StyledAlignedItem>
-                        }
-                    />
+                    {healthReport.activeCount ? (
+                        <StyledAlignedItem>
+                            Also includes potentially stale flags.
+                        </StyledAlignedItem>
+                    ) : null}
 
                     <li>
-                        <ConditionallyRender
-                            condition={Boolean(healthReport.staleCount)}
-                            show={renderStaleToggles}
-                        />
+                        {healthReport.staleCount ? renderStaleToggles : null}
                     </li>
                 </StyledList>
             </Box>
@@ -186,34 +171,28 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                 </StyledHeader>
                 <StyledList>
                     <li>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                healthReport.potentiallyStaleCount,
-                            )}
-                            show={renderPotentiallyStaleToggles}
-                        />
+                        {healthReport.potentiallyStaleCount
+                            ? renderPotentiallyStaleToggles
+                            : null}
                     </li>
                 </StyledList>
-                <ConditionallyRender
-                    condition={Boolean(healthReport.potentiallyStaleCount)}
-                    show={
-                        <>
-                            <StyledAlignedItem>
-                                Review your feature flags and delete unused
-                                flags.
-                            </StyledAlignedItem>
-                            <Box sx={{ mt: 2 }}>
-                                <Link
-                                    component={RouterLink}
-                                    to={'/feature-toggle-type'}
-                                >
-                                    Configure feature types lifetime
-                                </Link>
-                            </Box>
-                        </>
-                    }
-                    elseShow={<span>No action is required</span>}
-                />
+                {healthReport.potentiallyStaleCount ? (
+                    <>
+                        <StyledAlignedItem>
+                            Review your feature flags and delete unused flags.
+                        </StyledAlignedItem>
+                        <Box sx={{ mt: 2 }}>
+                            <Link
+                                component={RouterLink}
+                                to={'/feature-toggle-type'}
+                            >
+                                Configure feature types lifetime
+                            </Link>
+                        </Box>
+                    </>
+                ) : (
+                    <span>No action is required</span>
+                )}
             </Box>
         </StyledPaper>
     );

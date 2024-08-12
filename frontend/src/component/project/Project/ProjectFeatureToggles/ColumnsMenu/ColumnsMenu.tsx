@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import ColumnIcon from '@mui/icons-material/ViewWeek';
 import CloseIcon from '@mui/icons-material/Close';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     StyledBoxContainer,
     StyledBoxMenuHeader,
@@ -119,7 +118,6 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     <ColumnIcon />
                 </StyledIconButton>
             </Tooltip>
-
             <Popover
                 id={menuId}
                 open={isOpen}
@@ -153,10 +151,9 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     {allColumns
                         .filter(({ hideInMenu }) => !hideInMenu)
                         .map((column) => [
-                            <ConditionallyRender
-                                condition={dividerBefore.includes(column.id)}
-                                show={<StyledDivider />}
-                            />,
+                            dividerBefore.includes(column.id) ? (
+                                <StyledDivider />
+                            ) : null,
                             <StyledMenuItem
                                 onClick={() => {
                                     column.toggleHidden(column.isVisible);
@@ -179,31 +176,22 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                     id={column.id}
                                     primary={
                                         <Typography variant='body2'>
-                                            <ConditionallyRender
-                                                condition={Boolean(
-                                                    typeof column.Header ===
-                                                        'string' &&
-                                                        column.Header,
-                                                )}
-                                                show={() => (
-                                                    <>{column.Header}</>
-                                                )}
-                                                elseShow={() => (
-                                                    <>
-                                                        {columnNameMap[
-                                                            column.id
-                                                        ] || column.id}
-                                                    </>
-                                                )}
-                                            />
+                                            {typeof column.Header ===
+                                                'string' && column.Header ? (
+                                                <>{column.Header}</>
+                                            ) : (
+                                                <>
+                                                    {columnNameMap[column.id] ||
+                                                        column.id}
+                                                </>
+                                            )}
                                         </Typography>
                                     }
                                 />
                             </StyledMenuItem>,
-                            <ConditionallyRender
-                                condition={dividerAfter.includes(column.id)}
-                                show={<StyledDivider />}
-                            />,
+                            dividerAfter.includes(column.id) ? (
+                                <StyledDivider />
+                            ) : null,
                         ])}
                 </MenuList>
             </Popover>

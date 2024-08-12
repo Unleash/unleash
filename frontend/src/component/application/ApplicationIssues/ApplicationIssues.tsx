@@ -1,5 +1,4 @@
 import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import type { ApplicationOverviewSchema } from 'openapi';
 import { Link } from 'react-router-dom';
@@ -127,30 +126,23 @@ const FeaturesMissing = ({ features }: IFeaturesMissingProps) => {
                 {features.map((feature) => (
                     <IssueRowContainer key={feature}>
                         <StyledListElement>{feature}</StyledListElement>
-                        <ConditionallyRender
-                            condition={hasAccess(CREATE_FEATURE)}
-                            show={
-                                <ConditionallyRender
-                                    condition={improveCreateFlagFlow}
-                                    show={
-                                        <StyledLink
-                                            key={feature}
-                                            to={`/projects/default?create=true&name=${feature}`}
-                                        >
-                                            Create feature flag
-                                        </StyledLink>
-                                    }
-                                    elseShow={
-                                        <StyledLink
-                                            key={feature}
-                                            to={`/projects/default/create-toggle?name=${feature}`}
-                                        >
-                                            Create feature flag
-                                        </StyledLink>
-                                    }
-                                />
-                            }
-                        />
+                        {hasAccess(CREATE_FEATURE) ? (
+                            improveCreateFlagFlow ? (
+                                <StyledLink
+                                    key={feature}
+                                    to={`/projects/default?create=true&name=${feature}`}
+                                >
+                                    Create feature flag
+                                </StyledLink>
+                            ) : (
+                                <StyledLink
+                                    key={feature}
+                                    to={`/projects/default/create-toggle?name=${feature}`}
+                                >
+                                    Create feature flag
+                                </StyledLink>
+                            )
+                        ) : null}
                     </IssueRowContainer>
                 ))}
             </StyledList>
@@ -176,17 +168,14 @@ const StrategiesMissing = ({ strategies }: IStrategiesMissingProps) => {
                 {strategies.map((strategy) => (
                     <IssueRowContainer key={strategy}>
                         <StyledListElement>{strategy}</StyledListElement>
-                        <ConditionallyRender
-                            condition={hasAccess(CREATE_STRATEGY)}
-                            show={
-                                <StyledLink
-                                    key={strategy}
-                                    to={`/strategies/create`}
-                                >
-                                    Create strategy type
-                                </StyledLink>
-                            }
-                        />
+                        {hasAccess(CREATE_STRATEGY) ? (
+                            <StyledLink
+                                key={strategy}
+                                to={`/strategies/create`}
+                            >
+                                Create strategy type
+                            </StyledLink>
+                        ) : null}
                     </IssueRowContainer>
                 ))}
             </StyledList>

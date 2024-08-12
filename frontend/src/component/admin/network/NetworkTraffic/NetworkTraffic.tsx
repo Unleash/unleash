@@ -24,7 +24,6 @@ import 'chartjs-adapter-date-fns';
 import { Alert, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { CyclicIterator } from 'utils/cyclicIterator';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
 import type { Theme } from '@mui/material/styles/createTheme';
@@ -203,22 +202,18 @@ export const NetworkTraffic: VFC = () => {
         return { datasets: toChartData(theme, metrics) };
     }, [theme, metrics, locationSettings]);
 
-    return (
-        <ConditionallyRender
-            condition={data.datasets.length === 0}
-            show={<Alert severity='warning'>No data available.</Alert>}
-            elseShow={
-                <Box sx={{ display: 'grid', gap: 4 }}>
-                    <div style={{ height: 400 }}>
-                        <Line
-                            data={data}
-                            options={options}
-                            aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
-                        />
-                    </div>
-                </Box>
-            }
-        />
+    return data.datasets.length === 0 ? (
+        <Alert severity='warning'>No data available.</Alert>
+    ) : (
+        <Box sx={{ display: 'grid', gap: 4 }}>
+            <div style={{ height: 400 }}>
+                <Line
+                    data={data}
+                    options={options}
+                    aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
+                />
+            </div>
+        </Box>
     );
 };
 

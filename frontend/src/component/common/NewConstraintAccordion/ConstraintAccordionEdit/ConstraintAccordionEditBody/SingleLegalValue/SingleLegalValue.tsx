@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { FormControl, RadioGroup, Radio, Alert, styled } from '@mui/material';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useThemeStyles } from 'themes/themeStyles';
 import type { ILegalValue } from 'interfaces/context';
 import {
@@ -60,68 +59,51 @@ export const SingleLegalValue = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={Boolean(illegalValues && illegalValues.length > 0)}
-                show={
-                    <Alert
-                        severity='warning'
-                        sx={(theme) => ({ marginTop: theme.spacing(1) })}
-                    >
-                        {' '}
-                        This constraint is using legal values that have been
-                        deleted as a valid option. Please select a new value
-                        from the remaining predefined legal values. The
-                        constraint will be updated with the new value when you
-                        save the strategy.
-                    </Alert>
-                }
-            />
+            {illegalValues && illegalValues.length > 0 ? (
+                <Alert
+                    severity='warning'
+                    sx={(theme) => ({ marginTop: theme.spacing(1) })}
+                >
+                    {' '}
+                    This constraint is using legal values that have been deleted
+                    as a valid option. Please select a new value from the
+                    remaining predefined legal values. The constraint will be
+                    updated with the new value when you save the strategy.
+                </Alert>
+            ) : null}
             <ConstraintFormHeader>
                 Add a single {type.toLowerCase()} value
             </ConstraintFormHeader>
-            <ConditionallyRender
-                condition={Boolean(legalValues.length > 100)}
-                show={
-                    <ConstraintValueSearch
-                        filter={filter}
-                        setFilter={setFilter}
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(legalValues.length)}
-                show={
-                    <StyledFieldsetContainer>
-                        <FormControl component='fieldset'>
-                            <RadioGroup
-                                aria-label='selected-value'
-                                name='selected'
-                                value={value}
-                                sx={{ gap: (theme) => theme.spacing(0.5) }}
-                                onChange={(e) => {
-                                    setError('');
-                                    setValue(e.target.value);
-                                }}
-                            >
-                                {filteredValues.map((match) => (
-                                    <LegalValueLabel
-                                        key={match.value}
-                                        legal={match}
-                                        control={<Radio />}
-                                    />
-                                ))}
-                            </RadioGroup>
-                        </FormControl>
-                    </StyledFieldsetContainer>
-                }
-                elseShow={
-                    <p>No valid legal values available for this operator.</p>
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(error)}
-                show={<p className={styles.error}>{error}</p>}
-            />
+            {legalValues.length > 100 ? (
+                <ConstraintValueSearch filter={filter} setFilter={setFilter} />
+            ) : null}
+            {legalValues.length ? (
+                <StyledFieldsetContainer>
+                    <FormControl component='fieldset'>
+                        <RadioGroup
+                            aria-label='selected-value'
+                            name='selected'
+                            value={value}
+                            sx={{ gap: (theme) => theme.spacing(0.5) }}
+                            onChange={(e) => {
+                                setError('');
+                                setValue(e.target.value);
+                            }}
+                        >
+                            {filteredValues.map((match) => (
+                                <LegalValueLabel
+                                    key={match.value}
+                                    legal={match}
+                                    control={<Radio />}
+                                />
+                            ))}
+                        </RadioGroup>
+                    </FormControl>
+                </StyledFieldsetContainer>
+            ) : (
+                <p>No valid legal values available for this operator.</p>
+            )}
+            {error ? <p className={styles.error}>{error}</p> : null}
         </>
     );
 };

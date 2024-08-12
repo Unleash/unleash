@@ -4,7 +4,6 @@ import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     type IInstanceStatus,
     InstanceState,
@@ -141,20 +140,17 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
     return (
         <Grid item xs={12} md={7}>
             <StyledPlanBox>
-                <ConditionallyRender
-                    condition={inactive}
-                    show={
-                        <StyledAlert severity='info'>
-                            After you have sent your billing information, your
-                            instance will be upgraded - you don't have to do
-                            anything.{' '}
-                            <a href='mailto:support@getunleash.io?subject=PRO plan clarifications'>
-                                Get in touch with us
-                            </a>{' '}
-                            for any clarification
-                        </StyledAlert>
-                    }
-                />
+                {inactive ? (
+                    <StyledAlert severity='info'>
+                        After you have sent your billing information, your
+                        instance will be upgraded - you don't have to do
+                        anything.{' '}
+                        <a href='mailto:support@getunleash.io?subject=PRO plan clarifications'>
+                            Get in touch with us
+                        </a>{' '}
+                        for any clarification
+                    </StyledAlert>
+                ) : null}
                 <Badge color='success'>Current plan</Badge>
                 <Grid container>
                     <GridRow
@@ -164,165 +160,148 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                             <StyledPlanSpan>
                                 {instanceStatus.plan}
                             </StyledPlanSpan>
-                            <ConditionallyRender
-                                condition={isTrialInstance(instanceStatus)}
-                                show={
-                                    <StyledTrialSpan
-                                        sx={(theme) => ({
-                                            color: expired
-                                                ? theme.palette.error.dark
-                                                : theme.palette.warning.dark,
-                                        })}
-                                    >
-                                        {expired
-                                            ? 'Trial expired'
-                                            : instanceStatus.trialExtended
-                                              ? 'Extended Trial'
-                                              : 'Trial'}
-                                    </StyledTrialSpan>
-                                }
-                            />
+                            {isTrialInstance(instanceStatus) ? (
+                                <StyledTrialSpan
+                                    sx={(theme) => ({
+                                        color: expired
+                                            ? theme.palette.error.dark
+                                            : theme.palette.warning.dark,
+                                    })}
+                                >
+                                    {expired
+                                        ? 'Trial expired'
+                                        : instanceStatus.trialExtended
+                                          ? 'Extended Trial'
+                                          : 'Trial'}
+                                </StyledTrialSpan>
+                            ) : null}
                         </GridCol>
                         <GridCol>
-                            <ConditionallyRender
-                                condition={planPrice > 0}
-                                show={
-                                    <StyledPriceSpan>
-                                        ${planPrice.toFixed(2)}
-                                    </StyledPriceSpan>
-                                }
-                            />
+                            {planPrice > 0 ? (
+                                <StyledPriceSpan>
+                                    ${planPrice.toFixed(2)}
+                                </StyledPriceSpan>
+                            ) : null}
                         </GridCol>
                     </GridRow>
                 </Grid>
-                <ConditionallyRender
-                    condition={Boolean(
-                        instanceStatus.plan === InstancePlan.PRO,
-                    )}
-                    show={
-                        <>
-                            <Grid container>
-                                <GridRow
-                                    sx={(theme) => ({
-                                        marginBottom: theme.spacing(1.5),
-                                    })}
-                                >
-                                    <GridCol vertical>
-                                        <Typography>
-                                            <strong>Included members</strong>
-                                            <GridColLink>
-                                                <Link to='/admin/users'>
-                                                    {freeAssigned} of 5 assigned
-                                                </Link>
-                                            </GridColLink>
-                                        </Typography>
-                                        <StyledInfoLabel>
-                                            You have 5 team members included in
-                                            your PRO plan
-                                        </StyledInfoLabel>
-                                    </GridCol>
-                                    <GridCol>
-                                        <StyledCheckIcon />
-                                        <Typography variant='body2'>
-                                            included
-                                        </Typography>
-                                    </GridCol>
-                                </GridRow>
-                                <GridRow
-                                    sx={(theme) => ({
-                                        marginBottom: theme.spacing(1.5),
-                                    })}
-                                >
-                                    <GridCol vertical>
-                                        <Typography>
-                                            <strong>Paid members</strong>
-                                            <GridColLink>
-                                                <Link to='/admin/users'>
-                                                    {paidAssigned} assigned
-                                                </Link>
-                                            </GridColLink>
-                                        </Typography>
-                                        <StyledInfoLabel>
-                                            $15/month per paid member
-                                        </StyledInfoLabel>
-                                    </GridCol>
-                                    <GridCol>
-                                        <Typography
-                                            sx={(theme) => ({
-                                                fontSize:
-                                                    theme.fontSizes.mainHeader,
-                                            })}
-                                        >
-                                            ${paidAssignedPrice.toFixed(2)}
-                                        </Typography>
-                                    </GridCol>
-                                </GridRow>
-                                <ConditionallyRender
-                                    condition={overageCost > 0}
-                                    show={
-                                        <GridRow>
-                                            <GridCol vertical>
-                                                <Typography>
-                                                    <strong>
-                                                        Accrued traffic charges
-                                                    </strong>
-                                                    <GridColLink>
-                                                        <Link to='/admin/network/data-usage'>
-                                                            view details
-                                                        </Link>
-                                                    </GridColLink>
-                                                </Typography>
-                                                <StyledInfoLabel>
-                                                    $5 dollar per 1 million
-                                                    started above included data
-                                                </StyledInfoLabel>
-                                            </GridCol>
-                                            <GridCol>
-                                                <Typography
-                                                    sx={(theme) => ({
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .mainHeader,
-                                                    })}
-                                                >
-                                                    ${overageCost.toFixed(2)}
-                                                </Typography>
-                                            </GridCol>
-                                        </GridRow>
-                                    }
-                                />
-                            </Grid>
-                            <StyledDivider />
-                            <Grid container>
+                {instanceStatus.plan === InstancePlan.PRO ? (
+                    <>
+                        <Grid container>
+                            <GridRow
+                                sx={(theme) => ({
+                                    marginBottom: theme.spacing(1.5),
+                                })}
+                            >
+                                <GridCol vertical>
+                                    <Typography>
+                                        <strong>Included members</strong>
+                                        <GridColLink>
+                                            <Link to='/admin/users'>
+                                                {freeAssigned} of 5 assigned
+                                            </Link>
+                                        </GridColLink>
+                                    </Typography>
+                                    <StyledInfoLabel>
+                                        You have 5 team members included in your
+                                        PRO plan
+                                    </StyledInfoLabel>
+                                </GridCol>
+                                <GridCol>
+                                    <StyledCheckIcon />
+                                    <Typography variant='body2'>
+                                        included
+                                    </Typography>
+                                </GridCol>
+                            </GridRow>
+                            <GridRow
+                                sx={(theme) => ({
+                                    marginBottom: theme.spacing(1.5),
+                                })}
+                            >
+                                <GridCol vertical>
+                                    <Typography>
+                                        <strong>Paid members</strong>
+                                        <GridColLink>
+                                            <Link to='/admin/users'>
+                                                {paidAssigned} assigned
+                                            </Link>
+                                        </GridColLink>
+                                    </Typography>
+                                    <StyledInfoLabel>
+                                        $15/month per paid member
+                                    </StyledInfoLabel>
+                                </GridCol>
+                                <GridCol>
+                                    <Typography
+                                        sx={(theme) => ({
+                                            fontSize:
+                                                theme.fontSizes.mainHeader,
+                                        })}
+                                    >
+                                        ${paidAssignedPrice.toFixed(2)}
+                                    </Typography>
+                                </GridCol>
+                            </GridRow>
+                            {overageCost > 0 ? (
                                 <GridRow>
+                                    <GridCol vertical>
+                                        <Typography>
+                                            <strong>
+                                                Accrued traffic charges
+                                            </strong>
+                                            <GridColLink>
+                                                <Link to='/admin/network/data-usage'>
+                                                    view details
+                                                </Link>
+                                            </GridColLink>
+                                        </Typography>
+                                        <StyledInfoLabel>
+                                            $5 dollar per 1 million started
+                                            above included data
+                                        </StyledInfoLabel>
+                                    </GridCol>
                                     <GridCol>
                                         <Typography
                                             sx={(theme) => ({
-                                                fontWeight:
-                                                    theme.fontWeight.bold,
                                                 fontSize:
                                                     theme.fontSizes.mainHeader,
                                             })}
                                         >
-                                            Total
-                                        </Typography>
-                                    </GridCol>
-                                    <GridCol>
-                                        <Typography
-                                            sx={(theme) => ({
-                                                fontWeight:
-                                                    theme.fontWeight.bold,
-                                                fontSize: '2rem',
-                                            })}
-                                        >
-                                            ${totalCost.toFixed(2)}
+                                            ${overageCost.toFixed(2)}
                                         </Typography>
                                     </GridCol>
                                 </GridRow>
-                            </Grid>
-                        </>
-                    }
-                />
+                            ) : null}
+                        </Grid>
+                        <StyledDivider />
+                        <Grid container>
+                            <GridRow>
+                                <GridCol>
+                                    <Typography
+                                        sx={(theme) => ({
+                                            fontWeight: theme.fontWeight.bold,
+                                            fontSize:
+                                                theme.fontSizes.mainHeader,
+                                        })}
+                                    >
+                                        Total
+                                    </Typography>
+                                </GridCol>
+                                <GridCol>
+                                    <Typography
+                                        sx={(theme) => ({
+                                            fontWeight: theme.fontWeight.bold,
+                                            fontSize: '2rem',
+                                        })}
+                                    >
+                                        ${totalCost.toFixed(2)}
+                                    </Typography>
+                                </GridCol>
+                            </GridRow>
+                        </Grid>
+                    </>
+                ) : null}
             </StyledPlanBox>
         </Grid>
     );

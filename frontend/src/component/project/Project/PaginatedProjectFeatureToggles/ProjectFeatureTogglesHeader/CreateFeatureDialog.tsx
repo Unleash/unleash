@@ -15,7 +15,6 @@ import { Dialog, styled } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import UIContext from 'contexts/UIContext';
 import useFeatureForm from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
@@ -232,16 +231,13 @@ const CreateFeatureDialogContent = ({
                     Icon={<FlagIcon />}
                     validateName={validateToggleName}
                     Limit={
-                        <ConditionallyRender
-                            condition={resourceLimitsEnabled}
-                            show={
-                                <Limit
-                                    name='feature flags'
-                                    limit={uiConfig.resourceLimits.featureFlags}
-                                    currentValue={totalFlags ?? 0}
-                                />
-                            }
-                        />
+                        resourceLimitsEnabled ? (
+                            <Limit
+                                name='feature flags'
+                                limit={uiConfig.resourceLimits.featureFlags}
+                                currentValue={totalFlags ?? 0}
+                            />
+                        ) : null
                     }
                     name={name}
                     onClose={onClose}
@@ -250,42 +246,36 @@ const CreateFeatureDialogContent = ({
                     setName={setName}
                     configButtons={
                         <>
-                            <ConditionallyRender
-                                condition={!isOss()}
-                                show={
-                                    <SingleSelectConfigButton
-                                        tooltip={{
-                                            header: 'Select a project for the flag',
-                                        }}
-                                        description={
-                                            configButtonData.project.text
-                                        }
-                                        options={projects.map((project) => ({
-                                            label: project.name,
-                                            value: project.id,
-                                        }))}
-                                        onChange={(value: any) => {
-                                            setProject(value);
-                                        }}
-                                        button={{
-                                            label:
-                                                currentProjectName ?? project,
-                                            icon: configButtonData.project.icon,
-                                            labelWidth: '20ch',
-                                        }}
-                                        search={{
-                                            label: 'Filter projects',
-                                            placeholder: 'Select project',
-                                        }}
-                                        onOpen={() =>
-                                            setDocumentation(
-                                                configButtonData.project,
-                                            )
-                                        }
-                                        onClose={clearDocumentationOverride}
-                                    />
-                                }
-                            />
+                            {!isOss() ? (
+                                <SingleSelectConfigButton
+                                    tooltip={{
+                                        header: 'Select a project for the flag',
+                                    }}
+                                    description={configButtonData.project.text}
+                                    options={projects.map((project) => ({
+                                        label: project.name,
+                                        value: project.id,
+                                    }))}
+                                    onChange={(value: any) => {
+                                        setProject(value);
+                                    }}
+                                    button={{
+                                        label: currentProjectName ?? project,
+                                        icon: configButtonData.project.icon,
+                                        labelWidth: '20ch',
+                                    }}
+                                    search={{
+                                        label: 'Filter projects',
+                                        placeholder: 'Select project',
+                                    }}
+                                    onOpen={() =>
+                                        setDocumentation(
+                                            configButtonData.project,
+                                        )
+                                    }
+                                    onClose={clearDocumentationOverride}
+                                />
+                            ) : null}
                             <MultiSelectConfigButton<ITag>
                                 tooltip={{
                                     header: 'Select tags',

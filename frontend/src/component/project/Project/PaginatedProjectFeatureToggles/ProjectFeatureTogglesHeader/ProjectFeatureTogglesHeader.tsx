@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { useUiFlag } from 'hooks/useUiFlag';
 import Add from '@mui/icons-material/Add';
@@ -51,41 +50,35 @@ const FlagCreationButton: FC = () => {
     const navigate = useNavigate();
     const improveCreateFlagFlow = useUiFlag('improveCreateFlagFlow');
 
-    return (
-        <ConditionallyRender
-            condition={improveCreateFlagFlow}
-            show={
-                <>
-                    <StyledResponsiveButton
-                        onClick={() => setOpenCreateDialog(true)}
-                        maxWidth='960px'
-                        Icon={Add}
-                        projectId={projectId}
-                        disabled={loading}
-                        permission={CREATE_FEATURE}
-                        data-testid='NAVIGATE_TO_CREATE_FEATURE'
-                    >
-                        New feature flag
-                    </StyledResponsiveButton>
-                    <CreateFeatureDialog
-                        open={openCreateDialog}
-                        onClose={() => setOpenCreateDialog(false)}
-                    />
-                </>
-            }
-            elseShow={
-                <StyledResponsiveButton
-                    onClick={() => navigate(getCreateTogglePath(projectId))}
-                    maxWidth='960px'
-                    Icon={Add}
-                    projectId={projectId}
-                    permission={CREATE_FEATURE}
-                    data-testid='NAVIGATE_TO_CREATE_FEATURE'
-                >
-                    New feature flag
-                </StyledResponsiveButton>
-            }
-        />
+    return improveCreateFlagFlow ? (
+        <>
+            <StyledResponsiveButton
+                onClick={() => setOpenCreateDialog(true)}
+                maxWidth='960px'
+                Icon={Add}
+                projectId={projectId}
+                disabled={loading}
+                permission={CREATE_FEATURE}
+                data-testid='NAVIGATE_TO_CREATE_FEATURE'
+            >
+                New feature flag
+            </StyledResponsiveButton>
+            <CreateFeatureDialog
+                open={openCreateDialog}
+                onClose={() => setOpenCreateDialog(false)}
+            />
+        </>
+    ) : (
+        <StyledResponsiveButton
+            onClick={() => navigate(getCreateTogglePath(projectId))}
+            maxWidth='960px'
+            Icon={Add}
+            projectId={projectId}
+            permission={CREATE_FEATURE}
+            data-testid='NAVIGATE_TO_CREATE_FEATURE'
+        >
+            New feature flag
+        </StyledResponsiveButton>
     );
 };
 
@@ -150,97 +143,74 @@ export const ProjectFeatureTogglesHeader: FC<
                 }
                 actions={
                     <>
-                        <ConditionallyRender
-                            condition={!isSmallScreen}
-                            show={
-                                <Search
-                                    data-loading
-                                    placeholder='Search and Filter'
-                                    expandable
-                                    initialValue={searchQuery || ''}
-                                    onChange={handleSearch}
-                                    onFocus={() => setShowTitle(false)}
-                                    onBlur={() => setShowTitle(true)}
-                                    hasFilters
-                                    id='projectFeatureFlags'
-                                />
-                            }
-                        />
+                        {!isSmallScreen ? (
+                            <Search
+                                data-loading
+                                placeholder='Search and Filter'
+                                expandable
+                                initialValue={searchQuery || ''}
+                                onChange={handleSearch}
+                                onFocus={() => setShowTitle(false)}
+                                onBlur={() => setShowTitle(true)}
+                                hasFilters
+                                id='projectFeatureFlags'
+                            />
+                        ) : null}
                         {actions}
                         <PageHeader.Divider sx={{ marginLeft: 0 }} />
-                        <ConditionallyRender
-                            condition={featuresExportImportFlag}
-                            show={
-                                <>
-                                    <Tooltip
-                                        title='Export all project flags'
-                                        arrow
+                        {featuresExportImportFlag ? (
+                            <>
+                                <Tooltip title='Export all project flags' arrow>
+                                    <IconButton
+                                        data-loading
+                                        onClick={() =>
+                                            setShowExportDialog(true)
+                                        }
+                                        sx={(theme) => ({
+                                            marginRight: theme.spacing(2),
+                                        })}
                                     >
-                                        <IconButton
-                                            data-loading
-                                            onClick={() =>
-                                                setShowExportDialog(true)
-                                            }
-                                            sx={(theme) => ({
-                                                marginRight: theme.spacing(2),
-                                            })}
-                                        >
-                                            <FileDownload />
-                                        </IconButton>
-                                    </Tooltip>
+                                        <FileDownload />
+                                    </IconButton>
+                                </Tooltip>
 
-                                    <ConditionallyRender
-                                        condition={!isLoading}
-                                        show={
-                                            <ExportDialog
-                                                showExportDialog={
-                                                    showExportDialog
-                                                }
-                                                project={projectId}
-                                                data={[]}
-                                                onClose={() =>
-                                                    setShowExportDialog(false)
-                                                }
-                                                environments={
-                                                    environmentsToExport || []
-                                                }
-                                            />
+                                {!isLoading ? (
+                                    <ExportDialog
+                                        showExportDialog={showExportDialog}
+                                        project={projectId}
+                                        data={[]}
+                                        onClose={() =>
+                                            setShowExportDialog(false)
+                                        }
+                                        environments={
+                                            environmentsToExport || []
                                         }
                                     />
-                                </>
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={
-                                projectOverviewRefactorFeedback &&
-                                !isSmallScreen
-                            }
-                            show={
-                                <Button
-                                    startIcon={<ReviewsOutlined />}
-                                    onClick={createFeedbackContext}
-                                    variant='outlined'
-                                    data-loading
-                                >
-                                    Provide feedback
-                                </Button>
-                            }
-                        />
+                                ) : null}
+                            </>
+                        ) : null}
+                        {projectOverviewRefactorFeedback && !isSmallScreen ? (
+                            <Button
+                                startIcon={<ReviewsOutlined />}
+                                onClick={createFeedbackContext}
+                                variant='outlined'
+                                data-loading
+                            >
+                                Provide feedback
+                            </Button>
+                        ) : null}
                         <FlagCreationButton />
                     </>
                 }
             >
-                <ConditionallyRender
-                    condition={isSmallScreen}
-                    show={
-                        <Search
-                            initialValue={searchQuery || ''}
-                            onChange={handleSearch}
-                            hasFilters
-                            id='projectFeatureFlags'
-                        />
-                    }
-                />
+                {isSmallScreen ? (
+                    <Search
+                        initialValue={searchQuery || ''}
+                        onChange={handleSearch}
+                        hasFilters
+                        id='projectFeatureFlags'
+                    />
+                ) : null}
             </PageHeader>
         </Box>
     );

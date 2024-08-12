@@ -5,7 +5,6 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Paper, type PaperProps, styled } from '@mui/material';
 import { useStyles } from './PageContent.styles';
 import useLoading from 'hooks/useLoading';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 interface IPageContentProps extends PaperProps {
     header?: ReactNode;
@@ -93,18 +92,15 @@ export const PageContent: FC<IPageContentProps> = ({
             {...paperProps}
             className={classnames(className)}
         >
-            <ConditionallyRender
-                condition={Boolean(header)}
-                show={
-                    <StyledHeader className={headerClasses}>
-                        <ConditionallyRender
-                            condition={typeof header === 'string'}
-                            show={<PageHeader title={header as string} />}
-                            elseShow={header}
-                        />
-                    </StyledHeader>
-                }
-            />
+            {header ? (
+                <StyledHeader className={headerClasses}>
+                    {typeof header === 'string' ? (
+                        <PageHeader title={header as string} />
+                    ) : (
+                        header
+                    )}
+                </StyledHeader>
+            ) : null}
             <div className={bodyClasses}>{children}</div>
         </StyledPaper>
     );

@@ -1,6 +1,5 @@
 import History from '@mui/icons-material/History';
 import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { VFC } from 'react';
 import { StyledCode } from './SearchInstructions/SearchInstructions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -33,23 +32,18 @@ export const SearchHistory: VFC<ISearchHistoryProps> = ({
         });
     };
 
-    return (
-        <ConditionallyRender
-            condition={Boolean(savedQuery)}
-            show={
-                <>
-                    <StyledBox>
-                        <StyledHistory />
-                        <StyledCode
-                            tabIndex={0}
-                            onClick={onSavedQuery}
-                            onKeyDown={onEnter(onSavedQuery)}
-                        >
-                            <span>{savedQuery}</span>
-                        </StyledCode>
-                    </StyledBox>
-                </>
-            }
-        />
-    );
+    return savedQuery ? (
+        <>
+            <StyledBox>
+                <StyledHistory />
+                <StyledCode
+                    tabIndex={0}
+                    onClick={onSavedQuery}
+                    onKeyDown={onEnter(onSavedQuery)}
+                >
+                    <span>{savedQuery}</span>
+                </StyledCode>
+            </StyledBox>
+        </>
+    ) : null;
 };

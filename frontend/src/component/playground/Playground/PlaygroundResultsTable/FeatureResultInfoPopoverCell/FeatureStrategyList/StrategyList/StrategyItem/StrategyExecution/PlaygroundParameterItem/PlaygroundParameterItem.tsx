@@ -1,5 +1,4 @@
 import { Chip, Typography, useTheme, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import CancelOutlined from '@mui/icons-material/CancelOutlined';
 
@@ -64,55 +63,48 @@ export const PlaygroundParameterItem = ({
                 {`${input}`}
             </Typography>
             <StyledDivColumn>
-                <ConditionallyRender
-                    condition={Boolean(showReason)}
-                    show={
-                        <Typography
-                            variant='subtitle1'
-                            color={
-                                disabled
-                                    ? theme.palette.text.secondary
-                                    : theme.palette.error.main
-                            }
-                        >
-                            {reason}
-                        </Typography>
-                    }
-                />
-                <ConditionallyRender
-                    condition={value.length === 0}
-                    show={<p>No {text}s added yet.</p>}
-                    elseShow={
-                        <div>
-                            <StyledParagraph disabled={disabled}>
-                                {value.length}{' '}
-                                {value.length > 1 ? `${text}s` : text} will get
-                                access.
-                            </StyledParagraph>
-                            {value.map((v: string | number) => (
-                                <StyledChip
-                                    key={v}
-                                    disabled={disabled}
-                                    label={
-                                        <StringTruncator
-                                            maxWidth='300'
-                                            text={v.toString()}
-                                            maxLength={50}
-                                        />
-                                    }
-                                />
-                            ))}
-                        </div>
-                    }
-                />
+                {showReason ? (
+                    <Typography
+                        variant='subtitle1'
+                        color={
+                            disabled
+                                ? theme.palette.text.secondary
+                                : theme.palette.error.main
+                        }
+                    >
+                        {reason}
+                    </Typography>
+                ) : null}
+                {value.length === 0 ? (
+                    <p>No {text}s added yet.</p>
+                ) : (
+                    <div>
+                        <StyledParagraph disabled={disabled}>
+                            {value.length}{' '}
+                            {value.length > 1 ? `${text}s` : text} will get
+                            access.
+                        </StyledParagraph>
+                        {value.map((v: string | number) => (
+                            <StyledChip
+                                key={v}
+                                disabled={disabled}
+                                label={
+                                    <StringTruncator
+                                        maxWidth='300'
+                                        text={v.toString()}
+                                        maxLength={50}
+                                    />
+                                }
+                            />
+                        ))}
+                    </div>
+                )}
             </StyledDivColumn>
-            <ConditionallyRender
-                condition={Boolean(showReason)}
-                show={
-                    <CancelOutlined color={disabled ? 'disabled' : 'error'} />
-                }
-                elseShow={<div />}
-            />
+            {showReason ? (
+                <CancelOutlined color={disabled ? 'disabled' : 'error'} />
+            ) : (
+                <div />
+            )}
         </StyledDivContainer>
     );
 };

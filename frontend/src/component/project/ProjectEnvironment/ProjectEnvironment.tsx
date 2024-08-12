@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -236,10 +235,7 @@ const ProjectEnvironmentList = () => {
     return (
         <PageContent header={header} isLoading={loading}>
             <StyledDivContainer>
-                <ConditionallyRender
-                    condition={Boolean(error)}
-                    show={renderError()}
-                />
+                {error ? renderError() : null}
                 <StyledAlert severity='info'>
                     <strong>Important!</strong> In order for your application to
                     retrieve configured activation strategies for a specific
@@ -274,27 +270,20 @@ const ProjectEnvironmentList = () => {
                         </TableBody>
                     </Table>
                 </SearchHighlightProvider>
-                <ConditionallyRender
-                    condition={rows.length === 0}
-                    show={
-                        <ConditionallyRender
-                            condition={globalFilter?.length > 0}
-                            show={
-                                <TablePlaceholder>
-                                    No environments found matching &ldquo;
-                                    {globalFilter}
-                                    &rdquo;
-                                </TablePlaceholder>
-                            }
-                            elseShow={
-                                <TablePlaceholder>
-                                    No environments available. Get started by
-                                    adding one.
-                                </TablePlaceholder>
-                            }
-                        />
-                    }
-                />
+                {rows.length === 0 ? (
+                    globalFilter?.length > 0 ? (
+                        <TablePlaceholder>
+                            No environments found matching &ldquo;
+                            {globalFilter}
+                            &rdquo;
+                        </TablePlaceholder>
+                    ) : (
+                        <TablePlaceholder>
+                            No environments available. Get started by adding
+                            one.
+                        </TablePlaceholder>
+                    )
+                ) : null}
                 <EnvironmentHideDialog
                     environment={selectedEnvironment}
                     open={hideDialog}

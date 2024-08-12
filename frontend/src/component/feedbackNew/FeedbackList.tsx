@@ -6,7 +6,6 @@ import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -122,30 +121,24 @@ export const FeedbackList = () => {
                     title={`Feedbacks posted (${rows.length})`}
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <>
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
+                                    />
+                                    <PageHeader.Divider />
+                                </>
+                            ) : null}
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >

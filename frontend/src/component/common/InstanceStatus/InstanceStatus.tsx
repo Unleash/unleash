@@ -7,7 +7,6 @@ import React, {
     useContext,
 } from 'react';
 import { InstanceStatusBar } from 'component/common/InstanceStatus/InstanceStatusBar';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -128,20 +127,15 @@ export const InstanceStatus: FC<{ children?: React.ReactNode }> = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={Boolean(instanceStatus)}
-                show={() => (
-                    <>
-                        <InstanceStatusBarMemo
-                            instanceStatus={instanceStatus!}
-                        />
-                        <TrialDialog
-                            instanceStatus={instanceStatus!}
-                            onExtendTrial={onExtendTrial}
-                        />
-                    </>
-                )}
-            />
+            {instanceStatus ? (
+                <>
+                    <InstanceStatusBarMemo instanceStatus={instanceStatus!} />
+                    <TrialDialog
+                        instanceStatus={instanceStatus!}
+                        onExtendTrial={onExtendTrial}
+                    />
+                </>
+            ) : null}
             {children}
         </>
     );

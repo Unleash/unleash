@@ -7,7 +7,6 @@ import {
     TextField,
     Tooltip,
 } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeedbackContext } from './useFeedback';
 import type React from 'react';
 import { useState } from 'react';
@@ -277,193 +276,167 @@ export const FeedbackComponent = ({
         setSelectedScore(event.target.value);
     };
 
-    return (
-        <ConditionallyRender
-            condition={showFeedback}
-            show={
-                <ParentContainer>
-                    <ClickAwayListener onClickAway={() => closeFeedback()}>
-                        <StyledContainer>
-                            <Tooltip title='Close' arrow>
-                                <StyledCloseButton
-                                    onClick={closeFeedback}
-                                    size='large'
-                                >
-                                    <CloseIcon />
-                                </StyledCloseButton>
-                            </Tooltip>
-                            <StyledContent>
-                                <StyledTitle>
-                                    Help us to improve Unleash
-                                </StyledTitle>
-                                <StyledForm onSubmit={onSubmission}>
-                                    <input
-                                        type='hidden'
-                                        name='category'
-                                        value={feedbackData.category}
-                                    />
-                                    <input
-                                        type='hidden'
-                                        name='userType'
-                                        value={userType}
-                                    />
-                                    <FormTitle>{feedbackData.title}</FormTitle>
-                                    <StyledScoreContainer>
-                                        <StyledScoreInput>
-                                            {[1, 2, 3, 4, 5, 6, 7].map(
-                                                (score) => (
-                                                    <StyledScoreValue
-                                                        key={score}
-                                                    >
-                                                        <input
-                                                            type='radio'
-                                                            name='difficultyScore'
-                                                            value={score}
-                                                            onChange={
-                                                                onScoreChange
-                                                            }
-                                                        />
-                                                        <span>{score}</span>
-                                                    </StyledScoreValue>
-                                                ),
-                                            )}
-                                        </StyledScoreInput>
-                                        <ScoreHelpContainer>
-                                            <StyledScoreHelp>
-                                                Very difficult
-                                            </StyledScoreHelp>
-                                            <StyledScoreHelp>
-                                                Very easy
-                                            </StyledScoreHelp>
-                                        </ScoreHelpContainer>
-                                    </StyledScoreContainer>
+    return showFeedback ? (
+        <ParentContainer>
+            <ClickAwayListener onClickAway={() => closeFeedback()}>
+                <StyledContainer>
+                    <Tooltip title='Close' arrow>
+                        <StyledCloseButton onClick={closeFeedback} size='large'>
+                            <CloseIcon />
+                        </StyledCloseButton>
+                    </Tooltip>
+                    <StyledContent>
+                        <StyledTitle>Help us to improve Unleash</StyledTitle>
+                        <StyledForm onSubmit={onSubmission}>
+                            <input
+                                type='hidden'
+                                name='category'
+                                value={feedbackData.category}
+                            />
+                            <input
+                                type='hidden'
+                                name='userType'
+                                value={userType}
+                            />
+                            <FormTitle>{feedbackData.title}</FormTitle>
+                            <StyledScoreContainer>
+                                <StyledScoreInput>
+                                    {[1, 2, 3, 4, 5, 6, 7].map((score) => (
+                                        <StyledScoreValue key={score}>
+                                            <input
+                                                type='radio'
+                                                name='difficultyScore'
+                                                value={score}
+                                                onChange={onScoreChange}
+                                            />
+                                            <span>{score}</span>
+                                        </StyledScoreValue>
+                                    ))}
+                                </StyledScoreInput>
+                                <ScoreHelpContainer>
+                                    <StyledScoreHelp>
+                                        Very difficult
+                                    </StyledScoreHelp>
+                                    <StyledScoreHelp>Very easy</StyledScoreHelp>
+                                </ScoreHelpContainer>
+                            </StyledScoreContainer>
 
-                                    {feedbackComments !== false &&
-                                    feedbackComments.enabled &&
-                                    feedbackComments.name ===
-                                        'withoutComments' ? (
-                                        <>
-                                            <Box>
-                                                <TextField
-                                                    placeholder='Your answer here'
-                                                    style={{ width: '100%' }}
-                                                    name='positive'
-                                                    hidden
-                                                    value={
-                                                        feedbackComments.name
-                                                    }
-                                                    multiline
-                                                    rows={3}
-                                                    variant='outlined'
-                                                    size='small'
-                                                    InputLabelProps={{
-                                                        style: {
-                                                            fontSize:
-                                                                theme.fontSizes
-                                                                    .smallBody,
-                                                        },
-                                                    }}
-                                                />
-                                            </Box>
-                                            <Box>
-                                                <TextField
-                                                    placeholder='Your answer here'
-                                                    style={{ width: '100%' }}
-                                                    multiline
-                                                    name='areasForImprovement'
-                                                    rows={3}
-                                                    InputLabelProps={{
-                                                        style: {
-                                                            fontSize:
-                                                                theme.fontSizes
-                                                                    .smallBody,
-                                                        },
-                                                    }}
-                                                    variant='outlined'
-                                                    size='small'
-                                                    hidden
-                                                />
-                                            </Box>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Box>
-                                                <FormSubTitle>
-                                                    {feedbackData.positiveLabel}
-                                                </FormSubTitle>
-                                                <TextField
-                                                    placeholder='Your answer here'
-                                                    style={{ width: '100%' }}
-                                                    name='positive'
-                                                    multiline
-                                                    rows={3}
-                                                    variant='outlined'
-                                                    size='small'
-                                                    InputLabelProps={{
-                                                        style: {
-                                                            fontSize:
-                                                                theme.fontSizes
-                                                                    .smallBody,
-                                                        },
-                                                    }}
-                                                />
-                                            </Box>
-                                            <Box>
-                                                <FormSubTitle>
-                                                    {
-                                                        feedbackData.areasForImprovementsLabel
-                                                    }
-                                                </FormSubTitle>
-                                                <TextField
-                                                    placeholder='Your answer here'
-                                                    style={{ width: '100%' }}
-                                                    multiline
-                                                    name='areasForImprovement'
-                                                    rows={3}
-                                                    InputLabelProps={{
-                                                        style: {
-                                                            fontSize:
-                                                                theme.fontSizes
-                                                                    .smallBody,
-                                                        },
-                                                    }}
-                                                    variant='outlined'
-                                                    size='small'
-                                                />
-                                            </Box>
-                                        </>
-                                    )}
-
-                                    <StyledButtonContainer>
-                                        <StyledButton
-                                            disabled={!selectedScore}
-                                            variant='contained'
-                                            color='primary'
-                                            type='submit'
-                                        >
-                                            Send Feedback
-                                        </StyledButton>
-                                        <ConditionallyRender
-                                            condition={
-                                                feedbackMode === 'manual'
-                                            }
-                                            show={
-                                                <StyledButton
-                                                    variant='outlined'
-                                                    color='primary'
-                                                    onClick={dontAskAgain}
-                                                >
-                                                    Don't ask me again
-                                                </StyledButton>
-                                            }
+                            {feedbackComments !== false &&
+                            feedbackComments.enabled &&
+                            feedbackComments.name === 'withoutComments' ? (
+                                <>
+                                    <Box>
+                                        <TextField
+                                            placeholder='Your answer here'
+                                            style={{ width: '100%' }}
+                                            name='positive'
+                                            hidden
+                                            value={feedbackComments.name}
+                                            multiline
+                                            rows={3}
+                                            variant='outlined'
+                                            size='small'
+                                            InputLabelProps={{
+                                                style: {
+                                                    fontSize:
+                                                        theme.fontSizes
+                                                            .smallBody,
+                                                },
+                                            }}
                                         />
-                                    </StyledButtonContainer>
-                                </StyledForm>
-                            </StyledContent>
-                        </StyledContainer>
-                    </ClickAwayListener>
-                </ParentContainer>
-            }
-        />
-    );
+                                    </Box>
+                                    <Box>
+                                        <TextField
+                                            placeholder='Your answer here'
+                                            style={{ width: '100%' }}
+                                            multiline
+                                            name='areasForImprovement'
+                                            rows={3}
+                                            InputLabelProps={{
+                                                style: {
+                                                    fontSize:
+                                                        theme.fontSizes
+                                                            .smallBody,
+                                                },
+                                            }}
+                                            variant='outlined'
+                                            size='small'
+                                            hidden
+                                        />
+                                    </Box>
+                                </>
+                            ) : (
+                                <>
+                                    <Box>
+                                        <FormSubTitle>
+                                            {feedbackData.positiveLabel}
+                                        </FormSubTitle>
+                                        <TextField
+                                            placeholder='Your answer here'
+                                            style={{ width: '100%' }}
+                                            name='positive'
+                                            multiline
+                                            rows={3}
+                                            variant='outlined'
+                                            size='small'
+                                            InputLabelProps={{
+                                                style: {
+                                                    fontSize:
+                                                        theme.fontSizes
+                                                            .smallBody,
+                                                },
+                                            }}
+                                        />
+                                    </Box>
+                                    <Box>
+                                        <FormSubTitle>
+                                            {
+                                                feedbackData.areasForImprovementsLabel
+                                            }
+                                        </FormSubTitle>
+                                        <TextField
+                                            placeholder='Your answer here'
+                                            style={{ width: '100%' }}
+                                            multiline
+                                            name='areasForImprovement'
+                                            rows={3}
+                                            InputLabelProps={{
+                                                style: {
+                                                    fontSize:
+                                                        theme.fontSizes
+                                                            .smallBody,
+                                                },
+                                            }}
+                                            variant='outlined'
+                                            size='small'
+                                        />
+                                    </Box>
+                                </>
+                            )}
+
+                            <StyledButtonContainer>
+                                <StyledButton
+                                    disabled={!selectedScore}
+                                    variant='contained'
+                                    color='primary'
+                                    type='submit'
+                                >
+                                    Send Feedback
+                                </StyledButton>
+                                {feedbackMode === 'manual' ? (
+                                    <StyledButton
+                                        variant='outlined'
+                                        color='primary'
+                                        onClick={dontAskAgain}
+                                    >
+                                        Don't ask me again
+                                    </StyledButton>
+                                ) : null}
+                            </StyledButtonContainer>
+                        </StyledForm>
+                    </StyledContent>
+                </StyledContainer>
+            </ClickAwayListener>
+        </ParentContainer>
+    ) : null;
 };

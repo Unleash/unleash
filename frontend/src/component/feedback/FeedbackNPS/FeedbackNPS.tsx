@@ -12,7 +12,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as UnleashLogo } from 'assets/icons/logoBg.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/icons/logoWhiteBg.svg';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     fadeInTopEnter,
     fadeInTopLeave,
@@ -152,21 +151,17 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                         <StyledHeader>Unleash feedback</StyledHeader>
                     </Box>
 
-                    <ConditionallyRender
-                        condition={answeredNotNow}
-                        show={
-                            <p>
-                                Alright, apologies for the disruption. Have a
-                                nice day!
-                            </p>
-                        }
-                        elseShow={
-                            <p>
-                                Hi. Do you have 2 minutes to help us improve
-                                Unleash?{' '}
-                            </p>
-                        }
-                    />
+                    {answeredNotNow ? (
+                        <p>
+                            Alright, apologies for the disruption. Have a nice
+                            day!
+                        </p>
+                    ) : (
+                        <p>
+                            Hi. Do you have 2 minutes to help us improve
+                            Unleash?{' '}
+                        </p>
+                    )}
 
                     <Box
                         sx={{
@@ -174,37 +169,32 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                             marginTop: theme.spacing(2.5),
                         }}
                     >
-                        <ConditionallyRender
-                            condition={answeredNotNow}
-                            show={
+                        {answeredNotNow ? (
+                            <Button
+                                variant='outlined'
+                                onClick={onDontShowAgain}
+                            >
+                                Don't show again
+                            </Button>
+                        ) : (
+                            <>
                                 <Button
-                                    variant='outlined'
-                                    onClick={onDontShowAgain}
+                                    variant='contained'
+                                    color='primary'
+                                    onClick={onConfirm}
                                 >
-                                    Don't show again
+                                    Yes, no problem
                                 </Button>
-                            }
-                            elseShow={
-                                <>
-                                    <Button
-                                        variant='contained'
-                                        color='primary'
-                                        onClick={onConfirm}
-                                    >
-                                        Yes, no problem
-                                    </Button>
-                                    <Button
-                                        sx={{
-                                            marginLeft: (theme) =>
-                                                theme.spacing(2),
-                                        }}
-                                        onClick={() => setAnsweredNotNow(true)}
-                                    >
-                                        Not now
-                                    </Button>
-                                </>
-                            }
-                        />
+                                <Button
+                                    sx={{
+                                        marginLeft: (theme) => theme.spacing(2),
+                                    }}
+                                    onClick={() => setAnsweredNotNow(true)}
+                                >
+                                    Not now
+                                </Button>
+                            </>
+                        )}
                     </Box>
                 </Box>
             </Box>

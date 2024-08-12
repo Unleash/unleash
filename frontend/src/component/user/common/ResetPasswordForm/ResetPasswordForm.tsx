@@ -1,7 +1,6 @@
 import { Button, styled } from '@mui/material';
 import type React from 'react';
 import { type SyntheticEvent, useCallback, useEffect, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PasswordChecker from './PasswordChecker';
 import PasswordMatcher from './PasswordMatcher';
 import PasswordField from 'component/common/PasswordField/PasswordField';
@@ -82,17 +81,13 @@ const ResetPasswordForm = ({ onSubmit }: IResetPasswordProps) => {
                 autoComplete='new-password'
                 data-loading
             />
-            <ConditionallyRender
-                condition={showPasswordChecker}
-                show={
-                    <PasswordChecker
-                        password={password}
-                        callback={setValidOwaspPasswordMemo}
-                        style={{ marginBottom: '1rem' }}
-                    />
-                }
-            />
-
+            {showPasswordChecker ? (
+                <PasswordChecker
+                    password={password}
+                    callback={setValidOwaspPasswordMemo}
+                    style={{ marginBottom: '1rem' }}
+                />
+            ) : null}
             <PasswordMatcher
                 started={started}
                 passwordsDoNotMatch={!matchingPasswords}

@@ -28,7 +28,6 @@ import { sortTypes } from 'utils/sortTypes';
 import { SignalEndpointsTokensCreateDialog } from './SignalEndpointsTokensCreateDialog';
 import { SignalEndpointsTokensDialog } from './SignalEndpointsTokensDialog';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
     type SignalEndpointTokenPayload,
@@ -241,39 +240,30 @@ export const SignalEndpointsTokens = ({
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No tokens found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <StyledTablePlaceholder>
-                                <StyledPlaceholderTitle>
-                                    You have no tokens for this signal endpoint
-                                    yet.
-                                </StyledPlaceholderTitle>
-                                <StyledPlaceholderSubtitle>
-                                    Create a token to start using this signal
-                                    endpoint.
-                                </StyledPlaceholderSubtitle>
-                                <Button
-                                    variant='outlined'
-                                    onClick={() => setCreateOpen(true)}
-                                >
-                                    Create new signal endpoint token
-                                </Button>
-                            </StyledTablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No tokens found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <StyledTablePlaceholder>
+                        <StyledPlaceholderTitle>
+                            You have no tokens for this signal endpoint yet.
+                        </StyledPlaceholderTitle>
+                        <StyledPlaceholderSubtitle>
+                            Create a token to start using this signal endpoint.
+                        </StyledPlaceholderSubtitle>
+                        <Button
+                            variant='outlined'
+                            onClick={() => setCreateOpen(true)}
+                        >
+                            Create new signal endpoint token
+                        </Button>
+                    </StyledTablePlaceholder>
+                )
+            ) : null}
             <SignalEndpointsTokensCreateDialog
                 open={createOpen}
                 setOpen={setCreateOpen}

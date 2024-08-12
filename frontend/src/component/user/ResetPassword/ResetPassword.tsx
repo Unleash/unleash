@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { OK } from 'constants/statusCodes';
 import useLoading from 'hooks/useLoading';
 import { styled, Typography } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout';
@@ -57,22 +56,18 @@ const ResetPassword = () => {
         <div ref={ref}>
             <StandaloneLayout>
                 <StyledDiv>
-                    <ConditionallyRender
-                        condition={!isValidToken || passwordDisabled}
-                        show={<InvalidToken />}
-                        elseShow={
-                            <>
-                                <StyledTypography variant='h2' data-loading>
-                                    Reset password
-                                </StyledTypography>
+                    {!isValidToken || passwordDisabled ? (
+                        <InvalidToken />
+                    ) : (
+                        <>
+                            <StyledTypography variant='h2' data-loading>
+                                Reset password
+                            </StyledTypography>
 
-                                <ResetPasswordError>
-                                    {apiError}
-                                </ResetPasswordError>
-                                <ResetPasswordForm onSubmit={onSubmit} />
-                            </>
-                        }
-                    />
+                            <ResetPasswordError>{apiError}</ResetPasswordError>
+                            <ResetPasswordForm onSubmit={onSubmit} />
+                        </>
+                    )}
                 </StyledDiv>
             </StandaloneLayout>
         </div>

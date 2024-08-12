@@ -10,7 +10,6 @@ import {
 } from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue as ConfirmDialogue } from 'component/common/Dialogue/Dialogue';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
@@ -212,27 +211,19 @@ const ContextList: VFC = () => {
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={globalFilter?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No contexts found matching &ldquo;
-                                {globalFilter}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No contexts available. Get started by adding
-                                one.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                globalFilter?.length > 0 ? (
+                    <TablePlaceholder>
+                        No contexts found matching &ldquo;
+                        {globalFilter}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No contexts available. Get started by adding one.
+                    </TablePlaceholder>
+                )
+            ) : null}
             <ConfirmDialogue
                 open={showDelDialogue}
                 onClick={onDeleteContext}

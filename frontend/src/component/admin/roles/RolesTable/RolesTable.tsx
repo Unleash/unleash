@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IRole, PredefinedRoleType } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -170,27 +169,19 @@ export const RolesTable = ({
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No {type} roles found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No {type} roles available. Get started by adding
-                                one.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No {type} roles found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No {type} roles available. Get started by adding one.
+                    </TablePlaceholder>
+                )
+            ) : null}
             <RoleModal
                 type={type}
                 roleId={selectedRole?.id}

@@ -1,5 +1,4 @@
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import { Banner } from '../Banner/Banner';
 import type { IBanner } from '../../../interfaces/banner';
 
@@ -13,10 +12,9 @@ export const EdgeUpgradeBanner = () => {
     };
     return (
         <>
-            <ConditionallyRender
-                condition={displayUpgradeEdgeBanner}
-                show={<Banner key={'upgradeEdge'} banner={upgradeEdgeBanner} />}
-            />
+            {displayUpgradeEdgeBanner ? (
+                <Banner key={'upgradeEdge'} banner={upgradeEdgeBanner} />
+            ) : null}
         </>
     );
 };

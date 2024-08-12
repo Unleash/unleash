@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Box, List, ListItem, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject';
 import { FeatureSettingsInformation } from './FeatureSettingsInformation/FeatureSettingsInformation';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -62,19 +61,15 @@ export const FeatureSettings = () => {
                     </List>
                 </StyledListContainer>
                 <StyledInnerBodyContainer>
-                    <ConditionallyRender
-                        condition={settings === METADATA}
-                        show={
-                            <FeatureSettingsInformation
-                                projectId={projectId}
-                                featureId={featureId}
-                            />
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={settings === PROJECT && uiConfig.flags.P}
-                        show={<FeatureSettingsProject />}
-                    />
+                    {settings === METADATA ? (
+                        <FeatureSettingsInformation
+                            projectId={projectId}
+                            featureId={featureId}
+                        />
+                    ) : null}
+                    {settings === PROJECT && uiConfig.flags.P ? (
+                        <FeatureSettingsProject />
+                    ) : null}
                 </StyledInnerBodyContainer>
             </Box>
         </PageContent>

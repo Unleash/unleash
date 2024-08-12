@@ -5,7 +5,6 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
 import theme from 'themes/theme';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
@@ -52,14 +51,11 @@ export const ApiTokenTable = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={rows.length > 0}
-                show={
-                    <Box sx={{ mb: 4 }}>
-                        <ApiTokenDocs />
-                    </Box>
-                }
-            />
+            {rows.length > 0 ? (
+                <Box sx={{ mb: 4 }}>
+                    <ApiTokenDocs />
+                </Box>
+            ) : null}
             <Box sx={{ overflowX: 'auto' }}>
                 <SearchHighlightProvider value={globalFilter}>
                     <VirtualizedTable
@@ -69,36 +65,29 @@ export const ApiTokenTable = ({
                     />
                 </SearchHighlightProvider>
             </Box>
-            <ConditionallyRender
-                condition={rows.length === 0 && !loading}
-                show={
-                    <ConditionallyRender
-                        condition={globalFilter?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No tokens found matching &ldquo;
-                                {globalFilter}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                <span>
-                                    {'No tokens available. Read '}
-                                    <Link
-                                        href='https://docs.getunleash.io/how-to/api'
-                                        target='_blank'
-                                        rel='noreferrer'
-                                    >
-                                        API How-to guides
-                                    </Link>{' '}
-                                    {' to learn more.'}
-                                </span>
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 && !loading ? (
+                globalFilter?.length > 0 ? (
+                    <TablePlaceholder>
+                        No tokens found matching &ldquo;
+                        {globalFilter}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        <span>
+                            {'No tokens available. Read '}
+                            <Link
+                                href='https://docs.getunleash.io/how-to/api'
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                API How-to guides
+                            </Link>{' '}
+                            {' to learn more.'}
+                        </span>
+                    </TablePlaceholder>
+                )
+            ) : null}
         </>
     );
 };

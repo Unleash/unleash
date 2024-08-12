@@ -3,7 +3,6 @@ import { Alert, IconButton, Typography, useTheme, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import type React from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     checkForEmptyValues,
     hasCustomStrategies,
@@ -129,22 +128,18 @@ export const FeatureDetails = ({
                     <StyledTypographyName variant={'subtitle1'}>
                         {feature.name}
                     </StyledTypographyName>
-                    <ConditionallyRender
-                        condition={feature?.strategies?.result !== 'unknown'}
-                        show={() => (
-                            <PlaygroundResultChip
-                                enabled={feature.isEnabled}
-                                label={feature.isEnabled ? 'True' : 'False'}
-                            />
-                        )}
-                        elseShow={() => (
-                            <PlaygroundResultChip
-                                enabled='unknown'
-                                label={'Unknown'}
-                                showIcon={false}
-                            />
-                        )}
-                    />
+                    {feature?.strategies?.result !== 'unknown' ? (
+                        <PlaygroundResultChip
+                            enabled={feature.isEnabled}
+                            label={feature.isEnabled ? 'True' : 'False'}
+                        />
+                    ) : (
+                        <PlaygroundResultChip
+                            enabled='unknown'
+                            label={'Unknown'}
+                            showIcon={false}
+                        />
+                    )}
                 </StyledDivTitleRow>
                 <StyledIconButton onClick={onCloseClick}>
                     <CloseOutlined />
@@ -161,24 +156,18 @@ export const FeatureDetails = ({
                     .
                 </Typography>
             </StyledDivDescriptionRow>
-            <ConditionallyRender
-                condition={Boolean(noValueTxt)}
-                show={
-                    <StyledDivAlertRow>
-                        <Alert color={'info'}>{noValueTxt}</Alert>
-                    </StyledDivAlertRow>
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(customStrategiesTxt)}
-                show={
-                    <StyledDivAlertRow>
-                        <Alert severity='warning' color='info'>
-                            {customStrategiesTxt}
-                        </Alert>
-                    </StyledDivAlertRow>
-                }
-            />
+            {noValueTxt ? (
+                <StyledDivAlertRow>
+                    <Alert color={'info'}>{noValueTxt}</Alert>
+                </StyledDivAlertRow>
+            ) : null}
+            {customStrategiesTxt ? (
+                <StyledDivAlertRow>
+                    <Alert severity='warning' color='info'>
+                        {customStrategiesTxt}
+                    </Alert>
+                </StyledDivAlertRow>
+            ) : null}
         </>
     );
 };

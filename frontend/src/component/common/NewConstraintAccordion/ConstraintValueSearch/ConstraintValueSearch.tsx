@@ -1,6 +1,5 @@
 import { TextField, InputAdornment, Chip } from '@mui/material';
 import Search from '@mui/icons-material/Search';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IConstraintValueSearchProps {
     filter: string;
@@ -35,16 +34,13 @@ export const ConstraintValueSearch = ({
                     }}
                 />
             </div>
-            <ConditionallyRender
-                condition={Boolean(filter)}
-                show={
-                    <Chip
-                        style={{ marginLeft: '1rem' }}
-                        label={`filter active: ${filter}`}
-                        onDelete={() => setFilter('')}
-                    />
-                }
-            />
+            {filter ? (
+                <Chip
+                    style={{ marginLeft: '1rem' }}
+                    label={`filter active: ${filter}`}
+                    onDelete={() => setFilter('')}
+                />
+            ) : null}
         </div>
     );
 };

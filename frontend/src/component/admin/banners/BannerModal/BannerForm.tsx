@@ -1,6 +1,5 @@
 import { Button, Checkbox, FormControlLabel, styled } from '@mui/material';
 import { Banner } from 'component/banners/Banner/Banner';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -208,49 +207,45 @@ export const BannerForm = ({
                         )}
                     />
                 </StyledFieldGroup>
-                <ConditionallyRender
-                    condition={iconOption === 'Custom'}
-                    show={
-                        <StyledFieldGroup>
-                            <StyledInputDescription>
-                                Which custom icon?
-                                <HelpIcon
-                                    htmlTooltip
-                                    tooltip={
-                                        <StyledTooltip>
-                                            <p>
-                                                Choose an icon from{' '}
-                                                <a
-                                                    href='https://fonts.google.com/icons'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Material Symbols
-                                                </a>
-                                                .
-                                            </p>
-                                            <p>
-                                                For example, if you want to
-                                                display the "Rocket Launch"
-                                                icon, you can enter
-                                                "rocket_launch" in the field
-                                                below.
-                                            </p>
-                                        </StyledTooltip>
-                                    }
-                                />
-                            </StyledInputDescription>
-                            <StyledInput
-                                label='Banner icon'
-                                value={icon}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                    setIcon(e.target.value)
+                {iconOption === 'Custom' ? (
+                    <StyledFieldGroup>
+                        <StyledInputDescription>
+                            Which custom icon?
+                            <HelpIcon
+                                htmlTooltip
+                                tooltip={
+                                    <StyledTooltip>
+                                        <p>
+                                            Choose an icon from{' '}
+                                            <a
+                                                href='https://fonts.google.com/icons'
+                                                target='_blank'
+                                                rel='noreferrer'
+                                            >
+                                                Material Symbols
+                                            </a>
+                                            .
+                                        </p>
+                                        <p>
+                                            For example, if you want to display
+                                            the "Rocket Launch" icon, you can
+                                            enter "rocket_launch" in the field
+                                            below.
+                                        </p>
+                                    </StyledTooltip>
                                 }
-                                autoComplete='off'
                             />
-                        </StyledFieldGroup>
-                    }
-                />
+                        </StyledInputDescription>
+                        <StyledInput
+                            label='Banner icon'
+                            value={icon}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setIcon(e.target.value)
+                            }
+                            autoComplete='off'
+                        />
+                    </StyledFieldGroup>
+                ) : null}
                 <StyledFieldGroup>
                     <StyledInputDescription>
                         What is your banner message?
@@ -313,112 +308,103 @@ export const BannerForm = ({
                         }))}
                     />
                 </StyledFieldGroup>
-                <ConditionallyRender
-                    condition={linkOption === 'Link'}
-                    show={
+                {linkOption === 'Link' ? (
+                    <StyledFieldGroup>
+                        <StyledInputDescription>
+                            What URL should be opened?
+                        </StyledInputDescription>
+                        <StyledInput
+                            label='URL'
+                            value={link}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setLink(e.target.value)
+                            }
+                            onBlur={() => {
+                                if (!linkText) setLinkText(link);
+                            }}
+                            autoComplete='off'
+                        />
+                    </StyledFieldGroup>
+                ) : null}
+                {linkOption !== 'None' ? (
+                    <StyledFieldGroup>
+                        <StyledInputDescription>
+                            What is the action text?
+                        </StyledInputDescription>
+                        <StyledInput
+                            label='Action text'
+                            value={linkText}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setLinkText(e.target.value)
+                            }
+                            autoComplete='off'
+                        />
+                    </StyledFieldGroup>
+                ) : null}
+                {linkOption === 'Dialog' ? (
+                    <>
                         <StyledFieldGroup>
                             <StyledInputDescription>
-                                What URL should be opened?
+                                What is the dialog title?
                             </StyledInputDescription>
                             <StyledInput
-                                label='URL'
-                                value={link}
+                                label='Dialog title'
+                                value={dialogTitle}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                    setLink(e.target.value)
+                                    setDialogTitle(e.target.value)
                                 }
-                                onBlur={() => {
-                                    if (!linkText) setLinkText(link);
-                                }}
                                 autoComplete='off'
                             />
                         </StyledFieldGroup>
-                    }
-                />
-                <ConditionallyRender
-                    condition={linkOption !== 'None'}
-                    show={
                         <StyledFieldGroup>
                             <StyledInputDescription>
-                                What is the action text?
+                                What is the dialog content?
+                                <HelpIcon
+                                    htmlTooltip
+                                    tooltip={
+                                        <StyledTooltip>
+                                            <p>
+                                                <a
+                                                    href='https://www.markdownguide.org/basic-syntax/'
+                                                    target='_blank'
+                                                    rel='noreferrer'
+                                                >
+                                                    Markdown
+                                                </a>{' '}
+                                                is supported.
+                                            </p>
+                                        </StyledTooltip>
+                                    }
+                                />
                             </StyledInputDescription>
                             <StyledInput
-                                label='Action text'
-                                value={linkText}
+                                label='Dialog content'
+                                multiline
+                                minRows={4}
+                                value={dialog}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                    setLinkText(e.target.value)
+                                    setDialog(e.target.value)
                                 }
                                 autoComplete='off'
                             />
                         </StyledFieldGroup>
-                    }
-                />
-                <ConditionallyRender
-                    condition={linkOption === 'Dialog'}
-                    show={
-                        <>
-                            <StyledFieldGroup>
-                                <StyledInputDescription>
-                                    What is the dialog title?
-                                </StyledInputDescription>
-                                <StyledInput
-                                    label='Dialog title'
-                                    value={dialogTitle}
-                                    onChange={(
-                                        e: ChangeEvent<HTMLInputElement>,
-                                    ) => setDialogTitle(e.target.value)}
-                                    autoComplete='off'
-                                />
-                            </StyledFieldGroup>
-                            <StyledFieldGroup>
-                                <StyledInputDescription>
-                                    What is the dialog content?
-                                    <HelpIcon
-                                        htmlTooltip
-                                        tooltip={
-                                            <StyledTooltip>
-                                                <p>
-                                                    <a
-                                                        href='https://www.markdownguide.org/basic-syntax/'
-                                                        target='_blank'
-                                                        rel='noreferrer'
-                                                    >
-                                                        Markdown
-                                                    </a>{' '}
-                                                    is supported.
-                                                </p>
-                                            </StyledTooltip>
-                                        }
-                                    />
-                                </StyledInputDescription>
-                                <StyledInput
-                                    label='Dialog content'
-                                    multiline
-                                    minRows={4}
-                                    value={dialog}
-                                    onChange={(
-                                        e: ChangeEvent<HTMLInputElement>,
-                                    ) => setDialog(e.target.value)}
-                                    autoComplete='off'
-                                />
-                            </StyledFieldGroup>
-                            <StyledPreviewButton
-                                variant='outlined'
-                                color='primary'
-                                startIcon={<Visibility />}
-                                onClick={() => setPreviewDialogOpen(true)}
-                            >
-                                Preview dialog
-                            </StyledPreviewButton>
-                            <BannerDialog
-                                open={previewDialogOpen}
-                                setOpen={setPreviewDialogOpen}
-                                title={dialogTitle || linkText}
-                            >
-                                {dialog!}
-                            </BannerDialog>
-                        </>
-                    }
-                />
+                        <StyledPreviewButton
+                            variant='outlined'
+                            color='primary'
+                            startIcon={<Visibility />}
+                            onClick={() => setPreviewDialogOpen(true)}
+                        >
+                            Preview dialog
+                        </StyledPreviewButton>
+                        <BannerDialog
+                            open={previewDialogOpen}
+                            setOpen={setPreviewDialogOpen}
+                            title={dialogTitle || linkText}
+                        >
+                            {dialog!}
+                        </BannerDialog>
+                    </>
+                ) : null}
             </StyledSection>
             <StyledSection>
                 <StyledSectionLabel>Sticky banner</StyledSectionLabel>

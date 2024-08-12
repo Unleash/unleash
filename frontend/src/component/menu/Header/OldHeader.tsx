@@ -13,7 +13,6 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
 import UserProfile from 'component/user/UserProfile';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
@@ -216,22 +215,18 @@ const OldHeader: VFC = () => {
                 <StyledLink to='/' sx={flexRow} aria-label='Home'>
                     <ThemeMode
                         darkmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<CelebatoryUnleashLogoWhite />}
-                                elseShow={
-                                    <StyledUnleashLogoWhite aria-label='Unleash logo' />
-                                }
-                            />
+                            celebatoryUnleash ? (
+                                <CelebatoryUnleashLogoWhite />
+                            ) : (
+                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                            )
                         }
                         lightmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<StyledCelebatoryLogo />}
-                                elseShow={
-                                    <StyledUnleashLogo aria-label='Unleash logo' />
-                                }
-                            />
+                            celebatoryUnleash ? (
+                                <StyledCelebatoryLogo />
+                            ) : (
+                                <StyledUnleashLogo aria-label='Unleash logo' />
+                            )
                         }
                     />
                 </StyledLink>
@@ -241,12 +236,9 @@ const OldHeader: VFC = () => {
                         <StyledLink to='/projects'>Projects</StyledLink>
                         <StyledLink to={'/search'}>Search</StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
-                        <ConditionallyRender
-                            condition={!killInsightsDashboard && !isOss()}
-                            show={
-                                <StyledLink to='/insights'>Insights</StyledLink>
-                            }
-                        />
+                        {!killInsightsDashboard && !isOss() ? (
+                            <StyledLink to='/insights'>Insights</StyledLink>
+                        ) : null}
                         <StyledAdvancedNavButton
                             onClick={(e) => setConfigRef(e.currentTarget)}
                             aria-controls={configRef ? configId : undefined}
@@ -277,17 +269,16 @@ const OldHeader: VFC = () => {
                                 onClick={onSetThemeMode}
                                 size='large'
                             >
-                                <ConditionallyRender
-                                    condition={themeMode === 'dark'}
-                                    show={<DarkModeOutlined />}
-                                    elseShow={<LightModeOutlined />}
-                                />
+                                {themeMode === 'dark' ? (
+                                    <DarkModeOutlined />
+                                ) : (
+                                    <LightModeOutlined />
+                                )}
                             </StyledIconButton>
                         </Tooltip>
-                        <ConditionallyRender
-                            condition={!isOss() && !disableNotifications}
-                            show={<Notifications />}
-                        />
+                        {!isOss() && !disableNotifications ? (
+                            <Notifications />
+                        ) : null}
                         <Tooltip title='Documentation' arrow>
                             <StyledIconButton
                                 component='a'

@@ -15,45 +15,38 @@ import {
 import Apps from '@mui/icons-material/Apps';
 
 import styles from './common.module.scss';
-import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender';
 
 export { styles };
 
 export const AppsLinkList = ({ apps }) => (
     <List>
-        <ConditionallyRender
-            condition={apps.length > 0}
-            show={apps.map(({ appName, description, icon }) => (
-                <ListItem key={appName} className={styles.listItem}>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <ConditionallyRender
-                                key={`avatar_conditional_${appName}`}
-                                condition={icon}
-                                show={<Icon>{icon}</Icon>}
-                                elseShow={<Apps />}
-                            />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={
-                            <Link
-                                to={`/applications/${encodeURIComponent(
-                                    appName,
-                                )}`}
-                                className={[
-                                    styles.listLink,
-                                    styles.truncate,
-                                ].join(' ')}
-                            >
-                                {appName}
-                            </Link>
-                        }
-                        secondary={description || 'No description'}
-                    />
-                </ListItem>
-            ))}
-        />
+        {apps.length > 0
+            ? apps.map(({ appName, description, icon }) => (
+                  <ListItem key={appName} className={styles.listItem}>
+                      <ListItemAvatar>
+                          <Avatar>
+                              {icon ? <Icon>{icon}</Icon> : <Apps />}
+                          </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                          primary={
+                              <Link
+                                  to={`/applications/${encodeURIComponent(
+                                      appName,
+                                  )}`}
+                                  className={[
+                                      styles.listLink,
+                                      styles.truncate,
+                                  ].join(' ')}
+                              >
+                                  {appName}
+                              </Link>
+                          }
+                          secondary={description || 'No description'}
+                      />
+                  </ListItem>
+              ))
+            : null}
     </List>
 );
 AppsLinkList.propTypes = {

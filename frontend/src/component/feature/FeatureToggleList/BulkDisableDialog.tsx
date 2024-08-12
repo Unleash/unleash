@@ -10,7 +10,6 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -121,26 +120,18 @@ export const BulkDisableDialog = ({
                     value={selected}
                     onChange={(option: string) => setSelected(option)}
                 />
-                <ConditionallyRender
-                    condition={isChangeRequestConfigured(selected)}
-                    show={
-                        <SpacedAlert severity='warning'>
-                            Change requests are enabled for this environment.
-                        </SpacedAlert>
-                    }
-                />
-                <ConditionallyRender
-                    condition={alreadyDisabledCount > 0}
-                    show={
-                        <SpacedAlert severity='info'>
-                            {alreadyDisabledCount} feature{' '}
-                            {alreadyDisabledCount > 1
-                                ? 'flags are '
-                                : 'flag is '}
-                            already disabled.
-                        </SpacedAlert>
-                    }
-                />
+                {isChangeRequestConfigured(selected) ? (
+                    <SpacedAlert severity='warning'>
+                        Change requests are enabled for this environment.
+                    </SpacedAlert>
+                ) : null}
+                {alreadyDisabledCount > 0 ? (
+                    <SpacedAlert severity='info'>
+                        {alreadyDisabledCount} feature{' '}
+                        {alreadyDisabledCount > 1 ? 'flags are ' : 'flag is '}
+                        already disabled.
+                    </SpacedAlert>
+                ) : null}
             </Box>
         </Dialogue>
     );

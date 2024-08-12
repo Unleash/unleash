@@ -1,7 +1,6 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useEffect } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { Alert } from '@mui/material';
@@ -30,24 +29,20 @@ export const Billing = () => {
     return (
         <div>
             <PageContent header='Billing' isLoading={loading}>
-                <ConditionallyRender
-                    condition={isBilling}
-                    show={
-                        <PermissionGuard permissions={ADMIN}>
-                            <>
-                                <BillingDashboard
-                                    instanceStatus={instanceStatus!}
-                                />
-                                <BillingHistory data={invoices} />
-                            </>
-                        </PermissionGuard>
-                    }
-                    elseShow={
-                        <Alert severity='error'>
-                            Billing is not enabled for this instance.
-                        </Alert>
-                    }
-                />
+                {isBilling ? (
+                    <PermissionGuard permissions={ADMIN}>
+                        <>
+                            <BillingDashboard
+                                instanceStatus={instanceStatus!}
+                            />
+                            <BillingHistory data={invoices} />
+                        </>
+                    </PermissionGuard>
+                ) : (
+                    <Alert severity='error'>
+                        Billing is not enabled for this instance.
+                    </Alert>
+                )}
             </PageContent>
         </div>
     );

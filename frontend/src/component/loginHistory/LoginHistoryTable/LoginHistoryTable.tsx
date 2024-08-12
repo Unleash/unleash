@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
@@ -192,50 +191,40 @@ export const LoginHistoryTable = () => {
                     title={`Login history (${rows.length})`}
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <Search
-                                        initialValue={searchValue}
-                                        onChange={setSearchValue}
-                                        hasFilters
-                                        getSearchContext={getSearchContext}
-                                    />
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={rows.length > 0}
-                                show={
-                                    <>
-                                        <ConditionallyRender
-                                            condition={!isSmallScreen}
-                                            show={<PageHeader.Divider />}
-                                        />
-                                        <Tooltip
-                                            title='Download login history'
-                                            arrow
-                                        >
-                                            <IconButton onClick={downloadCSV}>
-                                                <Download />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <Search
+                                    initialValue={searchValue}
+                                    onChange={setSearchValue}
+                                    hasFilters
+                                    getSearchContext={getSearchContext}
+                                />
+                            ) : null}
+                            {rows.length > 0 ? (
+                                <>
+                                    {!isSmallScreen ? (
+                                        <PageHeader.Divider />
+                                    ) : null}
+                                    <Tooltip
+                                        title='Download login history'
+                                        arrow
+                                    >
+                                        <IconButton onClick={downloadCSV}>
+                                            <Download />
+                                        </IconButton>
+                                    </Tooltip>
+                                </>
+                            ) : null}
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                                hasFilters
-                                getSearchContext={getSearchContext}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                            hasFilters
+                            getSearchContext={getSearchContext}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
@@ -246,26 +235,19 @@ export const LoginHistoryTable = () => {
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No login events found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No login events available.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No login events found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No login events available.
+                    </TablePlaceholder>
+                )
+            ) : null}
         </PageContent>
     );
 };

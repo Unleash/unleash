@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, styled, Typography } from '@mui/material';
 import useLoading from 'hooks/useLoading';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import { LinkField } from '../LinkField/LinkField';
 import { add, formatDistanceToNowStrict, isAfter, parseISO } from 'date-fns';
@@ -70,42 +69,28 @@ export const InviteLinkBarContent = ({
     return (
         <>
             <StyledBox ref={ref}>
-                <ConditionallyRender
-                    condition={Boolean(inviteLink)}
-                    show={
-                        <>
-                            <Typography variant='body2' sx={{ mb: 1 }}>
-                                {`You have an invite link created on ${formatDateYMD(
-                                    createdAt,
-                                    locationSettings.locale,
-                                )} `}
-                                <ConditionallyRender
-                                    condition={isExpired}
-                                    show={
-                                        <>
-                                            that expired {expireDateComponent}{' '}
-                                            ago
-                                        </>
-                                    }
-                                    elseShow={
-                                        <>
-                                            that will expire in{' '}
-                                            {expireDateComponent}
-                                        </>
-                                    }
-                                />
-                            </Typography>
-                            <LinkField small inviteLink={inviteLink!} />
-                        </>
-                    }
-                    elseShow={
-                        <Typography variant='body2' data-loading>
-                            You can easily create an invite link here that you
-                            can share and use to invite people from your company
-                            to your Unleash setup.
+                {inviteLink ? (
+                    <>
+                        <Typography variant='body2' sx={{ mb: 1 }}>
+                            {`You have an invite link created on ${formatDateYMD(
+                                createdAt,
+                                locationSettings.locale,
+                            )} `}
+                            {isExpired ? (
+                                <>that expired {expireDateComponent} ago</>
+                            ) : (
+                                <>that will expire in {expireDateComponent}</>
+                            )}
                         </Typography>
-                    }
-                />
+                        <LinkField small inviteLink={inviteLink!} />
+                    </>
+                ) : (
+                    <Typography variant='body2' data-loading>
+                        You can easily create an invite link here that you can
+                        share and use to invite people from your company to your
+                        Unleash setup.
+                    </Typography>
+                )}
             </StyledBox>
             <StyledButtonBox
                 sx={{

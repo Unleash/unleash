@@ -38,7 +38,6 @@ import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm'
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Limit } from 'component/common/Limit/Limit';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const useStrategyLimit = (strategyCount: number) => {
     const resourceLimitsEnabled = useUiFlag('resourceLimits');
@@ -247,17 +246,14 @@ export const FeatureStrategyCreate = () => {
                     />
                 }
                 Limit={
-                    <ConditionallyRender
-                        condition={resourceLimitsEnabled}
-                        show={
-                            <Limit
-                                name='strategies in this environment'
-                                shortName='strategies'
-                                currentValue={strategyCount}
-                                limit={limit}
-                            />
-                        }
-                    />
+                    resourceLimitsEnabled ? (
+                        <Limit
+                            name='strategies in this environment'
+                            shortName='strategies'
+                            currentValue={strategyCount}
+                            limit={limit}
+                        />
+                    ) : null
                 }
                 disabled={limitReached}
             />

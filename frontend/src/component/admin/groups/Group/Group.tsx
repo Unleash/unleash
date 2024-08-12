@@ -11,7 +11,6 @@ import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
@@ -240,163 +239,137 @@ export const Group: VFC = () => {
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [sortBy, searchValue, setSearchParams]);
 
-    return (
-        <ConditionallyRender
-            condition={Boolean(group)}
-            show={
-                <>
-                    <MainHeader
-                        title={group?.name}
-                        description={group?.description}
+    return group ? (
+        <>
+            <MainHeader
+                title={group?.name}
+                description={group?.description}
+                actions={
+                    <>
+                        <PermissionIconButton
+                            data-testid={UG_EDIT_BTN_ID}
+                            to={`/admin/groups/${groupId}/edit`}
+                            component={Link}
+                            data-loading
+                            permission={ADMIN}
+                            tooltipProps={{
+                                title: isScimGroup
+                                    ? scimGroupTooltip
+                                    : 'Edit group',
+                            }}
+                            disabled={isScimGroup}
+                        >
+                            <Edit />
+                        </PermissionIconButton>
+                        <PermissionIconButton
+                            data-testid={UG_DELETE_BTN_ID}
+                            data-loading
+                            onClick={() => setRemoveOpen(true)}
+                            permission={ADMIN}
+                            tooltipProps={{
+                                title: isScimGroup
+                                    ? scimGroupTooltip
+                                    : 'Delete group',
+                            }}
+                            disabled={isScimGroup}
+                        >
+                            <Delete />
+                        </PermissionIconButton>
+                    </>
+                }
+            />
+            <PageContent
+                isLoading={loading}
+                header={
+                    <PageHeader
+                        secondary
+                        title={`Users (${
+                            rows.length < data.length
+                                ? `${rows.length} of ${data.length}`
+                                : data.length
+                        })`}
                         actions={
                             <>
-                                <PermissionIconButton
-                                    data-testid={UG_EDIT_BTN_ID}
-                                    to={`/admin/groups/${groupId}/edit`}
-                                    component={Link}
-                                    data-loading
-                                    permission={ADMIN}
-                                    tooltipProps={{
-                                        title: isScimGroup
-                                            ? scimGroupTooltip
-                                            : 'Edit group',
-                                    }}
-                                    disabled={isScimGroup}
-                                >
-                                    <Edit />
-                                </PermissionIconButton>
-                                <PermissionIconButton
-                                    data-testid={UG_DELETE_BTN_ID}
-                                    data-loading
-                                    onClick={() => setRemoveOpen(true)}
-                                    permission={ADMIN}
-                                    tooltipProps={{
-                                        title: isScimGroup
-                                            ? scimGroupTooltip
-                                            : 'Delete group',
-                                    }}
-                                    disabled={isScimGroup}
-                                >
-                                    <Delete />
-                                </PermissionIconButton>
-                            </>
-                        }
-                    />
-                    <PageContent
-                        isLoading={loading}
-                        header={
-                            <PageHeader
-                                secondary
-                                title={`Users (${
-                                    rows.length < data.length
-                                        ? `${rows.length} of ${data.length}`
-                                        : data.length
-                                })`}
-                                actions={
+                                {!isSmallScreen ? (
                                     <>
-                                        <ConditionallyRender
-                                            condition={!isSmallScreen}
-                                            show={
-                                                <>
-                                                    <Search
-                                                        initialValue={
-                                                            searchValue
-                                                        }
-                                                        onChange={
-                                                            setSearchValue
-                                                        }
-                                                        hasFilters
-                                                        getSearchContext={
-                                                            getSearchContext
-                                                        }
-                                                    />
-                                                    <PageHeader.Divider />
-                                                </>
-                                            }
-                                        />
-                                        <ResponsiveButton
-                                            data-testid={UG_EDIT_USERS_BTN_ID}
-                                            onClick={() => {
-                                                setEditUsersOpen(true);
-                                            }}
-                                            maxWidth='700px'
-                                            Icon={Add}
-                                            permission={ADMIN}
-                                            disabled={isScimGroup}
-                                            tooltipProps={{
-                                                title: isScimGroup
-                                                    ? scimGroupTooltip
-                                                    : '',
-                                            }}
-                                        >
-                                            Edit users
-                                        </ResponsiveButton>
-                                    </>
-                                }
-                            >
-                                <ConditionallyRender
-                                    condition={isSmallScreen}
-                                    show={
                                         <Search
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
                                             hasFilters
                                             getSearchContext={getSearchContext}
                                         />
-                                    }
-                                />
-                            </PageHeader>
+                                        <PageHeader.Divider />
+                                    </>
+                                ) : null}
+                                <ResponsiveButton
+                                    data-testid={UG_EDIT_USERS_BTN_ID}
+                                    onClick={() => {
+                                        setEditUsersOpen(true);
+                                    }}
+                                    maxWidth='700px'
+                                    Icon={Add}
+                                    permission={ADMIN}
+                                    disabled={isScimGroup}
+                                    tooltipProps={{
+                                        title: isScimGroup
+                                            ? scimGroupTooltip
+                                            : '',
+                                    }}
+                                >
+                                    Edit users
+                                </ResponsiveButton>
+                            </>
                         }
                     >
-                        <SearchHighlightProvider
-                            value={getSearchText(searchValue)}
-                        >
-                            <VirtualizedTable
-                                rows={rows}
-                                headerGroups={headerGroups}
-                                prepareRow={prepareRow}
+                        {isSmallScreen ? (
+                            <Search
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                                hasFilters
+                                getSearchContext={getSearchContext}
                             />
-                        </SearchHighlightProvider>
-                        <ConditionallyRender
-                            condition={rows.length === 0}
-                            show={
-                                <ConditionallyRender
-                                    condition={searchValue?.length > 0}
-                                    show={
-                                        <TablePlaceholder>
-                                            No users found matching &ldquo;
-                                            {searchValue}
-                                            &rdquo; in this group.
-                                        </TablePlaceholder>
-                                    }
-                                    elseShow={
-                                        <TablePlaceholder>
-                                            This group is empty. Get started by
-                                            adding a user to the group.
-                                        </TablePlaceholder>
-                                    }
-                                />
-                            }
-                        />
-                        <RemoveGroup
-                            open={removeOpen}
-                            setOpen={setRemoveOpen}
-                            group={group!}
-                        />
-                        <EditGroupUsers
-                            open={editUsersOpen}
-                            setOpen={setEditUsersOpen}
-                            group={group!}
-                        />
-                        <RemoveGroupUser
-                            open={removeUserOpen}
-                            setOpen={setRemoveUserOpen}
-                            user={selectedUser}
-                            group={group!}
-                        />
-                    </PageContent>
-                </>
-            }
-        />
-    );
+                        ) : null}
+                    </PageHeader>
+                }
+            >
+                <SearchHighlightProvider value={getSearchText(searchValue)}>
+                    <VirtualizedTable
+                        rows={rows}
+                        headerGroups={headerGroups}
+                        prepareRow={prepareRow}
+                    />
+                </SearchHighlightProvider>
+                {rows.length === 0 ? (
+                    searchValue?.length > 0 ? (
+                        <TablePlaceholder>
+                            No users found matching &ldquo;
+                            {searchValue}
+                            &rdquo; in this group.
+                        </TablePlaceholder>
+                    ) : (
+                        <TablePlaceholder>
+                            This group is empty. Get started by adding a user to
+                            the group.
+                        </TablePlaceholder>
+                    )
+                ) : null}
+                <RemoveGroup
+                    open={removeOpen}
+                    setOpen={setRemoveOpen}
+                    group={group!}
+                />
+                <EditGroupUsers
+                    open={editUsersOpen}
+                    setOpen={setEditUsersOpen}
+                    group={group!}
+                />
+                <RemoveGroupUser
+                    open={removeUserOpen}
+                    setOpen={setRemoveUserOpen}
+                    user={selectedUser}
+                    group={group!}
+                />
+            </PageContent>
+        </>
+    ) : null;
 };

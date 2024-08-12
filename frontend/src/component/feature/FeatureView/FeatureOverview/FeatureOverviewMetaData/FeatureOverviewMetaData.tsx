@@ -2,7 +2,6 @@ import { Box, capitalize, styled } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Edit from '@mui/icons-material/Edit';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -139,67 +138,60 @@ const FeatureOverviewMetaData = () => {
                         <StyledLabel>Project:</StyledLabel>
                         <Box sx={{ wordBreak: 'break-all' }}>{project}</Box>
                     </SpacedBodyItem>
-                    <ConditionallyRender
-                        condition={Boolean(feature.lifecycle)}
-                        show={
-                            <SpacedBodyItem data-loading>
-                                <StyledLabel>Lifecycle:</StyledLabel>
-                                <FeatureLifecycle
-                                    feature={feature}
-                                    onArchive={() => setShowDelDialog(true)}
-                                    onComplete={() =>
-                                        setShowMarkCompletedDialogue(true)
-                                    }
-                                    onUncomplete={refetchFeature}
-                                />
-                            </SpacedBodyItem>
-                        }
-                    />
+                    {feature.lifecycle ? (
+                        <SpacedBodyItem data-loading>
+                            <StyledLabel>Lifecycle:</StyledLabel>
+                            <FeatureLifecycle
+                                feature={feature}
+                                onArchive={() => setShowDelDialog(true)}
+                                onComplete={() =>
+                                    setShowMarkCompletedDialogue(true)
+                                }
+                                onUncomplete={refetchFeature}
+                            />
+                        </SpacedBodyItem>
+                    ) : null}
 
-                    <ConditionallyRender
-                        condition={Boolean(description)}
-                        show={
-                            <BodyItemWithIcon data-loading sx={{ pt: 1 }}>
-                                <StyledLabel>Description:</StyledLabel>
-                                <StyledDescriptionContainer>
-                                    <StyledDescription>
-                                        {description}
-                                    </StyledDescription>
-                                    <PermissionIconButton
-                                        size='medium'
-                                        projectId={projectId}
-                                        permission={UPDATE_FEATURE}
-                                        component={Link}
-                                        to={`/projects/${projectId}/features/${featureId}/settings`}
-                                        tooltipProps={{
-                                            title: 'Edit description',
-                                        }}
-                                    >
-                                        <Edit />
-                                    </PermissionIconButton>
-                                </StyledDescriptionContainer>
-                            </BodyItemWithIcon>
-                        }
-                        elseShow={
-                            <div data-loading>
-                                <StyledDescriptionContainer>
-                                    No description.{' '}
-                                    <PermissionIconButton
-                                        size='medium'
-                                        projectId={projectId}
-                                        permission={UPDATE_FEATURE}
-                                        component={Link}
-                                        to={`/projects/${projectId}/features/${featureId}/settings`}
-                                        tooltipProps={{
-                                            title: 'Edit description',
-                                        }}
-                                    >
-                                        <Edit />
-                                    </PermissionIconButton>
-                                </StyledDescriptionContainer>
-                            </div>
-                        }
-                    />
+                    {description ? (
+                        <BodyItemWithIcon data-loading sx={{ pt: 1 }}>
+                            <StyledLabel>Description:</StyledLabel>
+                            <StyledDescriptionContainer>
+                                <StyledDescription>
+                                    {description}
+                                </StyledDescription>
+                                <PermissionIconButton
+                                    size='medium'
+                                    projectId={projectId}
+                                    permission={UPDATE_FEATURE}
+                                    component={Link}
+                                    to={`/projects/${projectId}/features/${featureId}/settings`}
+                                    tooltipProps={{
+                                        title: 'Edit description',
+                                    }}
+                                >
+                                    <Edit />
+                                </PermissionIconButton>
+                            </StyledDescriptionContainer>
+                        </BodyItemWithIcon>
+                    ) : (
+                        <div data-loading>
+                            <StyledDescriptionContainer>
+                                No description.{' '}
+                                <PermissionIconButton
+                                    size='medium'
+                                    projectId={projectId}
+                                    permission={UPDATE_FEATURE}
+                                    component={Link}
+                                    to={`/projects/${projectId}/features/${featureId}/settings`}
+                                    tooltipProps={{
+                                        title: 'Edit description',
+                                    }}
+                                >
+                                    <Edit />
+                                </PermissionIconButton>
+                            </StyledDescriptionContainer>
+                        </div>
+                    )}
                     <BodyItemWithIcon>
                         <StyledDetailsContainer>
                             <StyledDetail>
@@ -218,62 +210,49 @@ const FeatureOverviewMetaData = () => {
                             />
                         </StyledDetailsContainer>
                     </BodyItemWithIcon>
-                    <ConditionallyRender
-                        condition={Boolean(feature.createdBy)}
-                        show={() => (
-                            <BodyItemWithIcon>
-                                <StyledDetailsContainer>
-                                    <StyledDetail>
-                                        <StyledLabel>Created by:</StyledLabel>
-                                        <span>{feature.createdBy?.name}</span>
-                                    </StyledDetail>
-                                    <StyledUserAvatar
-                                        user={feature.createdBy}
-                                    />
-                                </StyledDetailsContainer>
-                            </BodyItemWithIcon>
-                        )}
-                    />
-                    <ConditionallyRender
-                        condition={showDependentFeatures}
-                        show={<DependencyRow feature={feature} />}
-                    />
+                    {feature.createdBy ? (
+                        <BodyItemWithIcon>
+                            <StyledDetailsContainer>
+                                <StyledDetail>
+                                    <StyledLabel>Created by:</StyledLabel>
+                                    <span>{feature.createdBy?.name}</span>
+                                </StyledDetail>
+                                <StyledUserAvatar user={feature.createdBy} />
+                            </StyledDetailsContainer>
+                        </BodyItemWithIcon>
+                    ) : null}
+                    {showDependentFeatures ? (
+                        <DependencyRow feature={feature} />
+                    ) : null}
                 </StyledBody>
             </StyledPaddingContainerTop>
-            <ConditionallyRender
-                condition={feature.children.length > 0}
-                show={
-                    <FeatureArchiveNotAllowedDialog
-                        features={feature.children}
-                        project={projectId}
-                        isOpen={showDelDialog}
-                        onClose={() => setShowDelDialog(false)}
-                    />
-                }
-                elseShow={
-                    <FeatureArchiveDialog
-                        isOpen={showDelDialog}
-                        onConfirm={() => {
-                            navigate(`/projects/${projectId}`);
-                        }}
-                        onClose={() => setShowDelDialog(false)}
-                        projectId={projectId}
-                        featureIds={[featureId]}
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(feature.project)}
-                show={
-                    <MarkCompletedDialogue
-                        isOpen={showMarkCompletedDialogue}
-                        setIsOpen={setShowMarkCompletedDialogue}
-                        projectId={feature.project}
-                        featureId={feature.name}
-                        onComplete={refetchFeature}
-                    />
-                }
-            />
+            {feature.children.length > 0 ? (
+                <FeatureArchiveNotAllowedDialog
+                    features={feature.children}
+                    project={projectId}
+                    isOpen={showDelDialog}
+                    onClose={() => setShowDelDialog(false)}
+                />
+            ) : (
+                <FeatureArchiveDialog
+                    isOpen={showDelDialog}
+                    onConfirm={() => {
+                        navigate(`/projects/${projectId}`);
+                    }}
+                    onClose={() => setShowDelDialog(false)}
+                    projectId={projectId}
+                    featureIds={[featureId]}
+                />
+            )}
+            {feature.project ? (
+                <MarkCompletedDialogue
+                    isOpen={showMarkCompletedDialogue}
+                    setIsOpen={setShowMarkCompletedDialogue}
+                    projectId={feature.project}
+                    featureId={feature.name}
+                    onComplete={refetchFeature}
+                />
+            ) : null}
         </StyledContainer>
     );
 };

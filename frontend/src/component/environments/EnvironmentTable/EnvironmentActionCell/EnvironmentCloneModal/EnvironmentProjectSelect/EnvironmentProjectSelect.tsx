@@ -10,7 +10,6 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { caseInsensitiveSearch } from 'utils/search';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Fragment } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SelectAllButton } from 'component/admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectAllButton/SelectAllButton';
 
 const StyledOption = styled('div')(({ theme }) => ({
@@ -102,15 +101,12 @@ export const EnvironmentProjectSelect = ({
 
     const renderGroup = ({ key, children }: AutocompleteRenderGroupParams) => (
         <Fragment key={key}>
-            <ConditionallyRender
-                condition={projectOptions.length > 2}
-                show={
-                    <SelectAllButton
-                        isAllSelected={isAllSelected}
-                        onClick={onSelectAllClick}
-                    />
-                }
-            />
+            {projectOptions.length > 2 ? (
+                <SelectAllButton
+                    isAllSelected={isAllSelected}
+                    onClick={onSelectAllClick}
+                />
+            ) : null}
             {children}
         </Fragment>
     );

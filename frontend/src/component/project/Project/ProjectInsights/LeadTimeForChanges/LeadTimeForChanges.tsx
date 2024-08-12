@@ -9,7 +9,6 @@ import {
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import theme from 'themes/theme';
@@ -242,21 +241,15 @@ export const LeadTimeForChanges = ({
                     </TableBody>
                 </Table>
             </TableContainer>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={globalFilter?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No features with data found &ldquo;
-                                {globalFilter}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                globalFilter?.length > 0 ? (
+                    <TablePlaceholder>
+                        No features with data found &ldquo;
+                        {globalFilter}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : null
+            ) : null}
         </Container>
     );
 };

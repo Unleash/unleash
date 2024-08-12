@@ -1,6 +1,5 @@
 import { type DragEventHandler, type RefObject, useRef } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
@@ -65,11 +64,7 @@ export const StrategyDraggableItem = ({
             onDragOver={onDragOver(ref, index)}
             sx={{ opacity: isDragging ? '0.5' : '1' }}
         >
-            <ConditionallyRender
-                condition={index > 0}
-                show={<StrategySeparator text='OR' />}
-            />
-
+            {index > 0 ? <StrategySeparator text='OR' /> : null}
             <StrategyItem
                 strategy={strategy}
                 environmentId={environmentName}
@@ -100,14 +95,12 @@ const ChangeRequestStatusBadge = ({
 
     return (
         <Box sx={{ mr: 1.5 }}>
-            <ConditionallyRender
-                condition={change?.action === 'updateStrategy'}
-                show={<Badge color='warning'>Modified in draft</Badge>}
-            />
-            <ConditionallyRender
-                condition={change?.action === 'deleteStrategy'}
-                show={<Badge color='error'>Deleted in draft</Badge>}
-            />
+            {change?.action === 'updateStrategy' ? (
+                <Badge color='warning'>Modified in draft</Badge>
+            ) : null}
+            {change?.action === 'deleteStrategy' ? (
+                <Badge color='error'>Deleted in draft</Badge>
+            ) : null}
         </Box>
     );
 };

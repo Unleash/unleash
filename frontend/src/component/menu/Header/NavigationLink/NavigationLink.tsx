@@ -1,5 +1,4 @@
 import { ListItem, Link, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { INavigationMenuItem } from 'interfaces/route';
@@ -76,14 +75,11 @@ const NavigationLink = ({
                 <StyledSpan />
                 {text}
 
-                <ConditionallyRender
-                    condition={showEnterpriseBadgeToPro}
-                    show={
-                        <StyledBadgeContainer>
-                            <EnterpriseBadge />
-                        </StyledBadgeContainer>
-                    }
-                />
+                {showEnterpriseBadgeToPro ? (
+                    <StyledBadgeContainer>
+                        <EnterpriseBadge />
+                    </StyledBadgeContainer>
+                ) : null}
             </Link>
         </StyledListItem>
     );

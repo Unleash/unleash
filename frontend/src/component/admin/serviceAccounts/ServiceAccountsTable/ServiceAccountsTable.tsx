@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -227,18 +226,15 @@ export const ServiceAccountsTable = () => {
                     title={`Service Accounts (${rows.length})`}
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            {!isSmallScreen ? (
+                                <>
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
+                                    />
+                                    <PageHeader.Divider />
+                                </>
+                            ) : null}
                             <Button
                                 variant='contained'
                                 color='primary'
@@ -252,15 +248,12 @@ export const ServiceAccountsTable = () => {
                         </>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                            />
-                        }
-                    />
+                    {isSmallScreen ? (
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                        />
+                    ) : null}
                 </PageHeader>
             }
         >
@@ -271,27 +264,20 @@ export const ServiceAccountsTable = () => {
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No service accounts found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No service accounts available. Get started by
-                                adding one.
-                            </TablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No service accounts found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <TablePlaceholder>
+                        No service accounts available. Get started by adding
+                        one.
+                    </TablePlaceholder>
+                )
+            ) : null}
             <ServiceAccountModal
                 serviceAccount={selectedServiceAccount}
                 open={modalOpen}

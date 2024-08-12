@@ -12,7 +12,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ICopyButtonProps {
     environmentId: IFeatureEnvironment['name'];
@@ -84,14 +83,11 @@ export const CopyButton: VFC<ICopyButtonProps> = ({
                                     onClick={() => onClick(environment)}
                                     disabled={!access}
                                 >
-                                    <ConditionallyRender
-                                        condition={!access}
-                                        show={
-                                            <ListItemIcon>
-                                                <Lock fontSize='small' />
-                                            </ListItemIcon>
-                                        }
-                                    />
+                                    {!access ? (
+                                        <ListItemIcon>
+                                            <Lock fontSize='small' />
+                                        </ListItemIcon>
+                                    ) : null}
                                     <ListItemText>
                                         Copy from {environment}
                                     </ListItemText>

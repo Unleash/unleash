@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles/createTheme';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 import InsightsIcon from '@mui/icons-material/Insights';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
@@ -259,11 +258,11 @@ export const CommandResultGroup = ({
                         sx={listItemButtonStyle}
                     >
                         <StyledListItemIcon>
-                            <ConditionallyRender
-                                condition={groupName === 'Projects'}
-                                show={<ProjectIcon />}
-                                elseShow={<Icon>{icon}</Icon>}
-                            />
+                            {groupName === 'Projects' ? (
+                                <ProjectIcon />
+                            ) : (
+                                <Icon>{icon}</Icon>
+                            )}
                         </StyledListItemIcon>
                         <TooltipResolver
                             title={item.description}

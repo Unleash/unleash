@@ -1,5 +1,4 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled, Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { ApplicationUsageSchema } from 'openapi';
@@ -46,20 +45,16 @@ export const ApplicationUsageCell = ({ usage }: IApplicationUsageCellProps) => {
     );
     return (
         <TextCell>
-            <ConditionallyRender
-                condition={usage !== undefined && usage.length > 0}
-                show={
-                    <Typography variant='body2'>{formattedProjects}</Typography>
-                }
-                elseShow={
-                    <Typography
-                        variant='body2'
-                        color={theme.palette.text.secondary}
-                    >
-                        not connected
-                    </Typography>
-                }
-            />
+            {usage !== undefined && usage.length > 0 ? (
+                <Typography variant='body2'>{formattedProjects}</Typography>
+            ) : (
+                <Typography
+                    variant='body2'
+                    color={theme.palette.text.secondary}
+                >
+                    not connected
+                </Typography>
+            )}
         </TextCell>
     );
 };

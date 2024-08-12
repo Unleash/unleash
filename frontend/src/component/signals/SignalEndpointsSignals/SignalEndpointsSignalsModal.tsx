@@ -8,7 +8,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const LazyReactJSONEditor = lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
@@ -146,25 +145,17 @@ export const SignalEndpointsSignalsModal = ({
                             </Suspense>
                         )}
                         listEnd={
-                            <ConditionallyRender
-                                condition={hasMore}
-                                show={
-                                    <Button onClick={loadMore}>
-                                        Load more
-                                    </Button>
-                                }
-                            />
+                            hasMore ? (
+                                <Button onClick={loadMore}>Load more</Button>
+                            ) : null
                         }
                     />
-                    <ConditionallyRender
-                        condition={signalEndpointSignals.length === 0}
-                        show={
-                            <p>
-                                No signals have been received on this signal
-                                endpoint.
-                            </p>
-                        }
-                    />
+                    {signalEndpointSignals.length === 0 ? (
+                        <p>
+                            No signals have been received on this signal
+                            endpoint.
+                        </p>
+                    ) : null}
                     <StyledButtonContainer>
                         <Button
                             onClick={() => {

@@ -34,7 +34,6 @@ import { ServiceAccountCreateTokenDialog } from './ServiceAccountCreateTokenDial
 import { ServiceAccountTokenDialog } from 'component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountTokenDialog/ServiceAccountTokenDialog';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
     type ICreateServiceAccountTokenPayload,
@@ -257,26 +256,23 @@ export const ServiceAccountTokens = ({
 
     return (
         <>
-            <ConditionallyRender
-                condition={!readOnly}
-                show={
-                    <StyledHeader>
-                        <Search
-                            initialValue={searchValue}
-                            onChange={setSearchValue}
-                            getSearchContext={getSearchContext}
-                        />
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            disabled={tokens.length >= PAT_LIMIT}
-                            onClick={() => setCreateOpen(true)}
-                        >
-                            New token
-                        </Button>
-                    </StyledHeader>
-                }
-            />
+            {!readOnly ? (
+                <StyledHeader>
+                    <Search
+                        initialValue={searchValue}
+                        onChange={setSearchValue}
+                        getSearchContext={getSearchContext}
+                    />
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        disabled={tokens.length >= PAT_LIMIT}
+                        onClick={() => setCreateOpen(true)}
+                    >
+                        New token
+                    </Button>
+                </StyledHeader>
+            ) : null}
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
@@ -284,39 +280,31 @@ export const ServiceAccountTokens = ({
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No tokens found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <StyledTablePlaceholder>
-                                <StyledPlaceholderTitle>
-                                    You have no tokens for this service account
-                                    yet.
-                                </StyledPlaceholderTitle>
-                                <StyledPlaceholderSubtitle>
-                                    Create a service account token for access to
-                                    the Unleash API.
-                                </StyledPlaceholderSubtitle>
-                                <Button
-                                    variant='outlined'
-                                    onClick={() => setCreateOpen(true)}
-                                >
-                                    Create new service account token
-                                </Button>
-                            </StyledTablePlaceholder>
-                        }
-                    />
-                }
-            />
+            {rows.length === 0 ? (
+                searchValue?.length > 0 ? (
+                    <TablePlaceholder>
+                        No tokens found matching &ldquo;
+                        {searchValue}
+                        &rdquo;
+                    </TablePlaceholder>
+                ) : (
+                    <StyledTablePlaceholder>
+                        <StyledPlaceholderTitle>
+                            You have no tokens for this service account yet.
+                        </StyledPlaceholderTitle>
+                        <StyledPlaceholderSubtitle>
+                            Create a service account token for access to the
+                            Unleash API.
+                        </StyledPlaceholderSubtitle>
+                        <Button
+                            variant='outlined'
+                            onClick={() => setCreateOpen(true)}
+                        >
+                            Create new service account token
+                        </Button>
+                    </StyledTablePlaceholder>
+                )
+            ) : null}
             <ServiceAccountCreateTokenDialog
                 open={createOpen}
                 setOpen={setCreateOpen}

@@ -4,7 +4,6 @@ import type { ICheckedPermissions } from 'interfaces/permissions';
 import type { IRoleFormErrors } from './useRoleForm';
 import type { PredefinedRoleType } from 'interfaces/role';
 import { ROOT_ROLE_TYPE } from '@server/util/constants';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RolePermissionCategories } from './RolePermissionCategories/RolePermissionCategories';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
@@ -107,20 +106,17 @@ export const RoleForm = ({
                 setCheckedPermissions={setCheckedPermissions}
                 validatePermissions={validatePermissions}
             />
-            <ConditionallyRender
-                condition={showErrors}
-                show={() => (
-                    <Alert severity='error' icon={false}>
-                        <ul>
-                            {Object.values(errors)
-                                .filter(Boolean)
-                                .map((error) => (
-                                    <li key={error}>{error}</li>
-                                ))}
-                        </ul>
-                    </Alert>
-                )}
-            />
+            {showErrors ? (
+                <Alert severity='error' icon={false}>
+                    <ul>
+                        {Object.values(errors)
+                            .filter(Boolean)
+                            .map((error) => (
+                                <li key={error}>{error}</li>
+                            ))}
+                    </ul>
+                </Alert>
+            ) : null}
         </div>
     );
 };

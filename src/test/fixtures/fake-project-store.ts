@@ -105,7 +105,8 @@ export default class FakeProjectStore implements IProjectStore {
     destroy(): void {}
 
     async count(): Promise<number> {
-        return this.projects.length;
+        return this.projects.filter((project) => project.archivedAt !== null)
+            .length;
     }
 
     async get(key: string): Promise<IProject> {
@@ -117,7 +118,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async getAll(): Promise<IProject[]> {
-        return this.projects;
+        return this.projects.filter((project) => project.archivedAt !== null);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

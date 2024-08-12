@@ -123,6 +123,7 @@ class ProjectStore implements IProjectStore {
     ): Promise<IProjectWithCount[]> {
         const projectTimer = this.timer('getProjectsWithCount');
         let projects = this.db(TABLE)
+            .where(`${TABLE}.archived_at`, null)
             .leftJoin('features', 'features.project', 'projects.id')
             .leftJoin(
                 'project_settings',
@@ -225,6 +226,7 @@ class ProjectStore implements IProjectStore {
             .select(COLUMNS)
             .from(TABLE)
             .where(query)
+            .andWhere(`${TABLE}.archived_at`, null)
             .orderBy('name', 'asc');
 
         return rows.map(this.mapRow);
@@ -708,6 +710,7 @@ class ProjectStore implements IProjectStore {
     async count(): Promise<number> {
         return this.db
             .from(TABLE)
+            .where(`${TABLE}.archived_at`, null)
             .count('*')
             .then((res) => Number(res[0].count));
     }
@@ -721,6 +724,7 @@ class ProjectStore implements IProjectStore {
             )
             .count(`${TABLE}.id as count`)
             .from(`${TABLE}`)
+            .where(`${TABLE}.archived_at`, null)
             .leftJoin(
                 `${SETTINGS_TABLE}`,
                 `${TABLE}.id`,
@@ -733,7 +737,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapProjectModeCount(row): ProjectModeCount {
+    private mapProjectModeCount(row): ProjectModeCount {
         return {
             mode: row.mode,
             count: Number(row.count),
@@ -741,7 +745,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapLinkRow(row): IEnvironmentProjectLink {
+    private mapLinkRow(row): IEnvironmentProjectLink {
         return {
             environmentName: row.environment_name,
             projectId: row.project_id,
@@ -749,7 +753,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapRow(row): IProject {
+    private mapRow(row): IProject {
         if (!row) {
             throw new NotFoundError('No project found');
         }
@@ -772,7 +776,7 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    mapProjectEnvironmentRow(row: {
+    private mapProjectEnvironmentRow(row: {
         environment_name: string;
         default_strategy: CreateFeatureStrategySchema;
     }): ProjectEnvironment {
@@ -785,7 +789,7 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    getAggregatedApplicationsData(rows): IProjectApplication[] {
+    private getAggregatedApplicationsData(rows): IProjectApplication[] {
         const entriesMap = new Map<string, IProjectApplication>();
 
         rows.forEach((row) => {

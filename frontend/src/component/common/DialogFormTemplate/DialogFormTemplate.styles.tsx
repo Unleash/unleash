@@ -33,11 +33,14 @@ export const StyledHeader = styled(Typography)({
     fontWeight: 'lighter',
 });
 
-export const ProjectNameContainer = styled('div')({
+export const NameContainer = styled('div')(({ theme }) => ({
     gridArea: 'project-name',
-});
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    gap: theme.spacing(2),
+}));
 
-export const ProjectDescriptionContainer = styled('div')({
+export const DescriptionContainer = styled('div')({
     gridArea: 'project-description',
 });
 

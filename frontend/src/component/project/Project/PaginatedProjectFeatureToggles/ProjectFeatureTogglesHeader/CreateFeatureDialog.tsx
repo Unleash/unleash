@@ -227,6 +227,7 @@ const CreateFeatureDialogContent = ({
                         tooltipProps: { title: limitMessage, arrow: true },
                     }}
                     description={description}
+                    namingPattern={projectInfo.featureNaming}
                     errors={errors}
                     handleSubmit={handleSubmit}
                     Icon={<FlagIcon />}

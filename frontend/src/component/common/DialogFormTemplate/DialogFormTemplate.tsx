@@ -15,6 +15,11 @@ import {
 import { Button } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
+import type { FeatureNamingType } from 'interfaces/project';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { NamingPatternInfo } from './NamingPatternInfo';
+
+type NamingPattern = FeatureNamingType;
 
 type FormProps = {
     createButtonProps: IPermissionButtonProps;
@@ -30,12 +35,14 @@ type FormProps = {
     setDescription: (newDescription: string) => void;
     setName: (newName: string) => void;
     validateName?: () => void;
+    namingPattern?: NamingPattern;
 };
 
 export const DialogFormTemplate: React.FC<FormProps> = ({
     Limit,
     handleSubmit,
     name,
+    namingPattern,
     setName,
     description,
     setDescription,
@@ -47,6 +54,8 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
     createButtonProps,
     validateName = () => {},
 }) => {
+    const displayNamingPattern = Boolean(namingPattern?.pattern);
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <TopGrid>
@@ -56,6 +65,11 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                     <StyledInput
                         label={`${resource} name`}
                         aria-required
+                        aria-details={
+                            displayNamingPattern
+                                ? 'naming-pattern-info'
+                                : undefined
+                        }
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         error={Boolean(errors.name)}
@@ -73,6 +87,13 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         }}
                         data-testid='FORM_NAME_INPUT'
                         size='medium'
+                    />
+
+                    <ConditionallyRender
+                        condition={displayNamingPattern}
+                        show={
+                            <NamingPatternInfo featureNaming={namingPattern!} />
+                        }
                     />
                 </ProjectNameContainer>
                 <ProjectDescriptionContainer>

@@ -50,7 +50,7 @@ export default class FakeProjectStore implements IProjectStore {
 
     async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
         return this.projects
-            .filter((project) => project.archivedAt !== null)
+            .filter((project) => project.archivedAt === null)
             .map((project) => {
                 return {
                     ...project,
@@ -105,7 +105,7 @@ export default class FakeProjectStore implements IProjectStore {
     destroy(): void {}
 
     async count(): Promise<number> {
-        return this.projects.filter((project) => project.archivedAt !== null)
+        return this.projects.filter((project) => project.archivedAt === null)
             .length;
     }
 
@@ -118,7 +118,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async getAll(): Promise<IProject[]> {
-        return this.projects.filter((project) => project.archivedAt !== null);
+        return this.projects.filter((project) => project.archivedAt === null);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

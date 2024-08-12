@@ -24,14 +24,15 @@ import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import type { FeatureNamingType } from 'interfaces/project';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
+import type { CreateFeatureSchemaType } from 'openapi';
 
 interface IFeatureToggleForm {
-    type: string;
+    type: CreateFeatureSchemaType;
     name: string;
     description: string;
     project: string;
     impressionData: boolean;
-    setType: React.Dispatch<React.SetStateAction<string>>;
+    setType: React.Dispatch<React.SetStateAction<CreateFeatureSchemaType>>;
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string>>;

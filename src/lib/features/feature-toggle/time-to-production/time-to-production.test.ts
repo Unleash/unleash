@@ -24,7 +24,7 @@ describe('calculate average time to production', () => {
         expect(timeToProduction).toBe(21);
     });
 
-    test('should return more then 0 if feature was enabled almost instantly', () => {
+    test('should return more than 0 if feature was enabled almost instantly', () => {
         const timeToProduction = calculateAverageTimeToProd([
             {
                 created: new Date('2024-11-11T09:11:11.111Z'),
@@ -39,7 +39,7 @@ describe('calculate average time to production', () => {
         expect(timeToProduction).toBe(0.1);
     });
 
-    test('should return more then 0 if feature was enabled instantly', () => {
+    test('should return more than 0 if feature was enabled instantly', () => {
         const created = new Date('2024-11-11T09:11:11.111Z');
         const timeToProduction = calculateAverageTimeToProd([
             {

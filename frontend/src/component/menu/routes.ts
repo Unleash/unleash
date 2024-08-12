@@ -125,6 +125,14 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { mobile: true },
     },
+    {
+        path: '/projects-archive',
+        title: 'Projects archive',
+        component: ProjectListNew,
+        type: 'protected',
+        menu: {},
+        flag: 'archiveProjects',
+    },
 
     // Features
     {

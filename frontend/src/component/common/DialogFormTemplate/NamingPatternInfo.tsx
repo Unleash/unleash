@@ -1,10 +1,15 @@
-import { styled } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    styled,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { FeatureNamingType } from 'interfaces/project';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
-    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
     marginInlineStart: theme.spacing(1.5),
     backgroundColor: `${theme.palette.background.elevation2}`,
@@ -23,6 +28,12 @@ const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     },
 }));
 
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    backgroundColor: 'inherit',
+    boxShadow: 'none',
+    margin: 0,
+}));
+
 type Props = {
     naming: FeatureNamingType;
 };
@@ -30,31 +41,38 @@ type Props = {
 export const NamingPatternInfo: React.FC<Props> = ({ naming }) => {
     return (
         <StyledFlagNamingInfo>
-            <p>The name must match this pattern:</p>
-            <dl id='naming-pattern-info'>
-                <dt>Pattern</dt>
-                <dd>
-                    <code>^{naming.pattern}$</code>
-                </dd>
-                <ConditionallyRender
-                    condition={Boolean(naming?.example)}
-                    show={
-                        <>
-                            <dt>Example</dt>
-                            <dd>{naming?.example}</dd>
-                        </>
-                    }
-                />
-                <ConditionallyRender
-                    condition={Boolean(naming?.description)}
-                    show={
-                        <>
-                            <dt>Description</dt>
-                            <dd>{naming?.description}</dd>
-                        </>
-                    }
-                />
-            </dl>
+            <StyledAccordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    Must match: <code>^{naming.pattern}$</code>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <p>The name must match this pattern:</p>
+                    <dl id='naming-pattern-info'>
+                        <dt>Pattern</dt>
+                        <dd>
+                            <code>^{naming.pattern}$</code>
+                        </dd>
+                        <ConditionallyRender
+                            condition={Boolean(naming?.example)}
+                            show={
+                                <>
+                                    <dt>Example</dt>
+                                    <dd>{naming?.example}</dd>
+                                </>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(naming?.description)}
+                            show={
+                                <>
+                                    <dt>Description</dt>
+                                    <dd>{naming?.description}</dd>
+                                </>
+                            }
+                        />
+                    </dl>
+                </AccordionDetails>
+            </StyledAccordion>
         </StyledFlagNamingInfo>
     );
 };

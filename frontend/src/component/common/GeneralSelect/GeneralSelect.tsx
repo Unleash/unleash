@@ -24,7 +24,7 @@ export interface ISelectOption {
 export interface IGeneralSelectProps<T extends string>
     extends Omit<SelectProps, 'onChange'> {
     name?: string;
-    value?: string;
+    value: T;
     label?: string;
     options: ISelectOption[];
     onChange: (key: T) => void;
@@ -41,7 +41,7 @@ const StyledFormControl = styled(FormControl)({
 
 function GeneralSelect<T extends string = string>({
     name,
-    value = '',
+    value,
     label = '',
     options,
     onChange,

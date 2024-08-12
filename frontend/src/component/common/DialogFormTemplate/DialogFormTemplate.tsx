@@ -2,8 +2,8 @@ import type { FormEventHandler } from 'react';
 import theme from 'themes/theme';
 import {
     ConfigButtons,
-    ProjectDescriptionContainer,
-    ProjectNameContainer,
+    DescriptionContainer,
+    NameContainer,
     StyledForm,
     StyledHeader,
     StyledInput,
@@ -61,7 +61,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
             <TopGrid>
                 <IconWrapper>{Icon}</IconWrapper>
                 <StyledHeader variant='h2'>Create {resource}</StyledHeader>
-                <ProjectNameContainer>
+                <NameContainer>
                     <StyledInput
                         label={`${resource} name`}
                         aria-required
@@ -93,8 +93,8 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         condition={displayNamingPattern}
                         show={<NamingPatternInfo naming={namingPattern!} />}
                     />
-                </ProjectNameContainer>
-                <ProjectDescriptionContainer>
+                </NameContainer>
+                <DescriptionContainer>
                     <StyledInput
                         size='medium'
                         className='description'
@@ -111,7 +111,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         }}
                         data-testid='FORM_DESCRIPTION_INPUT'
                     />
-                </ProjectDescriptionContainer>
+                </DescriptionContainer>
             </TopGrid>
 
             <ConfigButtons>{configButtons}</ConfigButtons>

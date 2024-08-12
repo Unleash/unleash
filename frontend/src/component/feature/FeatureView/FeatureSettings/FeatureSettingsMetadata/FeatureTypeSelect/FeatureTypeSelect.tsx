@@ -6,7 +6,11 @@ import GeneralSelect, {
 import type { CreateFeatureSchemaType } from 'openapi';
 
 interface IFeatureTypeSelectProps
-    extends Omit<IGeneralSelectProps<CreateFeatureSchemaType>, 'options'> {
+    extends Omit<
+        IGeneralSelectProps<CreateFeatureSchemaType>,
+        'options' | 'value'
+    > {
+    value: CreateFeatureSchemaType;
     editable: boolean;
 }
 

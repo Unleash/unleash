@@ -18,8 +18,8 @@ import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useGlobalFeatureSearch } from '../FeatureToggleList/useGlobalFeatureSearch';
 import { Limit } from 'component/common/Limit/Limit';
-import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -104,11 +104,8 @@ const CreateFeature = () => {
 
     const { createFeatureToggle, loading } = useFeatureApi();
 
-    const {
-        insights: {
-            flags: { total: totalFlags },
-        },
-    } = useInsights();
+    const { total: totalFlags, loading: loadingTotalFlagCount } =
+        useGlobalFeatureSearch();
 
     const resourceLimitsEnabled = useUiFlag('resourceLimits');
 

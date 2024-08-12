@@ -17,6 +17,7 @@ import { EventLogFilters } from './EventLogFilters';
 import type { EventSchema } from 'openapi';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
+import { EventActions } from './EventActions';
 
 interface IEventLogProps {
     title: string;
@@ -121,6 +122,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                     actions={
                         <>
                             {showDataSwitch}
+                            <EventActions events={events} />
                             {!isSmallScreen && searchInputField}
                         </>
                     }

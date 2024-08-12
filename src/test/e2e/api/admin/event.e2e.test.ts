@@ -158,8 +158,6 @@ test('event creators - if system user, return system name, else should return na
         {
             type: FEATURE_CREATED,
             project: randomId(),
-            data: { id: randomId() },
-            tags: [],
             createdBy: 'should-not-use-this-name',
             createdByUserId: SYSTEM_USER.id,
             ip: '127.0.0.1',
@@ -167,8 +165,6 @@ test('event creators - if system user, return system name, else should return na
         {
             type: FEATURE_CREATED,
             project: randomId(),
-            data: { id: randomId() },
-            tags: [],
             createdBy: 'test-user1',
             createdByUserId: user.id,
             ip: '127.0.0.1',
@@ -176,9 +172,6 @@ test('event creators - if system user, return system name, else should return na
         {
             type: FEATURE_CREATED,
             project: randomId(),
-            data: { id: randomId() },
-            preData: { id: randomId() },
-            tags: [{ type: 'simple', value: randomId() }],
             createdBy: 'test-user2',
             createdByUserId: 2,
             ip: '127.0.0.1',
@@ -206,6 +199,41 @@ test('event creators - if system user, return system name, else should return na
         {
             id: 2,
             name: 'test-user2',
+        },
+    ]);
+});
+
+test('event creators - takes single distinct username, if 2 users have same id', async () => {
+    const events: IBaseEvent[] = [
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            createdBy: 'test-user4',
+            createdByUserId: 2,
+            ip: '127.0.0.1',
+        },
+        {
+            type: FEATURE_CREATED,
+            project: randomId(),
+            createdBy: 'test-user2',
+            createdByUserId: 2,
+            ip: '127.0.0.1',
+        },
+    ];
+
+    await Promise.all(
+        events.map((event) => {
+            return eventService.storeEvent(event);
+        }),
+    );
+
+    const { body } = await app.request
+        .get('/api/admin/event-creators')
+        .expect(200);
+    expect(body).toMatchObject([
+        {
+            id: 2,
+            name: 'test-user4',
         },
     ]);
 });

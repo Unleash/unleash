@@ -212,6 +212,42 @@ export const featureSchema = {
             description:
                 'The list of parent dependencies. This is an experimental field and may change.',
         },
+        collaborators: {
+            type: 'object',
+            required: ['users'],
+            description:
+                'Information related to users who have made changes to this feature flage.',
+            properties: {
+                users: {
+                    description:
+                        'Users who have made any changes to this feature flags. The list is sorted in reverse chronological order (most recent changes first)',
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        required: ['id', 'name', 'imageUrl'],
+                        description: 'A simple representation of a user.',
+                        properties: {
+                            id: {
+                                description: "The user's id",
+                                type: 'integer',
+                                example: 123,
+                            },
+                            name: {
+                                description:
+                                    "The user's name, username, or email (prioritized in that order). If none of those are present, this property will be set to the string `unknown`",
+                                type: 'string',
+                                example: 'User',
+                            },
+                            imageUrl: {
+                                description: `The URL to the user's profile image`,
+                                type: 'string',
+                                example: 'https://example.com/242x200.png',
+                            },
+                        },
+                    },
+                },
+            },
+        },
     },
     components: {
         schemas: {

@@ -18,7 +18,7 @@ import type { EventSchema } from 'openapi';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import useLoading from 'hooks/useLoading';
 
 interface IEventLogProps {
     title: string;
@@ -45,9 +45,10 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const Placeholder = styled('div')({
+const Placeholder = styled('li')({
     height: '246px',
     borderRadius: theme.shape.borderRadiusLarge,
+    '&[data-loading-events=true]': { zIndex: '1' }, // .skeleton has z-index: 9990
 });
 
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
@@ -66,6 +67,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
               ? { type: 'flag', flagName: feature }
               : { type: 'global' },
     );
+    const ref = useLoading(loading, '[data-loading-events=true]');
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
@@ -102,11 +104,10 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
         if (loading) {
             return (
                 <StyledEventsList>
-                    <ScreenReaderOnly>Loading search results</ScreenReaderOnly>
                     {Array.from({ length: pagination.pageSize }).map((_, i) => (
                         <Placeholder
+                            data-loading-events='true'
                             key={`event-skeleton-${i}`}
-                            className='skeleton'
                         />
                     ))}
                 </StyledEventsList>
@@ -147,7 +148,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
-            <EventResultWrapper>
+            <EventResultWrapper ref={ref}>
                 <StyledFilters
                     logType={project ? 'project' : feature ? 'flag' : 'global'}
                     state={filterState}

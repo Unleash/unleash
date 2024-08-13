@@ -18,6 +18,7 @@ import type { EventSchema } from 'openapi';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 interface IEventLogProps {
     title: string;
@@ -43,6 +44,11 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
     flexFlow: 'column',
     gap: theme.spacing(1),
 }));
+
+const Placeholder = styled('div')({
+    height: '246px',
+    borderRadius: theme.shape.borderRadiusLarge,
+});
 
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
     const {
@@ -94,7 +100,17 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
 
     const resultComponent = () => {
         if (loading) {
-            return <p>Loading...</p>;
+            return (
+                <StyledEventsList>
+                    <ScreenReaderOnly>Loading search results</ScreenReaderOnly>
+                    {Array.from({ length: pagination.pageSize }).map((_, i) => (
+                        <Placeholder
+                            key={`event-skeleton-${i}`}
+                            className='skeleton'
+                        />
+                    ))}
+                </StyledEventsList>
+            );
         } else if (events.length === 0) {
             return <p>No events found.</p>;
         } else {
@@ -104,8 +120,8 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                         <ConditionallyRender
                             key={entry.id}
                             condition={eventSettings.showData}
-                            show={() => <EventJson entry={entry} />}
-                            elseShow={() => <EventCard entry={entry} />}
+                            show={<EventJson entry={entry} />}
+                            elseShow={<EventCard entry={entry} />}
                         />
                     ))}
                 </StyledEventsList>

@@ -12,7 +12,6 @@ import {
 } from './NewProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
-import { ProjectOwners } from './ProjectOwners/ProjectOwners';
 import type { ProjectSchemaOwners } from 'openapi';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { formatDateYMDHM } from 'utils/formatDate';
@@ -132,8 +131,13 @@ export const ProjectArchiveCard: FC<IProjectArchiveCardProps> = ({
                     />
                 </StyledDivInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter id={id} Actions={Actions} disabled>
-                <ProjectOwners owners={owners} />
+            <ProjectCardFooter
+                id={id}
+                Actions={Actions}
+                disabled
+                owners={owners}
+            >
+                <Actions id={id} />
             </ProjectCardFooter>
         </StyledProjectCard>
     );

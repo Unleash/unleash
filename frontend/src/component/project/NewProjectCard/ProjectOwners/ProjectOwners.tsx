@@ -5,7 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 
-interface IProjectOwnersProps {
+export interface IProjectOwnersProps {
     owners?: ProjectSchema['owners'];
 }
 
@@ -59,12 +59,18 @@ const StyledHeader = styled('h3')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightRegular,
 }));
 
+const StyledWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(1.5, 0, 2.5, 3),
+    display: 'flex',
+    alignItems: 'center',
+}));
+
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     const ownersMap = useOwnersMap();
     const users = owners.map(ownersMap);
 
     return (
-        <>
+        <StyledWrapper>
             <StyledContainer>
                 <StyledHeader>
                     {owners.length === 1 ? 'Owner' : 'Owners'}
@@ -76,6 +82,6 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
                 show={<StyledUserName>{users[0]?.name}</StyledUserName>}
                 elseShow={<div />}
             />
-        </>
+        </StyledWrapper>
     );
 };

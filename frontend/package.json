@@ -157,5 +157,8 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@4.3.1"
+  "packageManager": "yarn@4.3.1",
+  "dependencies": {
+    "json-2-csv": "^5.5.5"
+  }
 }

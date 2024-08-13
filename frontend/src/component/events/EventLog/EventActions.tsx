@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import FileDownload from '@mui/icons-material/FileDownload';
 import type { EventSchema } from '../../../openapi';
+import { json2csv } from 'json-2-csv';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -25,27 +26,6 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 interface IEventActions {
     events: EventSchema[];
 }
-
-const convertObjectToCsv = (events: any[]) => {
-    const headers = Object.keys(events[0]);
-
-    const csvRows = [
-        headers.join(','),
-        ...events.map((row) =>
-            headers
-                .map((field) => {
-                    const value = JSON.stringify(row[field]) || '';
-                    const escapedValue = value.includes(',')
-                        ? `"${value.replace(/"/g, '""')}"`
-                        : value;
-                    return escapedValue;
-                })
-                .join(','),
-        ),
-    ];
-
-    return csvRows.join('\n');
-};
 
 export const EventActions: FC<IEventActions> = ({ events }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -76,7 +56,7 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
     };
 
     const exportCsv = () => {
-        const csvContent = convertObjectToCsv(events);
+        const csvContent = json2csv(events);
         const blob = new Blob([csvContent], {
             type: 'text/csv;charset=utf-8;',
         });

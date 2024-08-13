@@ -132,6 +132,7 @@ export default class SlackAppAddon extends Addon {
                     channel: name,
                     text,
                     blocks,
+                    unfurl_links: false,
                 });
             });
 

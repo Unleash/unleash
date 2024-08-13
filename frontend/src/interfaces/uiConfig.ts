@@ -84,7 +84,6 @@ export type UiFlags = {
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
-    scimApi?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;

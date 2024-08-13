@@ -2,7 +2,6 @@ import { Alert, Tab, Tabs } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { OidcAuth } from './OidcAuth/OidcAuth';
 import { SamlAuth } from './SamlAuth/SamlAuth';
 import { ScimSettings } from './ScimSettings/ScimSettings';
@@ -39,7 +38,7 @@ export const AuthSettings = () => {
         (item) => uiConfig.flags?.googleAuthEnabled || item.label !== 'Google',
     );
 
-    if (isEnterprise() && useUiFlag('scimApi')) {
+    if (isEnterprise()) {
         tabs.push({
             label: 'SCIM',
             component: <ScimSettings />,

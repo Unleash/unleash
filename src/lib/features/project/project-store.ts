@@ -133,7 +133,11 @@ class ProjectStore implements IProjectStore {
             .orderBy('projects.name', 'asc');
 
         if (this.flagResolver.isEnabled('archiveProjects')) {
-            projects = projects.where(`${TABLE}.archived_at`, null);
+            if (query?.archived === true) {
+                projects = projects.whereNot(`${TABLE}.archived_at`, null);
+            } else {
+                projects = projects.where(`${TABLE}.archived_at`, null);
+            }
         }
 
         if (query) {

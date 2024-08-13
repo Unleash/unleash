@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.5] - 2024-08-13
+
+### Bug Fixes
+
+- SCIM UI flag removal ([#7856](https://github.com/Unleash/unleash/issues/7856))
+
+
 ## [6.1.4] - 2024-08-13
 
 ### Bug Fixes

@@ -10,26 +10,36 @@ interface IProjectCardFooterProps {
     id: string;
     isFavorite?: boolean;
     children?: React.ReactNode;
+    Actions?: FC<{ id: string; isFavorite?: boolean }>;
+    disabled?: boolean;
 }
 
-const StyledFooter = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto 1fr auto',
+const StyledFooter = styled(Box)<{ disabled: boolean }>(
+    ({ theme, disabled }) => ({
+        display: 'flex',
+        background: disabled
+            ? theme.palette.background.paper
+            : theme.palette.envAccordion.expanded,
+        boxShadow: theme.boxShadows.accordionFooter,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderTop: `1px solid ${theme.palette.divider}`,
+    }),
+);
+
+const StyledContainer = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(1.5, 0, 2.5, 3),
+    display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(1.5, 3, 2.5, 3),
-    background: theme.palette.envAccordion.expanded,
-    boxShadow: theme.boxShadows.accordionFooter,
 }));
 
 const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
-    marginRight: theme.spacing(-1),
-    marginBottom: theme.spacing(-1),
+    margin: theme.spacing(1, 2, 0, 0),
 }));
 
-export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
-    children,
+const FavoriteAction: FC<{ id: string; isFavorite?: boolean }> = ({
     id,
-    isFavorite = false,
+    isFavorite,
 }) => {
     const { setToastApiError } = useToast();
     const { favorite, unfavorite } = useFavoriteProjectsApi();
@@ -48,14 +58,27 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
             setToastApiError('Something went wrong, could not update favorite');
         }
     };
+
     return (
-        <StyledFooter>
-            {children}
-            <StyledFavoriteIconButton
-                onClick={onFavorite}
-                isFavorite={isFavorite}
-                size='medium'
-            />
+        <StyledFavoriteIconButton
+            onClick={onFavorite}
+            isFavorite={Boolean(isFavorite)}
+            size='medium'
+        />
+    );
+};
+
+export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
+    children,
+    id,
+    isFavorite = false,
+    Actions = FavoriteAction,
+    disabled = false,
+}) => {
+    return (
+        <StyledFooter disabled={disabled}>
+            <StyledContainer>{children}</StyledContainer>
+            <Actions id={id} isFavorite={isFavorite} />
         </StyledFooter>
     );
 };

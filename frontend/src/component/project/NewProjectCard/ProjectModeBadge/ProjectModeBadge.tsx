@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -8,7 +8,7 @@ interface IProjectModeBadgeProps {
     mode: 'private' | 'protected' | 'public' | string;
 }
 
-export const ProjectModeBadge: VFC<IProjectModeBadgeProps> = ({ mode }) => {
+export const ProjectModeBadge: FC<IProjectModeBadgeProps> = ({ mode }) => {
     if (mode === 'private') {
         return (
             <HtmlTooltip

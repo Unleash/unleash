@@ -82,7 +82,7 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
         });
         const url = URL.createObjectURL(blob);
 
-        const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        const currentDate = new Date().toISOString().split('T')[0];
         const fileName = `data_${currentDate}.csv`;
 
         const a = document.createElement('a');

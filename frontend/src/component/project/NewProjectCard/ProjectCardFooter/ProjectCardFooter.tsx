@@ -5,34 +5,41 @@ import { FavoriteIconButton } from 'component/common/FavoriteIconButton/Favorite
 import useToast from 'hooks/useToast';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectCardFooterProps {
     id: string;
     isFavorite?: boolean;
     children?: React.ReactNode;
-    showFavorite?: boolean;
+    Actions?: FC<{ id: string; isFavorite?: boolean }>;
+    disabled?: boolean;
 }
 
-const StyledFooter = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto 1fr auto',
+const StyledFooter = styled(Box)<{ disabled: boolean }>(
+    ({ theme, disabled }) => ({
+        display: 'flex',
+        background: disabled
+            ? theme.palette.background.paper
+            : theme.palette.envAccordion.expanded,
+        boxShadow: theme.boxShadows.accordionFooter,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderTop: `1px solid ${theme.palette.divider}`,
+    }),
+);
+
+const StyledContainer = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(1.5, 0, 2.5, 3),
+    display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(1.5, 3, 2.5, 3),
-    background: theme.palette.envAccordion.expanded,
-    boxShadow: theme.boxShadows.accordionFooter,
 }));
 
 const StyledFavoriteIconButton = styled(FavoriteIconButton)(({ theme }) => ({
-    marginRight: theme.spacing(-1),
-    marginBottom: theme.spacing(-1),
+    margin: theme.spacing(1, 2, 0, 0),
 }));
 
-export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
-    children,
+const FavoriteAction: FC<{ id: string; isFavorite?: boolean }> = ({
     id,
-    isFavorite = false,
-    showFavorite = true,
+    isFavorite,
 }) => {
     const { setToastApiError } = useToast();
     const { favorite, unfavorite } = useFavoriteProjectsApi();
@@ -53,18 +60,25 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
     };
 
     return (
-        <StyledFooter>
-            {children}
-            <ConditionallyRender
-                condition={showFavorite}
-                show={
-                    <StyledFavoriteIconButton
-                        onClick={onFavorite}
-                        isFavorite={isFavorite}
-                        size='medium'
-                    />
-                }
-            />
+        <StyledFavoriteIconButton
+            onClick={onFavorite}
+            isFavorite={Boolean(isFavorite)}
+            size='medium'
+        />
+    );
+};
+
+export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
+    children,
+    id,
+    isFavorite = false,
+    Actions = FavoriteAction,
+    disabled = false,
+}) => {
+    return (
+        <StyledFooter disabled={disabled}>
+            <StyledContainer>{children}</StyledContainer>
+            <Actions id={id} isFavorite={isFavorite} />
         </StyledFooter>
     );
 };

@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import {
     StyledProjectCard,
     StyledDivHeader,
@@ -7,16 +8,27 @@ import {
     StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
+    StyledActions,
 } from './NewProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
 import { ProjectOwners } from './ProjectOwners/ProjectOwners';
 import type { ProjectSchemaOwners } from 'openapi';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { formatDateYMD } from 'utils/formatDate';
+import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import TimeAgo from 'react-timeago';
+import { Box, Link, Tooltip } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+    CREATE_PROJECT,
+    DELETE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
+import Undo from '@mui/icons-material/Undo';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import Delete from '@mui/icons-material/Delete';
 
 interface IProjectArchiveCardProps {
     id: string;
@@ -24,24 +36,49 @@ interface IProjectArchiveCardProps {
     createdAt?: string;
     archivedAt?: string;
     featureCount: number;
-    onHover?: () => void;
+    onRevive: () => void;
+    onDelete: () => void;
     mode: string;
     owners?: ProjectSchemaOwners;
 }
 
-export const ProjectArchiveCard = ({
+export const ProjectArchiveCard: FC<IProjectArchiveCardProps> = ({
     id,
     name,
-    createdAt,
     archivedAt,
     featureCount = 0,
-    onHover = () => {},
+    onRevive,
+    onDelete,
     mode,
     owners,
-}: IProjectArchiveCardProps) => {
+}) => {
     const { locationSettings } = useLocationSettings();
+    const Actions: FC<{
+        id: string;
+    }> = ({ id }) => (
+        <StyledActions>
+            <PermissionIconButton
+                onClick={onRevive}
+                projectId={id}
+                permission={CREATE_PROJECT}
+                tooltipProps={{ title: 'Restore project' }}
+                data-testid={`revive-feature-flag-button`}
+            >
+                <Undo />
+            </PermissionIconButton>
+            <PermissionIconButton
+                permission={DELETE_PROJECT}
+                projectId={id}
+                tooltipProps={{ title: 'Permanently delete project' }}
+                onClick={onDelete}
+            >
+                <Delete />
+            </PermissionIconButton>
+        </StyledActions>
+    );
+
     return (
-        <StyledProjectCard onMouseEnter={onHover} disabled>
+        <StyledProjectCard disabled>
             <StyledProjectCardBody>
                 <StyledDivHeader>
                     <StyledIconBox>
@@ -53,45 +90,49 @@ export const ProjectArchiveCard = ({
                     <ProjectModeBadge mode={mode} />
                 </StyledDivHeader>
                 <StyledDivInfo>
-                    <ConditionallyRender
-                        condition={Boolean(createdAt)}
-                        show={
-                            <div>
-                                <StyledParagraphInfo disabled data-loading>
-                                    {formatDateYMD(
-                                        parseISO(createdAt as string),
-                                        locationSettings.locale,
-                                    )}
-                                </StyledParagraphInfo>
-                                <p data-loading>created</p>
-                            </div>
-                        }
-                    />
-                    <div>
+                    <Link
+                        component={RouterLink}
+                        to={`/archive?search=project%3A${encodeURI(id)}`}
+                    >
                         <StyledParagraphInfo disabled data-loading>
                             {featureCount}
                         </StyledParagraphInfo>
                         <p data-loading>
-                            {featureCount === 1 ? 'flag' : 'flags'}
+                            archived {featureCount === 1 ? 'flag' : 'flags'}
                         </p>
-                    </div>
+                    </Link>
                     <ConditionallyRender
                         condition={Boolean(archivedAt)}
                         show={
-                            <div>
-                                <StyledParagraphInfo disabled data-loading>
-                                    {formatDateYMD(
-                                        parseISO(archivedAt as string),
-                                        locationSettings.locale,
-                                    )}
-                                </StyledParagraphInfo>
-                                <p data-loading>archived</p>
-                            </div>
+                            <Tooltip
+                                title={formatDateYMDHM(
+                                    parseISO(archivedAt as string),
+                                    locationSettings.locale,
+                                )}
+                                arrow
+                            >
+                                <Box
+                                    sx={(theme) => ({
+                                        color: theme.palette.text.secondary,
+                                    })}
+                                >
+                                    <StyledParagraphInfo disabled data-loading>
+                                        Archived
+                                    </StyledParagraphInfo>
+                                    <p data-loading>
+                                        <TimeAgo
+                                            date={
+                                                new Date(archivedAt as string)
+                                            }
+                                        />
+                                    </p>
+                                </Box>
+                            </Tooltip>
                         }
                     />
                 </StyledDivInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter id={id} showFavorite={false}>
+            <ProjectCardFooter id={id} Actions={Actions} disabled>
                 <ProjectOwners owners={owners} />
             </ProjectCardFooter>
         </StyledProjectCard>

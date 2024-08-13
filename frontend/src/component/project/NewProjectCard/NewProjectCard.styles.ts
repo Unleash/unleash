@@ -20,9 +20,7 @@ export const StyledProjectCard = styled(Card)<{ disabled?: boolean }>(
             ? theme.palette.neutral.light
             : theme.palette.background.default,
         '&:hover': {
-            backgroundColor: disabled
-                ? theme.palette.background.default
-                : theme.palette.neutral.light,
+            backgroundColor: theme.palette.neutral.light,
         },
         borderRadius: theme.shape.borderRadiusMedium,
     }),
@@ -81,10 +79,8 @@ export const StyledDivInfo = styled('div')(({ theme }) => ({
 
 export const StyledParagraphInfo = styled('p')<{ disabled?: boolean }>(
     ({ theme, disabled = false }) => ({
-        color: disabled
-            ? theme.palette.text.secondary
-            : theme.palette.primary.dark,
-        fontWeight: 'bold',
+        color: disabled ? 'inherit' : theme.palette.primary.dark,
+        fontWeight: disabled ? 'normal' : 'bold',
         fontSize: theme.typography.body1.fontSize,
     }),
 );
@@ -97,4 +93,9 @@ export const StyledIconBox = styled(Box)(({ theme }) => ({
     alignSelf: 'baseline',
     color: theme.palette.primary.main,
     height: '100%',
+}));
+
+export const StyledActions = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    marginRight: theme.spacing(2),
 }));

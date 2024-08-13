@@ -91,6 +91,7 @@ export const ArchiveProjectList: FC = () => {
                     projects={projects}
                     placeholder='No archived projects found'
                     ProjectCardComponent={ProjectArchiveCard}
+                    link={false}
                 />
             </StyledContainer>
         </PageContent>

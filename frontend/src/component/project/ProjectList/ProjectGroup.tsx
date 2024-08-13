@@ -31,6 +31,7 @@ type ProjectGroupProps<T extends { id: string } = IProjectCard> = {
     searchValue: string;
     placeholder?: string;
     ProjectCardComponent?: ComponentType<T & any>;
+    link?: boolean;
 };
 
 export const ProjectGroup = <T extends { id: string }>({
@@ -40,6 +41,7 @@ export const ProjectGroup = <T extends { id: string }>({
     searchValue,
     placeholder = 'No projects available.',
     ProjectCardComponent = ProjectCard,
+    link = true,
 }: ProjectGroupProps<T>) => {
     return (
         <article>
@@ -80,7 +82,7 @@ export const ProjectGroup = <T extends { id: string }>({
                                 <>
                                     {loadingData.map(
                                         (project: IProjectCard) => (
-                                            <ProjectCardComponent
+                                            <ProjectCard
                                                 data-loading
                                                 onHover={() => {}}
                                                 key={project.id}
@@ -97,18 +99,24 @@ export const ProjectGroup = <T extends { id: string }>({
                             )}
                             elseShow={() => (
                                 <>
-                                    {projects.map((project: T) => (
-                                        <StyledCardLink
-                                            key={project.id}
-                                            to={`/projects/${project.id}`}
-                                            // TODO: archive link
-                                        >
+                                    {projects.map((project: T) =>
+                                        link ? (
+                                            <StyledCardLink
+                                                key={project.id}
+                                                to={`/projects/${project.id}`}
+                                            >
+                                                <ProjectCardComponent
+                                                    onHover={() => {}}
+                                                    {...project}
+                                                />
+                                            </StyledCardLink>
+                                        ) : (
                                             <ProjectCardComponent
                                                 onHover={() => {}}
                                                 {...project}
                                             />
-                                        </StyledCardLink>
-                                    ))}
+                                        ),
+                                    )}
                                 </>
                             )}
                         />

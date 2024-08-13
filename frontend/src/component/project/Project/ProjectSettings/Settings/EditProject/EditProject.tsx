@@ -14,6 +14,8 @@ import { DeleteProjectForm } from './DeleteProjectForm';
 import useProjectOverview, {
     featuresCount,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { ArchiveProjectForm } from './ArchiveProjectForm';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -26,6 +28,7 @@ const EditProject = () => {
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(id);
+    const archiveProjectsEnabled = useUiFlag('archiveProjects');
 
     if (!project.name) {
         return null;
@@ -49,7 +52,19 @@ const EditProject = () => {
                     condition={isEnterprise()}
                     show={<UpdateEnterpriseSettings project={project} />}
                 />
-                <DeleteProjectForm featureCount={featuresCount(project)} />
+                <ConditionallyRender
+                    condition={archiveProjectsEnabled}
+                    show={
+                        <ArchiveProjectForm
+                            featureCount={featuresCount(project)}
+                        />
+                    }
+                    elseShow={
+                        <DeleteProjectForm
+                            featureCount={featuresCount(project)}
+                        />
+                    }
+                />
             </StyledFormContainer>
         </>
     );

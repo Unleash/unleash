@@ -52,21 +52,17 @@ export type IFlagKey =
     | 'displayEdgeBanner'
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
-    | 'featureLifecycle'
-    | 'featureLifecycleMetrics'
     | 'parseProjectFromSession'
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'navigationSidebar'
     | 'commandBarUI'
-    | 'flagCreator'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'insightsV2'
     | 'integrationEvents'
-    | 'featureCollaborators'
     | 'improveCreateFlagFlow'
     | 'originMiddleware'
     | 'newEventSearch'
@@ -268,10 +264,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
         false,
     ),
-    featureLifecycle: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_LIFECYCLE,
-        false,
-    ),
     parseProjectFromSession: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PARSE_PROJECT_FROM_SESSION,
         false,
@@ -290,10 +282,6 @@ const flags: IFlags = {
     ),
     commandBarUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
-        false,
-    ),
-    flagCreator: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_CREATOR,
         false,
     ),
     anonymizeProjectOwners: parseEnvVarBoolean(
@@ -318,10 +306,6 @@ const flags: IFlags = {
     ),
     integrationEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
-        false,
-    ),
-    featureCollaborators: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_COLLABORATORS,
         false,
     ),
     improveCreateFlagFlow: parseEnvVarBoolean(

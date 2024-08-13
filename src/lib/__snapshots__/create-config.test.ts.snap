@@ -100,8 +100,6 @@ exports[`should create default config 1`] = `
       "estimateTrafficDataCost": false,
       "extendedMetrics": false,
       "extendedUsageMetrics": false,
-      "featureCollaborators": false,
-      "featureLifecycle": false,
       "featureSearchFeedback": {
         "enabled": false,
         "name": "withText",
@@ -121,7 +119,6 @@ exports[`should create default config 1`] = `
         },
       },
       "filterInvalidClientMetrics": false,
-      "flagCreator": false,
       "googleAuthEnabled": false,
       "improveCreateFlagFlow": false,
       "insightsV2": false,

@@ -34,7 +34,6 @@ import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
 import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
-import { useUiFlag } from 'hooks/useUiFlag';
 import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
@@ -55,8 +54,6 @@ export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const featureLifecycleEnabled = useUiFlag('featureLifecycle');
-    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const {
         features,
@@ -76,7 +73,7 @@ export const ProjectFeatureToggles = ({
         createdAt: tableState.createdAt,
         type: tableState.type,
         state: tableState.state,
-        ...(flagCreatorEnabled ? { createdBy: tableState.createdBy } : {}),
+        createdBy: tableState.createdBy,
     };
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -168,20 +165,16 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
-            ...(flagCreatorEnabled
-                ? [
-                      columnHelper.accessor('createdBy', {
-                          id: 'createdBy',
-                          header: 'By',
-                          cell: AvatarCell(onAvatarClick),
-                          enableSorting: false,
-                          meta: {
-                              width: '1%',
-                              align: 'center',
-                          },
-                      }),
-                  ]
-                : []),
+            columnHelper.accessor('createdBy', {
+                id: 'createdBy',
+                header: 'By',
+                cell: AvatarCell(onAvatarClick),
+                enableSorting: false,
+                meta: {
+                    width: '1%',
+                    align: 'center',
+                },
+            }),
             columnHelper.accessor('lastSeenAt', {
                 id: 'lastSeenAt',
                 header: 'Last seen',
@@ -197,36 +190,30 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
-            ...(featureLifecycleEnabled
-                ? [
-                      columnHelper.accessor('lifecycle', {
-                          id: 'lifecycle',
-                          header: 'Lifecycle',
-                          cell: ({ row: { original } }) => (
-                              <FeatureLifecycleCell
-                                  feature={original}
-                                  onComplete={() => {
-                                      setShowMarkCompletedDialogue({
-                                          featureId: original.name,
-                                          open: true,
-                                      });
-                                  }}
-                                  onUncomplete={refetch}
-                                  onArchive={() =>
-                                      setFeatureArchiveState(original.name)
-                                  }
-                                  data-loading
-                              />
-                          ),
-                          enableSorting: false,
-                          size: 50,
-                          meta: {
-                              align: 'center',
-                              width: '1%',
-                          },
-                      }),
-                  ]
-                : []),
+            columnHelper.accessor('lifecycle', {
+                id: 'lifecycle',
+                header: 'Lifecycle',
+                cell: ({ row: { original } }) => (
+                    <FeatureLifecycleCell
+                        feature={original}
+                        onComplete={() => {
+                            setShowMarkCompletedDialogue({
+                                featureId: original.name,
+                                open: true,
+                            });
+                        }}
+                        onUncomplete={refetch}
+                        onArchive={() => setFeatureArchiveState(original.name)}
+                        data-loading
+                    />
+                ),
+                enableSorting: false,
+                size: 50,
+                meta: {
+                    align: 'center',
+                    width: '1%',
+                },
+            }),
             ...environments.map((name: string) => {
                 const isChangeRequestEnabled = isChangeRequestConfigured(name);
 
@@ -307,7 +294,6 @@ export const ProjectFeatureToggles = ({
             tableState.favoritesFirst,
             refetch,
             isPlaceholder,
-            featureLifecycleEnabled,
         ],
     );
 
@@ -425,31 +411,21 @@ export const ProjectFeatureToggles = ({
                                         id: 'createdAt',
                                         isVisible: columnVisibility.createdAt,
                                     },
-                                    ...(flagCreatorEnabled
-                                        ? [
-                                              {
-                                                  header: 'By',
-                                                  id: 'createdBy',
-                                                  isVisible:
-                                                      columnVisibility.createdBy,
-                                              },
-                                          ]
-                                        : []),
+                                    {
+                                        header: 'By',
+                                        id: 'createdBy',
+                                        isVisible: columnVisibility.createdBy,
+                                    },
                                     {
                                         header: 'Last seen',
                                         id: 'lastSeenAt',
                                         isVisible: columnVisibility.lastSeenAt,
                                     },
-                                    ...(featureLifecycleEnabled
-                                        ? [
-                                              {
-                                                  header: 'Lifecycle',
-                                                  id: 'lifecycle',
-                                                  isVisible:
-                                                      columnVisibility.lifecycle,
-                                              },
-                                          ]
-                                        : []),
+                                    {
+                                        header: 'Lifecycle',
+                                        id: 'lifecycle',
+                                        isVisible: columnVisibility.lifecycle,
+                                    },
                                     {
                                         id: 'divider',
                                     },

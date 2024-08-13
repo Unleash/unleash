@@ -69,6 +69,7 @@ export * from './environment-project-schema';
 export * from './environment-schema';
 export * from './environments-project-schema';
 export * from './environments-schema';
+export * from './event-creators-schema';
 export * from './event-schema';
 export * from './event-search-response-schema';
 export * from './events-schema';

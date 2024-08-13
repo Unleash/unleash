@@ -10,7 +10,7 @@ export type InstanceInsightsSchemaProjectFlagTrendsItem = {
     /** A UTC date when the stats were captured. Time is the very end of a given day. */
     date: string;
     /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
-    health?: number;
+    health: number;
     /** The number of time calculated potentially stale flags on a particular day */
     potentiallyStale: number;
     /** Project id of the project the flag trends belong to */

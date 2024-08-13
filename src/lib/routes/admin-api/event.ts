@@ -21,6 +21,11 @@ import { getStandardResponses } from '../../../lib/openapi/util/standard-respons
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
 import type { IFlagResolver } from '../../types/experimental';
+import type { IAuthRequest } from '../unleash-types';
+import {
+    eventCreatorsSchema,
+    type ProjectFlagCreatorsSchema,
+} from '../../openapi';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -45,7 +50,7 @@ export default class EventController extends Controller {
 
         this.route({
             method: 'get',
-            path: '',
+            path: '/events',
             handler: this.getEvents,
             permission: ADMIN,
             middleware: [
@@ -76,7 +81,7 @@ export default class EventController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:featureName',
+            path: '/events/:featureName',
             handler: this.getEventsForToggle,
             permission: NONE,
             middleware: [
@@ -97,7 +102,7 @@ export default class EventController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/search',
+            path: '/events/search',
             handler: this.deprecatedSearchEvents,
             permission: NONE,
             middleware: [
@@ -112,6 +117,26 @@ export default class EventController extends Controller {
                         'deprecatedSearchEventsSchema',
                     ),
                     responses: { 200: createResponseSchema('eventsSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/event-creators',
+            handler: this.getEventCreators,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Events'],
+                    operationId: 'getEventCreators',
+                    summary: 'Get a list of all users that have created events',
+                    description:
+                        'Returns a list of all users that have created events in the system.',
+                    responses: {
+                        200: createResponseSchema('eventCreatorsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -195,6 +220,20 @@ export default class EventController extends Controller {
             res,
             featureEventsSchema.$id,
             response,
+        );
+    }
+
+    async getEventCreators(
+        req: IAuthRequest,
+        res: Response<ProjectFlagCreatorsSchema>,
+    ): Promise<void> {
+        const flagCreators = await this.eventService.getEventCreators();
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            eventCreatorsSchema.$id,
+            serializeDates(flagCreators),
         );
     }
 }

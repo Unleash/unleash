@@ -317,7 +317,7 @@ test('Should allow to archive/delete feature with children if no orphans are lef
     await app.createFeature(child, 'default');
     await app.addDependency(child, parent);
 
-    const { body: deleteBody } = await app.request
+    await app.request
         .post(`/api/admin/projects/default/delete`)
         .set('Content-Type', 'application/json')
         .send({ features: [parent, child] })

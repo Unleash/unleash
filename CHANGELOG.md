@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.4] - 2024-08-13
+
+### Bug Fixes
+
+- Don't show link stubs in slack notifications ([#7810](https://github.com/Unleash/unleash/issues/7810)) ([#7850](https://github.com/Unleash/unleash/issues/7850))
+
+
+### Fix
+
+- Time to production ([#7835](https://github.com/Unleash/unleash/issues/7835)) ([#7848](https://github.com/Unleash/unleash/issues/7848))
+
+
+### Miscellaneous Tasks
+
+- Cherry-pick SCIM flag removal ([#7851](https://github.com/Unleash/unleash/issues/7851))
+
+
+## [6.1.3] - 2024-08-13
+
+### Bug Fixes
+
+- Don't always fetch all flags on project flag screen ([#7834](https://github.com/Unleash/unleash/issues/7834))
+
+- Display feature naming patterns in dialog ([#7837](https://github.com/Unleash/unleash/issues/7837))
+
+
+## [6.1.2] - 2024-08-08
+
+### Bug Fixes
+
+- Allow for empty groupId in form ([#7798](https://github.com/Unleash/unleash/issues/7798)) ([#7802](https://github.com/Unleash/unleash/issues/7802))
+
+
 ## [6.1.0] - 2024-08-07
 
 ### Bug Fixes

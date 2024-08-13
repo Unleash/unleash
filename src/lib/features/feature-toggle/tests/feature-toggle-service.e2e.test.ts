@@ -16,7 +16,12 @@ import {
     TEST_AUDIT_USER,
 } from '../../../types';
 import EnvironmentService from '../../project-environments/environment-service';
-import { ForbiddenError, PatternError, PermissionError } from '../../../error';
+import {
+    ForbiddenError,
+    NotFoundError,
+    PatternError,
+    PermissionError,
+} from '../../../error';
 import type { ISegmentService } from '../../segment/segment-service-interface';
 import { createFeatureToggleService, createSegmentService } from '../..';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
@@ -41,7 +46,9 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const config = createTestConfig();
+    const config = createTestConfig({
+        experimental: { flags: { archiveProjects: true } },
+    });
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
@@ -743,4 +750,63 @@ test('Should return "default" for stickiness when creating a flexibleRollout str
     expect(featureDB.environments[0]).toMatchObject({
         strategies: [{ parameters: { stickiness: 'default' } }],
     });
+});
+
+test('Should not allow to add flags to archived projects', async () => {
+    const project = await stores.projectStore.create({
+        id: 'archivedProject',
+        name: 'archivedProject',
+    });
+    await stores.projectStore.archive(project.id);
+
+    await expect(
+        service.createFeatureToggle(
+            project.id,
+            {
+                name: 'irrelevant',
+            },
+            TEST_AUDIT_USER,
+        ),
+    ).rejects.toEqual(
+        new NotFoundError(
+            `Active project with id archivedProject does not exist`,
+        ),
+    );
+});
+
+test('Should not allow to revive flags to archived projects', async () => {
+    const project = await stores.projectStore.create({
+        id: 'archivedProjectWithFlag',
+        name: 'archivedProjectWithFlag',
+    });
+    const flag = await service.createFeatureToggle(
+        project.id,
+        {
+            name: 'archiveFlag',
+        },
+        TEST_AUDIT_USER,
+    );
+
+    await service.archiveToggle(
+        flag.name,
+        { email: 'test@example.com' } as User,
+        TEST_AUDIT_USER,
+    );
+    await stores.projectStore.archive(project.id);
+
+    await expect(
+        service.reviveFeature(flag.name, TEST_AUDIT_USER),
+    ).rejects.toEqual(
+        new NotFoundError(
+            `Active project with id archivedProjectWithFlag does not exist`,
+        ),
+    );
+
+    await expect(
+        service.reviveFeatures([flag.name], project.id, TEST_AUDIT_USER),
+    ).rejects.toEqual(
+        new NotFoundError(
+            `Active project with id archivedProjectWithFlag does not exist`,
+        ),
+    );
 });

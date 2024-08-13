@@ -45,7 +45,21 @@ const useSelectionManagement = ({
         } else if (event.key === 'ArrowUp' && index > 0) {
             event.preventDefault();
             listRefs.current[index - 1]?.focus();
-        } else if (event.key === 'Enter') {
+        } else if (
+            event.key === 'Enter' &&
+            index === 0 &&
+            listRefs.current[0]?.value &&
+            options.length > 0
+        ) {
+            // if the search field is not empty and the user presses
+            // enter from the search field, toggle the topmost item in
+            // the filtered list event.preventDefault();
+            handleToggle(options[0].value)();
+        } else if (
+            event.key === 'Enter' ||
+            // allow selection with space when not in the search field
+            (index !== 0 && event.key === ' ')
+        ) {
             event.preventDefault();
             if (index > 0) {
                 const listItemIndex = index - 1;
@@ -100,6 +114,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
         onChipClose();
     };
 
+    const filteredOptions = options.filter((option) =>
+        option.label.toLowerCase().includes(searchText.toLowerCase()),
+    );
+
     const handleToggle = (value: string) => () => {
         if (
             selectedOptions?.some((selectedOption) => selectedOption === value)
@@ -123,7 +141,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
     };
 
     const { listRefs, handleSelection } = useSelectionManagement({
-        options,
+        options: filteredOptions,
         handleToggle,
     });
 
@@ -185,52 +203,46 @@ export const FilterItem: FC<IFilterItemProps> = ({
                         onKeyDown={(event) => handleSelection(event, 0)}
                     />
                     <List sx={{ overflowY: 'auto' }} disablePadding>
-                        {options
-                            ?.filter((option) =>
-                                option.label
-                                    .toLowerCase()
-                                    .includes(searchText.toLowerCase()),
-                            )
-                            .map((option, index) => {
-                                const labelId = `checkbox-list-label-${option.value}`;
+                        {filteredOptions.map((option, index) => {
+                            const labelId = `checkbox-list-label-${option.value}`;
 
-                                return (
-                                    <StyledListItem
-                                        key={option.value}
-                                        dense
-                                        disablePadding
-                                        tabIndex={0}
-                                        onClick={handleToggle(option.value)}
-                                        ref={(el) => {
-                                            listRefs.current[index + 1] = el;
-                                        }}
-                                        onKeyDown={(event) =>
-                                            handleSelection(event, index + 1)
+                            return (
+                                <StyledListItem
+                                    key={option.value}
+                                    dense
+                                    disablePadding
+                                    tabIndex={0}
+                                    onClick={handleToggle(option.value)}
+                                    ref={(el) => {
+                                        listRefs.current[index + 1] = el;
+                                    }}
+                                    onKeyDown={(event) =>
+                                        handleSelection(event, index + 1)
+                                    }
+                                >
+                                    <StyledCheckbox
+                                        edge='start'
+                                        checked={
+                                            selectedOptions?.some(
+                                                (selectedOption) =>
+                                                    selectedOption ===
+                                                    option.value,
+                                            ) ?? false
                                         }
-                                    >
-                                        <StyledCheckbox
-                                            edge='start'
-                                            checked={
-                                                selectedOptions?.some(
-                                                    (selectedOption) =>
-                                                        selectedOption ===
-                                                        option.value,
-                                                ) ?? false
-                                            }
-                                            tabIndex={-1}
-                                            inputProps={{
-                                                'aria-labelledby': labelId,
-                                            }}
-                                            size='small'
-                                            disableRipple
-                                        />
-                                        <ListItemText
-                                            id={labelId}
-                                            primary={option.label}
-                                        />
-                                    </StyledListItem>
-                                );
-                            })}
+                                        tabIndex={-1}
+                                        inputProps={{
+                                            'aria-labelledby': labelId,
+                                        }}
+                                        size='small'
+                                        disableRipple
+                                    />
+                                    <ListItemText
+                                        id={labelId}
+                                        primary={option.label}
+                                    />
+                                </StyledListItem>
+                            );
+                        })}
                     </List>
                 </StyledDropdown>
             </StyledPopover>

@@ -4,7 +4,6 @@ import {
     StringParam,
     withDefault,
 } from 'use-query-params';
-import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
@@ -34,6 +33,24 @@ const extraParameters = (logType: Log) => {
     }
 };
 
+const DEFAULT_PAGE_SIZE = 25;
+
+export const calculatePaginationInfo = ({
+    offset,
+    pageSize,
+}: {
+    offset: number;
+    pageSize: number;
+}) => {
+    const currentPage = Math.floor(offset / Math.max(pageSize, 1));
+
+    return {
+        currentPage,
+        nextPageOffset: pageSize * (currentPage + 1),
+        previousPageOffset: pageSize * Math.max(currentPage - 1, 0),
+    };
+};
+
 export const useEventLogSearch = (
     logType: Log,
     storageKey = 'event-log',
@@ -41,7 +58,7 @@ export const useEventLogSearch = (
 ) => {
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        limit: withDefault(NumberParam, DEFAULT_PAGE_SIZE),
         query: StringParam,
         from: FilterItemParam,
         to: FilterItemParam,
@@ -91,6 +108,12 @@ export const useEventLogSearch = (
         },
     );
 
+    const { currentPage, nextPageOffset, previousPageOffset } =
+        calculatePaginationInfo({
+            offset: tableState.offset ?? 0,
+            pageSize: tableState.limit ?? 1,
+        });
+
     return {
         events,
         total,
@@ -100,5 +123,18 @@ export const useEventLogSearch = (
         tableState,
         setTableState,
         filterState,
+        pagination: {
+            pageSize: tableState.limit ?? 0,
+            currentPage,
+            nextPage: () => {
+                setTableState({ offset: nextPageOffset });
+            },
+            prevPage: () => {
+                setTableState({ offset: previousPageOffset });
+            },
+            setPageLimit: (limit: number) => {
+                setTableState({ limit, offset: 0 });
+            },
+        },
     };
 };

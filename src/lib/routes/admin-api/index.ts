@@ -61,7 +61,7 @@ export class AdminApi extends Controller {
             '/strategies',
             new StrategyController(config, services).router,
         );
-        this.app.use('/events', new EventController(config, services).router);
+        this.app.use('', new EventController(config, services).router);
         this.app.use(
             '/playground',
             new PlaygroundController(config, services).router,

@@ -3,10 +3,14 @@ import GeneralSelect, {
     type ISelectOption,
     type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
+import type { CreateFeatureSchemaType } from 'openapi';
 
 interface IFeatureTypeSelectProps
-    extends Omit<IGeneralSelectProps, 'options' | 'value'> {
-    value: string;
+    extends Omit<
+        IGeneralSelectProps<CreateFeatureSchemaType>,
+        'options' | 'value'
+    > {
+    value: CreateFeatureSchemaType;
     editable: boolean;
 }
 

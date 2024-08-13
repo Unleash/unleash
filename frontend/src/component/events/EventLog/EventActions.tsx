@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import FileDownload from '@mui/icons-material/FileDownload';
 import type { EventSchema } from '../../../openapi';
+import { json2csv } from 'json-2-csv';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -55,6 +56,24 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
     };
 
     const exportCsv = () => {
+        const csvContent = json2csv(events);
+        const blob = new Blob([csvContent], {
+            type: 'text/csv;charset=utf-8;',
+        });
+        const url = URL.createObjectURL(blob);
+
+        const currentDate = new Date().toISOString().split('T')[0];
+        const fileName = `data_${currentDate}.csv`;
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        URL.revokeObjectURL(url);
         setAnchorEl(null);
     };
 

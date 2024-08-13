@@ -4365,6 +4365,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deeks@npm:3.1.0":
+  version: 3.1.0
+  resolution: "deeks@npm:3.1.0"
+  checksum: 10c0/3173ca28466cf31d550248c034c5466d93c5aecb8ee8ca547a2c9f471e62af4ebed7456c3310503be901d982867071b4411030a6b724528739895aee1dc2b482
+  languageName: node
+  linkType: hard
+
 "deep-diff@npm:1.0.2, deep-diff@npm:^1.0.2":
   version: 1.0.2
   resolution: "deep-diff@npm:1.0.2"
@@ -4477,6 +4484,13 @@ __metadata:
   dependencies:
     path-type: "npm:^4.0.0"
   checksum: 10c0/dcac00920a4d503e38bb64001acb19df4efc14536ada475725e12f52c16777afdee4db827f55f13a908ee7efc0cb282e2e3dbaeeb98c0993dd93d1802d3bf00c
+  languageName: node
+  linkType: hard
+
+"doc-path@npm:4.1.1":
+  version: 4.1.1
+  resolution: "doc-path@npm:4.1.1"
+  checksum: 10c0/5a908c4d0c8431fa60349cad1d5f0775cf9825d4d85e6bd7f55925c01d6278be8dd04f6858b8f8fdc8ea992a63545595ea77a2282551ff95538608f382b46f8a
   languageName: node
   linkType: hard
 
@@ -6395,6 +6409,16 @@ __metadata:
   bin:
     jsesc: bin/jsesc
   checksum: 10c0/dbf59312e0ebf2b4405ef413ec2b25abb5f8f4d9bc5fb8d9f90381622ebca5f2af6a6aa9a8578f65903f9e33990a6dc798edd0ce5586894bf0e9e31803a1de88
+  languageName: node
+  linkType: hard
+
+"json-2-csv@npm:^5.5.5":
+  version: 5.5.5
+  resolution: "json-2-csv@npm:5.5.5"
+  dependencies:
+    deeks: "npm:3.1.0"
+    doc-path: "npm:4.1.1"
+  checksum: 10c0/ab207883704f09e268a11665c924eba793307f20b38e1296ab94325c46089b4a49d1700e1f6b5a1537252108cef4bbc1acc4b89aa44558a84e13ad628eb786c0
   languageName: node
   linkType: hard
 
@@ -9822,6 +9846,7 @@ __metadata:
     http-proxy-middleware: "npm:2.0.6"
     immer: "npm:9.0.21"
     jsdom: "npm:23.2.0"
+    json-2-csv: "npm:^5.5.5"
     lodash.clonedeep: "npm:4.5.0"
     lodash.isequal: "npm:^4.5.0"
     lodash.mapvalues: "npm:^4.6.0"

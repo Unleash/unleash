@@ -113,7 +113,11 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
         ];
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(features), JSON.stringify(projects)]);
+    }, [
+        JSON.stringify(features),
+        JSON.stringify(projects),
+        JSON.stringify(sharedFilters),
+    ]);
 
     return (
         <Filters

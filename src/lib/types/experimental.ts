@@ -49,7 +49,6 @@ export type IFlagKey =
     | 'disablePublishUnannouncedEvents'
     | 'outdatedSdksBanner'
     | 'responseTimeMetricsFix'
-    | 'scimApi'
     | 'displayEdgeBanner'
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
@@ -249,10 +248,6 @@ const flags: IFlags = {
     ),
     queryMissingTokens: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_QUERY_MISSING_TOKENS,
-        false,
-    ),
-    scimApi: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SCIM_API,
         false,
     ),
     displayEdgeBanner: parseEnvVarBoolean(

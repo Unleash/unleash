@@ -26,6 +26,27 @@ interface IEventActions {
     events: EventSchema[];
 }
 
+const convertObjectToCsv = (events: any[]) => {
+    const headers = Object.keys(events[0]);
+
+    const csvRows = [
+        headers.join(','),
+        ...events.map((row) =>
+            headers
+                .map((field) => {
+                    const value = JSON.stringify(row[field]) || '';
+                    const escapedValue = value.includes(',')
+                        ? `"${value.replace(/"/g, '""')}"`
+                        : value;
+                    return escapedValue;
+                })
+                .join(','),
+        ),
+    ];
+
+    return csvRows.join('\n');
+};
+
 export const EventActions: FC<IEventActions> = ({ events }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -55,6 +76,24 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
     };
 
     const exportCsv = () => {
+        const csvContent = convertObjectToCsv(events);
+        const blob = new Blob([csvContent], {
+            type: 'text/csv;charset=utf-8;',
+        });
+        const url = URL.createObjectURL(blob);
+
+        const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        const fileName = `data_${currentDate}.csv`;
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        URL.revokeObjectURL(url);
         setAnchorEl(null);
     };
 

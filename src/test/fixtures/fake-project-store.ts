@@ -234,4 +234,10 @@ export default class FakeProjectStore implements IProjectStore {
                 : project,
         );
     }
+
+    async revive(id: string): Promise<void> {
+        this.projects = this.projects.map((project) =>
+            project.id === id ? { ...project, archivedAt: null } : project,
+        );
+    }
 }

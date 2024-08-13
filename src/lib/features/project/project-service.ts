@@ -47,6 +47,7 @@ import {
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    ProjectRevivedEvent,
     ProjectUpdatedEvent,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
@@ -619,6 +620,17 @@ export default class ProjectService {
 
         await this.eventService.storeEvent(
             new ProjectArchivedEvent({
+                project: id,
+                auditUser,
+            }),
+        );
+    }
+
+    async reviveProject(id: string, auditUser: IAuditUser): Promise<void> {
+        await this.projectStore.revive(id);
+
+        await this.eventService.storeEvent(
+            new ProjectRevivedEvent({
                 project: id,
                 auditUser,
             }),

@@ -420,6 +420,10 @@ class ProjectStore implements IProjectStore {
         await this.db(TABLE).where({ id }).update({ archived_at: now });
     }
 
+    async revive(id: string): Promise<void> {
+        await this.db(TABLE).where({ id }).update({ archived_at: null });
+    }
+
     async getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {

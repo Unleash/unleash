@@ -308,6 +308,30 @@ test('should archive project', async () => {
     expect(projects.length).not.toBe(0);
 });
 
+test('should revive project', async () => {
+    const project = {
+        id: 'test-revive',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
+    await projectService.archiveProject(project.id, TEST_AUDIT_USER);
+    await projectService.reviveProject(project.id, TEST_AUDIT_USER);
+
+    const events = await stores.eventStore.getEvents();
+
+    expect(events[0]).toMatchObject({
+        type: 'project-revived',
+        createdBy: TEST_AUDIT_USER.username,
+    });
+
+    const projects = await projectService.getProjects();
+    expect(projects.find((p) => p.id === project.id)).toMatchObject(project);
+});
+
 test('should not be able to archive project with flags', async () => {
     const project = {
         id: 'test-archive-with-flags',

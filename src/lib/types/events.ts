@@ -82,6 +82,7 @@ export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
 export const PROJECT_DELETED = 'project-deleted' as const;
 export const PROJECT_ARCHIVED = 'project-archived' as const;
+export const PROJECT_REVIVED = 'project-revived' as const;
 export const PROJECT_IMPORT = 'project-import' as const;
 export const PROJECT_USER_ADDED = 'project-user-added' as const;
 export const PROJECT_USER_REMOVED = 'project-user-removed' as const;
@@ -251,6 +252,7 @@ export const IEventTypes = [
     PROJECT_UPDATED,
     PROJECT_DELETED,
     PROJECT_ARCHIVED,
+    PROJECT_REVIVED,
     PROJECT_IMPORT,
     PROJECT_USER_ADDED,
     PROJECT_USER_REMOVED,
@@ -589,6 +591,18 @@ export class ProjectArchivedEvent extends BaseEvent {
         auditUser: IAuditUser;
     }) {
         super(PROJECT_ARCHIVED, eventData.auditUser);
+        this.project = eventData.project;
+    }
+}
+
+export class ProjectRevivedEvent extends BaseEvent {
+    readonly project: string;
+
+    constructor(eventData: {
+        project: string;
+        auditUser: IAuditUser;
+    }) {
+        super(PROJECT_REVIVED, eventData.auditUser);
         this.project = eventData.project;
     }
 }

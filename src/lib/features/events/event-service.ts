@@ -177,7 +177,7 @@ export default class EventService {
 
         if (params.createdBy) {
             const parsed = parseSearchOperatorValue(
-                'created_by',
+                'created_by_user_id',
                 params.createdBy,
             );
             if (parsed) queryParams.push(parsed);

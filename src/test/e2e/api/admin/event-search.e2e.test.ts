@@ -183,7 +183,7 @@ test('should filter events by created by', async () => {
     await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'admin1@example.com',
-        createdByUserId: TEST_USER_ID,
+        createdByUserId: TEST_USER_ID + 1,
         ip: '127.0.0.1',
     });
 
@@ -194,7 +194,7 @@ test('should filter events by created by', async () => {
         ip: '127.0.0.1',
     });
 
-    const { body } = await searchEvents({ createdBy: 'IS:admin2@example.com' });
+    const { body } = await searchEvents({ createdBy: `IS:${TEST_USER_ID}` });
 
     expect(body).toMatchObject({
         events: [

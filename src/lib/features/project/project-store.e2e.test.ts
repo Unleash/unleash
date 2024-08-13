@@ -1,9 +1,9 @@
-import type { IEnvironmentStore } from '../../../lib/features/project-environments/environment-store-type';
+import type { IEnvironmentStore } from '../project-environments/environment-store-type';
 
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type { IProjectStore, IUnleashStores } from '../../../lib/types';
-import type { IProjectInsert } from '../../../lib/features/project/project-store-type';
+import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import getLogger from '../../../test/fixtures/no-logger';
+import type { IProjectStore, IUnleashStores } from '../../types';
+import type { IProjectInsert } from './project-store-type';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -11,7 +11,9 @@ let projectStore: IProjectStore;
 let environmentStore: IEnvironmentStore;
 
 beforeAll(async () => {
-    db = await dbInit('project_store_serial', getLogger);
+    db = await dbInit('project_store_serial', getLogger, {
+        experimental: { flags: { archiveProjects: true } },
+    });
     stores = db.stores;
     projectStore = stores.projectStore;
     environmentStore = stores.environmentStore;
@@ -19,6 +21,25 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await db.destroy();
+});
+
+test('should exclude archived projects', async () => {
+    const project = {
+        id: 'archive-me',
+        name: 'archive-me',
+        description: 'Blah',
+        mode: 'open' as const,
+    };
+    await projectStore.create(project);
+    await projectStore.archive(project.id);
+
+    const allProjects = await projectStore.getAll();
+    const count = await projectStore.count();
+    const modeCounts = await projectStore.getProjectModeCounts();
+
+    expect(allProjects).toMatchObject([{ id: 'default' }]);
+    expect(count).toBe(1);
+    expect(modeCounts).toMatchObject([{ mode: 'open', count: 1 }]);
 });
 
 test('should have default project', async () => {

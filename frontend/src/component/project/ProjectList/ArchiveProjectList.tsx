@@ -9,7 +9,12 @@ import { styled, useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { ProjectGroup } from './ProjectGroup';
-import { ProjectArchiveCard } from '../NewProjectCard/ProjectArchiveCard';
+import {
+    ProjectArchiveCard,
+    type ProjectArchiveCardProps,
+} from '../NewProjectCard/ProjectArchiveCard';
+import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog';
+import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -32,6 +37,15 @@ export const ArchiveProjectList: FC = () => {
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || '',
     );
+    const [reviveProject, setReviveProject] = useState<{
+        isOpen: boolean;
+        id?: string;
+        name?: string;
+    }>({ isOpen: false });
+    const [deleteProject, setDeleteProject] = useState<{
+        isOpen: boolean;
+        id?: string;
+    }>({ isOpen: false });
 
     useEffect(() => {
         const tableState: PageQueryType = {};
@@ -43,6 +57,31 @@ export const ArchiveProjectList: FC = () => {
             replace: true,
         });
     }, [searchValue, setSearchParams]);
+
+    const onRevive = (id: string) => {
+        setReviveProject({
+            isOpen: true,
+            id,
+            name: projects?.find((project) => project.id === id)?.name,
+        });
+    };
+    const onDelete = (id: string) => {
+        setDeleteProject({
+            id,
+            isOpen: true,
+        });
+    };
+
+    const ProjectCard: FC<
+        Omit<ProjectArchiveCardProps, 'onRevive' | 'onDelete'>
+    > = ({ id, ...props }) => (
+        <ProjectArchiveCard
+            onRevive={() => onRevive(id)}
+            onDelete={() => onDelete(id)}
+            id={id}
+            {...props}
+        />
+    );
 
     return (
         <PageContent
@@ -90,10 +129,33 @@ export const ArchiveProjectList: FC = () => {
                     searchValue={searchValue}
                     projects={projects}
                     placeholder='No archived projects found'
-                    ProjectCardComponent={ProjectArchiveCard}
+                    ProjectCardComponent={ProjectCard}
                     link={false}
                 />
             </StyledContainer>
+            <ReviveProjectDialog
+                id={reviveProject.id}
+                name={reviveProject.name}
+                open={reviveProject.isOpen}
+                onClose={() =>
+                    setReviveProject((state) => ({ ...state, isOpen: false }))
+                }
+                onSubmit={() => {
+                    // TODO: toast
+                    setReviveProject((state) => ({ ...state, isOpen: false }));
+                }}
+            />
+            <DeleteProjectDialogue
+                project={deleteProject.id || ''}
+                open={deleteProject.isOpen}
+                onClose={() => {
+                    setDeleteProject((state) => ({ ...state, isOpen: false }));
+                }}
+                onSuccess={() => {
+                    // TODO: toast
+                    setDeleteProject((state) => ({ ...state, isOpen: false }));
+                }}
+            />
         </PageContent>
     );
 };

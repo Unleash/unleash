@@ -22,26 +22,25 @@ import TimeAgo from 'react-timeago';
 import { Box, Link, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-    CREATE_PROJECT,
     DELETE_PROJECT,
+    UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import Undo from '@mui/icons-material/Undo';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Delete from '@mui/icons-material/Delete';
 
-interface IProjectArchiveCardProps {
+export type ProjectArchiveCardProps = {
     id: string;
     name: string;
-    createdAt?: string;
     archivedAt?: string;
     featureCount: number;
     onRevive: () => void;
     onDelete: () => void;
-    mode: string;
+    mode?: string;
     owners?: ProjectSchemaOwners;
-}
+};
 
-export const ProjectArchiveCard: FC<IProjectArchiveCardProps> = ({
+export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     id,
     name,
     archivedAt,
@@ -52,29 +51,6 @@ export const ProjectArchiveCard: FC<IProjectArchiveCardProps> = ({
     owners,
 }) => {
     const { locationSettings } = useLocationSettings();
-    const Actions: FC<{
-        id: string;
-    }> = ({ id }) => (
-        <StyledActions>
-            <PermissionIconButton
-                onClick={onRevive}
-                projectId={id}
-                permission={CREATE_PROJECT}
-                tooltipProps={{ title: 'Restore project' }}
-                data-testid={`revive-feature-flag-button`}
-            >
-                <Undo />
-            </PermissionIconButton>
-            <PermissionIconButton
-                permission={DELETE_PROJECT}
-                projectId={id}
-                tooltipProps={{ title: 'Permanently delete project' }}
-                onClick={onDelete}
-            >
-                <Delete />
-            </PermissionIconButton>
-        </StyledActions>
-    );
 
     return (
         <StyledProjectCard disabled>
@@ -131,13 +107,26 @@ export const ProjectArchiveCard: FC<IProjectArchiveCardProps> = ({
                     />
                 </StyledDivInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter
-                id={id}
-                Actions={Actions}
-                disabled
-                owners={owners}
-            >
-                <Actions id={id} />
+            <ProjectCardFooter id={id} disabled owners={owners}>
+                <StyledActions>
+                    <PermissionIconButton
+                        onClick={onRevive}
+                        projectId={id}
+                        permission={UPDATE_PROJECT}
+                        tooltipProps={{ title: 'Restore project' }}
+                        data-testid={`revive-feature-flag-button`}
+                    >
+                        <Undo />
+                    </PermissionIconButton>
+                    <PermissionIconButton
+                        permission={DELETE_PROJECT}
+                        projectId={id}
+                        tooltipProps={{ title: 'Permanently delete project' }}
+                        onClick={onDelete}
+                    >
+                        <Delete />
+                    </PermissionIconButton>
+                </StyledActions>
             </ProjectCardFooter>
         </StyledProjectCard>
     );

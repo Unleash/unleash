@@ -10,7 +10,6 @@ interface IProjectCardFooterProps {
     id: string;
     isFavorite?: boolean;
     children?: React.ReactNode;
-    Actions?: FC<{ id: string; isFavorite?: boolean }>;
     disabled?: boolean;
     owners: IProjectOwnersProps['owners'];
 }

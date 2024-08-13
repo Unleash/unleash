@@ -47,6 +47,7 @@ export interface IProjectHealthUpdate {
 
 export interface IProjectQuery {
     id?: string;
+    archived?: boolean;
 }
 
 export type ProjectEnvironment = {

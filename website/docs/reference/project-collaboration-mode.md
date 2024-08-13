@@ -13,7 +13,7 @@ Project collaboration modes allow you to manage project visibility and interacti
 
 # Overview
 
-The collaboration mode of a [project](/projects.md) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](/change-requests.md)–a feature that provides controlled and secure updates for feature toggles.
+The collaboration mode of a [project](../reference/projects.md) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](../reference/change-requests.md)–a feature that provides controlled and secure updates for feature toggles.
 
 Unleash supports three collaboration modes: **open**, **protected**, and **private**. Each mode is designed with different user roles and permissions in mind, catering to various security and collaboration requirements. Let’s explore how the three modes work.
 

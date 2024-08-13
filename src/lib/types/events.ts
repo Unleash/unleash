@@ -8,7 +8,6 @@ import type {
 } from './model';
 import type { IApiToken } from './models/api-token';
 import type { IAuditUser, IUserWithRootRole } from './user';
-import type { FeatureLifecycleCompletedSchema } from '../openapi';
 import type { ITagType } from '../features/tag-type/tag-type-store-type';
 import type { IFeatureAndTag } from './stores/feature-tag-store';
 
@@ -749,13 +748,17 @@ export class FeatureTagImport extends BaseEvent {
 
 export class FeatureCompletedEvent extends BaseEvent {
     readonly featureName: string;
-    readonly data: FeatureLifecycleCompletedSchema;
+    readonly data: {
+        kept: boolean;
+    };
     readonly project: string;
 
     constructor(p: {
         project: string;
         featureName: string;
-        data: FeatureLifecycleCompletedSchema;
+        data: {
+            kept: boolean;
+        };
         auditUser: IAuditUser;
     }) {
         super(FEATURE_COMPLETED, p.auditUser);

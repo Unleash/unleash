@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.4] - 2024-08-13
+
+### Bug Fixes
+
+- Don't show link stubs in slack notifications ([#7810](https://github.com/Unleash/unleash/issues/7810)) ([#7850](https://github.com/Unleash/unleash/issues/7850))
+
+
+### Fix
+
+- Time to production ([#7835](https://github.com/Unleash/unleash/issues/7835)) ([#7848](https://github.com/Unleash/unleash/issues/7848))
+
+
+### Miscellaneous Tasks
+
+- Cherry-pick SCIM flag removal ([#7851](https://github.com/Unleash/unleash/issues/7851))
+
+
 ## [6.1.3] - 2024-08-13
 
 ### Bug Fixes

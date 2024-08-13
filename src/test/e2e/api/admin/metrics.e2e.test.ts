@@ -12,9 +12,7 @@ let db: ITestDb;
 beforeAll(async () => {
     db = await dbInit('metrics_serial', getLogger, {
         experimental: {
-            flags: {
-                parseProjectFromSession: true,
-            },
+            flags: {},
         },
     });
     app = await setupAppWithCustomConfig(
@@ -23,7 +21,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    parseProjectFromSession: true,
                 },
             },
         },

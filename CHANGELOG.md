@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.3] - 2024-08-13
+
+### Bug Fixes
+
+- Don't always fetch all flags on project flag screen ([#7834](https://github.com/Unleash/unleash/issues/7834))
+
+- Display feature naming patterns in dialog ([#7837](https://github.com/Unleash/unleash/issues/7837))
+
+
 ## [6.1.2] - 2024-08-08
 
 ### Bug Fixes

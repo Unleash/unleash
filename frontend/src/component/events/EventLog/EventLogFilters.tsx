@@ -119,18 +119,20 @@ export const useEventLogFilters = (
 
 type LogType = 'flag' | 'project' | 'global';
 const useEventLogFiltersFromLogType = (logType: LogType) => {
-    const [projectHook, featuresHook] = (() => {
-        switch (logType) {
-            case 'flag':
-                return [() => ({ projects: [] }), () => ({ features: [] })];
-            case 'project':
-                return [() => ({ projects: [] }), useFeatureSearch];
-            case 'global':
-                return [useProjects, useFeatureSearch];
-        }
-    })();
-
-    return useEventLogFilters(projectHook, featuresHook);
+    switch (logType) {
+        case 'flag':
+            return useEventLogFilters(
+                () => ({ projects: [] }),
+                () => ({ features: [] }),
+            );
+        case 'project':
+            return useEventLogFilters(
+                () => ({ projects: [] }),
+                useFeatureSearch,
+            );
+        case 'global':
+            return useEventLogFilters(useProjects, useFeatureSearch);
+    }
 };
 
 type EventLogFiltersProps = {

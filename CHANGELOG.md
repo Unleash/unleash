@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.6] - 2024-08-14
+
+### Features
+
+- Update feature completed payload to have boolean instead of string ([#7855](https://github.com/Unleash/unleash/issues/7855))
+
+
+### Miscellaneous Tasks
+
+- Split send welcome email ([#7795](https://github.com/Unleash/unleash/issues/7795)) ([#7867](https://github.com/Unleash/unleash/issues/7867))
+
+
 ## [6.1.5] - 2024-08-13
 
 ### Bug Fixes

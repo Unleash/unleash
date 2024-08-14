@@ -81,7 +81,16 @@ const useProjectApi = () => {
     };
 
     const archiveProject = async (projectId: string) => {
-        const path = `api/admin/projects/${projectId}/archive`;
+        const path = `api/admin/projects/archive/${projectId}`;
+        const req = createRequest(path, { method: 'POST' });
+
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
+    };
+
+    const reviveProject = async (projectId: string) => {
+        const path = `api/admin/projects/revive/${projectId}`;
         const req = createRequest(path, { method: 'POST' });
 
         const res = await makeRequest(req.caller, req.id);
@@ -263,6 +272,7 @@ const useProjectApi = () => {
         editProjectSettings,
         deleteProject,
         archiveProject,
+        reviveProject,
         addEnvironmentToProject,
         removeEnvironmentFromProject,
         addAccessToProject,

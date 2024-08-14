@@ -1,6 +1,5 @@
 import { type FC, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import useProjectsArchive from 'hooks/api/getters/useProjectsArchive/useProjectsArchive';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -13,6 +12,7 @@ import {
     ProjectArchiveCard,
     type ProjectArchiveCardProps,
 } from '../NewProjectCard/ProjectArchiveCard';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
 
@@ -30,7 +30,9 @@ const StyledContainer = styled('div')(({ theme }) => ({
 type PageQueryType = Partial<Record<'search', string>>;
 
 export const ArchiveProjectList: FC = () => {
-    const { projects, loading, error, refetch } = useProjectsArchive();
+    const { projects, loading, error, refetch } = useProjects({
+        archived: true,
+    });
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [searchParams, setSearchParams] = useSearchParams();
@@ -58,26 +60,23 @@ export const ArchiveProjectList: FC = () => {
         });
     }, [searchValue, setSearchParams]);
 
-    const onRevive = (id: string) => {
-        setReviveProject({
-            isOpen: true,
-            id,
-            name: projects?.find((project) => project.id === id)?.name,
-        });
-    };
-    const onDelete = (id: string) => {
-        setDeleteProject({
-            id,
-            isOpen: true,
-        });
-    };
-
     const ProjectCard: FC<
         Omit<ProjectArchiveCardProps, 'onRevive' | 'onDelete'>
     > = ({ id, ...props }) => (
         <ProjectArchiveCard
-            onRevive={() => onRevive(id)}
-            onDelete={() => onDelete(id)}
+            onRevive={() =>
+                setReviveProject({
+                    isOpen: true,
+                    id,
+                    name: projects?.find((project) => project.id === id)?.name,
+                })
+            }
+            onDelete={() =>
+                setDeleteProject({
+                    id,
+                    isOpen: true,
+                })
+            }
             id={id}
             {...props}
         />
@@ -140,19 +139,11 @@ export const ArchiveProjectList: FC = () => {
                 onClose={() =>
                     setReviveProject((state) => ({ ...state, isOpen: false }))
                 }
-                onSubmit={() => {
-                    // TODO: toast
-                    setReviveProject((state) => ({ ...state, isOpen: false }));
-                }}
             />
             <DeleteProjectDialogue
                 project={deleteProject.id || ''}
                 open={deleteProject.isOpen}
                 onClose={() => {
-                    setDeleteProject((state) => ({ ...state, isOpen: false }));
-                }}
-                onSuccess={() => {
-                    // TODO: toast
                     setDeleteProject((state) => ({ ...state, isOpen: false }));
                 }}
             />

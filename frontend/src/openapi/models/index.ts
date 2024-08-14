@@ -722,6 +722,7 @@ export * from './getProjectUsers401';
 export * from './getProjectUsers403';
 export * from './getProjects401';
 export * from './getProjects403';
+export * from './getProjectsParams';
 export * from './getPublicSignupToken401';
 export * from './getPublicSignupToken403';
 export * from './getRawFeatureMetrics401';

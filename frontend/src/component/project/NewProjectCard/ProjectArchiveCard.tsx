@@ -33,7 +33,7 @@ export type ProjectArchiveCardProps = {
     id: string;
     name: string;
     archivedAt?: string;
-    featureCount: number;
+    archivedFeaturesCount?: number;
     onRevive: () => void;
     onDelete: () => void;
     mode?: string;
@@ -44,7 +44,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     id,
     name,
     archivedAt,
-    featureCount = 0,
+    archivedFeaturesCount,
     onRevive,
     onDelete,
     mode,
@@ -65,17 +65,6 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                     <ProjectModeBadge mode={mode} />
                 </StyledDivHeader>
                 <StyledDivInfo>
-                    <Link
-                        component={RouterLink}
-                        to={`/archive?search=project%3A${encodeURI(id)}`}
-                    >
-                        <StyledParagraphInfo disabled data-loading>
-                            {featureCount}
-                        </StyledParagraphInfo>
-                        <p data-loading>
-                            archived {featureCount === 1 ? 'flag' : 'flags'}
-                        </p>
-                    </Link>
                     <ConditionallyRender
                         condition={Boolean(archivedAt)}
                         show={
@@ -103,6 +92,25 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                     </p>
                                 </Box>
                             </Tooltip>
+                        }
+                    />
+                    <ConditionallyRender
+                        condition={typeof archivedFeaturesCount !== 'undefined'}
+                        show={
+                            <Link
+                                component={RouterLink}
+                                to={`/archive?search=project%3A${encodeURI(id)}`}
+                            >
+                                <StyledParagraphInfo disabled data-loading>
+                                    {archivedFeaturesCount}
+                                </StyledParagraphInfo>
+                                <p data-loading>
+                                    archived{' '}
+                                    {archivedFeaturesCount === 1
+                                        ? 'flag'
+                                        : 'flags'}
+                                </p>
+                            </Link>
                         }
                     />
                 </StyledDivInfo>

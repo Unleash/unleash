@@ -12,18 +12,18 @@ import {
 } from './NewProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
-import { ProjectOwners } from './ProjectOwners/ProjectOwners';
 import type { ProjectSchemaOwners } from 'openapi';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { FavoriteAction } from './ProjectCardFooter/FavoriteAction/FavoriteAction';
 
 interface IProjectCardProps {
     name: string;
     featureCount: number;
     health: number;
-    memberCount: number;
+    memberCount?: number;
     id: string;
     onHover: () => void;
-    isFavorite?: boolean;
+    favorite?: boolean;
     mode: string;
     owners?: ProjectSchemaOwners;
 }
@@ -32,11 +32,11 @@ export const ProjectCard = ({
     name,
     featureCount,
     health,
-    memberCount,
+    memberCount = 0,
     onHover,
     id,
     mode,
-    isFavorite = false,
+    favorite = false,
     owners,
 }: IProjectCardProps) => (
     <StyledProjectCard onMouseEnter={onHover}>
@@ -78,8 +78,8 @@ export const ProjectCard = ({
                 </div>
             </StyledDivInfo>
         </StyledProjectCardBody>
-        <ProjectCardFooter id={id} isFavorite={isFavorite}>
-            <ProjectOwners owners={owners} />
+        <ProjectCardFooter id={id} owners={owners}>
+            <FavoriteAction id={id} isFavorite={favorite} />
         </ProjectCardFooter>
     </StyledProjectCard>
 );

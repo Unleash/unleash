@@ -141,7 +141,6 @@ exports[`should create default config 1`] = `
       "newEventSearch": false,
       "originMiddleware": false,
       "outdatedSdksBanner": false,
-      "parseProjectFromSession": false,
       "personalAccessTokensKillSwitch": false,
       "projectOverviewRefactorFeedback": false,
       "queryMissingTokens": false,

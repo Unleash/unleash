@@ -16,6 +16,7 @@ import type {
     IProjectApplicationsSearchParams,
     IProjectHealthUpdate,
     IProjectInsert,
+    IProjectQuery,
     ProjectEnvironment,
 } from '../../lib/features/project/project-store-type';
 
@@ -48,9 +49,15 @@ export default class FakeProjectStore implements IProjectStore {
         this.projectEnvironment.set(id, environments);
     }
 
-    async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
+    async getProjectsWithCounts(
+        query?: IProjectQuery,
+    ): Promise<IProjectWithCount[]> {
         return this.projects
-            .filter((project) => project.archivedAt === null)
+            .filter((project) =>
+                query?.archived
+                    ? project.archivedAt !== null
+                    : project.archivedAt === null,
+            )
             .map((project) => {
                 return {
                     ...project,

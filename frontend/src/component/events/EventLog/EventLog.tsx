@@ -18,6 +18,7 @@ import type { EventSchema } from 'openapi';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions';
+import useLoading from 'hooks/useLoading';
 
 interface IEventLogProps {
     title: string;
@@ -44,6 +45,12 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+const Placeholder = styled('li')({
+    height: '246px',
+    borderRadius: theme.shape.borderRadiusLarge,
+    '&[data-loading-events=true]': { zIndex: '1' }, // .skeleton has z-index: 9990
+});
+
 const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
     const {
         events,
@@ -60,6 +67,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
               ? { type: 'flag', flagName: feature }
               : { type: 'global' },
     );
+    const ref = useLoading(loading, '[data-loading-events=true]');
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
@@ -94,7 +102,16 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
 
     const resultComponent = () => {
         if (loading) {
-            return <p>Loading...</p>;
+            return (
+                <StyledEventsList>
+                    {Array.from({ length: pagination.pageSize }).map((_, i) => (
+                        <Placeholder
+                            data-loading-events='true'
+                            key={`event-skeleton-${i}`}
+                        />
+                    ))}
+                </StyledEventsList>
+            );
         } else if (events.length === 0) {
             return <p>No events found.</p>;
         } else {
@@ -104,8 +121,8 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                         <ConditionallyRender
                             key={entry.id}
                             condition={eventSettings.showData}
-                            show={() => <EventJson entry={entry} />}
-                            elseShow={() => <EventCard entry={entry} />}
+                            show={<EventJson entry={entry} />}
+                            elseShow={<EventCard entry={entry} />}
                         />
                     ))}
                 </StyledEventsList>
@@ -131,7 +148,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                 </PageHeader>
             }
         >
-            <EventResultWrapper>
+            <EventResultWrapper ref={ref}>
                 <StyledFilters
                     logType={project ? 'project' : feature ? 'flag' : 'global'}
                     state={filterState}

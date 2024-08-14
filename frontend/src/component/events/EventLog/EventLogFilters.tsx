@@ -6,7 +6,11 @@ import {
 } from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { EventSchemaType } from 'openapi';
+import {
+    EventSchemaType,
+    type FeatureSearchResponseSchema,
+    type SearchFeaturesParams,
+} from 'openapi';
 import type { IProjectCard } from 'interfaces/project';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 
@@ -17,7 +21,12 @@ type EventLogFiltersProps = {
     onChange: (value: FilterItemParamHolder) => void;
 };
 
-export const useEventLogFilters = (projectsHook, featuresHook) => {
+export const useEventLogFilters = (
+    projectsHook: () => { projects: IProjectCard[] },
+    featuresHook: (params: SearchFeaturesParams) => {
+        features: FeatureSearchResponseSchema[];
+    },
+) => {
     const { projects } = projectsHook();
     const { features } = featuresHook({});
     const { eventCreators } = useEventCreators();
@@ -121,13 +130,12 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
     state,
     onChange,
 }) => {
-    const useNoResults = () => [];
     const [projectHook, featuresHook] = (() => {
         switch (logType) {
             case 'flag':
-                return [useNoResults, useNoResults];
+                return [() => ({ projects: [] }), () => ({ features: [] })];
             case 'project':
-                return [useNoResults, useFeatureSearch];
+                return [() => ({ projects: [] }), useFeatureSearch];
             case 'global':
                 return [useProjects, useFeatureSearch];
         }

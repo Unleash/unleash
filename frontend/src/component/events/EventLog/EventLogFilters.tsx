@@ -14,13 +14,6 @@ import {
 import type { IProjectCard } from 'interfaces/project';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 
-type EventLogFiltersProps = {
-    logType: 'flag' | 'project' | 'global';
-    className?: string;
-    state: FilterItemParamHolder;
-    onChange: (value: FilterItemParamHolder) => void;
-};
-
 export const useEventLogFilters = (
     projectsHook: () => { projects: IProjectCard[] },
     featuresHook: (params: SearchFeaturesParams) => {
@@ -124,12 +117,8 @@ export const useEventLogFilters = (
     return availableFilters;
 };
 
-export const EventLogFilters: FC<EventLogFiltersProps> = ({
-    logType,
-    className,
-    state,
-    onChange,
-}) => {
+type LogType = 'flag' | 'project' | 'global';
+export const useEventLogFiltersFromLogType = (logType: LogType) => {
     const [projectHook, featuresHook] = (() => {
         switch (logType) {
             case 'flag':
@@ -141,7 +130,23 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
         }
     })();
 
-    const availableFilters = useEventLogFilters(projectHook, featuresHook);
+    return useEventLogFilters(projectHook, featuresHook);
+};
+
+type EventLogFiltersProps = {
+    logType: LogType;
+    className?: string;
+    state: FilterItemParamHolder;
+    onChange: (value: FilterItemParamHolder) => void;
+};
+
+export const EventLogFilters: FC<EventLogFiltersProps> = ({
+    logType,
+    className,
+    state,
+    onChange,
+}) => {
+    const availableFilters = useEventLogFiltersFromLogType(logType);
 
     return (
         <Filters

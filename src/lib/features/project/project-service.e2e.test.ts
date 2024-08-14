@@ -306,6 +306,13 @@ test('should archive project', async () => {
     const projects = await projectService.getProjects();
     expect(projects.find((p) => p.id === project.id)).toBeUndefined();
     expect(projects.length).not.toBe(0);
+
+    const archivedProjects = await projectService.getProjects({
+        archived: true,
+    });
+    expect(archivedProjects).toMatchObject([
+        { id: 'test-archive', archivedAt: expect.any(Date) },
+    ]);
 });
 
 test('should revive project', async () => {

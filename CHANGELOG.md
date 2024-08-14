@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.7] - 2024-08-14
+
+### Bug Fixes
+
+- Messed up on merge-conflicts
+
+
 ## [6.1.6] - 2024-08-14
 
 ### Features

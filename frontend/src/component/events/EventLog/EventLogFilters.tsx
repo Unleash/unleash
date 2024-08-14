@@ -17,22 +17,18 @@ type EventLogFiltersProps = {
     onChange: (value: FilterItemParamHolder) => void;
 };
 
-export const useEventLogFilters = (
-    logType: EventLogFiltersProps['logType'],
-) => {
-    const { projects } = useProjects();
-    const { features } = useFeatureSearch({});
+export const useEventLogFilters = (projectsHook, featuresHook) => {
+    const { projects } = projectsHook();
+    const { features } = featuresHook({});
     const { eventCreators } = useEventCreators();
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
         const projectOptions =
-            projects.map((project: IProjectCard) => ({
+            projects?.map((project: IProjectCard) => ({
                 label: project.name,
                 value: project.id,
             })) ?? [];
-
-        const hasMultipleProjects = projectOptions.length > 1;
 
         const flagOptions =
             features?.map((flag) => ({
@@ -83,7 +79,7 @@ export const useEventLogFilters = (
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
             },
-            ...(hasMultipleProjects && logType === 'global'
+            ...(projectOptions.length > 1
                 ? ([
                       {
                           label: 'Project',
@@ -95,7 +91,7 @@ export const useEventLogFilters = (
                       },
                   ] as IFilterItem[])
                 : []),
-            ...(logType !== 'flag'
+            ...(flagOptions.length > 0
                 ? ([
                       {
                           label: 'Feature Flag',
@@ -125,7 +121,19 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
     state,
     onChange,
 }) => {
-    const availableFilters = useEventLogFilters(logType);
+    const useNoResults = () => [];
+    const [projectHook, featuresHook] = (() => {
+        switch (logType) {
+            case 'flag':
+                return [useNoResults, useNoResults];
+            case 'project':
+                return [useNoResults, useFeatureSearch];
+            case 'global':
+                return [useProjects, useFeatureSearch];
+        }
+    })();
+
+    const availableFilters = useEventLogFilters(projectHook, featuresHook);
 
     return (
         <Filters

@@ -165,13 +165,6 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                     condition={showFilters}
                     show={
                         <StyledFilters
-                            logType={
-                                project
-                                    ? 'project'
-                                    : feature
-                                      ? 'flag'
-                                      : 'global'
-                            }
                             state={filterState}
                             onChange={setTableState}
                         />

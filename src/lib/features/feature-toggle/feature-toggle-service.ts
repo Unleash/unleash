@@ -1095,18 +1095,13 @@ class FeatureToggleService {
         let children: string[] = [];
         let lifecycle: IFeatureLifecycleStage | undefined = undefined;
         let collaborators: Collaborator[] = [];
-        const featureCollaboratorsEnabled = this.flagResolver.isEnabled(
-            'featureCollaborators',
-        );
         [dependencies, children, lifecycle, collaborators] = await Promise.all([
             this.dependentFeaturesReadModel.getParents(featureName),
             this.dependentFeaturesReadModel.getChildren([featureName]),
             this.featureLifecycleReadModel.findCurrentStage(featureName),
-            featureCollaboratorsEnabled
-                ? this.featureCollaboratorsReadModel.getFeatureCollaborators(
-                      featureName,
-                  )
-                : Promise.resolve([]),
+            this.featureCollaboratorsReadModel.getFeatureCollaborators(
+                featureName,
+            ),
         ]);
 
         if (environmentVariants) {
@@ -1121,9 +1116,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
-                ...(featureCollaboratorsEnabled
-                    ? { collaborators: { users: collaborators } }
-                    : {}),
+                collaborators: { users: collaborators },
             };
         } else {
             const result =
@@ -1137,9 +1130,7 @@ class FeatureToggleService {
                 dependencies,
                 children,
                 lifecycle,
-                ...(featureCollaboratorsEnabled
-                    ? { collaborators: { users: collaborators } }
-                    : {}),
+                collaborators: { users: collaborators },
             };
         }
     }
@@ -1244,6 +1235,18 @@ class FeatureToggleService {
         }
     }
 
+    private async validateActiveProject(projectId: string) {
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            const hasActiveProject =
+                await this.projectStore.hasActiveProject(projectId);
+            if (!hasActiveProject) {
+                throw new NotFoundError(
+                    `Active project with id ${projectId} does not exist`,
+                );
+            }
+        }
+    }
+
     async createFeatureToggle(
         projectId: string,
         value: FeatureToggleDTO,
@@ -1256,7 +1259,12 @@ class FeatureToggleService {
         await this.validateName(value.name);
         await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
 
-        const projectExists = await this.projectStore.hasProject(projectId);
+        let projectExists: boolean;
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            projectExists = await this.projectStore.hasActiveProject(projectId);
+        } else {
+            projectExists = await this.projectStore.hasProject(projectId);
+        }
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
             throw new InvalidOperationError(
@@ -1322,7 +1330,9 @@ class FeatureToggleService {
 
             return createdToggle;
         }
-        throw new NotFoundError(`Project with id ${projectId} does not exist`);
+        throw new NotFoundError(
+            `Active project with id ${projectId} does not exist`,
+        );
     }
 
     async checkFeatureFlagNamesAgainstProjectPattern(
@@ -2060,6 +2070,7 @@ class FeatureToggleService {
         projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        await this.validateActiveProject(projectId);
         await this.validateFeaturesContext(featureNames, projectId);
 
         const features =
@@ -2093,6 +2104,11 @@ class FeatureToggleService {
         featureName: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        const feature = await this.featureToggleStore.get(featureName);
+        if (!feature) {
+            throw new NotFoundError(`Feature ${featureName} does not exist`);
+        }
+        await this.validateActiveProject(feature.project);
         const toggle = await this.featureToggleStore.revive(featureName);
         await this.featureToggleStore.disableAllEnvironmentsForFeatures([
             featureName,

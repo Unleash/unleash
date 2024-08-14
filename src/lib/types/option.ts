@@ -71,11 +71,6 @@ export type UsernameAdminUser = {
     password: string;
 };
 
-export type EmailAdminUser = {
-    name: string;
-    email: string;
-};
-
 export interface IAuthOption {
     demoAllowAdminLogin?: boolean;
     enableApiToken: boolean;
@@ -83,7 +78,6 @@ export interface IAuthOption {
     customAuthHandler?: CustomAuthHandler;
     createAdminUser?: boolean;
     initialAdminUser?: UsernameAdminUser;
-    initialAdminEmailUser?: EmailAdminUser;
     initApiTokens: ILegacyApiTokenCreate[];
 }
 

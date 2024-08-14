@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
-import { Avatar, Box, Card, Paper, Typography } from '@mui/material';
+import { Box, Card, Paper, Typography } from '@mui/material';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 export const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(3, 4),
@@ -29,7 +30,8 @@ export const StyledCard = styled(Card)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
 }));
 
-export const StyledAvatar = styled(Avatar)(({ theme }) => ({
+export const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     height: '24px',
     width: '24px',
+    marginInline: 0,
 }));

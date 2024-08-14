@@ -79,7 +79,10 @@ beforeAll(async () => {
         email: 'test@example.com',
     });
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
-    const config = createTestConfig({ getLogger });
+    const config = createTestConfig({
+        getLogger,
+        experimental: { flags: { archiveProjects: true } },
+    });
     eventService = new EventService(stores, config);
     accessService = createAccessService(db.rawDatabase, config);
 
@@ -299,6 +302,34 @@ test('should archive project', async () => {
         type: 'project-archived',
         createdBy: TEST_AUDIT_USER.username,
     });
+
+    const projects = await projectService.getProjects();
+    expect(projects.find((p) => p.id === project.id)).toBeUndefined();
+    expect(projects.length).not.toBe(0);
+});
+
+test('should revive project', async () => {
+    const project = {
+        id: 'test-revive',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
+    await projectService.archiveProject(project.id, TEST_AUDIT_USER);
+    await projectService.reviveProject(project.id, TEST_AUDIT_USER);
+
+    const events = await stores.eventStore.getEvents();
+
+    expect(events[0]).toMatchObject({
+        type: 'project-revived',
+        createdBy: TEST_AUDIT_USER.username,
+    });
+
+    const projects = await projectService.getProjects();
+    expect(projects.find((p) => p.id === project.id)).toMatchObject(project);
 });
 
 test('should not be able to archive project with flags', async () => {
@@ -955,7 +986,7 @@ test('should not change project if feature flag project does not match current p
     }
 });
 
-test('should return 404 if no project is found with the project id', async () => {
+test('should return 404 if no active project is found with the project id', async () => {
     const project = {
         id: 'test-change-project-2',
         name: 'New project',
@@ -978,7 +1009,32 @@ test('should return 404 if no project is found with the project id', async () =>
             auditUser,
         );
     } catch (err) {
-        expect(err.message).toBe(`No project found`);
+        expect(err.message).toBe(
+            `Active project with id newProject does not exist`,
+        );
+    }
+
+    const newProject = {
+        id: 'newProject',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+    await projectService.createProject(newProject, user, auditUser);
+    await projectService.archiveProject(newProject.id, TEST_AUDIT_USER);
+    try {
+        await projectService.changeProject(
+            'newProject',
+            flag.name,
+            user,
+            project.id,
+            auditUser,
+        );
+    } catch (err) {
+        expect(err.message).toBe(
+            `Active project with id newProject does not exist`,
+        );
     }
 });
 

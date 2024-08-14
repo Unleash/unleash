@@ -150,3 +150,26 @@ Since projects segments are not environment specific and change requests are alw
 When you make changes though the Change Request UI it will automatically select first environment with change requests enabled, giving priority to [production](environments.md#environment-types) environments.
 
 Changes to segments can be only circumvented by admin users through the API calls.
+
+## Change Request Preview Playground
+
+To verify that a change request is correct, you can preview the result of change request's application in a change request  [playground](playground.mdx). 
+
+![Change request preview](/img/change-request-preview.png)
+
+From the change request overview page, go to the corresponding [playground](playground.mdx) and evaluate all your flags in the project and environment that your change request applies too.
+
+![Change request playground evaluation](/img/change-request-playground-evaluation.png)
+
+[Unleash context](playground.mdx#the-unleash-context) can be adjusted in the same way as in a regular playground, but the project and environment cannot be changed as they are derived from the change request itself.
+Once the evaluation results confirm the changes in your change request are correct, go back to the change request overview and proceed with the approval or rejection.
+
+
+Change request preview simulates the application of changes in a non-persistent transaction. 
+You still need to apply the changes to persist them for the SDKs to see the changes.
+A change request can only be previewed when the change request is In Review, Approved, or Scheduled. 
+It cannot be previewed when the change request is in Draft, Applied, Cancelled, or Rejected status.
+
+
+Change request preview does not require special permissions like approve/reject change requests or apply change requests. 
+It allows more users to provide feedback on the correctness of the changes.

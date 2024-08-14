@@ -21,7 +21,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    featureLifecycle: true,
                     anonymiseEventLog: true,
                 },
             },

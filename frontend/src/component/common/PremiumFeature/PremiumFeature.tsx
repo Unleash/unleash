@@ -128,6 +128,11 @@ const PremiumFeatures = {
         url: '',
         label: 'Automatic clean-up of inactive users',
     },
+    environments: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/environments',
+        label: 'Environments management',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -173,7 +178,7 @@ export const PremiumFeature = ({
         <>
             {featureLabel} is a feature available for the{' '}
             <strong>{plan}</strong>{' '}
-            {plan === FeaturePlan.PRO ? 'plans' : 'plan'}.
+            {plan === FeaturePlan.PRO ? 'plans' : 'plan'}
         </>
     );
 

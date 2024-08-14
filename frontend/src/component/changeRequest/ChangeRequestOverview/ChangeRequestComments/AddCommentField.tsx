@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { FC } from 'react';
-import { Box, styled, TextField, Tooltip } from '@mui/material';
+import { Box, styled, TextField } from '@mui/material';
 import { StyledAvatar } from './StyledAvatar';
 import type { IUser } from 'interfaces/user';
 
@@ -18,9 +18,7 @@ export const AddCommentField: FC<{
 }> = ({ user, commentText, onTypeComment, children }) => (
     <>
         <AddCommentWrapper>
-            <Tooltip title={user?.name || user?.username}>
-                <StyledAvatar src={user?.imageUrl || ''} />
-            </Tooltip>
+            <StyledAvatar user={user} />
             <TextField
                 variant='outlined'
                 placeholder='Add your comment here'

@@ -80,6 +80,15 @@ const useProjectApi = () => {
         return res;
     };
 
+    const archiveProject = async (projectId: string) => {
+        const path = `api/admin/projects/${projectId}/archive`;
+        const req = createRequest(path, { method: 'POST' });
+
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
+    };
+
     const addEnvironmentToProject = async (
         projectId: string,
         environment: string,
@@ -253,6 +262,7 @@ const useProjectApi = () => {
         editProject,
         editProjectSettings,
         deleteProject,
+        archiveProject,
         addEnvironmentToProject,
         removeEnvironmentFromProject,
         addAccessToProject,

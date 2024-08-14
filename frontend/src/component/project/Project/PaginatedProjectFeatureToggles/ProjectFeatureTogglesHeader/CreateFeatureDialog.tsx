@@ -80,6 +80,17 @@ export const CreateFeatureDialog = ({
     open,
     onClose,
 }: ICreateFeatureDialogProps) => {
+    if (open) {
+        // wrap the inner component so that we only fetch data etc
+        // when the dialog is actually open.
+        return <CreateFeatureDialogContent open={open} onClose={onClose} />;
+    }
+};
+
+const CreateFeatureDialogContent = ({
+    open,
+    onClose,
+}: ICreateFeatureDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
     const { uiConfig, isOss } = useUiConfig();
@@ -158,7 +169,7 @@ export const CreateFeatureDialog = ({
     };
 
     const { total: totalFlags, loading: loadingTotalFlagCount } =
-        useGlobalFeatureSearch();
+        useGlobalFeatureSearch(1);
 
     const { project: projectInfo } = useProjectOverview(project);
     const { tags: allTags } = useAllTags();
@@ -216,6 +227,7 @@ export const CreateFeatureDialog = ({
                         tooltipProps: { title: limitMessage, arrow: true },
                     }}
                     description={description}
+                    namingPattern={projectInfo.featureNaming}
                     errors={errors}
                     handleSubmit={handleSubmit}
                     Icon={<FlagIcon />}

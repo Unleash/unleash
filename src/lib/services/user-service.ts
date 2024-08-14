@@ -16,7 +16,6 @@ import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
 import type { EmailService } from './email-service';
 import type {
-    EmailAdminUser,
     IAuthOption,
     IUnleashConfig,
     UsernameAdminUser,
@@ -137,19 +136,14 @@ class UserService {
 
     async initAdminUser({
         createAdminUser,
-        initialAdminEmailUser,
         initialAdminUser,
     }: Pick<
         IAuthOption,
-        'createAdminUser' | 'initialAdminEmailUser' | 'initialAdminUser'
+        'createAdminUser' | 'initialAdminUser'
     >): Promise<void> {
         if (!createAdminUser) return Promise.resolve();
 
-        if (initialAdminEmailUser) {
-            return this.initAdminEmailUser(initialAdminEmailUser);
-        } else {
-            return this.initAdminUsernameUser(initialAdminUser);
-        }
+        return this.initAdminUsernameUser(initialAdminUser);
     }
 
     async initAdminUsernameUser(
@@ -183,25 +177,6 @@ class UserService {
                 this.logger.error(
                     `Unable to create default user '${username}'`,
                 );
-            }
-        }
-    }
-
-    async initAdminEmailUser({ name, email }: EmailAdminUser): Promise<void> {
-        const userCount = await this.store.count();
-
-        if (userCount === 0) {
-            try {
-                this.logger.info(
-                    `Creating default admin user, with email '${email}' ${name ? ` and name '${name}'` : ''}`,
-                );
-                await this.createUserWithEmail({
-                    name,
-                    email,
-                    rootRole: RoleName.ADMIN,
-                });
-            } catch (e) {
-                this.logger.error(`Unable to create default user '${email}'`);
             }
         }
     }
@@ -243,7 +218,11 @@ class UserService {
         }
 
         if (email) {
-            Joi.assert(email, Joi.string().email(), 'Email');
+            Joi.assert(
+                email,
+                Joi.string().email({ ignoreLength: true }),
+                'Email',
+            );
         }
 
         const exists = await this.store.hasUser({ username, email });
@@ -343,7 +322,11 @@ class UserService {
         const preUser = await this.getUser(id);
 
         if (email) {
-            Joi.assert(email, Joi.string().email(), 'Email');
+            Joi.assert(
+                email,
+                Joi.string().email({ ignoreLength: true }),
+                'Email',
+            );
         }
 
         if (rootRole) {

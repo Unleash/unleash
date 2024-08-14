@@ -1,7 +1,6 @@
 import {
     CLIENT_METRICS_ADDED,
     FEATURE_ARCHIVED,
-    FEATURE_COMPLETED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
     type IEnvironment,
@@ -100,34 +99,4 @@ test('can insert and read lifecycle stages', async () => {
     expect(initialLifecycle).toEqual([
         { stage: 'initial', enteredStageAt: expect.any(Date) },
     ]);
-});
-
-test('ignores lifecycle state updates when flag disabled', async () => {
-    const eventBus = new EventEmitter();
-    const { featureLifecycleService, eventStore, environmentStore } =
-        createFakeFeatureLifecycleService({
-            flagResolver: { isEnabled: () => false },
-            eventBus,
-            getLogger: noLoggerProvider,
-        } as unknown as IUnleashConfig);
-    const featureName = 'testFeature';
-
-    await environmentStore.create({
-        name: 'my-dev-environment',
-        type: 'development',
-    } as IEnvironment);
-    featureLifecycleService.listen();
-
-    await eventStore.emit(FEATURE_CREATED, { featureName });
-    await eventStore.emit(FEATURE_COMPLETED, { featureName });
-    await eventBus.emit(CLIENT_METRICS_ADDED, {
-        bucket: { toggles: { [featureName]: 'irrelevant' } },
-        environment: 'development',
-    });
-    await eventStore.emit(FEATURE_ARCHIVED, { featureName });
-
-    const lifecycle =
-        await featureLifecycleService.getFeatureLifecycle(featureName);
-
-    expect(lifecycle).toEqual([]);
 });

@@ -1,4 +1,4 @@
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import 'chartjs-adapter-date-fns';
 import type { InstanceInsightsSchema } from 'openapi';
 import {
@@ -21,7 +21,7 @@ interface ITimeToProductionChartProps {
     isLoading?: boolean;
 }
 
-export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
+export const TimeToProductionChart: FC<ITimeToProductionChartProps> = ({
     projectFlagTrends,
     isAggregate,
     isLoading,
@@ -35,9 +35,20 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
         [projectsDatasets, isLoading],
     );
 
+    const filteredProjectsDatasets = useMemo(
+        () => ({
+            ...projectsDatasets,
+            datasets: projectsDatasets.datasets.map((dataset) => ({
+                ...dataset,
+                data: dataset.data.filter((item) => item.timeToProduction),
+            })),
+        }),
+        [projectsDatasets],
+    );
+
     const aggregatedPerDay = useMemo(() => {
         const result = medianTimeToProduction(
-            Object.values(projectsDatasets.datasets).flatMap(
+            Object.values(filteredProjectsDatasets.datasets).flatMap(
                 (item) => item.data,
             ),
         );
@@ -60,9 +71,9 @@ export const TimeToProductionChart: VFC<ITimeToProductionChartProps> = ({
                 },
             ],
         };
-    }, [JSON.stringify(projectsDatasets), theme]);
+    }, [JSON.stringify(filteredProjectsDatasets), theme]);
 
-    const data = isAggregate ? aggregatedPerDay : projectsDatasets;
+    const data = isAggregate ? aggregatedPerDay : filteredProjectsDatasets;
     const placeholderData = usePlaceholderData();
     return (
         <LineChart

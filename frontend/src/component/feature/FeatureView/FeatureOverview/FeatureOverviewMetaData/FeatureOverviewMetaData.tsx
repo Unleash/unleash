@@ -7,7 +7,6 @@ import Edit from '@mui/icons-material/Edit';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
@@ -98,12 +97,10 @@ const FeatureOverviewMetaData = () => {
     const featureId = useRequiredPathParam('featureId');
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { project, description, type } = feature;
-    const featureLifecycleEnabled = useUiFlag('featureLifecycle');
     const navigate = useNavigate();
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
         useState(false);
-    const flagCreatorEnabled = useUiFlag('flagCreator');
 
     const { locationSettings } = useLocationSettings();
     const showDependentFeatures = useShowDependentFeatures(feature.project);
@@ -143,10 +140,7 @@ const FeatureOverviewMetaData = () => {
                         <Box sx={{ wordBreak: 'break-all' }}>{project}</Box>
                     </SpacedBodyItem>
                     <ConditionallyRender
-                        condition={
-                            featureLifecycleEnabled &&
-                            Boolean(feature.lifecycle)
-                        }
+                        condition={Boolean(feature.lifecycle)}
                         show={
                             <SpacedBodyItem data-loading>
                                 <StyledLabel>Lifecycle:</StyledLabel>
@@ -225,9 +219,7 @@ const FeatureOverviewMetaData = () => {
                         </StyledDetailsContainer>
                     </BodyItemWithIcon>
                     <ConditionallyRender
-                        condition={
-                            Boolean(feature.createdBy) && flagCreatorEnabled
-                        }
+                        condition={Boolean(feature.createdBy)}
                         show={() => (
                             <BodyItemWithIcon>
                                 <StyledDetailsContainer>

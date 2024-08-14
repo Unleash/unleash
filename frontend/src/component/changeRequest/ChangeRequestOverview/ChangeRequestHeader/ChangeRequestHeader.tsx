@@ -51,9 +51,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
                     })}
                 >
                     <Tooltip title={changeRequest?.createdBy?.username}>
-                        <StyledAvatar
-                            src={changeRequest?.createdBy?.imageUrl}
-                        />
+                        <StyledAvatar user={changeRequest?.createdBy} />
                     </Tooltip>
                 </Box>
                 <Typography

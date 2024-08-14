@@ -15,6 +15,10 @@ class FakeEventStore implements IEventStore {
         this.events = [];
     }
 
+    getEventCreators(): Promise<{ id: number; name: string }[]> {
+        throw new Error('Method not implemented.');
+    }
+
     getMaxRevisionId(): Promise<number> {
         return Promise.resolve(1);
     }

@@ -26,6 +26,8 @@ import { Search } from 'component/common/Search/Search';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -35,6 +37,7 @@ export const EnvironmentTable = () => {
     const { changeSortOrder } = useEnvironmentApi();
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
+    const isFeatureEnabled = useUiFlag('EEA');
 
     const moveListItem: MoveListItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
@@ -87,6 +90,14 @@ export const EnvironmentTable = () => {
     const header = (
         <PageHeader title={`Environments (${count})`} actions={headerActions} />
     );
+
+    if (!isFeatureEnabled) {
+        return (
+            <PageContent header={header}>
+                <PremiumFeature feature='environments' />
+            </PageContent>
+        );
+    }
 
     return (
         <PageContent header={header}>

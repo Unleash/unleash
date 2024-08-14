@@ -20,5 +20,10 @@ export class SearchApi extends Controller {
             '/events',
             new EventSearchController(config, services).router,
         );
+
+        this.app.use(
+            '/events',
+            new EventSearchController(config, services).router,
+        );
     }
 }

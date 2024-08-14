@@ -37,8 +37,7 @@ export const ArchivedFeatureDeleteConfirm = ({
     const { setToastData, setToastApiError } = useToast();
     const { deleteFeatures } = useProjectApi();
 
-    const singularOrPluralFlags =
-        deletedFeatures.length > 1 ? 'toggles' : 'toggle';
+    const singularOrPluralFlags = deletedFeatures.length > 1 ? 'flags' : 'flag';
 
     const onDeleteFeatureToggle = async () => {
         try {

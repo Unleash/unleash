@@ -10,13 +10,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { EventLogFilters } from './EventLogFilters';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions';
 import useLoading from 'hooks/useLoading';
-import { ProjectEventLogFilters } from './EventLogFilters/ProjectEventLogFilters';
-import { FlagEventLogFilters } from './EventLogFilters/FlagEventLogFilters';
-import { GlobalEventLogFilters } from './EventLogFilters/GlobalEventLogFilters';
 
 interface IEventLogProps {
     title: string;
@@ -31,6 +29,10 @@ const StyledEventsList = styled('ul')(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(2),
 }));
+
+const StyledFilters = styled(EventLogFilters)({
+    padding: 0,
+});
 
 const EventResultWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'withFilters',
@@ -50,26 +52,6 @@ const Placeholder = styled('li')({
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { isEnterprise } = useUiConfig();
     const showFilters = useUiFlag('newEventSearch') && isEnterprise();
-    const [Filters, eventLogSearchInput] = (() => {
-        if (project) {
-            return [
-                ProjectEventLogFilters,
-                { type: 'project' as const, projectId: project },
-            ];
-        } else if (feature) {
-            return [
-                FlagEventLogFilters,
-                { type: 'flag' as const, flagName: feature },
-            ];
-        } else {
-            return [GlobalEventLogFilters, { type: 'global' as const }];
-        }
-    })();
-
-    const StyledFilters = styled(Filters)({
-        padding: 0,
-    });
-
     const {
         events,
         total,
@@ -78,7 +60,13 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         setTableState,
         filterState,
         pagination,
-    } = useEventLogSearch(eventLogSearchInput);
+    } = useEventLogSearch(
+        project
+            ? { type: 'project', projectId: project }
+            : feature
+              ? { type: 'flag', flagName: feature }
+              : { type: 'global' },
+    );
     const ref = useLoading(loading, '[data-loading-events=true]');
 
     const setSearchValue = (query = '') => {
@@ -165,6 +153,13 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                     condition={showFilters}
                     show={
                         <StyledFilters
+                            logType={
+                                project
+                                    ? 'project'
+                                    : feature
+                                      ? 'flag'
+                                      : 'global'
+                            }
                             state={filterState}
                             onChange={setTableState}
                         />

@@ -3055,7 +3055,7 @@ test('should create a strategy with segments', async () => {
                 (strat) => strat.id === strategyOne.id,
             );
 
-            expect(strategy.segments).toBe(undefined);
+            expect(strategy.segments).toEqual([]);
         });
 });
 

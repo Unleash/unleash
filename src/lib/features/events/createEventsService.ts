@@ -4,7 +4,7 @@ import type { Db } from '../../db/db';
 import EventStore from './event-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import { EventService } from '../../services';
-import type { IUnleashConfig } from '../../types';
+import type { IUnleashConfig, IUnleashStores } from '../../types';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
@@ -28,14 +28,17 @@ export const createEventsService: (
     );
 };
 
-export const createFakeEventsService: (config: IUnleashConfig) => EventService =
-    (config) => {
-        const eventStore = new FakeEventStore();
-        const featureTagStore = new FakeFeatureTagStore();
-        const fakePrivateProjectChecker = createFakePrivateProjectChecker();
-        return new EventService(
-            { eventStore, featureTagStore },
-            config,
-            fakePrivateProjectChecker,
-        );
-    };
+export const createFakeEventsService: (
+    config: IUnleashConfig,
+    stores?: IUnleashStores,
+) => EventService = (config, stores) => {
+    const eventStore = stores?.eventStore || new FakeEventStore();
+    const featureTagStore =
+        stores?.featureTagStore || new FakeFeatureTagStore();
+    const fakePrivateProjectChecker = createFakePrivateProjectChecker();
+    return new EventService(
+        { eventStore, featureTagStore },
+        config,
+        fakePrivateProjectChecker,
+    );
+};

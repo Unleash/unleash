@@ -6,33 +6,31 @@ import {
 } from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { EventSchemaType } from 'openapi';
+import {
+    EventSchemaType,
+    type FeatureSearchResponseSchema,
+    type SearchFeaturesParams,
+} from 'openapi';
 import type { IProjectCard } from 'interfaces/project';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 
-type EventLogFiltersProps = {
-    logType: 'flag' | 'project' | 'global';
-    className?: string;
-    state: FilterItemParamHolder;
-    onChange: (value: FilterItemParamHolder) => void;
-};
-
 export const useEventLogFilters = (
-    logType: EventLogFiltersProps['logType'],
+    projectsHook: () => { projects: IProjectCard[] },
+    featuresHook: (params: SearchFeaturesParams) => {
+        features: FeatureSearchResponseSchema[];
+    },
 ) => {
-    const { projects } = useProjects();
-    const { features } = useFeatureSearch({});
+    const { projects } = projectsHook();
+    const { features } = featuresHook({});
     const { eventCreators } = useEventCreators();
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
         const projectOptions =
-            projects.map((project: IProjectCard) => ({
+            projects?.map((project: IProjectCard) => ({
                 label: project.name,
                 value: project.id,
             })) ?? [];
-
-        const hasMultipleProjects = projectOptions.length > 1;
 
         const flagOptions =
             features?.map((flag) => ({
@@ -83,7 +81,7 @@ export const useEventLogFilters = (
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
             },
-            ...(hasMultipleProjects && logType === 'global'
+            ...(projectOptions.length > 1
                 ? ([
                       {
                           label: 'Project',
@@ -95,7 +93,7 @@ export const useEventLogFilters = (
                       },
                   ] as IFilterItem[])
                 : []),
-            ...(logType !== 'flag'
+            ...(flagOptions.length > 0
                 ? ([
                       {
                           label: 'Feature Flag',
@@ -119,13 +117,36 @@ export const useEventLogFilters = (
     return availableFilters;
 };
 
+type LogType = 'flag' | 'project' | 'global';
+export const useEventLogFiltersFromLogType = (logType: LogType) => {
+    const [projectHook, featuresHook] = (() => {
+        switch (logType) {
+            case 'flag':
+                return [() => ({ projects: [] }), () => ({ features: [] })];
+            case 'project':
+                return [() => ({ projects: [] }), useFeatureSearch];
+            case 'global':
+                return [useProjects, useFeatureSearch];
+        }
+    })();
+
+    return useEventLogFilters(projectHook, featuresHook);
+};
+
+type EventLogFiltersProps = {
+    logType: LogType;
+    className?: string;
+    state: FilterItemParamHolder;
+    onChange: (value: FilterItemParamHolder) => void;
+};
+
 export const EventLogFilters: FC<EventLogFiltersProps> = ({
     logType,
     className,
     state,
     onChange,
 }) => {
-    const availableFilters = useEventLogFilters(logType);
+    const availableFilters = useEventLogFiltersFromLogType(logType);
 
     return (
         <Filters

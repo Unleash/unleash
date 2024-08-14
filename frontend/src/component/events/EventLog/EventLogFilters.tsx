@@ -26,19 +26,31 @@ export const useEventLogFilters = (
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
-        const projectOptions = (projects || []).map(
-            (project: IProjectCard) => ({
+        const projectOptions =
+            projects.map((project: IProjectCard) => ({
                 label: project.name,
                 value: project.id,
-            }),
-        );
+            })) ?? [];
 
         const hasMultipleProjects = projectOptions.length > 1;
 
-        const flagOptions = (features || []).map((flag) => ({
-            label: flag.name,
-            value: flag.name,
+        const flagOptions =
+            features?.map((flag) => ({
+                label: flag.name,
+                value: flag.name,
+            })) ?? [];
+
+        const eventCreatorOptions = eventCreators.map((creator) => ({
+            label: creator.name,
+            value: creator.id.toString(),
         }));
+
+        const eventTypeOptions = Object.entries(EventSchemaType).map(
+            ([key, value]) => ({
+                label: key,
+                value: value,
+            }),
+        );
 
         const availableFilters: IFilterItem[] = [
             {
@@ -58,10 +70,7 @@ export const useEventLogFilters = (
             {
                 label: 'Created by',
                 icon: 'person',
-                options: eventCreators.map((creator) => ({
-                    label: creator.name,
-                    value: creator.id.toString(),
-                })),
+                options: eventCreatorOptions,
                 filterKey: 'createdBy',
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
@@ -69,12 +78,7 @@ export const useEventLogFilters = (
             {
                 label: 'Event type',
                 icon: 'announcement',
-                options: Object.entries(EventSchemaType).map(
-                    ([key, value]) => ({
-                        label: key,
-                        value: value,
-                    }),
-                ),
+                options: eventTypeOptions,
                 filterKey: 'type',
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],

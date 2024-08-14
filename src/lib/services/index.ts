@@ -64,7 +64,9 @@ import {
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
     createEnvironmentService,
+    createEventsService,
     createFakeEnvironmentService,
+    createFakeEventsService,
     createFakeProjectService,
     createFeatureLifecycleService,
     createFeatureToggleService,
@@ -147,7 +149,13 @@ export const createServices = (
     config: IUnleashConfig,
     db?: Db,
 ): IUnleashServices => {
-    const eventService = new EventService(stores, config);
+    const privateProjectChecker = db
+        ? createPrivateProjectChecker(db, config)
+        : createFakePrivateProjectChecker();
+
+    const eventService = db
+        ? createEventsService(db, config)
+        : createFakeEventsService(config);
     const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(
         stores,
@@ -166,9 +174,6 @@ export const createServices = (
         config,
         lastSeenService,
     );
-    const privateProjectChecker = db
-        ? createPrivateProjectChecker(db, config)
-        : createFakePrivateProjectChecker();
     const dependentFeaturesReadModel = db
         ? new DependentFeaturesReadModel(db)
         : new FakeDependentFeaturesReadModel();

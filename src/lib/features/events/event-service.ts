@@ -14,6 +14,7 @@ import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { parseSearchOperatorValue } from '../feature-search/search-utils';
 import { endOfDay, formatISO } from 'date-fns';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 
 export default class EventService {
     private logger: Logger;
@@ -21,6 +22,8 @@ export default class EventService {
     private eventStore: IEventStore;
 
     private featureTagStore: IFeatureTagStore;
+
+    private privateProjectChecker: IPrivateProjectChecker;
 
     private eventBus: EventEmitter;
 
@@ -30,9 +33,11 @@ export default class EventService {
             featureTagStore,
         }: Pick<IUnleashStores, 'eventStore' | 'featureTagStore'>,
         { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.logger = getLogger('services/event-service.ts');
         this.eventStore = eventStore;
+        this.privateProjectChecker = privateProjectChecker;
         this.featureTagStore = featureTagStore;
         this.eventBus = eventBus;
     }

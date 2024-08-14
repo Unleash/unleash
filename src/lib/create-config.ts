@@ -21,6 +21,7 @@ import {
     type IUnleashOptions,
     type IVersionOption,
     type ISSLOption,
+    type UsernameAdminUser,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -315,6 +316,12 @@ const defaultVersionOption: IVersionOption = {
     enable: parseEnvVarBoolean(process.env.CHECK_VERSION, true),
 };
 
+const parseEnvVarInitialAdminUser = (): UsernameAdminUser | undefined => {
+    const username = process.env.INITIAL_ADMIN_USER_USERNAME;
+    const password = process.env.INITIAL_ADMIN_USER_PASSWORD;
+    return username && password ? { username, password } : undefined;
+};
+
 const defaultAuthentication: IAuthOption = {
     demoAllowAdminLogin: parseEnvVarBoolean(
         process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN,
@@ -324,10 +331,7 @@ const defaultAuthentication: IAuthOption = {
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
-    initialAdminUser: {
-        username: process.env.UNLEASH_DEFAULT_ADMIN_USERNAME ?? 'admin',
-        password: process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD ?? 'unleash4all',
-    },
+    initialAdminUser: parseEnvVarInitialAdminUser(),
     initApiTokens: [],
 };
 

@@ -32,9 +32,9 @@ export const ReviveProjectDialog = ({
             refetchProjects();
             refetchProjectArchive();
             setToastData({
-                title: 'Deleted project',
+                title: 'Restored project',
                 type: 'success',
-                text: 'Successfully deleted project',
+                text: 'Successfully restored project',
             });
             onSuccess?.();
         } catch (ex: unknown) {

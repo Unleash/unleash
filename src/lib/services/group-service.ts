@@ -30,6 +30,10 @@ import type { IUser } from '../types/user';
 import type EventService from '../features/events/event-service';
 import { SSO_SYNC_USER } from '../db/group-store';
 
+const setsAreEqual = (firstSet, secondSet) =>
+    firstSet.size === secondSet.size &&
+    [...firstSet].every((x) => secondSet.has(x));
+
 export class GroupService {
     private groupStore: IGroupStore;
 
@@ -233,18 +237,24 @@ export class GroupService {
         }
 
         if (existingGroup && Boolean(existingGroup.scimId)) {
-            const {
-                description: _existingDescription,
-                rootRole: _existingRootRole,
-                ...existingConstantProperties
-            } = existingGroup;
-            const { description, rootRole, ...newConstantProperties } = group;
+            if (existingGroup.name !== group.name) {
+                throw new BadDataError(
+                    'Cannot update the name of a SCIM group',
+                );
+            }
 
-            if (
-                JSON.stringify(existingConstantProperties) !==
-                JSON.stringify(newConstantProperties)
-            ) {
-                throw new BadDataError('Cannot change SCIM group properties');
+            const existingUsers = new Set(
+                (
+                    await this.groupStore.getAllUsersByGroups([
+                        existingGroup.id,
+                    ])
+                ).map((g) => g.userId),
+            );
+
+            const newUsers = new Set(group.users?.map((g) => g.user.id) || []);
+
+            if (!setsAreEqual(existingUsers, newUsers)) {
+                throw new BadDataError('Cannot update users of a SCIM group');
             }
         }
     }

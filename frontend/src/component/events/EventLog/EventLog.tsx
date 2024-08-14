@@ -173,7 +173,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
     );
 };
 
-export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
+const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
     const [query, setQuery] = useState('');
     const { events, totalEvents, fetchNextPage } = useLegacyEventSearch(
         project,

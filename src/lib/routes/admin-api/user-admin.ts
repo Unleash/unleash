@@ -520,22 +520,30 @@ export default class UserAdminController extends Controller {
             ? Number(rootRole)
             : (rootRole as RoleName);
 
-        const { createdUser, inviteLink, emailSent } =
-            await this.userService.createUserWithEmail(
-                {
-                    username,
-                    email,
-                    name,
-                    password,
-                    rootRole: normalizedRootRole,
-                },
-                sendEmail,
-                req.audit,
-            );
+        const createdUser = await this.userService.createUser(
+            {
+                username,
+                email,
+                name,
+                password,
+                rootRole: normalizedRootRole,
+            },
+            req.audit,
+        );
+
+        const inviteLink = await this.userService.newUserInviteLink(
+            createdUser,
+            req.audit,
+        );
+
+        // send email defaults to true
+        const emailSent = (sendEmail !== undefined ? sendEmail : true)
+            ? await this.userService.sendWelcomeEmail(createdUser, inviteLink)
+            : false;
 
         const responseData: CreateUserResponseSchema = {
             ...serializeDates(createdUser),
-            inviteLink: inviteLink,
+            inviteLink,
             emailSent,
             rootRole: normalizedRootRole,
         };

@@ -12,6 +12,7 @@ import {
 import FileDownload from '@mui/icons-material/FileDownload';
 import type { EventSchema } from '../../../openapi';
 import { json2csv } from 'json-2-csv';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -29,6 +30,7 @@ interface IEventActions {
 
 export const EventActions: FC<IEventActions> = ({ events }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { trackEvent } = usePlausibleTracker();
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -53,6 +55,12 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
 
         URL.revokeObjectURL(url);
         setAnchorEl(null);
+
+        trackEvent('events-exported', {
+            props: {
+                eventType: 'json',
+            },
+        });
     };
 
     const exportCsv = () => {
@@ -68,13 +76,16 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
-        a.style.display = 'none';
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
 
         URL.revokeObjectURL(url);
         setAnchorEl(null);
+
+        trackEvent('events-exported', {
+            props: {
+                eventType: 'csv',
+            },
+        });
     };
 
     return (

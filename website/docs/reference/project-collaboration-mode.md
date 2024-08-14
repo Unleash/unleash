@@ -4,14 +4,13 @@ title: Project Collaboration Mode
 
 :::note Availability
 
-**Plan**: Enterprise
-**Version**: 4.22+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.22+`
 
 :::
 
-Project collaboration modes allow you to manage project visibility and interaction levels, ensuring better control and collaboration within your organization.
-
 # Overview
+
+Project collaboration modes allow you to manage project visibility and interaction levels, ensuring better control and collaboration within your organization.
 
 The collaboration mode of a [project](../reference/projects.md) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](../reference/change-requests.md)–a feature that provides controlled and secure updates for feature toggles.
 
@@ -32,18 +31,19 @@ All users of your Unleash instance can access the project but only admins and pr
 All project members can access the project and submit change requests. Outside of project members, only admins, editors, and users with [custom root roles](../how-to/how-to-create-and-assign-custom-root-roles.md) can access the project and submit change requests.
 
 
-|           | View project    | Submit change requests                                             |   |   |
-|-----------|-----------------|--------------------------------------------------------------------|---|---|
-| Open      | All users       | All users                                                          |   |   |
-| Protected | All users       | Project Members, Admins, Editors, and users with [custom root roles](../how-to/how-to-create-and-assign-custom-root-roles.md) |   |   |
-| Private   | Project members | Project Members, Admins, Editors, and users with [custom root roles](../how-to/how-to-create-and-assign-custom-root-roles.md) |   |   |
+| Collaboration Mode | View project    | Submit change requests                                                                                                        |
+|--------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------------|
+| Open               | All users       | All users                                                                                                                     |
+| Protected          | All users       | Project members, Admins, Editors, and users with [custom root roles](../how-to/how-to-create-and-assign-custom-root-roles.md) |
+| Private            | Project members, Admins, Editors, and users with [custom root roles](../how-to/how-to-create-and-assign-custom-root-roles.md) | Project members, Admins, Editors, and users with [custom root roles](../how-to/how-to-create-and-assign-custom-root-roles.md) |
+
 
 # Set project collaboration mode
 
 To [create a new project](../reference/projects.md#creating-a-new-project) with a specific collaboration mode, do the following:
 1. In the Unleash Admin UI, go to **Projects** > **New project**.
 2. Enter **Project name**.
-3. Click **open** to choose your collaboration mode.
+3. Click **Open** to choose your collaboration mode.
 4. Click **Create project**.
 
 ## Modify project collaboration mode
@@ -63,4 +63,4 @@ When you change the collaboration mode of an existing project to private, all us
 
 ## Migrate existing projects
 
-When upgrading Unleash to version 4.22.0 or later, all migrated projects get the open collaboration mode by default. Go to [Modify project collaboration mode](#modify-project-collaboration-mode) for steps on how to change the collaboration mode of an existing project.
+When upgrading Unleash to version `4.22.0` or later, all migrated projects get the open collaboration mode by default. Go to [Modify project collaboration mode](#modify-project-collaboration-mode) for steps on how to change the collaboration mode of an existing project.

@@ -10,48 +10,6 @@ import { EventSchemaType } from 'openapi';
 import type { IProjectCard } from 'interfaces/project';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 
-const useSharedFilters = (): IFilterItem[] => {
-    const { eventCreators } = useEventCreators();
-    return [
-        {
-            label: 'Date From',
-            icon: 'today',
-            options: [],
-            filterKey: 'from',
-            dateOperators: ['IS'],
-        },
-        {
-            label: 'Date To',
-            icon: 'today',
-            options: [],
-            filterKey: 'to',
-            dateOperators: ['IS'],
-        },
-        {
-            label: 'Created by',
-            icon: 'person',
-            options: eventCreators.map((creator) => ({
-                label: creator.name,
-                value: creator.id.toString(),
-            })),
-            filterKey: 'createdBy',
-            singularOperators: ['IS'],
-            pluralOperators: ['IS_ANY_OF'],
-        },
-        {
-            label: 'Event type',
-            icon: 'announcement',
-            options: Object.entries(EventSchemaType).map(([key, value]) => ({
-                label: key,
-                value: value,
-            })),
-            filterKey: 'type',
-            singularOperators: ['IS'],
-            pluralOperators: ['IS_ANY_OF'],
-        },
-    ];
-};
-
 type EventLogFiltersProps = {
     logType: 'flag' | 'project' | 'global';
     className?: string;
@@ -64,7 +22,7 @@ export const useEventLogFilters = (
 ) => {
     const { projects } = useProjects();
     const { features } = useFeatureSearch({});
-    const sharedFilters = useSharedFilters();
+    const { eventCreators } = useEventCreators();
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
@@ -83,7 +41,44 @@ export const useEventLogFilters = (
         }));
 
         const availableFilters: IFilterItem[] = [
-            ...sharedFilters,
+            {
+                label: 'Date From',
+                icon: 'today',
+                options: [],
+                filterKey: 'from',
+                dateOperators: ['IS'],
+            },
+            {
+                label: 'Date To',
+                icon: 'today',
+                options: [],
+                filterKey: 'to',
+                dateOperators: ['IS'],
+            },
+            {
+                label: 'Created by',
+                icon: 'person',
+                options: eventCreators.map((creator) => ({
+                    label: creator.name,
+                    value: creator.id.toString(),
+                })),
+                filterKey: 'createdBy',
+                singularOperators: ['IS'],
+                pluralOperators: ['IS_ANY_OF'],
+            },
+            {
+                label: 'Event type',
+                icon: 'announcement',
+                options: Object.entries(EventSchemaType).map(
+                    ([key, value]) => ({
+                        label: key,
+                        value: value,
+                    }),
+                ),
+                filterKey: 'type',
+                singularOperators: ['IS'],
+                pluralOperators: ['IS_ANY_OF'],
+            },
             ...(hasMultipleProjects && logType === 'global'
                 ? ([
                       {
@@ -114,7 +109,7 @@ export const useEventLogFilters = (
     }, [
         JSON.stringify(features),
         JSON.stringify(projects),
-        JSON.stringify(sharedFilters),
+        JSON.stringify(eventCreators),
     ]);
 
     return availableFilters;

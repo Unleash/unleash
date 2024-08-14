@@ -58,12 +58,10 @@ type EventLogFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
 };
-export const EventLogFilters: FC<EventLogFiltersProps> = ({
-    logType,
-    className,
-    state,
-    onChange,
-}) => {
+
+export const useEventLogFilters = (
+    logType: EventLogFiltersProps['logType'],
+) => {
     const { projects } = useProjects();
     const { features } = useFeatureSearch({});
     const sharedFilters = useSharedFilters();
@@ -118,6 +116,17 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
         JSON.stringify(projects),
         JSON.stringify(sharedFilters),
     ]);
+
+    return availableFilters;
+};
+
+export const EventLogFilters: FC<EventLogFiltersProps> = ({
+    logType,
+    className,
+    state,
+    onChange,
+}) => {
+    const availableFilters = useEventLogFilters(logType);
 
     return (
         <Filters

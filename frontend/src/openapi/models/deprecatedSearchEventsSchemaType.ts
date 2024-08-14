@@ -60,6 +60,7 @@ export const DeprecatedSearchEventsSchemaType = {
     'project-updated': 'project-updated',
     'project-deleted': 'project-deleted',
     'project-archived': 'project-archived',
+    'project-revived': 'project-revived',
     'project-import': 'project-import',
     'project-user-added': 'project-user-added',
     'project-user-removed': 'project-user-removed',

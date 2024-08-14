@@ -10,7 +10,7 @@ import type {
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { subDays } from 'date-fns';
 import {
-    createFakeEventsService,
+    createEventsService,
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
@@ -48,7 +48,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
     });
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
 

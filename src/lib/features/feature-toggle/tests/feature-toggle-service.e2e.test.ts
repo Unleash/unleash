@@ -24,7 +24,7 @@ import {
 } from '../../../error';
 import type { ISegmentService } from '../../segment/segment-service-interface';
 import {
-    createFakeEventsService,
+    createEventsService,
     createFeatureToggleService,
     createSegmentService,
 } from '../..';
@@ -64,7 +64,7 @@ beforeAll(async () => {
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

@@ -8,7 +8,7 @@ import {
     type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
-import { createFakeEventsService } from '../../../../lib/features';
+import { createEventsService } from '../../../../lib/features';
 import { createTestConfig } from '../../../config/test-config';
 
 let app: IUnleashTest;
@@ -28,7 +28,7 @@ beforeAll(async () => {
         },
     });
 
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

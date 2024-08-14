@@ -8,7 +8,7 @@ import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service';
 import { FEATURE_CREATED } from '../../../lib/types/events';
 import { IntegrationEventsService } from '../../../lib/services';
-import { createFakeEventsService } from '../../../lib/features';
+import { createEventsService } from '../../../lib/features';
 
 const addonProvider = { simple: new SimpleAddon() };
 
@@ -23,7 +23,7 @@ beforeAll(async () => {
     });
     db = await dbInit('addon_service_serial', getLogger);
     stores = db.stores;
-    const eventService = createFakeEventsService(config);
+    const eventService = createEventsService(db.rawDatabase, config);
     const tagTypeService = new TagTypeService(stores, config, eventService);
     const integrationEventsService = new IntegrationEventsService(
         stores,

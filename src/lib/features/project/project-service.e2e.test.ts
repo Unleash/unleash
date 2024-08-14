@@ -14,7 +14,7 @@ import { FeatureEnvironmentEvent } from '../../types/events';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
-    createFakeEventsService,
+    createEventsService,
     createFeatureToggleService,
     createProjectService,
 } from '../index';
@@ -84,7 +84,7 @@ beforeAll(async () => {
         getLogger,
         experimental: { flags: { archiveProjects: true } },
     });
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
     accessService = createAccessService(db.rawDatabase, config);
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);

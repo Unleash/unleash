@@ -20,10 +20,7 @@ import {
     SYSTEM_USER,
     TEST_AUDIT_USER,
 } from '../types';
-import {
-    createFakeEventsService,
-    IntegrationEventsService,
-} from '../internals';
+import { IntegrationEventsService } from '../internals';
 import { createTestConfig } from '../../test/config/test-config';
 
 const MASKED_VALUE = '*****';
@@ -36,7 +33,7 @@ const config: IUnleashConfig = createTestConfig();
 
 function getSetup() {
     const stores = createStores();
-    const eventService = createFakeEventsService(config);
+    const eventService = createEventsService(db, config);
     const tagTypeService = new TagTypeService(
         stores,
         { getLogger },

@@ -1,6 +1,6 @@
 import type { EventEmitter } from 'stream';
 import {
-    createFakeEventsService,
+    createEventsService,
     createFeatureToggleService,
 } from '../../lib/features';
 import { FEATURES_CREATED_BY_PROCESSED } from '../../lib/metric-events';
@@ -32,7 +32,7 @@ beforeAll(async () => {
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

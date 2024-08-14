@@ -8,7 +8,7 @@ import {
     SETTING_UPDATED,
 } from '../../../lib/types/events';
 import { TEST_AUDIT_USER } from '../../../lib/types';
-import { createFakeEventsService } from '../../../lib/features';
+import { createEventsService } from '../../../lib/features';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -19,7 +19,7 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('setting_service_serial', config.getLogger);
     stores = db.stores;
-    const eventService = createFakeEventsService(config);
+    const eventService = createEventsService(db.rawDatabase, config);
     service = new SettingService(stores, config, eventService);
 });
 beforeEach(async () => {

@@ -15,7 +15,7 @@ import { ADMIN, type IUnleashStores, type IUser } from '../../../../lib/types';
 import type { InactiveUsersService } from '../../../../lib/users/inactive/inactive-users-service';
 import { createInactiveUsersService } from '../../../../lib/users';
 import { extractAuditInfoFromUser } from '../../../../lib/util';
-import { createFakeEventsService } from '../../../../lib/features';
+import { createEventsService } from '../../../../lib/features';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -38,7 +38,7 @@ beforeAll(async () => {
     db = await dbInit('inactive_user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(
         stores,

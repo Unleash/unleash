@@ -9,7 +9,7 @@ import {
     type IUser,
     TEST_AUDIT_USER,
 } from '../../../lib/types';
-import { createFakeEventsService } from '../../../lib/features';
+import { createEventsService } from '../../../lib/features';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -29,7 +29,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
     });
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
     groupService = new GroupService(stores, config, eventService);
     groupStore = stores.groupStore;
 

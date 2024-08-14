@@ -28,7 +28,7 @@ import {
 } from '../../../lib/types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
 import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used';
-import { createFakeEventsService } from '../../../lib/features';
+import { createEventsService } from '../../../lib/features';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -46,7 +46,7 @@ beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    eventService = createFakeEventsService(config);
+    eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(
         stores,

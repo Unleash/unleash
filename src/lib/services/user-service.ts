@@ -255,20 +255,10 @@ class UserService {
         return userCreated;
     }
 
-    async createUserWithEmail(
-        { username, email, name, password, rootRole }: ICreateUser,
-        sendEmail = true,
+    async newUserInviteLink(
+        user: IUserWithRootRole,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
-    ): Promise<{
-        createdUser: IUserWithRootRole;
-        inviteLink: string;
-        emailSent: boolean;
-    }> {
-        const createdUser = await this.createUser(
-            { username, email, name, password, rootRole },
-            auditUser,
-        );
-
+    ): Promise<string> {
         const passwordAuthSettings =
             await this.settingService.getWithDefault<SimpleAuthSettings>(
                 simpleAuthSettingsKey,
@@ -278,20 +268,26 @@ class UserService {
         let inviteLink = this.unleashUrl;
         if (!passwordAuthSettings.disabled) {
             const inviteUrl = await this.resetTokenService.createNewUserUrl(
-                createdUser.id,
+                user.id,
                 auditUser.username,
             );
             inviteLink = inviteUrl.toString();
         }
+        return inviteLink;
+    }
 
+    async sendWelcomeEmail(
+        user: IUserWithRootRole,
+        inviteLink: string,
+    ): Promise<boolean> {
         let emailSent = false;
         const emailConfigured = this.emailService.configured();
 
-        if (emailConfigured && sendEmail && createdUser.email) {
+        if (emailConfigured && user.email) {
             try {
                 await this.emailService.sendGettingStartedMail(
-                    createdUser.name || '',
-                    createdUser.email,
+                    user.name || '',
+                    user.email,
                     this.unleashUrl,
                     inviteLink,
                 );
@@ -308,7 +304,7 @@ class UserService {
             );
         }
 
-        return { createdUser, inviteLink, emailSent };
+        return emailSent;
     }
 
     async updateUser(

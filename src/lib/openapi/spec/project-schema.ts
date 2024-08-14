@@ -67,6 +67,7 @@ export const projectSchema = {
         archivedAt: {
             type: 'string',
             format: 'date-time',
+            nullable: true,
             description: 'When this project was archived.',
             example: '2023-07-28T12:12:28Z',
         },

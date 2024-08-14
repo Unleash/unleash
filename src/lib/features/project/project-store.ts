@@ -140,8 +140,8 @@ class ProjectStore implements IProjectStore {
             }
         }
 
-        if (query) {
-            projects = projects.where(query);
+        if (query?.id) {
+            projects = projects.where(`${TABLE}.id`, query.id);
         }
 
         let selectColumns = [
@@ -155,6 +155,10 @@ class ProjectStore implements IProjectStore {
             'project_settings.project_mode',
             'project_stats.avg_time_to_prod_current_window',
         ] as (string | Raw<any>)[];
+
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            selectColumns.push(`${TABLE}.archived_at`);
+        }
 
         let groupByColumns = [
             'projects.id',
@@ -219,6 +223,7 @@ class ProjectStore implements IProjectStore {
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
             createdAt: row.created_at,
+            archivedAt: row.archived_at,
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
             avgTimeToProduction: row.avg_time_to_prod_current_window || 0,

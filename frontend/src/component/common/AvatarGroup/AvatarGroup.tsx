@@ -88,7 +88,7 @@ const AvatarGroupInner = ({
                 show={
                     <AvatarComponent
                         user={{
-                            username: `+${millify(overflow)}`,
+                            username: `Total: ${millify(users.length)}`,
                         }}
                     >
                         +{Math.min(overflow, MAX_OVERFLOW_DISPLAY_NUMBER)}

@@ -42,7 +42,7 @@ const EventResultWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 4, 4, 4),
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
 }));
 
 const Placeholder = styled('li')({

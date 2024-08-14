@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.8] - 2024-08-14
+
+### Bug Fixes
+
+- Change request enabled check should ignore disabled envs ([#7869](https://github.com/Unleash/unleash/issues/7869)) ([#7876](https://github.com/Unleash/unleash/issues/7876))
+
+
 ## [6.1.7] - 2024-08-14
 
 ### Bug Fixes

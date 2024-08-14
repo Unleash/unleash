@@ -23,9 +23,13 @@ import {
     PermissionError,
 } from '../../../error';
 import type { ISegmentService } from '../../segment/segment-service-interface';
-import { createFeatureToggleService, createSegmentService } from '../..';
+import {
+    createFakeEventsService,
+    createFeatureToggleService,
+    createSegmentService,
+} from '../..';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
-import { EventService } from '../../../services';
+import type { EventService } from '../../../services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -60,7 +64,7 @@ beforeAll(async () => {
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
-    eventService = new EventService(stores, config);
+    eventService = createFakeEventsService(config);
 });
 
 afterAll(async () => {

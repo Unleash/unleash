@@ -2,10 +2,14 @@ import EventStore from './event-store';
 import getLogger from '../../../test/fixtures/no-logger';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import { EventEmitter } from 'stream';
-import EventService from './event-service';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
+import { createFakeEventsService } from './createEventsService';
+import type { IUnleashConfig } from '../../types';
+import { createTestConfig } from '../../../test/config/test-config';
 
 let db: ITestDb;
+
+const config: IUnleashConfig = createTestConfig();
 
 beforeAll(async () => {
     db = await dbInit('events_test', getLogger);
@@ -122,10 +126,7 @@ test('emits events with details on amount of updated rows', async () => {
     const store = new EventStore(db.rawDatabase, getLogger);
 
     const eventBus = new EventEmitter();
-    const service = new EventService(
-        { eventStore: store, featureTagStore: db.stores.featureTagStore },
-        { getLogger, eventBus },
-    );
+    const service = createFakeEventsService(config);
     let triggered = false;
 
     eventBus.on(EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {

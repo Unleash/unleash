@@ -3,13 +3,14 @@ import getLogger from '../../../test/fixtures/no-logger';
 import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
 import type ProjectService from '../../../lib/features/project/project-service';
 import { createTestConfig } from '../../../test/config/test-config';
-import {
+import type {
     EventService,
-    type ProjectInsightsService,
+    ProjectInsightsService,
 } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { subDays } from 'date-fns';
 import {
+    createFakeEventsService,
     createFeatureToggleService,
     createProjectService,
 } from '../../../lib/features';
@@ -47,7 +48,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
     });
-    eventService = new EventService(stores, config);
+    eventService = createFakeEventsService(config);
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
 

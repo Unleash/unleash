@@ -14,10 +14,17 @@ import AddonService from './addon-service';
 import type { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import type { IAddonProviders } from '../addons';
-import EventService from '../features/events/event-service';
-import { type IFlagResolver, SYSTEM_USER, TEST_AUDIT_USER } from '../types';
-import EventEmitter from 'node:events';
-import { IntegrationEventsService } from '../internals';
+import {
+    type IFlagResolver,
+    type IUnleashConfig,
+    SYSTEM_USER,
+    TEST_AUDIT_USER,
+} from '../types';
+import {
+    createFakeEventsService,
+    IntegrationEventsService,
+} from '../internals';
+import { createTestConfig } from '../../test/config/test-config';
 
 const MASKED_VALUE = '*****';
 
@@ -25,12 +32,11 @@ const TEST_USER_ID = -9999;
 
 let addonProvider: IAddonProviders;
 
+const config: IUnleashConfig = createTestConfig();
+
 function getSetup() {
     const stores = createStores();
-    const eventService = new EventService(stores, {
-        getLogger,
-        eventBus: new EventEmitter(),
-    });
+    const eventService = createFakeEventsService(config);
     const tagTypeService = new TagTypeService(
         stores,
         { getLogger },

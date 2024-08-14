@@ -2,13 +2,14 @@ import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import { GroupService } from '../../../lib/services/group-service';
-import { EventService } from '../../../lib/services';
+import type { EventService } from '../../../lib/services';
 import {
     type IGroupStore,
     type IUnleashStores,
     type IUser,
     TEST_AUDIT_USER,
 } from '../../../lib/types';
+import { createFakeEventsService } from '../../../lib/features';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -28,7 +29,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
     });
-    eventService = new EventService(stores, config);
+    eventService = createFakeEventsService(config);
     groupService = new GroupService(stores, config, eventService);
     groupStore = stores.groupStore;
 

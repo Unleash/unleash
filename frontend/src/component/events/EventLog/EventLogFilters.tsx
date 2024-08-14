@@ -118,7 +118,7 @@ export const useEventLogFilters = (
 };
 
 type LogType = 'flag' | 'project' | 'global';
-export const useEventLogFiltersFromLogType = (logType: LogType) => {
+const useEventLogFiltersFromLogType = (logType: LogType) => {
     const [projectHook, featuresHook] = (() => {
         switch (logType) {
             case 'flag':

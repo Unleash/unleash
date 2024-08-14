@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.9] - 2024-08-14
+
+### Bug Fixes
+
+- Add collaborators to ignored props for feature diff notif ([#7877](https://github.com/Unleash/unleash/issues/7877))
+
+
+### Features
+
+- Allow editing root role/description on SCIM group ([#7874](https://github.com/Unleash/unleash/issues/7874))
+
+
 ## [6.1.8] - 2024-08-14
 
 ### Bug Fixes

@@ -262,3 +262,101 @@ test('adding a nonexistent role to a group should fail', async () => {
         'Request validation failed: your request body or params contain invalid data: Incorrect role id 100',
     );
 });
+
+test('trying to modify a SCIM group name should fail', async () => {
+    const group = await groupStore.create({
+        name: 'scim_group',
+        description: 'scim_group',
+    });
+
+    await db.rawDatabase('groups').where({ id: group.id }).update({
+        scim_id: 'some-faux-uuid',
+        scim_external_id: 'external-id',
+    });
+
+    await expect(() => {
+        return groupService.updateGroup(
+            {
+                id: group.id,
+                name: 'new_name',
+                users: [],
+                rootRole: 100,
+                createdAt: new Date(),
+                createdBy: 'test',
+            },
+            TEST_AUDIT_USER,
+        );
+    }).rejects.toThrow(
+        'Request validation failed: your request body or params contain invalid data: Cannot update the name of a SCIM group',
+    );
+});
+
+test('trying to modify users in a SCIM group should fail', async () => {
+    const group = await groupStore.create({
+        name: 'another_scim_group',
+        description: 'scim_group',
+    });
+
+    await db.rawDatabase('groups').where({ id: group.id }).update({
+        scim_id: 'some-other-faux-uuid',
+        scim_external_id: 'some-external-id',
+    });
+
+    await expect(() => {
+        return groupService.updateGroup(
+            {
+                id: group.id,
+                name: 'new_name',
+                users: [
+                    {
+                        user: {
+                            id: 1,
+                            isAPI: false,
+                            permissions: [],
+                        },
+                    },
+                ],
+                rootRole: 100,
+                createdAt: new Date(),
+                createdBy: 'test',
+            },
+            TEST_AUDIT_USER,
+        );
+    }).rejects.toThrow(
+        'Request validation failed: your request body or params contain invalid data: Cannot update the name of a SCIM group',
+    );
+});
+
+test('can modify a SCIM group description and root role', async () => {
+    const group = await groupStore.create({
+        name: 'yet_another_scim_group',
+        description: 'scim_group',
+    });
+
+    await db.rawDatabase('groups').where({ id: group.id }).update({
+        scim_id: 'completely-different-faux-uuid',
+        scim_external_id: 'totally-not-the-same-external-id',
+    });
+
+    await groupService.updateGroup(
+        {
+            id: group.id,
+            name: 'yet_another_scim_group',
+            description: 'new description',
+            users: [],
+            rootRole: 1,
+            createdAt: new Date(),
+            createdBy: 'test',
+        },
+        TEST_AUDIT_USER,
+    );
+
+    const updatedGroup = await groupService.getGroup(group.id);
+    expect(updatedGroup).toMatchObject({
+        description: 'new description',
+        id: group.id,
+        mappingsSSO: [],
+        name: 'yet_another_scim_group',
+        rootRole: 1,
+    });
+});

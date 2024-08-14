@@ -261,7 +261,6 @@ export const Group: VFC = () => {
                                             ? scimGroupTooltip
                                             : 'Edit group',
                                     }}
-                                    disabled={isScimGroup}
                                 >
                                     <Edit />
                                 </PermissionIconButton>

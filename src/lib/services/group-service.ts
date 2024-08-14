@@ -231,6 +231,22 @@ export class GroupService {
                 throw new NameExistsError('Group name already exists');
             }
         }
+
+        if (existingGroup && Boolean(existingGroup.scimId)) {
+            const {
+                description: _existingDescription,
+                rootRole: _existingRootRole,
+                ...existingConstantProperties
+            } = existingGroup;
+            const { description, rootRole, ...newConstantProperties } = group;
+
+            if (
+                JSON.stringify(existingConstantProperties) !==
+                JSON.stringify(newConstantProperties)
+            ) {
+                throw new BadDataError('Cannot change SCIM group properties');
+            }
+        }
     }
 
     async getRolesForProject(projectId: string): Promise<IGroupRole[]> {

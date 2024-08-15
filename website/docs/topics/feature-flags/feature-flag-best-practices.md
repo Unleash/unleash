@@ -1,5 +1,5 @@
 ---
-title: "eature flags: Best practices for building and scaling"
+title: "Feature flags: Best practices for building and scaling"
 ---
 
 import Figure from '@site/src/components/Figure/Figure.tsx'

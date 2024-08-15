@@ -7,7 +7,6 @@ const userAgentMatches = [
     { label: 'Curl', matcher: /^curl/ },
     { label: 'Go', matcher: /^Go-http-client/ },
     { label: 'Python', matcher: /^python-requests/ },
-    { label: 'Node', matcher: /^node-fetch/ },
     { label: 'Node', matcher: /^node/ },
     { label: 'Java', matcher: /^Apache-HttpClient.*Java/ },
     { label: 'JiraCloudUnleash', matcher: /^Jira-Cloud-Unleash/ },

@@ -214,7 +214,7 @@ All flags served by the same Feature Flag Control service should have unique nam
 
 * Flexibility over time: Large enterprise systems are not static. Over time, we split monoliths into microservices, merge microservices into larger microservices, and applications change responsibility. This means that the way flags are grouped will change over time, and a unique name for the entire organization ensures that you keep the option to reorganize your flags to match the changing needs of your organization.
 
-* Prevent conflicts: If two applications use the same Feature Flag name it can be impossible to know which flag controls which applications. This can lead to accidentally flipping the wrong flag, even if they are separated into different namespaces (projects, workspaces etc).
+* Prevent conflicts: If two applications use the same feature flag name, it can become difficult to identify which flag controls which application. This can lead to accidentally flipping the wrong flag, even if they are organized into different namespaces (such as different projects or workspaces).
 
 * Easier to manage: When a flag has a unique name, it's easier to know what it is used for and where it is being used. For example, it will be easier to search across multiple code bases to find references for a feature flag when it has a unique identifier across the entire organization.
 

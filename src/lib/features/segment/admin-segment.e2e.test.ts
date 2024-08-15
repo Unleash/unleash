@@ -602,14 +602,30 @@ test('Should show usage in features and projects', async () => {
     );
     const [feature] = await fetchFeatures();
     const [strategy] = await fetchFeatureStrategies(feature.name);
-    //@ts-ignore
-    await addSegmentsToStrategy([segment.id], strategy.id);
 
-    const segments = await fetchSegments();
-    expect(segments).toMatchObject([
+    const unusedSegments = await fetchSegments();
+    expect(unusedSegments).toMatchObject([
+        {
+            usedInFeatures: 0,
+            usedInProjects: 0,
+        },
+    ]);
+
+    await addSegmentsToStrategy([segment.id], strategy.id);
+    const usedSegments = await fetchSegments();
+    expect(usedSegments).toMatchObject([
         {
             usedInFeatures: 1,
             usedInProjects: 1,
+        },
+    ]);
+
+    await app.archiveFeature(feature.name, feature.project);
+    const segmentsWithArchivedFeatures = await fetchSegments();
+    expect(segmentsWithArchivedFeatures).toMatchObject([
+        {
+            usedInFeatures: 0,
+            usedInProjects: 0,
         },
     ]);
 });

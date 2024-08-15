@@ -105,7 +105,7 @@ Feature flags should be evaluated as close to your users as possible, and the ev
 
 In summary, this principle emphasizes optimizing performance while protecting end-user privacy by evaluating feature flags as close to the end user as possible. This also leads to a highly available feature flag system that scales with your applications.
 
-### H3 \- 4\. Scale Horizontally. Decouple reading and writing flags.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#4-scale-horizontally-decouple-reading-and-writing-flags)
+### \- 4\. Scale Horizontally. Decouple reading and writing flags.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#4-scale-horizontally-decouple-reading-and-writing-flags)
 
 Separating the reading and writing of feature flags into distinct APIs is a critical architectural decision for building a scalable and efficient feature flag system, particularly when considering horizontal scaling. This separation provides several benefits:
 

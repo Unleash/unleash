@@ -948,4 +948,39 @@ describe('detect strategy usage in change requests', () => {
             { usedInFeatures: 0, usedInProjects: 0 },
         ]);
     });
+
+    test('If a segment is used in an archived feature it should be excluded from count - enterprise version', async () => {
+        await app.createSegment({
+            name: 'a',
+            constraints: [],
+        });
+        const flag = mockFeatureFlag();
+        await createFeatureFlag(enterpriseApp, flag);
+        const [segment] = await enterpriseFetchSegments();
+
+        await addStrategyToFeatureEnv(
+            enterpriseApp,
+            { ...flag.strategies[0] },
+            'default',
+            flag.name,
+        );
+
+        const [feature] = await fetchFeatures();
+        const [strategy] = await fetchFeatureStrategies(feature.name);
+
+        const strategyId = strategy.id;
+        await addSegmentsToStrategy([segment.id], strategyId!);
+
+        const segments = await enterpriseFetchSegments();
+        expect(segments).toMatchObject([
+            { usedInFeatures: 1, usedInProjects: 1 },
+        ]);
+
+        await enterpriseApp.archiveFeature(flag.name, 'default');
+
+        const segmentsAfter = await enterpriseFetchSegments();
+        expect(segmentsAfter).toMatchObject([
+            { usedInFeatures: 0, usedInProjects: 0 },
+        ]);
+    });
 });

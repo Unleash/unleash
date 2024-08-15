@@ -187,7 +187,13 @@ export default class SegmentStore implements ISegmentStore {
                 T.featureStrategies,
                 `${T.featureStrategies}.id`,
                 `${T.featureStrategySegment}.feature_strategy_id`,
-            );
+            )
+            .leftJoin(
+                T.features,
+                `${T.featureStrategies}.feature_name`,
+                `${T.features}.name`,
+            )
+            .where(`${T.features}.archived_at`, null);
 
         this.mergeCurrentUsageWithCombinedData(
             combinedUsageData,

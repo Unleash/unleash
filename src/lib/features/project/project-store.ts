@@ -194,8 +194,6 @@ class ProjectStore implements IProjectStore {
         const projectsWithFeatureCount = projectAndFeatureCount.map(
             this.mapProjectWithCountRow,
         );
-
-        console.log('projectsWithFeatureCount', projectsWithFeatureCount);
         projectTimer();
         const memberTimer = this.timer('getMemberCount');
 

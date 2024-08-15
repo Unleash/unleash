@@ -23,7 +23,11 @@ const StickyContainer = styled(Sticky)(({ theme }) => ({
     transition: 'padding 0.3s ease',
 }));
 
-export const Insights: FC = () => {
+interface InsightsProps {
+    withCharts?: boolean;
+}
+
+export const Insights: FC<InsightsProps> = ({ withCharts = true }) => {
     const [scrolled, setScrolled] = useState(false);
 
     const stateConfig = {
@@ -62,11 +66,13 @@ export const Insights: FC = () => {
                     }
                 />
             </StickyContainer>
-            <InsightsCharts
-                loading={loading}
-                projects={projects}
-                {...insightsData}
-            />
+            {withCharts && (
+                <InsightsCharts
+                    loading={loading}
+                    projects={projects}
+                    {...insightsData}
+                />
+            )}
         </StyledWrapper>
     );
 };

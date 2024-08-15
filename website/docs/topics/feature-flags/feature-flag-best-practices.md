@@ -54,7 +54,7 @@ A large-scale feature flag system that enables runtime control should have, at m
     
 ###\- 2\. Never expose PII. Follow the principle of least privilege.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#2-never-expose-pii-follow-the-principle-of-least-privilege)
 
-Your Feature Flag Control Service should only handle the configuration for your feature flags and pass this configuration down to SDKs connecting from your applications.The primary rationale behind this practice is that feature flags often require contextual data for accurate evaluation. This may include user IDs, email addresses, or geographical locations.
+Your Feature Flag Control Service should only handle the configuration for your feature flags and pass this configuration down to SDKs connecting from your applications. The primary rationale behind this practice is that feature flags often require contextual data for accurate evaluation. This may include user IDs, email addresses, or geographical locations.
 
 Safeguarding this sensitive information from external exposure is paramount. This information may include [Personally Identifiable Information (PII)](https://www.investopedia.com/terms/p/personally-identifiable-information-pii.asp), which must remain confined within the boundaries of your application, following the [data security principle of least privilege (PoLP)](https://www.cyberark.com/what-is/least-privilege).
 

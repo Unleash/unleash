@@ -20,7 +20,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
@@ -156,7 +155,6 @@ export const PrimaryNavigationList: FC<{
     activeItem?: string;
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-    const killInsightsDashboard = useUiFlag('killInsightsUI');
     const { isOss } = useUiConfig();
 
     return (
@@ -186,7 +184,7 @@ export const PrimaryNavigationList: FC<{
                 <PlaygroundIcon />
             </DynamicListItem>
             <ConditionallyRender
-                condition={!killInsightsDashboard && !isOss()}
+                condition={!isOss()}
                 show={
                     <DynamicListItem
                         href='/insights'

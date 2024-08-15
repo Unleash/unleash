@@ -126,7 +126,6 @@ exports[`should create default config 1`] = `
       "integrationEvents": false,
       "killInsightsUI": false,
       "killScheduledChangeRequestCache": false,
-      "maintenanceMode": false,
       "manyStrategiesPagination": false,
       "messageBanner": {
         "enabled": false,

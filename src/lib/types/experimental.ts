@@ -11,7 +11,6 @@ export type IFlagKey =
     | 'embedProxy'
     | 'embedProxyFrontend'
     | 'responseTimeWithAppNameKillSwitch'
-    | 'maintenanceMode'
     | 'messageBanner'
     | 'featuresExportImport'
     | 'caseInsensitiveInOperators'
@@ -84,10 +83,6 @@ const flags: IFlags = {
     ),
     responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
-        false,
-    ),
-    maintenanceMode: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,
     ),
     messageBanner: {

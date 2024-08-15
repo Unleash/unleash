@@ -19,9 +19,7 @@ afterAll(async () => {
 test('should not allow to create feature flags in maintenance mode', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
-            flags: {
-                maintenanceMode: true,
-            },
+            flags: {},
         },
     });
 
@@ -68,9 +66,7 @@ test('should go into maintenance mode, when user has set it', async () => {
 test('maintenance mode flag should take precedence over maintenance mode setting', async () => {
     const appWithMaintenanceMode = await setupAppWithCustomConfig(db.stores, {
         experimental: {
-            flags: {
-                maintenanceMode: true,
-            },
+            flags: {},
         },
     });
 

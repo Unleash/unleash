@@ -61,11 +61,6 @@ export const uiConfigSchema = {
             description: 'Whether this instance can send out emails or not.',
             example: true,
         },
-        maintenanceMode: {
-            type: 'boolean',
-            description: 'Whether maintenance mode is currently active or not.',
-            example: false,
-        },
         segmentValuesLimit: {
             type: 'number',
             description:

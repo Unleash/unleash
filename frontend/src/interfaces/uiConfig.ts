@@ -50,7 +50,6 @@ export type UiFlags = {
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
     embedProxyFrontend?: boolean;
-    maintenanceMode?: boolean;
     messageBanner?: Variant;
     banner?: Variant;
     featuresExportImport?: boolean;

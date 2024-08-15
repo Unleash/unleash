@@ -51,6 +51,21 @@ const SETTINGS_COLUMNS = [
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
 
+export type ProjectForUI = {
+    id: string;
+    name: string;
+    description?: string;
+    health: number;
+    createdAt: Date;
+    mode: ProjectMode;
+    memberCount: number;
+    favorite: boolean;
+    archivedAt?: Date;
+    featureCount: number;
+    lastUsage: Date | null;
+    lastUpdated: Date | null;
+};
+
 export interface IEnvironmentProjectLink {
     environmentName: string;
     projectId: string;
@@ -115,6 +130,108 @@ class ProjectStore implements IProjectStore {
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async getProjectsForProjectList(
+        query?: IProjectQuery,
+        userId?: number,
+    ): Promise<ProjectForUI[]> {
+        const projectTimer = this.timer('getProjectsForProjectList');
+        let projects = this.db(TABLE)
+            .leftJoin('features', 'features.project', 'projects.id')
+            .leftJoin(
+                'project_settings',
+                'project_settings.project',
+                'projects.id',
+            )
+            .leftJoin('events', 'events.feature_name', 'features.name')
+            .orderBy('projects.name', 'asc');
+
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            if (query?.archived === true) {
+                projects = projects.whereNot(`${TABLE}.archived_at`, null);
+            } else {
+                projects = projects.where(`${TABLE}.archived_at`, null);
+            }
+        }
+
+        if (query?.id) {
+            projects = projects.where(`${TABLE}.id`, query.id);
+        }
+
+        let selectColumns = [
+            this.db.raw(
+                'projects.id, projects.name, projects.description, projects.health, projects.created_at, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
+                    'MAX(features.last_seen_at) AS last_usage,' +
+                    'MAX(events.created_at) AS last_updated',
+            ),
+            'project_settings.project_mode',
+        ] as (string | Raw<any>)[];
+
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            selectColumns.push(`${TABLE}.archived_at`);
+        }
+
+        let groupByColumns = ['projects.id', 'project_settings.project_mode'];
+
+        if (userId) {
+            projects = projects.leftJoin(`favorite_projects`, function () {
+                this.on('favorite_projects.project', 'projects.id').andOnVal(
+                    'favorite_projects.user_id',
+                    '=',
+                    userId,
+                );
+            });
+            selectColumns = [
+                ...selectColumns,
+                this.db.raw(
+                    'favorite_projects.project is not null as favorite',
+                ),
+            ];
+            groupByColumns = [...groupByColumns, 'favorite_projects.project'];
+        }
+
+        const projectAndFeatureCount = await projects
+            .select(selectColumns)
+            .groupBy(groupByColumns);
+
+        const projectsWithFeatureCount = projectAndFeatureCount.map(
+            this.mapProjectForUi,
+        );
+        projectTimer();
+        const memberTimer = this.timer('getMemberCount');
+
+        const memberCount = await this.getMembersCount();
+        memberTimer();
+        const memberMap = new Map<string, number>(
+            memberCount.map((c) => [c.project, Number(c.count)]),
+        );
+
+        return projectsWithFeatureCount.map((projectWithCount) => {
+            return {
+                ...projectWithCount,
+                memberCount: memberMap.get(projectWithCount.id) || 0,
+            };
+        });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapProjectForUi(row): ProjectForUI {
+        return {
+            name: row.name,
+            id: row.id,
+            description: row.description,
+            health: row.health,
+            favorite: row.favorite,
+            featureCount: Number(row.number_of_features) || 0,
+            memberCount: Number(row.number_of_users) || 0,
+            createdAt: row.created_at,
+            archivedAt: row.archived_at,
+            mode: row.project_mode || 'open',
+            lastUsage: row.last_usage,
+            lastUpdated: row.last_updated,
+        };
     }
 
     async getProjectsWithCounts(

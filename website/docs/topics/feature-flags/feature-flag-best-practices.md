@@ -157,7 +157,7 @@ Imposing limitations on payloads is crucial for scaling a feature flag system:
 
 4. Scalability:
 
-   * Scalability is critical concern for modern applications, especially those experiencing rapid growth. Feature flagging solutions need to scale horizontally to accommodate increased workloads. Smaller payloads require fewer processing resources, making it easier to scale your system horizontally.
+   * Scalability is a critical concern for modern applications, especially those experiencing rapid growth. Feature flagging solutions need to scale horizontally to accommodate increased workloads. Smaller payloads require fewer processing resources, making it easier to scale your system horizontally.
 
 5. Lower infrastructure costs:
 

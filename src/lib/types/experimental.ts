@@ -55,13 +55,11 @@ export type IFlagKey =
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'navigationSidebar'
-    | 'commandBarUI'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'integrationEvents'
-    | 'improveCreateFlagFlow'
     | 'originMiddleware'
     | 'newEventSearch'
     | 'changeRequestPlayground'
@@ -274,10 +272,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         true,
     ),
-    commandBarUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
-        false,
-    ),
     anonymizeProjectOwners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,
         false,
@@ -296,10 +290,6 @@ const flags: IFlags = {
     ),
     integrationEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
-        false,
-    ),
-    improveCreateFlagFlow: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPROVE_CREATE_FLAG_FLOW,
         false,
     ),
     originMiddleware: parseEnvVarBoolean(

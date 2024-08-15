@@ -87,11 +87,9 @@ export type UiFlags = {
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;
-    commandBarUI?: boolean;
     flagCreator?: boolean;
     resourceLimits?: boolean;
     integrationEvents?: boolean;
-    improveCreateFlagFlow?: boolean;
     newEventSearch?: boolean;
     changeRequestPlayground?: boolean;
     archiveProjects?: boolean;

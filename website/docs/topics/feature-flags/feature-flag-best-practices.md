@@ -298,4 +298,4 @@ Strategies for Consistency in Percentage-Based Gradual Rollouts:
 
 5. Documentation and Training:
 
-   * Onboarding and Training: The entire feature flag solution, including API, UI, and SDKs, requires clear and comprehensive documentation, along with easy-to-understand examples, i order to simplify the onboarding process for new developers. It also supports the ongoing training of new team members, ensuring that everyone can effectively use the feature flagging solution.
+   * Onboarding and Training: The entire feature flag solution, including API, UI, and SDKs, requires clear and comprehensive documentation, along with easy-to-understand examples, to simplify the onboarding process for new developers. It also supports the ongoing training of new team members, ensuring that everyone can effectively use the feature flagging solution.

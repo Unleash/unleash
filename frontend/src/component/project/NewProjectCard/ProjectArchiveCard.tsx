@@ -85,6 +85,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                     </StyledParagraphInfo>
                                     <p data-loading>
                                         <TimeAgo
+                                            minPeriod={60}
                                             date={
                                                 new Date(archivedAt as string)
                                             }

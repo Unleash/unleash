@@ -15,6 +15,7 @@ import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strateg
 import { parseSearchOperatorValue } from '../feature-search/search-utils';
 import { endOfDay, formatISO } from 'date-fns';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type { ProjectAccess } from '../private-project/privateProjectStore';
 
 export default class EventService {
     private logger: Logger;
@@ -63,8 +64,20 @@ export default class EventService {
         };
     }
 
-    async searchEvents(search: IEventSearchParams): Promise<IEventList> {
+    async searchEvents(
+        search: IEventSearchParams,
+        userId: number,
+    ): Promise<IEventList> {
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+
+        search.project = filterPrivateProjectsFromParams(
+            search.project,
+            projectAccess,
+        );
+
         const queryParams = this.convertToDbParams(search);
+
         const totalEvents = await this.eventStore.searchEventsCount(
             {
                 limit: search.limit,
@@ -210,3 +223,35 @@ export default class EventService {
         return this.eventStore.getEventCreators();
     }
 }
+
+export const filterPrivateProjectsFromParams = (
+    projectParam: string | undefined,
+    projectAccess: ProjectAccess,
+): string | undefined => {
+    if (projectAccess.mode !== 'all') {
+        const allowedProjects = projectAccess.projects;
+
+        if (!projectParam) {
+            return `IS_ANY_OF:${allowedProjects.join(',')}`;
+        } else {
+            const searchProjectList = projectParam.split(',');
+            const filteredProjects = searchProjectList
+                .filter((proj) =>
+                    allowedProjects.includes(
+                        proj.replace(/^(IS|IS_ANY_OF):/, ''),
+                    ),
+                )
+                .join(',');
+
+            if (!filteredProjects) {
+                throw new Error(
+                    'No accessible projects in the search parameters',
+                );
+            }
+
+            return filteredProjects;
+        }
+    }
+
+    return projectParam;
+};

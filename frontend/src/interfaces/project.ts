@@ -59,6 +59,7 @@ export interface IProjectOverview {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: FeatureNamingType;
+    archivedAt?: Date;
 }
 
 export interface IProjectHealthReport extends IProject {

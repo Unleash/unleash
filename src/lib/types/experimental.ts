@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'removeUnsafeInlineStyleSrc'
     | 'insightsV2'
     | 'integrationEvents'
-    | 'improveCreateFlagFlow'
     | 'originMiddleware'
     | 'newEventSearch'
     | 'changeRequestPlayground'
@@ -301,10 +300,6 @@ const flags: IFlags = {
     ),
     integrationEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
-        false,
-    ),
-    improveCreateFlagFlow: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPROVE_CREATE_FLAG_FLOW,
         false,
     ),
     originMiddleware: parseEnvVarBoolean(

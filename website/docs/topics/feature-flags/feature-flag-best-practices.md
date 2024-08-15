@@ -250,7 +250,7 @@ Allowing engineers, product owners, and even technical support to have open acce
 
 Access control and visibility into feature flag changes are essential for security and compliance purposes. It helps track and audit who has made changes to the system, which can be crucial in maintaining data integrity and adhering to regulatory requirements.
 
-### H3 \- 10\. Do no harm. Prioritize consistent user experience.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#10-do-no-harm-prioritize-consistent-user-experience)
+### \- 10\. Do no harm. Prioritize consistent user experience.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#10-do-no-harm-prioritize-consistent-user-experience)
 
 Feature flagging solutions are indispensable tools in modern software development, enabling teams to manage feature releases and experiment with new functionality. However, one aspect that is absolutely non-negotiable in any feature flag solution is the need to ensure a consistent user experience. Feature flagging solutions must prioritize consistency and guarantee the same user experience every time, especially with percentage-based gradual rollouts.
 

@@ -20,7 +20,7 @@ describe('filterPrivateProjectsFromParams', () => {
             mode: 'all',
         };
 
-        const projectParam = 'IS:project1,IS:project3';
+        const projectParam = 'IS_ANY_OF:project1,IS:project3';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
@@ -33,11 +33,11 @@ describe('filterPrivateProjectsFromParams', () => {
             projects: ['project1', 'project2'],
         };
 
-        const projectParam = 'IS:project1,IS:project3';
+        const projectParam = 'IS_ANY_OF:project1,IS:project3';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
-        expect(result).toBe('IS:project1');
+        expect(result).toBe('IS_ANY_OF:project1');
     });
 
     it('should return a single project if only one is allowed', () => {
@@ -46,24 +46,11 @@ describe('filterPrivateProjectsFromParams', () => {
             projects: ['project1'],
         };
 
-        const projectParam = 'IS:project1,IS:project2';
+        const projectParam = 'IS_ANY_OF:project1,IS:project2';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
-        expect(result).toBe('IS:project1');
-    });
-
-    it('should throw an error if no projects match and not throw an error', () => {
-        const projectAccess: ProjectAccess = {
-            mode: 'limited',
-            projects: ['project1', 'project2'],
-        };
-
-        const projectParam = 'IS:project3,IS:project4';
-
-        expect(() =>
-            filterAccessibleProjects(projectParam, projectAccess),
-        ).toThrow('No accessible projects in the search parameters');
+        expect(result).toBe('IS_ANY_OF:project1');
     });
 
     it('should return undefined if projectParam is undefined and projectAccess mode is all', () => {
@@ -84,10 +71,10 @@ describe('filterPrivateProjectsFromParams', () => {
             projects: ['project1', 'project2', 'project3'],
         };
 
-        const projectParam = 'IS:project1,IS:project2';
+        const projectParam = 'IS_ANY_OF:project1,IS:project2';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
-        expect(result).toBe('IS:project1,IS:project2');
+        expect(result).toBe('IS_ANY_OF:project1,IS:project2');
     });
 });

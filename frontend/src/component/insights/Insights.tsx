@@ -5,7 +5,7 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { InsightsHeader } from './components/InsightsHeader/InsightsHeader';
 import { useInsightsData } from './hooks/useInsightsData';
-import { type IChartsProps, InsightsCharts } from './InsightsCharts';
+import { InsightsCharts } from './InsightsCharts';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { InsightsFilters } from './InsightsFilters';
 import { FilterItemParam } from '../../utils/serializeQueryParams';
@@ -23,11 +23,7 @@ const StickyContainer = styled(Sticky)(({ theme }) => ({
     transition: 'padding 0.3s ease',
 }));
 
-interface InsightsProps {
-    ChartComponent?: FC<IChartsProps>;
-}
-
-export const NewInsights: FC<InsightsProps> = ({ ChartComponent }) => {
+export const Insights: FC = () => {
     const [scrolled, setScrolled] = useState(false);
 
     const stateConfig = {
@@ -66,17 +62,11 @@ export const NewInsights: FC<InsightsProps> = ({ ChartComponent }) => {
                     }
                 />
             </StickyContainer>
-            {ChartComponent && (
-                <ChartComponent
-                    loading={loading}
-                    projects={projects}
-                    {...insightsData}
-                />
-            )}
+            <InsightsCharts
+                loading={loading}
+                projects={projects}
+                {...insightsData}
+            />
         </StyledWrapper>
     );
-};
-
-export const Insights: FC = () => {
-    return <NewInsights ChartComponent={InsightsCharts} />;
 };

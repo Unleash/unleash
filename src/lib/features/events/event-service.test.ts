@@ -77,4 +77,17 @@ describe('filterPrivateProjectsFromParams', () => {
 
         expect(result).toBe('IS_ANY_OF:project1,IS:project2');
     });
+
+    it('should throw an error if no projects match', () => {
+        const projectAccess: ProjectAccess = {
+            mode: 'limited',
+            projects: ['project1', 'project2'],
+        };
+
+        const projectParam = 'IS_ANY_OF:project3,project4';
+
+        expect(() =>
+            filterAccessibleProjects(projectParam, projectAccess),
+        ).toThrow('No accessible projects in the search parameters');
+    });
 });

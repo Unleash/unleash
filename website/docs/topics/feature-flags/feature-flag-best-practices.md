@@ -171,7 +171,7 @@ Imposing limitations on payloads is crucial for scaling a feature flag system:
 
    * Smaller payloads are easier to monitor and debug. When issues arise, it's simpler to trace problems and identify their root causes when dealing with smaller, more manageable data sets.
 
-### H3 \- 6\. Design for failure. Favor availability over consistency.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#6-design-for-failure-favor-availability-over-consistency)
+### \- 6\. Design for failure. Favor availability over consistency.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#6-design-for-failure-favor-availability-over-consistency)
 
 Your feature flag system should not be able to take down your main application under any circumstance, including network disruptions. Follow these patterns to achieve fault tolerance for your feature flag system.
 

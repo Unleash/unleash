@@ -20,7 +20,7 @@ describe('filterPrivateProjectsFromParams', () => {
             mode: 'all',
         };
 
-        const projectParam = 'IS_ANY_OF:project1,IS:project3';
+        const projectParam = 'IS:project3';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
@@ -33,7 +33,7 @@ describe('filterPrivateProjectsFromParams', () => {
             projects: ['project1', 'project2'],
         };
 
-        const projectParam = 'IS_ANY_OF:project1,IS:project3';
+        const projectParam = 'IS_ANY_OF:project1,project3';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
@@ -46,7 +46,7 @@ describe('filterPrivateProjectsFromParams', () => {
             projects: ['project1'],
         };
 
-        const projectParam = 'IS_ANY_OF:project1,IS:project2';
+        const projectParam = 'IS_ANY_OF:project1,project2';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
@@ -71,11 +71,11 @@ describe('filterPrivateProjectsFromParams', () => {
             projects: ['project1', 'project2', 'project3'],
         };
 
-        const projectParam = 'IS_ANY_OF:project1,IS:project2';
+        const projectParam = 'IS_ANY_OF:project1,project2';
 
         const result = filterAccessibleProjects(projectParam, projectAccess);
 
-        expect(result).toBe('IS_ANY_OF:project1,IS:project2');
+        expect(result).toBe('IS_ANY_OF:project1,project2');
     });
 
     it('should throw an error if no projects match', () => {

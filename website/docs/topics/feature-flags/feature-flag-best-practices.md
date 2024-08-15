@@ -34,7 +34,7 @@ These principles are:
 
 * [11\. Enable traceability. Make it easy to understand flag evaluation.](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#11-enable-traceability-make-it-easy-to-understand-flag-evaluation)
 
-### H3 \- 1\. Enable run-time control. Control flags dynamically, not using config files.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#1-enable-run-time-control-control-flags-dynamically-not-using-config-files)
+### \- 1\. Enable run-time control. Control flags dynamically, not using config files.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#1-enable-run-time-control-control-flags-dynamically-not-using-config-files)
 
 A scalable feature management system evaluates flags at runtime. Flags are dynamic, not static. If you need to restart your application to turn on a flag, you use configuration, not feature flags.
 

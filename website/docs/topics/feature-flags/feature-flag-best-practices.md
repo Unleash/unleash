@@ -52,7 +52,7 @@ A large-scale feature flag system that enables runtime control should have, at m
 
 <Figure caption="The SDK holds an in-memory feature flag configuration cache which is continuously synced with the feature flag control service. The SDK can then be used to check the state of feature flags in your application." img="/img/feature-flag-scalable-architecture.png"/>
     
-### H3 \- 2\. Never expose PII. Follow the principle of least privilege.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#2-never-expose-pii-follow-the-principle-of-least-privilege)
+###\- 2\. Never expose PII. Follow the principle of least privilege.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#2-never-expose-pii-follow-the-principle-of-least-privilege)
 
 Your Feature Flag Control Service should only handle the configuration for your feature flags and pass this configuration down to SDKs connecting from your applications.The primary rationale behind this practice is that feature flags often require contextual data for accurate evaluation. This may include user IDs, email addresses, or geographical locations.
 

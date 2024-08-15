@@ -247,8 +247,13 @@ class ProjectStore implements IProjectStore {
     }
 
     async get(id: string): Promise<IProject> {
+        let extraColumns: string[] = [];
+        if (this.flagResolver.isEnabled('archiveProjects')) {
+            extraColumns = ['archived_at'];
+        }
+
         return this.db
-            .first([...COLUMNS, ...SETTINGS_COLUMNS])
+            .first([...COLUMNS, ...SETTINGS_COLUMNS, ...extraColumns])
             .from(TABLE)
             .leftJoin(
                 SETTINGS_TABLE,
@@ -791,6 +796,7 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
+            ...(row.archived_at ? { archivedAt: row.archived_at } : {}),
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
             featureLimit: row.feature_limit,

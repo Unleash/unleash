@@ -314,6 +314,9 @@ test('should archive project', async () => {
     expect(archivedProjects).toMatchObject([
         { id: 'test-archive', archivedAt: expect.any(Date) },
     ]);
+
+    const archivedProject = await projectService.getProject(project.id);
+    expect(archivedProject).toMatchObject({ archivedAt: expect.any(Date) });
 });
 
 test('should revive project', async () => {

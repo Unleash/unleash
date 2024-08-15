@@ -18,11 +18,7 @@ import { ALL } from '../../../types/models/api-token';
 import type { IUser } from '../../../types/user';
 import { collapseHourlyMetrics } from './collapseHourlyMetrics';
 import type { LastSeenService } from '../last-seen/last-seen-service';
-import {
-    generateDayBuckets,
-    generateHourBuckets,
-    type HourBucket,
-} from '../../../util/time-utils';
+import { generateHourBuckets, type HourBucket } from '../../../util/time-utils';
 import type { ClientMetricsSchema } from '../../../../lib/openapi';
 import { nameSchema } from '../../../schema/feature-schema';
 
@@ -57,51 +53,9 @@ export default class ClientMetricsServiceV2 {
         return this.clientMetricsStoreV2.clearMetrics(hoursAgo);
     }
 
-    async clearDailyMetrics(daysAgo: number) {
-        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
-            return this.clientMetricsStoreV2.clearDailyMetrics(daysAgo);
-        }
-    }
+    async clearDailyMetrics() {}
 
-    async aggregateDailyMetrics() {
-        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
-            const {
-                enabledCount: hourlyEnabledCount,
-                variantCount: hourlyVariantCount,
-            } =
-                await this.clientMetricsStoreV2.countPreviousDayHourlyMetricsBuckets();
-            const {
-                enabledCount: dailyEnabledCount,
-                variantCount: dailyVariantCount,
-            } =
-                await this.clientMetricsStoreV2.countPreviousDayMetricsBuckets();
-            const { payload } = this.flagResolver.getVariant(
-                'extendedUsageMetrics',
-            );
-
-            const limit =
-                payload?.value &&
-                Number.isInteger(Number.parseInt(payload?.value))
-                    ? Number.parseInt(payload?.value)
-                    : 3600000;
-
-            const totalHourlyCount = hourlyEnabledCount + hourlyVariantCount;
-            const totalDailyCount = dailyEnabledCount + dailyVariantCount;
-            const previousDayDailyCountCalculated =
-                totalDailyCount > totalHourlyCount / 24; // heuristic
-
-            if (previousDayDailyCountCalculated) {
-                return;
-            }
-            if (totalHourlyCount > limit) {
-                this.logger.warn(
-                    `Skipping previous day metrics aggregation. Too many results. Expected max value: ${limit}, Actual value: ${totalHourlyCount}`,
-                );
-                return;
-            }
-            await this.clientMetricsStoreV2.aggregateDailyMetrics();
-        }
-    }
+    async aggregateDailyMetrics() {}
 
     async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {
         const nameValidations: Promise<
@@ -244,27 +198,11 @@ export default class ClientMetricsServiceV2 {
     ): Promise<IClientMetricsEnv[]> {
         let hours: HourBucket[];
         let metrics: IClientMetricsEnv[];
-        if (this.flagResolver.isEnabled('extendedUsageMetrics')) {
-            // if we're in the daily range we need to add one more day
-            const normalizedHoursBack =
-                hoursBack > 48 ? hoursBack + 24 : hoursBack;
-            metrics =
-                await this.clientMetricsStoreV2.getMetricsForFeatureToggleV2(
-                    featureName,
-                    normalizedHoursBack,
-                );
-            hours =
-                hoursBack > 48
-                    ? generateDayBuckets(Math.floor(hoursBack / 24))
-                    : generateHourBuckets(hoursBack);
-        } else {
-            metrics =
-                await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
-                    featureName,
-                    hoursBack,
-                );
-            hours = generateHourBuckets(hoursBack);
-        }
+        metrics = await this.clientMetricsStoreV2.getMetricsForFeatureToggle(
+            featureName,
+            hoursBack,
+        );
+        hours = generateHourBuckets(hoursBack);
 
         const environments = [...new Set(metrics.map((x) => x.environment))];
 

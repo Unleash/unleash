@@ -23,7 +23,8 @@ export const DeleteProjectDialogue = ({
     onSuccess,
 }: IDeleteProjectDialogueProps) => {
     const { deleteProject } = useProjectApi();
-    const { refetch: refetchProjectOverview } = useProjects();
+    const { refetch: refetchProjects } = useProjects();
+    const { refetch: refetchProjectArchive } = useProjects({ archived: true });
     const { setToastData, setToastApiError } = useToast();
     const { isEnterprise } = useUiConfig();
     const automatedActionsEnabled = useUiFlag('automatedActions');
@@ -32,7 +33,8 @@ export const DeleteProjectDialogue = ({
         e.preventDefault();
         try {
             await deleteProject(project);
-            refetchProjectOverview();
+            refetchProjects();
+            refetchProjectArchive();
             setToastData({
                 title: 'Deleted project',
                 type: 'success',

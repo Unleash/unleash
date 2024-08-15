@@ -34,7 +34,6 @@ export const ArchiveProject = ({
 }: IDeleteProjectProps) => {
     const { isEnterprise } = useUiConfig();
     const automatedActionsEnabled = useUiFlag('automatedActions');
-    const archiveProjectsEnabled = useUiFlag('archiveProjects');
     const { actions } = useActions(projectId);
     const [showArchiveDialog, setShowArchiveDialog] = useState(false);
     const actionsCount = actions.filter(({ enabled }) => enabled).length;

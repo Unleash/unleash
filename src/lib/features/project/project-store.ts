@@ -51,7 +51,7 @@ const SETTINGS_COLUMNS = [
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
 
-export type ProjectForUI = {
+type ProjectForUI = {
     id: string;
     name: string;
     description?: string;
@@ -64,6 +64,16 @@ export type ProjectForUI = {
     featureCount: number;
     lastUsage: Date | null;
     lastUpdated: Date | null;
+};
+
+type ProjectForInsights = {
+    id: string;
+    health: number;
+    memberCount: number;
+    featureCount: number;
+    staleFeatureCount: number;
+    potentiallyStaleFeatureCount: number;
+    avgTimeToProduction: number;
 };
 
 export interface IEnvironmentProjectLink {
@@ -237,17 +247,11 @@ class ProjectStore implements IProjectStore {
     async getProjectsForInsights(
         query?: IProjectQuery,
         userId?: number,
-    ): Promise<IProjectWithCount[]> {
+    ): Promise<ProjectForInsights[]> {
         const projectTimer = this.timer('getProjectsForInsights');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
-            .leftJoin(
-                'project_settings',
-                'project_settings.project',
-                'projects.id',
-            )
             .leftJoin('project_stats', 'project_stats.project', 'projects.id')
-            .leftJoin('events', 'events.feature_name', 'features.name')
             .orderBy('projects.name', 'asc');
 
         if (this.flagResolver.isEnabled('archiveProjects')) {
@@ -262,17 +266,13 @@ class ProjectStore implements IProjectStore {
             projects = projects.where(`${TABLE}.id`, query.id);
         }
 
-        let selectColumns = [
+        const selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
+                'projects.id, projects.health, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count,' +
-                    'MAX(features.last_seen_at) AS last_usage,' +
-                    'MAX(events.created_at) AS last_updated',
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count,',
             ),
-            'project_settings.default_stickiness',
-            'project_settings.project_mode',
             'project_stats.avg_time_to_prod_current_window',
         ] as (string | Raw<any>)[];
 
@@ -280,36 +280,17 @@ class ProjectStore implements IProjectStore {
             selectColumns.push(`${TABLE}.archived_at`);
         }
 
-        let groupByColumns = [
+        const groupByColumns = [
             'projects.id',
-            'project_settings.default_stickiness',
-            'project_settings.project_mode',
             'project_stats.avg_time_to_prod_current_window',
         ];
-
-        if (userId) {
-            projects = projects.leftJoin(`favorite_projects`, function () {
-                this.on('favorite_projects.project', 'projects.id').andOnVal(
-                    'favorite_projects.user_id',
-                    '=',
-                    userId,
-                );
-            });
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'favorite_projects.project is not null as favorite',
-                ),
-            ];
-            groupByColumns = [...groupByColumns, 'favorite_projects.project'];
-        }
 
         const projectAndFeatureCount = await projects
             .select(selectColumns)
             .groupBy(groupByColumns);
 
         const projectsWithFeatureCount = projectAndFeatureCount.map(
-            this.mapProjectWithCountRow,
+            this.mapProjectForInsights,
         );
         projectTimer();
         const memberTimer = this.timer('getMemberCount');
@@ -329,26 +310,16 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapProjectForInsights(row): IProjectWithCount {
+    mapProjectForInsights(row): ProjectForInsights {
         return {
-            name: row.name,
             id: row.id,
-            description: row.description,
             health: row.health,
-            favorite: row.favorite,
             featureCount: Number(row.number_of_features) || 0,
             staleFeatureCount: Number(row.stale_feature_count) || 0,
             potentiallyStaleFeatureCount:
                 Number(row.potentially_stale_feature_count) || 0,
             memberCount: Number(row.number_of_users) || 0,
-            updatedAt: row.updated_at,
-            createdAt: row.created_at,
-            archivedAt: row.archived_at,
-            mode: row.project_mode || 'open',
-            defaultStickiness: row.default_stickiness || 'default',
             avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
-            lastUsage: row.last_usage,
-            lastUpdated: row.last_updated,
         };
     }
 
@@ -465,8 +436,6 @@ class ProjectStore implements IProjectStore {
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
             avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
-            lastUsage: row.last_usage,
-            lastUpdated: row.last_updated,
         };
     }
 

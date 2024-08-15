@@ -206,7 +206,7 @@ There are valid exceptions to short-lived feature flags. In general, you should 
 
 * Internal flags are used to enable additional debugging, tracing, and metrics at runtime, which are too costly to run all the time. Software engineers can enable these while debugging issues.
 
-### H3 \- 8\. Use unique names across all applications. Enforce naming conventions.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#8-use-unique-names-across-all-applications-enforce-naming-conventions)
+### \- 8\. Use unique names across all applications. Enforce naming conventions.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#8-use-unique-names-across-all-applications-enforce-naming-conventions)
 
 All flags served by the same Feature Flag Control service should have unique names across the entire cluster to avoid inconsistencies and errors. This prevents the reuse of old flag names to protect new features. Using old names can lead to accidental exposure of old features, still protected with the same feature flag name.
 

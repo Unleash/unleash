@@ -290,7 +290,7 @@ Strategies for Consistency in Percentage-Based Gradual Rollouts:
 
 4. Effective Monitoring and Metrics:
 
-   * Tracking Performance: A testable SDK should allow developers to monitor the performance of feature flags in real-time. This includes tracking metrics related to flag evaluations, user engagement, and the impact of flag changes.
+   * Tracking Performance: A testable SDK should allow developers to monitor the performance of feature flags in real time. This includes tracking metrics related to flag evaluations, user engagement, and the impact of flag changes.
 
    * Data-Driven Decisions: Developers can use this data to evaluate the success of new features, conduct A/B tests, and make informed decisions about optimizations.
 

@@ -55,7 +55,6 @@ export type IFlagKey =
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'navigationSidebar'
-    | 'commandBarUI'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
     | 'extendedMetrics'
@@ -274,10 +273,6 @@ const flags: IFlags = {
     navigationSidebar: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         true,
-    ),
-    commandBarUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
-        false,
     ),
     anonymizeProjectOwners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,

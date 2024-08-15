@@ -80,26 +80,7 @@ const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
 
 const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
 
-const StyledLinks = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    marginLeft: theme.spacing(3),
-    '& a': {
-        textDecoration: 'none',
-        color: 'inherit',
-        marginRight: theme.spacing(3),
-        display: 'flex',
-        alignItems: 'center',
-    },
-}));
-
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
-
-const StyledText = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
 
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
@@ -120,7 +101,6 @@ const Header: VFC = () => {
     const theme = useTheme();
 
     const disableNotifications = useUiFlag('disableNotifications');
-    const commandBarUI = useUiFlag('commandBarUI');
     const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -199,7 +179,7 @@ const Header: VFC = () => {
 
                 <StyledNav>
                     <StyledUserContainer>
-                        {commandBarUI && <CommandBar />}
+                        {<CommandBar />}
                         <InviteLinkButton />
                         <Tooltip
                             title={

@@ -30,7 +30,7 @@ export const originMiddleware = ({
             const userAgent = req.headers['user-agent'];
             const uaLabel = userAgent
                 ? determineIntegrationSource(userAgent)
-                : undefined;
+                : 'Other';
             logger.info('API request', {
                 method: req.method,
                 userAgent: req.headers['user-agent'],

@@ -69,6 +69,7 @@ describe('originMiddleware', () => {
         expect(eventBus.emit).toHaveBeenCalledWith(REQUEST_ORIGIN, {
             type: 'API',
             method: req.method,
+            source: 'Other',
         });
     });
 
@@ -83,6 +84,7 @@ describe('originMiddleware', () => {
         expect(loggerMock.info).toHaveBeenCalledWith('API request', {
             method: req.method,
             userAgent: TEST_USER_AGENT,
+            origin: undefined,
         });
     });
 });

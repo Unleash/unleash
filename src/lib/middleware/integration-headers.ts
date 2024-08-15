@@ -2,7 +2,7 @@ import type { Request } from 'express';
 
 const ORIGIN = 'origin';
 const httpMatcher = /^https?:\/\//;
-export const userAgentMatches = [
+const userAgentMatches = [
     { label: 'Axios', matcher: /^axios/ },
     { label: 'Curl', matcher: /^curl/ },
     { label: 'Go', matcher: /^Go-http-client/ },

@@ -135,9 +135,7 @@ class ClientMetricsController extends Controller {
         }
 
         const parsed = Number(param);
-        const max = this.flagResolver.isEnabled('extendedUsageMetrics')
-            ? ClientMetricsController.HOURS_BACK_MAX_V2
-            : ClientMetricsController.HOURS_BACK_MAX;
+        const max = ClientMetricsController.HOURS_BACK_MAX_V2;
 
         if (parsed >= ClientMetricsController.HOURS_BACK_MIN && parsed <= max) {
             return parsed;

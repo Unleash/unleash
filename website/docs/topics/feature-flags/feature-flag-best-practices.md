@@ -186,7 +186,7 @@ Your feature flag system should not be able to take down your main application u
 
 * Availability Over Consistency: As the CAP theorem teaches us, in distributed systems, prioritizing availability over strict consistency can be a crucial design choice. In the face of network partitions or downtime of external services, your application should favor maintaining its availability rather than enforcing perfectly consistent feature flag configuration caches. Eventually, consistent systems can tolerate temporary inconsistencies in flag evaluations without compromising availability. In CAP theorem parlance, a feature flagging system should aim for AP over CP.
 
-### H3 \- 7\. Make feature flags short-lived. Do not confuse flags with application configuration.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#7-make-feature-flags-short-lived-do-not-confuse-flags-with-application-configuration)
+### \- 7\. Make feature flags short-lived. Do not confuse flags with application configuration.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#7-make-feature-flags-short-lived-do-not-confuse-flags-with-application-configuration)
 
 The most common use case for feature flags is to protect new functionality. That means that when the roll-out of new functionality is complete, the feature flag should be removed from the code and archived. If there were old code paths that the new functionality replaces, those should also be cleaned up and removed.
 

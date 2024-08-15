@@ -71,7 +71,7 @@ export default class EventService {
         const projectAccess =
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
 
-        search.project = filterPrivateProjectsFromParams(
+        search.project = filterAccessibleProjects(
             search.project,
             projectAccess,
         );
@@ -224,7 +224,7 @@ export default class EventService {
     }
 }
 
-export const filterPrivateProjectsFromParams = (
+export const filterAccessibleProjects = (
     projectParam: string | undefined,
     projectAccess: ProjectAccess,
 ): string | undefined => {

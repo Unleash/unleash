@@ -1,5 +1,5 @@
 import type { ProjectAccess } from '../private-project/privateProjectStore';
-import { filterPrivateProjectsFromParams } from './event-service';
+import { filterAccessibleProjects } from './event-service';
 
 describe('filterPrivateProjectsFromParams', () => {
     it('should return IS_ANY_OF with allowed projects when projectParam is undefined and mode is limited', () => {
@@ -10,10 +10,7 @@ describe('filterPrivateProjectsFromParams', () => {
 
         const projectParam = undefined;
 
-        const result = filterPrivateProjectsFromParams(
-            projectParam,
-            projectAccess,
-        );
+        const result = filterAccessibleProjects(projectParam, projectAccess);
 
         expect(result).toBe('IS_ANY_OF:project1,project2');
     });
@@ -25,10 +22,7 @@ describe('filterPrivateProjectsFromParams', () => {
 
         const projectParam = 'IS:project1,IS:project3';
 
-        const result = filterPrivateProjectsFromParams(
-            projectParam,
-            projectAccess,
-        );
+        const result = filterAccessibleProjects(projectParam, projectAccess);
 
         expect(result).toBe(projectParam);
     });
@@ -41,10 +35,7 @@ describe('filterPrivateProjectsFromParams', () => {
 
         const projectParam = 'IS:project1,IS:project3';
 
-        const result = filterPrivateProjectsFromParams(
-            projectParam,
-            projectAccess,
-        );
+        const result = filterAccessibleProjects(projectParam, projectAccess);
 
         expect(result).toBe('IS:project1');
     });
@@ -57,10 +48,7 @@ describe('filterPrivateProjectsFromParams', () => {
 
         const projectParam = 'IS:project1,IS:project2';
 
-        const result = filterPrivateProjectsFromParams(
-            projectParam,
-            projectAccess,
-        );
+        const result = filterAccessibleProjects(projectParam, projectAccess);
 
         expect(result).toBe('IS:project1');
     });
@@ -74,7 +62,7 @@ describe('filterPrivateProjectsFromParams', () => {
         const projectParam = 'IS:project3,IS:project4';
 
         expect(() =>
-            filterPrivateProjectsFromParams(projectParam, projectAccess),
+            filterAccessibleProjects(projectParam, projectAccess),
         ).toThrow('No accessible projects in the search parameters');
     });
 
@@ -85,10 +73,7 @@ describe('filterPrivateProjectsFromParams', () => {
 
         const projectParam = undefined;
 
-        const result = filterPrivateProjectsFromParams(
-            projectParam,
-            projectAccess,
-        );
+        const result = filterAccessibleProjects(projectParam, projectAccess);
 
         expect(result).toBeUndefined();
     });
@@ -101,10 +86,7 @@ describe('filterPrivateProjectsFromParams', () => {
 
         const projectParam = 'IS:project1,IS:project2';
 
-        const result = filterPrivateProjectsFromParams(
-            projectParam,
-            projectAccess,
-        );
+        const result = filterAccessibleProjects(projectParam, projectAccess);
 
         expect(result).toBe('IS:project1,IS:project2');
     });

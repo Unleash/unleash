@@ -130,6 +130,7 @@ class ProjectStore implements IProjectStore {
                 'projects.id',
             )
             .leftJoin('project_stats', 'project_stats.project', 'projects.id')
+            .leftJoin('events', 'events.feature_name', 'features.name')
             .orderBy('projects.name', 'asc');
 
         if (this.flagResolver.isEnabled('archiveProjects')) {
@@ -149,7 +150,9 @@ class ProjectStore implements IProjectStore {
                 'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count,' +
+                    'MAX(features.last_seen_at) AS last_usage,' +
+                    'MAX(events.created_at) AS last_updated',
             ),
             'project_settings.default_stickiness',
             'project_settings.project_mode',
@@ -191,6 +194,8 @@ class ProjectStore implements IProjectStore {
         const projectsWithFeatureCount = projectAndFeatureCount.map(
             this.mapProjectWithCountRow,
         );
+
+        console.log('projectsWithFeatureCount', projectsWithFeatureCount);
         projectTimer();
         const memberTimer = this.timer('getMemberCount');
 
@@ -227,6 +232,8 @@ class ProjectStore implements IProjectStore {
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
             avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
+            lastUsage: row.last_usage,
+            lastUpdated: row.last_updated,
         };
     }
 

@@ -574,6 +574,8 @@ export interface IProjectWithCount extends IProject {
     favorite?: boolean;
     avgTimeToProduction: number;
     archivedAt?: Date;
+    lastUsage?: Date;
+    lastUpdated?: Date;
 }
 
 export interface IClientSegment {

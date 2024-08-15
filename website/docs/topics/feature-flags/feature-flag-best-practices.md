@@ -198,7 +198,7 @@ To succeed with feature flags in a large organization, you should:
 
 * Treat feature flags like technical debt: You must plan to clean up old feature branches in sprint or project planning, as you plan to clean up technical debt in your code. Feature flags add complexity to your code. You’ll need to know what code paths the feature flag enables, and while the feature flag lives, the context of it needs to be maintained and known within the organization. If you don’t clean up feature flags, eventually, you may lose the context surrounding it if enough time passes or personnel changes happen. As time passes, you will find it hard to remove flags, or to operate them effectively.
 
-* Archive old flags: Feature flags no longer in use should be archived after their usage are removed from the codebase. The archive serves as an important audit log of feature flags that are no longer in use, and allows you to revive them if you need to install an older version of your application.
+* Archive old flags: When feature flags are no longer in use, archive them after removing them from the codebase. This archive serves as an important audit log of feature flags and allows you to revive flags if you need to install an older version of your application.
 
 There are valid exceptions to short-lived feature flags. In general, you should limit the number of long-lived feature flags. Some examples include:
 

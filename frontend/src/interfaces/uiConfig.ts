@@ -87,7 +87,6 @@ export type UiFlags = {
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;
-    commandBarUI?: boolean;
     flagCreator?: boolean;
     resourceLimits?: boolean;
     insightsV2?: boolean;

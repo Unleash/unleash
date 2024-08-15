@@ -72,7 +72,6 @@ export type UiFlags = {
     featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     adminTokenKillSwitch?: boolean;
-    killInsightsUI?: boolean;
     feedbackComments?: Variant;
     displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;

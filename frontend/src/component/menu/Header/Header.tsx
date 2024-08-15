@@ -179,7 +179,7 @@ const Header: VFC = () => {
 
                 <StyledNav>
                     <StyledUserContainer>
-                        {<CommandBar />}
+                        <CommandBar />
                         <InviteLinkButton />
                         <Tooltip
                             title={

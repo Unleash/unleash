@@ -137,7 +137,7 @@ Separating reading and writing of the database allows you to horizontally scale 
 
    * Load balancing strategies can be tailored to the specific needs of the read and write APIs. You can distribute traffic and resources accordingly to optimize performance and ensure that neither API becomes a bottleneck under heavy loads.
 
-### H3 \- 5\. Limit payloads. Feature flag payload should be as small as possible.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#5-limit-payloads-feature-flag-payload-should-be-as-small-as-possible)
+### \- 5\. Limit payloads. Feature flag payload should be as small as possible.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#5-limit-payloads-feature-flag-payload-should-be-as-small-as-possible)
 
 Minimizing the size of feature flag payloads is a critical aspect of maintaining the efficiency and performance of a feature flag system. The configuration of your feature flags can vary in size depending on the complexity of your targeting rules. 
 

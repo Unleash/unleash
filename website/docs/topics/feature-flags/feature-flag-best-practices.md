@@ -149,7 +149,7 @@ Imposing limitations on payloads is crucial for scaling a feature flag system:
 
 2. Faster Evaluation:
 
-   * Smaller payloads reduce latency,which means quicker transmission and evaluation. Speed is essential when evaluating feature flags, especially for real-time decisions that impact user experiences. Limiting payloads ensures evaluations occur faster, allowing your application to respond promptly to feature flag changes.
+   * Smaller payloads reduce latency, which means quicker transmission and evaluation. Speed is essential when evaluating feature flags, especially for real-time decisions that impact user experiences. Limiting payloads ensures evaluations occur faster, allowing your application to respond promptly to feature flag changes.
 
 3. Improved Memory Efficiency:
 

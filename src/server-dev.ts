@@ -53,7 +53,6 @@ process.nextTick(async () => {
                         commandBarUI: true,
                         resourceLimits: true,
                         extendedMetrics: true,
-                        insightsV2: true,
                         integrationEvents: true,
                         improveCreateFlagFlow: true,
                         originMiddleware: true,

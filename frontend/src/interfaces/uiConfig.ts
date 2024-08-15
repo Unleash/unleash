@@ -90,7 +90,6 @@ export type UiFlags = {
     commandBarUI?: boolean;
     flagCreator?: boolean;
     resourceLimits?: boolean;
-    insightsV2?: boolean;
     integrationEvents?: boolean;
     improveCreateFlagFlow?: boolean;
     newEventSearch?: boolean;

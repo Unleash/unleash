@@ -43,6 +43,7 @@ test('Should only store events for potentially stale on', async () => {
             featureTagStore: new FakeFeatureTagStore(),
         },
         config,
+        {},
     );
 
     const featureToggleService = new FeatureToggleService(

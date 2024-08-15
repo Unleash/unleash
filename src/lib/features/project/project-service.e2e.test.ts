@@ -9,11 +9,12 @@ import { RoleName } from '../../types/model';
 import { randomId } from '../../util/random-id';
 import EnvironmentService from '../project-environments/environment-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
-import { type ApiTokenService, EventService } from '../../services';
+import type { ApiTokenService, EventService } from '../../services';
 import { FeatureEnvironmentEvent } from '../../types/events';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
+    createEventsService,
     createFeatureToggleService,
     createProjectService,
 } from '../index';
@@ -83,7 +84,7 @@ beforeAll(async () => {
         getLogger,
         experimental: { flags: { archiveProjects: true } },
     });
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
     accessService = createAccessService(db.rawDatabase, config);
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);

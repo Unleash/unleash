@@ -15,7 +15,7 @@ import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service';
 import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
-import { EventService } from '../../../lib/services';
+import type { EventService } from '../../../lib/services';
 import {
     CREATE_ADDON,
     type IUnleashStores,
@@ -28,6 +28,7 @@ import {
 } from '../../../lib/types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
 import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used';
+import { createEventsService } from '../../../lib/features';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -45,7 +46,7 @@ beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(
         stores,

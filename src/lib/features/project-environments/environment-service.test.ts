@@ -8,7 +8,8 @@ import {
     SYSTEM_USER_AUDIT,
 } from '../../types';
 import NameExistsError from '../../error/name-exists-error';
-import { EventService } from '../../services';
+import type { EventService } from '../../services';
+import { createEventsService } from '../events/createEventsService';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -19,7 +20,7 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('environment_service_serial', config.getLogger);
     stores = db.stores;
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
     service = new EnvironmentService(stores, config, eventService);
 });
 afterAll(async () => {

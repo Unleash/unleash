@@ -1,19 +1,22 @@
 import type { EventSearchQueryParameters } from '../../../../lib/openapi/spec/event-search-query-parameters';
 import dbInit, { type ITestDb } from '../../helpers/database-init';
 
-import { FEATURE_CREATED } from '../../../../lib/types';
-import { EventService } from '../../../../lib/services';
-import EventEmitter from 'events';
+import { FEATURE_CREATED, type IUnleashConfig } from '../../../../lib/types';
+import type { EventService } from '../../../../lib/services';
 import getLogger from '../../../fixtures/no-logger';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper';
+import { createEventsService } from '../../../../lib/features';
+import { createTestConfig } from '../../../config/test-config';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventService: EventService;
 const TEST_USER_ID = -9999;
+
+const config: IUnleashConfig = createTestConfig();
 
 beforeAll(async () => {
     db = await dbInit('event_search', getLogger);
@@ -25,10 +28,7 @@ beforeAll(async () => {
         },
     });
 
-    eventService = new EventService(db.stores, {
-        getLogger,
-        eventBus: new EventEmitter(),
-    });
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

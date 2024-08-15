@@ -10,7 +10,6 @@ import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { addDays } from 'date-fns';
 import type ProjectService from '../../../lib/features/project/project-service';
 import { createProjectService } from '../../../lib/features';
-import { EventService } from '../../../lib/services';
 import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService';
 
@@ -30,7 +29,6 @@ beforeAll(async () => {
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
-    const eventService = new EventService(stores, config);
     const project = {
         id: 'test-project',
         name: 'Test Project',

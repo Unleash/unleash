@@ -218,7 +218,7 @@ All flags served by the same Feature Flag Control service should have unique nam
 
 * Easier to manage: When a flag has a unique name, it's easier to know what it is used for and where it is being used. For example, it will be easier to search across multiple code bases to find references for a feature flag when it has a unique identifier across the entire organization.
 
-* Enables collaboration: A feature flag with a unique name in the organization, it simplifies collaboration across teams, products, and applications andensures that we all talk about the same feature.
+* Enables collaboration: A feature flag with a unique name in the organization simplifies collaboration across teams, products, and applications, ensuring that everyone refers to the same feature.
 
 ### \- 9\. Choose open by default. Democratize feature flag access.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#9-choose-open-by-default-democratize-feature-flag-access)
 

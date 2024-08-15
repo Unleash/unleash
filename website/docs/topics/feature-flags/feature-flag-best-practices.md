@@ -274,9 +274,9 @@ Strategies for consistency in percentage-based gradual rollouts:
 
    * Faster development cycles: A feature flagging solution with a testable SDK allows developers to test and iterate on new features quickly. They can easily turn flags on or off, simulate different conditions, and observe the results without needing extensive code changes or redeployments.
 
-   * Rapid issue resolution: A testable SDK enables developers to pinpoint the problem more efficiently when issues or unexpected behaviour arise. They can examine the flag configurations, log feature flag decisions, and troubleshoot issues more precisely.
+   * Rapid issue resolution: A testable SDK enables developers to pinpoint the problem more efficiently when issues or unexpected behavior arise. They can examine the flag configurations, log feature flag decisions, and troubleshoot issues more precisely.
 
-2. Visibility into flag behaviour:
+2. Visibility into flag behavior:
 
    * Understanding user experience: Developers need tools to see and understand how feature flags affect the user experience. This visibility helps them gauge the impact of flag changes and make informed decisions about when to roll out features to different user segments. Debugging a feature flag with multiple inputs simultaneously makes it easy for developers to compare the results and quickly determine how a feature flag evaluates in different scenarios with multiple input values.
 

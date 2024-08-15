@@ -266,7 +266,7 @@ Strategies for Consistency in Percentage-Based Gradual Rollouts:
 
 5. Transparent Communication: Clearly communicate the gradual rollout to users. Use in-app notifications, tooltips, or changelogs to inform users about changes, ensuring they know what to expect.
 
-### H3 \- 11\. Enable traceability. Make it easy to understand flag evaluation.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#11-enable-traceability-make-it-easy-to-understand-flag-evaluation)
+### \- 11\. Enable traceability. Make it easy to understand flag evaluation.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#11-enable-traceability-make-it-easy-to-understand-flag-evaluation)
 
 [Developer experience](https://www.opslevel.com/resources/devex-series-part-1-what-is-devex) is a critical factor to consider when implementing a feature flag solution. A positive developer experience enhances the efficiency of the development process and contributes to the overall success and effectiveness of feature flagging. One crucial aspect of developer experience is ensuring the testability of the SDK and providing tools for developers to understand how and why feature flags are evaluated. This is important because:
 

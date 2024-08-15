@@ -133,8 +133,8 @@ export const ArchiveProjectList: FC = () => {
                 />
             </StyledContainer>
             <ReviveProjectDialog
-                id={reviveProject.id}
-                name={reviveProject.name}
+                id={reviveProject.id || ''}
+                name={reviveProject.name || ''}
                 open={reviveProject.isOpen}
                 onClose={() =>
                     setReviveProject((state) => ({ ...state, isOpen: false }))

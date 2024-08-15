@@ -5,11 +5,10 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 type ReviveProjectDialogProps = {
-    name?: string;
-    id?: string;
+    name: string;
+    id: string;
     open: boolean;
     onClose: () => void;
-    onSuccess?: () => void;
 };
 
 export const ReviveProjectDialog = ({
@@ -17,7 +16,6 @@ export const ReviveProjectDialog = ({
     id,
     open,
     onClose,
-    onSuccess,
 }: ReviveProjectDialogProps) => {
     const { reviveProject } = useProjectApi();
     const { refetch: refetchProjects } = useProjects();
@@ -36,7 +34,6 @@ export const ReviveProjectDialog = ({
                 type: 'success',
                 text: 'Successfully restored project',
             });
-            onSuccess?.();
         } catch (ex: unknown) {
             setToastApiError(formatUnknownError(ex));
         }

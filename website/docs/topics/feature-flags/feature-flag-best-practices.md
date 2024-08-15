@@ -86,7 +86,7 @@ The server-side SDKs should implement logic to evaluate feature flags based on t
 
 For client-side feature flags, you’ll need a different type of SDK. These SDKs will send the context to the Feature Flag Evaluation Service and receive the evaluated results. These results should be stored in memory for a feature flag lookup in the client-side application. By keeping the evaluated results for a specific context in memory in the client-side application, you avoid network roundtrips every time your application needs to check the status of a feature flag. It achieves the same level of performance as a server-side SDK, but the content stored in memory is different and limited to evaluated results on the client.
 
-### H3 \- 3\. Evaluate flags as close to the user as possible. Reduce latency.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#3-evaluate-flags-as-close-to-the-user-as-possible-reduce-latency)
+### \- 3\. Evaluate flags as close to the user as possible. Reduce latency.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#3-evaluate-flags-as-close-to-the-user-as-possible-reduce-latency)
 
 Feature flags should be evaluated as close to your users as possible, and the evaluation should always happen server side as discussed in Principle 2\. In addition to security and privacy benefits, performing evaluation as soon as possible to your users has multiple benefits:
 

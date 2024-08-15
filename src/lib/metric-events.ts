@@ -30,6 +30,7 @@ type MetricEvent =
 type RequestOriginEventPayload = {
     type: 'UI' | 'API';
     method: Request['method'];
+    source?: string;
 };
 
 type MetricEventPayloads = {

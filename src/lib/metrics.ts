@@ -350,7 +350,7 @@ export default class MetricsMonitor {
         const requestOriginCounter = createCounter({
             name: 'request_origin_counter',
             help: 'Number of authenticated requests, including origin information.',
-            labelNames: ['type', 'method'],
+            labelNames: ['type', 'method', 'source'],
         });
 
         const resourceLimit = createGauge({
@@ -715,9 +715,9 @@ export default class MetricsMonitor {
         events.onMetricEvent(
             eventBus,
             events.REQUEST_ORIGIN,
-            ({ type, method }) => {
+            ({ type, method, source }) => {
                 if (flagResolver.isEnabled('originMiddleware')) {
-                    requestOriginCounter.increment({ type, method });
+                    requestOriginCounter.increment({ type, method, source });
                 }
             },
         );

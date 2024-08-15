@@ -305,6 +305,7 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
+    archivedAt?: Date;
     createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
@@ -525,6 +526,7 @@ export interface IProject {
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;
+    archivedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     defaultStickiness: string;

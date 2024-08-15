@@ -1513,6 +1513,7 @@ export default class ProjectService {
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
+            archivedAt: project.archivedAt,
             createdAt: project.createdAt,
             environments,
             featureTypeCounts,

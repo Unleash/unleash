@@ -220,7 +220,7 @@ All flags served by the same Feature Flag Control service should have unique nam
 
 * Enables collaboration: A feature flag with a unique name in the organization, it simplifies collaboration across teams, products, and applications andensures that we all talk about the same feature.
 
-### H3 \- 9\. Choose open by default. Democratize feature flag access.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#9-choose-open-by-default-democratize-feature-flag-access)
+### \- 9\. Choose open by default. Democratize feature flag access.[​](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices\#9-choose-open-by-default-democratize-feature-flag-access)
 
 Allowing engineers, product owners, and even technical support to have open access to a feature flagging system is essential for effective development, debugging, and decision-making. These groups should have access to the system, along with access to the codebase and visibility into configuration changes:
 

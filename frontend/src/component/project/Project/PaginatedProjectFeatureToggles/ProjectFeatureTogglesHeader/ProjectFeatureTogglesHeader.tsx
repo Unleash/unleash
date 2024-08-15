@@ -16,9 +16,8 @@ import Add from '@mui/icons-material/Add';
 import FileDownload from '@mui/icons-material/FileDownload';
 import { styled } from '@mui/material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
@@ -48,44 +47,25 @@ const FlagCreationButton: FC = () => {
     const showCreateDialog = Boolean(searchParams.get('create'));
     const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
     const { loading } = useUiConfig();
-    const navigate = useNavigate();
-    const improveCreateFlagFlow = useUiFlag('improveCreateFlagFlow');
 
     return (
-        <ConditionallyRender
-            condition={improveCreateFlagFlow}
-            show={
-                <>
-                    <StyledResponsiveButton
-                        onClick={() => setOpenCreateDialog(true)}
-                        maxWidth='960px'
-                        Icon={Add}
-                        projectId={projectId}
-                        disabled={loading}
-                        permission={CREATE_FEATURE}
-                        data-testid='NAVIGATE_TO_CREATE_FEATURE'
-                    >
-                        New feature flag
-                    </StyledResponsiveButton>
-                    <CreateFeatureDialog
-                        open={openCreateDialog}
-                        onClose={() => setOpenCreateDialog(false)}
-                    />
-                </>
-            }
-            elseShow={
-                <StyledResponsiveButton
-                    onClick={() => navigate(getCreateTogglePath(projectId))}
-                    maxWidth='960px'
-                    Icon={Add}
-                    projectId={projectId}
-                    permission={CREATE_FEATURE}
-                    data-testid='NAVIGATE_TO_CREATE_FEATURE'
-                >
-                    New feature flag
-                </StyledResponsiveButton>
-            }
-        />
+        <>
+            <StyledResponsiveButton
+                onClick={() => setOpenCreateDialog(true)}
+                maxWidth='960px'
+                Icon={Add}
+                projectId={projectId}
+                disabled={loading}
+                permission={CREATE_FEATURE}
+                data-testid='NAVIGATE_TO_CREATE_FEATURE'
+            >
+                New feature flag
+            </StyledResponsiveButton>
+            <CreateFeatureDialog
+                open={openCreateDialog}
+                onClose={() => setOpenCreateDialog(false)}
+            />
+        </>
     );
 };
 

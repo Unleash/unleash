@@ -12,8 +12,8 @@ export type ProjectForUi = {
     favorite: boolean;
     archivedAt?: Date;
     featureCount: number;
-    lastUsage: Date | null;
-    lastUpdated: Date | null;
+    lastReportedFlagUsage: Date | null;
+    lastFlagUpdate: Date | null;
 };
 
 export type ProjectForInsights = {

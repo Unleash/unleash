@@ -49,13 +49,10 @@ export class ProjectReadModel implements IProjectReadModel {
     private db: Db;
 
     private timer: Function;
-    private flagResolver: IFlagResolver;
-    constructor(
-        db: Db,
 
-        eventBus: EventEmitter,
-        flagResolver: IFlagResolver,
-    ) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, eventBus: EventEmitter, flagResolver: IFlagResolver) {
         this.db = db;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {

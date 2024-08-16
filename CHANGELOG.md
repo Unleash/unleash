@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.10] - 2024-08-16
+
+### Bug Fixes
+
+- Orphaned token label patch ([#7903](https://github.com/Unleash/unleash/issues/7903))
+
+
 ## [6.1.9] - 2024-08-14
 
 ### Bug Fixes

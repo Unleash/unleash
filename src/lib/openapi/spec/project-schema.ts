@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const projectSchema = {
     $id: '#/components/schemas/projectSchema',
     type: 'object',
-    additionalProperties: false,
+    // additionalProperties: false, // todo: re-enable when flag projectListImprovements is removed
     required: ['id', 'name'],
     description:
         'A definition of the project used for projects listing purposes',

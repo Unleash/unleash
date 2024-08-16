@@ -27,7 +27,7 @@ export type ProjectForInsights = {
 };
 
 export interface IProjectReadModel {
-    getForAdminUi(
+    getProjectsForAdminUi(
         query?: IProjectQuery,
         userId?: number,
     ): Promise<ProjectForUi[]>;

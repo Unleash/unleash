@@ -65,7 +65,7 @@ export class ProjectReadModel implements IProjectReadModel {
         this.flagResolver = flagResolver;
     }
 
-    async getForAdminUi(
+    async getProjectsForAdminUi(
         query?: IProjectQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {

@@ -140,6 +140,7 @@ exports[`should create default config 1`] = `
       "originMiddleware": false,
       "outdatedSdksBanner": false,
       "personalAccessTokensKillSwitch": false,
+      "projectListImprovements": false,
       "projectOverviewRefactorFeedback": false,
       "queryMissingTokens": false,
       "removeUnsafeInlineStyleSrc": false,
@@ -150,6 +151,7 @@ exports[`should create default config 1`] = `
       "signals": false,
       "strictSchemaValidation": false,
       "useMemoizedActiveTokens": false,
+      "useProjectReadModel": false,
       "userAccessUIEnabled": false,
     },
     "externalResolver": {

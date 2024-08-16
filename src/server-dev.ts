@@ -57,6 +57,8 @@ process.nextTick(async () => {
                         originMiddleware: true,
                         newEventSearch: true,
                         changeRequestPlayground: true,
+                        projectListImprovements: true,
+                        useProjectReadModel: true,
                     },
                 },
                 authentication: {

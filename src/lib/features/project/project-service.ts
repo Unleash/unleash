@@ -54,6 +54,7 @@ import {
     RoleName,
     SYSTEM_USER_ID,
     type IProjectReadModel,
+    type IProjectWithCount,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -225,11 +226,12 @@ export default class ProjectService {
     async getProjects(
         query?: IProjectQuery,
         userId?: number,
-    ): Promise<ProjectForUi[]> {
-        const projects = await this.projectReadModel.getProjectsForAdminUi(
-            query,
-            userId,
-        );
+    ): Promise<(ProjectForUi | IProjectWithCount)[]> {
+        const getProjects = this.flagResolver.isEnabled('useProjectReadModel')
+            ? this.projectReadModel.getProjectsForAdminUi
+            : this.projectStore.getProjectsWithCounts;
+
+        const projects = await getProjects(query, userId);
 
         if (userId) {
             const projectAccess =
@@ -249,8 +251,8 @@ export default class ProjectService {
     }
 
     async addOwnersToProjects(
-        projects: ProjectForUi[],
-    ): Promise<ProjectForUi[]> {
+        projects: (ProjectForUi | IProjectWithCount)[],
+    ): Promise<(ProjectForUi | IProjectWithCount)[]> {
         const anonymizeProjectOwners = this.flagResolver.isEnabled(
             'anonymizeProjectOwners',
         );

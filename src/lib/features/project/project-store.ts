@@ -149,7 +149,7 @@ class ProjectStore implements IProjectStore {
                 'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count,',
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
             ),
             'project_settings.default_stickiness',
             'project_settings.project_mode',

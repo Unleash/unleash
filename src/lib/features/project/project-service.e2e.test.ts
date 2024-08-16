@@ -2748,9 +2748,7 @@ test('should get project settings with mode', async () => {
     );
 
     expect(foundProjectOne!.mode).toBe('private');
-    expect(foundProjectOne!.defaultStickiness).toBe('clientId');
     expect(foundProjectTwo!.mode).toBe('open');
-    expect(foundProjectTwo!.defaultStickiness).toBe('default');
 });
 
 describe('create project with environments', () => {

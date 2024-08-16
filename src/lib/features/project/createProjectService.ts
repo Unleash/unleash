@@ -48,6 +48,10 @@ import {
     createEventsService,
     createFakeEventsService,
 } from '../events/createEventsService';
+import {
+    createFakeProjectReadModel,
+    createProjectReadModel,
+} from './createProjectReadModel';
 
 export const createProjectService = (
     db: Db,
@@ -120,6 +124,12 @@ export const createProjectService = (
         eventService,
     );
 
+    const projectReadModel = createProjectReadModel(
+        db,
+        eventBus,
+        config.flagResolver,
+    );
+
     return new ProjectService(
         {
             projectStore,
@@ -131,6 +141,7 @@ export const createProjectService = (
             projectStatsStore,
             projectOwnersReadModel,
             projectFlagCreatorsReadModel,
+            projectReadModel,
         },
         config,
         accessService,
@@ -184,6 +195,8 @@ export const createFakeProjectService = (
         eventService,
     );
 
+    const projectReadModel = createFakeProjectReadModel();
+
     return new ProjectService(
         {
             projectStore,
@@ -195,6 +208,7 @@ export const createFakeProjectService = (
             featureEnvironmentStore,
             accountStore,
             projectStatsStore,
+            projectReadModel,
         },
         config,
         accessService,

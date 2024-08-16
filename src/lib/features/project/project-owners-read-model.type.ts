@@ -1,4 +1,4 @@
-import type { IProjectWithCount } from '../../types';
+import type { ProjectForUi } from './project-read-model-type';
 
 export type SystemOwner = { ownerType: 'system' };
 export type UserProjectOwner = {
@@ -17,13 +17,13 @@ type ProjectOwners =
 
 export type ProjectOwnersDictionary = Record<string, ProjectOwners>;
 
-export type IProjectWithCountAndOwners = IProjectWithCount & {
+export type IProjectForUiWithOwners = ProjectForUi & {
     owners: ProjectOwners;
 };
 
 export interface IProjectOwnersReadModel {
     addOwners(
-        projects: IProjectWithCount[],
+        projects: ProjectForUi[],
         anonymizeProjectOwners?: boolean,
-    ): Promise<IProjectWithCountAndOwners[]>;
+    ): Promise<IProjectForUiWithOwners[]>;
 }

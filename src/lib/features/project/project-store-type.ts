@@ -1,6 +1,5 @@
 import type {
     IEnvironmentProjectLink,
-    IProjectMembersCount,
     ProjectModeCount,
 } from './project-store';
 import type {
@@ -99,8 +98,6 @@ export interface IProjectStore extends Store<IProject, string> {
     ): Promise<number>;
 
     getProjectsByUser(userId: number): Promise<string[]>;
-
-    getMembersCount(): Promise<IProjectMembersCount[]>;
 
     getProjectsWithCounts(
         query?: IProjectQuery,

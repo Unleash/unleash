@@ -55,6 +55,12 @@ describe('isOrphanedToken', () => {
                 projects: ['a', 'b'],
             }),
         ).toBe(false);
+          expect(
+              isOrphanedToken({
+                  secret: '[]:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b',
+                  projects: ['a'],
+              }),
+          ).toBe(false);
     });
 });
 

@@ -99,6 +99,9 @@ export interface IProjectStore extends Store<IProject, string> {
 
     getProjectsByUser(userId: number): Promise<string[]>;
 
+    /**
+     * @deprecated Use the appropriate method in the project read model instead.
+     */
     getProjectsWithCounts(
         query?: IProjectQuery,
         userId?: number,

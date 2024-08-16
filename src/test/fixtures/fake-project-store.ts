@@ -8,7 +8,6 @@ import type {
 import NotFoundError from '../../lib/error/notfound-error';
 import type {
     IEnvironmentProjectLink,
-    IProjectMembersCount,
     ProjectModeCount,
 } from '../../lib/features/project/project-store';
 import type { CreateFeatureStrategySchema } from '../../lib/openapi';
@@ -165,10 +164,6 @@ export default class FakeProjectStore implements IProjectStore {
         this.projects.find(
             (project) => project.id === healthUpdate.id,
         )!.health = healthUpdate.health;
-    }
-
-    getMembersCount(): Promise<IProjectMembersCount[]> {
-        throw new Error('Method not implemented.');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -511,7 +511,7 @@ class ProjectStore implements IProjectStore {
         return rows.map(this.mapProjectEnvironmentRow);
     }
 
-    async getMembersCount(): Promise<IProjectMembersCount[]> {
+    private async getMembersCount(): Promise<IProjectMembersCount[]> {
         const members = await this.db
             .select('project')
             .from((db) => {

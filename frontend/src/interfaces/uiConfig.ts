@@ -94,6 +94,7 @@ export type UiFlags = {
     newEventSearch?: boolean;
     changeRequestPlayground?: boolean;
     archiveProjects?: boolean;
+    projectListImprovements?: boolean;
 };
 
 export interface IVersionInfo {

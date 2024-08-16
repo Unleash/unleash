@@ -48,7 +48,7 @@ But what if it's more ephemeral or what if it's not available together with the 
 
 An option is to set up an external data store that handles this information specifically. As an example, consider a [Redis](http://redis.com/) instance that has a list of VIP customers. You could have an application connect to it and receive the latest state of VIP customers whenever you check a feature with Unleash. For an example of this, check out the [Unleash and Redis](https://github.com/sighphyre/UnleashAndRedis) example.
 
-## Why doesn't Unleash support complex constraint setups out the box?
+## Why doesn't Unleash support complex constraint setups out of the box?
 
 The Unleash SDKs are designed to be fast and unobtrusive. This means that resolving a large set of constraints at runtime results in one of two problems: either the SDK needs to resolve very large amounts of data, which can put pressure on your network or it needs to make a potentially slow network call to resolve the segment. Both of these are undesirable for the health of your application.
 

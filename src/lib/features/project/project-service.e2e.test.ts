@@ -349,9 +349,7 @@ test('should not be able to archive project with flags', async () => {
     const project = {
         id: 'test-archive-with-flags',
         name: 'New project',
-        description: 'Blah',
         mode: 'open' as const,
-        defaultStickiness: 'default',
     };
     await projectService.createProject(project, user, auditUser);
     await stores.featureToggleStore.create(project.id, {

@@ -227,10 +227,10 @@ export default class ProjectService {
         userId?: number,
     ): Promise<TransitionalProjectData[]> {
         const getProjects = this.flagResolver.isEnabled('useProjectReadModel')
-            ? this.projectReadModel.getProjectsForAdminUi
-            : this.projectStore.getProjectsWithCounts;
+            ? () => this.projectReadModel.getProjectsForAdminUi(query, userId)
+            : () => this.projectStore.getProjectsWithCounts(query, userId);
 
-        const projects = await getProjects(query, userId);
+        const projects = await getProjects();
 
         if (userId) {
             const projectAccess =

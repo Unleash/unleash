@@ -16,7 +16,10 @@ describe('ApiTokenIcon', () => {
     it('should show tooltip with warning message if it is an orphaned token', async () => {
         const user = userEvent.setup();
         render(
-            <ApiTokenIcon secret='test:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b' />,
+            <ApiTokenIcon
+                secret='test:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b'
+                projects={[]}
+            />,
         );
 
         const errorIcon = await screen.findByTestId('orphaned-token-icon');
@@ -37,7 +40,23 @@ describe('ApiTokenIcon', () => {
 
     it('should not show warning for true wildcard tokens', async () => {
         render(
-            <ApiTokenIcon secret='*:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b' />,
+            <ApiTokenIcon
+                secret='*:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b'
+                project='*'
+                projects={['*']}
+            />,
+        );
+
+        const errorIcon = await screen.queryByTestId('orphaned-token-icon');
+        expect(errorIcon).toBeNull();
+    });
+
+    it('should not show warning when there are active projects assigned to a token', async () => {
+        render(
+            <ApiTokenIcon
+                secret='[]:development.be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b'
+                projects={['a', 'b']}
+            />,
         );
 
         const errorIcon = await screen.queryByTestId('orphaned-token-icon');

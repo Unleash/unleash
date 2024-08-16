@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { useMemo, type FC } from 'react';
 import KeyIcon from '@mui/icons-material/Key';
 import WarningIcon from '@mui/icons-material/WarningAmber';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -11,10 +11,30 @@ interface IApiTokenIconProps {
     secret?: string;
 }
 
-export const ApiTokenIcon: FC<IApiTokenIconProps> = ({ secret }) => {
+export const ApiTokenIcon: FC<IApiTokenIconProps> = ({
+    secret,
+    project,
+    projects,
+}) => {
     const tokenFormat = secret?.includes(':') ? 'v2' : 'v1'; // see https://docs.getunleash.io/reference/api-tokens-and-client-keys#format
     const isWildcardToken = secret?.startsWith('*:');
-    const isOrphanedToken = tokenFormat === 'v2' && !isWildcardToken;
+    const hasProjects = useMemo(() => {
+        if (
+            projects &&
+            Array.isArray(projects) &&
+            projects.length > 1 &&
+            projects[0] !== '*'
+        ) {
+            return true;
+        }
+        if (project && project !== '*') {
+            return true;
+        }
+
+        return false;
+    }, []);
+    const isOrphanedToken =
+        tokenFormat === 'v2' && !isWildcardToken && !hasProjects;
 
     if (isOrphanedToken) {
         return (

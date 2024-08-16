@@ -325,9 +325,7 @@ test('should revive project', async () => {
     const project = {
         id: 'test-revive',
         name: 'New project',
-        description: 'Blah',
         mode: 'open' as const,
-        defaultStickiness: 'default',
     };
 
     await projectService.createProject(project, user, TEST_AUDIT_USER);

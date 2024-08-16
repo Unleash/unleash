@@ -64,7 +64,9 @@ export type IFlagKey =
     | 'originMiddleware'
     | 'newEventSearch'
     | 'changeRequestPlayground'
-    | 'archiveProjects';
+    | 'archiveProjects'
+    | 'projectListImprovements'
+    | 'useProjectReadModel';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -311,6 +313,14 @@ const flags: IFlags = {
     ),
     archiveProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
+        false,
+    ),
+    projectListImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_IMPROVEMENTS,
+        false,
+    ),
+    useProjectReadModel: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USE_PROJECT_READ_MODEL,
         false,
     ),
 };

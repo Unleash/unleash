@@ -27,7 +27,11 @@ export const useApiTokenTable = (
             {
                 id: 'Icon',
                 Cell: (props: any) => (
-                    <ApiTokenIcon secret={props.row.original.secret} />
+                    <ApiTokenIcon
+                        secret={props.row.original.secret}
+                        project={props.row.original.project}
+                        projects={props.row.original.projects}
+                    />
                 ),
                 disableSortBy: true,
                 disableGlobalFilter: true,

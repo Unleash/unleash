@@ -54,7 +54,6 @@ import {
     RoleName,
     SYSTEM_USER_ID,
     type IProjectReadModel,
-    type IProjectWithCount,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -88,7 +87,7 @@ import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
-import type { ProjectForUi } from './project-read-model-type';
+import type { TransitionalProjectData } from './project-read-model-type';
 
 type Days = number;
 type Count = number;
@@ -226,7 +225,7 @@ export default class ProjectService {
     async getProjects(
         query?: IProjectQuery,
         userId?: number,
-    ): Promise<(ProjectForUi | IProjectWithCount)[]> {
+    ): Promise<TransitionalProjectData[]> {
         const getProjects = this.flagResolver.isEnabled('useProjectReadModel')
             ? this.projectReadModel.getProjectsForAdminUi
             : this.projectStore.getProjectsWithCounts;
@@ -251,8 +250,8 @@ export default class ProjectService {
     }
 
     async addOwnersToProjects(
-        projects: (ProjectForUi | IProjectWithCount)[],
-    ): Promise<(ProjectForUi | IProjectWithCount)[]> {
+        projects: TransitionalProjectData[],
+    ): Promise<TransitionalProjectData[]> {
         const anonymizeProjectOwners = this.flagResolver.isEnabled(
             'anonymizeProjectOwners',
         );

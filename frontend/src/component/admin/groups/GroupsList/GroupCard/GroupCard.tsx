@@ -76,6 +76,7 @@ const ProjectBadgeContainer = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
     gap: theme.spacing(0.5),
     flexWrap: 'wrap',
+    wordWrap: 'anywhere',
 }));
 
 const InfoBadgeDescription = styled('span')(({ theme }) => ({

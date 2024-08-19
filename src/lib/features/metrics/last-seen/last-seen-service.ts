@@ -32,10 +32,21 @@ export class LastSeenService {
             const lastSeenToggles = Array.from(
                 this.lastSeenToggles.values(),
             ).filter((lastSeen) => lastSeen.featureName.length <= 255);
-            this.lastSeenToggles = new Map<String, LastSeenInput>();
+            if (lastSeenToggles.length < this.lastSeenToggles.size) {
+                this.logger.warn(
+                    `Toggles with long names ${JSON.stringify(
+                        Array.from(this.lastSeenToggles.values())
+                            .filter(
+                                (lastSeen) => lastSeen.featureName.length > 255,
+                            )
+                            .map((lastSeen) => lastSeen.featureName),
+                    )}`,
+                );
+            }
             this.logger.debug(
                 `Updating last seen for ${lastSeenToggles.length} toggles`,
             );
+            this.lastSeenToggles = new Map<String, LastSeenInput>();
 
             await this.lastSeenStore.setLastSeen(lastSeenToggles);
         }

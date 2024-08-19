@@ -92,7 +92,6 @@ export type UiFlags = {
     insightsV2?: boolean;
     integrationEvents?: boolean;
     newEventSearch?: boolean;
-    changeRequestPlayground?: boolean;
     archiveProjects?: boolean;
     projectListImprovements?: boolean;
 };

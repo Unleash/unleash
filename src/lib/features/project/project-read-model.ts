@@ -129,10 +129,8 @@ export class ProjectReadModel implements IProjectReadModel {
         const projectsWithFeatureCount =
             projectAndFeatureCount.map(mapProjectForUi);
         projectTimer();
-        const memberTimer = this.timer('getMemberCount');
 
         const memberCount = await this.getMembersCount();
-        memberTimer();
         const memberMap = new Map<string, number>(
             memberCount.map((c) => [c.project, Number(c.count)]),
         );
@@ -193,10 +191,8 @@ export class ProjectReadModel implements IProjectReadModel {
             mapProjectForInsights,
         );
         projectTimer();
-        const memberTimer = this.timer('getMemberCount');
 
         const memberCount = await this.getMembersCount();
-        memberTimer();
         const memberMap = new Map<string, number>(
             memberCount.map((c) => [c.project, Number(c.count)]),
         );
@@ -210,6 +206,7 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     private async getMembersCount(): Promise<IProjectMembersCount[]> {
+        const memberTimer = this.timer('getMemberCount');
         const members = await this.db
             .select('project')
             .from((db) => {
@@ -231,6 +228,8 @@ export class ProjectReadModel implements IProjectReadModel {
             })
             .groupBy('project')
             .count('user_id');
+
+        memberTimer();
         return members;
     }
 }

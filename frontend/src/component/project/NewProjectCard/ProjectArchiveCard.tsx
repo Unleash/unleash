@@ -103,25 +103,12 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                             </Tooltip>
                         }
                     />
-                    <ConditionallyRender
-                        condition={typeof archivedFeaturesCount !== 'undefined'}
-                        show={
-                            <Link
-                                component={RouterLink}
-                                to={`/archive?search=project%3A${encodeURI(id)}`}
-                            >
-                                <StyledParagraphInfo disabled data-loading>
-                                    {archivedFeaturesCount}
-                                </StyledParagraphInfo>
-                                <p data-loading>
-                                    archived{' '}
-                                    {archivedFeaturesCount === 1
-                                        ? 'flag'
-                                        : 'flags'}
-                                </p>
-                            </Link>
-                        }
-                    />
+                    <Link
+                        component={RouterLink}
+                        to={`/archive?search=project%3A${encodeURI(id)}`}
+                    >
+                        <p>View archived flags</p>
+                    </Link>
                 </StyledDivInfo>
             </StyledProjectCardBody>
             <ProjectCardFooter id={id} disabled owners={owners}>

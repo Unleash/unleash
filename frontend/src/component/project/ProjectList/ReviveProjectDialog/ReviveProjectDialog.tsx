@@ -1,4 +1,6 @@
+import { styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { ProjectId } from 'component/project/ProjectId/ProjectId';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useToast from 'hooks/useToast';
@@ -10,6 +12,10 @@ type ReviveProjectDialogProps = {
     open: boolean;
     onClose: () => void;
 };
+
+const StyledParagraph = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
 
 export const ReviveProjectDialog = ({
     name,
@@ -30,9 +36,9 @@ export const ReviveProjectDialog = ({
             refetchProjects();
             refetchProjectArchive();
             setToastData({
-                title: 'Restored project',
+                title: 'Revive project',
                 type: 'success',
-                text: 'Successfully restored project',
+                text: 'Successfully revived project',
             });
         } catch (ex: unknown) {
             setToastApiError(formatUnknownError(ex));
@@ -43,14 +49,20 @@ export const ReviveProjectDialog = ({
     return (
         <Dialogue
             open={open}
-            secondaryButtonText='Close'
             onClose={onClose}
             onClick={onClick}
-            title='Restore archived project'
+            title='Revive an archived project'
         >
-            Are you sure you'd like to restore project <strong>{name}</strong>{' '}
-            (id: <code>{id}</code>)?
-            {/* TODO: more explanation */}
+            <StyledParagraph>
+                Are you sure you'd like to revive project{' '}
+                <strong>{name}</strong>?
+            </StyledParagraph>
+            <StyledParagraph>
+                Project ID: <ProjectId>{id}</ProjectId>
+            </StyledParagraph>
+            <StyledParagraph>
+                All flags in the revived project will remain archived.
+            </StyledParagraph>
         </Dialogue>
     );
 };

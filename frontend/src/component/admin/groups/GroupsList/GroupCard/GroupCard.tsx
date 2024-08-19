@@ -88,7 +88,7 @@ const InfoBadgeDescription = styled('span')(({ theme }) => ({
 }));
 
 const ProjectNameBadge = styled(Badge)({
-    wordWrap: 'anywhere',
+    wordwrap: 'anywhere',
 });
 
 interface IGroupCardProps {

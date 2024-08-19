@@ -103,7 +103,7 @@ export const Project = () => {
             name: 'health',
         },
         {
-            title: 'Archive',
+            title: 'Archived flags',
             path: `${basePath}/archive`,
             name: 'archive',
         },

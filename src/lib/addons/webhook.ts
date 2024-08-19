@@ -2,7 +2,11 @@ import Mustache from 'mustache';
 import Addon from './addon';
 import definition from './webhook-definition';
 import type { IEvent } from '../types/events';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
 import {
     type FeatureEventFormatter,
@@ -12,6 +16,7 @@ import {
 
 interface IParameters {
     url: string;
+    serviceName?: string;
     bodyTemplate?: string;
     contentType?: string;
     authorization?: string;
@@ -21,12 +26,15 @@ interface IParameters {
 export default class Webhook extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(args: IAddonConfig) {
         super(definition, args);
         this.msgFormatter = new FeatureEventFormatterMd(
             args.unleashUrl,
             LinkStyle.MD,
         );
+        this.flagResolver = args.flagResolver;
     }
 
     async handleEvent(

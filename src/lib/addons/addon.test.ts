@@ -16,6 +16,7 @@ const ARGS: IAddonConfig = {
     unleashUrl: url,
     integrationEventsService: {} as IntegrationEventsService,
     flagResolver: {} as IFlagResolver,
+    eventBus: {} as any,
 };
 
 test('Does not retry if request succeeds', async () => {

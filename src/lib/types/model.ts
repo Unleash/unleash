@@ -10,6 +10,7 @@ import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-sea
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { IFlagResolver } from './experimental';
 import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
+import type { EventEmitter } from 'events';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -384,6 +385,7 @@ export interface IAddonConfig {
     unleashUrl: string;
     integrationEventsService: IntegrationEventsService;
     flagResolver: IFlagResolver;
+    eventBus: EventEmitter;
 }
 
 export interface IUserWithRole {

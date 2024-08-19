@@ -6,6 +6,7 @@ import {
     type IAddonConfig,
     type IEvent,
     type IEventType,
+    type IFlagResolver,
     serializeDates,
 } from '../types';
 import {
@@ -39,12 +40,15 @@ interface INewRelicRequestBody {
 export default class NewRelicAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(config: IAddonConfig) {
         super(definition, config);
         this.msgFormatter = new FeatureEventFormatterMd(
             config.unleashUrl,
             LinkStyle.MD,
         );
+        this.flagResolver = config.flagResolver;
     }
 
     async handleEvent(

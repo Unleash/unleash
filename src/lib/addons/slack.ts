@@ -1,7 +1,11 @@
 import Addon from './addon';
 
 import slackDefinition from './slack-definition';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 
 import {
     type FeatureEventFormatter,
@@ -21,12 +25,15 @@ interface ISlackAddonParameters {
 export default class SlackAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(args: IAddonConfig) {
         super(slackDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd(
             args.unleashUrl,
             LinkStyle.SLACK,
         );
+        this.flagResolver = args.flagResolver;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

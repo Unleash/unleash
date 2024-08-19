@@ -13,7 +13,11 @@ import {
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -30,6 +34,8 @@ interface ISlackAppAddonParameters {
 export default class SlackAppAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     private accessToken?: string;
 
     private slackClient?: WebClient;
@@ -40,6 +46,7 @@ export default class SlackAppAddon extends Addon {
             args.unleashUrl,
             LinkStyle.SLACK,
         );
+        this.flagResolver = args.flagResolver;
     }
 
     async handleEvent(

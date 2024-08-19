@@ -1,7 +1,11 @@
 import Addon from './addon';
 
 import teamsDefinition from './teams-definition';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -16,9 +20,12 @@ interface ITeamsParameters {
 export default class TeamsAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(args: IAddonConfig) {
         super(teamsDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd(args.unleashUrl);
+        this.flagResolver = args.flagResolver;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

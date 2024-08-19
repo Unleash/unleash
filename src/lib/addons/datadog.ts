@@ -2,7 +2,11 @@ import Addon from './addon';
 
 import definition from './datadog-definition';
 import Mustache from 'mustache';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -29,12 +33,15 @@ interface DDRequestBody {
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(config: IAddonConfig) {
         super(definition, config);
         this.msgFormatter = new FeatureEventFormatterMd(
             config.unleashUrl,
             LinkStyle.MD,
         );
+        this.flagResolver = config.flagResolver;
     }
 
     async handleEvent(

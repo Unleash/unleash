@@ -6,6 +6,7 @@ import {
     type IAddonConfig,
     type IEvent,
     serializeDates,
+    type IFlagKey,
 } from '../types';
 import type { Logger } from '../logger';
 
@@ -26,7 +27,8 @@ const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: {} as IFlagResolver,
+    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {} as any,
 };
 
 jest.mock(

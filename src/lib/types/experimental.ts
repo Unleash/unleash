@@ -61,11 +61,12 @@ export type IFlagKey =
     | 'removeUnsafeInlineStyleSrc'
     | 'insightsV2'
     | 'integrationEvents'
-    | 'improveCreateFlagFlow'
     | 'originMiddleware'
     | 'newEventSearch'
     | 'changeRequestPlayground'
     | 'archiveProjects'
+    | 'projectListImprovements'
+    | 'useProjectReadModel'
     | 'webhookServiceNameLogging'
     | 'addonUsageMetrics';
 
@@ -300,10 +301,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
         false,
     ),
-    improveCreateFlagFlow: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPROVE_CREATE_FLAG_FLOW,
-        false,
-    ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
         false,
@@ -318,6 +315,14 @@ const flags: IFlags = {
     ),
     archiveProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
+        false,
+    ),
+    projectListImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_IMPROVEMENTS,
+        false,
+    ),
+    useProjectReadModel: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USE_PROJECT_READ_MODEL,
         false,
     ),
     webhookServiceNameLogging: parseEnvVarBoolean(

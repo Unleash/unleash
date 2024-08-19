@@ -1,13 +1,14 @@
 import type { Db } from '../../db/db';
-import { RoleName, type IProjectWithCount } from '../../types';
+import { RoleName } from '../../types';
 import { anonymise, generateImageUrl } from '../../util';
 import type {
     GroupProjectOwner,
     IProjectOwnersReadModel,
-    IProjectWithCountAndOwners,
+    IProjectForUiWithOwners,
     ProjectOwnersDictionary,
     UserProjectOwner,
 } from './project-owners-read-model.type';
+import type { ProjectForUi } from './project-read-model-type';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -24,9 +25,9 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     }
 
     static addOwnerData(
-        projects: IProjectWithCount[],
+        projects: ProjectForUi[],
         owners: ProjectOwnersDictionary,
-    ): IProjectWithCountAndOwners[] {
+    ): IProjectForUiWithOwners[] {
         return projects.map((project) => ({
             ...project,
             owners: owners[project.id] || [{ ownerType: 'system' }],
@@ -138,9 +139,9 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     }
 
     async addOwners(
-        projects: IProjectWithCount[],
+        projects: ProjectForUi[],
         anonymizeProjectOwners: boolean = false,
-    ): Promise<IProjectWithCountAndOwners[]> {
+    ): Promise<IProjectForUiWithOwners[]> {
         const owners = await this.getAllProjectOwners(anonymizeProjectOwners);
 
         return ProjectOwnersReadModel.addOwnerData(projects, owners);

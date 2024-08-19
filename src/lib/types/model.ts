@@ -568,6 +568,7 @@ export interface ICustomRole extends IRole {
     description: string;
 }
 
+// @deprecated Remove with flag useProjectReadModel
 export interface IProjectWithCount extends IProject {
     featureCount: number;
     staleFeatureCount: number;

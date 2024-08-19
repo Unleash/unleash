@@ -28,6 +28,8 @@ import {
 import Undo from '@mui/icons-material/Undo';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Delete from '@mui/icons-material/Delete';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 
 export type ProjectArchiveCardProps = {
     id: string;
@@ -51,16 +53,21 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     owners,
 }) => {
     const { locationSettings } = useLocationSettings();
+    const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <StyledProjectCard disabled>
+        <StyledProjectCard disabled data-testid={id}>
             <StyledProjectCardBody>
                 <StyledDivHeader>
                     <StyledIconBox>
                         <ProjectIcon color='action' />
                     </StyledIconBox>
                     <StyledBox data-loading>
-                        <StyledCardTitle>{name}</StyledCardTitle>
+                        <StyledCardTitle>
+                            <Highlighter search={searchQuery}>
+                                {name}
+                            </Highlighter>
+                        </StyledCardTitle>
                     </StyledBox>
                     <ProjectModeBadge mode={mode} />
                 </StyledDivHeader>
@@ -85,34 +92,23 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                     </StyledParagraphInfo>
                                     <p data-loading>
                                         <TimeAgo
+                                            minPeriod={60}
                                             date={
                                                 new Date(archivedAt as string)
                                             }
+                                            live={false}
                                         />
                                     </p>
                                 </Box>
                             </Tooltip>
                         }
                     />
-                    <ConditionallyRender
-                        condition={typeof archivedFeaturesCount !== 'undefined'}
-                        show={
-                            <Link
-                                component={RouterLink}
-                                to={`/archive?search=project%3A${encodeURI(id)}`}
-                            >
-                                <StyledParagraphInfo disabled data-loading>
-                                    {archivedFeaturesCount}
-                                </StyledParagraphInfo>
-                                <p data-loading>
-                                    archived{' '}
-                                    {archivedFeaturesCount === 1
-                                        ? 'flag'
-                                        : 'flags'}
-                                </p>
-                            </Link>
-                        }
-                    />
+                    <Link
+                        component={RouterLink}
+                        to={`/archive?search=project%3A${encodeURI(id)}`}
+                    >
+                        <p>View archived flags</p>
+                    </Link>
                 </StyledDivInfo>
             </StyledProjectCardBody>
             <ProjectCardFooter id={id} disabled owners={owners}>

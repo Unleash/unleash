@@ -91,10 +91,10 @@ export type UiFlags = {
     resourceLimits?: boolean;
     insightsV2?: boolean;
     integrationEvents?: boolean;
-    improveCreateFlagFlow?: boolean;
     newEventSearch?: boolean;
     changeRequestPlayground?: boolean;
     archiveProjects?: boolean;
+    projectListImprovements?: boolean;
 };
 
 export interface IVersionInfo {

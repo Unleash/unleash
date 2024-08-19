@@ -112,6 +112,7 @@ export const ProjectGroup = <T extends { id: string }>({
                                             </StyledCardLink>
                                         ) : (
                                             <ProjectCardComponent
+                                                key={project.id}
                                                 onHover={() => {}}
                                                 {...project}
                                             />

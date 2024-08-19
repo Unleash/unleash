@@ -43,6 +43,8 @@ import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRe
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
 import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { ProjectArchived } from './ArchiveProject/ProjectArchived';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -75,6 +77,7 @@ export const Project = () => {
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
+    const archiveProjectsEnabled = useUiFlag('archiveProjects');
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -188,6 +191,10 @@ export const Project = () => {
             <EnterpriseBadge />
         </Box>
     );
+
+    if (archiveProjectsEnabled && Boolean(project.archivedAt)) {
+        return <ProjectArchived name={project.name} />;
+    }
 
     return (
         <div ref={ref}>

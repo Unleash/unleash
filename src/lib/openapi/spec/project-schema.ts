@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const projectSchema = {
     $id: '#/components/schemas/projectSchema',
     type: 'object',
-    additionalProperties: false,
+    // additionalProperties: false, // todo: re-enable when flag projectListImprovements is removed
     required: ['id', 'name'],
     description:
         'A definition of the project used for projects listing purposes',
@@ -19,6 +19,7 @@ export const projectSchema = {
             description: 'The name of this project',
         },
         description: {
+            deprecated: true,
             type: 'string',
             nullable: true,
             example: 'DX squad feature release',
@@ -36,11 +37,13 @@ export const projectSchema = {
             description: 'The number of features this project has',
         },
         staleFeatureCount: {
+            deprecated: true,
             type: 'number',
             example: 10,
             description: 'The number of stale features this project has',
         },
         potentiallyStaleFeatureCount: {
+            deprecated: true,
             type: 'number',
             example: 10,
             description:
@@ -58,6 +61,7 @@ export const projectSchema = {
             format: 'date-time',
         },
         updatedAt: {
+            deprecated: true,
             type: 'string',
             format: 'date-time',
             nullable: true,
@@ -85,12 +89,14 @@ export const projectSchema = {
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         defaultStickiness: {
+            deprecated: true,
             type: 'string',
             example: 'userId',
             description:
                 'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
         },
         avgTimeToProduction: {
+            deprecated: true,
             type: 'number',
             example: 10,
             description:

@@ -13,6 +13,7 @@ import {
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface IParameters {
     url: string;

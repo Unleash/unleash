@@ -1,4 +1,4 @@
-import type { ProjectMode } from '../../types';
+import type { IProjectWithCount, ProjectMode } from '../../types';
 import type { IProjectQuery } from './project-store-type';
 
 export type ProjectForUi = {
@@ -15,6 +15,9 @@ export type ProjectForUi = {
     lastReportedFlagUsage: Date | null;
     lastFlagUpdate: Date | null;
 };
+
+// @todo remove with flag useProjectReadModel
+export type TransitionalProjectData = ProjectForUi | IProjectWithCount;
 
 export type ProjectForInsights = {
     id: string;

@@ -82,7 +82,9 @@ beforeAll(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
     const config = createTestConfig({
         getLogger,
-        experimental: { flags: { archiveProjects: true } },
+        experimental: {
+            flags: { archiveProjects: true, useProjectReadModel: true },
+        },
     });
     eventService = createEventsService(db.rawDatabase, config);
     accessService = createAccessService(db.rawDatabase, config);
@@ -323,9 +325,7 @@ test('should revive project', async () => {
     const project = {
         id: 'test-revive',
         name: 'New project',
-        description: 'Blah',
         mode: 'open' as const,
-        defaultStickiness: 'default',
     };
 
     await projectService.createProject(project, user, TEST_AUDIT_USER);
@@ -347,9 +347,7 @@ test('should not be able to archive project with flags', async () => {
     const project = {
         id: 'test-archive-with-flags',
         name: 'New project',
-        description: 'Blah',
         mode: 'open' as const,
-        defaultStickiness: 'default',
     };
     await projectService.createProject(project, user, auditUser);
     await stores.featureToggleStore.create(project.id, {
@@ -2748,9 +2746,7 @@ test('should get project settings with mode', async () => {
     );
 
     expect(foundProjectOne!.mode).toBe('private');
-    expect(foundProjectOne!.defaultStickiness).toBe('clientId');
     expect(foundProjectTwo!.mode).toBe('open');
-    expect(foundProjectTwo!.defaultStickiness).toBe('default');
 });
 
 describe('create project with environments', () => {

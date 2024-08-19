@@ -19,6 +19,7 @@ import type {
 } from '../types/stores/addon-store';
 import {
     type IAuditUser,
+    type IFlagResolver,
     type IUnleashConfig,
     type IUnleashStores,
     SYSTEM_USER_AUDIT,
@@ -52,6 +53,8 @@ export default class AddonService {
 
     sensitiveParams: ISensitiveParams;
 
+    flagResolver: IFlagResolver;
+
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
 
@@ -75,6 +78,7 @@ export default class AddonService {
         this.logger = getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
         this.eventService = eventService;
+        this.flagResolver = flagResolver;
 
         this.addonProviders =
             addons ||
@@ -220,6 +224,16 @@ export default class AddonService {
             `User ${auditUser.username} created addon ${addonConfig.provider}`,
         );
 
+        if (
+            this.flagResolver.isEnabled('webhookServiceNameLogging') &&
+            addonConfig.provider === 'webhook' &&
+            addonConfig.parameters.serviceName
+        ) {
+            this.logger.info(
+                `Webhook service created: ${addonConfig.parameters.serviceName}`,
+            );
+        }
+
         await this.eventService.storeEvent(
             new AddonConfigCreatedEvent({
                 data: omitKeys(createdAddon, 'parameters'),
@@ -262,6 +276,17 @@ export default class AddonService {
             }),
         );
         this.logger.info(`User ${auditUser} updated addon ${id}`);
+
+        if (
+            this.flagResolver.isEnabled('webhookServiceNameLogging') &&
+            addonConfig.provider === 'webhook' &&
+            addonConfig.parameters.serviceName
+        ) {
+            this.logger.info(
+                `Webhook service updated: ${addonConfig.parameters.serviceName}`,
+            );
+        }
+
         return result;
     }
 

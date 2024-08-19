@@ -51,6 +51,16 @@ const webhookDefinition: IAddonDefinition = {
             sensitive: true,
         },
         {
+            name: 'serviceName',
+            displayName: 'Integration Service Name',
+            placeholder: 'Datadog/Servicenow/Slack etc',
+            description:
+                '(Optional) Name of the service that Unleash is being integrated with.',
+            type: 'text',
+            required: false,
+            sensitive: false,
+        },
+        {
             name: 'contentType',
             displayName: 'Content-Type',
             placeholder: 'application/json',

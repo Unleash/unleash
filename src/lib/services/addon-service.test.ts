@@ -15,6 +15,7 @@ import type { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import type { IAddonProviders } from '../addons';
 import {
+    type IFlagKey,
     type IFlagResolver,
     type IUnleashConfig,
     SYSTEM_USER,
@@ -44,7 +45,9 @@ function getSetup() {
     );
     const integrationEventsService = new IntegrationEventsService(stores, {
         getLogger,
-        flagResolver: {} as IFlagResolver,
+        flagResolver: {
+            isEnabled: (expName: IFlagKey) => false,
+        } as IFlagResolver,
     });
 
     addonProvider = { simple: new SimpleAddon() };
@@ -55,6 +58,9 @@ function getSetup() {
                 getLogger,
                 // @ts-ignore
                 server: { unleashUrl: 'http://test' },
+                flagResolver: {
+                    isEnabled: (expName: IFlagKey) => false,
+                } as IFlagResolver,
             },
             tagTypeService,
             eventService,

@@ -41,9 +41,10 @@ const StyledTitleRow = styled(StyledRow)(() => ({
     alignItems: 'flex-start',
 }));
 
-const StyledBottomRow = styled(StyledRow)(() => ({
+const StyledBottomRow = styled(StyledRow)(({ theme }) => ({
     marginTop: 'auto',
     alignItems: 'flex-end',
+    gap: theme.spacing(1),
 }));
 
 const StyledHeaderTitle = styled('h2')(({ theme }) => ({

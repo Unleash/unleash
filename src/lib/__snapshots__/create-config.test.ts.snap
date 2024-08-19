@@ -72,6 +72,7 @@ exports[`should create default config 1`] = `
   "feedbackUriPath": undefined,
   "flagResolver": FlagResolver {
     "experiments": {
+      "addonUsageMetrics": false,
       "adminTokenKillSwitch": false,
       "anonymiseEventLog": false,
       "anonymizeProjectOwners": false,
@@ -152,6 +153,7 @@ exports[`should create default config 1`] = `
       "strictSchemaValidation": false,
       "useMemoizedActiveTokens": false,
       "userAccessUIEnabled": false,
+      "webhookServiceNameLogging": false,
     },
     "externalResolver": {
       "getVariant": [Function],

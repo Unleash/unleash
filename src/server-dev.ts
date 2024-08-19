@@ -58,6 +58,8 @@ process.nextTick(async () => {
                         originMiddleware: true,
                         newEventSearch: true,
                         changeRequestPlayground: true,
+                        webhookServiceNameLogging: true,
+                        addonUsageMetrics: true,
                     },
                 },
                 authentication: {

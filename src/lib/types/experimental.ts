@@ -65,7 +65,9 @@ export type IFlagKey =
     | 'originMiddleware'
     | 'newEventSearch'
     | 'changeRequestPlayground'
-    | 'archiveProjects';
+    | 'archiveProjects'
+    | 'webhookServiceNameLogging'
+    | 'addonUsageMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -316,6 +318,14 @@ const flags: IFlags = {
     ),
     archiveProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
+        false,
+    ),
+    webhookServiceNameLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_WEBHOOK_SERVICE_NAME_LOGGING,
+        false,
+    ),
+    addonUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
         false,
     ),
 };

@@ -66,7 +66,7 @@ export class ProjectReadModel implements IProjectReadModel {
         query?: IProjectQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const projectTimer = this.timer('getProjectsForProjectList');
+        const projectTimer = this.timer('getProjectsForAdminUi');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
             .leftJoin(

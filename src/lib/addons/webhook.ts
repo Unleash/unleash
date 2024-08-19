@@ -102,6 +102,13 @@ export default class Webhook extends Addon {
             state = 'failed';
             const failedMessage = `Webhook request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
+            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                    result: state,
+                    destination: 'webhook',
+                });
+            }
+
             this.logger.warn(failedMessage);
         }
 

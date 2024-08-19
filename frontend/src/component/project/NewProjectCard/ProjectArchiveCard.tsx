@@ -5,7 +5,6 @@ import {
     StyledBox,
     StyledCardTitle,
     StyledDivInfo,
-    StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
     StyledActions,
@@ -87,10 +86,8 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                         color: theme.palette.text.secondary,
                                     })}
                                 >
-                                    <StyledParagraphInfo disabled data-loading>
-                                        Archived
-                                    </StyledParagraphInfo>
                                     <p data-loading>
+                                        Archived:{' '}
                                         <TimeAgo
                                             minPeriod={60}
                                             date={

@@ -76,7 +76,6 @@ const ProjectBadgeContainer = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
     gap: theme.spacing(0.5),
     flexWrap: 'wrap',
-    wordWrap: 'anywhere',
 }));
 
 const InfoBadgeDescription = styled('span')(({ theme }) => ({
@@ -86,6 +85,10 @@ const InfoBadgeDescription = styled('span')(({ theme }) => ({
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
 }));
+
+const ProjectNameBadge = styled(Badge)({
+    wordWrap: 'anywhere',
+});
 
 interface IGroupCardProps {
     group: IGroup;
@@ -152,7 +155,7 @@ export const GroupCard = ({
                                         placement='bottom-end'
                                         describeChild
                                     >
-                                        <Badge
+                                        <ProjectNameBadge
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 navigate(
@@ -163,7 +166,7 @@ export const GroupCard = ({
                                             icon={<TopicOutlinedIcon />}
                                         >
                                             {project}
-                                        </Badge>
+                                        </ProjectNameBadge>
                                     </Tooltip>
                                 ))}
                                 elseShow={

@@ -285,7 +285,7 @@ export const Project = () => {
                 </StyledTabContainer>
             </StyledHeader>
             <DeleteProjectDialogue
-                project={projectId}
+                projectId={projectId}
                 open={showDelDialog}
                 onClose={() => {
                     setShowDelDialog(false);

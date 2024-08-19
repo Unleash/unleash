@@ -36,11 +36,7 @@ export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
                 showDescription={false}
                 showLink={false}
             >
-                <DeleteProject
-                    projectId={id}
-                    featureCount={featureCount}
-                    projectName={projectName}
-                />
+                <DeleteProject projectId={id} featureCount={featureCount} />
             </FormTemplate>
         </StyledContainer>
     );

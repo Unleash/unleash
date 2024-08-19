@@ -48,8 +48,8 @@ export const ArchiveProjectDialogue = ({
             title='Are you sure?'
         >
             <Typography>
-                Project will be placed in projects archive. It can be revived or
-                permanently deleted from there.
+                The project will be moved to the projects archive, where it can
+                either be revived or permanently deleted.
             </Typography>
         </Dialogue>
     );

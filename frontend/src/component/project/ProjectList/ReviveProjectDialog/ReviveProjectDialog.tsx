@@ -61,8 +61,7 @@ export const ReviveProjectDialog = ({
                 Project ID: <ProjectId>{id}</ProjectId>
             </StyledParagraph>
             <StyledParagraph>
-                All flags in revived project will still be archived, until
-                changed.
+                All flags in the revived project will remain archived.
             </StyledParagraph>
         </Dialogue>
     );

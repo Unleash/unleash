@@ -38,6 +38,7 @@ export const StyledDivHeader = styled('div')(({ theme }) => ({
     ...flexRow,
     width: '100%',
     marginBottom: theme.spacing(2),
+    gap: theme.spacing(1),
 }));
 
 export const StyledCardTitle = styled('h3')(({ theme }) => ({
@@ -89,7 +90,7 @@ export const StyledIconBox = styled(Box)(({ theme }) => ({
     display: 'grid',
     placeItems: 'center',
     padding: theme.spacing(0, 0.5, 0, 1),
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
     alignSelf: 'baseline',
     color: theme.palette.primary.main,
     height: '100%',

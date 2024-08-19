@@ -50,6 +50,7 @@ export const applyGenericQueryParams = (
     queryParams: IQueryParam[],
 ): void => {
     queryParams.forEach((param) => {
+        const isSingleParam = param.values.length === 1;
         switch (param.operator) {
             case 'IS':
             case 'IS_ANY_OF':
@@ -57,7 +58,11 @@ export const applyGenericQueryParams = (
                 break;
             case 'IS_NOT':
             case 'IS_NONE_OF':
-                query.whereNotIn(param.field, param.values);
+                if (isSingleParam) {
+                    query.whereNot(param.field, param.values[0]);
+                } else {
+                    query.whereNotIn(param.field, param.values);
+                }
                 break;
             case 'IS_BEFORE':
                 query.where(param.field, '<', param.values[0]);

@@ -23,13 +23,22 @@ import {
 } from '../../lib/types';
 import BadDataError from '../../lib/error/bad-data-error';
 import { createFakeEventsService } from '../../lib/features/events/createEventsService';
+import { createFakeAccessReadModel } from '../features/access/createAccessReadModel';
 
 function getSetup() {
     const config = createTestConfig({
         getLogger,
     });
 
-    return createFakeAccessService(config);
+    const { accessService, eventStore, accessStore } =
+        createFakeAccessService(config);
+
+    return {
+        accessService,
+        eventStore,
+        accessStore,
+        accessReadModel: createFakeAccessReadModel(accessStore),
+    };
 }
 
 test('should fail when name exists', async () => {
@@ -287,28 +296,28 @@ describe('addAccessToProject', () => {
 });
 
 test('should return true if user has admin role', async () => {
-    const { accessService, accessStore } = getSetup();
+    const { accessReadModel, accessStore } = getSetup();
 
     const userId = 1;
     accessStore.getRolesForUserId = jest
         .fn()
         .mockResolvedValue([{ id: 1, name: 'ADMIN', type: 'custom' }]);
 
-    const result = await accessService.isRootAdmin(userId);
+    const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(true);
     expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
 });
 
 test('should return false if user does not have admin role', async () => {
-    const { accessService, accessStore } = getSetup();
+    const { accessReadModel, accessStore } = getSetup();
 
     const userId = 2;
     accessStore.getRolesForUserId = jest
         .fn()
         .mockResolvedValue([{ id: 2, name: 'user', type: 'custom' }]);
 
-    const result = await accessService.isRootAdmin(userId);
+    const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(false);
     expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);

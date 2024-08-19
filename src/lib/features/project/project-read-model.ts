@@ -206,7 +206,7 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     private async getMembersCount(): Promise<IProjectMembersCount[]> {
-        const memberTimer = this.timer('getMemberCount');
+        const memberTimer = this.timer('getMembersCount');
         const members = await this.db
             .select('project')
             .from((db) => {

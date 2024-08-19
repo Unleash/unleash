@@ -4,10 +4,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ArchiveProjectDialogue } from '../../ArchiveProject/ArchiveProjectDialogue';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -33,25 +30,15 @@ export const ArchiveProject = ({
     projectId,
     featureCount,
 }: IDeleteProjectProps) => {
-    const { isEnterprise } = useUiConfig();
-    const automatedActionsEnabled = useUiFlag('automatedActions');
-    const { actions } = useActions(projectId);
     const [showArchiveDialog, setShowArchiveDialog] = useState(false);
-    const actionsCount = actions.filter(({ enabled }) => enabled).length;
     const navigate = useNavigate();
-    const hasActions =
-        isEnterprise() && automatedActionsEnabled && actionsCount > 0;
-    const disabled = featureCount > 0 || hasActions;
+    const disabled = featureCount > 0;
 
     return (
         <StyledContainer>
             <p>
                 Before you can archive a project, you must first archive all of
-                the feature flags associated with it
-                {isEnterprise() && automatedActionsEnabled
-                    ? ' and disable all actions that are in it'
-                    : ''}
-                .
+                the feature flags associated with it.
             </p>
             <ConditionallyRender
                 condition={featureCount > 0}
@@ -62,20 +49,6 @@ export const ArchiveProject = ({
                             <strong>
                                 {featureCount} active feature{' '}
                                 {featureCount === 1 ? 'flag' : 'flags'}.
-                            </strong>
-                        </Link>
-                    </p>
-                }
-            />
-            <ConditionallyRender
-                condition={hasActions}
-                show={
-                    <p>
-                        Currently there {actionsCount <= 1 ? 'is' : 'are'}{' '}
-                        <Link component={RouterLink} to='../actions'>
-                            <strong>
-                                {actionsCount} enabled{' '}
-                                {actionsCount === 1 ? 'action' : 'actions'}.
                             </strong>
                         </Link>
                     </p>

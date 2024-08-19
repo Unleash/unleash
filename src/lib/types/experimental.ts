@@ -63,7 +63,6 @@ export type IFlagKey =
     | 'integrationEvents'
     | 'originMiddleware'
     | 'newEventSearch'
-    | 'changeRequestPlayground'
     | 'archiveProjects'
     | 'projectListImprovements'
     | 'useProjectReadModel'
@@ -307,10 +306,6 @@ const flags: IFlags = {
     ),
     newEventSearch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_EVENT_SEARCH,
-        false,
-    ),
-    changeRequestPlayground: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_PLAYGROUND,
         false,
     ),
     archiveProjects: parseEnvVarBoolean(

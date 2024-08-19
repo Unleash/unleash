@@ -33,7 +33,6 @@ import {
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -104,7 +103,6 @@ export const ChangeRequestOverview: FC = () => {
         useChangeRequestsEnabled(projectId);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
-    const changeRequestPlaygroundEnabled = useUiFlag('changeRequestPlayground');
 
     if (!changeRequest) {
         return null;
@@ -266,25 +264,6 @@ export const ChangeRequestOverview: FC = () => {
 
     const countOfChanges = changesCount(changeRequest);
 
-    const reason = (() => {
-        if (!('schedule' in changeRequest)) {
-            return undefined;
-        }
-
-        switch (changeRequest.schedule.status) {
-            case 'failed':
-                return (
-                    (changeRequest.schedule.reason ||
-                        changeRequest.schedule.failureReason) ??
-                    undefined
-                );
-            case 'suspended':
-                return changeRequest.schedule.reason;
-            default:
-                return undefined;
-        }
-    })();
-
     const scheduledAt =
         'schedule' in changeRequest
             ? changeRequest.schedule.scheduledAt
@@ -421,10 +400,9 @@ export const ChangeRequestOverview: FC = () => {
 
                             <ConditionallyRender
                                 condition={
-                                    changeRequestPlaygroundEnabled &&
-                                    (changeRequest.state === 'In review' ||
-                                        changeRequest.state === 'Approved' ||
-                                        changeRequest.state === 'Scheduled')
+                                    changeRequest.state === 'In review' ||
+                                    changeRequest.state === 'Approved' ||
+                                    changeRequest.state === 'Scheduled'
                                 }
                                 show={
                                     <StyledButton

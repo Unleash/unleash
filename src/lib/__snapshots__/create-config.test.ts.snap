@@ -80,7 +80,6 @@ exports[`should create default config 1`] = `
       "automatedActions": false,
       "caseInsensitiveInOperators": false,
       "celebrateUnleash": false,
-      "changeRequestPlayground": false,
       "collectTrafficDataUsage": false,
       "demo": false,
       "disableBulkToggle": false,

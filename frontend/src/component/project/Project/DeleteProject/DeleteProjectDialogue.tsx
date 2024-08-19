@@ -7,19 +7,26 @@ import useToast from 'hooks/useToast';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
+import { ProjectId } from 'component/project/ProjectId/ProjectId';
 
 interface IDeleteProjectDialogueProps {
-    project: string;
+    projectId: string;
+    projectName?: string;
     open: boolean;
     onClose: (e: React.SyntheticEvent) => void;
     onSuccess?: () => void;
 }
 
+const StyledParagraph = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
 export const DeleteProjectDialogue = ({
     open,
     onClose,
-    project,
+    projectId,
+    projectName,
     onSuccess,
 }: IDeleteProjectDialogueProps) => {
     const { deleteProject } = useProjectApi();
@@ -32,7 +39,7 @@ export const DeleteProjectDialogue = ({
     const onClick = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-            await deleteProject(project);
+            await deleteProject(projectId);
             refetchProjects();
             refetchProjectArchive();
             setToastData({
@@ -52,17 +59,34 @@ export const DeleteProjectDialogue = ({
             open={open}
             onClick={onClick}
             onClose={onClose}
-            title='Really delete project'
+            title='Are you sure?'
         >
-            <Typography>
-                This will irreversibly remove the project, all feature flags
-                archived in it, all API keys scoped to only this project
-                <ConditionallyRender
-                    condition={isEnterprise() && automatedActionsEnabled}
-                    show=', and all actions configured for it'
-                />
-                .
-            </Typography>
+            <StyledParagraph>
+                This will irreversibly remove:
+                <ul>
+                    <li>project with all of its settings</li>
+                    <li>all feature flags archived in it</li>
+                    <li>all API keys scoped to only this project</li>
+                    <ConditionallyRender
+                        condition={isEnterprise() && automatedActionsEnabled}
+                        show={<li>all actions configured for it</li>}
+                    />
+                </ul>
+            </StyledParagraph>
+            <ConditionallyRender
+                condition={Boolean(projectName)}
+                show={
+                    <>
+                        <StyledParagraph>
+                            Are you sure you'd like to permanently delete
+                            project <strong>{projectName}</strong>?
+                        </StyledParagraph>
+                        <StyledParagraph>
+                            Project ID: <ProjectId>{projectId}</ProjectId>
+                        </StyledParagraph>
+                    </>
+                }
+            />
         </Dialogue>
     );
 };

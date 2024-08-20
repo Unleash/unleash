@@ -101,7 +101,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.21.3, @babel/core@npm:^7.24.5":
+"@babel/core@npm:^7.21.3":
   version: 7.24.7
   resolution: "@babel/core@npm:7.24.7"
   dependencies:
@@ -202,13 +202,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-plugin-utils@npm:^7.24.7":
-  version: 7.24.7
-  resolution: "@babel/helper-plugin-utils@npm:7.24.7"
-  checksum: 10c0/c3d38cd9b3520757bb4a279255cc3f956fc0ac1c193964bd0816ebd5c86e30710be8e35252227e0c9d9e0f4f56d9b5f916537f2bc588084b0988b4787a967d31
-  languageName: node
-  linkType: hard
-
 "@babel/helper-simple-access@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/helper-simple-access@npm:7.24.7"
@@ -271,34 +264,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.20.7, @babel/parser@npm:^7.24.7":
+"@babel/parser@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/parser@npm:7.24.7"
   bin:
     parser: ./bin/babel-parser.js
   checksum: 10c0/8b244756872185a1c6f14b979b3535e682ff08cb5a2a5fd97cc36c017c7ef431ba76439e95e419d43000c5b07720495b00cf29a7f0d9a483643d08802b58819b
-  languageName: node
-  linkType: hard
-
-"@babel/plugin-transform-react-jsx-self@npm:^7.24.5":
-  version: 7.24.7
-  resolution: "@babel/plugin-transform-react-jsx-self@npm:7.24.7"
-  dependencies:
-    "@babel/helper-plugin-utils": "npm:^7.24.7"
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: 10c0/dcf3b732401f47f06bb29d6016e48066f66de00029a0ded98ddd9983c770a00a109d91cd04d2700d15ee0bcec3ae3027a5f12d69e15ec56efc0bcbfac65e92cb
-  languageName: node
-  linkType: hard
-
-"@babel/plugin-transform-react-jsx-source@npm:^7.24.1":
-  version: 7.24.7
-  resolution: "@babel/plugin-transform-react-jsx-source@npm:7.24.7"
-  dependencies:
-    "@babel/helper-plugin-utils": "npm:^7.24.7"
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: 10c0/970ef1264c7c6c416ab11610665d5309aec2bd2b9086ae394e1132e65138d97b060a7dc9d31054e050d6dc475b5a213938c9707c0202a5022d55dcb4c5abe28f
   languageName: node
   linkType: hard
 
@@ -349,7 +320,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.0.0, @babel/types@npm:^7.20.7, @babel/types@npm:^7.21.3, @babel/types@npm:^7.24.7, @babel/types@npm:^7.8.3":
+"@babel/types@npm:^7.21.3, @babel/types@npm:^7.24.7, @babel/types@npm:^7.8.3":
   version: 7.24.7
   resolution: "@babel/types@npm:7.24.7"
   dependencies:
@@ -2491,6 +2462,138 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-darwin-arm64@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-darwin-arm64@npm:1.7.14"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-x64@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-darwin-x64@npm:1.7.14"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm-gnueabihf@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.7.14"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.7.14"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-musl@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-linux-arm64-musl@npm:1.7.14"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-linux-x64-gnu@npm:1.7.14"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-musl@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-linux-x64-musl@npm:1.7.14"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.7.14"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-ia32-msvc@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.7.14"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:1.7.14":
+  version: 1.7.14
+  resolution: "@swc/core-win32-x64-msvc@npm:1.7.14"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:^1.5.7":
+  version: 1.7.14
+  resolution: "@swc/core@npm:1.7.14"
+  dependencies:
+    "@swc/core-darwin-arm64": "npm:1.7.14"
+    "@swc/core-darwin-x64": "npm:1.7.14"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.7.14"
+    "@swc/core-linux-arm64-gnu": "npm:1.7.14"
+    "@swc/core-linux-arm64-musl": "npm:1.7.14"
+    "@swc/core-linux-x64-gnu": "npm:1.7.14"
+    "@swc/core-linux-x64-musl": "npm:1.7.14"
+    "@swc/core-win32-arm64-msvc": "npm:1.7.14"
+    "@swc/core-win32-ia32-msvc": "npm:1.7.14"
+    "@swc/core-win32-x64-msvc": "npm:1.7.14"
+    "@swc/counter": "npm:^0.1.3"
+    "@swc/types": "npm:^0.1.12"
+  peerDependencies:
+    "@swc/helpers": "*"
+  dependenciesMeta:
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  peerDependenciesMeta:
+    "@swc/helpers":
+      optional: true
+  checksum: 10c0/d98e935a376d6358f53f16a269ee0021c00e2764cc7fabbc594904f283a97200a323b802d35eea034e44af67e8158f641f8ac7a8799b15312cb952765e03ba6b
+  languageName: node
+  linkType: hard
+
+"@swc/counter@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "@swc/counter@npm:0.1.3"
+  checksum: 10c0/8424f60f6bf8694cfd2a9bca45845bce29f26105cda8cf19cdb9fd3e78dc6338699e4db77a89ae449260bafa1cc6bec307e81e7fb96dbf7dcfce0eea55151356
+  languageName: node
+  linkType: hard
+
+"@swc/types@npm:^0.1.12":
+  version: 0.1.12
+  resolution: "@swc/types@npm:0.1.12"
+  dependencies:
+    "@swc/counter": "npm:^0.1.3"
+  checksum: 10c0/f95fea7dee8fc07f8389afbb9578f3d0cd84b429b1d0dbff7fd99b2ef06ed88e96bc33631f36c3bc0505d5a783bee1374acd84b8fc2593001219b6c2caba241b
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-table@npm:^8.10.7":
   version: 8.20.1
   resolution: "@tanstack/react-table@npm:8.20.1"
@@ -2569,47 +2672,6 @@ __metadata:
   version: 5.0.4
   resolution: "@types/aria-query@npm:5.0.4"
   checksum: 10c0/dc667bc6a3acc7bba2bccf8c23d56cb1f2f4defaa704cfef595437107efaa972d3b3db9ec1d66bc2711bfc35086821edd32c302bffab36f2e79b97f312069f08
-  languageName: node
-  linkType: hard
-
-"@types/babel__core@npm:^7.20.5":
-  version: 7.20.5
-  resolution: "@types/babel__core@npm:7.20.5"
-  dependencies:
-    "@babel/parser": "npm:^7.20.7"
-    "@babel/types": "npm:^7.20.7"
-    "@types/babel__generator": "npm:*"
-    "@types/babel__template": "npm:*"
-    "@types/babel__traverse": "npm:*"
-  checksum: 10c0/bdee3bb69951e833a4b811b8ee9356b69a61ed5b7a23e1a081ec9249769117fa83aaaf023bb06562a038eb5845155ff663e2d5c75dd95c1d5ccc91db012868ff
-  languageName: node
-  linkType: hard
-
-"@types/babel__generator@npm:*":
-  version: 7.6.8
-  resolution: "@types/babel__generator@npm:7.6.8"
-  dependencies:
-    "@babel/types": "npm:^7.0.0"
-  checksum: 10c0/f0ba105e7d2296bf367d6e055bb22996886c114261e2cb70bf9359556d0076c7a57239d019dee42bb063f565bade5ccb46009bce2044b2952d964bf9a454d6d2
-  languageName: node
-  linkType: hard
-
-"@types/babel__template@npm:*":
-  version: 7.4.4
-  resolution: "@types/babel__template@npm:7.4.4"
-  dependencies:
-    "@babel/parser": "npm:^7.1.0"
-    "@babel/types": "npm:^7.0.0"
-  checksum: 10c0/cc84f6c6ab1eab1427e90dd2b76ccee65ce940b778a9a67be2c8c39e1994e6f5bbc8efa309f6cea8dc6754994524cd4d2896558df76d92e7a1f46ecffee7112b
-  languageName: node
-  linkType: hard
-
-"@types/babel__traverse@npm:*":
-  version: 7.20.6
-  resolution: "@types/babel__traverse@npm:7.20.6"
-  dependencies:
-    "@babel/types": "npm:^7.20.7"
-  checksum: 10c0/7ba7db61a53e28cac955aa99af280d2600f15a8c056619c05b6fc911cbe02c61aa4f2823299221b23ce0cce00b294c0e5f618ec772aa3f247523c2e48cf7b888
   languageName: node
   linkType: hard
 
@@ -3073,18 +3135,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:4.3.1":
-  version: 4.3.1
-  resolution: "@vitejs/plugin-react@npm:4.3.1"
+"@vitejs/plugin-react-swc@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@vitejs/plugin-react-swc@npm:3.7.0"
   dependencies:
-    "@babel/core": "npm:^7.24.5"
-    "@babel/plugin-transform-react-jsx-self": "npm:^7.24.5"
-    "@babel/plugin-transform-react-jsx-source": "npm:^7.24.1"
-    "@types/babel__core": "npm:^7.20.5"
-    react-refresh: "npm:^0.14.2"
+    "@swc/core": "npm:^1.5.7"
   peerDependencies:
-    vite: ^4.2.0 || ^5.0.0
-  checksum: 10c0/39a027feddfd6b3e307121d79631462ef1aae05714ba7a2f9a73d240d0f89c2bf281132568eb27b55d6ddaf08d86ad1bd8b0066090240e570de8c6320eb9a903
+    vite: ^4 || ^5
+  checksum: 10c0/f9f562c87f0fd384d160c5d499056841f8a38050fc01f5295d3394a77c288eca1f78f6df3aa08c01f3f5cb3e4937c6490607ac87b700d87bab425b7c4dc15e91
   languageName: node
   linkType: hard
 
@@ -8294,13 +8352,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-refresh@npm:^0.14.2":
-  version: 0.14.2
-  resolution: "react-refresh@npm:0.14.2"
-  checksum: 10c0/875b72ef56b147a131e33f2abd6ec059d1989854b3ff438898e4f9310bfcc73acff709445b7ba843318a953cb9424bcc2c05af2b3d80011cee28f25aef3e2ebb
-  languageName: node
-  linkType: hard
-
 "react-router-dom@npm:6.16.0":
   version: 6.16.0
   resolution: "react-router-dom@npm:6.16.0"
@@ -9819,7 +9870,7 @@ __metadata:
     "@types/uuid": "npm:^9.0.0"
     "@uiw/codemirror-theme-duotone": "npm:4.23.0"
     "@uiw/react-codemirror": "npm:4.23.0"
-    "@vitejs/plugin-react": "npm:4.3.1"
+    "@vitejs/plugin-react-swc": "npm:^3.7.0"
     cartesian: "npm:^1.0.1"
     chart.js: "npm:3.9.1"
     chartjs-adapter-date-fns: "npm:3.0.0"

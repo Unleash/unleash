@@ -5,7 +5,6 @@ import {
     StyledBox,
     StyledCardTitle,
     StyledDivInfo,
-    StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
     StyledActions,
@@ -63,11 +62,13 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                         <ProjectIcon color='action' />
                     </StyledIconBox>
                     <StyledBox data-loading>
-                        <StyledCardTitle>
-                            <Highlighter search={searchQuery}>
-                                {name}
-                            </Highlighter>
-                        </StyledCardTitle>
+                        <Tooltip title={`id: ${id}`} arrow>
+                            <StyledCardTitle>
+                                <Highlighter search={searchQuery}>
+                                    {name}
+                                </Highlighter>
+                            </StyledCardTitle>
+                        </Tooltip>
                     </StyledBox>
                     <ProjectModeBadge mode={mode} />
                 </StyledDivHeader>
@@ -87,10 +88,8 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                         color: theme.palette.text.secondary,
                                     })}
                                 >
-                                    <StyledParagraphInfo disabled data-loading>
-                                        Archived
-                                    </StyledParagraphInfo>
                                     <p data-loading>
+                                        Archived:{' '}
                                         <TimeAgo
                                             minPeriod={60}
                                             date={
@@ -117,7 +116,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                         onClick={onRevive}
                         projectId={id}
                         permission={UPDATE_PROJECT}
-                        tooltipProps={{ title: 'Restore project' }}
+                        tooltipProps={{ title: 'Revive project' }}
                         data-testid={`revive-feature-flag-button`}
                     >
                         <Undo />

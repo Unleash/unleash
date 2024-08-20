@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         integrationEvents: true,
                         originMiddleware: true,
                         newEventSearch: true,
-                        changeRequestPlayground: true,
                         projectListImprovements: true,
                         useProjectReadModel: true,
                         webhookServiceNameLogging: true,

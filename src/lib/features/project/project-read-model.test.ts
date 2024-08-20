@@ -70,11 +70,7 @@ test("it doesn't count flags multiple times when they have multiple events assoc
     });
 
     const withFlags = await projectReadModel.getProjectsForAdminUi();
-    expect(withFlags).toEqual(
-        expect.arrayContaining([
-            expect.objectContaining({ id: projectId, featureCount: 1 }),
-        ]),
-    );
+    expect(withFlags).toMatchObject([{ id: projectId, featureCount: 1 }]);
 });
 
 test('it uses the last flag change for an flag in the project as lastUpdated', async () => {
@@ -127,18 +123,16 @@ test('it does not consider flag events in a different project for lastUpdatedAt,
 
     const withEvents = await projectReadModel.getProjectsForAdminUi();
 
-    expect(withEvents).toEqual(
-        expect.arrayContaining([
-            // no events for the flag in this project (i.e. if a flag
-            // has been moved from one project to the next (before the
-            // moving event has been counted)). In practice, you'll
-            // always get a "feature-project-change" event to count
-            expect.objectContaining({ id: projectId1, lastUpdatedAt: null }),
-            // this flag no longer exists in this project because it
-            // has been moved, so it should not be counted
-            expect.objectContaining({ id: projectId2, lastUpdatedAt: null }),
-        ]),
-    );
+    expect(withEvents).toMatchObject([
+        // no events for the flag in this project (i.e. if a flag
+        // has been moved from one project to the next (before the
+        // moving event has been counted)). In practice, you'll
+        // always get a "feature-project-change" event to count
+        { id: projectId1, lastUpdatedAt: null },
+        // this flag no longer exists in this project because it
+        // has been moved, so it should not be counted
+        { id: projectId2, lastUpdatedAt: null },
+    ]);
 });
 
 test('it uses the last flag metrics received for lastReportedFlagUsage', async () => {

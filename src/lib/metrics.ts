@@ -19,6 +19,10 @@ import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
     PROJECT_ENVIRONMENT_REMOVED,
+    PROJECT_CREATED,
+    PROJECT_ARCHIVED,
+    PROJECT_REVIVED,
+    PROJECT_DELETED,
 } from './types/events';
 import type { IUnleashConfig } from './types/option';
 import type { ISettingStore, IUnleashStores } from './types/stores';
@@ -313,6 +317,12 @@ export default class MetricsMonitor {
             name: 'feature_lifecycle_stage_entered',
             help: 'Count how many features entered a given stage',
             labelNames: ['stage'],
+        });
+
+        const projectActionsCounter = createCounter({
+            name: 'project_actions_count',
+            help: 'Count project actions',
+            labelNames: ['project_id', 'action'],
         });
 
         const projectEnvironmentsDisabled = createCounter({
@@ -844,6 +854,26 @@ export default class MetricsMonitor {
                 environment: 'n/a',
                 environmentType: 'n/a',
             });
+        });
+        eventStore.on(PROJECT_CREATED, ({ project }: { project: string }) => {
+            projectActionsCounter
+                .labels({ project_id: project, action: PROJECT_CREATED })
+                .inc();
+        });
+        eventStore.on(PROJECT_ARCHIVED, ({ project }: { project: string }) => {
+            projectActionsCounter
+                .labels({ project_id: project, action: PROJECT_ARCHIVED })
+                .inc();
+        });
+        eventStore.on(PROJECT_REVIVED, ({ project }: { project: string }) => {
+            projectActionsCounter
+                .labels({ project_id: project, action: PROJECT_REVIVED })
+                .inc();
+        });
+        eventStore.on(PROJECT_DELETED, ({ project }: { project: string }) => {
+            projectActionsCounter
+                .labels({ project_id: project, action: PROJECT_DELETED })
+                .inc();
         });
 
         const logger = config.getLogger('metrics.ts');

@@ -28,7 +28,7 @@ const mapProjectForUi = (row): ProjectForUi => {
         archivedAt: row.archived_at,
         mode: row.project_mode || 'open',
         lastReportedFlagUsage: row.last_usage,
-        lastFlagUpdate: row.last_updated,
+        lastUpdatedAt: row.last_updated,
     };
 };
 
@@ -74,7 +74,13 @@ export class ProjectReadModel implements IProjectReadModel {
                 'project_settings.project',
                 'projects.id',
             )
-            .leftJoin('events', 'events.feature_name', 'features.name')
+            .leftJoin('events', (join) => {
+                join.on('events.feature_name', '=', 'features.name').andOn(
+                    'events.project',
+                    '=',
+                    'projects.id',
+                );
+            })
             .orderBy('projects.name', 'asc');
 
         if (this.flagResolver.isEnabled('archiveProjects')) {
@@ -92,7 +98,7 @@ export class ProjectReadModel implements IProjectReadModel {
         let selectColumns = [
             this.db.raw(
                 'projects.id, projects.name, projects.description, projects.health, projects.created_at, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
+                    'count(DISTINCT features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'MAX(features.last_seen_at) AS last_usage,' +
                     'MAX(events.created_at) AS last_updated',
             ),
@@ -169,7 +175,7 @@ export class ProjectReadModel implements IProjectReadModel {
                 'projects.id, projects.health, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count,',
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
             ),
             'project_stats.avg_time_to_prod_current_window',
         ] as (string | Raw<any>)[];

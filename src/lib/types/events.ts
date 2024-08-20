@@ -354,7 +354,7 @@ export const IEventTypes = [
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
-// this rerpresents the write model for events
+// this represents the write model for events
 export interface IBaseEvent {
     type: IEventType;
     createdBy: string;

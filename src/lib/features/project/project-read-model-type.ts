@@ -13,7 +13,7 @@ export type ProjectForUi = {
     archivedAt?: Date;
     featureCount: number;
     lastReportedFlagUsage: Date | null;
-    lastFlagUpdate: Date | null;
+    lastUpdatedAt: Date | null;
 };
 
 // @todo remove with flag useProjectReadModel

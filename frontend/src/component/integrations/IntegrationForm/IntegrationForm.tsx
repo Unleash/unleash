@@ -430,12 +430,19 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             />
                         </div>
                     </StyledConfigurationSection>
-                    <Divider />
-                    <section>
-                        <IntegrationDelete
-                            id={(formValues as AddonSchema).id}
-                        />
-                    </section>
+                    <ConditionallyRender
+                        condition={editMode}
+                        show={
+                            <>
+                                <Divider />
+                                <section>
+                                    <IntegrationDelete
+                                        id={(formValues as AddonSchema).id}
+                                    />
+                                </section>
+                            </>
+                        }
+                    />
                 </StyledContainer>
             </StyledForm>
             <IntegrationEventsModal

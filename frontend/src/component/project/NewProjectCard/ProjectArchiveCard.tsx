@@ -17,7 +17,6 @@ import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import TimeAgo from 'react-timeago';
 import { Box, Link, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import {
@@ -29,6 +28,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import Delete from '@mui/icons-material/Delete';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import TimeAgo from 'component/common/TimeAgo/TimeAgo';
 
 export type ProjectArchiveCardProps = {
     id: string;
@@ -91,11 +91,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                     <p data-loading>
                                         Archived:{' '}
                                         <TimeAgo
-                                            key={`${archivedAt}`}
-                                            minPeriod={60}
-                                            date={
-                                                new Date(archivedAt as string)
-                                            }
+                                            date={archivedAt}
                                             live={false}
                                         />
                                     </p>

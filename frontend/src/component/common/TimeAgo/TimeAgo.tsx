@@ -20,7 +20,9 @@ const TimeAgo: FC<TimeAgoProps> = ({ date, fallback = '', live }) => {
         try {
             return formatDistanceToNow(new Date(date), {
                 addSuffix: true,
-            }).replace('about ', '');
+            })
+                .replace('about ', '')
+                .replace('less than a minute ago', '< 1 minute ago');
         } catch {
             return fallback;
         }

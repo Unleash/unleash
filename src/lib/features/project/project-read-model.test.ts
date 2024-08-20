@@ -71,6 +71,9 @@ test("it doesn't count flags multiple times when they have multiple events assoc
 
     const withFlags = await projectReadModel.getProjectsForAdminUi();
     expect(withFlags).toMatchObject([{ id: projectId, featureCount: 1 }]);
+
+    const insightsQuery = await projectReadModel.getProjectsForInsights();
+    expect(insightsQuery).toMatchObject([{ id: projectId, featureCount: 1 }]);
 });
 
 test('it uses the last flag change for an flag in the project as lastUpdated', async () => {

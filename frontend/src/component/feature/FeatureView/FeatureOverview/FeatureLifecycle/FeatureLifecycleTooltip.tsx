@@ -117,6 +117,7 @@ const LastSeenIcon: FC<{
 
     return (
         <TimeAgo
+            key={`${lastSeen}`}
             date={lastSeen}
             title=''
             live={false}
@@ -230,6 +231,7 @@ const Environments: FC<{
                         </CenteredBox>
                         <CenteredBox>
                             <TimeAgo
+                                key={`${environment.lastSeenAt}`}
                                 minPeriod={60}
                                 date={environment.lastSeenAt}
                             />

@@ -1,6 +1,6 @@
 import { Tooltip, Typography } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { formatDateYMD } from 'utils/formatDate';
 import { TextCell } from '../TextCell/TextCell';
 import TimeAgo from 'react-timeago';
@@ -13,7 +13,7 @@ interface ITimeAgoCellProps {
     dateFormat?: (value: string | number | Date, locale: string) => string;
 }
 
-export const TimeAgoCell: VFC<ITimeAgoCellProps> = ({
+export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
     value,
     live = false,
     emptyText,
@@ -35,7 +35,12 @@ export const TimeAgoCell: VFC<ITimeAgoCellProps> = ({
                     variant='body2'
                     data-loading
                 >
-                    <TimeAgo date={new Date(value)} live={live} title={''} />
+                    <TimeAgo
+                        key={`${value}`}
+                        date={new Date(value)}
+                        live={live}
+                        title={''}
+                    />
                 </Typography>
             </Tooltip>
         </TextCell>

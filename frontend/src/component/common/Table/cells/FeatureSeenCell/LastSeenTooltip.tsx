@@ -99,6 +99,7 @@ export const LastSeenTooltip = ({
                                         condition={Boolean(lastSeenAt)}
                                         show={
                                             <TimeAgo
+                                                key={`${lastSeenAt}`}
                                                 date={lastSeenAt!}
                                                 title=''
                                                 live={false}

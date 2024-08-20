@@ -89,6 +89,7 @@ export const FeatureEnvironmentSeen = ({
         <>
             {lastSeen ? (
                 <TimeAgo
+                    key={`${lastSeen}`}
                     date={lastSeen}
                     title=''
                     live={false}

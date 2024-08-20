@@ -91,6 +91,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                     <p data-loading>
                                         Archived:{' '}
                                         <TimeAgo
+                                            key={`${archivedAt}`}
                                             minPeriod={60}
                                             date={
                                                 new Date(archivedAt as string)

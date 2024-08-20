@@ -74,7 +74,13 @@ export class ProjectReadModel implements IProjectReadModel {
                 'project_settings.project',
                 'projects.id',
             )
-            .leftJoin('events', 'events.feature_name', 'features.name')
+            .leftJoin('events', (join) => {
+                join.on('events.feature_name', '=', 'features.name').andOn(
+                    'events.project',
+                    '=',
+                    'projects.id',
+                );
+            })
             .orderBy('projects.name', 'asc');
 
         if (this.flagResolver.isEnabled('archiveProjects')) {

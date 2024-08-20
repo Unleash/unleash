@@ -7,16 +7,17 @@ type Color = {
 };
 
 export const useLastSeenColors = (): ((
-    date?: Date | number | string,
+    date?: Date | number | string | null,
 ) => Color) => {
     const theme = useTheme();
+    const colorsForUnknown = {
+        background: theme.palette.seen.unknown,
+        text: theme.palette.grey.A400,
+    };
 
-    return (date?: Date | number | string): Color => {
+    return (date?: Date | number | string | null): Color => {
         if (!date) {
-            return {
-                background: theme.palette.seen.unknown,
-                text: theme.palette.grey.A400,
-            };
+            return colorsForUnknown;
         }
 
         try {
@@ -41,9 +42,6 @@ export const useLastSeenColors = (): ((
             };
         } catch {}
 
-        return {
-            background: theme.palette.seen.unknown,
-            text: theme.palette.grey.A400,
-        };
+        return colorsForUnknown;
     };
 };

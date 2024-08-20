@@ -74,7 +74,6 @@ export const LastSeenTooltip = ({
     ...rest
 }: ILastSeenTooltipProps) => {
     const getColor = useLastSeenColors();
-    const { text: defaultTextColor } = getColor();
     const environmentsHaveLastSeen = environments?.some((environment) =>
         Boolean(environment.lastSeenAt),
     );
@@ -98,28 +97,15 @@ export const LastSeenTooltip = ({
                                     {name}
                                 </StyledDescriptionBlockHeader>
                                 <StyledValueContainer>
-                                    <ConditionallyRender
-                                        condition={Boolean(lastSeenAt)}
-                                        show={
-                                            <StyledValue
-                                                color={
-                                                    getColor(lastSeenAt!).text
-                                                }
-                                            >
-                                                <TimeAgo
-                                                    date={lastSeenAt}
-                                                    live={false}
-                                                />
-                                            </StyledValue>
-                                        }
-                                        elseShow={
-                                            <StyledValue
-                                                color={defaultTextColor}
-                                            >
-                                                no usage
-                                            </StyledValue>
-                                        }
-                                    />
+                                    <StyledValue
+                                        color={getColor(lastSeenAt).text}
+                                    >
+                                        <TimeAgo
+                                            date={lastSeenAt}
+                                            live={false}
+                                            fallback='no usage'
+                                        />
+                                    </StyledValue>
                                 </StyledValueContainer>
                                 <LastSeenProgress yes={yes} no={no} />
                             </StyledDescriptionBlock>

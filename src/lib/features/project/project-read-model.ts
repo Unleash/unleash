@@ -28,7 +28,7 @@ const mapProjectForUi = (row): ProjectForUi => {
         archivedAt: row.archived_at,
         mode: row.project_mode || 'open',
         lastReportedFlagUsage: row.last_usage,
-        lastFlagUpdate: row.last_updated,
+        lastUpdatedAt: row.last_updated,
     };
 };
 

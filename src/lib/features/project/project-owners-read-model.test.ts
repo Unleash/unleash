@@ -20,7 +20,7 @@ const mockProjectData = (name: string): ProjectForUi => ({
     createdAt: new Date(),
     favorite: false,
     lastReportedFlagUsage: null,
-    lastFlagUpdate: null,
+    lastUpdatedAt: null,
 });
 
 describe('unit tests', () => {

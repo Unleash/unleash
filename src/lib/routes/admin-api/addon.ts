@@ -38,7 +38,7 @@ import {
     type IntegrationEventsSchema,
     integrationEventsSchema,
 } from '../../openapi/spec/integration-events-schema';
-import { BadDataError, NotFoundError } from '../../error';
+import { BadDataError } from '../../error';
 import type { IntegrationEventsService } from '../../services';
 
 type AddonServices = Pick<
@@ -276,10 +276,6 @@ Note: passing \`null\` as a value for the description property will set it to an
         >,
         res: Response<IntegrationEventsSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('integrationEvents')) {
-            throw new NotFoundError('This feature is not enabled');
-        }
-
         const { id } = req.params;
 
         if (Number.isNaN(Number(id))) {
@@ -288,24 +284,11 @@ Note: passing \`null\` as a value for the description property will set it to an
 
         const { limit = '50', offset = '0' } = req.query;
 
-        const normalizedLimit =
-            Number(limit) > 0 && Number(limit) <= 100 ? Number(limit) : 50;
-        const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
-
-        const integrationEvents =
-            await this.integrationEventsService.getPaginatedEvents(
-                id,
-                normalizedLimit,
-                normalizedOffset,
-            );
-
         this.openApiService.respondWithValidation(
             200,
             res,
             integrationEventsSchema.$id,
-            {
-                integrationEvents: serializeDates(integrationEvents),
-            },
+            {},
         );
     }
 }

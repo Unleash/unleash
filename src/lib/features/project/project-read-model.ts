@@ -92,7 +92,7 @@ export class ProjectReadModel implements IProjectReadModel {
         let selectColumns = [
             this.db.raw(
                 'projects.id, projects.name, projects.description, projects.health, projects.created_at, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
+                    'count(DISTINCT features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'MAX(features.last_seen_at) AS last_usage,' +
                     'MAX(events.created_at) AS last_updated',
             ),

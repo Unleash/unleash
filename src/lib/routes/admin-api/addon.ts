@@ -185,7 +185,7 @@ Note: passing \`null\` as a value for the description property will set it to an
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Addons'],
                     operationId: 'getIntegrationEvents',
                     summary:
                         'Get integration events for a specific integration configuration.',

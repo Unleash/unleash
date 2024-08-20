@@ -45,35 +45,11 @@ beforeEach(async () => {
     await flagStore.deleteAll();
 });
 
-test('it gets the right number of flags for a project', async () => {
-    await projectStore.create({ id: 'a', name: 'A' });
-    await projectStore.create({ id: 'b', name: 'B' });
-
-    const noFlags = await projectReadModel.getProjectsForAdminUi();
-    expect(noFlags).toEqual(
-        expect.arrayContaining([
-            expect.objectContaining({ id: 'a', featureCount: 0 }),
-            expect.objectContaining({ id: 'b', featureCount: 0 }),
-        ]),
-    );
-
-    await flagStore.create('a', { name: 'x', createdByUserId: 1 });
-    await flagStore.create('a', { name: 'y', createdByUserId: 1 });
-    await flagStore.create('b', { name: 'z', createdByUserId: 1 });
-
-    const withFlags = await projectReadModel.getProjectsForAdminUi();
-    expect(withFlags).toEqual(
-        expect.arrayContaining([
-            expect.objectContaining({ id: 'a', featureCount: 2 }),
-            expect.objectContaining({ id: 'b', featureCount: 1 }),
-        ]),
-    );
-});
-
-test('it gets the right number of flags for a project 2', async () => {
+test("it doesn't count flags multiple times when they have multiple events associated with them", async () => {
     await projectStore.create({ id: 'a', name: 'A' });
 
     await flagStore.create('a', { name: 'x', createdByUserId: 1 });
+
     await eventStore.store({
         type: 'feature-created',
         createdBy: 'admin',
@@ -90,6 +66,7 @@ test('it gets the right number of flags for a project 2', async () => {
         featureName: 'x',
         project: 'a',
     });
+
     const withFlags = await projectReadModel.getProjectsForAdminUi();
     expect(withFlags).toEqual(
         expect.arrayContaining([

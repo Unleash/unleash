@@ -322,7 +322,7 @@ export default class MetricsMonitor {
         const projectActionsCounter = createCounter({
             name: 'project_actions_count',
             help: 'Count project actions',
-            labelNames: ['project_id', 'action'],
+            labelNames: ['action'],
         });
 
         const projectEnvironmentsDisabled = createCounter({
@@ -855,25 +855,17 @@ export default class MetricsMonitor {
                 environmentType: 'n/a',
             });
         });
-        eventStore.on(PROJECT_CREATED, ({ project }: { project: string }) => {
-            projectActionsCounter
-                .labels({ project_id: project, action: PROJECT_CREATED })
-                .inc();
+        eventStore.on(PROJECT_CREATED, () => {
+            projectActionsCounter.labels({ action: PROJECT_CREATED }).inc();
         });
-        eventStore.on(PROJECT_ARCHIVED, ({ project }: { project: string }) => {
-            projectActionsCounter
-                .labels({ project_id: project, action: PROJECT_ARCHIVED })
-                .inc();
+        eventStore.on(PROJECT_ARCHIVED, () => {
+            projectActionsCounter.labels({ action: PROJECT_ARCHIVED }).inc();
         });
-        eventStore.on(PROJECT_REVIVED, ({ project }: { project: string }) => {
-            projectActionsCounter
-                .labels({ project_id: project, action: PROJECT_REVIVED })
-                .inc();
+        eventStore.on(PROJECT_REVIVED, () => {
+            projectActionsCounter.labels({ action: PROJECT_REVIVED }).inc();
         });
-        eventStore.on(PROJECT_DELETED, ({ project }: { project: string }) => {
-            projectActionsCounter
-                .labels({ project_id: project, action: PROJECT_DELETED })
-                .inc();
+        eventStore.on(PROJECT_DELETED, () => {
+            projectActionsCounter.labels({ action: PROJECT_DELETED }).inc();
         });
 
         const logger = config.getLogger('metrics.ts');

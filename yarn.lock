@@ -2271,9 +2271,9 @@ __metadata:
   linkType: hard
 
 "@types/slug@npm:^5.0.8":
-  version: 5.0.8
-  resolution: "@types/slug@npm:5.0.8"
-  checksum: 10c0/8e6d308f91e0f099fe6d23f0604fd1576759e40cc1aa0bf8b4eda2c03741c5741840733576a4e7c37b6ae8b5a2adda9458c8a7a16166fbf4167c6108f3abeb15
+  version: 5.0.9
+  resolution: "@types/slug@npm:5.0.9"
+  checksum: 10c0/6d5366d80d83a8d08b7d33ea14394511997de2d6001d1e463a5141aa10bf0dd1ec801e0e248b8a84239142064f96918638db7ca2c745c85891d6c34c309ad3a6
   languageName: node
   linkType: hard
 

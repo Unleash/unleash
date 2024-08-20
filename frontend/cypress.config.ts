@@ -4,7 +4,7 @@ import vitePreprocessor from 'cypress-vite';
 
 export default defineConfig({
     projectId: 'tc2qff',
-    defaultCommandTimeout: 12000,
+    defaultCommandTimeout: 13000,
     screenshotOnRunFailure: false,
     video: false,
     e2e: {

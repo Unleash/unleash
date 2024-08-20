@@ -46,38 +46,41 @@ beforeEach(async () => {
 });
 
 test("it doesn't count flags multiple times when they have multiple events associated with them", async () => {
-    await projectStore.create({ id: 'a', name: 'A' });
+    const projectId = 'project';
+    const flagName = 'flag';
+    await projectStore.create({ id: projectId, name: projectId });
 
-    await flagStore.create('a', { name: 'x', createdByUserId: 1 });
+    await flagStore.create(projectId, { name: flagName, createdByUserId: 1 });
 
     await eventStore.store({
         type: 'feature-created',
         createdBy: 'admin',
         ip: '',
         createdByUserId: 1,
-        featureName: 'x',
-        project: 'a',
+        featureName: flagName,
+        project: projectId,
     });
     await eventStore.store({
         type: 'feature-updated',
         createdBy: 'admin',
         ip: '',
         createdByUserId: 1,
-        featureName: 'x',
-        project: 'a',
+        featureName: flagName,
+        project: projectId,
     });
 
     const withFlags = await projectReadModel.getProjectsForAdminUi();
     expect(withFlags).toEqual(
         expect.arrayContaining([
-            expect.objectContaining({ id: 'a', featureCount: 1 }),
+            expect.objectContaining({ id: projectId, featureCount: 1 }),
         ]),
     );
 });
 
 test('it uses the last flag change for an flag in the project as lastUpdated', async () => {
-    const projectId = 'a';
-    await projectStore.create({ id: projectId, name: 'A' });
+    const projectId = 'project';
+    const flagName = 'flag';
+    await projectStore.create({ id: projectId, name: projectId });
     await eventStore.store({
         type: 'project-created',
         createdBy: 'admin',
@@ -90,13 +93,13 @@ test('it uses the last flag change for an flag in the project as lastUpdated', a
 
     expect(noEvents[0].lastUpdatedAt).toBeNull();
 
-    await flagStore.create(projectId, { name: 'x', createdByUserId: 1 });
+    await flagStore.create(projectId, { name: flagName, createdByUserId: 1 });
     await eventStore.store({
         type: 'feature-created',
         createdBy: 'admin',
         ip: '',
         createdByUserId: 1,
-        featureName: 'x',
+        featureName: flagName,
         project: projectId,
     });
 
@@ -111,13 +114,14 @@ test('it does not consider flag events in a different project for lastUpdatedAt,
     const projectId2 = 'project2';
     await projectStore.create({ id: projectId2, name: 'Project2' });
 
-    await flagStore.create(projectId1, { name: 'x', createdByUserId: 1 });
+    const flagName = 'flag';
+    await flagStore.create(projectId1, { name: flagName, createdByUserId: 1 });
     await eventStore.store({
         type: 'feature-created',
         createdBy: 'admin',
         ip: '',
         createdByUserId: 1,
-        featureName: 'x',
+        featureName: flagName,
         project: projectId2,
     });
 
@@ -138,15 +142,20 @@ test('it does not consider flag events in a different project for lastUpdatedAt,
 });
 
 test('it uses the last flag metrics received for lastReportedFlagUsage', async () => {
-    await projectStore.create({ id: 'a', name: 'A' });
+    const projectId = 'project';
+    const flagName = 'flag';
+    await projectStore.create({ id: projectId, name: projectId });
 
-    await flagStore.create('a', { name: 'x', createdByUserId: 1 });
+    const noUsage = await projectReadModel.getProjectsForAdminUi();
+    expect(noUsage[0].lastReportedFlagUsage).toBeNull();
+
+    await flagStore.create(projectId, { name: flagName, createdByUserId: 1 });
 
     await flagStore.setLastSeen([
-        { featureName: 'x', environment: 'development' },
+        { featureName: flagName, environment: 'development' },
     ]);
 
-    const flag = await flagStore.get('x');
+    const flag = await flagStore.get(flagName);
 
     const result = await projectReadModel.getProjectsForAdminUi();
     expect(result[0].lastReportedFlagUsage).toEqual(flag.lastSeenAt);

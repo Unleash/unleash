@@ -40,6 +40,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
                 >
                     Created{' '}
                     <TimeAgo
+                        key={`${changeRequest.createdAt}`}
                         minPeriod={60}
                         date={new Date(changeRequest.createdAt)}
                     />{' '}

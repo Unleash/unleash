@@ -307,6 +307,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                             <StyledCell>
                                                 {environment.lastSeen && (
                                                     <TimeAgo
+                                                        key={`${environment.lastSeen}`}
                                                         minPeriod={60}
                                                         date={
                                                             new Date(

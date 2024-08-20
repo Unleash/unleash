@@ -38,6 +38,7 @@ export const FeatureArchivedCell: VFC<IFeatureArchivedCellProps> = ({
             >
                 <Typography noWrap variant='body2' data-loading>
                     <TimeAgo
+                        key={`${archivedAt}`}
                         date={new Date(archivedAt)}
                         title=''
                         live={false}

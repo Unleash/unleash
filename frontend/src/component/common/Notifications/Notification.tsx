@@ -158,6 +158,7 @@ export const Notification = ({
 
                     <StyledTimeAgoTypography>
                         <TimeAgo
+                            key={`${notification.createdAt}`}
                             date={new Date(notification.createdAt)}
                             minPeriod={60}
                         />

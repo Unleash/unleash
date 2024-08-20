@@ -37,6 +37,7 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
                     <Typography color='text.secondary' component='span'>
                         commented{' '}
                         <TimeAgo
+                            key={`${comment.createdAt}`}
                             minPeriod={60}
                             date={new Date(comment.createdAt)}
                         />

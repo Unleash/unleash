@@ -98,6 +98,7 @@ export const FeatureSeenCell: VFC<IFeatureSeenCellProps> = ({
             condition={Boolean(lastSeenAt)}
             show={
                 <TimeAgo
+                    key={`${lastSeenAt}`}
                     date={lastSeenAt!}
                     title=''
                     live={false}

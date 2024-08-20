@@ -10,7 +10,7 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 Feature flags, sometimes called feature toggles or feature switches, are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
 
-With feature flags, developers can turn specific features or code segments on or off at runtime without needing a code deployment or rollback. Organizations that adopt feature flags see improvements in key DevOps metrics like lead time, deployment frequency, change failure rate, and recovery time.
+With feature flags, developers can turn specific features or code segments on or off at runtime without needing a code deployment or rollback. Organizations that adopt feature flags see improvements in key DevOps metrics like lead time to changes, mean time to recovery, deployment frequency, and change failure rate.
 
 At Unleash, we've defined 11 principles for building a large-scale feature flag system. These principles have their roots in distributed systems design and focus on security, privacy, and scalability—critical needs for enterprise systems. By following these principles, you can create a feature flag system that's reliable, easy to maintain, and capable of handling heavy loads.
 
@@ -123,7 +123,7 @@ For more insights into reducing payload size, visit our [Best practices for usin
 
 ## 6. Prioritize availability over consistency
 
-Your feature flag system should not be able to take down your main application under any circumstance, even during network disruptions. Your application shouldn't have any dependency on the availability of your feature flag system. Avoid real-time flag evaluations; your application should operate normally without experiencing downtime or performance issues, even if the feature flag goes down.
+Your application shouldn't have any dependency on the availability of your feature flag system. Robust feature flag systems avoid relying on real-time flag evaluations because the unavailability of the feature flag system will cause application downtime, outages, degraded performance, or even a complete failure of your application.
 
 If the feature flag system fails, your application should continue running smoothly. Feature flagging should degrade gracefully, preventing any unexpected behavior or disruptions for users.
 

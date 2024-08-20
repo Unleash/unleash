@@ -359,6 +359,12 @@ export default class MetricsMonitor {
             labelNames: ['resource'],
         });
 
+        const addonEventsHandledCounter = createCounter({
+            name: 'addon_events_handled',
+            help: 'Events handled by addons and the result.',
+            labelNames: ['result', 'destination'],
+        });
+
         async function collectStaticCounters() {
             try {
                 const stats = await instanceStatsService.getStats();
@@ -904,6 +910,10 @@ export default class MetricsMonitor {
 
         eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
             projectEnvironmentsDisabled.increment({ project_id: project });
+        });
+
+        eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {
+            addonEventsHandledCounter.increment({ result, destination });
         });
 
         await this.configureDbMetrics(

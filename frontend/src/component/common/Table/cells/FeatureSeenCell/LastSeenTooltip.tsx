@@ -1,5 +1,5 @@
 import { styled, type SxProps, type Theme, Typography } from '@mui/material';
-import TimeAgo from 'react-timeago';
+import TimeAgo from 'component/common/TimeAgo/TimeAgo';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
@@ -74,10 +74,11 @@ export const LastSeenTooltip = ({
     ...rest
 }: ILastSeenTooltipProps) => {
     const getColor = useLastSeenColors();
-    const [, defaultTextColor] = getColor();
+    const { text: defaultTextColor } = getColor();
     const environmentsHaveLastSeen = environments?.some((environment) =>
         Boolean(environment.lastSeenAt),
     );
+
     return (
         <StyledDescription {...rest} data-loading>
             <StyledDescriptionHeader>
@@ -85,7 +86,9 @@ export const LastSeenTooltip = ({
             </StyledDescriptionHeader>
             <ConditionallyRender
                 condition={
-                    Boolean(environments) && Boolean(environmentsHaveLastSeen)
+                    Boolean(environments) &&
+                    Boolean(environmentsHaveLastSeen) &&
+                    false
                 }
                 show={
                     <StyledListContainer>
@@ -98,31 +101,16 @@ export const LastSeenTooltip = ({
                                     <ConditionallyRender
                                         condition={Boolean(lastSeenAt)}
                                         show={
-                                            <TimeAgo
-                                                key={`${lastSeenAt}`}
-                                                date={lastSeenAt!}
-                                                title=''
-                                                live={false}
-                                                formatter={(
-                                                    value: number,
-                                                    unit: string,
-                                                    suffix: string,
-                                                ) => {
-                                                    const [, textColor] =
-                                                        getColor(unit);
-                                                    return (
-                                                        <StyledValue
-                                                            color={textColor}
-                                                        >
-                                                            {`${value} ${unit}${
-                                                                value !== 1
-                                                                    ? 's'
-                                                                    : ''
-                                                            } ${suffix}`}
-                                                        </StyledValue>
-                                                    );
-                                                }}
-                                            />
+                                            <StyledValue
+                                                color={
+                                                    getColor(lastSeenAt!).text
+                                                }
+                                            >
+                                                <TimeAgo
+                                                    date={lastSeenAt}
+                                                    live={false}
+                                                />
+                                            </StyledValue>
                                         }
                                         elseShow={
                                             <StyledValue
@@ -139,27 +127,12 @@ export const LastSeenTooltip = ({
                     </StyledListContainer>
                 }
                 elseShow={
-                    <TimeAgo
-                        date={featureLastSeen}
-                        title=''
-                        live={false}
-                        formatter={(
-                            value: number,
-                            unit: string,
-                            suffix: string,
-                        ) => {
-                            return (
-                                <Typography
-                                    fontWeight={'bold'}
-                                    color={'text.primary'}
-                                >
-                                    {`Reported ${value} ${unit}${
-                                        value !== 1 ? 's' : ''
-                                    } ${suffix}`}
-                                </Typography>
-                            );
-                        }}
-                    />
+                    <Typography
+                        fontWeight={'bold'}
+                        color={getColor(featureLastSeen).text}
+                    >
+                        Reported <TimeAgo date={featureLastSeen} />
+                    </Typography>
                 }
             />
             <StyledDescriptionSubHeader>

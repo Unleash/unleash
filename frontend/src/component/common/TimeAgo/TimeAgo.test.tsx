@@ -21,14 +21,14 @@ test('renders fallback when date is null or undefined', () => {
 test('formats date correctly', () => {
     const date = new Date();
     render(<TimeAgo date={date} />);
-    expect(screen.getByText('less than a minute ago')).toBeInTheDocument();
+    expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 });
 
 test('updates time periodically based on `live`', () => {
     const date = new Date();
     render(<TimeAgo date={date} live={10} />);
 
-    expect(screen.getByText('less than a minute ago')).toBeInTheDocument();
+    expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 
     act(() => vi.advanceTimersByTime(61_000));
 
@@ -40,11 +40,11 @@ test('stops updating when live is false', () => {
     const setIntervalSpy = vi.spyOn(global, 'setInterval');
     render(<TimeAgo date={date} live={false} />);
 
-    expect(screen.getByText('less than a minute ago')).toBeInTheDocument();
+    expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 
     act(() => vi.advanceTimersByTime(61000));
 
-    expect(screen.getByText('less than a minute ago')).toBeInTheDocument();
+    expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 
     expect(setIntervalSpy).not.toHaveBeenCalled();
 });
@@ -54,7 +54,7 @@ test('handles string dates', () => {
     vi.setSystemTime(new Date('2024-01-01T01:01:00Z'));
 
     render(<TimeAgo date={dateString} />);
-    expect(screen.getByText('about 1 hour ago')).toBeInTheDocument();
+    expect(screen.getByText('1 hour ago')).toBeInTheDocument();
 });
 
 test('cleans up interval on unmount', () => {

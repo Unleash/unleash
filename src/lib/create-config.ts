@@ -657,7 +657,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             1,
             parseEnvVarNumber(
                 process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
-                30,
+                options?.resourceLimits?.featureEnvironmentStrategies || 30,
             ),
         ),
         constraintValues: Math.max(
@@ -669,23 +669,38 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ),
         constraints: Math.max(
             0,
-            parseEnvVarNumber(process.env.UNLEASH_CONSTRAINTS_LIMIT, 30),
+            parseEnvVarNumber(
+                process.env.UNLEASH_CONSTRAINTS_LIMIT,
+                options?.resourceLimits?.constraints || 30,
+            ),
         ),
-        environments: parseEnvVarNumber(
-            process.env.UNLEASH_ENVIRONMENTS_LIMIT,
-            50,
+        environments: Math.max(
+            0,
+            parseEnvVarNumber(
+                process.env.UNLEASH_ENVIRONMENTS_LIMIT,
+                options?.resourceLimits?.environments || 50,
+            ),
         ),
         projects: Math.max(
             1,
-            parseEnvVarNumber(process.env.UNLEASH_PROJECTS_LIMIT, 500),
+            parseEnvVarNumber(
+                process.env.UNLEASH_PROJECTS_LIMIT,
+                options?.resourceLimits?.projects || 500,
+            ),
         ),
         apiTokens: Math.max(
             0,
-            parseEnvVarNumber(process.env.UNLEASH_API_TOKENS_LIMIT, 2000),
+            parseEnvVarNumber(
+                process.env.UNLEASH_API_TOKENS_LIMIT,
+                options?.resourceLimits?.apiTokens || 2000,
+            ),
         ),
         segments: Math.max(
             0,
-            parseEnvVarNumber(process.env.UNLEASH_SEGMENTS_LIMIT, 300),
+            parseEnvVarNumber(
+                process.env.UNLEASH_SEGMENTS_LIMIT,
+                options?.resourceLimits?.segments || 300,
+            ),
         ),
         featureFlags: Math.max(
             1,

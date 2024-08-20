@@ -49,6 +49,7 @@ export const ArchiveProjectList: FC = () => {
     const [deleteProject, setDeleteProject] = useState<{
         isOpen: boolean;
         id?: string;
+        name?: string;
     }>({ isOpen: false });
 
     useEffect(() => {
@@ -76,6 +77,7 @@ export const ArchiveProjectList: FC = () => {
             onDelete={() =>
                 setDeleteProject({
                     id,
+                    name: projects?.find((project) => project.id === id)?.name,
                     isOpen: true,
                 })
             }
@@ -155,7 +157,8 @@ export const ArchiveProjectList: FC = () => {
                 }
             />
             <DeleteProjectDialogue
-                project={deleteProject.id || ''}
+                projectId={deleteProject.id || ''}
+                projectName={deleteProject.name || ''}
                 open={deleteProject.isOpen}
                 onClose={() => {
                     setDeleteProject((state) => ({ ...state, isOpen: false }));

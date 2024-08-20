@@ -103,7 +103,7 @@ export const Project = () => {
             name: 'health',
         },
         {
-            title: 'Archive',
+            title: 'Archived flags',
             path: `${basePath}/archive`,
             name: 'archive',
         },
@@ -285,7 +285,7 @@ export const Project = () => {
                 </StyledTabContainer>
             </StyledHeader>
             <DeleteProjectDialogue
-                project={projectId}
+                projectId={projectId}
                 open={showDelDialog}
                 onClose={() => {
                     setShowDelDialog(false);

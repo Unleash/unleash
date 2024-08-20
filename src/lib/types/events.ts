@@ -578,7 +578,7 @@ export class ProjectDeletedEvent extends BaseEvent {
         project: string;
         auditUser: IAuditUser;
     }) {
-        super(PROJECT_ARCHIVED, eventData.auditUser);
+        super(PROJECT_DELETED, eventData.auditUser);
         this.project = eventData.project;
     }
 }

@@ -5,7 +5,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useProjectOverview from '../../../../../hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 interface IArchivedFeatureReviveConfirmProps {
     revivedFeatures: string[];

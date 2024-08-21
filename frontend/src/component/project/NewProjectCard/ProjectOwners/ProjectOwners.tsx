@@ -45,6 +45,7 @@ const StyledUserName = styled('p')(({ theme }) => ({
     textOverflow: 'ellipsis',
     textWrap: 'nowrap',
     alignSelf: 'end',
+    maxWidth: theme.spacing(21),
 }));
 
 const StyledContainer = styled('div')(() => ({

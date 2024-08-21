@@ -63,6 +63,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5, 0, 2.5, 3),
     display: 'flex',
     alignItems: 'center',
+    minWidth: 0,
 }));
 
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {

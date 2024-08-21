@@ -102,7 +102,7 @@ export const LastSeenTooltip = ({
                                     >
                                         <TimeAgo
                                             date={lastSeenAt}
-                                            live={false}
+                                            refresh={false}
                                             fallback='no usage'
                                         />
                                     </StyledValue>

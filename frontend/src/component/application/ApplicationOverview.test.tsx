@@ -51,7 +51,7 @@ test('Display application overview with environments', async () => {
     await screen.findByText('development environment');
     await screen.findByText('999');
     await screen.findByText('unleash-client-node:5.5.0-beta.0');
-    await screen.findByText('0 seconds ago');
+    await screen.findByText('< 1 minute ago');
 });
 
 test('Display application overview without environments', async () => {

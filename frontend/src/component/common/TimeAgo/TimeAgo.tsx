@@ -4,47 +4,54 @@ import { formatDistanceToNow, secondsToMilliseconds } from 'date-fns';
 type TimeAgoProps = {
     date: Date | number | string | null | undefined;
     fallback?: string;
-    live?: boolean | number;
+    refresh?: boolean;
+    timeElement?: boolean;
 };
 
-const getRefreshInterval = (input?: boolean | number) => {
-    if (input === undefined) return secondsToMilliseconds(12);
-    if (input === false) return false;
-    if (input === true) return secondsToMilliseconds(12);
-    return secondsToMilliseconds(input);
-};
-
-const TimeAgo: FC<TimeAgoProps> = ({ date, fallback = '', live }) => {
-    const getValue = () => {
-        if (!date) return fallback;
+const TimeAgo: FC<TimeAgoProps> = ({
+    date,
+    fallback = '',
+    refresh = true,
+    timeElement = true,
+}) => {
+    const getValue = (): { description: string; dateTime?: Date } => {
         try {
-            return formatDistanceToNow(new Date(date), {
-                addSuffix: true,
-            })
-                .replace('about ', '')
-                .replace('less than a minute ago', '< 1 minute ago');
+            if (!date) return { description: fallback };
+            return {
+                description: formatDistanceToNow(new Date(date), {
+                    addSuffix: true,
+                })
+                    .replace('about ', '')
+                    .replace('less than a minute ago', '< 1 minute ago'),
+                dateTime: timeElement ? new Date(date) : undefined,
+            };
         } catch {
-            return fallback;
+            return { description: fallback };
         }
     };
-    const [value, setValue] = useState<string>(getValue);
+    const [state, setState] = useState(getValue);
 
     useEffect(() => {
-        setValue(getValue);
+        setState(getValue);
     }, [date, fallback]);
 
     useEffect(() => {
-        const refreshInterval = getRefreshInterval(live);
-        if (!date || !refreshInterval) return;
+        if (!date || !refresh) return;
 
         const intervalId = setInterval(() => {
-            setValue(getValue);
-        }, refreshInterval);
+            setState(getValue);
+        }, secondsToMilliseconds(12));
 
         return () => clearInterval(intervalId);
-    }, [live]);
+    }, [refresh]);
 
-    return value;
+    if (!state.dateTime) {
+        return state.description;
+    }
+
+    return (
+        <time dateTime={state.dateTime.toISOString()}>{state.description}</time>
+    );
 };
 
 export default TimeAgo;

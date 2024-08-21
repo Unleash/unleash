@@ -39,7 +39,7 @@ export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
                     variant='body2'
                     data-loading
                 >
-                    <TimeAgo date={value} live={live} />
+                    <TimeAgo date={value} refresh={live} />
                 </Typography>
             </Tooltip>
         </TextCell>

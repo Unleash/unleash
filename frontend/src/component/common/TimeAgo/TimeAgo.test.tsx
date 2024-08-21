@@ -2,6 +2,10 @@ import { vi } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 import TimeAgo from './TimeAgo';
 
+const h = 3_600_000 as const;
+const min = 60_000 as const;
+const s = 1_000 as const;
+
 beforeAll(() => {
     vi.useFakeTimers();
 });
@@ -24,13 +28,13 @@ test('formats date correctly', () => {
     expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 });
 
-test('updates time periodically based on `live`', () => {
+test('updates time periodically', () => {
     const date = new Date();
-    render(<TimeAgo date={date} live={10} />);
+    render(<TimeAgo date={date} />);
 
     expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 
-    act(() => vi.advanceTimersByTime(61_000));
+    act(() => vi.advanceTimersByTime(61 * s));
 
     expect(screen.getByText('1 minute ago')).toBeInTheDocument();
 });
@@ -38,11 +42,11 @@ test('updates time periodically based on `live`', () => {
 test('stops updating when live is false', () => {
     const date = new Date();
     const setIntervalSpy = vi.spyOn(global, 'setInterval');
-    render(<TimeAgo date={date} live={false} />);
+    render(<TimeAgo date={date} refresh={false} />);
 
     expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 
-    act(() => vi.advanceTimersByTime(61000));
+    act(() => vi.advanceTimersByTime(61 * s));
 
     expect(screen.getByText('< 1 minute ago')).toBeInTheDocument();
 
@@ -59,7 +63,7 @@ test('handles string dates', () => {
 
 test('cleans up interval on unmount', () => {
     const date = new Date();
-    const { unmount } = render(<TimeAgo date={date} live={1_000} />);
+    const { unmount } = render(<TimeAgo date={date} refresh />);
 
     const clearIntervalSpy = vi.spyOn(global, 'clearInterval');
     unmount();
@@ -85,12 +89,12 @@ test('on date change, current time should be updated', () => {
     const { rerender } = render(<Component date={start} />);
     expect(screen.getByText('1 minute ago')).toBeInTheDocument();
 
-    act(() => vi.advanceTimersByTime(120_000));
+    act(() => vi.advanceTimersByTime(2 * min));
     rerender(<Component date={start} />);
 
     expect(screen.getByText('3 minutes ago')).toBeInTheDocument();
 
-    rerender(<Component date={start + 60_000} />);
+    rerender(<Component date={start + min} />);
 
     expect(screen.getByText('2 minutes ago')).toBeInTheDocument();
 });
@@ -104,4 +108,32 @@ test('should refresh on fallback change', () => {
 
     rerender(<TimeAgo date={date} fallback='Updated fallback' />);
     expect(screen.getByText('Updated fallback')).toBeInTheDocument();
+});
+
+test('should create `time` element', () => {
+    const now = 1724222592978;
+    vi.setSystemTime(now);
+    const { container } = render(<TimeAgo date={now - 3 * min} />);
+    expect(container).toMatchInlineSnapshot(`
+      <div>
+        <time
+          datetime="2024-08-21T06:40:12.978Z"
+        >
+          3 minutes ago
+        </time>
+      </div>
+    `);
+});
+
+test('should not create `time` element if `timeElement` is false', () => {
+    const now = 1724222592978;
+    vi.setSystemTime(now);
+    const { container } = render(
+        <TimeAgo date={now - 5 * h} timeElement={false} />,
+    );
+    expect(container).toMatchInlineSnapshot(`
+      <div>
+        5 hours ago
+      </div>
+    `);
 });

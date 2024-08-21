@@ -37,7 +37,7 @@ export const FeatureArchivedCell: FC<IFeatureArchivedCellProps> = ({
                 arrow
             >
                 <Typography noWrap variant='body2' data-loading>
-                    <TimeAgo date={new Date(archivedAt)} live={false} />
+                    <TimeAgo date={new Date(archivedAt)} refresh={false} />
                 </Typography>
             </Tooltip>
         </TextCell>

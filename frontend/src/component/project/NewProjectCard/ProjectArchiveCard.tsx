@@ -92,7 +92,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                                         Archived:{' '}
                                         <TimeAgo
                                             date={archivedAt}
-                                            live={false}
+                                            refresh={false}
                                         />
                                     </p>
                                 </Box>

@@ -151,11 +151,10 @@ export class SegmentService implements ISegmentService {
         await this.validateName(input.name);
         const segment = await this.segmentStore.create(input, auditUser);
 
-        const project = segment.project;
         await this.eventService.storeEvent(
             new SegmentCreatedEvent({
                 data: segment,
-                project: project,
+                project: segment.project,
                 auditUser,
             }),
         );

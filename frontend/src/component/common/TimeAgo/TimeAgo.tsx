@@ -8,6 +8,13 @@ type TimeAgoProps = {
     timeElement?: boolean;
 };
 
+const formatTimeAgo = (date: string | number | Date) =>
+    formatDistanceToNow(new Date(date), {
+        addSuffix: true,
+    })
+        .replace('about ', '')
+        .replace('less than a minute ago', '< 1 minute ago');
+
 const TimeAgo: FC<TimeAgoProps> = ({
     date,
     fallback = '',
@@ -18,11 +25,7 @@ const TimeAgo: FC<TimeAgoProps> = ({
         try {
             if (!date) return { description: fallback };
             return {
-                description: formatDistanceToNow(new Date(date), {
-                    addSuffix: true,
-                })
-                    .replace('about ', '')
-                    .replace('less than a minute ago', '< 1 minute ago'),
+                description: formatTimeAgo(date),
                 dateTime: timeElement ? new Date(date) : undefined,
             };
         } catch {

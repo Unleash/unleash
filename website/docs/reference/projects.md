@@ -9,8 +9,9 @@ Projects help you organize feature flags within Unleash. For example, you can us
 
 Each instance requires at least one project. New instances get a default project that all members can access. You cannot delete this project, but you can [rename](#update-a-project) or [archive it](#archive-a-project).
 
-You can configure which [environments](./environments.md) are available within a project. By default, all global environments are available. You can only enable and disable feature flags for the environments you've configured for the project.
+You can configure which [environments](environments.md) are available within a project. By default, all global environments are available. You can only enable and disable feature flags for the environments you've configured for the project.
 
+By default, projects have an open [collaboration mode](project-collaboration-mode.md), which means all members of your instance can access the project and submit change requests. To learn more, visit [Project Collaboration Mode](project-collaboration-mode.md).
 
 ## Create a project
 
@@ -22,7 +23,7 @@ You can configure which [environments](./environments.md) are available within a
 
 To create a new project:
 1. Go to **Projects** > **New project** and enter a project name.
-2. Optionally configure settings such as [environments](/reference/environments.md), [stickiness](/reference/stickiness.md), [collaboration mode](/reference/project-collaboration-mode.md), and [change requests](/reference/change-requests.md).
+2. Optionally configure settings such as [environments](environments.md), [stickiness](stickiness.md), [collaboration mode](project-collaboration-mode.md), and [change requests](change-requests.md).
 3. Click **Create project**.
 
 
@@ -36,21 +37,21 @@ To create a new project:
 
 You can update all aspects of a project except its ID.
 
-To update a project, go to **Projects** and select the project you'd like to edit. In the **Project settings** tab, you can update general settings such as project name, description, [stickiness](/reference/stickiness.md), [collaboration mode](/reference/project-collaboration-mode.md), and more. You can also configure user and API access, [change requests](/reference/change-requests.md), and [actions](/reference/actions.md), add [segments](/reference/segments.mdx) and [environments](/reference/environments.md), and update the [default strategy](#project-default-strategy).
+To update a project, go to **Projects** and select the project you'd like to edit. In the **Project settings** tab, you can update general settings such as project name, description, [stickiness](stickiness.md), [collaboration mode](project-collaboration-mode.md), and more. You can also configure user and API access, [change requests](change-requests.md), and [actions](actions.md), add [segments](segments.mdx) and [environments](environments.md), and update the [default strategy](#project-default-strategy).
 
-The available project settings depend on a user's [root and project roles](/reference/rbac).
+The available project settings depend on a user's [root and project roles](rbac.md).
 
 ## Archive a project
 
 :::note Availability
 
-**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing). | **Version**: 6.?+ in BETA.
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing). | **Version**: 6.2 in BETA.
 
 :::
 
-The archive projects functionality allows you to hide a project while maintaining historical project data. Archiving allows you to have short-lived projects, for example, to represent specific initiatives in your organization.
+The archive projects functionality allows you to hide a project while maintaining historical project data. Archiving lets you manage short-lived projects, for example, to represent specific initiatives in your organization.
 
-Before archiving a project, you must archive all feature flags within it. Once you archive a project, you cannot add or move feature flags to it.
+Before archiving a project, you must archive all feature flags within it. Archiving automatically disables all project [actions](actions.md). Once you archive a project, you cannot add or move feature flags to it.
 
 To archive a project:
 
@@ -70,7 +71,7 @@ To revive an archived project, go to **Projects > Archived projects** and click 
 
 :::
 
-When deleting a project within the Admin UI, you must [archive it](#archive-a-project) first. Alternatively, you can [delete projects directly](/reference/api/unleash/delete-project) using the API.
+When deleting a project within the Admin UI, you must [archive it](#archive-a-project) first. Alternatively, you can [delete projects directly](./api/unleash/delete-project) using the API.
 
 To delete a project:
 
@@ -101,7 +102,7 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 Each project has a default strategy of [gradual rollout](activation-strategies.md#gradual-rollout) to 100% of the user base. The default strategy only applies when **no active strategies** are defined for a flag in a specific environment.
 
-You can change the default strategies of a project per environment. You can customize the default strategies by changing the rollout percentage and [stickiness](/reference/stickiness.md) and adding [segments](segments.mdx), [constraints](strategy-constraints.md), and [variants](strategy-variants.md).
+You can change the default strategies of a project per environment. You can customize the default strategies by changing the rollout percentage and [stickiness](stickiness.md) and adding [segments](segments.mdx), [constraints](strategy-constraints.md), and [variants](strategy-variants.md).
 
 To change the default strategy for an environment in a project:
 

@@ -10,7 +10,15 @@ export const integrationEventsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['integrationEvents'],
-    properties: {},
+    properties: {
+        integrationEvents: {
+            type: 'array',
+            description: 'A list of integration events.',
+            items: {
+                $ref: integrationEventSchema.$id,
+            },
+        },
+    },
     components: {
         schemas: {
             integrationEventSchema,

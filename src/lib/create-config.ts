@@ -675,7 +675,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             ),
         ),
         environments: Math.max(
-            0,
+            1,
             parseEnvVarNumber(
                 process.env.UNLEASH_ENVIRONMENTS_LIMIT,
                 options?.resourceLimits?.environments ?? 50,

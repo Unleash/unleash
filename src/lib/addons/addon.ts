@@ -92,9 +92,7 @@ export default abstract class Addon {
     async registerEvent(
         integrationEvent: IntegrationEventWriteModel,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('integrationEvents')) {
-            await this.integrationEventsService.registerEvent(integrationEvent);
-        }
+        await this.integrationEventsService.registerEvent(integrationEvent);
     }
 
     destroy?(): void;

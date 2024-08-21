@@ -25,8 +25,6 @@ import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 import Visibility from '@mui/icons-material/Visibility';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { IntegrationEventsModal } from 'component/integrations/IntegrationEvents/IntegrationEventsModal';
@@ -55,7 +53,6 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
     const { refetchAddons } = useAddons();
     const { setToastData, setToastApiError } = useToast();
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
-    const integrationEventsEnabled = useUiFlag('integrationEvents');
 
     const closeMenu = () => {
         setIsMenuOpen(false);
@@ -131,24 +128,19 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 }}
                 onClose={handleMenuClick}
             >
-                <ConditionallyRender
-                    condition={integrationEventsEnabled}
-                    show={
-                        <PermissionHOC permission={ADMIN}>
-                            {({ hasAccess }) => (
-                                <MenuItem
-                                    onClick={() => setEventsModalOpen(true)}
-                                    disabled={!hasAccess}
-                                >
-                                    <ListItemIcon>
-                                        <Visibility />
-                                    </ListItemIcon>
-                                    <ListItemText>View events</ListItemText>
-                                </MenuItem>
-                            )}
-                        </PermissionHOC>
-                    }
-                />
+                <PermissionHOC permission={ADMIN}>
+                    {({ hasAccess }) => (
+                        <MenuItem
+                            onClick={() => setEventsModalOpen(true)}
+                            disabled={!hasAccess}
+                        >
+                            <ListItemIcon>
+                                <Visibility />
+                            </ListItemIcon>
+                            <ListItemText>View events</ListItemText>
+                        </MenuItem>
+                    )}
+                </PermissionHOC>
                 <MenuItem
                     onClick={() => {
                         setIsToggleOpen(true);

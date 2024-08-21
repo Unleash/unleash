@@ -51,9 +51,7 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {
-                    integrationEvents: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,

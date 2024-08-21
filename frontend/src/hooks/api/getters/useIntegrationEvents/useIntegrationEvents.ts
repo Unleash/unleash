@@ -5,7 +5,6 @@ import useSWRInfinite, {
 } from 'swr/infinite';
 import { formatApiPath } from 'utils/formatPath';
 import type { IntegrationEvents } from 'interfaces/integrationEvent';
-import { useUiFlag } from 'hooks/useUiFlag';
 import AccessContext from 'contexts/AccessContext';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
@@ -21,15 +20,13 @@ export const useIntegrationEvents = (
     options: SWRInfiniteConfiguration = {},
 ) => {
     const { isAdmin } = useContext(AccessContext);
-    const integrationEventsEnabled = useUiFlag('integrationEvents');
 
     const getKey: SWRInfiniteKeyLoader = (
         pageIndex: number,
         previousPageData: IntegrationEvents,
     ) => {
         // Does not meet conditions
-        if (!integrationId || !isAdmin || !integrationEventsEnabled)
-            return null;
+        if (!integrationId || !isAdmin) return null;
 
         // Reached the end
         if (previousPageData && !previousPageData.integrationEvents.length)

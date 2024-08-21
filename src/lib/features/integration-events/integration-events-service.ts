@@ -44,8 +44,6 @@ export class IntegrationEventsService {
     }
 
     async cleanUpEvents(): Promise<void> {
-        if (!this.flagResolver.isEnabled('integrationEvents')) return;
-
         await this.integrationEventsStore.cleanUpEvents();
     }
 }

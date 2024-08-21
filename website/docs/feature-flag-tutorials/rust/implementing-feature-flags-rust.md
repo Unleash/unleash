@@ -204,12 +204,13 @@ We want to let you choose the nature of that concurrency, so we're compatible wi
 ```rust
 use enum_map::Enum;
 use image::ImageReader;
+use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fs;
-use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tokio::time::sleep;
 use unleash_api_client::client::ClientBuilder;
+use unleash_api_client::Client;
 use webp::Encoder;
 
 #[derive(Debug, Deserialize, Serialize, Enum, Clone)]
@@ -218,8 +219,8 @@ enum Flags {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
-    let client = ClientBuilder::default().into_client::<Flags, reqwest::Client>(
+async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
+    let client:Client<Flags, reqwest::Client> = ClientBuilder::default().into_client(
         "http://localhost:4242/api",
         "unleash-rust-client-example",
         "unleash-rust-client-example",
@@ -232,17 +233,17 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
         sleep(Duration::from_millis(500)).await;
 
         let is_webp = client.is_enabled(Flags::webp, None, false);
-        process_images(is_webp)?;
+        process_image(is_webp)?;
 
         // allow tokio::join to finish
         client.stop_poll().await;
-        Ok::<(), Box<dyn Error + Send + Sync + 'static>>(())
+        Ok::<(), Box<dyn Error + Send + Sync>>(())
     });
 
     Ok(())
 }
 
-fn process_image(is_webp: bool) -> Result<(), Box<dyn Error>> {
+fn process_image(is_webp: bool) -> Result<(), Box<dyn Error + Send + Sync>> {
     let img = ImageReader::open("input.png")?.decode()?;
 
     if is_webp {

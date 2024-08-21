@@ -363,6 +363,15 @@ export default class UserAdminController extends Controller {
                     description:
                         'Only the explicitly specified fields get updated.',
                     requestBody: createRequestSchema('updateUserSchema'),
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            schema: {
+                                type: 'integer',
+                            },
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('createUserResponseSchema'),
                         ...getStandardResponses(400, 401, 403, 404),

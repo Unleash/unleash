@@ -3,7 +3,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { FC } from 'react';
 import { formatDateYMD } from 'utils/formatDate';
 import { TextCell } from '../TextCell/TextCell';
-import TimeAgo from 'react-timeago';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 
 interface ITimeAgoCellProps {
     value?: string | number | Date;
@@ -31,16 +31,15 @@ export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
             <Tooltip title={title?.(date) ?? date} arrow>
                 <Typography
                     noWrap
+                    sx={{
+                        display: 'inline-block',
+                        maxWidth: '100%',
+                    }}
                     component='span'
                     variant='body2'
                     data-loading
                 >
-                    <TimeAgo
-                        key={`${value}`}
-                        date={new Date(value)}
-                        live={live}
-                        title={''}
-                    />
+                    <TimeAgo date={value} refresh={live} />
                 </Typography>
             </Tooltip>
         </TextCell>

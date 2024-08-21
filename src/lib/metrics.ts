@@ -19,6 +19,10 @@ import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
     PROJECT_ENVIRONMENT_REMOVED,
+    PROJECT_CREATED,
+    PROJECT_ARCHIVED,
+    PROJECT_REVIVED,
+    PROJECT_DELETED,
 } from './types/events';
 import type { IUnleashConfig } from './types/option';
 import type { ISettingStore, IUnleashStores } from './types/stores';
@@ -315,6 +319,12 @@ export default class MetricsMonitor {
             labelNames: ['stage'],
         });
 
+        const projectActionsCounter = createCounter({
+            name: 'project_actions_count',
+            help: 'Count project actions',
+            labelNames: ['action'],
+        });
+
         const projectEnvironmentsDisabled = createCounter({
             name: 'project_environments_disabled',
             help: 'How many "environment disabled" events we have received for each project',
@@ -350,13 +360,19 @@ export default class MetricsMonitor {
         const requestOriginCounter = createCounter({
             name: 'request_origin_counter',
             help: 'Number of authenticated requests, including origin information.',
-            labelNames: ['type', 'method'],
+            labelNames: ['type', 'method', 'source'],
         });
 
         const resourceLimit = createGauge({
             name: 'resource_limit',
             help: 'The maximum number of resources allowed.',
             labelNames: ['resource'],
+        });
+
+        const addonEventsHandledCounter = createCounter({
+            name: 'addon_events_handled',
+            help: 'Events handled by addons and the result.',
+            labelNames: ['result', 'destination'],
         });
 
         async function collectStaticCounters() {
@@ -715,9 +731,9 @@ export default class MetricsMonitor {
         events.onMetricEvent(
             eventBus,
             events.REQUEST_ORIGIN,
-            ({ type, method }) => {
+            ({ type, method, source }) => {
                 if (flagResolver.isEnabled('originMiddleware')) {
-                    requestOriginCounter.increment({ type, method });
+                    requestOriginCounter.increment({ type, method, source });
                 }
             },
         );
@@ -845,6 +861,18 @@ export default class MetricsMonitor {
                 environmentType: 'n/a',
             });
         });
+        eventStore.on(PROJECT_CREATED, () => {
+            projectActionsCounter.labels({ action: PROJECT_CREATED }).inc();
+        });
+        eventStore.on(PROJECT_ARCHIVED, () => {
+            projectActionsCounter.labels({ action: PROJECT_ARCHIVED }).inc();
+        });
+        eventStore.on(PROJECT_REVIVED, () => {
+            projectActionsCounter.labels({ action: PROJECT_REVIVED }).inc();
+        });
+        eventStore.on(PROJECT_DELETED, () => {
+            projectActionsCounter.labels({ action: PROJECT_DELETED }).inc();
+        });
 
         const logger = config.getLogger('metrics.ts');
         eventBus.on(CLIENT_METRICS, (metrics: IClientMetricsEnv[]) => {
@@ -904,6 +932,10 @@ export default class MetricsMonitor {
 
         eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
             projectEnvironmentsDisabled.increment({ project_id: project });
+        });
+
+        eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {
+            addonEventsHandledCounter.increment({ result, destination });
         });
 
         await this.configureDbMetrics(

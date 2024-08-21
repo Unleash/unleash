@@ -12,6 +12,7 @@ const PROXY_FEATURES_FOR_TOKEN_TIME = 'proxy_features_for_token_time';
 const STAGE_ENTERED = 'stage-entered' as const;
 const EXCEEDS_LIMIT = 'exceeds-limit' as const;
 const REQUEST_ORIGIN = 'request_origin' as const;
+const ADDON_EVENTS_HANDLED = 'addon-event-handled' as const;
 
 type MetricEvent =
     | typeof REQUEST_TIME
@@ -30,6 +31,7 @@ type MetricEvent =
 type RequestOriginEventPayload = {
     type: 'UI' | 'API';
     method: Request['method'];
+    source?: string;
 };
 
 type MetricEventPayloads = {
@@ -70,6 +72,7 @@ export {
     STAGE_ENTERED,
     EXCEEDS_LIMIT,
     REQUEST_ORIGIN,
+    ADDON_EVENTS_HANDLED,
     type MetricEvent,
     type MetricEventPayload,
     emitMetricEvent,

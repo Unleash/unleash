@@ -5,7 +5,6 @@ import {
     StyledBox,
     StyledCardTitle,
     StyledDivInfo,
-    StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
     StyledActions,
@@ -18,88 +17,62 @@ import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import TimeAgo from 'react-timeago';
 import { Box, Link, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-    CREATE_PROJECT,
     DELETE_PROJECT,
+    UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import Undo from '@mui/icons-material/Undo';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Delete from '@mui/icons-material/Delete';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 
-interface IProjectArchiveCardProps {
+export type ProjectArchiveCardProps = {
     id: string;
     name: string;
-    createdAt?: string;
     archivedAt?: string;
-    featureCount: number;
+    archivedFeaturesCount?: number;
     onRevive: () => void;
     onDelete: () => void;
-    mode: string;
+    mode?: string;
     owners?: ProjectSchemaOwners;
-}
+};
 
-export const ProjectArchiveCard: FC<IProjectArchiveCardProps> = ({
+export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     id,
     name,
     archivedAt,
-    featureCount = 0,
+    archivedFeaturesCount,
     onRevive,
     onDelete,
     mode,
     owners,
 }) => {
     const { locationSettings } = useLocationSettings();
-    const Actions: FC<{
-        id: string;
-    }> = ({ id }) => (
-        <StyledActions>
-            <PermissionIconButton
-                onClick={onRevive}
-                projectId={id}
-                permission={CREATE_PROJECT}
-                tooltipProps={{ title: 'Restore project' }}
-                data-testid={`revive-feature-flag-button`}
-            >
-                <Undo />
-            </PermissionIconButton>
-            <PermissionIconButton
-                permission={DELETE_PROJECT}
-                projectId={id}
-                tooltipProps={{ title: 'Permanently delete project' }}
-                onClick={onDelete}
-            >
-                <Delete />
-            </PermissionIconButton>
-        </StyledActions>
-    );
+    const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <StyledProjectCard disabled>
+        <StyledProjectCard disabled data-testid={id}>
             <StyledProjectCardBody>
                 <StyledDivHeader>
                     <StyledIconBox>
                         <ProjectIcon color='action' />
                     </StyledIconBox>
                     <StyledBox data-loading>
-                        <StyledCardTitle>{name}</StyledCardTitle>
+                        <Tooltip title={`id: ${id}`} arrow>
+                            <StyledCardTitle>
+                                <Highlighter search={searchQuery}>
+                                    {name}
+                                </Highlighter>
+                            </StyledCardTitle>
+                        </Tooltip>
                     </StyledBox>
                     <ProjectModeBadge mode={mode} />
                 </StyledDivHeader>
                 <StyledDivInfo>
-                    <Link
-                        component={RouterLink}
-                        to={`/archive?search=project%3A${encodeURI(id)}`}
-                    >
-                        <StyledParagraphInfo disabled data-loading>
-                            {featureCount}
-                        </StyledParagraphInfo>
-                        <p data-loading>
-                            archived {featureCount === 1 ? 'flag' : 'flags'}
-                        </p>
-                    </Link>
                     <ConditionallyRender
                         condition={Boolean(archivedAt)}
                         show={
@@ -115,29 +88,45 @@ export const ProjectArchiveCard: FC<IProjectArchiveCardProps> = ({
                                         color: theme.palette.text.secondary,
                                     })}
                                 >
-                                    <StyledParagraphInfo disabled data-loading>
-                                        Archived
-                                    </StyledParagraphInfo>
                                     <p data-loading>
+                                        Archived:{' '}
                                         <TimeAgo
-                                            date={
-                                                new Date(archivedAt as string)
-                                            }
+                                            date={archivedAt}
+                                            refresh={false}
                                         />
                                     </p>
                                 </Box>
                             </Tooltip>
                         }
                     />
+                    <Link
+                        component={RouterLink}
+                        to={`/archive?search=project%3A${encodeURI(id)}`}
+                    >
+                        <p>View archived flags</p>
+                    </Link>
                 </StyledDivInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter
-                id={id}
-                Actions={Actions}
-                disabled
-                owners={owners}
-            >
-                <Actions id={id} />
+            <ProjectCardFooter id={id} disabled owners={owners}>
+                <StyledActions>
+                    <PermissionIconButton
+                        onClick={onRevive}
+                        projectId={id}
+                        permission={UPDATE_PROJECT}
+                        tooltipProps={{ title: 'Revive project' }}
+                        data-testid={`revive-feature-flag-button`}
+                    >
+                        <Undo />
+                    </PermissionIconButton>
+                    <PermissionIconButton
+                        permission={DELETE_PROJECT}
+                        projectId={id}
+                        tooltipProps={{ title: 'Permanently delete project' }}
+                        onClick={onDelete}
+                    >
+                        <Delete />
+                    </PermissionIconButton>
+                </StyledActions>
             </ProjectCardFooter>
         </StyledProjectCard>
     );

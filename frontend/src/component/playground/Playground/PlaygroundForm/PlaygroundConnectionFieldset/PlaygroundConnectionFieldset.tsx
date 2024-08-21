@@ -29,7 +29,6 @@ import {
 import Clear from '@mui/icons-material/Clear';
 import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { EnvironmentsField } from './EnvironmentsField/EnvironmentsField';
 import { Link } from 'react-router-dom';
 
@@ -98,8 +97,6 @@ export const PlaygroundConnectionFieldset: FC<
     const [tokenError, setTokenError] = useState<string | undefined>();
 
     const { projects: availableProjects } = useProjects();
-
-    const changeRequestPlaygroundEnabled = useUiFlag('changeRequestPlayground');
 
     const projectsOptions = [
         allOption,
@@ -269,9 +266,7 @@ export const PlaygroundConnectionFieldset: FC<
                     />
                 </Box>
                 <ConditionallyRender
-                    condition={Boolean(
-                        changeRequestPlaygroundEnabled && changeRequest,
-                    )}
+                    condition={Boolean(changeRequest)}
                     show={
                         <Box sx={{ display: 'flex', gap: 2 }}>
                             <Box sx={{ flex: 1 }}>

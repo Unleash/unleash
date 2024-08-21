@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import Paper from '@mui/material/Paper';
 import { Box, styled, Typography } from '@mui/material';
-import TimeAgo from 'react-timeago';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { StyledAvatar } from './StyledAvatar';
 import type { IChangeRequestComment } from '../../changeRequest.types';
 
@@ -35,11 +35,7 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
                 <Box>
                     <strong>{comment.createdBy.username}</strong>{' '}
                     <Typography color='text.secondary' component='span'>
-                        commented{' '}
-                        <TimeAgo
-                            minPeriod={60}
-                            date={new Date(comment.createdAt)}
-                        />
+                        commented <TimeAgo date={comment.createdAt} />
                     </Typography>
                 </Box>
             </CommentHeader>

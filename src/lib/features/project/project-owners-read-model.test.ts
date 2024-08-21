@@ -3,23 +3,24 @@ import getLogger from '../../../test/fixtures/no-logger';
 import { type IUser, RoleName, type IGroup } from '../../types';
 import { randomId } from '../../util';
 import { ProjectOwnersReadModel } from './project-owners-read-model';
+import type { ProjectForUi } from './project-read-model-type';
 
 jest.mock('../../util', () => ({
     ...jest.requireActual('../../util'),
     generateImageUrl: jest.fn((input) => `https://${input.image_url}`),
 }));
 
-const mockProjectWithCounts = (name: string) => ({
+const mockProjectData = (name: string): ProjectForUi => ({
     name,
     id: name,
-    description: '',
     featureCount: 0,
     memberCount: 0,
     mode: 'open' as const,
-    defaultStickiness: 'default' as const,
-    staleFeatureCount: 0,
-    potentiallyStaleFeatureCount: 0,
-    avgTimeToProduction: 0,
+    health: 100,
+    createdAt: new Date(),
+    favorite: false,
+    lastReportedFlagUsage: null,
+    lastUpdatedAt: null,
 });
 
 describe('unit tests', () => {
@@ -351,8 +352,8 @@ describe('integration tests', () => {
         );
 
         const projectsWithOwners = await readModel.addOwners([
-            mockProjectWithCounts(projectIdA),
-            mockProjectWithCounts(projectIdB),
+            mockProjectData(projectIdA),
+            mockProjectData(projectIdB),
         ]);
 
         expect(projectsWithOwners).toMatchObject([

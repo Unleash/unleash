@@ -52,7 +52,6 @@ import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { IntegrationEventsModal } from '../IntegrationEvents/IntegrationEventsModal';
 import AccessContext from 'contexts/AccessContext';
 
@@ -116,7 +115,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
     });
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
     const { isAdmin } = useContext(AccessContext);
-    const integrationEventsEnabled = useUiFlag('integrationEvents');
 
     const submitText = editMode ? 'Update' : 'Create';
     const url = `${uiConfig.unleashUrl}/api/admin/addons${
@@ -318,7 +316,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                     integration
                 </StyledHeaderTitle>
                 <ConditionallyRender
-                    condition={editMode && isAdmin && integrationEventsEnabled}
+                    condition={editMode && isAdmin}
                     show={
                         <Link onClick={() => setEventsModalOpen(true)}>
                             View events
@@ -430,12 +428,19 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             />
                         </div>
                     </StyledConfigurationSection>
-                    <Divider />
-                    <section>
-                        <IntegrationDelete
-                            id={(formValues as AddonSchema).id}
-                        />
-                    </section>
+                    <ConditionallyRender
+                        condition={editMode}
+                        show={
+                            <>
+                                <Divider />
+                                <section>
+                                    <IntegrationDelete
+                                        id={(formValues as AddonSchema).id}
+                                    />
+                                </section>
+                            </>
+                        }
+                    />
                 </StyledContainer>
             </StyledForm>
             <IntegrationEventsModal

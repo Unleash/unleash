@@ -10,6 +10,11 @@ import type { ProjectSchemaOwners } from './projectSchemaOwners';
  * A definition of the project used for projects listing purposes
  */
 export interface ProjectSchema {
+    /**
+     * When this project was archived.
+     * @nullable
+     */
+    archivedAt?: string | null;
     /** The average time from when a feature was created to when it was enabled in the "production" environment during the current window */
     avgTimeToProduction?: number;
     /** When this project was created. */

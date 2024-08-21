@@ -4,6 +4,7 @@ import type { IGroupUser } from 'interfaces/group';
 import { useMemo } from 'react';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
 import { objectId } from 'utils/objectId';
+import millify from 'millify';
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -48,6 +49,8 @@ type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
     AvatarComponent: typeof UserAvatar;
 };
 
+const MAX_OVERFLOW_DISPLAY_NUMBER = 99;
+
 const AvatarGroupInner = ({
     users = [],
     avatarLimit = 9,
@@ -73,16 +76,22 @@ const AvatarGroupInner = ({
         [users],
     );
 
+    const overflow = users.length - avatarLimit;
+
     return (
         <StyledAvatars className={className}>
             {shownUsers.map((user) => (
                 <AvatarComponent key={objectId(user)} user={user} />
             ))}
             <ConditionallyRender
-                condition={users.length > avatarLimit}
+                condition={overflow > 0}
                 show={
-                    <AvatarComponent>
-                        +{users.length - shownUsers.length}
+                    <AvatarComponent
+                        user={{
+                            username: `Total: ${millify(users.length)}`,
+                        }}
+                    >
+                        +{Math.min(overflow, MAX_OVERFLOW_DISPLAY_NUMBER)}
                     </AvatarComponent>
                 }
             />

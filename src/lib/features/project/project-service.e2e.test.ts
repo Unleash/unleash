@@ -9,11 +9,12 @@ import { RoleName } from '../../types/model';
 import { randomId } from '../../util/random-id';
 import EnvironmentService from '../project-environments/environment-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
-import { type ApiTokenService, EventService } from '../../services';
+import type { ApiTokenService, EventService } from '../../services';
 import { FeatureEnvironmentEvent } from '../../types/events';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
+    createEventsService,
     createFeatureToggleService,
     createProjectService,
 } from '../index';
@@ -81,9 +82,11 @@ beforeAll(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
     const config = createTestConfig({
         getLogger,
-        experimental: { flags: { archiveProjects: true } },
+        experimental: {
+            flags: { archiveProjects: true, useProjectReadModel: true },
+        },
     });
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
     accessService = createAccessService(db.rawDatabase, config);
 
     featureToggleService = createFeatureToggleService(db.rawDatabase, config);
@@ -306,15 +309,23 @@ test('should archive project', async () => {
     const projects = await projectService.getProjects();
     expect(projects.find((p) => p.id === project.id)).toBeUndefined();
     expect(projects.length).not.toBe(0);
+
+    const archivedProjects = await projectService.getProjects({
+        archived: true,
+    });
+    expect(archivedProjects).toMatchObject([
+        { id: 'test-archive', archivedAt: expect.any(Date) },
+    ]);
+
+    const archivedProject = await projectService.getProject(project.id);
+    expect(archivedProject).toMatchObject({ archivedAt: expect.any(Date) });
 });
 
 test('should revive project', async () => {
     const project = {
         id: 'test-revive',
         name: 'New project',
-        description: 'Blah',
         mode: 'open' as const,
-        defaultStickiness: 'default',
     };
 
     await projectService.createProject(project, user, TEST_AUDIT_USER);
@@ -336,9 +347,7 @@ test('should not be able to archive project with flags', async () => {
     const project = {
         id: 'test-archive-with-flags',
         name: 'New project',
-        description: 'Blah',
         mode: 'open' as const,
-        defaultStickiness: 'default',
     };
     await projectService.createProject(project, user, auditUser);
     await stores.featureToggleStore.create(project.id, {
@@ -2737,9 +2746,7 @@ test('should get project settings with mode', async () => {
     );
 
     expect(foundProjectOne!.mode).toBe('private');
-    expect(foundProjectOne!.defaultStickiness).toBe('clientId');
     expect(foundProjectTwo!.mode).toBe('open');
-    expect(foundProjectTwo!.defaultStickiness).toBe('default');
 });
 
 describe('create project with environments', () => {

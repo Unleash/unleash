@@ -10,6 +10,7 @@ import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-sea
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { IFlagResolver } from './experimental';
 import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
+import type { EventEmitter } from 'events';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -305,6 +306,7 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
+    archivedAt?: Date;
     createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
@@ -383,6 +385,7 @@ export interface IAddonConfig {
     unleashUrl: string;
     integrationEventsService: IntegrationEventsService;
     flagResolver: IFlagResolver;
+    eventBus: EventEmitter;
 }
 
 export interface IUserWithRole {
@@ -525,6 +528,7 @@ export interface IProject {
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;
+    archivedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     defaultStickiness: string;
@@ -566,6 +570,7 @@ export interface ICustomRole extends IRole {
     description: string;
 }
 
+// @deprecated Remove with flag useProjectReadModel
 export interface IProjectWithCount extends IProject {
     featureCount: number;
     staleFeatureCount: number;
@@ -573,6 +578,7 @@ export interface IProjectWithCount extends IProject {
     memberCount: number;
     favorite?: boolean;
     avgTimeToProduction: number;
+    archivedAt?: Date;
 }
 
 export interface IClientSegment {

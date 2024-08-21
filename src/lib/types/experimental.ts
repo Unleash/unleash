@@ -55,18 +55,18 @@ export type IFlagKey =
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'navigationSidebar'
-    | 'commandBarUI'
     | 'anonymizeProjectOwners'
     | 'resourceLimits'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'insightsV2'
-    | 'integrationEvents'
-    | 'improveCreateFlagFlow'
     | 'originMiddleware'
     | 'newEventSearch'
-    | 'changeRequestPlayground'
-    | 'archiveProjects';
+    | 'archiveProjects'
+    | 'projectListImprovements'
+    | 'useProjectReadModel'
+    | 'webhookServiceNameLogging'
+    | 'addonUsageMetrics'
+    | 'timeAgoRefactor';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -275,10 +275,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         true,
     ),
-    commandBarUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
-        false,
-    ),
     anonymizeProjectOwners: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,
         false,
@@ -295,18 +291,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    insightsV2: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INSIGHTS_V2,
-        false,
-    ),
-    integrationEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
-        false,
-    ),
-    improveCreateFlagFlow: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPROVE_CREATE_FLAG_FLOW,
-        false,
-    ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
         false,
@@ -315,12 +299,28 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_EVENT_SEARCH,
         false,
     ),
-    changeRequestPlayground: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_PLAYGROUND,
-        false,
-    ),
     archiveProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
+        false,
+    ),
+    projectListImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_IMPROVEMENTS,
+        false,
+    ),
+    useProjectReadModel: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USE_PROJECT_READ_MODEL,
+        false,
+    ),
+    webhookServiceNameLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_WEBHOOK_SERVICE_NAME_LOGGING,
+        false,
+    ),
+    addonUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
+        false,
+    ),
+    timeAgoRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_TIMEAGO_REFACTOR,
         false,
     ),
 };

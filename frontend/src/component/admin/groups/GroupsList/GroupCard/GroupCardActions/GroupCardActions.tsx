@@ -74,7 +74,6 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClick}
                         type='button'
-                        disabled={isScimGroup}
                     >
                         <MoreVert />
                     </IconButton>
@@ -103,6 +102,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                         </ListItemText>
                     </MenuItem>
                     <MenuItem
+                        disabled={isScimGroup}
                         onClick={() => {
                             onEditUsers();
                             handleClose();
@@ -122,6 +122,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                             onRemove();
                             handleClose();
                         }}
+                        disabled={isScimGroup}
                     >
                         <ListItemIcon>
                             <Delete />

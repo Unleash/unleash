@@ -13,7 +13,11 @@ import {
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -21,6 +25,7 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ISlackAppAddonParameters {
     accessToken: string;
@@ -29,6 +34,8 @@ interface ISlackAppAddonParameters {
 
 export default class SlackAppAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
+
+    flagResolver: IFlagResolver;
 
     private accessToken?: string;
 
@@ -40,6 +47,7 @@ export default class SlackAppAddon extends Addon {
             args.unleashUrl,
             LinkStyle.SLACK,
         );
+        this.flagResolver = args.flagResolver;
     }
 
     async handleEvent(
@@ -168,6 +176,13 @@ export default class SlackAppAddon extends Addon {
             stateDetails.push(eventErrorMessage);
             this.logger.warn(eventErrorMessage);
             const errorMessage = this.parseError(error);
+            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                    result: state,
+                    destination: 'slack-app',
+                });
+            }
+
             stateDetails.push(errorMessage);
             this.logger.warn(errorMessage, error);
         } finally {

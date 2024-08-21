@@ -1,4 +1,3 @@
-import TimeAgo from 'react-timeago';
 import { LastSeenTooltip } from 'component/common/Table/cells/FeatureSeenCell/LastSeenTooltip';
 import type React from 'react';
 import type { FC, ReactElement } from 'react';
@@ -85,44 +84,36 @@ export const FeatureEnvironmentSeen = ({
 
     const lastSeen = getLatestLastSeenAt(environments) || featureLastSeen;
 
-    return (
-        <>
-            {lastSeen ? (
-                <TimeAgo
-                    date={lastSeen}
-                    title=''
-                    live={false}
-                    formatter={(value: number, unit: string) => {
-                        const [color, textColor] = getColor(unit);
-                        return (
-                            <TooltipContainer
-                                sx={sx}
-                                tooltip={
-                                    <LastSeenTooltip
-                                        featureLastSeen={lastSeen}
-                                        environments={environments}
-                                        {...rest}
-                                    />
-                                }
-                                color={color}
-                            >
-                                <UsageRate stroke={textColor} />
-                            </TooltipContainer>
-                        );
-                    }}
-                />
-            ) : (
-                <TooltipContainer
-                    sx={sx}
-                    tooltip='No usage reported from connected applications'
-                >
-                    <Box data-loading>
-                        <Box>
-                            <UsageLine />
-                        </Box>
+    if (!lastSeen) {
+        return (
+            <TooltipContainer
+                sx={sx}
+                tooltip='No usage reported from connected applications'
+            >
+                <Box data-loading>
+                    <Box>
+                        <UsageLine />
                     </Box>
-                </TooltipContainer>
-            )}
-        </>
+                </Box>
+            </TooltipContainer>
+        );
+    }
+
+    const { background, text } = getColor(lastSeen);
+
+    return (
+        <TooltipContainer
+            sx={sx}
+            tooltip={
+                <LastSeenTooltip
+                    featureLastSeen={lastSeen}
+                    environments={environments}
+                    {...rest}
+                />
+            }
+            color={background}
+        >
+            <UsageRate stroke={text} />
+        </TooltipContainer>
     );
 };

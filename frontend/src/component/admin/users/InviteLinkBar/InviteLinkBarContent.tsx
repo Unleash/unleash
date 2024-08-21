@@ -95,7 +95,11 @@ export const InviteLinkBarContent = ({
                                     }
                                 />
                             </Typography>
-                            <LinkField small inviteLink={inviteLink!} />
+                            <LinkField
+                                small
+                                inviteLink={inviteLink!}
+                                isExpired={isExpired}
+                            />
                         </>
                     }
                     elseShow={

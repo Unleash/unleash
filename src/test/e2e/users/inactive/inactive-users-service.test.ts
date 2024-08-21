@@ -4,7 +4,7 @@ import { createTestConfig } from '../../../config/test-config';
 import {
     AccessService,
     EmailService,
-    EventService,
+    type EventService,
     GroupService,
 } from '../../../../lib/services';
 import ResetTokenService from '../../../../lib/services/reset-token-service';
@@ -15,6 +15,7 @@ import { ADMIN, type IUnleashStores, type IUser } from '../../../../lib/types';
 import type { InactiveUsersService } from '../../../../lib/users/inactive/inactive-users-service';
 import { createInactiveUsersService } from '../../../../lib/users';
 import { extractAuditInfoFromUser } from '../../../../lib/util';
+import { createEventsService } from '../../../../lib/features';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -37,7 +38,7 @@ beforeAll(async () => {
     db = await dbInit('inactive_user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(
         stores,

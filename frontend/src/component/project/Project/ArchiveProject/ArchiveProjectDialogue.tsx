@@ -45,11 +45,11 @@ export const ArchiveProjectDialogue = ({
             open={open}
             onClick={onClick}
             onClose={onClose}
-            title='Really archive project'
+            title='Are you sure?'
         >
             <Typography>
-                This will archive the project and all feature flags archived in
-                it.
+                The project will be moved to the projects archive, where it can
+                either be revived or permanently deleted.
             </Typography>
         </Dialogue>
     );

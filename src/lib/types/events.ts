@@ -354,7 +354,7 @@ export const IEventTypes = [
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
-// this rerpresents the write model for events
+// this represents the write model for events
 export interface IBaseEvent {
     type: IEventType;
     createdBy: string;
@@ -578,7 +578,7 @@ export class ProjectDeletedEvent extends BaseEvent {
         project: string;
         auditUser: IAuditUser;
     }) {
-        super(PROJECT_ARCHIVED, eventData.auditUser);
+        super(PROJECT_DELETED, eventData.auditUser);
         this.project = eventData.project;
     }
 }
@@ -1930,12 +1930,12 @@ export class AddonConfigDeletedEvent extends BaseEvent {
 }
 
 export class SegmentCreatedEvent extends BaseEvent {
-    readonly project: string;
+    readonly project: string | undefined;
     readonly data: any;
 
     constructor(eventData: {
         auditUser: IAuditUser;
-        project: string;
+        project: string | undefined;
         data: any;
     }) {
         super(SEGMENT_CREATED, eventData.auditUser);

@@ -115,6 +115,13 @@ export const projectOverviewSchema = {
             example: '2023-02-10T08:36:35.262Z',
             description: 'When the project was last updated.',
         },
+        archivedAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2023-02-10T08:36:35.262Z',
+            description: 'When the project was archived.',
+        },
         createdAt: {
             type: 'string',
             format: 'date-time',

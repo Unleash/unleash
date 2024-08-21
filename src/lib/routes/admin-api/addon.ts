@@ -38,7 +38,7 @@ import {
     type IntegrationEventsSchema,
     integrationEventsSchema,
 } from '../../openapi/spec/integration-events-schema';
-import { BadDataError, NotFoundError } from '../../error';
+import { BadDataError } from '../../error';
 import type { IntegrationEventsService } from '../../services';
 
 type AddonServices = Pick<
@@ -185,7 +185,7 @@ Note: passing \`null\` as a value for the description property will set it to an
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Addons'],
                     operationId: 'getIntegrationEvents',
                     summary:
                         'Get integration events for a specific integration configuration.',
@@ -276,10 +276,6 @@ Note: passing \`null\` as a value for the description property will set it to an
         >,
         res: Response<IntegrationEventsSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('integrationEvents')) {
-            throw new NotFoundError('This feature is not enabled');
-        }
-
         const { id } = req.params;
 
         if (Number.isNaN(Number(id))) {

@@ -9,7 +9,6 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const WarningContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -109,7 +108,6 @@ type ApplicationIssues =
 
 const FeaturesMissing = ({ features }: IFeaturesMissingProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const improveCreateFlagFlow = useUiFlag('improveCreateFlagFlow');
     const length = features.length;
 
     if (length === 0) {
@@ -130,25 +128,12 @@ const FeaturesMissing = ({ features }: IFeaturesMissingProps) => {
                         <ConditionallyRender
                             condition={hasAccess(CREATE_FEATURE)}
                             show={
-                                <ConditionallyRender
-                                    condition={improveCreateFlagFlow}
-                                    show={
-                                        <StyledLink
-                                            key={feature}
-                                            to={`/projects/default?create=true&name=${feature}`}
-                                        >
-                                            Create feature flag
-                                        </StyledLink>
-                                    }
-                                    elseShow={
-                                        <StyledLink
-                                            key={feature}
-                                            to={`/projects/default/create-toggle?name=${feature}`}
-                                        >
-                                            Create feature flag
-                                        </StyledLink>
-                                    }
-                                />
+                                <StyledLink
+                                    key={feature}
+                                    to={`/projects/default?create=true&name=${feature}`}
+                                >
+                                    Create feature flag
+                                </StyledLink>
                             }
                         />
                     </IssueRowContainer>

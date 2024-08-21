@@ -5,7 +5,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { Badge } from 'component/common/Badge/Badge';
 
 interface IProjectModeBadgeProps {
-    mode: 'private' | 'protected' | 'public' | string;
+    mode?: 'private' | 'protected' | 'public' | string;
 }
 
 export const ProjectModeBadge: FC<IProjectModeBadgeProps> = ({ mode }) => {

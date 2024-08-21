@@ -5,6 +5,7 @@ import type { IAddonConfig, IAddonDefinition } from '../types/model';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { IntegrationEventWriteModel } from '../features/integration-events/integration-events-store';
+import type EventEmitter from 'events';
 import type { IFlagResolver } from '../types';
 
 export default abstract class Addon {
@@ -16,11 +17,18 @@ export default abstract class Addon {
 
     integrationEventsService: IntegrationEventsService;
 
+    eventBus: EventEmitter;
+
     flagResolver: IFlagResolver;
 
     constructor(
         definition: IAddonDefinition,
-        { getLogger, integrationEventsService, flagResolver }: IAddonConfig,
+        {
+            getLogger,
+            integrationEventsService,
+            flagResolver,
+            eventBus,
+        }: IAddonConfig,
     ) {
         this.logger = getLogger(`addon/${definition.name}`);
         const { error } = addonDefinitionSchema.validate(definition);
@@ -34,6 +42,7 @@ export default abstract class Addon {
         this._name = definition.name;
         this._definition = definition;
         this.integrationEventsService = integrationEventsService;
+        this.eventBus = eventBus;
         this.flagResolver = flagResolver;
     }
 
@@ -83,9 +92,7 @@ export default abstract class Addon {
     async registerEvent(
         integrationEvent: IntegrationEventWriteModel,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('integrationEvents')) {
-            await this.integrationEventsService.registerEvent(integrationEvent);
-        }
+        await this.integrationEventsService.registerEvent(integrationEvent);
     }
 
     destroy?(): void;

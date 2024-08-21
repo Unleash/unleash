@@ -77,6 +77,16 @@ export default class ProjectController extends Controller {
                     summary: 'Get a list of all projects.',
                     description:
                         'This endpoint returns an list of all the projects in the Unleash instance.',
+                    parameters: [
+                        {
+                            name: 'archived',
+                            in: 'query',
+                            required: false,
+                            schema: {
+                                type: 'boolean',
+                            },
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('projectsSchema'),
                         ...getStandardResponses(401, 403),

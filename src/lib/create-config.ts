@@ -40,6 +40,7 @@ import {
 import {
     parseEnvVarBoolean,
     parseEnvVarNumber,
+    parseEnvVarNumberWithBounds,
     parseEnvVarStrings,
 } from './util/parseEnvVar';
 import {
@@ -653,61 +654,70 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT,
             5,
         ),
-        featureEnvironmentStrategies: Math.max(
-            1,
-            parseEnvVarNumber(
-                process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
-                options?.resourceLimits?.featureEnvironmentStrategies ?? 30,
-            ),
+        featureEnvironmentStrategies: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
+            {
+                min: 1,
+                optionsOverride:
+                    options?.resourceLimits?.featureEnvironmentStrategies,
+                fallback: 30,
+            },
         ),
-        constraintValues: Math.max(
-            1,
-            parseEnvVarNumber(
-                process.env.UNLEASH_CONSTRAINT_VALUES_LIMIT,
-                options?.resourceLimits?.constraintValues ?? 250,
-            ),
+        constraintValues: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_CONSTRAINT_VALUES_LIMIT,
+            {
+                min: 1,
+                optionsOverride: options?.resourceLimits?.constraintValues,
+                fallback: 250,
+            },
         ),
-        constraints: Math.max(
-            0,
-            parseEnvVarNumber(
-                process.env.UNLEASH_CONSTRAINTS_LIMIT,
-                options?.resourceLimits?.constraints ?? 30,
-            ),
+        constraints: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_CONSTRAINTS_LIMIT,
+            {
+                min: 0,
+                optionsOverride: options?.resourceLimits?.constraints,
+                fallback: 30,
+            },
         ),
-        environments: Math.max(
-            1,
-            parseEnvVarNumber(
-                process.env.UNLEASH_ENVIRONMENTS_LIMIT,
-                options?.resourceLimits?.environments ?? 50,
-            ),
+        environments: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_ENVIRONMENTS_LIMIT,
+            {
+                min: 1,
+                optionsOverride: options?.resourceLimits?.environments,
+                fallback: 50,
+            },
         ),
-        projects: Math.max(
-            1,
-            parseEnvVarNumber(
-                process.env.UNLEASH_PROJECTS_LIMIT,
-                options?.resourceLimits?.projects ?? 500,
-            ),
+        projects: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_PROJECTS_LIMIT,
+            {
+                min: 1,
+                optionsOverride: options?.resourceLimits?.projects,
+                fallback: 500,
+            },
         ),
-        apiTokens: Math.max(
-            0,
-            parseEnvVarNumber(
-                process.env.UNLEASH_API_TOKENS_LIMIT,
-                options?.resourceLimits?.apiTokens ?? 2000,
-            ),
+        apiTokens: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_API_TOKENS_LIMIT,
+            {
+                min: 0,
+                optionsOverride: options?.resourceLimits?.apiTokens,
+                fallback: 2000,
+            },
         ),
-        segments: Math.max(
-            0,
-            parseEnvVarNumber(
-                process.env.UNLEASH_SEGMENTS_LIMIT,
-                options?.resourceLimits?.segments ?? 300,
-            ),
+        segments: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_SEGMENTS_LIMIT,
+            {
+                min: 0,
+                optionsOverride: options?.resourceLimits?.segments,
+                fallback: 300,
+            },
         ),
-        featureFlags: Math.max(
-            1,
-            parseEnvVarNumber(
-                process.env.UNLEASH_FEATURE_FLAGS_LIMIT,
-                options?.resourceLimits?.featureFlags ?? 5000,
-            ),
+        featureFlags: parseEnvVarNumberWithBounds(
+            process.env.UNLEASH_FEATURE_FLAGS_LIMIT,
+            {
+                min: 1,
+                optionsOverride: options?.resourceLimits?.featureFlags,
+                fallback: 5000,
+            },
         ),
     };
 

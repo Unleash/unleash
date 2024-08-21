@@ -1,14 +1,25 @@
 export function parseEnvVarNumber(
     envVar: string | undefined,
     defaultVal: number,
+    options?: { min?: number; optionsOverride?: number },
 ): number {
-    if (!envVar) {
-        return defaultVal;
-    }
-    const parsed = Number.parseInt(envVar, 10);
+    const parse = (fallback: number) => {
+        if (!envVar) {
+            return fallback;
+        }
+        const parsed = Number.parseInt(envVar, 10);
 
-    if (Number.isNaN(parsed)) {
-        return defaultVal;
+        if (Number.isNaN(parsed)) {
+            return fallback;
+        }
+
+        return parsed;
+    };
+
+    const parsed = parse(options?.optionsOverride ?? defaultVal);
+
+    if (options?.min) {
+        return Math.max(options?.min, parsed);
     }
 
     return parsed;
@@ -37,23 +48,4 @@ export function parseEnvVarStrings(
     }
 
     return defaultVal;
-}
-
-type parseEnvVarNumberWithBoundsOptions = {
-    fallback: number;
-    min?: number;
-    optionsOverride?: number;
-};
-
-export function parseEnvVarNumberWithBounds(
-    envVar: string | undefined,
-    { min, fallback, optionsOverride }: parseEnvVarNumberWithBoundsOptions,
-): number {
-    const parsed = parseEnvVarNumber(envVar, optionsOverride ?? fallback);
-
-    if (min) {
-        return Math.max(min, parsed);
-    }
-
-    return parsed;
 }

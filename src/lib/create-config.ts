@@ -40,7 +40,6 @@ import {
 import {
     parseEnvVarBoolean,
     parseEnvVarNumber,
-    parseEnvVarNumberWithBounds,
     parseEnvVarStrings,
 } from './util/parseEnvVar';
 import {
@@ -654,69 +653,61 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT,
             5,
         ),
-        featureEnvironmentStrategies: parseEnvVarNumberWithBounds(
+        featureEnvironmentStrategies: parseEnvVarNumber(
             process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
+            30,
             {
                 min: 1,
                 optionsOverride:
                     options?.resourceLimits?.featureEnvironmentStrategies,
-                fallback: 30,
             },
         ),
-        constraintValues: parseEnvVarNumberWithBounds(
+        constraintValues: parseEnvVarNumber(
             process.env.UNLEASH_CONSTRAINT_VALUES_LIMIT,
+            250,
             {
                 min: 1,
                 optionsOverride: options?.resourceLimits?.constraintValues,
-                fallback: 250,
             },
         ),
-        constraints: parseEnvVarNumberWithBounds(
+        constraints: parseEnvVarNumber(
             process.env.UNLEASH_CONSTRAINTS_LIMIT,
+            30,
             {
                 min: 0,
                 optionsOverride: options?.resourceLimits?.constraints,
-                fallback: 30,
             },
         ),
-        environments: parseEnvVarNumberWithBounds(
+        environments: parseEnvVarNumber(
             process.env.UNLEASH_ENVIRONMENTS_LIMIT,
+            50,
             {
                 min: 1,
                 optionsOverride: options?.resourceLimits?.environments,
-                fallback: 50,
             },
         ),
-        projects: parseEnvVarNumberWithBounds(
-            process.env.UNLEASH_PROJECTS_LIMIT,
-            {
-                min: 1,
-                optionsOverride: options?.resourceLimits?.projects,
-                fallback: 500,
-            },
-        ),
-        apiTokens: parseEnvVarNumberWithBounds(
+        projects: parseEnvVarNumber(process.env.UNLEASH_PROJECTS_LIMIT, 500, {
+            min: 1,
+            optionsOverride: options?.resourceLimits?.projects,
+        }),
+        apiTokens: parseEnvVarNumber(
             process.env.UNLEASH_API_TOKENS_LIMIT,
+            2_000,
             {
                 min: 0,
                 optionsOverride: options?.resourceLimits?.apiTokens,
-                fallback: 2000,
             },
         ),
-        segments: parseEnvVarNumberWithBounds(
-            process.env.UNLEASH_SEGMENTS_LIMIT,
-            {
-                min: 0,
-                optionsOverride: options?.resourceLimits?.segments,
-                fallback: 300,
-            },
-        ),
-        featureFlags: parseEnvVarNumberWithBounds(
+        segments: parseEnvVarNumber(process.env.UNLEASH_SEGMENTS_LIMIT, 300, {
+            min: 0,
+            optionsOverride: options?.resourceLimits?.segments,
+        }),
+        featureFlags: parseEnvVarNumber(
             process.env.UNLEASH_FEATURE_FLAGS_LIMIT,
+            5_000,
             {
                 min: 1,
                 optionsOverride: options?.resourceLimits?.featureFlags,
-                fallback: 5000,
             },
         ),
     };

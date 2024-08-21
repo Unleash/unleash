@@ -1,5 +1,5 @@
 import { styled, type SxProps, type Theme, Typography } from '@mui/material';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';

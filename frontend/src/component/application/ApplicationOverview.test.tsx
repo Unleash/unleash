@@ -13,7 +13,11 @@ const setupApi = (application: ApplicationOverviewSchema) => {
         '/api/admin/metrics/applications/my-app/overview',
         application,
     );
-    testServerRoute(server, '/api/admin/ui-config', {});
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            timeAgoRefactor: true,
+        },
+    });
 };
 
 test('Display application overview with environments', async () => {

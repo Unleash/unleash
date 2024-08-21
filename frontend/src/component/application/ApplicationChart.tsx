@@ -13,7 +13,7 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import Flag from '@mui/icons-material/Flag';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues';
 

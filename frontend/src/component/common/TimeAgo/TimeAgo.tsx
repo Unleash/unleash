@@ -17,7 +17,7 @@ const formatTimeAgo = (date: string | number | Date) =>
         .replace('about ', '')
         .replace('less than a minute ago', '< 1 minute ago');
 
-const TimeAgo: FC<TimeAgoProps> = ({ ...props }) => {
+export const TimeAgo: FC<TimeAgoProps> = ({ ...props }) => {
     const { date, fallback, refresh } = props;
     const timeAgoRefactorEnabled = useUiFlag('timeAgoRefactor');
 
@@ -28,7 +28,7 @@ const TimeAgo: FC<TimeAgoProps> = ({ ...props }) => {
     );
 };
 
-const NewTimeAgo: FC<TimeAgoProps> = ({
+export const NewTimeAgo: FC<TimeAgoProps> = ({
     date,
     fallback = '',
     refresh = true,

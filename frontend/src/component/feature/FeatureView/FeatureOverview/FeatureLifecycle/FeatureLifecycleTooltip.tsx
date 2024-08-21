@@ -11,7 +11,7 @@ import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
 import type { LifecycleStage } from './LifecycleStage';

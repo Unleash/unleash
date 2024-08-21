@@ -11,7 +11,7 @@ import type {
     NotificationsSchemaItemNotificationType,
 } from 'openapi';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import ToggleOffOutlined from '@mui/icons-material/ToggleOffOutlined';
 import { flexRow } from 'themes/themeStyles';
 

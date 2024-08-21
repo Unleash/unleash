@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { Tooltip, Typography, useTheme } from '@mui/material';
 import { formatDateYMD } from 'utils/formatDate';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import Paper from '@mui/material/Paper';
 import { Box, styled, Typography } from '@mui/material';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { StyledAvatar } from './StyledAvatar';
 import type { IChangeRequestComment } from '../../changeRequest.types';
 

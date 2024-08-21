@@ -28,7 +28,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import Delete from '@mui/icons-material/Delete';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 
 export type ProjectArchiveCardProps = {
     id: string;

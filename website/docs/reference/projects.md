@@ -3,131 +3,120 @@ id: projects
 title: Projects
 ---
 
-:::info feature availability
+## Overview
 
-All users get access to projects, but only pro and enterprise users can create, update, or delete them.
+Projects help you organize feature flags within Unleash. For example, you can use projects to group feature flags by development teams or different functional modules within your application.
+
+Each instance requires at least one project. New instances get a default project that all members can access. You cannot delete this project, but you can [rename](#update-a-project) or [archive it](#archive-a-project).
+
+You can configure which [environments](environments.md) are available within a project. By default, all global environments are available. You can only enable and disable feature flags for the environments you've configured for the project.
+
+By default, projects have an open [collaboration mode](project-collaboration-mode.md), which means all members of your instance can access the project and submit change requests. To learn more, visit [Project Collaboration Mode](project-collaboration-mode.md).
+
+## Create a project
+
+:::note Availability
+
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing).
 
 :::
 
-This document explains how Unleash uses projects, including how to create and maintain them.
+To create a new project:
+1. Go to **Projects** > **New project** and enter a project name.
+2. Optionally configure settings such as [environments](environments.md), [stickiness](stickiness.md), [collaboration mode](project-collaboration-mode.md), and [change requests](change-requests.md).
+3. Click **Create project**.
 
-## The default project
 
-All users get access to the default project. You cannot delete this project. You can, however, rename it if you're using the pro or enterprise version of Unleash.
+## Update a project
 
-## Understanding purpose of projects {#understanding-purpose-of-projects}
+:::note Availability
 
-Projects are a way to organize your feature flags within Unleash. Within a large organization, having multiple feature flags, staying on top of the feature flags might become a challenge. Every feature flag will be part of a project. Projects can be linked to a development team or to functional modules within the software.
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing).
 
-A common pattern is to organize the feature flags according to key areas of the application, e.g. “Basic user process” and “Advanced user process”. This is illustrated below.
+:::
 
-![A diagram with two boxes labeled "Basic user process" and "Advanced user process", respectively. The former contains features "New login" and "Winter theme enablement", the latter "New in-app purchase" and "Updated invoice repository".](/img/project_concept.png)
+You can update all aspects of a project except its ID.
 
-## Projects and environments
+To update a project, go to **Projects** and select the project you'd like to edit. In the **Project settings** tab, you can update general settings such as project name, description, [stickiness](stickiness.md), [collaboration mode](project-collaboration-mode.md), and more. You can also configure user and API access, [change requests](change-requests.md), and [actions](actions.md), add [segments](segments.mdx) and [environments](environments.md), and update the [default strategy](#project-default-strategy).
 
-You can configure which [environments](./environments.md) should be available within a project. By default, all globally available environments are available. You can only enable/disable a feature flag for the environments you configure for a project.
+The available project settings depend on a user's [root and project roles](rbac.md).
 
-Within the admin UI, the projects are available under the "environments" tab of the project page. Changing them requires the project owner role.
+## Archive a project
 
-## Creating a new project {#creating-a-new-project}
+:::note Availability
 
-When you log into Unleash for the first time, there is a Default project already created. All feature flags are included in the Default project, unless explicitly set to a different one.
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing). | **Version**: 6.2 in BETA.
 
-From the top-line menu – click on “Projects”
+:::
 
-![The Unleash admin UI with the "Projects" nav link in the top bar highlighted.](/img/projects_button.png)
+The archive projects functionality allows you to hide a project while maintaining historical project data. Archiving lets you manage short-lived projects, for example, to represent specific initiatives in your organization.
 
-The UI shows the currently available projects. To create a new project, use the “new project” button.
+Before archiving a project, you must archive all feature flags within it. Archiving automatically disables all project [actions](actions.md). Once you archive a project, you cannot add or move feature flags to it.
 
-![A list of projects. There is a button saying "Add new project".](/img/projects_new_project.png)
+To archive a project:
 
-The configuration of a new Project is now available. the following input is available to create the new Project.
+1. Go to **Projects > Project settings > Settings**.
+2. Go to the **Archive project** section and click **Archive project**.
+3. Confirm by clicking **Yes, I'm sure**.
 
-![A project creation form. The "Create" button is highlighted.](/img/projects_save_new_project_v2.png)
+### Revive a project
 
-| Item               | Description                                                                                 |
-|--------------------|---------------------------------------------------------------------------------------------|
-| Project Id         | Id for this Project                                                                         |
-| Project name       | The name of the Project.                                                                    |
-| Description        | A short description of the project                                                          |
-| Mode               | The project [collaboration mode](/reference/project-collaboration-mode.md)                  |
-| Default Stickiness | The default stickiness for the project. This setting controls the default stickiness value for variants and for the gradual rollout strategy.                                                                 |
+To revive an archived project, go to **Projects > Archived projects** and click **Revive project** on the project you want to restore.
 
-## Deleting an existing project {#deleting-an-existing-project}
+## Delete a project
 
-To keep your feature flags clean, removing deprecated projects is important. From the overview of Projects –
+:::note Availability
 
-1. In the top right of the project card, find the project menu represented by three vertical dots.
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing).
 
-![A list of projects. Each project has three vertical dots — a kebab menu — next to it.](/img/projects_menu_button.png)
+:::
 
-2. Click on Delete Project
+When deleting a project within the Admin UI, you must [archive it](#archive-a-project) first. Alternatively, you can [delete projects directly](./api/unleash/delete-project) using the API.
 
-![A list of projects. Each project has three vertical dots — a kebab menu — next to it, which exposes a menu with the "Edit project" and "Delete project" options when interacted with.](/img/projects_delete_button.png)
+To delete a project:
 
-## Filter feature flags on projects {#filter-feature-toggles-on-projects}
+1. Go to **Projects > Archived projects** and click **Permanently delete project** on the project you want to delete.
+2. Confirm by clicking **Yes, I'm sure**.
 
-When browsing the feature flags in Unleash, you might want to filter the view by looking only at the ones included in the project of interest. This is possible from the Feature flag overview.
+## Move a feature flag between projects
 
-From the UI top navigation menu, choose "Feature flags".
+A feature flag belongs to a single project. To move a feature flag between two projects, both projects must have the exact same environments enabled.
 
-![The Unleash Admin UI navigation menu with the "Feature flags" option highlighted by a red arrow.](/img/projects_menu.png)
+To move a feature flag between projects:
 
-The list of features flags can be filtered on the project of your choice. By default, all feature flags are listed in the view. You can use the search to filter to a specific project or even for multiple projects in the same time if you need.
-
-![The feature flag list with flags scoped to the "fintech" project. The filter is activated by using a form control.](/img/project_select.png)
-
-In the search you can type "project:specific-name" to filter that project only.
-
-![The feature flag list with an overlay listing all the projects available. You can select a project and the list will update with the flags belonging to that project.](/img/projects_select_dropdown.png)
-
-The view will now be updated with the filtered feature flags.
-
-## Assigning project to a new feature flag {#assigning-project-to-a-new-feature-toggle}
-
-When you create a new feature flag, you can choose which project to create it in. The default project is whatever project you are currently configuring.
-
-![A form to create a flag. An arrow points to an input labeled "project".](/img/projects_change_project.png)
-
-All available projects are available from the drop-down menu.
-
-![A form to create a flag. The "project" input is expanded to show projects you can create the flag in.](/img/projects_toggle_project_dropdown.png)
-
-## Change project for an existing feature flag {#change-project-for-an-existing-feature-toggle}
-
-If you want to change which project a feature flag belongs to, you can change that from the feature flag's configuration page. Under the _settings_ tab, choose the _project_ option and choose the new project from the dropdown menu.
-
-![A feature flag's settings tab. The project setting shows a dropdown to change projects.](/img/projects_existing_toggle_dropdown.png)
+1. Go to **Projects** and select the feature flag's current project.
+2. In the **Flags** tab, click the feature flag's name.
+3. Go to **Settings > Project**.
+4. Select the new project from the list.
+5. Click **Save**, then click **Change project** to confirm your changes.
 
 ## Project default strategy
+
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-:::info Availability
+:::note Availability
 
-The project default strategy feature is generally available starting with **Unleash 5.2.0**.
+**Version**: 5.2.0+.
 
 :::
 
-You can define default strategies for each of a project's environments. The default strategy for an environment will be added to a feature when you enable it in an environment **if and only if** the feature has **no active strategies** defined.
+Each project has a default strategy of [gradual rollout](activation-strategies.md#gradual-rollout) to 100% of the user base. The default strategy only applies when **no active strategies** are defined for a flag in a specific environment.
 
-All default project strategies use the [gradual rollout activation strategy](activation-strategies.md). By default, the rollout 100%. You can customize the strategies by changing the rollout percentage and adding [constraints](strategy-constraints.md) and [segments](segments.mdx) as you would for any other strategy.
+You can change the default strategies of a project per environment. You can customize the default strategies by changing the rollout percentage and [stickiness](stickiness.md) and adding [segments](segments.mdx), [constraints](strategy-constraints.md), and [variants](strategy-variants.md).
 
-### Configuration
+To change the default strategy for an environment in a project:
 
-Custom strategies are configured from each project's project settings tab.
+1. Go to **Projects > Project settings > Default strategy**.
+2. Go to the environment you want to configure and click **Edit default strategy for 'environment'**.
+3. Configure the strategy values, such as the rollout percentage, stickiness, segments, constraints, and variants.
+4. Click **Save strategy**.
 
-<Figure caption="The default strategy configuration page is available from the project settings tab." img="/img/project-settings-default-strategy.png" />
+<Figure caption="You can configure each environment's default strategy with the corresponding edit button." img="/img/edit-default-strategy-development.png" />
 
-The default strategies screen lists a strategy for each of the project's environments
+## View project insights
 
-<Figure caption="Each strategy can be individually configured with the corresponding edit button." img="/img/edit-default-strategy.png" />
+Project insights is a great way to see how your project performed in the last 30 days compared to the previous 30 days. You can explore key metrics such as the total number of changes, the average time to production, the number of features created and archived, and project health.
 
-## Project overview
+To view your project insights, go to the **Insights** within a project.
 
-The project overview gives statistics for a project, including:
-* the number of all changes/events in the past 30 days compared to previous 30 days
-* the average time from when a feature was created to when it was enabled in the "production" environment. This value is calculated for all features in the project lifetime.
-* the number of features created in the past 30 days compared to previous 30 days
-* the number of features archived in the past 30 days compared to previous 30 days
 
-![Project overview with 4 statistics for total changes, average time to production, features created and features archived.](/img/project_overview.png)

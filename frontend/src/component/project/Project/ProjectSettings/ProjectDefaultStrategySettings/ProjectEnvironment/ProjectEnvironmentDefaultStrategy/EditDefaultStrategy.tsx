@@ -211,7 +211,7 @@ export const projectDefaultStrategyHelp = `
 `;
 
 export const projectDefaultStrategyDocsLink =
-    'https://docs.getunleash.io/reference/activation-strategies';
+    'https://docs.getunleash.io/reference/projects#project-default-strategy';
 
 export const projectDefaultStrategyDocsLinkLabel =
     'Default strategy documentation';

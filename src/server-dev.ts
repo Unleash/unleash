@@ -60,6 +60,7 @@ process.nextTick(async () => {
                         useProjectReadModel: true,
                         webhookServiceNameLogging: true,
                         addonUsageMetrics: true,
+                        timeAgoRefactor: true,
                     },
                 },
                 authentication: {

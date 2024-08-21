@@ -6,7 +6,7 @@ export const ProjectArchived: FC<{ name: string }> = ({ name }) => {
         <p>
             The project <strong>{name}</strong> has been archived. You can find
             it on the{' '}
-            <Link to={`/projects-archive`}>projects archive page</Link>.
+            <Link to={`/projects-archive`}>archive page for projects</Link>.
         </p>
     );
 };

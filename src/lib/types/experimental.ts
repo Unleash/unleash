@@ -292,10 +292,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    insightsV2: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INSIGHTS_V2,
-        false,
-    ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
         false,

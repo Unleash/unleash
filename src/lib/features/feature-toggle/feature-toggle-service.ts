@@ -1783,7 +1783,7 @@ class FeatureToggleService {
                     strategies.map((strategy) =>
                         this.updateStrategy(
                             strategy.id,
-                            { disabled: false },
+                            { ...strategy, disabled: false },
                             {
                                 environment,
                                 projectId: project,

@@ -38,3 +38,22 @@ export function parseEnvVarStrings(
 
     return defaultVal;
 }
+
+type parseEnvVarNumberWithBoundsOptions = {
+    fallback: number;
+    min?: number;
+    optionsOverride?: number;
+};
+
+export function parseEnvVarNumberWithBounds(
+    envVar: string | undefined,
+    { min, fallback, optionsOverride }: parseEnvVarNumberWithBoundsOptions,
+): number {
+    const parsed = parseEnvVarNumber(envVar, optionsOverride ?? fallback);
+
+    if (min) {
+        return Math.max(min, parsed);
+    }
+
+    return parsed;
+}

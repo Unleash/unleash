@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'resourceLimits'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'insightsV2'
     | 'originMiddleware'
     | 'newEventSearch'
     | 'archiveProjects'

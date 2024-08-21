@@ -734,3 +734,51 @@ test('Should return last seen at per environment', async () => {
     );
     expect(featureToggle.lastSeenAt).toEqual(new Date(lastSeenAtStoreDate));
 });
+
+test('Should enable disabled strategies on feature environment enabled', async () => {
+    const flagName = 'enableThisFlag';
+    const project = 'default';
+    const environment = 'default';
+    const shouldActivateDisabledStrategies = true;
+    await service.createFeatureToggle(
+        project,
+        {
+            name: flagName,
+        },
+        TEST_AUDIT_USER,
+    );
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [
+            { contextName: 'userId', operator: 'IN', values: ['1', '1'] },
+        ],
+        parameters: { param: 'a' },
+        variants: [
+            {
+                name: 'a',
+                weight: 100,
+                weightType: 'variable',
+                stickiness: 'random',
+            },
+        ],
+        disabled: true,
+    };
+    const createdConfig = await service.createStrategy(
+        config,
+        { projectId: project, featureName: flagName, environment },
+        TEST_AUDIT_USER,
+    );
+
+    await service.updateEnabled(
+        project,
+        flagName,
+        environment,
+        true,
+        TEST_AUDIT_USER,
+        { email: 'test@example.com' } as User,
+        shouldActivateDisabledStrategies,
+    );
+
+    const strategy = await service.getStrategy(createdConfig.id);
+    expect(strategy).toMatchObject({ ...config, disabled: false });
+});

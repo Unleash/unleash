@@ -39,7 +39,7 @@ Only project Members, Admins, Editors, and users with [custom root roles](rbac.m
 
 # Set project collaboration mode
 
-To [create a new project](projects.md#creating-a-new-project) with a specific collaboration mode, do the following:
+To [create a new project](projects.md#create-a-project) with a specific collaboration mode, do the following:
 1. In the Unleash Admin UI, go to **Projects** > **New project**.
 2. Enter **Project name**.
 3. Click **Open** to choose your collaboration mode.

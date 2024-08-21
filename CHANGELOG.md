@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.11] - 2024-08-21
+
+### Bug Fixes
+
+- Enable disabled strategies keeps settings ([#7952](https://github.com/Unleash/unleash/issues/7952))
+
+
 ## [6.1.10] - 2024-08-16
 
 ### Bug Fixes

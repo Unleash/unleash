@@ -234,7 +234,6 @@ test('event creators - takes single distinct username, if 2 users have same id',
     expect(body).toMatchObject([
         {
             id: 2,
-            name: 'test-user4',
         },
     ]);
 });

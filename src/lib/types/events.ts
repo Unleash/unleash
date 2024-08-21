@@ -1930,12 +1930,12 @@ export class AddonConfigDeletedEvent extends BaseEvent {
 }
 
 export class SegmentCreatedEvent extends BaseEvent {
-    readonly project: string;
+    readonly project: string | undefined;
     readonly data: any;
 
     constructor(eventData: {
         auditUser: IAuditUser;
-        project: string;
+        project: string | undefined;
         data: any;
     }) {
         super(SEGMENT_CREATED, eventData.auditUser);

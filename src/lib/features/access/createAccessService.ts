@@ -33,7 +33,6 @@ export const createAccessService = (
         { getLogger },
         eventService,
     );
-
     return new AccessService(
         { accessStore, accountStore, roleStore, environmentStore },
         { getLogger },

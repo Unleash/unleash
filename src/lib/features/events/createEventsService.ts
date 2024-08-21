@@ -13,6 +13,10 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
+import {
+    createAccessReadModel,
+    createFakeAccessReadModel,
+} from '../access/createAccessReadModel';
 
 export const createEventsService: (
     db: Db,
@@ -25,10 +29,12 @@ export const createEventsService: (
         config.getLogger,
     );
     const privateProjectChecker = createPrivateProjectChecker(db, config);
+    const accessReadModel = createAccessReadModel(db, config);
     return new EventService(
         { eventStore, featureTagStore },
         config,
         privateProjectChecker,
+        accessReadModel,
     );
 };
 
@@ -43,9 +49,11 @@ export const createFakeEventsService: (
     const featureTagStore =
         stores?.featureTagStore || new FakeFeatureTagStore();
     const fakePrivateProjectChecker = createFakePrivateProjectChecker();
+    const fakeAccessReadModel = createFakeAccessReadModel();
     return new EventService(
         { eventStore, featureTagStore },
         config,
         fakePrivateProjectChecker,
+        fakeAccessReadModel,
     );
 };

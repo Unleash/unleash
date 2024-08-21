@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'resourceLimits'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'insightsV2'
     | 'integrationEvents'
     | 'originMiddleware'
     | 'newEventSearch'
@@ -290,10 +289,6 @@ const flags: IFlags = {
     ),
     removeUnsafeInlineStyleSrc: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
-        false,
-    ),
-    insightsV2: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INSIGHTS_V2,
         false,
     ),
     integrationEvents: parseEnvVarBoolean(

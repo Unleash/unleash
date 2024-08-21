@@ -1,6 +1,6 @@
 import { render } from '../../utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { NewInsights } from './Insights';
+import { Insights } from './Insights';
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { vi } from 'vitest';
 
@@ -30,7 +30,7 @@ const currentTime = '2024-04-25T08:05:00.000Z';
 test('Filter insights by project and date', async () => {
     vi.setSystemTime(currentTime);
     setupApi();
-    render(<NewInsights ChartComponent={undefined} />);
+    render(<Insights withCharts={false} />);
     const addFilter = await screen.findByText('Add Filter');
     fireEvent.click(addFilter);
 

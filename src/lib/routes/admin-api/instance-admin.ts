@@ -15,6 +15,8 @@ import {
     createCsvResponseSchema,
     createResponseSchema,
 } from '../../openapi/util/create-response-schema';
+import type { InstanceAdminStatsSchema } from '../../openapi';
+import { serializeDates } from '../../types';
 
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
@@ -129,11 +131,20 @@ class InstanceAdminController extends Controller {
     }
 
     async getStatistics(
-        req: AuthedRequest,
-        res: Response<InstanceStatsSigned>,
+        _: AuthedRequest,
+        res: Response<InstanceAdminStatsSchema>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
-        res.json(instanceStats);
+        const apiTokensObj = Object.fromEntries(
+            instanceStats.apiTokens.entries(),
+        );
+        res.json(
+            serializeDates({
+                ...instanceStats,
+
+                apiTokens: apiTokensObj,
+            }),
+        );
     }
 
     async getStatisticsCSV(

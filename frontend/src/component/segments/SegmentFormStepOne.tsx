@@ -36,15 +36,15 @@ interface ISegmentFormPartOneProps {
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
 }
 
-const StyledForm = styled('div')(() => ({
+const StyledForm = styled('div')({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-}));
+});
 
-const StyledContainer = styled('div')(() => ({
+const StyledContainer = styled('div')({
     maxWidth: '400px',
-}));
+});
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
@@ -55,11 +55,11 @@ const StyledInput = styled(Input)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledButtonContainer = styled('div')(() => ({
+const StyledButtonContainer = styled('div')({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-}));
+});
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -85,7 +85,6 @@ const useSegmentLimit = () => {
         limitReached,
         currentCount: segmentsCount,
         loading: loadingSegments || loadingConfig,
-        resourceLimitsEnabled: true,
     };
 };
 
@@ -108,7 +107,6 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
         limit,
         currentCount,
         loading: loadingSegmentLimit,
-        resourceLimitsEnabled,
     } = useSegmentLimit();
 
     const {
@@ -201,15 +199,10 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
             </StyledContainer>
 
             <LimitContainer>
-                <ConditionallyRender
-                    condition={resourceLimitsEnabled}
-                    show={
-                        <Limit
-                            name='segments'
-                            limit={limit}
-                            currentValue={currentCount}
-                        />
-                    }
+                <Limit
+                    name='segments'
+                    limit={limit}
+                    currentValue={currentCount}
                 />
             </LimitContainer>
 

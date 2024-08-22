@@ -18,7 +18,9 @@ const server = testServerSetup();
 
 const setupApi = (existingTokensCount: number) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {},
+        resourceLimits: {
+            apiTokens: 1,
+        },
         versionInfo: {
             current: { enterprise: 'version' },
         },

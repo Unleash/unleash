@@ -5,9 +5,10 @@ import { FreeTextInput } from './FreeTextInput';
 
 const server = testServerSetup();
 
+const LIMIT = 3;
 const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {},
+        resourceLimits: { constraintValues: LIMIT },
     });
 };
 

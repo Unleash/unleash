@@ -86,6 +86,9 @@ const uiConfigForEnterprise = () =>
         flags: {
             changeRequests: true,
         },
+        resourceLimits: {
+            featureEnvironmentStrategies: 10,
+        },
         slogan: 'getunleash.io - All rights reserved',
         name: 'Unleash enterprise',
         links: [

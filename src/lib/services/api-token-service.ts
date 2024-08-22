@@ -83,7 +83,11 @@ export class ApiTokenService {
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<
             IUnleashConfig,
-            'getLogger' | 'authentication' | 'flagResolver' | 'eventBus'
+            | 'getLogger'
+            | 'authentication'
+            | 'flagResolver'
+            | 'eventBus'
+            | 'resourceLimits'
         >,
         eventService: EventService,
     ) {

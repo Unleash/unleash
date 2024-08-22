@@ -10,7 +10,9 @@ const LIMIT = 5;
 
 const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {},
+        resourceLimits: {
+            constraints: LIMIT,
+        },
     });
     testServerRoute(server, '/api/admin/context', [{ name: 'text' }]);
 };

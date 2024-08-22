@@ -1536,7 +1536,7 @@ export default class ProjectService {
         if (this.isEnterprise) {
             return data;
         }
-        const { ...proData } = data;
+        const { mode, changeRequestEnvironments, ...proData } = data;
         return proData;
     }
 }

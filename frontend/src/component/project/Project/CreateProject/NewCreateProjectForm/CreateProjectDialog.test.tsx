@@ -8,7 +8,7 @@ const server = testServerSetup();
 
 const setupApi = (existingProjectsCount: number) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {},
+        resourceLimits: { projects: 1 },
         versionInfo: {
             current: { enterprise: 'version' },
         },

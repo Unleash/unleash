@@ -43,7 +43,6 @@ const useConstraintLimit = (constraintsCount: number) => {
     const limitReached = constraintsCount >= constraintsLimit;
 
     return {
-        resourceLimitsEnabled: true,
         limit: constraintsLimit,
         limitReached,
     };
@@ -52,93 +51,81 @@ const useConstraintLimit = (constraintsCount: number) => {
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
->(
-    (
-        { constraints, setConstraints, showCreateButton, showLabel = true },
-        ref,
-    ) => {
-        const { onAdd, state, context } = useConstraintAccordionList(
-            setConstraints,
-            ref as RefObject<IConstraintAccordionListRef>,
-        );
-        const { resourceLimitsEnabled, limit, limitReached } =
-            useConstraintLimit(constraints.length);
+>(({ constraints, setConstraints, showCreateButton }, ref) => {
+    const { onAdd, state, context } = useConstraintAccordionList(
+        setConstraints,
+        ref as RefObject<IConstraintAccordionListRef>,
+    );
+    const { limit, limitReached } = useConstraintLimit(constraints.length);
 
-        if (context.length === 0) {
-            return null;
-        }
+    if (context.length === 0) {
+        return null;
+    }
 
-        return (
-            <StyledContainer id={constraintAccordionListId}>
-                <ConditionallyRender
-                    condition={Boolean(showCreateButton && onAdd)}
-                    show={
-                        <div>
-                            <StyledHelpIconBox>
-                                <Typography>Constraints</Typography>
-                                <HelpIcon
-                                    htmlTooltip
-                                    tooltip={
-                                        <Box>
-                                            <Typography variant='body2'>
-                                                Constraints are advanced
-                                                targeting rules that you can use
-                                                to enable a feature flag for a
-                                                subset of your users. Read more
-                                                about constraints{' '}
-                                                <a
-                                                    href='https://docs.getunleash.io/reference/strategy-constraints'
-                                                    target='_blank'
-                                                    rel='noopener noreferrer'
-                                                >
-                                                    here
-                                                </a>
-                                            </Typography>
-                                        </Box>
-                                    }
-                                />
-                            </StyledHelpIconBox>
-                            <NewConstraintAccordionList
-                                ref={ref}
-                                setConstraints={setConstraints}
-                                constraints={constraints}
-                                state={state}
+    return (
+        <StyledContainer id={constraintAccordionListId}>
+            <ConditionallyRender
+                condition={Boolean(showCreateButton && onAdd)}
+                show={
+                    <div>
+                        <StyledHelpIconBox>
+                            <Typography>Constraints</Typography>
+                            <HelpIcon
+                                htmlTooltip
+                                tooltip={
+                                    <Box>
+                                        <Typography variant='body2'>
+                                            Constraints are advanced targeting
+                                            rules that you can use to enable a
+                                            feature flag for a subset of your
+                                            users. Read more about constraints{' '}
+                                            <a
+                                                href='https://docs.getunleash.io/reference/strategy-constraints'
+                                                target='_blank'
+                                                rel='noopener noreferrer'
+                                            >
+                                                here
+                                            </a>
+                                        </Typography>
+                                    </Box>
+                                }
                             />
+                        </StyledHelpIconBox>
+                        <NewConstraintAccordionList
+                            ref={ref}
+                            setConstraints={setConstraints}
+                            constraints={constraints}
+                            state={state}
+                        />
 
-                            <Box
-                                sx={(theme) => ({
-                                    marginTop: theme.spacing(2),
-                                    marginBottom: theme.spacing(2),
-                                })}
-                            >
-                                <ConditionallyRender
-                                    condition={resourceLimitsEnabled}
-                                    show={
-                                        <Limit
-                                            name='constraints in this strategy'
-                                            shortName='constraints'
-                                            currentValue={constraints.length}
-                                            limit={limit}
-                                        />
-                                    }
-                                />
-                            </Box>
+                        <Box
+                            sx={(theme) => ({
+                                marginTop: theme.spacing(2),
+                                marginBottom: theme.spacing(2),
+                            })}
+                        >
+                            <Limit
+                                name='constraints in this strategy'
+                                shortName='constraints'
+                                currentValue={constraints.length}
+                                limit={limit}
+                            />
+                        </Box>
 
-                            <Button
-                                type='button'
-                                onClick={onAdd}
-                                startIcon={<Add />}
-                                variant='outlined'
-                                color='primary'
-                                data-testid='ADD_CONSTRAINT_BUTTON'
-                                disabled={Boolean(limitReached)}
-                            >
-                                Add constraint
-                            </Button>
-                        </div>
-                    }
-                />
-            </StyledContainer>
-        );
-    },
-);
+                        <Button
+                            type='button'
+                            onClick={onAdd}
+                            startIcon={<Add />}
+                            variant='outlined'
+                            color='primary'
+                            data-testid='ADD_CONSTRAINT_BUTTON'
+                            disabled={Boolean(limitReached)}
+                        >
+                            Add constraint
+                        </Button>
+                    </div>
+                }
+            />
+        </StyledContainer>
+    );
+});

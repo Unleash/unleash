@@ -101,7 +101,6 @@ const useProjectLimit = () => {
     const limitReached = projects.length >= projectsLimit;
 
     return {
-        resourceLimitsEnabled: true,
         limit: projectsLimit,
         currentValue: projects.length,
         limitReached,
@@ -198,7 +197,6 @@ export const CreateProjectDialog = ({
     };
 
     const {
-        resourceLimitsEnabled,
         limit,
         currentValue,
         limitReached,
@@ -248,15 +246,10 @@ export const CreateProjectDialog = ({
                             creatingProject || limitReached || loadingLimit,
                     }}
                     Limit={
-                        <ConditionallyRender
-                            condition={resourceLimitsEnabled}
-                            show={
-                                <Limit
-                                    name='projects'
-                                    limit={limit}
-                                    currentValue={currentValue}
-                                />
-                            }
+                        <Limit
+                            name='projects'
+                            limit={limit}
+                            currentValue={currentValue}
                         />
                     }
                     handleSubmit={handleSubmit}

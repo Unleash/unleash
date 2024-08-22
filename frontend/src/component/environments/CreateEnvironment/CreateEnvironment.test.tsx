@@ -7,12 +7,12 @@ import { ADMIN } from '../../providers/AccessProvider/permissions';
 const server = testServerSetup();
 
 const setupApi = ({
-    resourceLimits,
+    limit,
     environments,
-}: { resourceLimits: boolean; limit: number; environments: number }) => {
+}: { limit: number; environments: number }) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            resourceLimits,
+        resourceLimits: {
+            environments: limit,
         },
     });
 
@@ -43,11 +43,4 @@ test('show approaching limit info', async () => {
         selector: 'button',
     });
     expect(createButton).toBeEnabled();
-});
-
-test('show limit reached info - no resource limits component', async () => {
-    setupApi({ environments: 1, limit: 1 });
-    render(<CreateEnvironment />);
-
-    await screen.findByText('Go back');
 });

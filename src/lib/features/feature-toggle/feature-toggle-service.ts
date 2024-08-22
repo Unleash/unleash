@@ -213,7 +213,10 @@ class FeatureToggleService {
             flagResolver,
             eventBus,
             resourceLimits,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'flagResolver' | 'eventBus' | 'resourceLimits'
+        >,
         segmentService: ISegmentService,
         accessService: AccessService,
         eventService: EventService,

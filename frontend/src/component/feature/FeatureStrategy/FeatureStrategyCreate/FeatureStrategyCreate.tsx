@@ -37,7 +37,6 @@ import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/Pro
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { Limit } from 'component/common/Limit/Limit';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -46,7 +45,6 @@ const useStrategyLimit = (strategyCount: number) => {
     const limitReached = strategyCount >= featureEnvironmentStrategiesLimit;
 
     return {
-        resourceLimitsEnabled: true,
         limit: featureEnvironmentStrategiesLimit,
         limitReached,
     };
@@ -89,8 +87,7 @@ export const FeatureStrategyCreate = () => {
         (featureEnvironment) => featureEnvironment.name === environmentId,
     );
     const strategyCount = featureEnvironment?.strategies.length || 0;
-    const { limit, limitReached, resourceLimitsEnabled } =
-        useStrategyLimit(strategyCount);
+    const { limit, limitReached } = useStrategyLimit(strategyCount);
     const ref = useRef<IFeatureToggle>(feature);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
@@ -243,16 +240,11 @@ export const FeatureStrategyCreate = () => {
                     />
                 }
                 Limit={
-                    <ConditionallyRender
-                        condition={resourceLimitsEnabled}
-                        show={
-                            <Limit
-                                name='strategies in this environment'
-                                shortName='strategies'
-                                currentValue={strategyCount}
-                                limit={limit}
-                            />
-                        }
+                    <Limit
+                        name='strategies in this environment'
+                        shortName='strategies'
+                        currentValue={strategyCount}
+                        limit={limit}
                     />
                 }
                 disabled={limitReached}

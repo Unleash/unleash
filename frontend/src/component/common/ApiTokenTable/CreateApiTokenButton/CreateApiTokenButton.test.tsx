@@ -8,9 +8,10 @@ const server = testServerSetup();
 
 const setupApi = ({
     apiTokenCount,
+    apiTokenLimit,
 }: { apiTokenCount: number; apiTokenLimit: number }) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {},
+        resourceLimits: { apiTokens: apiTokenLimit },
     });
 
     testServerRoute(server, '/api/admin/api-tokens', {

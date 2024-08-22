@@ -80,6 +80,19 @@ export const uiConfigSchema = {
             example: 5,
             deprecated: true,
         },
+        resourceLimits: {
+            $ref: resourceLimitsSchema.$id,
+            description: resourceLimitsSchema.description,
+            example: {
+                ...Object.entries(resourceLimitsSchema.properties).reduce(
+                    (acc, [prop, { example }]) => ({
+                        ...acc,
+                        [prop]: example,
+                    }),
+                    {},
+                ),
+            },
+        },
         networkViewEnabled: {
             type: 'boolean',
             description: 'Whether to enable the Unleash network view or not.',

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -41,7 +40,6 @@ const useApiTokenLimit = () => {
     const apiTokensLimit = uiConfig.resourceLimits.apiTokens;
 
     return {
-        resourceLimitsEnabled: true,
         limit: apiTokensLimit,
         currentValue: tokens.length,
         limitReached: tokens.length >= apiTokensLimit,
@@ -56,7 +54,6 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
     const {
-        resourceLimitsEnabled,
         limit,
         currentValue,
         limitReached,
@@ -174,16 +171,11 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                     environment={environment}
                     setEnvironment={setEnvironment}
                 />
-                <ConditionallyRender
-                    condition={resourceLimitsEnabled}
-                    show={
-                        <StyledLimit
-                            name='API tokens'
-                            shortName='tokens'
-                            currentValue={currentValue}
-                            limit={limit}
-                        />
-                    }
+                <StyledLimit
+                    name='API tokens'
+                    shortName='tokens'
+                    currentValue={currentValue}
+                    limit={limit}
                 />
             </ApiTokenForm>
             <ConfirmToken

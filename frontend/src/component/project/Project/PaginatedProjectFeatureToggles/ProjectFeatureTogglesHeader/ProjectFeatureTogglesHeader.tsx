@@ -13,7 +13,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Search } from 'component/common/Search/Search';
 import { useUiFlag } from 'hooks/useUiFlag';
 import Add from '@mui/icons-material/Add';
-import FileDownload from '@mui/icons-material/FileDownload';
 import { styled } from '@mui/material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { useSearchParams } from 'react-router-dom';
@@ -26,6 +25,7 @@ import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CreateFeatureDialog } from './CreateFeatureDialog';
+import { IosShare } from '@mui/icons-material';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
@@ -165,7 +165,7 @@ export const ProjectFeatureTogglesHeader: FC<
                                                 marginRight: theme.spacing(2),
                                             })}
                                         >
-                                            <FileDownload />
+                                            <IosShare />
                                         </IconButton>
                                     </Tooltip>
 

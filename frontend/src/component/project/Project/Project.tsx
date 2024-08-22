@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
 import {
     StyledDiv,
     StyledFavoriteIconButton,
@@ -14,7 +15,6 @@ import {
     StyledTopRow,
 } from './Project.styles';
 import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
-import FileUpload from '@mui/icons-material/FileUpload';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
@@ -230,7 +230,7 @@ export const Project = () => {
                                         data-testid={IMPORT_BUTTON}
                                         data-loading-project
                                     >
-                                        <FileUpload />
+                                        <ImportSvg />
                                     </PermissionIconButton>
                                 }
                             />

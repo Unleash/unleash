@@ -28,11 +28,10 @@ export const InstanceStats: FC = () => {
         version = stats?.versionOSS;
     }
 
-    const apiTokensTotal =
-        stats?.apiTokens?.client ??
-        0 + stats?.apiTokens?.admin ??
-        0 + stats?.apiTokens?.frontend ??
-        0;
+    const apiTokensTotal = Object.values(stats?.apiTokens ?? {}).reduce(
+        (acc, val) => acc + val,
+        0,
+    );
 
     const rows = [
         { title: 'Instance Id', value: stats?.instanceId, offset: false },
@@ -47,19 +46,22 @@ export const InstanceStats: FC = () => {
         { title: 'Strategies', value: stats?.strategies },
         { title: 'Feature exports', value: stats?.featureExports },
         { title: 'Feature imports', value: stats?.featureImports },
-        { title: 'API client tokens', value: stats?.apiTokens?.client },
+        { title: 'Admin API tokens', value: stats?.apiTokens?.admin },
+        { title: 'Client API tokens', value: stats?.apiTokens?.client },
+        { title: 'Frontend API tokens', value: stats?.apiTokens?.frontend },
+        { title: 'API tokens total', value: apiTokensTotal },
         { title: 'Segments', value: stats?.segments },
         {
             title: 'Highest number of strategies used for a single flag in a single environment',
-            value: stats?.featureImports,
+            value: stats?.maxEnvironmentStrategies,
         },
         {
             title: 'Highest number of constraints used on a single strategy',
-            value: stats?.featureImports,
+            value: stats?.maxConstraints,
         },
         {
             title: 'Highest number of values used for a single constraint',
-            value: stats?.featureImports,
+            value: stats?.maxConstraintValues,
         },
     ];
 

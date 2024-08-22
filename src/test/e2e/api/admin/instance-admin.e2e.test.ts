@@ -133,3 +133,16 @@ test('should return instance statistics as CSV', async () => {
     expect(res.text).toMatch(/featureToggles/);
     expect(res.text).toMatch(/"sum"/);
 });
+
+test('contains new max* properties', async () => {
+    const { body } = await app.request
+        .get('/api/admin/instance-admin/statistics')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        maxEnvironmentStrategies: 0,
+        maxConstraints: 0,
+        maxConstraintValues: 0,
+    });
+});

@@ -126,6 +126,9 @@ class InstanceAdminController extends Controller {
                 variantCount: 100,
                 enabledCount: 200,
             },
+            maxEnvironmentStrategies: 20,
+            maxConstraints: 17,
+            maxConstraintValues: 123,
         };
     }
 

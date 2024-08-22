@@ -60,6 +60,7 @@ process.nextTick(async () => {
                         webhookServiceNameLogging: true,
                         addonUsageMetrics: true,
                         timeAgoRefactor: true,
+                        webhookUrlDomainLogging: true,
                     },
                 },
                 authentication: {

@@ -67,7 +67,8 @@ export type IFlagKey =
     | 'useProjectReadModel'
     | 'webhookServiceNameLogging'
     | 'addonUsageMetrics'
-    | 'timeAgoRefactor';
+    | 'timeAgoRefactor'
+    | 'webhookUrlDomainLogging';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -326,6 +327,10 @@ const flags: IFlags = {
     ),
     timeAgoRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_TIMEAGO_REFACTOR,
+        false,
+    ),
+    webhookUrlDomainLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_WEBHOOK_URL_DOMAIN_LOGGING,
         false,
     ),
 };

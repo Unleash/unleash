@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         newEventSearch: true,
                         projectListImprovements: true,
                         useProjectReadModel: true,
-                        webhookServiceNameLogging: true,
                         addonUsageMetrics: true,
                         timeAgoRefactor: true,
                     },

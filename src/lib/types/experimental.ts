@@ -64,7 +64,6 @@ export type IFlagKey =
     | 'archiveProjects'
     | 'projectListImprovements'
     | 'useProjectReadModel'
-    | 'webhookServiceNameLogging'
     | 'addonUsageMetrics'
     | 'timeAgoRefactor';
 
@@ -309,10 +308,6 @@ const flags: IFlags = {
     ),
     useProjectReadModel: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USE_PROJECT_READ_MODEL,
-        false,
-    ),
-    webhookServiceNameLogging: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_WEBHOOK_SERVICE_NAME_LOGGING,
         false,
     ),
     addonUsageMetrics: parseEnvVarBoolean(

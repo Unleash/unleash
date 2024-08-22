@@ -21,7 +21,6 @@ import useFeatureForm from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import FlagIcon from '@mui/icons-material/Flag';
 import ImpressionDataIcon from '@mui/icons-material/AltRoute';
-import { useFlagLimits } from 'component/feature/CreateFeature/CreateFeature';
 import { useGlobalFeatureSearch } from 'component/feature/FeatureToggleList/useGlobalFeatureSearch';
 import useProjectOverview, {
     featuresCount,
@@ -37,6 +36,7 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 import type { ITag } from 'interfaces/tags';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
+import { useFlagLimits } from './useFlagLimits';
 
 interface ICreateFeatureDialogProps {
     open: boolean;

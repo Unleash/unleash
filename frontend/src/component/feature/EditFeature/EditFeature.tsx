@@ -1,6 +1,6 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useNavigate } from 'react-router-dom';
-import FeatureForm from '../FeatureForm/FeatureForm';
+import EditFeatureForm from '../FeatureForm/EditFeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';
 import * as jsonpatch from 'fast-json-patch';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
@@ -26,15 +26,12 @@ const EditFeature = () => {
         type,
         setType,
         name,
-        setName,
         project,
-        setProject,
         description,
         setDescription,
         impressionData,
         setImpressionData,
         clearErrors,
-        errors,
     } = useFeatureForm(
         feature?.name,
         feature?.type,
@@ -88,25 +85,19 @@ const EditFeature = () => {
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
-            <FeatureForm
+            <EditFeatureForm
                 type={type}
                 name={name}
-                project={project}
                 description={description}
                 setType={setType}
-                setName={setName}
-                setProject={setProject}
                 setDescription={setDescription}
-                errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 impressionData={impressionData}
                 setImpressionData={setImpressionData}
-                mode='Edit'
-                clearErrors={clearErrors}
             >
                 <UpdateButton permission={UPDATE_FEATURE} projectId={project} />
-            </FeatureForm>
+            </EditFeatureForm>
         </FormTemplate>
     );
 };

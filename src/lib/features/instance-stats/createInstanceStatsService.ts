@@ -41,6 +41,7 @@ import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import { FeatureStrategiesReadModel } from '../feature-toggle/feature-strategies-read-model';
+import { FakeFeatureStrategiesReadModel } from '../feature-toggle/fake-feature-strategies-read-model';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;

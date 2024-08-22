@@ -108,7 +108,7 @@ test('should return signed instance statistics', async () => {
         });
 });
 
-test('should return instance statistics as CVS', async () => {
+test('should return instance statistics as CSV', async () => {
     await stores.featureToggleStore.create('default', {
         name: 'TestStats2',
         createdByUserId: 9999,

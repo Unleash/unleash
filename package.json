@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "6.0.6",
+  "version": "6.0.7",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -82,7 +82,9 @@
     "testTimeout": 10000,
     "globalSetup": "./scripts/jest-setup.js",
     "transform": {
-      "^.+\\.tsx?$": ["@swc/jest"]
+      "^.+\\.tsx?$": [
+        "@swc/jest"
+      ]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "testPathIgnorePatterns": [
@@ -91,7 +93,13 @@
       "/frontend/",
       "/website/"
     ],
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/dist/",
@@ -232,8 +240,14 @@
     "tough-cookie": "4.1.4"
   },
   "lint-staged": {
-    "*.{js,ts}": ["biome check --write --no-errors-on-unmatched"],
-    "*.{jsx,tsx}": ["biome check --write --no-errors-on-unmatched"],
-    "*.json": ["biome format --write --no-errors-on-unmatched"]
+    "*.{js,ts}": [
+      "biome check --write --no-errors-on-unmatched"
+    ],
+    "*.{jsx,tsx}": [
+      "biome check --write --no-errors-on-unmatched"
+    ],
+    "*.json": [
+      "biome format --write --no-errors-on-unmatched"
+    ]
   }
 }

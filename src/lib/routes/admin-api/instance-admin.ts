@@ -5,7 +5,6 @@ import type { IUnleashServices } from '../../types/services';
 import type { IUnleashConfig } from '../../types/option';
 import Controller from '../controller';
 import { NONE } from '../../types/permissions';
-import type { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
 import type {
     InstanceStatsService,
     InstanceStatsSigned,
@@ -130,20 +129,24 @@ class InstanceAdminController extends Controller {
         };
     }
 
+    private serializeStats(
+        instanceStats: InstanceStatsSigned,
+    ): InstanceAdminStatsSchema {
+        const apiTokensObj = Object.fromEntries(
+            instanceStats.apiTokens.entries(),
+        );
+        return serializeDates({
+            ...instanceStats,
+            apiTokens: apiTokensObj,
+        });
+    }
+
     async getStatistics(
         _: AuthedRequest,
         res: Response<InstanceAdminStatsSchema>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
-        const apiTokensObj = Object.fromEntries(
-            instanceStats.apiTokens.entries(),
-        );
-        res.json(
-            serializeDates({
-                ...instanceStats,
-                apiTokens: apiTokensObj,
-            }),
-        );
+        res.json(this.serializeStats(instanceStats));
     }
 
     async getStatisticsCSV(
@@ -156,13 +159,7 @@ class InstanceAdminController extends Controller {
         }-${Date.now()}.csv`;
 
         const json2csvParser = new Parser();
-        const apiTokensObj = Object.fromEntries(
-            instanceStats.apiTokens.entries(),
-        );
-        const csv = json2csvParser.parse({
-            ...instanceStats,
-            apiTokens: apiTokensObj,
-        });
+        const csv = json2csvParser.parse(this.serializeStats(instanceStats));
 
         res.contentType('csv');
         res.attachment(fileName);

@@ -287,6 +287,7 @@ module.exports = {
                         'reference/archived-toggles',
                         'reference/banners',
                         'reference/change-requests',
+                        'reference/command-menu',
                         'reference/custom-activation-strategies',
                         'reference/dependent-features',
                         'reference/environments',

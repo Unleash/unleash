@@ -150,8 +150,8 @@ class InstanceAdminController extends Controller {
     }
 
     async getStatisticsCSV(
-        req: AuthedRequest,
-        res: Response<UiConfigSchema>,
+        _: AuthedRequest,
+        res: Response<InstanceAdminStatsSchema>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
         const fileName = `unleash-${

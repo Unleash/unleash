@@ -28,7 +28,12 @@ The Command Menu also includes a comprehensive list of all available pages, enab
 
 ### Keyboard Shortcuts
 
-To facilitate a mouseless workflow, the Command Menu can be accessed using the `Ctrl + K` keyboard shortcut. This ensures that you can bring up the Command Menu instantly, without interrupting your flow.
+To facilitate a mouseless workflow, the Command Menu can be accessed using a keyboard shortcut:
+
+- **Windows/Linux**: `Ctrl + K`
+- **macOS**: `Cmd + K`
+
+This allows you to bring up the Command Menu instantly, ensuring that you can maintain your flow without interruption.
 
 ### Search Functionality
 

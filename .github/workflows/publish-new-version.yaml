@@ -18,8 +18,8 @@ on:
         required: true
         type: boolean
         default: true
-      update-version-function:
-        description: Should we update the version function to use this version?
+      is-latest-version:
+        description: Is this the latest version? If latest we'll update the version function, docker and npm latest
         required: true
         type: boolean
         default: true
@@ -138,6 +138,7 @@ jobs:
     secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
+      is-latest-version: ${{ github.event.inputs.is-latest-version }}
 
   publish-npm:
     needs: build
@@ -154,7 +155,7 @@ jobs:
 
   update-version-checker:
     needs: publish-docker
-    if: ${{ github.event.inputs.update-version-function == 'true' }}
+    if: ${{ github.event.inputs.is-latest-version == 'true' }}
     uses: ./.github/workflows/update_version_for_version_checker.yml
     secrets: inherit
     with:

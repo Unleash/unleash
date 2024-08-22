@@ -12,6 +12,11 @@ on:
         description: "Which version to release"
         type: 'string'
         required: true
+      is-latest-version:
+        description: Is this the latest version? If latest we'll update the version docker
+        required: true
+        type: boolean
+        default: true
   workflow_dispatch:
 
 jobs:
@@ -44,6 +49,8 @@ jobs:
             type=semver,pattern={{ version }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
             type=semver,pattern={{ major }}.{{ minor }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
             type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
+            # only set latest if it is latest
+            type=raw,value=latest,enable=${{ github.event.inputs.is-latest-version }}
             # only enabled in main:
             type=edge,prefix=main-,suffix=-${{ matrix.version }},enable=${{ github.ref == 'refs/heads/main' }}
             # only enabled on workflow_dispatch:

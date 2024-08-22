@@ -225,6 +225,22 @@ export default class AddonService {
             `User ${auditUser.username} created addon ${addonConfig.provider}`,
         );
 
+        if (
+            addonConfig.provider === 'webhook' &&
+            addonConfig.parameters.url &&
+            addonConfig.parameters.url.indexOf('://') > 0
+        ) {
+            const start = addonConfig.parameters.url.indexOf('://') + 3;
+            let end = addonConfig.parameters.url.indexOf('/', start);
+            if (end === -1) {
+                end = addonConfig.parameters.url.length;
+            }
+            const domain = addonConfig.parameters.url.substring(start, end);
+            this.logger.info(`Webhook created`, {
+                domain,
+            });
+        }
+
         await this.eventService.storeEvent(
             new AddonConfigCreatedEvent({
                 data: omitKeys(createdAddon, 'parameters'),
@@ -259,6 +275,23 @@ export default class AddonService {
             );
         }
         const result = await this.addonStore.update(id, addonConfig);
+
+        if (
+            addonConfig.provider === 'webhook' &&
+            addonConfig.parameters.url &&
+            addonConfig.parameters.url.indexOf('://') > 0
+        ) {
+            const start = addonConfig.parameters.url.indexOf('://') + 3;
+            let end = addonConfig.parameters.url.indexOf('/', start);
+            if (end === -1) {
+                end = addonConfig.parameters.url.length;
+            }
+            const domain = addonConfig.parameters.url.substring(start, end);
+            this.logger.info(`Webhook updated`, {
+                domain,
+            });
+        }
+
         await this.eventService.storeEvent(
             new AddonConfigUpdatedEvent({
                 preData: omitKeys(existingConfig, 'parameters'),

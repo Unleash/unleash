@@ -1,5 +1,5 @@
 import { ValidationError } from 'joi';
-
+import type { Logger } from '../../lib/logger';
 import getLogger from '../../test/fixtures/no-logger';
 import TagTypeService from '../features/tag-type/tag-type-service';
 import {
@@ -55,11 +55,44 @@ function getSetup() {
                 getLogger,
                 // @ts-ignore
                 server: { unleashUrl: 'http://test' },
+                flagResolver: {} as IFlagResolver,
             },
             tagTypeService,
             eventService,
             integrationEventsService,
             addonProvider,
+        ),
+        eventService,
+        stores,
+        tagTypeService,
+    };
+}
+
+function getSetupWithLogger(logProvider: () => Logger) {
+    const stores = createStores();
+    const eventService = createFakeEventsService(config);
+    const tagTypeService = new TagTypeService(
+        stores,
+        { getLogger: logProvider },
+        eventService,
+    );
+    const integrationEventsService = new IntegrationEventsService(stores, {
+        getLogger: logProvider,
+        flagResolver: {} as IFlagResolver,
+    });
+
+    return {
+        addonService: new AddonService(
+            stores,
+            {
+                getLogger: logProvider,
+                // @ts-ignore
+                server: { unleashUrl: 'http://test' },
+                flagResolver: {} as IFlagResolver,
+            },
+            tagTypeService,
+            eventService,
+            integrationEventsService,
         ),
         eventService,
         stores,
@@ -813,4 +846,117 @@ test('Should reject addon config if a required parameter is just the empty strin
     await expect(async () =>
         addonService.createAddon(config, TEST_AUDIT_USER),
     ).rejects.toThrow(ValidationError);
+});
+
+test('should log resolved domain', async () => {
+    const loggerMock = {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+        fatal: jest.fn(),
+    };
+    const getLogger = jest.fn(() => loggerMock);
+    const { addonService } = getSetupWithLogger(getLogger);
+
+    const config: IAddonDto = {
+        provider: 'webhook',
+        description: '',
+        enabled: true,
+        parameters: {
+            url: 'http://localhost/wh',
+            var: 'some-value',
+        },
+        events: [FEATURE_CREATED],
+    };
+    await addonService.createAddon(config, TEST_AUDIT_USER);
+    expect(getLogger).toHaveBeenCalled();
+    expect(loggerMock.info).toHaveBeenCalledWith(`Webhook created`, {
+        domain: 'localhost',
+    });
+});
+
+test('should log resolved domain with last slash missing', async () => {
+    const loggerMock = {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+        fatal: jest.fn(),
+    };
+    const getLogger = jest.fn(() => loggerMock);
+    const { addonService } = getSetupWithLogger(getLogger);
+
+    const config: IAddonDto = {
+        provider: 'webhook',
+        description: '',
+        enabled: true,
+        parameters: {
+            url: 'http://localhost',
+            var: 'some-value',
+        },
+        events: [FEATURE_CREATED],
+    };
+    await addonService.createAddon(config, TEST_AUDIT_USER);
+    expect(getLogger).toHaveBeenCalled();
+    expect(loggerMock.info).toHaveBeenCalledWith(`Webhook created`, {
+        domain: 'localhost',
+    });
+});
+
+test('will log with port if specified', async () => {
+    const loggerMock = {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+        fatal: jest.fn(),
+    };
+    const getLogger = jest.fn(() => loggerMock);
+    const { addonService } = getSetupWithLogger(getLogger);
+
+    const config: IAddonDto = {
+        provider: 'webhook',
+        description: '',
+        enabled: true,
+        parameters: {
+            url: 'http://localhost:8080',
+            var: 'some-value',
+        },
+        events: [FEATURE_CREATED],
+    };
+    await addonService.createAddon(config, TEST_AUDIT_USER);
+    expect(getLogger).toHaveBeenCalled();
+    expect(loggerMock.info).toHaveBeenCalledWith(`Webhook created`, {
+        domain: 'localhost:8080',
+    });
+});
+
+test('should not log if protocol missing', async () => {
+    const loggerMock = {
+        debug: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+        fatal: jest.fn(),
+    };
+    const getLogger = jest.fn(() => loggerMock);
+    const { addonService } = getSetupWithLogger(getLogger);
+
+    const config: IAddonDto = {
+        provider: 'webhook',
+        description: '',
+        enabled: true,
+        parameters: {
+            url: '://localhost/wh',
+            var: 'some-value',
+        },
+        events: [FEATURE_CREATED],
+    };
+    await addonService.createAddon(config, TEST_AUDIT_USER);
+    expect(getLogger).toHaveBeenCalled();
+    expect(loggerMock.info).toHaveBeenCalledTimes(1);
+    expect(loggerMock.info).not.toHaveBeenCalledWith(`Webhook created`, {
+        domain: 'localhost',
+    });
 });

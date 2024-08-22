@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -37,16 +35,14 @@ const StyledLimit = styled(Limit)(({ theme }) => ({
 }));
 
 const useApiTokenLimit = () => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const { tokens, loading: loadingTokens } = useApiTokens();
     const { uiConfig, loading: loadingConfig } = useUiConfig();
     const apiTokensLimit = uiConfig.resourceLimits.apiTokens;
 
     return {
-        resourceLimitsEnabled,
         limit: apiTokensLimit,
         currentValue: tokens.length,
-        limitReached: resourceLimitsEnabled && tokens.length >= apiTokensLimit,
+        limitReached: tokens.length >= apiTokensLimit,
         loading: loadingConfig || loadingTokens,
     };
 };
@@ -58,7 +54,6 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
     const {
-        resourceLimitsEnabled,
         limit,
         currentValue,
         limitReached,
@@ -176,16 +171,11 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                     environment={environment}
                     setEnvironment={setEnvironment}
                 />
-                <ConditionallyRender
-                    condition={resourceLimitsEnabled}
-                    show={
-                        <StyledLimit
-                            name='API tokens'
-                            shortName='tokens'
-                            currentValue={currentValue}
-                            limit={limit}
-                        />
-                    }
+                <StyledLimit
+                    name='API tokens'
+                    shortName='tokens'
+                    currentValue={currentValue}
+                    limit={limit}
                 />
             </ApiTokenForm>
             <ConfirmToken

@@ -308,15 +308,13 @@ export class ApiTokenService {
     }
 
     private async validateApiTokenLimit() {
-        if (this.flagResolver.isEnabled('resourceLimits')) {
-            const currentTokenCount = await this.store.count();
-            const limit = this.resourceLimits.apiTokens;
-            if (currentTokenCount >= limit) {
-                throwExceedsLimitError(this.eventBus, {
-                    resource: 'api token',
-                    limit,
-                });
-            }
+        const currentTokenCount = await this.store.count();
+        const limit = this.resourceLimits.apiTokens;
+        if (currentTokenCount >= limit) {
+            throwExceedsLimitError(this.eventBus, {
+                resource: 'api token',
+                limit,
+            });
         }
     }
 

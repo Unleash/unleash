@@ -3,7 +3,6 @@ import { CREATE_API_TOKEN_BUTTON } from 'utils/testIds';
 import { useNavigate } from 'react-router-dom';
 import Add from '@mui/icons-material/Add';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 interface ICreateApiTokenButton {
     path: string;
@@ -12,9 +11,7 @@ interface ICreateApiTokenButton {
 }
 
 const useApiTokenLimit = (apiTokenLimit: number, apiTokenCount: number) => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const limitReached =
-        resourceLimitsEnabled && apiTokenCount >= apiTokenLimit;
+    const limitReached = apiTokenCount >= apiTokenLimit;
 
     return {
         limitReached,

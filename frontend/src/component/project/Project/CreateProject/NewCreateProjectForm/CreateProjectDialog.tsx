@@ -16,7 +16,6 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -96,15 +95,12 @@ const configButtonData = {
 };
 
 const useProjectLimit = () => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const { projects, loading: loadingProjects } = useProjects();
     const { uiConfig, loading: loadingConfig } = useUiConfig();
     const projectsLimit = uiConfig.resourceLimits?.projects;
-    const limitReached =
-        resourceLimitsEnabled && projects.length >= projectsLimit;
+    const limitReached = projects.length >= projectsLimit;
 
     return {
-        resourceLimitsEnabled,
         limit: projectsLimit,
         currentValue: projects.length,
         limitReached,
@@ -201,7 +197,6 @@ export const CreateProjectDialog = ({
     };
 
     const {
-        resourceLimitsEnabled,
         limit,
         currentValue,
         limitReached,
@@ -251,15 +246,10 @@ export const CreateProjectDialog = ({
                             creatingProject || limitReached || loadingLimit,
                     }}
                     Limit={
-                        <ConditionallyRender
-                            condition={resourceLimitsEnabled}
-                            show={
-                                <Limit
-                                    name='projects'
-                                    limit={limit}
-                                    currentValue={currentValue}
-                                />
-                            }
+                        <Limit
+                            name='projects'
+                            limit={limit}
+                            currentValue={currentValue}
                         />
                     }
                     handleSubmit={handleSubmit}

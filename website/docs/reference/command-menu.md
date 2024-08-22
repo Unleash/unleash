@@ -10,6 +10,10 @@ The Command Menu is a feature introduced in Unleash v6.2.
 
 The Command Menu provides a powerful interface for quick navigation and efficient workflow management within Unleash. It enables users to access recently visited pages, navigate through projects, and search for specific flags or features, all from a single command interface.
 
+
+![Command Menu accessible from the top navbar.](/img/command-menu.png)
+
+
 ## Overview
 
 The Command Menu consists of several key functionalities designed to enhance user productivity:

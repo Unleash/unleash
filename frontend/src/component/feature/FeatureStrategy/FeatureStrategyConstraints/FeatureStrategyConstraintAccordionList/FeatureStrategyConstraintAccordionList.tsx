@@ -1,8 +1,7 @@
 import type React from 'react';
 import { forwardRef, type RefObject } from 'react';
-import { Box, Button, styled, Tooltip, Typography } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import HelpOutline from '@mui/icons-material/HelpOutline';
 import type { IConstraint } from 'interfaces/strategy';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -13,7 +12,6 @@ import {
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { NewConstraintAccordionList } from 'component/common/NewConstraintAccordion/NewConstraintAccordionList/NewConstraintAccordionList';
 import { Limit } from 'component/common/Limit/Limit';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IConstraintAccordionListProps {
@@ -32,30 +30,6 @@ const StyledContainer = styled('div')({
     flexDirection: 'column',
 });
 
-const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
-    marginLeft: theme.spacing(0.75),
-    height: theme.spacing(1.5),
-}));
-
-const StyledHelp = styled(HelpOutline)(({ theme }) => ({
-    fill: theme.palette.action.active,
-    [theme.breakpoints.down(860)]: {
-        display: 'none',
-    },
-}));
-
-const StyledConstraintLabel = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.secondary,
-}));
-
-const StyledAddCustomLabel = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.primary,
-    display: 'flex',
-}));
-
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -64,14 +38,12 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
 }));
 
 const useConstraintLimit = (constraintsCount: number) => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const { uiConfig } = useUiConfig();
     const constraintsLimit = uiConfig.resourceLimits?.constraints || 30;
-    const limitReached =
-        resourceLimitsEnabled && constraintsCount >= constraintsLimit;
+    const limitReached = constraintsCount >= constraintsLimit;
 
     return {
-        resourceLimitsEnabled,
+        resourceLimitsEnabled: true,
         limit: constraintsLimit,
         limitReached,
     };

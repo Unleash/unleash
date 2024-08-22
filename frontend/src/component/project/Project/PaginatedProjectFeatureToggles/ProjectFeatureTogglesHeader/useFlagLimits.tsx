@@ -1,5 +1,3 @@
-import { useUiFlag } from 'hooks/useUiFlag';
-
 type FlagLimitsProps = {
     global: { limit: number; count: number };
     project: { limit?: number; count: number };
@@ -30,8 +28,7 @@ export const useFlagLimits = ({ global, project }: FlagLimitsProps) => {
 };
 
 const useGlobalFlagLimit = (flagLimit: number, flagCount: number) => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const limitReached = resourceLimitsEnabled && flagCount >= flagLimit;
+    const limitReached = flagCount >= flagLimit;
 
     return {
         limitReached,

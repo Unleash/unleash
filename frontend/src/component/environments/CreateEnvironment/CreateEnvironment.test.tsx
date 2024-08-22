@@ -8,15 +8,11 @@ const server = testServerSetup();
 
 const setupApi = ({
     resourceLimits,
-    limit,
     environments,
 }: { resourceLimits: boolean; limit: number; environments: number }) => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             resourceLimits,
-        },
-        resourceLimits: {
-            environments: limit,
         },
     });
 
@@ -28,7 +24,7 @@ const setupApi = ({
 };
 
 test('show limit reached info', async () => {
-    setupApi({ environments: 1, limit: 1, resourceLimits: true });
+    setupApi({ environments: 1, limit: 1 });
     render(<CreateEnvironment />, { permissions: [{ permission: ADMIN }] });
 
     await screen.findByText('You have reached the limit for environments');
@@ -39,7 +35,7 @@ test('show limit reached info', async () => {
 });
 
 test('show approaching limit info', async () => {
-    setupApi({ environments: 9, limit: 10, resourceLimits: true });
+    setupApi({ environments: 9, limit: 10 });
     render(<CreateEnvironment />, { permissions: [{ permission: ADMIN }] });
 
     await screen.findByText('You are nearing the limit for environments');
@@ -50,7 +46,7 @@ test('show approaching limit info', async () => {
 });
 
 test('show limit reached info - no resource limits component', async () => {
-    setupApi({ environments: 1, limit: 1, resourceLimits: false });
+    setupApi({ environments: 1, limit: 1 });
     render(<CreateEnvironment />);
 
     await screen.findByText('Go back');

@@ -12,7 +12,6 @@ import {
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -174,8 +173,6 @@ const CreateFeatureDialogContent = ({
     const { project: projectInfo } = useProjectOverview(project);
     const { tags: allTags } = useAllTags();
 
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-
     const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
         useFlagLimits({
             global: {
@@ -233,15 +230,10 @@ const CreateFeatureDialogContent = ({
                     Icon={<FlagIcon />}
                     validateName={validateToggleName}
                     Limit={
-                        <ConditionallyRender
-                            condition={resourceLimitsEnabled}
-                            show={
-                                <Limit
-                                    name='feature flags'
-                                    limit={uiConfig.resourceLimits.featureFlags}
-                                    currentValue={totalFlags ?? 0}
-                                />
-                            }
+                        <Limit
+                            name='feature flags'
+                            limit={uiConfig.resourceLimits.featureFlags}
+                            currentValue={totalFlags ?? 0}
                         />
                     }
                     name={name}

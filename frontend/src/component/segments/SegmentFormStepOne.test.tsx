@@ -5,10 +5,7 @@ import { SegmentFormStepOne } from './SegmentFormStepOne';
 
 const server = testServerSetup();
 
-const setupRoutes = ({
-    limit,
-    segments,
-}: { limit: number; segments: number }) => {
+const setupRoutes = ({ segments }: { limit: number; segments: number }) => {
     testServerRoute(server, 'api/admin/segments', {
         segments: [...Array(segments).keys()].map((i) => ({
             name: `segment${i}`,
@@ -18,10 +15,6 @@ const setupRoutes = ({
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             SE: true,
-            resourceLimits: true,
-        },
-        resourceLimits: {
-            segments: limit,
         },
     });
 };

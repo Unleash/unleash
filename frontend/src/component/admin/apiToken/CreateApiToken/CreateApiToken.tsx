@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useUiFlag } from 'hooks/useUiFlag';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -37,16 +36,15 @@ const StyledLimit = styled(Limit)(({ theme }) => ({
 }));
 
 const useApiTokenLimit = () => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const { tokens, loading: loadingTokens } = useApiTokens();
     const { uiConfig, loading: loadingConfig } = useUiConfig();
     const apiTokensLimit = uiConfig.resourceLimits.apiTokens;
 
     return {
-        resourceLimitsEnabled,
+        resourceLimitsEnabled: true,
         limit: apiTokensLimit,
         currentValue: tokens.length,
-        limitReached: resourceLimitsEnabled && tokens.length >= apiTokensLimit,
+        limitReached: tokens.length >= apiTokensLimit,
         loading: loadingConfig || loadingTokens,
     };
 };

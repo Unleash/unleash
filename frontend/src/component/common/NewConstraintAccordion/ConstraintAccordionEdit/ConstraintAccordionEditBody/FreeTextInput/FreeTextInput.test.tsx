@@ -5,16 +5,9 @@ import { FreeTextInput } from './FreeTextInput';
 
 const server = testServerSetup();
 
-const LIMIT = 3;
-
 const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            resourceLimits: true,
-        },
-        resourceLimits: {
-            constraintValues: LIMIT,
-        },
+        flags: {},
     });
 };
 
@@ -126,8 +119,8 @@ test('should show limit reached indicator', async () => {
         <FreeTextInput
             error=''
             values={['1', '2', '3']}
-            setValues={(newValues) => {}}
-            setError={(newError: string) => {}}
+            setValues={() => {}}
+            setError={() => {}}
             removeValue={() => {}}
         />,
     );

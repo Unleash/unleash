@@ -36,21 +36,17 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const useStrategyLimit = (strategyCount: number) => {
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const { uiConfig } = useUiConfig();
     const featureEnvironmentStrategiesLimit =
         uiConfig.resourceLimits?.featureEnvironmentStrategies || 100;
-    const limitReached =
-        resourceLimitsEnabled &&
-        strategyCount >= featureEnvironmentStrategiesLimit;
+    const limitReached = strategyCount >= featureEnvironmentStrategiesLimit;
 
     return {
-        resourceLimitsEnabled,
+        resourceLimitsEnabled: true,
         limit: featureEnvironmentStrategiesLimit,
         limitReached,
     };

@@ -20,7 +20,6 @@ import {
 import { SegmentProjectAlert } from './SegmentProjectAlert';
 import { sortStrategiesByFeature } from './SegmentDelete/SegmentDeleteUsedSegment/sort-strategies';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { Limit } from '../common/Limit/Limit';
@@ -37,13 +36,13 @@ interface ISegmentFormPartOneProps {
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
 }
 
-const StyledForm = styled('div')(({ theme }) => ({
+const StyledForm = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
 }));
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div')(() => ({
     maxWidth: '400px',
 }));
 
@@ -56,7 +55,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledButtonContainer = styled('div')(({ theme }) => ({
+const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
@@ -79,16 +78,14 @@ const useSegmentLimit = () => {
     const { uiConfig, loading: loadingConfig } = useUiConfig();
     const segmentsLimit = uiConfig.resourceLimits.segments;
     const segmentsCount = segments?.length || 0;
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
-    const limitReached =
-        resourceLimitsEnabled && segmentsCount >= segmentsLimit;
+    const limitReached = segmentsCount >= segmentsLimit;
 
     return {
         limit: segmentsLimit,
         limitReached,
         currentCount: segmentsCount,
         loading: loadingSegments || loadingConfig,
-        resourceLimitsEnabled,
+        resourceLimitsEnabled: true,
     };
 };
 

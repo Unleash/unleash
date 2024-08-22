@@ -244,6 +244,27 @@ export const instanceAdminStatsSchema = {
                 },
             },
         },
+        maxEnvironmentStrategies: {
+            type: 'integer',
+            minimum: 0,
+            example: 3,
+            description:
+                'The highest number of strategies used on a single feature flag in a single environment.',
+        },
+        maxConstraints: {
+            type: 'integer',
+            minimum: 0,
+            example: 4,
+            description:
+                'The highest number of constraints used on a single strategy.',
+        },
+        maxConstraintValues: {
+            type: 'integer',
+            minimum: 0,
+            example: 17,
+            description:
+                'The highest number of constraint values used on a single constraint.',
+        },
         sum: {
             type: 'string',
             description:

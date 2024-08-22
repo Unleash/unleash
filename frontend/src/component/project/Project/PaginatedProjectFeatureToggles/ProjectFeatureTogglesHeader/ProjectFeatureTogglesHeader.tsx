@@ -25,7 +25,7 @@ import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CreateFeatureDialog } from './CreateFeatureDialog';
-import IosShare from '@mui/icons-material';
+import IosShare from '@mui/icons-material/IosShare';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;

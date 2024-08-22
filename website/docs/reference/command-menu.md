@@ -47,4 +47,4 @@ This search functionality is designed to be comprehensive, allowing you to find 
 
 ### Feature Request Capability
 
-If your search query does not return any results, the Command Menu will present a "Suggest Capability" button. This button allows you to request new features or capabilities that you might want to explore, ensuring that the system evolves with your needs.
+If your search query does not return any results, the Command Menu will present a "Suggest Capability" button. This button allows you to request new features or capabilities that you might want to explore.

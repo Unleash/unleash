@@ -227,19 +227,19 @@ export const instanceAdminStatsSchema = {
                 admin: {
                     type: 'number',
                     description: 'The number of admin tokens.',
-                    minumum: 0,
+                    minimum: 0,
                     example: 5,
                 },
                 client: {
                     type: 'number',
                     description: 'The number of client tokens.',
-                    minumum: 0,
+                    minimum: 0,
                     example: 5,
                 },
                 frontend: {
                     type: 'number',
                     description: 'The number of frontend tokens.',
-                    minumum: 0,
+                    minimum: 0,
                     example: 5,
                 },
             },

@@ -152,7 +152,6 @@ exports[`should create default config 1`] = `
       "useMemoizedActiveTokens": false,
       "useProjectReadModel": false,
       "userAccessUIEnabled": false,
-      "webhookServiceNameLogging": false,
     },
     "externalResolver": {
       "getVariant": [Function],

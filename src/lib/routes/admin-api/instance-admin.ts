@@ -141,7 +141,6 @@ class InstanceAdminController extends Controller {
         res.json(
             serializeDates({
                 ...instanceStats,
-
                 apiTokens: apiTokensObj,
             }),
         );

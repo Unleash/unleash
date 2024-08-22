@@ -5,6 +5,7 @@ import {
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import type { IUnleashStores } from '../../../../lib/types';
+import { ApiTokenType } from '../../../../lib/types/models/api-token';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -45,6 +46,36 @@ test('should return instance statistics', async () => {
         .expect((res) => {
             expect(res.body.featureToggles).toBe(1);
         });
+});
+
+test('api tokens are serialized correctly', async () => {
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        tokenName: 'admin',
+        type: ApiTokenType.ADMIN,
+        environment: '*',
+        projects: ['*'],
+    });
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        tokenName: 'frontend',
+        type: ApiTokenType.FRONTEND,
+        environment: 'default',
+        projects: ['*'],
+    });
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        tokenName: 'client',
+        type: ApiTokenType.CLIENT,
+        environment: 'default',
+        projects: ['*'],
+    });
+
+    const { body } = await app.request
+        .get('/api/admin/instance-admin/statistics')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        apiTokens: { client: 1, admin: 1, frontend: 1 },
+    });
 });
 
 test('should return instance statistics with correct number of projects', async () => {

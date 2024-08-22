@@ -129,8 +129,6 @@ export class SegmentService implements ISegmentService {
     }
 
     async validateSegmentLimit() {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const limit = this.resourceLimits.segments;
 
         const segmentCount = await this.segmentStore.count();

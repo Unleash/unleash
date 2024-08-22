@@ -325,8 +325,6 @@ export default class ProjectService {
     }
 
     async validateProjectLimit() {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const limit = Math.max(this.resourceLimits.projects, 1);
         const projectCount = await this.projectStore.count();
 
@@ -1538,7 +1536,7 @@ export default class ProjectService {
         if (this.isEnterprise) {
             return data;
         }
-        const { mode, changeRequestEnvironments, ...proData } = data;
+        const { ...proData } = data;
         return proData;
     }
 }

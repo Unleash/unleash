@@ -9,13 +9,9 @@ const alwaysOnFlagResolver = {
 } as unknown as IFlagResolver;
 
 test('Should not allow to exceed segment limit', async () => {
-    const LIMIT = 1;
     const segmentService = createFakeSegmentService({
         getLogger,
         flagResolver: alwaysOnFlagResolver,
-        resourceLimits: {
-            segments: LIMIT,
-        },
         eventBus: {
             emit: () => {},
         },

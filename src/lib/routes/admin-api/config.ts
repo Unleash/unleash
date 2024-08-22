@@ -170,7 +170,6 @@ class ConfigController extends Controller {
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: await this.versionService.getVersionInfo(),
             networkViewEnabled: this.config.prometheusApi !== undefined,
-            resourceLimits: this.config.resourceLimits,
             disablePasswordAuth,
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,

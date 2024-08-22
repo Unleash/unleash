@@ -50,7 +50,6 @@ process.nextTick(async () => {
                         projectOverviewRefactorFeedback: true,
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
-                        resourceLimits: true,
                         extendedMetrics: true,
                         originMiddleware: true,
                         newEventSearch: true,

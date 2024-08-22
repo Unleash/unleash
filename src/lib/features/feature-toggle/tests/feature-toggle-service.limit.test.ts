@@ -23,9 +23,6 @@ describe('Strategy limits', () => {
             createFakeFeatureToggleService({
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
-                resourceLimits: {
-                    featureEnvironmentStrategies: LIMIT,
-                },
             } as unknown as IUnleashConfig);
 
         const addStrategy = () =>
@@ -49,14 +46,10 @@ describe('Strategy limits', () => {
     });
 
     test('Should not allow to exceed constraints limit', async () => {
-        const LIMIT = 1;
         const { featureToggleService, featureToggleStore } =
             createFakeFeatureToggleService({
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
-                resourceLimits: {
-                    constraints: LIMIT,
-                },
             } as unknown as IUnleashConfig);
 
         const addStrategy = (constraints: IConstraint[]) =>
@@ -98,9 +91,6 @@ describe('Strategy limits', () => {
             createFakeFeatureToggleService({
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
-                resourceLimits: {
-                    constraints: LIMIT,
-                },
             } as unknown as IUnleashConfig);
 
         const constraints: IConstraint[] = [
@@ -159,14 +149,10 @@ describe('Strategy limits', () => {
     });
 
     test('Should not allow to exceed constraint values limit', async () => {
-        const LIMIT = 3;
         const { featureToggleService, featureToggleStore } =
             createFakeFeatureToggleService({
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
-                resourceLimits: {
-                    constraintValues: LIMIT,
-                },
             } as unknown as IUnleashConfig);
 
         const addStrategyWithConstraints = (constraints: IConstraint[]) =>
@@ -202,9 +188,6 @@ describe('Strategy limits', () => {
             createFakeFeatureToggleService({
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
-                resourceLimits: {
-                    constraintValues: LIMIT,
-                },
             } as unknown as IUnleashConfig);
 
         const constraints = (valueCount: number) =>
@@ -271,9 +254,6 @@ describe('Flag limits', () => {
             createFakeFeatureToggleService({
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
-                resourceLimits: {
-                    featureFlags: LIMIT,
-                },
             } as unknown as IUnleashConfig);
 
         await projectStore.create({
@@ -299,14 +279,10 @@ describe('Flag limits', () => {
     });
 
     test('Archived flags do not count towards the total', async () => {
-        const LIMIT = 1;
         const { featureToggleService, projectStore } =
             createFakeFeatureToggleService({
                 getLogger,
                 flagResolver: alwaysOnFlagResolver,
-                resourceLimits: {
-                    featureFlags: LIMIT,
-                },
             } as unknown as IUnleashConfig);
 
         await projectStore.create({

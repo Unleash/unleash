@@ -213,10 +213,7 @@ class FeatureToggleService {
             flagResolver,
             eventBus,
             resourceLimits,
-        }: Pick<
-            IUnleashConfig,
-            'getLogger' | 'flagResolver' | 'eventBus' | 'resourceLimits'
-        >,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
         segmentService: ISegmentService,
         accessService: AccessService,
         eventService: EventService,
@@ -378,8 +375,6 @@ class FeatureToggleService {
         environment: string;
         featureName: string;
     }) {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const limit = this.resourceLimits.featureEnvironmentStrategies;
         const existingCount = (
             await this.featureStrategiesStore.getStrategiesForFeatureEnv(
@@ -400,8 +395,6 @@ class FeatureToggleService {
         updated: IConstraint[];
         existing: IConstraint[];
     }) {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const {
             constraints: constraintsLimit,
             constraintValues: constraintValuesLimit,
@@ -1223,15 +1216,13 @@ class FeatureToggleService {
     }
 
     private async validateFeatureFlagLimit() {
-        if (this.flagResolver.isEnabled('resourceLimits')) {
-            const currentFlagCount = await this.featureToggleStore.count();
-            const limit = this.resourceLimits.featureFlags;
-            if (currentFlagCount >= limit) {
-                throwExceedsLimitError(this.eventBus, {
-                    resource: 'feature flag',
-                    limit,
-                });
-            }
+        const currentFlagCount = await this.featureToggleStore.count();
+        const limit = this.resourceLimits.featureFlags;
+        if (currentFlagCount >= limit) {
+            throwExceedsLimitError(this.eventBus, {
+                resource: 'feature flag',
+                limit,
+            });
         }
     }
 

@@ -55,7 +55,7 @@ export type IQueryOperator =
 export interface IQueryParam {
     field: string;
     operator: IQueryOperator;
-    values: string[];
+    values: (string | null)[];
 }
 
 export interface IFeatureStrategiesStore

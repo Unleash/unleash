@@ -634,6 +634,8 @@ export default class ProjectService {
     }
 
     async reviveProject(id: string, auditUser: IAuditUser): Promise<void> {
+        await this.validateProjectLimit();
+
         await this.projectStore.revive(id);
 
         await this.eventService.storeEvent(

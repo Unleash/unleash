@@ -5,6 +5,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useNavigate } from 'react-router-dom';
 
 type ReviveProjectDialogProps = {
     name: string;
@@ -27,6 +28,7 @@ export const ReviveProjectDialog = ({
     const { refetch: refetchProjects } = useProjects();
     const { refetch: refetchProjectArchive } = useProjects({ archived: true });
     const { setToastData, setToastApiError } = useToast();
+    const navigate = useNavigate();
 
     const onClick = async (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -35,6 +37,7 @@ export const ReviveProjectDialog = ({
             await reviveProject(id);
             refetchProjects();
             refetchProjectArchive();
+            navigate(`/projects/${id}`);
             setToastData({
                 title: 'Revive project',
                 type: 'success',

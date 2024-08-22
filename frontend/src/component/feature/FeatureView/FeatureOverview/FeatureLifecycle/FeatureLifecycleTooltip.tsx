@@ -11,7 +11,7 @@ import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
-import TimeAgo from 'react-timeago';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
 import type { LifecycleStage } from './LifecycleStage';
@@ -114,22 +114,12 @@ const LastSeenIcon: FC<{
     lastSeen: string;
 }> = ({ lastSeen }) => {
     const getColor = useLastSeenColors();
+    const { text, background } = getColor(lastSeen);
 
     return (
-        <TimeAgo
-            key={`${lastSeen}`}
-            date={lastSeen}
-            title=''
-            live={false}
-            formatter={(value: number, unit: string) => {
-                const [color, textColor] = getColor(unit);
-                return (
-                    <StyledIconWrapper style={{ background: color }}>
-                        <UsageRate stroke={textColor} />
-                    </StyledIconWrapper>
-                );
-            }}
-        />
+        <StyledIconWrapper style={{ background }}>
+            <UsageRate stroke={text} />
+        </StyledIconWrapper>
     );
 };
 
@@ -230,11 +220,7 @@ const Environments: FC<{
                             <Box>{environment.name}</Box>
                         </CenteredBox>
                         <CenteredBox>
-                            <TimeAgo
-                                key={`${environment.lastSeenAt}`}
-                                minPeriod={60}
-                                date={environment.lastSeenAt}
-                            />
+                            <TimeAgo date={environment.lastSeenAt} />
                             <LastSeenIcon lastSeen={environment.lastSeenAt} />
                         </CenteredBox>
                     </EnvironmentLine>

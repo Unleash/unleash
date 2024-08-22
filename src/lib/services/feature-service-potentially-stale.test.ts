@@ -44,6 +44,7 @@ test('Should only store events for potentially stale on', async () => {
         },
         config,
         {},
+        {},
     );
 
     const featureToggleService = new FeatureToggleService(

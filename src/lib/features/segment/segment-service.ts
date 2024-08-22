@@ -154,7 +154,7 @@ export class SegmentService implements ISegmentService {
         await this.eventService.storeEvent(
             new SegmentCreatedEvent({
                 data: segment,
-                project: segment.project || 'no-project',
+                project: segment.project,
                 auditUser,
             }),
         );

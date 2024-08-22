@@ -59,15 +59,14 @@ export type IFlagKey =
     | 'resourceLimits'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'insightsV2'
-    | 'integrationEvents'
     | 'originMiddleware'
     | 'newEventSearch'
     | 'archiveProjects'
     | 'projectListImprovements'
     | 'useProjectReadModel'
     | 'webhookServiceNameLogging'
-    | 'addonUsageMetrics';
+    | 'addonUsageMetrics'
+    | 'timeAgoRefactor';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -292,14 +291,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    insightsV2: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INSIGHTS_V2,
-        false,
-    ),
-    integrationEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
-        false,
-    ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
         false,
@@ -326,6 +317,10 @@ const flags: IFlags = {
     ),
     addonUsageMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
+        false,
+    ),
+    timeAgoRefactor: parseEnvVarBoolean(
+        process.env.UNLEASH_TIMEAGO_REFACTOR,
         false,
     ),
 };

@@ -76,6 +76,13 @@ test('api tokens are serialized correctly', async () => {
     expect(body).toMatchObject({
         apiTokens: { client: 1, admin: 1, frontend: 1 },
     });
+
+    const { text: csv } = await app.request
+        .get('/api/admin/instance-admin/statistics/csv')
+        .expect('Content-Type', /text\/csv/)
+        .expect(200);
+
+    expect(csv).toMatch(/{""client"":1,""admin"":1,""frontend"":1}/);
 });
 
 test('should return instance statistics with correct number of projects', async () => {

@@ -156,7 +156,13 @@ class InstanceAdminController extends Controller {
         }-${Date.now()}.csv`;
 
         const json2csvParser = new Parser();
-        const csv = json2csvParser.parse(instanceStats);
+        const apiTokensObj = Object.fromEntries(
+            instanceStats.apiTokens.entries(),
+        );
+        const csv = json2csvParser.parse({
+            ...instanceStats,
+            apiTokens: apiTokensObj,
+        });
 
         res.contentType('csv');
         res.attachment(fileName);

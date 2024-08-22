@@ -220,6 +220,30 @@ export const instanceAdminStatsSchema = {
             example: 0,
             minimum: 0,
         },
+        apiTokens: {
+            type: 'object',
+            description: 'The number of API tokens in Unleash, split by type',
+            properties: {
+                admin: {
+                    type: 'number',
+                    description: 'The number of admin tokens.',
+                    minumum: 0,
+                    example: 5,
+                },
+                client: {
+                    type: 'number',
+                    description: 'The number of client tokens.',
+                    minumum: 0,
+                    example: 5,
+                },
+                frontend: {
+                    type: 'number',
+                    description: 'The number of frontend tokens.',
+                    minumum: 0,
+                    example: 5,
+                },
+            },
+        },
         sum: {
             type: 'string',
             description:

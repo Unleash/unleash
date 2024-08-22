@@ -66,14 +66,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
-    "menu": {},
-    "parent": "/projects/:projectId/features",
-    "path": "/projects/:projectId/create-toggle",
-    "title": "Create feature flag",
-    "type": "protected",
-  },
-  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],

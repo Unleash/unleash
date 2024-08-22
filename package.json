@@ -82,9 +82,7 @@
     "testTimeout": 10000,
     "globalSetup": "./scripts/jest-setup.js",
     "transform": {
-      "^.+\\.tsx?$": [
-        "@swc/jest"
-      ]
+      "^.+\\.tsx?$": ["@swc/jest"]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "testPathIgnorePatterns": [
@@ -93,13 +91,7 @@
       "/frontend/",
       "/website/"
     ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/dist/",
@@ -240,14 +232,8 @@
     "tough-cookie": "4.1.4"
   },
   "lint-staged": {
-    "*.{js,ts}": [
-      "biome check --write --no-errors-on-unmatched"
-    ],
-    "*.{jsx,tsx}": [
-      "biome check --write --no-errors-on-unmatched"
-    ],
-    "*.json": [
-      "biome format --write --no-errors-on-unmatched"
-    ]
+    "*.{js,ts}": ["biome check --write --no-errors-on-unmatched"],
+    "*.{jsx,tsx}": ["biome check --write --no-errors-on-unmatched"],
+    "*.json": ["biome format --write --no-errors-on-unmatched"]
   }
 }

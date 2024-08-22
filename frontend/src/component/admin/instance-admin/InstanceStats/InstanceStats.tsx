@@ -8,13 +8,13 @@ import {
     TableRow,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
 import { formatApiPath } from '../../../../utils/formatPath';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
 
-export const InstanceStats: VFC = () => {
+export const InstanceStats: FC = () => {
     const { stats } = useInstanceStats();
 
     let versionTitle: string;
@@ -27,6 +27,12 @@ export const InstanceStats: VFC = () => {
         versionTitle = 'Unleash OSS version';
         version = stats?.versionOSS;
     }
+
+    const apiTokensTotal =
+        stats?.apiTokens?.client ??
+        0 + stats?.apiTokens?.admin ??
+        0 + stats?.apiTokens?.frontend ??
+        0;
 
     const rows = [
         { title: 'Instance Id', value: stats?.instanceId, offset: false },
@@ -41,6 +47,20 @@ export const InstanceStats: VFC = () => {
         { title: 'Strategies', value: stats?.strategies },
         { title: 'Feature exports', value: stats?.featureExports },
         { title: 'Feature imports', value: stats?.featureImports },
+        { title: 'API client tokens', value: stats?.apiTokens?.client },
+        { title: 'Segments', value: stats?.segments },
+        {
+            title: 'Highest number of strategies used for a single flag in a single environment',
+            value: stats?.featureImports,
+        },
+        {
+            title: 'Highest number of constraints used on a single strategy',
+            value: stats?.featureImports,
+        },
+        {
+            title: 'Highest number of values used for a single constraint',
+            value: stats?.featureImports,
+        },
     ];
 
     if (stats?.versionEnterprise) {

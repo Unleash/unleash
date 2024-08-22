@@ -1,4 +1,4 @@
-import { isProjectFeatureLimitReached } from './CreateFeature';
+import { isProjectFeatureLimitReached } from './useFlagLimits';
 
 test('isFeatureLimitReached  should return false when featureLimit is null', async () => {
     expect(isProjectFeatureLimitReached(null, 5)).toBe(false);

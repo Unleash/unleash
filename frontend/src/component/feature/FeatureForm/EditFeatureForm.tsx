@@ -10,40 +10,23 @@ import {
     Box,
 } from '@mui/material';
 import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
-import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from 'utils/testIds';
+import { CF_DESC_ID, CF_TYPE_ID } from 'utils/testIds';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
-import { projectFilterGenerator } from 'utils/projectFilterGenerator';
-import FeatureProjectSelect from '../FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { trim } from 'component/common/util';
 import Input from 'component/common/Input/Input';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
-import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
-import type { FeatureNamingType } from 'interfaces/project';
-import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
+import type React from 'react';
 import type { CreateFeatureSchemaType } from 'openapi';
 
 interface IFeatureToggleForm {
     type: CreateFeatureSchemaType;
     name: string;
     description: string;
-    project: string;
     impressionData: boolean;
     setType: React.Dispatch<React.SetStateAction<CreateFeatureSchemaType>>;
-    setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
-    setProject: React.Dispatch<React.SetStateAction<string>>;
     setImpressionData: React.Dispatch<React.SetStateAction<boolean>>;
-    featureNaming?: FeatureNamingType;
-    validateToggleName?: () => void;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
-    errors: { [key: string]: string };
-    mode: 'Create' | 'Edit';
-    clearErrors: () => void;
     children?: React.ReactNode;
     Limit?: React.ReactNode;
 }
@@ -106,73 +89,37 @@ const LimitContainer = styled(Box)(({ theme }) => ({
     },
 }));
 
-const FeatureForm: React.FC<IFeatureToggleForm> = ({
+const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
     children,
     type,
     name,
     description,
-    project,
     setType,
-    setName,
     setDescription,
-    setProject,
-    validateToggleName,
-    featureNaming,
     setImpressionData,
     impressionData,
     handleSubmit,
     handleCancel,
-    errors,
-    mode,
-    clearErrors,
     Limit,
 }) => {
     const { featureTypes } = useFeatureTypes();
-    const navigate = useNavigate();
-    const { permissions } = useAuthPermissions();
-    const editable = mode !== 'Edit';
 
     const renderToggleDescription = () => {
         return featureTypes.find((flag) => flag.id === type)?.description;
     };
-
-    const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
-
-    React.useEffect(() => {
-        if (featureNaming?.pattern && validateToggleName && name) {
-            clearErrors();
-            validateToggleName();
-        }
-    }, [featureNaming?.pattern]);
 
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledInputDescription>
                 What would you like to call your flag?
             </StyledInputDescription>
-            <ConditionallyRender
-                condition={displayFeatureNamingInfo}
-                show={
-                    <FeatureNamingPatternInfo featureNaming={featureNaming!} />
-                }
-            />
             <StyledInput
                 autoFocus
-                disabled={mode === 'Edit'}
+                disabled={true}
                 label='Name'
-                aria-details={
-                    displayFeatureNamingInfo
-                        ? 'feature-naming-pattern-info'
-                        : undefined
-                }
                 id='feature-flag-name'
-                error={Boolean(errors.name)}
-                errorText={errors.name}
-                onFocus={() => clearErrors()}
                 value={name}
-                onChange={(e) => setName(trim(e.target.value))}
-                data-testid={CF_NAME_ID}
-                onBlur={validateToggleName}
+                onChange={() => {}}
             />
             <StyledInputDescription>
                 What kind of feature flag do you want?
@@ -190,31 +137,6 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             <StyledTypeDescription>
                 {renderToggleDescription()}
             </StyledTypeDescription>
-            <ConditionallyRender
-                condition={editable}
-                show={
-                    <StyledInputDescription>
-                        In which project do you want to save the flag?
-                    </StyledInputDescription>
-                }
-            />
-            {/* TODO: this can be removed after new create flag flow goes live */}
-            <FeatureProjectSelect
-                value={project}
-                onChange={(projectId) => {
-                    setProject(projectId);
-                    navigate(`/projects/${projectId}/create-toggle`, {
-                        replace: true,
-                    });
-                }}
-                enabled={editable}
-                filter={projectFilterGenerator(
-                    permissions || [],
-                    CREATE_FEATURE,
-                )}
-                IconComponent={KeyboardArrowDownOutlined}
-                sx={styledSelectInput}
-            />
             <StyledInputDescription>
                 How would you describe your feature flag?
             </StyledInputDescription>
@@ -276,4 +198,4 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     );
 };
 
-export default FeatureForm;
+export default EditFeatureForm;

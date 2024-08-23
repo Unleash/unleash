@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const archivedFeatureSchema = {
     $id: '#/components/schemas/archivedFeatureSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
     required: ['name', 'project'],
     description: 'An archived project feature flag definition',
     properties: {
@@ -67,9 +67,32 @@ export const archivedFeatureSchema = {
         },
         environments: {
             type: 'array',
-            maxItems: 0,
-            description: 'Deprecated field always returning empty array',
-            items: {},
+            description:
+                'The list of environments where the feature can be used',
+            items: {
+                type: 'object',
+                properties: {
+                    name: {
+                        type: 'string',
+                        example: 'my-dev-env',
+                        description: 'The name of the environment',
+                    },
+                    lastSeenAt: {
+                        type: 'string',
+                        format: 'date-time',
+                        nullable: true,
+                        example: '2023-01-28T16:21:39.975Z',
+                        description:
+                            'The date when metrics where last collected for the feature environment',
+                    },
+                    enabled: {
+                        type: 'boolean',
+                        example: true,
+                        description:
+                            '`true` if the feature is enabled for the environment, otherwise `false`.',
+                    },
+                },
+            },
         },
     },
     components: {

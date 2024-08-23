@@ -8,17 +8,18 @@ Hello! In this tutorial, we’ll show you how to add feature flags to your Ruby 
 
 In a classic tutorial fashion, we’ll add feature flags to a blog app made with Ruby on Rails. We’ll use feature flags to decide how many blog posts to show on the index page.
 
--   [Prerequisites](#prerequisites)
--   [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
--   [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
--   [3. Setup the Rails app](#3-setup-the-rails-app)
-    -   [Install dependencies](#install-dependencies)
-    -   [Setup DB](#setup-db)
-    -   [Run the server](#run-the-server)
--   [4. Restrict the number of posts](#4-restrict-the-number-of-posts)
--   [5. Add Unleash to your Rails app](#5-add-unleash-to-your-rails-app)
--   [6. Verify the toggle experience](#6-verify-the-toggle-experience)
--   [Conclusion](#conclusion)
+- [Prerequisites](#prerequisites)
+- [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
+- [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
+- [3. Setup the Rails app](#3-setup-the-rails-app)
+    - [Install dependencies](#install-dependencies)
+    - [Setup DB](#setup-db)
+    - [Run the server](#run-the-server)
+- [4. Restrict the number of posts](#4-restrict-the-number-of-posts)
+- [5. Add Unleash to your Rails app](#5-add-unleash-to-your-rails-app)
+  - [Initialize the Unleash client and make it available in your Rails app](#initialize-the-unleash-client-and-make-it-available-in-your-rails-app)
+- [6. Verify the toggle experience](#6-verify-the-toggle-experience)
+- [Conclusion](#conclusion)
 
 ## Prerequisites
 
@@ -152,25 +153,47 @@ gem install unleash
 
 Now you can initialize your Unleash client as follows:
 
-```ruby
-@unleash = Unleash::Client.new(app_name: 'rails-blog', url: 'http://localhost:4242/api/', custom_http_headers: {
-  'Authorization': 'YOUR_API_KEY'
-})
-```
+### Initialize the Unleash client and make it available in your Rails app
 
-You can check our [API tokens and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more information.
-
-Now, let’s add the Unleash client to our Rails controller, grab the feature flag from our local instance, and update our conditional statement. Don't forget to also update the config with your API key.
+In `config/initializers/unleash.rb`, add the following:
 
 ```ruby
 require 'unleash'
 
+Unleash.configure do |config|
+  config.app_name = Rails.application.class.parent.to_s
+  config.url      = 'http://localhost:4242/api/'
+  # config.instance_id = "#{Socket.gethostname}"
+  config.logger   = Rails.logger
+end
+
+UNLEASH = Unleash::Client.new
+
+```
+
+You can check our [API tokens and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more information.
+
+Then, in `app/controllers/application_controller.rb`:
+
+```ruby
+  before_action :set_unleash_context
+
+  private
+  def set_unleash_context
+    @unleash_context = Unleash::Context.new(
+      session_id: session.id,
+      remote_address: request.remote_ip,
+      user_id: session[:user_id]
+    )
+  end
+```
+
+Now, let’s add the Unleash client to our Rails controller, grab the feature flag from our local instance, and update our conditional statement. Don't forget to also update the config with your API key.
+
+```ruby
 class PostsController < ApplicationController
   def index
-    @unleash = Unleash::Client.new(app_name: 'rails-blog', url: 'http://localhost:4242/api/', custom_http_headers: {
-      'Authorization': 'YOUR_API_KEY'
-      })
-    is_top3 = @unleash.is_enabled('top-3')
+    is_top3 = UNLEASH.is_enabled('top-3', @unleash_context)
     @posts = is_top3 ? Post.order(created_at: :desc).limit(3) : Post.all
   end
 

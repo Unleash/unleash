@@ -153,8 +153,6 @@ gem install unleash
 Then, in `config/initializers/unleash.rb`, add the following:
 
 ```ruby
-require 'unleash'
-
 Unleash.configure do |config|
   config.app_name = Rails.application.class.parent.to_s
   config.url      = 'http://localhost:4242/api/'

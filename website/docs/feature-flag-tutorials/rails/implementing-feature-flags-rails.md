@@ -17,7 +17,6 @@ In a classic tutorial fashion, we’ll add feature flags to a blog app made with
     - [Run the server](#run-the-server)
 - [4. Restrict the number of posts](#4-restrict-the-number-of-posts)
 - [5. Add Unleash to your Rails app](#5-add-unleash-to-your-rails-app)
-  - [Initialize the Unleash client and make it available in your Rails app](#initialize-the-unleash-client-and-make-it-available-in-your-rails-app)
 - [6. Verify the toggle experience](#6-verify-the-toggle-experience)
 - [Conclusion](#conclusion)
 
@@ -151,11 +150,7 @@ First, install the `unleash` gem.
 gem install unleash
 ```
 
-Now you can initialize your Unleash client as follows:
-
-### Initialize the Unleash client and make it available in your Rails app
-
-In `config/initializers/unleash.rb`, add the following:
+Then, in `config/initializers/unleash.rb`, add the following:
 
 ```ruby
 require 'unleash'

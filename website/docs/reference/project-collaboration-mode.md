@@ -12,23 +12,23 @@ title: Project Collaboration Mode
 
 Project collaboration modes allow you to manage project visibility and interaction levels, ensuring better control and collaboration within your organization.
 
-The collaboration mode of a [project](projects.md) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](change-requests.md)–a feature that provides controlled and secure updates for feature toggles.
+The collaboration mode of a [project](projects.md) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](change-requests.md)–a feature that provides controlled and secure updates for feature flags.
 
-Unleash supports three collaboration modes: **open**, **protected**, and **private**. The [predefined root and project roles](rbac.md#predefined-roles), as well as [custom root roles](rbac.md#custom-root-roles) of a user, determine what projects they can access.
+Unleash supports three collaboration modes: **open**, **protected**, and **private**. A user's [predefined root and project roles](rbac.md#predefined-roles), as well as their [custom root roles](rbac.md#custom-root-roles), determine what projects they can access.
 
 ## Open collaboration mode
 
-All users of your Unleash instance can access the project and submit change requests. This is the default collaboration mode.
+All users of your Unleash instance can view the project and submit change requests. This is the default collaboration mode.
 
 
 ## Protected collaboration mode
 
-All users of your Unleash instance can access the project but only Admins and project Members can submit change requests.
+All users of your Unleash instance can view the project but only project Members and Admins can submit change requests.
 
 
 ## Private collaboration mode
 
-Only project Members, Admins, Editors, and users with [custom root roles](rbac.md#custom-root-roles) can access the project. Only Admins and project Members can submit change requests. 
+Only project Members, Admins, Editors, and users with [custom root roles](rbac.md#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
 
 
 |           | View project                                                                                    | Submit change requests     |

@@ -146,22 +146,6 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                 />
                             </StyledChartContainer>
                         </StyledWidget>
-                        <StyledWidget>
-                            <StyledWidgetStats width={275}>
-                                <WidgetTitle title='Flags' />
-                                <FlagStats
-                                    count={flags.total}
-                                    flagsPerUser={getFlagsPerUser(flags, users)}
-                                    isLoading={loading}
-                                />
-                            </StyledWidgetStats>
-                            <StyledChartContainer>
-                                <FlagsChart
-                                    flagTrends={flagTrends}
-                                    isLoading={loading}
-                                />
-                            </StyledChartContainer>
-                        </StyledWidget>
                     </>
                 }
                 elseShow={
@@ -187,22 +171,6 @@ export const InsightsCharts: FC<IChartsProps> = ({
                             </StyledWidgetStats>
                             <StyledChartContainer>
                                 <UsersPerProjectChart
-                                    projectFlagTrends={groupedProjectsData}
-                                    isLoading={loading}
-                                />
-                            </StyledChartContainer>
-                        </StyledWidget>
-                        <StyledWidget>
-                            <StyledWidgetStats width={275}>
-                                <WidgetTitle title='Flags' />
-                                <FlagStats
-                                    count={summary.total}
-                                    flagsPerUser={''}
-                                    isLoading={loading}
-                                />
-                            </StyledWidgetStats>
-                            <StyledChartContainer>
-                                <FlagsProjectChart
                                     projectFlagTrends={groupedProjectsData}
                                     isLoading={loading}
                                 />
@@ -260,6 +228,56 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                 />
                             </StyledChartContainer>
                         </StyledWidget>
+                    </>
+                }
+            />
+            <ConditionallyRender
+                condition={showAllProjects}
+                show={
+                    <>
+                        <StyledWidget>
+                            <StyledWidgetStats width={275}>
+                                <WidgetTitle title='Flags' />
+                                <FlagStats
+                                    count={flags.total}
+                                    flagsPerUser={getFlagsPerUser(flags, users)}
+                                    isLoading={loading}
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <FlagsChart
+                                    flagTrends={flagTrends}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </StyledWidget>
+                    </>
+                }
+                elseShow={
+                    <>
+                        <StyledWidget>
+                            <StyledWidgetStats width={275}>
+                                <WidgetTitle title='Flags' />
+                                <FlagStats
+                                    count={summary.total}
+                                    flagsPerUser={''}
+                                    isLoading={loading}
+                                />
+                            </StyledWidgetStats>
+                            <StyledChartContainer>
+                                <FlagsProjectChart
+                                    projectFlagTrends={groupedProjectsData}
+                                    isLoading={loading}
+                                />
+                            </StyledChartContainer>
+                        </StyledWidget>
+                    </>
+                }
+            />
+            <ConditionallyRender
+                condition={isEnterprise()}
+                show={
+                    <>
                         <StyledWidget>
                             <StyledWidgetContent>
                                 <WidgetTitle

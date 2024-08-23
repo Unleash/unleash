@@ -330,12 +330,22 @@ export class ApiTokenService {
         return this.insertNewApiToken(createNewToken, SYSTEM_USER_AUDIT);
     }
 
+    private normalizeTokenType(token: IApiTokenCreate): IApiTokenCreate {
+        const { type, ...rest } = token;
+        return {
+            ...rest,
+            type: type.toLowerCase() as ApiTokenType,
+        };
+    }
+
     private async insertNewApiToken(
         newApiToken: IApiTokenCreate,
         auditUser: IAuditUser,
     ): Promise<IApiToken> {
         try {
-            const token = await this.store.insert(newApiToken);
+            const token = await this.store.insert(
+                this.normalizeTokenType(newApiToken),
+            );
             this.activeTokens.push(token);
             await this.eventService.storeEvent(
                 new ApiTokenCreatedEvent({

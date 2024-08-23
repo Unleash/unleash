@@ -38,19 +38,14 @@ Existing hosted customers who are already above the limits will have their limit
 
 With a few exceptions, all the limits can be overridden through the use of their respective environment variables. However, while it is possible to override these limits, we advise against it in most cases. If you feel that you're unable to do what you need to do because of the limits, we'd love to hear from you.
 
-Some of the limits have a lower threshold. If you try to set them lower than that threshold, Unleash will instead use the minimum value listed below:
+The following resources have a lower limit of 1:
+- feature flags
+- strategies
+- constraint values
+- projects
+- environments
 
-| Resource          | Minimum value |
-|-------------------|--------------:|
-| Feature flags     |             1 |
-| Strategies        |             1 |
-| Constraints       |             0 |
-| Constraint values |             1 |
-| Segments          |             0 |
-| API tokens        |             0 |
-| Projects          |             1 |
-| Environments      |             1 |
-
+If you try to set their limits lower than that, Unleash will automatically adjust them to 1.
 
 If you operate a self-hosted Unleash instance, you can adjust the limit yourself. For hosted users of Unleash, you'll need to reach out and talk to your Unleash contact.
 

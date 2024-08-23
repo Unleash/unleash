@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const archivedFeatureSchema = {
     $id: '#/components/schemas/archivedFeatureSchema',
     type: 'object',
-    additionalProperties: true,
+    additionalProperties: false,
     required: ['name', 'project'],
     description: 'An archived project feature flag definition',
     properties: {

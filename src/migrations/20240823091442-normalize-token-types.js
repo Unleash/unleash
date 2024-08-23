@@ -19,4 +19,6 @@ exports.up = (db, cb) => {
     );
 };
 
-exports.down = () => {  }
+exports.down = function (db, callback) {
+    db.runSql(``, callback);
+};

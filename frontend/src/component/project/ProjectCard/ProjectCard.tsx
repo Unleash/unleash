@@ -9,12 +9,13 @@ import {
     StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
-} from './NewProjectCard.styles';
+} from './ProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
 import type { ProjectSchemaOwners } from 'openapi';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { FavoriteAction } from './ProjectCardFooter/FavoriteAction/FavoriteAction';
+import { Box } from '@mui/material';
 
 interface IProjectCardProps {
     name: string;
@@ -79,7 +80,9 @@ export const ProjectCard = ({
             </StyledDivInfo>
         </StyledProjectCardBody>
         <ProjectCardFooter id={id} owners={owners}>
-            <FavoriteAction id={id} isFavorite={favorite} />
+            <Box sx={(theme) => ({ margin: theme.spacing(1, 2, 0, 0) })}>
+                <FavoriteAction id={id} isFavorite={favorite} />
+            </Box>
         </ProjectCardFooter>
     </StyledProjectCard>
 );

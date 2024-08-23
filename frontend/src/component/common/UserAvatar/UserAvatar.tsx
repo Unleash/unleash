@@ -9,7 +9,7 @@ import type { IUser } from 'interfaces/user';
 import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
+const StyledAvatar = styled(Avatar)<{ small?: boolean }>(({ theme }) => ({
     width: theme.spacing(3.5),
     height: theme.spacing(3.5),
     margin: 'auto',

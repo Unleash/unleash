@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard } from '../NewProjectCard/NewProjectCard';
+import { ProjectCard } from '../ProjectCard/ProjectCard';
 
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';

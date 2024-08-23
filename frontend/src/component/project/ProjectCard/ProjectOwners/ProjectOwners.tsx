@@ -4,6 +4,7 @@ import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export interface IProjectOwnersProps {
     owners?: ProjectSchema['owners'];
@@ -69,6 +70,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     const ownersMap = useOwnersMap();
     const users = owners.map(ownersMap);
+    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
 
     return (
         <StyledWrapper>

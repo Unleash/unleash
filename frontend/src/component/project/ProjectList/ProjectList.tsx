@@ -26,6 +26,7 @@ import { groupProjects } from './group-projects';
 import { ProjectGroup } from './ProjectGroup';
 import { CreateProjectDialog } from '../Project/CreateProject/NewCreateProjectForm/CreateProjectDialog';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectCard as NewProjectCard } from '../ProjectCard/NewProjectCard';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -127,6 +128,7 @@ export const ProjectListNew = () => {
         searchParams.get('search') || '',
     );
     const archiveProjectsEnabled = useUiFlag('archiveProjects');
+    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
 
     const myProjects = new Set(useProfile().profile?.projects || []);
 
@@ -176,6 +178,11 @@ export const ProjectListNew = () => {
                 loading={loading}
                 searchValue={searchValue}
                 {...props}
+                {...(projectListImprovementsEnabled
+                    ? {
+                          ProjectCardComponent: NewProjectCard,
+                      }
+                    : {})}
             />
         );
     };
